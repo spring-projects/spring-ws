@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<preface id="preface">
+	<title>Preface</title>
+	<para>
+	    Web services development is a complicated affair. There is SOAP, there is REST. There is SOAP 1.1, and there is
+        SOAP 1.2. There is rpc/encoded, and there is document/literal. There is WS-Addressing, WS-Security, WS-Policy,
+        and various other Web service specifications. Implementing Web services using abstractions that magically turn
+        Java into XML, but turn out to be leaky abstractions makes it even harder. Spring Web Services provides a
+        solution for building interoperable Web services, while making it clear what XML is received and sent across the
+        wire. Spring-WS provides a powerful <link linkend="ws">message dispatching framework</link>, various <link
+        linkend="oxm">XML marshalling</link> techniques that can be used outside a Web service environment, and a <link
+        linkend="security">WS-Security</link> solution that integrates with your existing application security
+        solution.
+    </para>
+	<para>
+        This document provides a reference guide to Spring-WS's features. Since this document is still a
+        work-in-progress, if you have any requests or comments, please post them on the support forums at <ulink
+        url="http://forum.springframework.org/forumdisplay.php?f=39"/>.
+    </para>
+</preface>

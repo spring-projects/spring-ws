@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="airline"
+             targetNamespace="http://www.springframework.org/spring-ws/samples/airline/definitions"
+             xmlns:tns="http://www.springframework.org/spring-ws/samples/airline/definitions"
+             xmlns:types="http://www.springframework.org/spring-ws/samples/airline/schemas"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+    <types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:import namespace="http://www.springframework.org/spring-ws/samples/airline/schemas"
+                        schemaLocation="airline.xsd"/>
+        </xsd:schema>
+    </types>
+    <message name="GetFlightsInput">
+        <part element="types:GetFlightsRequest" name="body"/>
+    </message>
+    <message name="GetFlightsOutput">
+        <part element="types:GetFlightsResponse" name="body"/>
+    </message>
+    <message name="BookFlightInput">
+        <part element="types:BookFlightRequest" name="body"/>
+    </message>
+    <message name="BookFlightOutput">
+        <part element="types:BookFlightResponse" name="body"/>
+    </message>
+    <message name="GetFrequentFlyerMileageInput">
+        <part element="types:GetFrequentFlyerMileageRequest" name="body"/>
+    </message>
+    <message name="GetFrequentFlyerMileageOutput">
+        <part element="types:GetFrequentFlyerMileageResponse" name="body"/>
+    </message>
+    <portType name="AirlinePortType">
+        <operation name="GetFlights">
+            <input message="tns:GetFlightsInput"/>
+            <output message="tns:GetFlightsOutput"/>
+        </operation>
+        <operation name="BookFlight">
+            <input message="tns:BookFlightInput"/>
+            <output message="tns:BookFlightOutput"/>
+        </operation>
+        <operation name="GetFrequentFlyerMileage">
+            <input message="tns:GetFrequentFlyerMileageInput"/>
+            <output message="tns:GetFrequentFlyerMileageOutput"/>
+        </operation>
+    </portType>
+    <binding name="AirlineSoapBinding" type="tns:AirlinePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="GetFlights">
+            <soap:operation soapAction="http://www.springframework.org/spring-ws/samples/airline/GetFlights"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="BookFlight">
+            <soap:operation soapAction="http://www.springframework.org/spring-ws/samples/airline/BookFlight"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="GetFrequentFlyerMileage">
+            <soap:operation
+                    soapAction="http://www.springframework.org/spring-ws/samples/airline/GetFrequentFlyerMileage"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="AirlineService">
+        <port binding="tns:AirlineSoapBinding" name="AirlinePort">
+            <soap:address location="http://localhost:8080/airline/Airline"/>
+        </port>
+    </service>
+</definitions>
