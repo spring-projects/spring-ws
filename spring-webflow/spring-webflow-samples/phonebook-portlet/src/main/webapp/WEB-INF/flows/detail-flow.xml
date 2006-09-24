@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
+	"http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
+	
+<flow start-state="getDetails">
+
+    <input-mapper>
+    	<mapping source="id" target="flowScope.id"/>
+    </input-mapper>
+    
+	<action-state id="getDetails">
+		<action bean="phonebook" method="getPerson(${flowScope.id})" result-name="person"/>
+		<transition on="success" to="displayDetails"/>
+	</action-state>
+
+	<view-state id="displayDetails" view="details">
+		<transition on="back" to="finish"/>
+		<transition on="select" to="browseColleagueDetails"/>
+	</view-state>
+
+	<subflow-state id="browseColleagueDetails" flow="detail-flow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="${requestParameters.id}" target="id" from="string" to="long"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="finish" to="getDetails"/>
+	</subflow-state>
+	
+	<end-state id="finish"/>
+	
+</flow>

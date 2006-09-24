@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
+	"http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
+
+<flow start-state="actionState1">
+	<action-state id="actionState1">
+		<action bean="pojoAction" method="enumMethod" result-name="result1" result-scope="request"/>
+		<transition on="success" to="actionState2"/>
+	</action-state>
+
+	<action-state id="actionState2">
+		<action bean="pojoAction" method="enumMethod" result-name="result2" result-scope="flow"/>
+		<transition on="success" to="actionState3"/>
+	</action-state>
+
+	<action-state id="actionState3">
+		<action bean="pojoAction" method="enumMethod" result-name="result3" result-scope="conversation"/>
+		<transition on="success" to="pause"/>
+	</action-state>
+	
+	<view-state id="pause">
+		<transition on="resume" to="end"/>
+	</view-state>
+	
+	<end-state id="end"/>
+
+</flow>

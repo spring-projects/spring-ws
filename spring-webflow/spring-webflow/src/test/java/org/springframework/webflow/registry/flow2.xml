@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
+	"http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
+
+<flow start-state="view">
+
+	<view-state id="view" view="view">
+		<transition on="submit" to="flow1"/>
+		<transition on="cancel" to="end"/>
+	</view-state>
+	
+	<subflow-state id="flow1" flow="flow1">
+		<transition on="end" to="end"/>
+	</subflow-state>
+	
+	<end-state id="end"/>
+	
+</flow>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="1.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="http://www.jayasoft.org/misc/ivy/ivy.xsd">
+
+    <info organisation="org.springframework" module="spring-ws-core"/>
+
+    <configurations>
+        <conf name="default" extends="saaj"/>
+        <conf name="global" visibility="private"/>
+        <conf name="buildtime" visibility="private"/>
+        <conf name="test" visibility="private"/>
+        <!-- public configurations other projects may use -->
+        <conf name="saaj" visibility="public" extends="global"/>
+        <conf name="axiom" visibility="public" extends="global"/>
+    </configurations>
+
+    <dependencies defaultconf="global->default">
+        <!-- global (compile, test, runtime) dependencies -->
+        <dependency org="apache" name="commons-logging" rev="1.0.4"/>
+        <dependency org="org.springframework" name="spring-core" rev="1.2.8"/>
+        <dependency org="org.springframework" name="spring-beans" rev="1.2.8"/>
+        <dependency org="org.springframework" name="spring-context" rev="1.2.8"/>
+        <dependency org="org.springframework" name="spring-web" rev="1.2.8"/>
+        <dependency org="org.springframework" name="spring-webmvc" rev="1.2.8"/>
+        <dependency org="jdom" name="jdom" rev="1.0"/>
+        <dependency org="stax" name="stax-api" rev="1.0"/>
+        <dependency org="xom" name="xom" rev="1.1">
+            <exclude org="xerces"/>
+        </dependency>
+        <dependency org="dom4j" name="dom4j" rev="1.6.1"/>
+        <dependency org="apache" name="xerces" rev="2.8.0">
+            <artifact name="xercesImpl" type="jar"/>
+        </dependency>
+
+        <!-- spring-ws dependencies -->
+        <dependency org="org.springframework" name="spring-oxm" rev="latest.integration"/>
+
+        <!-- saaj only dependencies -->
+        <dependency org="javax.xml" name="saaj-api" rev="1.2" conf="buildtime,saaj->default"/>
+        <dependency org="javax.xml" name="saaj-impl" rev="1.2" conf="buildtime,saaj->default"/>
+        <dependency org="javax.activation" name="activation" rev="1.0.2" conf="buildtime,saaj->default"/>
+        <dependency org="javax.mail" name="mail" rev="1.3.2" conf="buildtime,saaj->default"/>
+
+        <!-- axiom only dependencies -->
+        <dependency org="ws-commons" name="ws-commons" rev="1.0" conf="buildtime,axiom->default">
+            <artifact name="axiom-api" type="jar"/>
+            <artifact name="axiom-impl" type="jar"/>
+        </dependency>
+
+        <!-- mixed dependencies -->
+        <dependency org="woodstox" name="wstx-asl" rev="2.9.3" conf="test,axiom->default"/>
+
+        <!--  build time dependencies -->
+        <dependency org="javax.servlet" name="servlet-api" rev="2.4" conf="buildtime->default"/>
+        <dependency org="jaxen" name="jaxen" rev="1.1-beta-8" conf="buildtime->default">
+            <exclude org="xom"/>
+        </dependency>
+        <dependency org="xalan" name="xalan" rev="2.7.0" conf="buildtime->default"/>
+
+        <!-- test time only dependencies -->
+        <dependency org="junit" name="junit" rev="3.8.1" conf="test->default"/>
+        <dependency org="xmlunit" name="xmlunit" rev="1.0" conf="test->default"/>
+        <dependency org="easymock" name="easymock" rev="1.1" conf="test->default"/>
+        <dependency org="clover" name="clover" rev="1.3.11" conf="test->default"/>
+        <dependency org="org.springframework" name="spring-mock" rev="1.2.8" conf="test->default"/>
+        <dependency org="apache" name="log4j" rev="1.2.9" conf="test->default"/>
+    </dependencies>
+</ivy-module>

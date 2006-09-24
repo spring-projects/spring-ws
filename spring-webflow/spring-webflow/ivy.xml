@@ -1,0 +1,68 @@
+<ivy-module	version="1.1">
+
+  <info	organisation="org.springframework" module="spring-webflow" />
+
+  <configurations>
+	<conf name="default" extends="mvc" />
+	<conf name="global"	visibility="private" />
+	<conf name="buildtime" visibility="private"	/>
+	<conf name="test" visibility="private" />
+	<!-- public	webflow	configurations other projects may use -->
+	<conf name="mvc" visibility="public" extends="global"/>
+	<conf name="portlet" visibility="public" extends="mvc"/>
+	<conf name="struts"	visibility="public"	extends="global"/>
+	<conf name="jsf" visibility="public" extends="global"/>
+  </configurations>
+
+  <dependencies	defaultconf="global->default">
+	<!--  global (core)	dependencies -->
+	<dependency	org="apache" name="commons-codec" rev="1.3"/>
+	<dependency	org="apache" name="commons-logging"	rev="1.0.4"/>
+	<dependency	org="apache" name="log4j" rev="1.2.9"/>
+	<dependency	org="ognl" name="ognl" rev="2.6.7"/>
+	<dependency	org="org.springframework" name="spring-beans" rev="2.0-m5"/>
+	<dependency	org="org.springframework" name="spring-core" rev="2.0-m5"/>
+	<dependency	org="org.springframework" name="spring-context"	rev="2.0-m5"/>
+	<dependency	org="org.springframework" name="spring-struts"	rev="2.0-m5"/>
+	<dependency	org="org.springframework" name="spring-web"	rev="2.0-m5"/>
+	<dependency	org="org.springframework" name="spring-binding"	rev="latest.integration"/>
+	<dependency	org="junit"	name="junit" rev="3.8.1"/>
+
+	<!-- spring	mvc	only dependencies -->
+	<dependency	org="org.springframework" name="spring-webmvc" rev="2.0-m5" conf="buildtime,mvc->default"/>
+
+	<!-- spring portlet mvc only dependencies -->
+	<dependency org="org.springframework" name="spring-portlet" rev="2.0-m5" conf="buildtime,portlet->default"/>
+
+	<!-- struts	only dependencies -->
+	<dependency	org="apache" name="struts" rev="1.2.8" conf="buildtime,struts->default"/>
+	<dependency	org="apache" name="commons-lang" rev="2.1" conf="struts->default"/>
+
+    <!-- JSF-only dependencies -->
+    <!-- note that at this time we depend on MyFaces, not JSF-RI -->
+    <dependency	org="apache" name="commons-el" rev="1.0" conf="jsf->default"/>
+    <dependency	org="apache" name="commons-fileupload" rev="1.0" conf="jsf->default"/>
+    <dependency	org="org.apache.myfaces.core" name="myfaces-api" rev="1.1.2" conf="buildtime, jsf->default"/>
+    <dependency	org="org.apache.myfaces.core" name="myfaces-impl" rev="1.1.2" conf="buildtime, jsf->default"/>
+
+    <!-- mixed dependencies -->
+    <dependency	org="apache" name="commons-beanutils" rev="1.7.0" conf="test, jsf->default; struts->default"/>
+    <dependency	org="apache" name="commons-collections"	rev="3.1" conf="jsf->default; struts->default"/>
+    <dependency	org="apache" name="commons-digester" rev="1.7" conf="buildtime,jsf->default;struts->default"/>
+    <dependency	org="apache" name="commons-validator" rev="1.1.4" conf="jsf->default; struts->default"/>
+    <dependency	org="apache" name="oro"	rev="2.0.8" conf="jsf->default"/>
+
+	<!-- build time	only dependencies -->	 
+	<dependency org="concurrent" name="concurrent" rev="1.3.4" conf="buildtime->default"/>
+	<dependency	org="javax.servlet" name="servlet-api" rev="2.4" conf="buildtime->default"/>
+	<dependency	org="javax.portlet" name="portlet-api" rev="1.0" conf="buildtime->default"/>
+	<dependency	org="javax.jmx" name="jmx-ri" rev="1.2.1" conf="buildtime->default"/>
+
+	<!-- test time only	dependencies -->
+	<dependency	org="easymock" name="easymock" rev="1.1" conf="test->default" />
+	<dependency	org="clover" name="clover" rev="1.3.11" conf="test->default" />
+	<dependency	org="org.springframework" name="spring-mock" rev="2.0-m5" conf="test->default"/>
+
+  </dependencies>
+  
+</ivy-module>

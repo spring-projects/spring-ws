@@ -1,0 +1,24 @@
+<html>
+<body>
+<p>
+High-level executors for driving the execution of flow definitions.
+</p>
+<p>
+The central concept defined by this package is the
+{@link org.springframework.webflow.executor.FlowExecutor}, representing
+a facade or entry-point for driving the execution of flows.  This interface acts 
+as the system boundary into Spring Web Flow most calling systems interact with.
+<p>
+The following classes and interfaces are of particular interest to the user of
+the web flow system:
+<ul>
+<li>
+{@link org.springframework.webflow.executor.FlowExecutor} - A facade 
+clients (e.g. controllers) can use as an entry-point into Spring Web Flow for launching 
+and executing flows.
+</li>
+<p>
+This package depends on the webflow, webflow.context, and webflow.execution packages.
+</p>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app PUBLIC
+    "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+    <display-name>
+        "Echo" WebService
+    </display-name>
+    <description>Returns a given string(only A-Z and a-z chars allowed). See echo.xsd file.</description>
+
+   	<!--Location of the Log4J config file, for initialization and refresh checks.
+   		Applied by Log4jConfigListener. -->
+	<context-param>
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>/WEB-INF/log4j.properties</param-value>
+	</context-param>
+
+    <!-- Logger for web server specific messages. -->
+    <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+
+    <!-- Loads the root application context of this web app at startup.
+    	 Use WebApplicationContextUtils.getWebApplicationContext(servletContext)
+    	 to access it anywhere in the web application, outside of the framework.
+
+	  	 The root context is the parent of all servlet-specific contexts.
+	  	 This means that its beans are automatically available in these child contexts,
+		 both for getBean(name) calls and (external) bean references. -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <!-- Starts the web service servlet. -->
+	<servlet>
+        <servlet-name>springws</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    </servlet>
+
+    <!-- We map all request to the springws servlet. -->
+    <servlet-mapping>
+        <servlet-name>springws</servlet-name>
+        <url-pattern>/services</url-pattern>
+    </servlet-mapping>
+</web-app>

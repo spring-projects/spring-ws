@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
+	"http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
+
+<flow start-state="viewState1">
+	<view-state id="viewState1" view="view1">
+		<transition on="event1" to="viewState2"/>
+	</view-state>
+	
+	<view-state id="viewState2" view="view2">
+		<transition on="event1" to="endState1"/>
+	</view-state>
+	
+	<end-state id="endState1" view="endView1"/>	
+</flow>  

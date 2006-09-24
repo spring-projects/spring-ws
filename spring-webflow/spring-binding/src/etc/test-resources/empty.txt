@@ -1,0 +1,5 @@
+placeholder so CVS doesn't remove an otherwise empty dir.
+
+Note: the contents of this dir get added to the unit test classpath. It gets copied to
+/target/add-to-unittest-cp.
+

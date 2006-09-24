@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
+	"http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
+
+<flow start-state="bPage">
+
+	<input-mapper>
+		<mapping source="input" target="flowScope.input"/>
+	</input-mapper>
+	
+	<view-state id="bPage" view="bPage">
+		<transition on="end" to="end"/>
+	</view-state>
+	
+	<end-state id="end"/>
+
+</flow>
