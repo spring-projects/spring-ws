@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws</artifactId>
@@ -68,18 +67,20 @@
     </licenses>
     <scm>
         <connection>
-            scm:svn:https://svn.sourceforge.net/svnroot/springframework/spring-projects/trunk/spring-ws/</connection>
+            https://svn.sourceforge.net/svnroot/springframework/spring-ws/trunk/
+		</connection>
         <developerConnection>
-            scm:svn:https://svn.sourceforge.net/svnroot/springframework/spring-projects/trunk/spring-ws/</developerConnection>
+            https://svn.sourceforge.net/svnroot/springframework/spring-ws/trunk/
+		</developerConnection>
         <url>http://svn.sourceforge.net/viewcvs.cgi/springframework/spring-projects/trunk/spring-ws/</url>
     </scm>
     <modules>
-        <module>spring-xml</module>
-        <module>spring-oxm</module>
-        <module>spring-ws-core</module>
-        <module>spring-ws-security</module>
+        <module>xml</module>
+        <module>oxm</module>
+        <module>core</module>
+        <module>security</module>
         <module>release</module>
-    </modules>
+  </modules>
     <profiles>
         <profile>
             <id>jdk1.5</id>
@@ -87,7 +88,7 @@
                 <jdk>1.5</jdk>
             </activation>
             <modules>
-                <module>spring-oxm-tiger</module>
+                <module>oxm-tiger</module>
             </modules>
         </profile>
         <profile>
