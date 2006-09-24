@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
+	"http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
+
+<flow start-state="enterPriceAndItemCount">
+
+	<view-state id="enterPriceAndItemCount" view="priceAndItemCountForm">
+		<entry-actions>
+			<action bean="formAction" method="setupForm"/>
+		</entry-actions>
+		<transition on="submit" to="enterCategory">
+			<action bean="formAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validatePriceAndItemCount"/>
+			</action>
+		</transition>
+	</view-state>
+
+	<view-state id="enterCategory" view="categoryForm">
+		<transition on="submit" to="requiresShipping">
+			<action bean="formAction" method="bindAndValidate"/>
+		</transition>
+	</view-state>
+
+	<decision-state id="requiresShipping">
+		<if test="${conversationScope.sale.shipping}" then="enterShippingDetails" else="processSale"/>
+	</decision-state>
+
+	<view-state id="enterShippingDetails" view="shippingDetailsForm">
+		<transition on="submit" to="processSale">
+			<action bean="formAction" method="bindAndValidate"/>
+		</transition>
+	</view-state>
+
+	<action-state id="processSale">
+		<action bean="saleProcessor" method="process(${conversationScope.sale})"/>
+		<transition on="success" to="finish"/>
+	</action-state>
+	
+	<view-state id="showCostOverview" view="costOverview">
+		<transition on="back" to="enterPriceAndItemCount"/>
+	</view-state>
+	
+	<end-state id="finish" view="costOverview"/>
+
+	<end-state id="error" view="error"/>
+
+	<!-- could support a nav menu, on header button bar -->
+	<global-transitions>
+		<transition on="price" to="enterPriceAndItemCount"/>
+		<transition on="category" to="enterCategory"/>
+		<transition on="shipping" to="enterShippingDetails"/>
+		<transition on="preview" to="showCostOverview"/>
+	</global-transitions>
+
+	<import resource="sellitem-beans.xml"/>
+	
+</flow>

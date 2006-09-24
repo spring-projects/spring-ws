@@ -1,0 +1,32 @@
+<html>
+<body>
+<p>
+The overall system for executing flow definitions.
+</p>
+<p>
+The central concept defined by this package is the
+{@link org.springframework.webflow.execution.FlowExecution}, representing
+a single instance of an executing flow (also known as a "dialog" or "web conversation").
+</p>
+<p>
+The following classes and interfaces are of particular interest to the user of
+the web flow system:
+<ul>
+<li>
+{@link org.springframework.webflow.execution.repository.FlowExecutionRepository} - A repository interface
+used by a flow execution manager to store the state of an ongoing flow execution.
+</li>
+<li>
+{@link org.springframework.webflow.execution.FlowExecutionListener} - The listener
+interface to be implemented by objects that are interested in flow execution
+lifecycle events. The class
+{@link org.springframework.webflow.execution.FlowExecutionListenerAdapter}
+provides an adapter to ease subclassing. 
+</li>
+</ul>
+</p>
+<p>
+This package depends on the webflow root package.
+</p>
+</body>
+</html>

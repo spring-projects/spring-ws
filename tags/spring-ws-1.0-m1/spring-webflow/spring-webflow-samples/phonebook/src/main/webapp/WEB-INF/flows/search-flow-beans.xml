@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<!-- Search form action that setups the form and processes form submissions -->
+	<bean id="formAction" class="org.springframework.webflow.action.FormAction">
+		<property name="formObjectName" value="searchCriteria"/>
+		<property name="formObjectClass" value="org.springframework.webflow.samples.phonebook.domain.SearchCriteria"/>
+		<property name="formObjectScope" value="FLOW"/>
+		<property name="validator">
+			<bean class="org.springframework.webflow.samples.phonebook.domain.SearchCriteriaValidator"/>
+		</property>
+	</bean>
+	
+</beans>

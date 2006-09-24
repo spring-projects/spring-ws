@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BookFlightRequest xmlns="http://www.springframework.org/spring-ws/samples/airline/schemas">
+    <flightNumber>EF1234</flightNumber>
+    <departureTime>2006-01-01T00:00:00+01:00</departureTime>
+    <passengers>
+        <username>john</username>
+    </passengers>
+</BookFlightRequest>

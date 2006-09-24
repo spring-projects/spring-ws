@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BookFlightResponse xmlns="http://www.springframework.org/spring-ws/samples/airline/schemas">
+    <id>42</id>
+    <issueDate>2006-01-01</issueDate>
+    <passengers>
+        <passenger>
+            <first>John</first>
+            <last>Doe</last>
+        </passenger>
+    </passengers>
+    <flight>
+        <number>EF1234</number>
+        <departureTime>2006-01-01T00:00:00+01:00</departureTime>
+        <from>
+            <code>ABC</code>
+            <name>Airport</name>
+            <city>City</city>
+        </from>
+        <arrivalTime>2006-02-02T00:00:00+01:00</arrivalTime>
+        <to>
+            <code>DEF</code>
+            <name>Airport</name>
+            <city>City</city>
+        </to>
+        <serviceClass>economy</serviceClass>
+    </flight>
+</BookFlightResponse>

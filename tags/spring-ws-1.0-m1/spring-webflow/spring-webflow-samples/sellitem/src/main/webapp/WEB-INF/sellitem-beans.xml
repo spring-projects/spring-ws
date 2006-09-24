@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+	"http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!-- Application context definition -->
+
+<beans>
+
+	<bean id="formAction" class="org.springframework.webflow.action.FormAction">
+		<property name="formObjectName" value="sale"/>
+		<property name="formObjectClass" value="org.springframework.webflow.samples.sellitem.Sale"/>
+		<property name="formObjectScope" value="CONVERSATION"/>
+		<property name="formErrorsScope" value="CONVERSATION"/>
+		<property name="validator">
+			<bean class="org.springframework.webflow.samples.sellitem.SaleValidator"/>
+		</property>
+		<property name="validateUsingValidatorMethod" value="true"/>
+	</bean>
+	
+</beans>

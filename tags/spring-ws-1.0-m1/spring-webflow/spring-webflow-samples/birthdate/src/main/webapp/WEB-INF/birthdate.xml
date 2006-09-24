@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
+	"http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
+	
+<!-- 
+	This simple flow demonstrates the use of the FormAction: a multi-action.
+	Notice how all the actions use the same "formAction" bean, which groups
+	all action methods executed by this flow into single class.
+-->
+<flow start-state="setupForm">
+
+	<!--
+	    Prepare to display a new form.  Initializes the backing "form object" and installs property 
+	    editors to format form field values.
+	-->
+	<action-state id="setupForm">
+		<action bean="formAction" method="setupForm"/>
+		<transition on="success" to="enterBirthdate"/>
+	</action-state>
+	
+	<!-- Display the first input form view -->
+	<view-state id="enterBirthdate" view="birthdateForm">
+		<transition on="submit" to="processBirthdateFormSubmit"/>
+	</view-state>
+	
+	<!-- Bind and validate input data from the form -->
+	<action-state id="processBirthdateFormSubmit">
+		<action bean="formAction" method="bindAndValidate">
+			<attribute name="validatorMethod" value="validateBirthdateForm"/>
+		</action>
+		<transition on="success" to="enterCardInformation"/>
+		<transition on="error" to="enterBirthdate"/>
+	</action-state>
+
+	<!-- Display the next input form view -->
+	<view-state id="enterCardInformation" view="cardForm">
+		<transition on="submit" to="processCardFormSubmit"/>
+	</view-state>
+
+	<!-- Bind and validate input data from the form -->
+	<action-state id="processCardFormSubmit">
+		<action bean="formAction" method="bindAndValidate">
+			<attribute name="validatorMethod" value="validateCardForm"/>
+		</action>
+		<transition on="success" to="calculateAge"/>
+		<transition on="error" to="enterCardInformation"/>
+	</action-state>
+		
+	<!-- Process the transaction -->
+	<action-state id="calculateAge">
+		<action bean="formAction" method="calculateAge"/>
+		<transition on="success" to="displayAge"/>
+	</action-state>
+	
+	<!-- Display the success view. -->
+	<end-state id="displayAge" view="yourAge"/>
+
+</flow>

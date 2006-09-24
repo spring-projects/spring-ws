@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+	"http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="flowExecutor" class="org.springframework.webflow.executor.FlowExecutorImpl">
+		<constructor-arg ref="repositoryFactory"/>
+	</bean>
+	
+	<bean id="repositoryFactory" class="org.springframework.webflow.execution.repository.continuation.ClientContinuationFlowExecutionRepositoryFactory">
+		<constructor-arg ref="flowRegistry"/>
+	</bean>
+	
+	<bean id="flowRegistry" class="org.springframework.webflow.registry.XmlFlowRegistryFactoryBean">
+		<property name="flowLocations" value="classpath:org/springframework/webflow/executor/flow.xml"/>
+	</bean>
+</beans>

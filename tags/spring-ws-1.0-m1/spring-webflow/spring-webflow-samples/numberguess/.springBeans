@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beansProjectDescription>
+	<configs>
+		<config>src/main/webapp/WEB-INF/mastermind-beans.xml</config>
+		<config>src/main/webapp/WEB-INF/dispatcher-servlet.xml</config>
+		<config>src/main/webapp/WEB-INF/higherlower-beans.xml</config>
+	</configs>
+	<configSets>
+		<configSet>
+			<name>mastermind</name>
+			<allowBeanDefinitionOverriding>false</allowBeanDefinitionOverriding>
+			<incomplete>false</incomplete>
+			<configs>
+				<config>src/main/webapp/WEB-INF/dispatcher-servlet.xml</config>
+				<config>src/main/webapp/WEB-INF/mastermind-beans.xml</config>
+			</configs>
+		</configSet>
+		<configSet>
+			<name>higherlower</name>
+			<allowBeanDefinitionOverriding>false</allowBeanDefinitionOverriding>
+			<incomplete>false</incomplete>
+			<configs>
+				<config>src/main/webapp/WEB-INF/dispatcher-servlet.xml</config>
+				<config>src/main/webapp/WEB-INF/higherlower-beans.xml</config>
+			</configs>
+		</configSet>
+	</configSets>
+</beansProjectDescription>

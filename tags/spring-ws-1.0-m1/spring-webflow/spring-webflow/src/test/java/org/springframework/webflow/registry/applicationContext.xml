@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+	"http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!-- Application context definition -->
+
+<beans>
+
+	<bean id="flowRegistry1" class="org.springframework.webflow.registry.FlowRegistryFactoryBean">
+		<property name="flowRegistrar">
+			<bean class="org.springframework.webflow.registry.FlowRegistryPopulationTests$MyFlowRegistrar"/>
+		</property>
+	</bean>
+
+	<bean id="flowRegistry2" class="org.springframework.webflow.registry.XmlFlowRegistryFactoryBean">
+		<property name="flowLocations" value="classpath*:org/springframework/webflow/registry/**/flow*.xml"/>
+	</bean>
+
+	<bean id="flowRegistry3" class="org.springframework.webflow.registry.XmlFlowRegistryFactoryBean">
+		<property name="flowDefinitions">
+			<value>
+				flow1=classpath:org/springframework/webflow/registry/flow1.xml
+				flow2=classpath:org/springframework/webflow/registry/flow2.xml
+			</value>
+		</property>
+	</bean>
+
+	<bean id="flowRegistry4" class="org.springframework.webflow.registry.XmlFlowRegistryFactoryBean">
+		<property name="flowLocations" value="classpath*:org/springframework/webflow/registry/**/flow*.xml"/>
+		<property name="flowArtifactFactory">
+			<bean class="org.springframework.webflow.builder.FlowArtifactFactory"/>
+		</property>
+		<property name="beanInvokingActionFactory">
+			<bean class="org.springframework.webflow.builder.BeanInvokingActionFactory"/>
+		</property>
+		<property name="expressionParser">
+			<bean class="org.springframework.webflow.support.WebFlowOgnlExpressionParser"/>
+		</property>
+		<property name="conversionService">
+			<bean class="org.springframework.binding.convert.support.DefaultConversionService"/>
+		</property>
+		<property name="builderValidating" value="true"/>
+		<property name="parent" ref="flowRegistry3"/>
+	</bean>
+	
+</beans>

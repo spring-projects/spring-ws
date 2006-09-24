@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<project name="spring-ws-airline-sample" default="dist">
+
+    <!-- you may override default properties for the build by using entries
+        in a build.properties file, or by just adding 'property' elements
+        here, before the following properties files are loaded -->
+    <property file="build.properties"/>
+    <property file="project.properties"/>
+    <property file="${common.build.dir}/build.properties"/>
+    <property file="${common.build.dir}/project.properties"/>
+    <property file="${user.home}/build.properties"/>
+    <property name="build.web" value="true"/>
+    <property name="project.webapp.name" value="airline"/>
+
+    <import file="${common.build.dir}/common-targets.xml"/>
+    <import file="${common.build.dir}/tomcat-targets.xml"/>
+
+    <target name="gen.main" depends="generate-jaxb"/>
+
+    <target name="generate-jaxb">
+        <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask" classpathref="compile.classpath"/>
+
+        <xjc target="${target.gen.java.dir}" package="${jaxb.package}" source="1.0">
+            <schema dir="${src.web.dir}">
+                <include name="**/*.xsd"/>
+            </schema>
+            <produces dir="${target.gen.java.dir}" includes="**/schema/**/*.java"/>
+        </xjc>
+    </target>
+</project>

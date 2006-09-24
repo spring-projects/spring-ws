@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="1.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="http://www.jayasoft.org/misc/ivy/ivy.xsd">
+
+    <info organisation="org.springframework" module="spring-oxm"/>
+
+    <configurations>
+        <conf name="default" extends="global"/>
+        <conf name="global" visibility="private"/>
+        <conf name="buildtime" visibility="private"/>
+        <conf name="test" visibility="private"/>
+        <!-- public configurations other projects may use -->
+        <conf name="jaxb1" visibility="public" extends="global"/>
+        <conf name="jaxb2" visibility="public" extends="global"/>
+        <conf name="castor" visibility="public" extends="global"/>
+        <conf name="xmlbeans" visibility="public" extends="global"/>
+        <conf name="jibx" visibility="public" extends="global"/>
+        <conf name="xstream" visibility="public" extends="global"/>
+    </configurations>
+
+    <dependencies defaultconf="global->default">
+        <!-- global (compile, test, runtime) dependencies -->
+        <dependency org="apache" name="commons-logging" rev="1.0.4"/>
+        <dependency org="org.springframework" name="spring-core" rev="1.2.8"/>
+        <dependency org="org.springframework" name="spring-beans" rev="1.2.8"/>
+
+        <!-- jaxb only dependencies -->
+        <dependency org="javax.xml" name="jaxb-api" rev="2.0.1" conf="buildtime,jaxb1,jaxb2->default"/>
+        <dependency org="javax.xml" name="jaxb-impl" rev="2.0.1" conf="buildtime,jaxb1,jaxb2->default"/>
+        <dependency org="javax.xml" name="jaxb1-impl" rev="2.0.1" conf="buildtime,jaxb1->default"/>
+        <dependency org="javax.activation" name="activation" rev="1.0.2" conf="buildtime,jaxb2->default"/>
+
+        <!-- castor only dependencies -->
+        <dependency org="org.castor" name="castor" rev="1.0" conf="buildtime,castor->default"/>
+        <dependency org="apache" name="xerces" rev="2.8.0" conf="test,castor->default">
+            <artifact name="xercesImpl" type="jar"/>
+        </dependency>
+
+        <!-- xmlbeans only dependencies -->
+        <dependency org="xmlbeans" name="xmlbeans" rev="2.0.0" conf="buildtime->default">
+            <artifact name="xbean" type="jar"/>
+        </dependency>
+        <dependency org="stax" name="stax-api" rev="1.0" conf="buildtime,xmlbeans->default"/>
+        <!-- jibx only dependencies -->
+        <dependency org="org.jibx" name="jibx-run" rev="1.0.1" conf="jibx,buildtime->default"/>
+        <dependency org="org.jibx" name="jibx-bind" rev="1.0.1" conf="test,jibx->default"/>
+        <!-- xstream only dependencies -->
+        <dependency org="xstream" name="xstream" rev="1.1.3" conf="buildtime,xstream->default"/>
+
+        <!-- test time only dependencies -->
+        <dependency org="junit" name="junit" rev="3.8.1" conf="test->default"/>
+        <dependency org="xmlunit" name="xmlunit" rev="1.0" conf="test->default"/>
+        <dependency org="easymock" name="easymock" rev="1.1" conf="test->default"/>
+        <dependency org="clover" name="clover" rev="1.3.11" conf="test->default"/>
+        <dependency org="javax.xml" name="jaxb-xjc" rev="2.0.1" conf="test->default"/>
+        <dependency org="apache" name="log4j" rev="1.2.9" conf="test->default"/>
+    </dependencies>
+</ivy-module>
