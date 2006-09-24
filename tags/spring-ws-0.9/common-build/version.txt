@@ -1,0 +1,7 @@
+version 20060208-1
+
+Changelog:
+2005-02-08: Colin: add dir="${basedir} to junit task so it runs ok from other dirs
+2005-01-04: Colin: add description element to "retrieve" since it's not an internal target
+2005-11-27: Update Spring version in templates
+2005-11-20: Arjen: add gen java source dir functionality for test sources too
