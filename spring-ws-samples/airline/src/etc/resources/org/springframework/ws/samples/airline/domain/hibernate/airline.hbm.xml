@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping
+        package="org.springframework.ws.samples.airline.domain"
+        auto-import="true" default-lazy="false">
+    <class name="Customer" table="CUSTOMER">
+        <id name="id" column="ID">
+            <generator class="identity"/>
+        </id>
+        <property name="firstName" column="FIRST_NAME" length="128"/>
+        <property name="lastName" column="LAST_NAME" length="128"/>
+    </class>
+    <class name="Flight" table="FLIGHT">
+        <id name="id" column="ID">
+            <generator class="identity"/>
+        </id>
+        <property name="departureTime" column="DEPARTURE_TIME"/>
+        <many-to-one name="departureAirport" column="DEPARTURE_AIRPORT"
+                     class="Airport"/>
+        <property name="arrivalTime" column="ARRIVAL_TIME"/>
+        <many-to-one name="arrivalAirport" column="ARRIVAL_AIRPORT"
+                     class="Airport"/>
+        <property name="number" column="NUMBER" length="20"
+                  unique="true"/>
+        <property name="serviceClass" column="SERVICE_CLASS"
+                  type="org.springframework.ws.samples.airline.domain.hibernate.ServiceClassUserType"/>
+    </class>
+    <class name="Airport" table="AIRPORT">
+        <id name="code" column="CODE">
+            <generator class="assigned"/>
+        </id>
+        <property name="name" column="NAME"/>
+        <property name="city" column="CITY"/>
+    </class>
+    <class name="Ticket" table="TICKET">
+        <id name="id" column="ID">
+            <generator class="identity"/>
+        </id>
+        <property name="issueDate" column="ISSUE_DATE"/>
+        <many-to-one name="customer" column="CUSTOMER_ID" class="Customer"/>
+        <many-to-one name="flight" column="FLIGHT_ID" class="Flight"/>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+    version="2.4">
+	
+	<!--
+	  - Name of the system property that specifies the root directory of this
+	  - web app. Value set by WebAppRootListener and used by Log4jConfigListener.
+	  -->
+	<context-param>
+		<param-name>webAppRootKey</param-name>
+		<param-value>@PROJECT_NAME@</param-value>
+	</context-param>
+	
+	<!--
+	  - Location of the Log4J config file, for initialization and refresh checks.
+	  - Applied by Log4jConfigListener.
+	  -->
+	<context-param>
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>/WEB-INF/classes/log4j.properties</param-value>
+	</context-param>
+
+	<!--
+	  - Location of the Spring bean definition files, for initialization of
+	  - root spring application context
+	  -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			<!-- Context config files go here, space delimited -->
+		</param-value>
+	</context-param>
+
+	<!--
+	  - Configures Log4J for this web app.
+	  - As this context specifies a context-param "log4jConfigLocation", its file path
+	  - is used to load the Log4J configuration, including periodic refresh checks.
+	  -
+	  - Would fall back to default Log4J initialization (non-refreshing) if no special
+	  - context-params are given.
+	  -
+	  - Exports a "web app root key", i.e. a system property that specifies the root
+	  - directory of this web app, for usage in log file paths.
+	  -->
+	<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
+
+	<!--
+	  - Load the spring root application context from the paths define by
+	  - the contextConfigLocation param.
+	  -->	
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	<servlet>
+		<servlet-name>@PROJECT_NAME@</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>@PROJECT_NAME@</servlet-name>
+		<url-pattern>*.htm</url-pattern>
+	</servlet-mapping>
+	
+</web-app>

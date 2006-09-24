@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+
+<project name="spring-oxm" default="dist">
+
+    <!-- you may override default properties for the build by using entries
+        in a build.properties file, or by just adding 'property' elements
+        here, before the following properties files are loaded -->
+    <property file="build.properties"/>
+    <property file="project.properties"/>
+    <property file="${common.build.dir}/build.properties"/>
+    <property file="${common.build.dir}/project.properties"/>
+    <property file="${user.home}/build.properties"/>
+
+    <import file="${common.build.dir}/common-targets.xml"/>
+
+    <!-- import clover support -->
+    <import file="${common.build.dir}/clover-targets.xml"/>
+
+    <target name="gen.main" depends="generate-jaxb-test,generate-xmlbeans-test,generate-castor-test"/>
+
+    <target name="compile.post" depends="jibx-compile"/>
+
+    <target name="generate-jaxb-test">
+        <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask" classpathref="test.classpath"/>
+
+        <xjc target="${target.gen.java.test.dir}" package="${jaxb.package}">
+            <schema dir="${src.test.resources.dir}">
+                <include name="**/*.xsd"/>
+            </schema>
+        </xjc>
+    </target>
+
+    <target name="generate-xmlbeans-test">
+        <java classname="org.apache.xmlbeans.impl.tool.SchemaCompiler" classpathref="test.classpath" fork="true">
+            <arg value="-srconly"/>
+            <arg line="-d ${target.gen.java.test.dir}"/>
+            <arg value="${src.test.resources.dir}"/>
+        </java>
+
+        <copy todir="${target.testclasses.dir}">
+            <fileset dir="${target.gen.java.test.dir}">
+                <include name="**/*.xsb"/>
+                <include name="**/*.class"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="generate-castor-test">
+        <taskdef name="castor-srcgen" classname="org.exolab.castor.tools.ant.taskdefs.CastorSourceGenTask"
+                 classpathref="test.classpath"/>
+        <castor-srcgen file="${src.test.resources.dir}/flight.xsd" todir="${target.gen.java.test.dir}"
+                       package="${castor.package}" types="j2" warnings="false"/>
+    </target>
+
+    <target name="jibx-compile">
+        <!-- JiBX binding compiler task definition -->
+        <taskdef name="bind" classname="org.jibx.binding.ant.CompileTask"
+                 classpathref="test.classpath"/>
+        <!-- Run JiBX binding compiler -->
+        <bind load="true" binding="${src.java.test.dir}/org/springframework/oxm/jibx/binding.xml">
+            <classpathset dir="${target.testclasses.dir}"/>
+        </bind>
+    </target>
+
+
+</project>
