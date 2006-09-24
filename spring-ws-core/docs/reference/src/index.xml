@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding="iso-8859-1"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+        "../lib/docbook-dtd/docbookx.dtd"
+        [
+                <!ENTITY overview           SYSTEM "overview.xml">
+                <!ENTITY oxm                SYSTEM "oxm.xml">
+                <!ENTITY ws                 SYSTEM "ws.xml">
+                ]>
+
+
+<book>
+
+    <bookinfo>
+        <title>Spring Web Services</title>
+        <subtitle>
+            Reference Documentation
+        </subtitle>
+        <releaseinfo>Version 0.9.1</releaseinfo>
+        <pubdate>(Work in progress)</pubdate>
+
+        <authorgroup>
+            <author>
+                <firstname>Arjen</firstname>
+                <surname>Poutsma</surname>
+            </author>
+        </authorgroup>
+
+        <legalnotice>Copies of this document may be made for your own use and for distribution to others, provided that
+            you do not charge any fee for such copies and further provided that each copy contains this Copyright
+            Notice, whether distributed in print or electronically.</legalnotice>
+    </bookinfo>
+
+    <toc/>
+
+    &overview;
+
+    &ws;
+
+    &oxm;
+    
+</book>

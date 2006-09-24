@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+        "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+    <bean id="airlineServiceTarget" class="org.springframework.ws.samples.airline.service.impl.AirlineServiceImpl">
+        <property name="customerDao" ref="customerDao"/>
+        <property name="flightDao" ref="flightDao"/>
+        <property name="ticketDao" ref="ticketDao"/>
+    </bean>
+
+    <bean id="airlineService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="target" ref="airlineServiceTarget"/>
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="bookFlight">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+</beans>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+        "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+    <bean id="abstractDao" abstract="true">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="customerDao" class="org.springframework.ws.samples.airline.dao.hibernate.HibernateCustomerDao"
+          parent="abstractDao"/>
+
+    <bean id="flightDao" class="org.springframework.ws.samples.airline.dao.hibernate.HibernateFlightDao"
+          parent="abstractDao"/>
+
+    <bean id="ticketDao" class="org.springframework.ws.samples.airline.dao.hibernate.HibernateTicketDao"
+          parent="abstractDao"/>
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mappingLocations">
+            <list>
+                <value>classpath:org/springframework/ws/samples/airline/domain/hibernate/airline.hbm.xml</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+                <property name="location"
+                          value="classpath:org/springframework/ws/samples/airline/dao/hibernate/hibernate.properties"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations" value="classpath:org/springframework/ws/samples/airline/dao/jdbc.properties"/>
+    </bean>
+
+</beans>
