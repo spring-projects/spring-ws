@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<project name="spring-ws-airline-sample-saaj-client" default="build">
+    <property name="bin.dir" value="bin"/>
+    <property name="src.dir" value="src"/>
+
+    <target name="build">
+        <mkdir dir="${bin.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${bin.dir}">
+            <classpath>
+                <pathelement location="lib/saaj-api.jar"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="clean">
+        <delete dir="${bin.dir}"/>
+    </target>
+
+    <target name="run" depends="echo"/>
+
+    <target name="echo" depends="build">
+        <java classname="org.springframework.ws.samples.echo.client.saaj.EchoClient" fork="true" failonerror="true">
+            <classpath>
+                <pathelement location="${bin.dir}"/>
+                <pathelement location="lib/saaj-api.jar"/>
+                <pathelement location="lib/saaj-impl.jar"/>
+                <pathelement location="lib/mail.jar"/>
+                <pathelement location="lib/activation.jar"/>
+                <pathelement location="lib/xercesImpl.jar"/>
+            </classpath>
+        </java>
+    </target>
+
+</project>

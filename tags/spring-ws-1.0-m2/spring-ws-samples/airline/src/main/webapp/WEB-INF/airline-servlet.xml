@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+        "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    <bean id="handlerAdapter"
+          class="org.springframework.ws.transport.http.MessageEndpointHandlerAdapter">
+        <description>
+            The handlerAdapter makes sure that Spring's DispatcherServlet
+            supports MessageEndpoints instances as handlers.
+            It uses a SAAJ to construct SoapMessageContexts (and SoapMessages).
+        </description>
+        <property name="messageContextFactory" ref="messageContextFactory"/>
+    </bean>
+
+    <bean id="messageContextFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageContextFactory"/>
+
+    <bean id="handlerMapping"
+          class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <description>
+            All incoming request are mapped to the messageDispatcher defined in applicationContext-ws.xml
+        </description>
+        <property name="defaultHandler" ref="messageDispatcher"/>
+    </bean>
+
+</beans>
