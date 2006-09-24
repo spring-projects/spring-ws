@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>spring-ws</artifactId>
+        <groupId>org.springframework.ws</groupId>
+        <version>1.0-m3-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>spring-ws-samples</artifactId>
+    <packaging>pom</packaging>
+    <name>Spring WS Samples</name>
+    <modules>
+        <module>echo</module>
+        <module>airline</module>
+  </modules>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>mortbay-repo</id>
+            <name>mortbay-repo</name>
+            <url>http://www.mortbay.org/maven2/release</url>
+        </pluginRepository>
+    </pluginRepositories>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>maven-jetty-plugin</artifactId>
+                <version>6.0.0rc0</version>
+                <configuration>
+                    <scanIntervalSeconds>3</scanIntervalSeconds>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <warName>${pom.artifactId}</warName>
+                </configuration>
+            </plugin>
+    </plugins>
+    </build>
+    <dependencies>
+        <!-- Loggin dependencies -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- The following JEE dependencies can be changed from 'runtime' to 'provided' if you're running the samples on a full-fledged J2EE application
+        server. They are required for running the samples on a Web container such as Tomcat -->
+        <dependency>
+            <groupId>javax.xml.soap</groupId>
+            <artifactId>saaj-api</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.messaging.saaj</groupId>
+            <artifactId>saaj-impl</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+</project>
