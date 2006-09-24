@@ -29,11 +29,11 @@
           <link href="http://jdom.org/docs/apidocs/"/>
           <link href="http://www.xom.nu/apidocs/"/> 
           <link href="http://acegisecurity.org/multiproject/acegi-security/apidocs/"/> 
-          <packageset dir="../spring-xml/src/main/java" />
-          <packageset dir="../spring-oxm/src/main/java" />
-          <packageset dir="../spring-oxm-tiger/src/main/java" />
-          <packageset dir="../spring-ws-core/src/main/java" />
-          <packageset dir="../spring-ws-security/src/main/java" />
+          <packageset dir="../xml/src/main/java" />
+          <packageset dir="../oxm/src/main/java" />
+          <packageset dir="../oxm-tiger/src/main/java" />
+          <packageset dir="../core/src/main/java" />
+          <packageset dir="../security/src/main/java" />
           <classpath>
               <fileset dir="${user.home}/.m2/repository">
                   <!-- XML handling apis -->
