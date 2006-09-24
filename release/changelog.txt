@@ -1,0 +1,166 @@
+SPRING WEB SERVICES CHANGELOG
+=============================
+http://www.springframework.org/spring-ws
+
+Changes in version 1.0-M3
+-------------------------
+Package org.springframework.oxm.castor
+* CastorMarshaller uses a XMLClassDescriptorResolver instead of a Mapping (#SWS-54)
+
+Package org.springframework.ws.soap
+* Added setId() method to Attachment, to set the Content-ID of MIME attachments (#SWS-53)
+
+Changes in version 1.0-M2
+-------------------------
+Package org.springframework.oxm
+* all marshallers support StaxSources now (#SWS-36)
+
+Package org.springframework.oxm.xstream
+* added support for registering custom Converters (#SWS-34)
+
+Package org.springframework.ws.context
+* changed contract of MessageContext.getResponse(): now creates a response if none has been created. Required because
+  creating SOAP fault when a response was already set threw an exception.
+* enabling support for direct writing to the TransportResponse
+* MessageContext contains TransportRequest, for transport-based routing
+
+Package org.springframework.ws.endpoint
+* improved endpoint test suite
+* AbstractStaxPayloadEndpoint now use StaxSource corrently (#SWS-38)
+* changed AbstractDom4JPayloadEndpoint to AbstractDom4jPayloadEndpoint (lower case j), to follow Spring naming
+  conventions (e.g. Log4jConfigurer)
+* added getters on AbstractMarshallingPayloadEndpoint 
+
+Package org.springframework.ws.endpoint.interceptor
+* moved interceptors to seperate package
+* made PayloadValidatingInterceptor more customizable (#SWS-43)
+* add schemas property to PayloadValidatingInterceptor (#SWS-44)
+* refactoring most of PayloadValidatingInterceptor into AbstractValidatingInterceptor
+
+Package org.springframework.ws.endpoint.mapping
+* moved EndpointMappings to seperate package
+* removed SOAP-specific roles functionality
+
+Package org.springframework.ws.pox
+* Added Plain Old XML support (#SWS-50)
+
+Package org.springframework.ws.soap
+* improved content-type handling (#SWS-32)
+* moved SOAP 1.1 specfics to separate package and interfaces
+* SoapAction has been removed from SoapMessage, SoapActionEndpointMapping uses TransportRequest header
+
+Package org.springframework.ws.soap.axiom
+* add support for SAAJ 1.3
+* added "payloadCaching" property to read the contents of SOAP bodies produced by the AxiomSoapMessageContextFactory in
+  a non-buffering, read-once fashion.
+* increased performance by keeping object references instead of creating new instances for every call
+
+Package org.springframework.ws.soap.endpoint.interceptor
+* added SoapEnvelopeLoggingInterceptor, which logs the entire SoapEnvelope
+
+Package org.springframework.ws.soap.endpoint.mapping
+* moved SOAP-specific EndpointMappings to seperate package
+* added Role/Actor functionality to DelegatingSoapEndpointMapping
+
+Package org.springframework.ws.soap.saaj
+* add support for SAAJ 1.3
+* increased performance by keeping object references instead of creating new instances for every call
+
+Package org.springframework.ws.soap.saaj.support
+* added SaajUtils.getVersion()
+
+Package org.springframework.ws.soap.soap11
+* moved SOAP 1.1 specifics to separate package and interfaces
+
+Package org.springframework.ws.soap.soap12
+* moved SOAP 1.2 specifics to separate package and interfaces
+
+Package org.springframework.ws.transport
+* added TransportContext, TransportRequest & TransportResponse
+
+Package org.springframework.ws.transport.http
+* removed J2EE 1.4 dependency (#SWS-31)
+* renamed MessageHandlerAdapter to MessageEndpointHandlerAdapter
+
+Package org.springframework.xml
+* moved package to seperate jar file, since oxm now also depends on it
+
+Package org.springframework.xml.namespace
+* moved QNameEditor from spring-ws-core
+* removed prefix dependency from QName
+
+Package org.springframework.xml.validation
+* improved validation schema loading (#SWS-46)
+
+Samples
+* Added Ben Ethridge's Echo sample client
+
+Changes in version 1.0-M1 (12-6-2006)
+-------------------------
+
+Package org.springframework.oxm.jaxb
+* added support for JAXB 2: refactored JaxbMarshaller into AbstractJaxbMarshaller, Jaxb1Marshaller and Jaxb2Marshaller
+* made JaxbMarshallers thread safe
+* added property for a ValidationEventHandler
+
+Package org.springframework.ws.axiom
+* added AXIOM (AXis Object Model) implementation of SoapMessage hierarchy
+
+Package org.springframework.ws.endpoint
+* added AbstractDom4JPayloadEndpoint
+* added AbstractXomPayloadEndpoint
+* renamed AbstractTransformingEndpoint to TransformerObjectSupport
+
+Package org.springframework.ws.soap
+* added SoapFaultDetail and SoapFaultDetailElement
+* improved SoapMessage test suite
+* fixed serious bug which resulted in not-understood mustUnderstand headers being silently ignored
+
+Package org.springframework.ws.soap.endpoint
+* added SimpleSoapExceptionResolver
+
+Package org.springframework.ws.soap.security.xwss
+* added WS-Security implementation based on XWS-Security with integration for Acegi and JAAS
+
+Package org.springframework.xml.transform
+* added StaxSource and StaxResult, which allow for StAX readers/writers to be used as javax.xml.transform.Source and
+  javax.xml.transform.Result
+
+Package org.springframework.xml.xpath
+* added XPath abstraction with support for JAXP 1.3, Jaxen, and Xalan
+
+Samples
+* Added Ingo Siebert's Echo sample
+* Added WS-Security support to Airline sample
+* Added SAAJ clients to Airline sample
+
+
+Changes in version 0.9.1 (6-4-2006)
+-------------------------------------
+
+Overall
+* made overall thread safety fixes
+* added initial reference documentation in HTML and PDF form
+* (lots of minor bugfixes)
+
+Package org.springframework.oxm
+* AbstractMarshallers does proper SAXSource handling
+* exposing JAXB properties on JaxbMarshaller
+* added XmlOptionsFactoryBean for use with XmlBeansMarshaller
+* moved JaxbContextFactoryBean functionality into JaxbMarshaller
+* moved JibxBindingFactoryBean functionality into JibxMarshaller
+
+Package org.springframework.ws.soap
+* made AbstractSoapEndpointMapping ignorant of SOAP version
+* added initial attachment support
+
+Package org.springframework.xml
+* added a JaxpVersion class for easy detection of JAXP version
+* removed JAXP1.3 dependency
+
+
+
+
+Changes in version 0.9 (11-2-2006)
+-----------------------------------
+* First public preview release.
