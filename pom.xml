@@ -67,10 +67,10 @@
     </licenses>
     <scm>
         <connection>
-            https://svn.sourceforge.net/svnroot/springframework/spring-ws/trunk/
+            scm:svn:https://svn.sourceforge.net/svnroot/springframework/spring-ws/trunk/
 		</connection>
         <developerConnection>
-            https://svn.sourceforge.net/svnroot/springframework/spring-ws/trunk/
+            scm:svn:https://svn.sourceforge.net/svnroot/springframework/spring-ws/trunk/
 		</developerConnection>
         <url>http://svn.sourceforge.net/viewcvs.cgi/springframework/spring-projects/trunk/spring-ws/</url>
     </scm>
