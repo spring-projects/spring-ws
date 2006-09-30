@@ -16,19 +16,17 @@
 
 package org.springframework.ws.soap.security.xwss.callback;
 
+import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
+import com.sun.xml.wss.impl.callback.TimestampValidationCallback;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.Assert;
+
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.UnsupportedCallbackException;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.UnsupportedCallbackException;
-
-import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
-import com.sun.xml.wss.impl.callback.TimestampValidationCallback;
-
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.Assert;
 
 /**
  * Simple callback handler that validates passwords agains a in-memory <code>Properties</code> object. Password
@@ -60,21 +58,17 @@ public class SimplePasswordValidationCallbackHandler extends AbstractCallbackHan
             PasswordValidationCallback passwordCallback = (PasswordValidationCallback) callback;
             if (passwordCallback.getRequest() instanceof PasswordValidationCallback.PlainTextPasswordRequest) {
                 passwordCallback.setValidator(new SimplePlainTextPasswordValidator());
-            }
-            else if (passwordCallback.getRequest() instanceof PasswordValidationCallback.DigestPasswordRequest) {
+            } else if (passwordCallback.getRequest() instanceof PasswordValidationCallback.DigestPasswordRequest) {
                 PasswordValidationCallback.DigestPasswordRequest digestPasswordRequest =
                         (PasswordValidationCallback.DigestPasswordRequest) passwordCallback.getRequest();
                 String password = users.getProperty(digestPasswordRequest.getUsername());
                 digestPasswordRequest.setPassword(password);
                 passwordCallback.setValidator(new PasswordValidationCallback.DigestPasswordValidator());
             }
-            passwordCallback.setValidator(new SimplePlainTextPasswordValidator());
-        }
-        else if (callback instanceof TimestampValidationCallback) {
+        } else if (callback instanceof TimestampValidationCallback) {
             TimestampValidationCallback timestampCallback = (TimestampValidationCallback) callback;
             timestampCallback.setValidator(new DefaultTimestampValidator());
-        }
-        else {
+        } else {
             throw new UnsupportedCallbackException(callback);
         }
     }

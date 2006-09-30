@@ -16,10 +16,10 @@
 
 package org.springframework.ws.soap.security.xwss.callback;
 
-import java.util.Properties;
-
 import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
 import junit.framework.TestCase;
+
+import java.util.Properties;
 
 public class SimplePasswordValidationCallbackHandlerTest extends TestCase {
 
@@ -69,7 +69,7 @@ public class SimplePasswordValidationCallbackHandlerTest extends TestCase {
         PasswordValidationCallback callback = new PasswordValidationCallback(request);
         handler.handleInternal(callback);
         boolean authenticated = callback.getResult();
-        assertFalse("Authenticated", authenticated);
+        assertTrue("Authenticated", authenticated);
 
     }
 
