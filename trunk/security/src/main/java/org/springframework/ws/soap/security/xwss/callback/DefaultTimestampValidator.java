@@ -36,13 +36,13 @@ public class DefaultTimestampValidator implements TimestampValidationCallback.Ti
             throws TimestampValidationCallback.TimestampValidationException {
         if (request instanceof TimestampValidationCallback.UTCTimestampRequest) {
             TimestampValidationCallback.UTCTimestampRequest utcRequest =
-                    ((TimestampValidationCallback.UTCTimestampRequest) request);
+                    (TimestampValidationCallback.UTCTimestampRequest) request;
             Date created = parseDate(utcRequest.getCreated());
-            Date expired = parseDate(utcRequest.getExpired());
 
             validateCreationTime(created, utcRequest.getMaxClockSkew(), utcRequest.getTimestampFreshnessLimit());
 
-            if (expired != null) {
+            if (utcRequest.getExpired() != null) {
+                Date expired = parseDate(utcRequest.getExpired());
                 validateExpirationTime(expired, utcRequest.getMaxClockSkew());
             }
         }
