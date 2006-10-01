@@ -72,7 +72,7 @@
         <developerConnection>
             scm:svn:https://svn.sourceforge.net/svnroot/springframework/spring-ws/trunk/
 		</developerConnection>
-        <url>http://svn.sourceforge.net/viewcvs.cgi/springframework/spring-projects/trunk/spring-ws/</url>
+        <url>http://svn.sourceforge.net/viewvc/springframework/spring-ws/trunk/</url>
     </scm>
     <modules>
         <module>xml</module>
