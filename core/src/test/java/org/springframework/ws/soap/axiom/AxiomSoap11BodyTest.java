@@ -32,4 +32,8 @@ public class AxiomSoap11BodyTest extends AbstractSoap11BodyTestCase {
     public void testAddFaultWithDetail() throws Exception {
         // Overriden because of http://issues.apache.org/jira/browse/WSCOMMONS-38
     }
+
+    public void testAddFaultWithDetailResult() throws Exception {
+        // Overriden because of http://issues.apache.org/jira/browse/WSCOMMONS-38
+    }
 }

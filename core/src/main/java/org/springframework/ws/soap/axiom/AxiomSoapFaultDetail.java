@@ -18,7 +18,9 @@ package org.springframework.ws.soap.axiom;
 
 import java.util.Iterator;
 import javax.xml.namespace.QName;
+import javax.xml.transform.Result;
 import javax.xml.transform.Source;
+import javax.xml.transform.sax.SAXResult;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
@@ -73,7 +75,10 @@ class AxiomSoapFaultDetail implements SoapFaultDetail {
         catch (OMException ex) {
             throw new AxiomSoapFaultException(ex);
         }
+    }
 
+    public Result getResult() {
+        return new SAXResult(new AxiomContentHandler(axiomFaultDetail));
     }
 
     private class AxiomSoapFaultDetailElementIterator implements Iterator {
