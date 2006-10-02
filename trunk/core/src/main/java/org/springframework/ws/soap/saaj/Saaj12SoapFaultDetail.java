@@ -23,7 +23,9 @@ import javax.xml.soap.DetailEntry;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
+import javax.xml.transform.Result;
 import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
 import org.springframework.util.Assert;
@@ -51,6 +53,10 @@ class Saaj12SoapFaultDetail implements SoapFaultDetail {
 
     public Source getSource() {
         return new DOMSource(saajDetail);
+    }
+
+    public Result getResult() {
+        return new DOMResult(saajDetail);
     }
 
     public SoapFaultDetailElement addFaultDetailElement(QName name) {

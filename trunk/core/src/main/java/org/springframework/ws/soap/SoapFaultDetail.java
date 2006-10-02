@@ -17,8 +17,8 @@
 package org.springframework.ws.soap;
 
 import java.util.Iterator;
-
 import javax.xml.namespace.QName;
+import javax.xml.transform.Result;
 
 /**
  * Represents the <code>detail</code> element in a SOAP fault. A detail contains <code>SoapFaultDetailElement</code>s,
@@ -36,6 +36,15 @@ public interface SoapFaultDetail extends SoapElement {
      * @return the created <code>SoapFaultDetailElement</code>
      */
     SoapFaultDetailElement addFaultDetailElement(QName name);
+
+    /**
+     * Returns the <code>Source</code> of this element. This result does not include the element itself.
+     * <p/>
+     * The result can be used for marshalling.
+     *
+     * @return the <code>Result</code> of this element
+     */
+    Result getResult();
 
     /**
      * Gets an iterator over all of the <code>SoapFaultDetailElement</code>s in this detail.

@@ -50,6 +50,10 @@ class Saaj13SoapFaultDetail implements SoapFaultDetail {
         return new DOMSource(saajDetail);
     }
 
+    public Result getResult() {
+        return new DOMResult(saajDetail);
+    }
+
     public SoapFaultDetailElement addFaultDetailElement(QName name) {
         try {
             DetailEntry saajDetailEntry = saajDetail.addDetailEntry(name);
