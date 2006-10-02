@@ -40,10 +40,10 @@ public class XmlBeansUnmarshallerTest extends AbstractUnmarshallerTestCase {
 
     public void testValidate() throws Exception {
         ((XmlBeansMarshaller) unmarshaller).setValidating(true);
-        String invalidInput = "<tns:flights xmlns:tns=\"http://samples.springframework.org/flight\">" +
-                "<tns:flight><tns:number>abc</tns:number></tns:flight></tns:flights>";
 
         try {
+            String invalidInput = "<tns:flights xmlns:tns=\"http://samples.springframework.org/flight\">" +
+                    "<tns:flight><tns:number>abc</tns:number></tns:flight></tns:flights>";
             unmarshaller.unmarshal(new StringSource(invalidInput));
             fail("Expected a XmlBeansValidationFailureException");
         }
