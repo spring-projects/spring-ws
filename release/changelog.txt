@@ -9,6 +9,11 @@ Package org.springframework.oxm.castor
 
 Package org.springframework.ws.soap
 * Added setId() method to Attachment, to set the Content-ID of MIME attachments (#SWS-53)
+* Added getResult() to SoapFaultDetail (#SWS-57)
+
+Package org.springframework.ws.soap.security.xwss.callback
+* DefaultTimestampValidator no longer requires Expired in request (#SWS-55)
+* Digest passwords are handled correctly in the SimplePasswordValidationCallbackHandler (#SWS-56)
 
 Changes in version 1.0-M2
 -------------------------
