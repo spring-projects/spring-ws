@@ -8,7 +8,6 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamReader;
@@ -20,6 +19,11 @@ import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.XmlSaxHandler;
 import org.apache.xmlbeans.XmlValidationError;
+import org.springframework.oxm.AbstractMarshaller;
+import org.springframework.oxm.XmlMappingException;
+import org.springframework.xml.stream.StaxEventContentHandler;
+import org.springframework.xml.stream.StaxEventXmlReader;
+import org.springframework.xml.stream.StaxStreamContentHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -30,12 +34,6 @@ import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
-
-import org.springframework.oxm.AbstractMarshaller;
-import org.springframework.oxm.XmlMappingException;
-import org.springframework.xml.stream.StaxEventContentHandler;
-import org.springframework.xml.stream.StaxEventXmlReader;
-import org.springframework.xml.stream.StaxStreamContentHandler;
 
 /**
  * Implementation of the <code>Marshaller</code> interface for XMLBeans. Further options can be set by setting the
@@ -57,15 +55,6 @@ import org.springframework.xml.stream.StaxStreamContentHandler;
 public class XmlBeansMarshaller extends AbstractMarshaller {
 
     private XmlOptions xmlOptions;
-
-    private boolean validating = false;
-
-    /**
-     * Set if this marshaller should validate the incoming document. Default is <code>false</code>.
-     */
-    public void setValidating(boolean validating) {
-        this.validating = validating;
-    }
 
     /**
      * Sets the <code>XmlOptions</code>.
@@ -222,9 +211,9 @@ public class XmlBeansMarshaller extends AbstractMarshaller {
      *          if the given object is not valid
      */
     public void validate(XmlObject object) throws XmlBeansValidationFailureException {
-        if (validating && object != null) {
+        if (isValidating() && object != null) {
             // create a temporary xmlOptions just for validation
-            XmlOptions validateOptions = (xmlOptions != null) ? xmlOptions : new XmlOptions();
+            XmlOptions validateOptions = xmlOptions != null ? xmlOptions : new XmlOptions();
             List errorsList = new ArrayList();
             validateOptions.setErrorListener(errorsList);
             if (!object.validate(validateOptions)) {

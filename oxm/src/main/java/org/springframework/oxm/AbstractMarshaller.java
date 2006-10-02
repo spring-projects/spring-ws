@@ -85,6 +85,13 @@ public abstract class AbstractMarshaller implements Marshaller, Unmarshaller {
     }
 
     /**
+     * Returns whether the XML parser should validate the document. Default is <code>false</code>.
+     */
+    public boolean isValidating() {
+        return validating;
+    }
+
+    /**
      * Marshals the object graph with the given root into the provided <code>javax.xml.transform.Result</code>.
      * <p/>
      * This implementation inspects the given result, and calls <code>marshalDomResult</code>,
