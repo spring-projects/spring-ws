@@ -15,14 +15,15 @@
  */
 package org.springframework.oxm;
 
-import org.springframework.core.NestedRuntimeException;
+import org.springframework.xml.XmlException;
 
 /**
  * Root of the hierarchy of Object XML Mapping exceptions.
  *
  * @author Arjen Poutsma
  */
-public abstract class XmlMappingException extends NestedRuntimeException {
+public abstract class XmlMappingException extends XmlException {
+
     /**
      * Constructor for <code>XmlMappingException</code>.
      */
