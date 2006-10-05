@@ -111,7 +111,7 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller {
      * Sets the schema resource to use for validation.
      */
     public void setSchema(Resource schemaResource) {
-        this.schemaResources = new Resource[]{schemaResource};
+        schemaResources = new Resource[]{schemaResource};
     }
 
     /**
