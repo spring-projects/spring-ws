@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+<project name="spring-ws-airline-sample-jax-ws-client" default="build">
+    <property name="bin.dir" value="bin"/>
+    <property name="src.dir" value="src"/>
+    <property name="lib.dir" value="lib"/>
+
+    <target name="init">
+        <mkdir dir="${bin.dir}"/>
+    </target>
+
+    <target name="generate" depends="init">
+        <taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport">
+            <classpath>
+                <pathelement location="${lib.dir}/activation.jar"/>
+                <pathelement location="${lib.dir}/jaxb-api.jar"/>
+                <pathelement location="${lib.dir}/jaxb-impl.jar"/>
+                <pathelement location="${lib.dir}/jaxb-xjc.jar"/>
+                <pathelement location="${lib.dir}/jaxws-api.jar"/>
+                <pathelement location="${lib.dir}/jaxws-rt.jar"/>
+                <pathelement location="${lib.dir}/jaxws-tools.jar"/>
+                <pathelement location="${lib.dir}/jsr181-api.jar"/>
+            </classpath>
+        </taskdef>
+        <wsimport wsdl="http://localhost:8080/airline/airline.wsdl" destdir="${bin.dir}" sourcedestdir="${src.dir}"
+                  package="org.springframework.ws.samples.airline.client.jws"/>
+    </target>
+
+    <target name="build" depends="init">
+        <javac srcdir="${src.dir}" destdir="${bin.dir}" debug="true">
+            <classpath>
+                <pathelement location="${lib.dir}/activation.jar"/>
+                <pathelement location="${lib.dir}/jaxb-api.jar"/>
+                <pathelement location="${lib.dir}/jaxb-impl.jar"/>
+                <pathelement location="${lib.dir}/jaxws-api.jar"/>
+                <pathelement location="${lib.dir}/jaxws-rt.jar"/>
+                <pathelement location="${lib.dir}/jsr181-api.jar"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="clean">
+        <delete dir="${bin.dir}"/>
+    </target>
+
+    <target name="run" depends="build">
+        <java classname="org.springframework.ws.samples.airline.client.jws.Main" fork="true" failonerror="true">
+            <classpath>
+                <pathelement location="${bin.dir}"/>
+                <pathelement location="${lib.dir}/activation.jar"/>
+                <pathelement location="${lib.dir}/jaxb-api.jar"/>
+                <pathelement location="${lib.dir}/jaxb-impl.jar"/>
+                <pathelement location="${lib.dir}/jaxws-api.jar"/>
+                <pathelement location="${lib.dir}/jaxws-rt.jar"/>
+                <pathelement location="${lib.dir}/jsr181-api.jar"/>
+                <pathelement location="${lib.dir}/resolver.jar"/>
+                <pathelement location="${lib.dir}/jsr173_api.jar"/>
+                <pathelement location="${lib.dir}/saaj-api.jar"/>
+                <pathelement location="${lib.dir}/saaj-impl.jar"/>
+                <pathelement location="${lib.dir}/sjsxp.jar"/>
+            </classpath>
+        </java>
+    </target>
+</project>
