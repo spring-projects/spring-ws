@@ -42,6 +42,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.AbstractMarshaller;
 import org.springframework.oxm.XmlMappingException;
+import org.springframework.xml.dom.DomContentHandler;
 import org.springframework.xml.stream.StaxEventContentHandler;
 import org.springframework.xml.stream.StaxEventXmlReader;
 import org.springframework.xml.stream.StaxStreamContentHandler;
@@ -202,8 +203,8 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
     }
 
     protected void marshalDomNode(Object graph, Node node) throws XmlMappingException {
-        Marshaller marshaller = new Marshaller(node);
-        marshal(graph, marshaller);
+        ContentHandler contentHandler = new DomContentHandler(node);
+        marshalSaxHandlers(graph, contentHandler, null);
     }
 
     protected void marshalXmlEventWriter(Object graph, XMLEventWriter eventWriter) throws XmlMappingException {
