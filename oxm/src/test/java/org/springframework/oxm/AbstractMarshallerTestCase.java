@@ -22,16 +22,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.springframework.xml.transform.StaxResult;
-import org.springframework.xml.transform.StringResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
@@ -72,12 +68,7 @@ public abstract class AbstractMarshallerTestCase extends XMLTestCase {
         flightElement.appendChild(numberElement);
         Text text = expected.createTextNode("42");
         numberElement.appendChild(text);
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        StringResult stringResult = new StringResult();
-        transformer.transform(new DOMSource(result), stringResult);
-        StringResult stringExpected = new StringResult();
-        transformer.transform(new DOMSource(expected), stringExpected);
-        assertXMLEqual("Marshaller writes invalid DOMResult", stringExpected.toString(), stringResult.toString());
+        assertXMLEqual("Marshaller writes invalid DOMResult", expected, result);
     }
 
     public void testMarshalStreamResultWriter() throws Exception {
@@ -91,8 +82,7 @@ public abstract class AbstractMarshallerTestCase extends XMLTestCase {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         StreamResult result = new StreamResult(os);
         marshaller.marshal(flights, result);
-        assertXMLEqual("Marshaller writes invalid StreamResult",
-                EXPECTED_STRING,
+        assertXMLEqual("Marshaller writes invalid StreamResult", EXPECTED_STRING,
                 new String(os.toByteArray(), "UTF-8"));
     }
 
