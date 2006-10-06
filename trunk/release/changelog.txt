@@ -16,6 +16,9 @@ Package org.springframework.ws.soap.security.xwss.callback
 * DefaultTimestampValidator no longer requires Expired in request (#SWS-55)
 * Digest passwords are handled correctly in the SimplePasswordValidationCallbackHandler (#SWS-56)
 
+Samples
+* Added JAX-WS client for Airline sample
+
 Changes in version 1.0-M2
 -------------------------
 Package org.springframework.oxm
