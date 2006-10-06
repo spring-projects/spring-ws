@@ -6,6 +6,7 @@ Changes in version 1.0-M3
 -------------------------
 Package org.springframework.oxm.castor
 * CastorMarshaller uses a XMLClassDescriptorResolver instead of a Mapping (#SWS-54)
+* CastorMarshaller marshals to DOM trees correctly (#SWS-59)
 
 Package org.springframework.ws.soap
 * Added setId() method to Attachment, to set the Content-ID of MIME attachments (#SWS-53)
