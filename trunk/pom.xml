@@ -79,7 +79,6 @@
         <module>oxm</module>
         <module>core</module>
         <module>security</module>
-        <module>release</module>
   </modules>
     <profiles>
         <profile>
@@ -92,10 +91,15 @@
             </modules>
         </profile>
         <profile>
-            <id>full</id>
+            <id>release</id>
+            <activation>
+                <property>
+                    <name>enableCiProfile</name>
+                    <value>true</value>
+                </property>
+            </activation>
             <modules>
-                <module>spring-ws-samples</module>
-                <module>doc</module>
+                <module>release</module>
             </modules>
         </profile>
     </profiles>
