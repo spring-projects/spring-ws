@@ -117,11 +117,6 @@
         </repository>
     </repositories>
     <build>
-        <testResources>
-            <testResource>
-                <directory>src/etc/test-resources</directory>
-            </testResource>
-        </testResources>
         <pluginManagement>
             <plugins>
                 <plugin>
