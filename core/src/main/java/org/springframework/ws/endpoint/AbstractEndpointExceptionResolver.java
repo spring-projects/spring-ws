@@ -20,7 +20,6 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.ws.EndpointExceptionResolver;
 import org.springframework.ws.context.MessageContext;
 
@@ -52,10 +51,10 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
      * Default implementation. Checks whether the given endpoint is in the set of mapped endpoints. Calls
      * <code>resolveExceptionInternal</code>.
      *
-     * @see #resolveExceptionInternal(org.springframework.ws.context.MessageContext, Object, Exception)
+     * @see #resolveExceptionInternal(org.springframework.ws.context.MessageContext,Object,Exception)
      */
     public final boolean resolveException(MessageContext messageContext, Object endpoint, Exception ex) {
-        if (this.mappedEndpoints != null && !this.mappedEndpoints.contains(endpoint)) {
+        if (mappedEndpoints != null && !mappedEndpoints.contains(endpoint)) {
             return false;
         }
         return resolveExceptionInternal(messageContext, endpoint, ex);
@@ -68,7 +67,7 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
      * @param endpoint       the executed endpoint, or null if none chosen at the time of the exception
      * @param ex             the exception that got thrown during endpoint execution
      * @return <code>true</code> if resolved; <code>false</code> otherwise
-     * @see #resolveException(org.springframework.ws.context.MessageContext, Object, Exception)
+     * @see #resolveException(org.springframework.ws.context.MessageContext,Object,Exception)
      */
     protected abstract boolean resolveExceptionInternal(MessageContext messageContext, Object endpoint, Exception ex);
 
