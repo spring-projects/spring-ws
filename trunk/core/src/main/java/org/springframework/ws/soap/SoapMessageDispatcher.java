@@ -17,6 +17,7 @@
 package org.springframework.ws.soap;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -29,6 +30,7 @@ import org.springframework.ws.EndpointInvocationChain;
 import org.springframework.ws.MessageDispatcher;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.context.SoapMessageContext;
+import org.springframework.ws.soap.endpoint.SimpleSoapExceptionResolver;
 import org.springframework.ws.soap.soap12.Soap12Header;
 
 /**
@@ -66,6 +68,22 @@ public class SoapMessageDispatcher extends MessageDispatcher {
      */
     public void setMustUnderstandFaultLocale(Locale mustUnderstandFaultLocale) {
         this.mustUnderstandFaultLocale = mustUnderstandFaultLocale;
+    }
+
+    /**
+     * Initialize the default implementations for the dispatcher's strategies: <code>MessageEndpointAdapter</code> and
+     * <code>PayloadEndpointAdapter</code> as endpoint adapters, and a <code>SimpleSoapExceptionResolver</code> as
+     * exception resolver.
+     *
+     * @see #setEndpointAdapters(java.util.List)
+     * @see #setEndpointExceptionResolvers(java.util.List)
+     * @see org.springframework.ws.endpoint.MessageEndpointAdapter
+     * @see org.springframework.ws.endpoint.PayloadEndpointAdapter
+     * @see org.springframework.ws.soap.endpoint.SimpleSoapExceptionResolver
+     */
+    protected void initDefaultStrategies() {
+        super.initDefaultStrategies();
+        setEndpointExceptionResolvers(Collections.singletonList(new SimpleSoapExceptionResolver()));
     }
 
     /**
@@ -183,7 +201,7 @@ public class SoapMessageDispatcher extends MessageDispatcher {
      * @param interceptorIndex index of last interceptor that was called
      * @param messageContext   the message context, whose request and response are filled
      * @see org.springframework.ws.EndpointInterceptor#handleResponse(org.springframework.ws.context.MessageContext,
-     *      Object)
+     *Object)
      */
     protected void triggerHandleResponse(EndpointInvocationChain mappedEndpoint,
                                          int interceptorIndex,
