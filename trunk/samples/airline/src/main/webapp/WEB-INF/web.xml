@@ -37,10 +37,10 @@
         <servlet-name>airline</servlet-name>
         <url-pattern>/Airline</url-pattern>
     </servlet-mapping>
-    <mime-mapping>
-        <extension>wsdl</extension>
-        <mime-type>text/xml</mime-type>
-    </mime-mapping>
+    <servlet-mapping>
+        <servlet-name>airline</servlet-name>
+        <url-pattern>*.wsdl</url-pattern>
+    </servlet-mapping>
     <mime-mapping>
         <extension>xsd</extension>
         <mime-type>text/xml</mime-type>

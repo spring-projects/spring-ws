@@ -71,14 +71,11 @@ public class SoapMessageDispatcher extends MessageDispatcher {
     }
 
     /**
-     * Initialize the default implementations for the dispatcher's strategies: <code>MessageEndpointAdapter</code> and
-     * <code>PayloadEndpointAdapter</code> as endpoint adapters, and a <code>SimpleSoapExceptionResolver</code> as
-     * exception resolver.
+     * Initialize the default implementations for the dispatcher's strategies, in addition to the strategies defined in
+     * the base class: a <code>SimpleSoapExceptionResolver</code> as exception resolver.
      *
-     * @see #setEndpointAdapters(java.util.List)
+     * @see org.springframework.ws.MessageDispatcher#initDefaultStrategies()
      * @see #setEndpointExceptionResolvers(java.util.List)
-     * @see org.springframework.ws.endpoint.MessageEndpointAdapter
-     * @see org.springframework.ws.endpoint.PayloadEndpointAdapter
      * @see org.springframework.ws.soap.endpoint.SimpleSoapExceptionResolver
      */
     protected void initDefaultStrategies() {

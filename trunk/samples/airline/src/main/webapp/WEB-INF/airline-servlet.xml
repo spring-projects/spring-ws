@@ -14,12 +14,25 @@
 
     <bean id="messageContextFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageContextFactory"/>
 
+    <bean id="wsdlDefinitionHandlerAdapter" class="org.springframework.ws.transport.http.WsdlDefinitionHandlerAdapter">
+        <description>
+            This handler adapter adds support for WsdlDefinitions to Spring's DispatcherServlet. It transforms location
+            attributes in the original WSDL to reflect the URL of the incoming HTTP request.
+        </description>
+        <property name="transformLocations" value="true"/>
+    </bean>
+
     <bean id="handlerMapping"
           class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
         <description>
             All incoming request are mapped to the messageDispatcher defined in applicationContext-ws.xml
         </description>
         <property name="defaultHandler" ref="messageDispatcher"/>
+        <property name="mappings">
+            <props>
+                <prop key="airline.wsdl">airlineWsdl</prop>
+            </props>
+        </property>
     </bean>
 
 </beans>

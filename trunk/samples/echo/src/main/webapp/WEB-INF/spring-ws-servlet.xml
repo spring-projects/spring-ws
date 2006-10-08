@@ -1,35 +1,45 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
-        "http://www.springframework.org/dtd/spring-beans.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-    <bean id="messageEndpointHandlerAdapter"
-          class="org.springframework.ws.transport.http.MessageEndpointHandlerAdapter">
+    <bean id="payloadMapping" class="org.springframework.ws.endpoint.mapping.PayloadRootQNameEndpointMapping">
         <description>
-            This handler adapter makes sure that Spring's DispatcherServlet supports MessageEndpoint instances as
-            handlers. It uses a SAAJ to construct SoapMessageContexts (and SoapMessages).
+            This endpoint mapping uses the qualified name of the payload (body contents) to determine the endpoint for
+            an incoming message. Every message is passed to the default endpoint. Additionally, messages are logged
+            using the logging interceptor.
         </description>
-        <property name="messageContextFactory">
-            <bean class="org.springframework.ws.soap.saaj.SaajSoapMessageContextFactory"/>
+        <property name="defaultEndpoint" ref="echoEndpoint"/>
+        <property name="interceptors">
+            <list>
+                <ref local="validatingInterceptor"/>
+                <ref local="loggingInterceptor"/>
+            </list>
         </property>
     </bean>
 
-    <bean id="wsdlDefinitionHandlerAdapter" class="org.springframework.ws.transport.http.WsdlDefinitionHandlerAdapter">
+    <bean id="validatingInterceptor" class="org.springframework.ws.endpoint.interceptor.PayloadValidatingInterceptor">
         <description>
-            This handler adapter adds support for WsdlDefinitions to Spring's DispatcherServlet. It transforms location
-            attributes in the original WSDL to reflect the URL of the incoming HTTP request.
+            This interceptor validates both incoming and outgoing message contents according to the 'echo.xsd' XML
+            Schema file.
         </description>
-        <property name="transformLocations" value="true"/>
+        <property name="schema" value="/echo.xsd"/>
+        <property name="validateRequest" value="true"/>
+        <property name="validateResponse" value="true"/>
     </bean>
 
-    <bean id="handlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+    <bean id="loggingInterceptor" class="org.springframework.ws.endpoint.interceptor.PayloadLoggingInterceptor">
         <description>
-            All incoming request are mapped to the messageDispatcher defined in applicationContext-ws.xml
+            This interceptor logs the message payload.
         </description>
-        <property name="defaultHandler" ref="messageDispatcher"/>
-        <property name="mappings">
-            <props>
-                <prop key="/services/*">messageDispatcher</prop>
-                <prop key="echo.wsdl">echoWsdl</prop>
-            </props>
-        </property>
     </bean>
+
+    <bean id="echoEndpoint" class="org.springframework.ws.samples.echo.ws.EchoEndpoint">
+        <description>
+            This endpoint handles echo requests.
+        </description>
+        <property name="echoService" ref="echoService"/>
+    </bean>
+
+    <!-- "Business" (POJO) services -->
+    <bean id="echoService" class="org.springframework.ws.samples.echo.service.impl.EchoServiceImpl"/>
+
 </beans>
