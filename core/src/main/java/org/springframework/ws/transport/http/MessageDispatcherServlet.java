@@ -36,10 +36,11 @@ import org.springframework.ws.context.MessageContextFactory;
  * <code>MessageEndpointHandlerAdapter</code> and a <code>MessageDispatcher</code>.
  * <p/>
  * This servlet automatically detects <code>EndpointAdapter</code>s, <code>EndpointMapping</code>s, and
- * <code>EndpointExceptionResolver</code>s, by name or by type. For instance, when the
- * <code>detectAllEndpointAdapters</code> propery is <code>true</code> (the default), all endpoint adapters defined in
- * the application context are registered with the message dispatcher. When it is set to <code>false</code>, this
- * servlet tries to find a bean with the "endpointAdapter" bean name in the context.
+ * <code>EndpointExceptionResolver</code>s, by type (when the corresponding detectAll* property is enabled) or by type
+ * (when the property is disabled). For instance, when the <code>detectAllEndpointAdapters</code> propery is
+ * <code>true</code> (the default), all endpoint adapters defined in the web application context are registered with the
+ * message dispatcher. When it is set to <code>false</code>, this servlet tries to find a bean with the
+ * "endpointAdapter" bean name in the context.
  *
  * @author Arjen Poutsma
  * @see org.springframework.web.servlet.DispatcherServlet
