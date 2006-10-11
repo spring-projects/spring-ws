@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import javax.mail.MessagingException;
 import javax.xml.stream.XMLStreamException;
+import javax.activation.DataHandler;
 
 import org.apache.axiom.attachments.Attachments;
 import org.apache.axiom.attachments.Part;
@@ -36,6 +37,7 @@ import org.springframework.core.io.InputStreamSource;
 import org.springframework.ws.soap.AbstractSoapMessage;
 import org.springframework.ws.soap.Attachment;
 import org.springframework.ws.soap.SoapEnvelope;
+import org.springframework.util.Assert;
 
 /**
  * AXIOM-specific implementation of the <code>SoapMessage</code> interface. Accessed via the
@@ -107,8 +109,8 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
     }
 
     public Attachment getAttachment(String contentId) {
-        Part part = attachments.getPart(contentId);
-        return part != null ? new AxiomAttachment(part) : null;
+        DataHandler dataHandler = attachments.getDataHandler(contentId);
+        return dataHandler != null ? new AxiomAttachment(contentId, dataHandler) : null;
     }
 
     public Iterator getAttachments() {
@@ -151,19 +153,19 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
      */
     private static class AxiomAttachment implements Attachment {
 
-        private final Part part;
+        private final DataHandler dataHandler;
 
-        private AxiomAttachment(Part part) {
-            this.part = part;
+        private final String contentId;
+
+        public AxiomAttachment(String contentId, DataHandler dataHandler) {
+            Assert.notNull(contentId, "contentId must not be null");
+            Assert.notNull(dataHandler, "dataHandler must not be null");
+            this.contentId = contentId;
+            this.dataHandler = dataHandler;
         }
 
         public String getId() {
-            try {
-                return part.getContentID();
-            }
-            catch (MessagingException ex) {
-                throw new AxiomAttachmentException(ex);
-            }
+            return contentId;
         }
 
         public void setId(String id) {
@@ -171,30 +173,15 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         }
 
         public String getContentType() {
-            try {
-                return part.getContentType();
-            }
-            catch (MessagingException ex) {
-                throw new AxiomAttachmentException(ex);
-            }
+            return dataHandler.getContentType();
         }
 
         public InputStream getInputStream() throws IOException {
-            try {
-                return part.getInputStream();
-            }
-            catch (MessagingException ex) {
-                throw new AxiomAttachmentException(ex);
-            }
+            return dataHandler.getInputStream();
         }
 
         public long getSize() {
-            try {
-                return part.getSize();
-            }
-            catch (MessagingException ex) {
-                throw new AxiomAttachmentException(ex);
-            }
+            throw new UnsupportedOperationException("Axiom does not support setting the Content-ID of attachments.");
         }
     }
 
@@ -203,7 +190,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         private final Iterator iterator;
 
         private AxiomAttachmentIterator() {
-            iterator = Arrays.asList(attachments.getAllContentIDs()).iterator();
+            iterator = attachments.getContentIDSet().iterator();
         }
 
         public boolean hasNext() {
@@ -212,8 +199,8 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
 
         public Object next() {
             String contentId = (String) iterator.next();
-            Part part = attachments.getPart(contentId);
-            return part != null ? new AxiomAttachment(part) : null;
+            DataHandler dataHandler = attachments.getDataHandler(contentId);
+            return new AxiomAttachment(contentId, dataHandler);
         }
 
         public void remove() {
