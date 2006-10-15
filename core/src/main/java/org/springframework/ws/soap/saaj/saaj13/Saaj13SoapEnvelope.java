@@ -16,19 +16,16 @@
 
 package org.springframework.ws.soap.saaj.saaj13;
 
-import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 
-import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapBody;
+import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.saaj.SaajSoapBodyException;
-import org.springframework.ws.soap.saaj.SaajSoapEnvelope;
-import org.springframework.ws.soap.saaj.SaajSoapEnvelopeException;
 import org.springframework.ws.soap.saaj.SaajSoapHeaderException;
 
 /**
@@ -37,39 +34,50 @@ import org.springframework.ws.soap.saaj.SaajSoapHeaderException;
  *
  * @author Arjen Poutsma
  */
-public class Saaj13SoapEnvelope extends SaajSoapEnvelope {
-
-    private Saaj13SoapHeader header;
+class Saaj13SoapEnvelope extends Saaj13SoapElement implements SoapEnvelope {
 
     private Saaj13SoapBody body;
 
+    private Saaj13SoapHeader header;
+
     public Saaj13SoapEnvelope(SOAPEnvelope saajEnvelope) {
         super(saajEnvelope);
-        Assert.notNull(saajEnvelope, "No saajEnvelope given");
     }
 
-    public QName getName() {
-        return getSaajEnvelope().getElementQName();
-    }
-
-    public SoapHeader getHeader() {
-        if (header == null) {
+    public final SoapBody getBody() {
+        if (body == null) {
             try {
-                if (getSaajEnvelope().getHeader() == null) {
-                    return null;
+                SOAPBody saajBody = getSaajEnvelope().getBody();
+                Saaj13SoapBody result;
+                if (isSoap11()) {
+                    result = new Saaj13Soap11Body(saajBody);
                 }
                 else {
-                    SOAPHeader saajHeader = getSaajEnvelope().getHeader();
-                    String namespaceURI = getSaajEnvelope().getElementQName().getNamespaceURI();
-                    if (SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE.equals(namespaceURI)) {
+                    result = new Saaj13Soap12Body(saajBody);
+                }
+                body = result;
+            }
+            catch (SOAPException ex) {
+                throw new SaajSoapBodyException(ex);
+            }
+        }
+        return body;
+    }
+
+    public final SoapHeader getHeader() {
+        if (header == null) {
+            try {
+                SOAPHeader saajHeader = getSaajEnvelope().getHeader();
+                if (saajHeader != null) {
+                    if (isSoap11()) {
                         header = new Saaj13SoapHeader(saajHeader);
                     }
-                    else if (SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE.equals(namespaceURI)) {
+                    else {
                         header = new Saaj13Soap12Header(saajHeader);
                     }
-                    else {
-                        throw new SaajSoapEnvelopeException("Unknown SOAP namespace \"" + namespaceURI + "\"");
-                    }
+                }
+                else {
+                    header = null;
                 }
             }
             catch (SOAPException ex) {
@@ -79,27 +87,24 @@ public class Saaj13SoapEnvelope extends SaajSoapEnvelope {
         return header;
     }
 
-    public SoapBody getBody() {
-        if (body == null) {
-            try {
-                SOAPBody saajBody = getSaajEnvelope().getBody();
-                String namespaceURI = getSaajEnvelope().getElementQName().getNamespaceURI();
-                if (SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE.equals(namespaceURI)) {
-                    body = new Saaj13Soap11Body(saajBody);
-                }
-                else if (SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE.equals(namespaceURI)) {
-                    body = new Saaj13Soap12Body(saajBody);
-                }
-                else {
-                    throw new SaajSoapEnvelopeException("Unknown SOAP namespace \"" + namespaceURI + "\"");
-                }
-
-            }
-            catch (SOAPException ex) {
-                throw new SaajSoapBodyException(ex);
-            }
-        }
-        return body;
+    protected SOAPEnvelope getSaajEnvelope() {
+        return (SOAPEnvelope) getSaajElement();
     }
 
+    /**
+     * Returns <code>true</code> if this is a SOAP 1.1 message, <code>false</code> if SOAP 1.2. Throws an exception
+     * otherwise.
+     */
+    private boolean isSoap11() {
+        String namespaceURI = getSaajEnvelope().getElementQName().getNamespaceURI();
+        if (SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE.equals(namespaceURI)) {
+            return true;
+        }
+        else if (SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE.equals(namespaceURI)) {
+            return false;
+        }
+        else {
+            throw new IllegalStateException("Unknown SOAP namespace \"" + namespaceURI + "\"");
+        }
+    }
 }

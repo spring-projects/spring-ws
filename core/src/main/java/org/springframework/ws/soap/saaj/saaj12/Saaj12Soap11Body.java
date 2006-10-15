@@ -43,23 +43,10 @@ import org.springframework.ws.soap.soap11.Soap11Fault;
  *
  * @author Arjen Poutsma
  */
-class Saaj12Soap11Body implements Soap11Body {
-
-    private final SOAPBody saajBody;
+class Saaj12Soap11Body extends Saaj12SoapElement implements Soap11Body {
 
     Saaj12Soap11Body(SOAPBody saajBody) {
-        Assert.notNull(saajBody, "No saajBody given");
-        this.saajBody = saajBody;
-    }
-
-    public Source getPayloadSource() {
-        SOAPBodyElement payloadElement = getPayloadElement();
-        return payloadElement != null ? new DOMSource(payloadElement) : null;
-    }
-
-    public Result getPayloadResult() {
-        saajBody.removeContents();
-        return new DOMResult(saajBody);
+        super(saajBody);
     }
 
     public Soap11Fault addFault(QName faultCode, String faultString, Locale faultStringLocale) {
@@ -70,14 +57,14 @@ class Saaj12Soap11Body implements Soap11Body {
                     "A fault code with namespace and local part must be specific for a custom fault code");
         }
         try {
-            Name name = SaajUtils.toName(faultCode, saajBody, getEnvelope());
-            saajBody.removeContents();
+            Name name = SaajUtils.toName(faultCode, getSaajBody(), getEnvelope());
+            getSaajBody().removeContents();
             SOAPFault saajFault;
             if (faultStringLocale == null) {
-                saajFault = saajBody.addFault(name, faultString);
+                saajFault = getSaajBody().addFault(name, faultString);
             }
             else {
-                saajFault = saajBody.addFault(name, faultString, faultStringLocale);
+                saajFault = getSaajBody().addFault(name, faultString, faultStringLocale);
             }
             return new Saaj12Soap11Fault(saajFault);
         }
@@ -86,12 +73,12 @@ class Saaj12Soap11Body implements Soap11Body {
         }
     }
 
-    public SoapFault addMustUnderstandFault(String faultString, Locale locale) {
-        return addStandardFault("MustUnderstand", faultString, locale);
-    }
-
     public SoapFault addClientOrSenderFault(String faultString, Locale locale) {
         return addStandardFault("Client", faultString, locale);
+    }
+
+    public SoapFault addMustUnderstandFault(String faultString, Locale locale) {
+        return addStandardFault("MustUnderstand", faultString, locale);
     }
 
     public SoapFault addServerOrReceiverFault(String faultString, Locale locale) {
@@ -102,17 +89,36 @@ class Saaj12Soap11Body implements Soap11Body {
         return addStandardFault("VersionMismatch", faultString, locale);
     }
 
+    public SoapFault getFault() {
+        return new Saaj12Soap11Fault(getSaajBody().getFault());
+    }
+
+    public final Result getPayloadResult() {
+        getSaajBody().removeContents();
+        return new DOMResult(getSaajBody());
+    }
+
+    public final Source getPayloadSource() {
+        SOAPBodyElement payloadElement = getPayloadElement();
+        return payloadElement != null ? new DOMSource(payloadElement) : null;
+    }
+
+    public final boolean hasFault() {
+        return getSaajBody().hasFault();
+    }
+
     private Soap11Fault addStandardFault(String localName, String faultString, Locale locale) {
         try {
             Name faultCode = getEnvelope()
-                    .createName(localName, saajBody.getElementName().getPrefix(), saajBody.getElementName().getURI());
-            saajBody.removeContents();
+                    .createName(localName, getSaajBody().getElementName().getPrefix(),
+                            getSaajBody().getElementName().getURI());
+            getSaajBody().removeContents();
             SOAPFault saajFault;
             if (locale == null) {
-                saajFault = saajBody.addFault(faultCode, faultString);
+                saajFault = getSaajBody().addFault(faultCode, faultString);
             }
             else {
-                saajFault = saajBody.addFault(faultCode, faultString, locale);
+                saajFault = getSaajBody().addFault(faultCode, faultString, locale);
             }
             return new Saaj12Soap11Fault(saajFault);
         }
@@ -121,24 +127,8 @@ class Saaj12Soap11Body implements Soap11Body {
         }
     }
 
-    public boolean hasFault() {
-        return saajBody.hasFault();
-    }
-
-    public SoapFault getFault() {
-        return new Saaj12Soap11Fault(saajBody.getFault());
-    }
-
-    public QName getName() {
-        return SaajUtils.toQName(saajBody.getElementName());
-    }
-
-    public Source getSource() {
-        return new DOMSource(saajBody);
-    }
-
     private SOAPEnvelope getEnvelope() {
-        return (SOAPEnvelope) saajBody.getParentElement();
+        return (SOAPEnvelope) getSaajBody().getParentElement();
     }
 
     /**
@@ -148,12 +138,16 @@ class Saaj12Soap11Body implements Soap11Body {
      * @return the message payload, or <code>null</code> if none is set.
      */
     private SOAPBodyElement getPayloadElement() {
-        for (Iterator iterator = saajBody.getChildElements(); iterator.hasNext();) {
+        for (Iterator iterator = getSaajBody().getChildElements(); iterator.hasNext();) {
             Object child = iterator.next();
             if (child instanceof SOAPBodyElement) {
                 return (SOAPBodyElement) child;
             }
         }
         return null;
+    }
+
+    protected final SOAPBody getSaajBody() {
+        return (SOAPBody) getSaajElement();
     }
 }

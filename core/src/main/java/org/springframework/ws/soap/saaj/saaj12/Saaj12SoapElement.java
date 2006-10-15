@@ -14,35 +14,35 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.saaj;
+package org.springframework.ws.soap.saaj.saaj12;
 
-import javax.xml.soap.SOAPEnvelope;
+import javax.xml.namespace.QName;
+import javax.xml.soap.SOAPElement;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
 import org.springframework.util.Assert;
-import org.springframework.ws.soap.SoapEnvelope;
+import org.springframework.ws.soap.SoapElement;
+import org.springframework.ws.soap.saaj.support.SaajUtils;
 
-/**
- * Abstract base class for implementations of the <code>SoapEnvelope</code> interface that use SAAJ. Used by
- * <code>SaajSoapMessage</code>.
- *
- * @author Arjen Poutsma
- */
-public abstract class SaajSoapEnvelope implements SoapEnvelope {
+abstract class Saaj12SoapElement implements SoapElement {
 
-    private final SOAPEnvelope saajEnvelope;
+    private final SOAPElement saajElement;
 
-    protected SaajSoapEnvelope(SOAPEnvelope saajEnvelope) {
-        Assert.notNull(saajEnvelope, "No saajEnvelope given");
-        this.saajEnvelope = saajEnvelope;
+    protected Saaj12SoapElement(SOAPElement saajElement) {
+        Assert.notNull(saajElement, "No saajElement given");
+        this.saajElement = saajElement;
     }
 
-    protected SOAPEnvelope getSaajEnvelope() {
-        return saajEnvelope;
+    protected SOAPElement getSaajElement() {
+        return saajElement;
     }
 
-    public Source getSource() {
-        return new DOMSource(saajEnvelope);
+    public final QName getName() {
+        return SaajUtils.toQName(saajElement.getElementName());
+    }
+
+    public final Source getSource() {
+        return new DOMSource(saajElement);
     }
 }

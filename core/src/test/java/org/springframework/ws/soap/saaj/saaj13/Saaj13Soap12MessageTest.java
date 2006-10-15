@@ -1,4 +1,4 @@
-package org.springframework.ws.soap.saaj;
+package org.springframework.ws.soap.saaj.saaj13;
 
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
@@ -11,14 +11,14 @@ import org.springframework.ws.soap.soap12.AbstractSoap12MessageTestCase;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-public class SaajSoap12MessageTest extends AbstractSoap12MessageTestCase {
+public class Saaj13Soap12MessageTest extends AbstractSoap12MessageTestCase {
 
     private SOAPMessage saajMessage;
 
     protected SoapMessage createSoapMessage() throws Exception {
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
         saajMessage = messageFactory.createMessage();
-        return new SaajSoapMessage(saajMessage);
+        return new Saaj13SoapMessage(saajMessage);
     }
 
     public void testGetPayloadSource() throws Exception {

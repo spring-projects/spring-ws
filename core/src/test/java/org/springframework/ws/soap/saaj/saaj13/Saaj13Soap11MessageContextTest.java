@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.saaj;
+package org.springframework.ws.soap.saaj.saaj13;
 
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
@@ -24,10 +24,10 @@ import org.springframework.ws.soap.context.AbstractSoap11MessageContextTestCase;
 import org.springframework.ws.soap.context.SoapMessageContext;
 import org.springframework.ws.transport.TransportRequest;
 
-public class SaajSoap11MessageContextTest extends AbstractSoap11MessageContextTestCase {
+public class Saaj13Soap11MessageContextTest extends AbstractSoap11MessageContextTestCase {
 
     protected SoapMessageContext createMessageContext(TransportRequest transportRequest) throws SOAPException {
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
-        return new SaajSoapMessageContext(messageFactory.createMessage(), transportRequest, messageFactory);
+        return new Saaj13SoapMessageContext(messageFactory.createMessage(), transportRequest, messageFactory);
     }
 }

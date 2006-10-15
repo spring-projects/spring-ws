@@ -39,8 +39,6 @@ import org.springframework.ws.soap.Attachment;
 import org.springframework.ws.soap.AttachmentException;
 import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.SoapVersion;
-import org.springframework.ws.soap.saaj.saaj12.Saaj12SoapEnvelope;
-import org.springframework.ws.soap.saaj.saaj13.Saaj13SoapEnvelope;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 
 /**
@@ -51,18 +49,18 @@ import org.springframework.ws.soap.saaj.support.SaajUtils;
  * @see javax.xml.soap.SOAPMessage
  * @see SaajSoapMessageContext
  */
-public class SaajSoapMessage extends AbstractSoapMessage {
+public abstract class SaajSoapMessage extends AbstractSoapMessage {
 
     private final SOAPMessage saajMessage;
 
-    private SaajSoapEnvelope envelope;
+    private SoapEnvelope envelope;
 
     /**
      * Create a new <code>SaajSoapMessage</code> based on the given SAAJ <code>SOAPMessage</code>.
      *
      * @param soapMessage the SAAJ SOAPMessage
      */
-    public SaajSoapMessage(SOAPMessage soapMessage) {
+    protected SaajSoapMessage(SOAPMessage soapMessage) {
         saajMessage = soapMessage;
     }
 
@@ -73,16 +71,11 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         return saajMessage;
     }
 
-    public SoapEnvelope getEnvelope() {
+    public final SoapEnvelope getEnvelope() {
         if (envelope == null) {
             try {
                 SOAPEnvelope saajEnvelope = saajMessage.getSOAPPart().getEnvelope();
-                if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_12) {
-                    envelope = new Saaj12SoapEnvelope(saajEnvelope);
-                }
-                else {
-                    envelope = new Saaj13SoapEnvelope(saajEnvelope);
-                }
+                envelope = createSaajSoapEnvelope(saajEnvelope);
             }
             catch (SOAPException ex) {
                 throw new SaajSoapEnvelopeException(ex);
@@ -91,7 +84,9 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         return envelope;
     }
 
-    public void writeTo(OutputStream outputStream) throws IOException {
+    protected abstract SoapEnvelope createSaajSoapEnvelope(SOAPEnvelope saajEnvelope);
+
+    public final void writeTo(OutputStream outputStream) throws IOException {
         try {
             if (saajMessage.saveRequired()) {
                 saajMessage.saveChanges();

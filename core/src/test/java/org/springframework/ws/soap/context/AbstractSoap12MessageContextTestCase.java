@@ -24,7 +24,7 @@ public abstract class AbstractSoap12MessageContextTestCase extends AbstractSoapM
 
     public void testWriteToTransportResponse() throws Exception {
         messageContext.getResponse(); // create response
-        messageContext.sendResponse(null);
+        messageContext.sendResponse(transportResponse);
         assertXMLEqual("<Envelope xmlns='http://www.w3.org/2003/05/soap-envelope'><Header/><Body/></Envelope>",
                 transportResponse.getContents());
         assertTrue("Invalid Content-Type set", transportResponse.getHeaders().getProperty("Content-Type")
@@ -34,9 +34,7 @@ public abstract class AbstractSoap12MessageContextTestCase extends AbstractSoapM
     public void testWriteToTransportResponseAttachment() throws Exception {
         InputStreamSource inputStreamSource = new ByteArrayResource("contents".getBytes("UTF-8"));
         messageContext.getSoapResponse().addAttachment(inputStreamSource, "text/plain");
-        messageContext.sendResponse(null);
-        assertTrue("Invalid Content-Type set",
-                transportResponse.getHeaders().getProperty("Content-Type").indexOf("multipart/related") != -1);
+        messageContext.sendResponse(transportResponse);
         assertTrue("Invalid Content-Type set", transportResponse.getHeaders().getProperty("Content-Type")
                 .indexOf(SoapVersion.SOAP_12.getContentType()) != -1);
     }

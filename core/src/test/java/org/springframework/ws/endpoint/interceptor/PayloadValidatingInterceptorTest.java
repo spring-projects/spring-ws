@@ -36,6 +36,7 @@ import org.springframework.ws.mock.MockWebServiceMessage;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.saaj.SaajSoapMessageContext;
+import org.springframework.ws.soap.saaj.saaj13.Saaj13SoapMessageContext;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 import org.springframework.ws.soap.soap12.Soap12Fault;
@@ -65,7 +66,7 @@ public class PayloadValidatingInterceptorTest extends TestCase {
         InputStream inputStream = getClass().getResourceAsStream("invalidMessage.xml");
         transformer.transform(new StreamSource(inputStream), new DOMResult(invalidMessage.getSOAPBody()));
         SaajSoapMessageContext context =
-                new SaajSoapMessageContext(invalidMessage, new MockTransportRequest(), messageFactory);
+                new Saaj13SoapMessageContext(invalidMessage, new MockTransportRequest(), messageFactory);
 
         boolean result = interceptor.handleRequest(context, null);
         assertFalse("Invalid response from interceptor", result);
@@ -73,11 +74,9 @@ public class PayloadValidatingInterceptorTest extends TestCase {
         SoapMessage response = context.getSoapResponse();
         assertTrue("Resonse has no fault", response.getSoapBody().hasFault());
         Soap11Fault fault = (Soap11Fault) response.getSoapBody().getFault();
-        assertEquals("Invalid fault code on fault",
-                SoapVersion.SOAP_11.getClientOrSenderFaultName(),
+        assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getClientOrSenderFaultName(),
                 fault.getFaultCode());
-        assertEquals("Invalid fault string on fault",
-                PayloadValidatingInterceptor.DEFAULT_FAULTSTRING_OR_REASON,
+        assertEquals("Invalid fault string on fault", PayloadValidatingInterceptor.DEFAULT_FAULTSTRING_OR_REASON,
                 fault.getFaultString());
         assertNotNull("No Detail on fault", fault.getFaultDetail());
     }
@@ -89,7 +88,7 @@ public class PayloadValidatingInterceptorTest extends TestCase {
         InputStream inputStream = getClass().getResourceAsStream("invalidMessage.xml");
         transformer.transform(new StreamSource(inputStream), new DOMResult(invalidMessage.getSOAPBody()));
         SaajSoapMessageContext context =
-                new SaajSoapMessageContext(invalidMessage, new MockTransportRequest(), messageFactory);
+                new Saaj13SoapMessageContext(invalidMessage, new MockTransportRequest(), messageFactory);
 
         boolean result = interceptor.handleRequest(context, null);
         assertFalse("Invalid response from interceptor", result);
@@ -97,11 +96,9 @@ public class PayloadValidatingInterceptorTest extends TestCase {
         SoapMessage response = context.getSoapResponse();
         assertTrue("Resonse has no fault", response.getSoapBody().hasFault());
         Soap12Fault fault = (Soap12Fault) response.getSoapBody().getFault();
-        assertEquals("Invalid fault code on fault",
-                SoapVersion.SOAP_12.getClientOrSenderFaultName(),
+        assertEquals("Invalid fault code on fault", SoapVersion.SOAP_12.getClientOrSenderFaultName(),
                 fault.getFaultCode());
-        assertEquals("Invalid fault string on fault",
-                PayloadValidatingInterceptor.DEFAULT_FAULTSTRING_OR_REASON,
+        assertEquals("Invalid fault string on fault", PayloadValidatingInterceptor.DEFAULT_FAULTSTRING_OR_REASON,
                 fault.getFaultReasonText(Locale.ENGLISH));
         assertNotNull("No Detail on fault", fault.getFaultDetail());
     }
@@ -119,7 +116,7 @@ public class PayloadValidatingInterceptorTest extends TestCase {
         InputStream inputStream = getClass().getResourceAsStream("invalidMessage.xml");
         transformer.transform(new StreamSource(inputStream), new DOMResult(invalidMessage.getSOAPBody()));
         SaajSoapMessageContext context =
-                new SaajSoapMessageContext(invalidMessage, new MockTransportRequest(), messageFactory);
+                new Saaj13SoapMessageContext(invalidMessage, new MockTransportRequest(), messageFactory);
 
         boolean result = interceptor.handleRequest(context, null);
         assertFalse("Invalid response from interceptor", result);
@@ -127,8 +124,7 @@ public class PayloadValidatingInterceptorTest extends TestCase {
         SoapMessage response = context.getSoapResponse();
         assertTrue("Resonse has no fault", response.getSoapBody().hasFault());
         Soap11Fault fault = (Soap11Fault) response.getSoapBody().getFault();
-        assertEquals("Invalid fault code on fault",
-                SoapVersion.SOAP_11.getClientOrSenderFaultName(),
+        assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getClientOrSenderFaultName(),
                 fault.getFaultCode());
         assertEquals("Invalid fault string on fault", faultString, fault.getFaultString());
         assertEquals("Invalid fault string locale on fault", locale, fault.getFaultStringLocale());
@@ -174,7 +170,7 @@ public class PayloadValidatingInterceptorTest extends TestCase {
             SOAPMessage saajMessage =
                     SaajUtils.loadMessage(new ClassPathResource("validSoapMessage.xml", getClass()), messageFactory);
             SaajSoapMessageContext soapContext =
-                    new SaajSoapMessageContext(saajMessage, new MockTransportRequest(), messageFactory);
+                    new Saaj13SoapMessageContext(saajMessage, new MockTransportRequest(), messageFactory);
             boolean result = interceptor.handleRequest(soapContext, null);
             assertTrue("Invalid response from interceptor", result);
             assertFalse("Response set", soapContext.hasResponse());

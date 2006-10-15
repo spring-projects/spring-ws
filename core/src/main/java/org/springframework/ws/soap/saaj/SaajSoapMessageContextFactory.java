@@ -32,6 +32,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.context.MessageContextFactory;
 import org.springframework.ws.soap.SoapMessageCreationException;
+import org.springframework.ws.soap.saaj.saaj12.Saaj12SoapMessageContext;
+import org.springframework.ws.soap.saaj.saaj13.Saaj13SoapMessageContext;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 import org.springframework.ws.transport.TransportContext;
 import org.springframework.ws.transport.TransportRequest;
@@ -113,7 +115,16 @@ public class SaajSoapMessageContextFactory implements MessageContextFactory, Ini
         }
         try {
             SOAPMessage requestMessage = messageFactory.createMessage(mimeHeaders, transportRequest.getInputStream());
-            return new SaajSoapMessageContext(requestMessage, transportRequest, messageFactory);
+            if (SaajUtils.getSaajVersion() >= SaajUtils.SAAJ_13) {
+                return new Saaj13SoapMessageContext(requestMessage, transportRequest, messageFactory);
+            }
+            else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_12) {
+                return new Saaj12SoapMessageContext(requestMessage, transportRequest, messageFactory);
+            }
+            else {
+                throw new IllegalStateException(
+                        "SaajSoapMessageContextFactory requires SAAJ 1.2, which was not" + "found on the classpath");
+            }
         }
         catch (SOAPException ex) {
             throw new SoapMessageCreationException("Could not create message from TransportRequest: " + ex.getMessage(),

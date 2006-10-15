@@ -38,7 +38,7 @@ class Saaj13Soap12Header extends Saaj13SoapHeader implements Soap12Header {
 
     public SoapHeaderElement addNotUnderstoodHeaderElement(QName headerName) {
         try {
-            SOAPHeaderElement saajHeaderElement = saajHeader.addNotUnderstoodHeaderElement(headerName);
+            SOAPHeaderElement saajHeaderElement = getSaajHeader().addNotUnderstoodHeaderElement(headerName);
             return new Saaj13SoapHeaderElement(saajHeaderElement);
         }
         catch (SOAPException ex) {
@@ -48,7 +48,7 @@ class Saaj13Soap12Header extends Saaj13SoapHeader implements Soap12Header {
 
     public SoapHeaderElement addUpgradeHeaderElement(String[] supportedSoapUris) {
         try {
-            SOAPHeaderElement saajHeaderElement = saajHeader.addUpgradeHeaderElement(supportedSoapUris);
+            SOAPHeaderElement saajHeaderElement = getSaajHeader().addUpgradeHeaderElement(supportedSoapUris);
             return new Saaj13SoapHeaderElement(saajHeaderElement);
         }
         catch (SOAPException ex) {
