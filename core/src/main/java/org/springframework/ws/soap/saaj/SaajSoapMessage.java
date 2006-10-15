@@ -27,7 +27,6 @@ import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
@@ -73,18 +72,12 @@ public abstract class SaajSoapMessage extends AbstractSoapMessage {
 
     public final SoapEnvelope getEnvelope() {
         if (envelope == null) {
-            try {
-                SOAPEnvelope saajEnvelope = saajMessage.getSOAPPart().getEnvelope();
-                envelope = createSaajSoapEnvelope(saajEnvelope);
-            }
-            catch (SOAPException ex) {
-                throw new SaajSoapEnvelopeException(ex);
-            }
+            envelope = createSaajSoapEnvelope(saajMessage);
         }
         return envelope;
     }
 
-    protected abstract SoapEnvelope createSaajSoapEnvelope(SOAPEnvelope saajEnvelope);
+    protected abstract SoapEnvelope createSaajSoapEnvelope(SOAPMessage saajMessage);
 
     public final void writeTo(OutputStream outputStream) throws IOException {
         try {

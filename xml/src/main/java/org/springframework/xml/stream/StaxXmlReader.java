@@ -19,16 +19,12 @@ package org.springframework.xml.stream;
 import javax.xml.stream.Location;
 import javax.xml.stream.XMLStreamException;
 
+import org.springframework.xml.sax.AbstractXmlReader;
 import org.xml.sax.ContentHandler;
-import org.xml.sax.DTDHandler;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXParseException;
-import org.xml.sax.XMLReader;
 
 /**
  * Abstract base class for SAX <code>XMLReader</code> implementations that use StAX as a basis.
@@ -39,83 +35,7 @@ import org.xml.sax.XMLReader;
  * @see #setEntityResolver(org.xml.sax.EntityResolver)
  * @see #setErrorHandler(org.xml.sax.ErrorHandler)
  */
-public abstract class StaxXmlReader implements XMLReader {
-
-    private DTDHandler dtdHandler;
-
-    private ContentHandler contentHandler;
-
-    private EntityResolver entityResolver;
-
-    private ErrorHandler errorHandler;
-
-    public ContentHandler getContentHandler() {
-        return contentHandler;
-    }
-
-    public void setContentHandler(ContentHandler contentHandler) {
-        this.contentHandler = contentHandler;
-    }
-
-    public void setDTDHandler(DTDHandler dtdHandler) {
-        this.dtdHandler = dtdHandler;
-    }
-
-    public DTDHandler getDTDHandler() {
-        return dtdHandler;
-    }
-
-    public EntityResolver getEntityResolver() {
-        return entityResolver;
-    }
-
-    public void setEntityResolver(EntityResolver entityResolver) {
-        this.entityResolver = entityResolver;
-    }
-
-    public ErrorHandler getErrorHandler() {
-        return errorHandler;
-    }
-
-    public void setErrorHandler(ErrorHandler errorHandler) {
-        this.errorHandler = errorHandler;
-    }
-
-    /**
-     * Throws a <code>SAXNotRecognizedException</code> exception.
-     *
-     * @throws SAXNotRecognizedException always
-     */
-    public boolean getFeature(String name) throws SAXNotRecognizedException {
-        throw new SAXNotRecognizedException(name);
-    }
-
-    /**
-     * Throws a <code>SAXNotRecognizedException</code> exception.
-     *
-     * @throws SAXNotRecognizedException always
-     */
-    public void setFeature(String name, boolean value) throws SAXNotRecognizedException {
-        throw new SAXNotRecognizedException(name);
-    }
-
-    /**
-     * Throws a <code>SAXNotRecognizedException</code> exception.
-     *
-     * @throws SAXNotRecognizedException always
-     */
-    public Object getProperty(String name) throws SAXNotRecognizedException {
-        throw new SAXNotRecognizedException(name);
-    }
-
-    /**
-     * Throws a <code>SAXNotRecognizedException</code> exception.
-     *
-     * @throws SAXNotRecognizedException always
-     */
-    public void setProperty(String name, Object value) throws SAXNotRecognizedException {
-        throw new SAXNotRecognizedException(name);
-    }
+public abstract class StaxXmlReader extends AbstractXmlReader {
 
     /**
      * Parses the StAX XML reader passed at construction-time.
