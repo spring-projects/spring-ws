@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.saaj;
+package org.springframework.ws.soap.saaj.saaj13;
 
 import java.util.Locale;
 import javax.xml.namespace.QName;
@@ -26,6 +26,7 @@ import javax.xml.soap.SOAPFault;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.SoapFault;
+import org.springframework.ws.soap.saaj.SaajSoapFaultException;
 import org.springframework.ws.soap.soap12.Soap12Body;
 import org.springframework.ws.soap.soap12.Soap12Fault;
 

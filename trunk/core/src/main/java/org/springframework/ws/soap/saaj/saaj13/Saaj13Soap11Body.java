@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.saaj;
+package org.springframework.ws.soap.saaj.saaj13;
 
 import java.util.Locale;
 import javax.xml.namespace.QName;
@@ -25,6 +25,7 @@ import javax.xml.soap.SOAPFault;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.SoapFault;
+import org.springframework.ws.soap.saaj.SaajSoapFaultException;
 import org.springframework.ws.soap.soap11.Soap11Body;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 import org.springframework.xml.namespace.QNameUtils;
@@ -82,13 +83,12 @@ class Saaj13Soap11Body extends Saaj13SoapBody implements Soap11Body {
 
     private Soap11Fault addStandardFault(String localName, String faultString, Locale faultStringLocale) {
         try {
-            QName faultCode = QNameUtils.createQName(saajBody.getElementQName().getNamespaceURI(),
-                    localName,
+            QName faultCode = QNameUtils.createQName(saajBody.getElementQName().getNamespaceURI(), localName,
                     QNameUtils.getPrefix(saajBody.getElementQName()));
             saajBody.removeContents();
             SOAPFault saajFault = faultStringLocale == null ? saajBody.addFault(faultCode, faultString) :
                     saajBody.addFault(faultCode, faultString, faultStringLocale);
-            return new Saaj12Soap11Fault(saajFault);
+            return new Saaj13Soap11Fault(saajFault);
         }
         catch (SOAPException ex) {
             throw new SaajSoapFaultException(ex);

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.saaj;
+package org.springframework.ws.soap.saaj.saaj13;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPBody;
@@ -22,13 +22,14 @@ import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
-import javax.xml.transform.Source;
-import javax.xml.transform.dom.DOMSource;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapBody;
-import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.SoapHeader;
+import org.springframework.ws.soap.saaj.SaajSoapBodyException;
+import org.springframework.ws.soap.saaj.SaajSoapEnvelope;
+import org.springframework.ws.soap.saaj.SaajSoapEnvelopeException;
+import org.springframework.ws.soap.saaj.SaajSoapHeaderException;
 
 /**
  * Internal class that uses SAAJ 1.3 to implement the <code>SoapEnvelope</code> interface. Used by
@@ -36,36 +37,30 @@ import org.springframework.ws.soap.SoapHeader;
  *
  * @author Arjen Poutsma
  */
-class Saaj13SoapEnvelope implements SoapEnvelope {
-
-    private final SOAPEnvelope saajEnvelope;
+public class Saaj13SoapEnvelope extends SaajSoapEnvelope {
 
     private Saaj13SoapHeader header;
 
     private Saaj13SoapBody body;
 
-    Saaj13SoapEnvelope(SOAPEnvelope saajEnvelope) {
+    public Saaj13SoapEnvelope(SOAPEnvelope saajEnvelope) {
+        super(saajEnvelope);
         Assert.notNull(saajEnvelope, "No saajEnvelope given");
-        this.saajEnvelope = saajEnvelope;
     }
 
     public QName getName() {
-        return saajEnvelope.getElementQName();
-    }
-
-    public Source getSource() {
-        return new DOMSource(saajEnvelope);
+        return getSaajEnvelope().getElementQName();
     }
 
     public SoapHeader getHeader() {
         if (header == null) {
             try {
-                if (saajEnvelope.getHeader() == null) {
+                if (getSaajEnvelope().getHeader() == null) {
                     return null;
                 }
                 else {
-                    SOAPHeader saajHeader = saajEnvelope.getHeader();
-                    String namespaceURI = saajEnvelope.getElementQName().getNamespaceURI();
+                    SOAPHeader saajHeader = getSaajEnvelope().getHeader();
+                    String namespaceURI = getSaajEnvelope().getElementQName().getNamespaceURI();
                     if (SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE.equals(namespaceURI)) {
                         header = new Saaj13SoapHeader(saajHeader);
                     }
@@ -87,8 +82,8 @@ class Saaj13SoapEnvelope implements SoapEnvelope {
     public SoapBody getBody() {
         if (body == null) {
             try {
-                SOAPBody saajBody = saajEnvelope.getBody();
-                String namespaceURI = saajEnvelope.getElementQName().getNamespaceURI();
+                SOAPBody saajBody = getSaajEnvelope().getBody();
+                String namespaceURI = getSaajEnvelope().getElementQName().getNamespaceURI();
                 if (SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE.equals(namespaceURI)) {
                     body = new Saaj13Soap11Body(saajBody);
                 }

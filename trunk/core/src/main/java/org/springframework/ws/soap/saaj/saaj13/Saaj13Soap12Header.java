@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.saaj;
+package org.springframework.ws.soap.saaj.saaj13;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
@@ -22,6 +22,7 @@ import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
 
 import org.springframework.ws.soap.SoapHeaderElement;
+import org.springframework.ws.soap.saaj.SaajSoapHeaderException;
 import org.springframework.ws.soap.soap12.Soap12Header;
 
 /**

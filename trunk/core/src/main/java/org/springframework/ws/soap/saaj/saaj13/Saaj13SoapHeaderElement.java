@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.saaj;
+package org.springframework.ws.soap.saaj.saaj13;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
@@ -27,6 +27,7 @@ import javax.xml.transform.dom.DOMSource;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapHeaderException;
+import org.springframework.ws.soap.saaj.SaajSoapHeaderException;
 
 /**
  * Internal class that uses SAAJ 1.3 to implement the <code>SoapHeaderElement</code> interface.

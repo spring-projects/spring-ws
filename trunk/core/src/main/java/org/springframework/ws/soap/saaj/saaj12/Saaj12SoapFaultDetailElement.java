@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.saaj;
+package org.springframework.ws.soap.saaj.saaj12;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.DetailEntry;
@@ -26,6 +26,7 @@ import javax.xml.transform.dom.DOMSource;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapFaultDetailElement;
+import org.springframework.ws.soap.saaj.SaajSoapFaultException;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 
 /**

@@ -39,6 +39,8 @@ import org.springframework.ws.soap.Attachment;
 import org.springframework.ws.soap.AttachmentException;
 import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.SoapVersion;
+import org.springframework.ws.soap.saaj.saaj12.Saaj12SoapEnvelope;
+import org.springframework.ws.soap.saaj.saaj13.Saaj13SoapEnvelope;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 
 /**
@@ -53,7 +55,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 
     private final SOAPMessage saajMessage;
 
-    private SoapEnvelope envelope;
+    private SaajSoapEnvelope envelope;
 
     /**
      * Create a new <code>SaajSoapMessage</code> based on the given SAAJ <code>SOAPMessage</code>.
