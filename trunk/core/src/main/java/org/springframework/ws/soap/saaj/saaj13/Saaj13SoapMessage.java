@@ -14,20 +14,26 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.saaj;
+package org.springframework.ws.soap.saaj.saaj13;
 
-import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPMessage;
 
-import org.springframework.ws.soap.SoapHeader;
-import org.springframework.ws.soap.soap11.AbstractSoap11HeaderTestCase;
+import org.springframework.ws.soap.SoapEnvelope;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
-public class SaajSoap11HeaderTest extends AbstractSoap11HeaderTestCase {
+class Saaj13SoapMessage extends SaajSoapMessage {
 
-    protected SoapHeader createSoapHeader() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance();
-        SOAPMessage saajMessage = messageFactory.createMessage();
-        SaajSoapMessage saajSoapMessage = new SaajSoapMessage(saajMessage);
-        return saajSoapMessage.getSoapHeader();
+    /**
+     * Create a new <code>SaajSoapMessage</code> based on the given SAAJ <code>SOAPMessage</code>.
+     *
+     * @param soapMessage the SAAJ SOAPMessage
+     */
+    protected Saaj13SoapMessage(SOAPMessage soapMessage) {
+        super(soapMessage);
+    }
+
+    protected SoapEnvelope createSaajSoapEnvelope(SOAPEnvelope saajEnvelope) {
+        return new Saaj13SoapEnvelope(saajEnvelope);
     }
 }

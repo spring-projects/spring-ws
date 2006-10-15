@@ -35,8 +35,6 @@ public abstract class AbstractSoap11MessageContextTestCase extends AbstractSoapM
         InputStreamSource inputStreamSource = new ByteArrayResource("contents".getBytes("UTF-8"));
         messageContext.getSoapResponse().addAttachment(inputStreamSource, "text/plain");
         messageContext.sendResponse(transportResponse);
-        assertTrue("Invalid Content-Type set",
-                transportResponse.getHeaders().getProperty("Content-Type").indexOf("multipart/related") != -1);
         assertTrue("Invalid Content-Type set", transportResponse.getHeaders().getProperty("Content-Type")
                 .indexOf(SoapVersion.SOAP_11.getContentType()) != -1);
     }

@@ -51,8 +51,8 @@ class Saaj13Soap12Body extends Saaj13SoapBody implements Soap12Body {
                     "A code with namespace and local part must be specific for a custom fault code");
         }
         try {
-            saajBody.removeContents();
-            SOAPFault saajFault = saajBody.addFault(code, reason, locale);
+            getSaajBody().removeContents();
+            SOAPFault saajFault = getSaajBody().addFault(code, reason, locale);
             return new Saaj13Soap12Fault(saajFault);
         }
         catch (SOAPException ex) {
@@ -81,6 +81,6 @@ class Saaj13Soap12Body extends Saaj13SoapBody implements Soap12Body {
     }
 
     public SoapFault getFault() {
-        return new Saaj13Soap12Fault(saajBody.getFault());
+        return new Saaj13Soap12Fault(getSaajBody().getFault());
     }
 }

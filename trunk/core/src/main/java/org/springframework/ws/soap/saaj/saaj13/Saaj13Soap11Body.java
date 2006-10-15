@@ -49,13 +49,13 @@ class Saaj13Soap11Body extends Saaj13SoapBody implements Soap11Body {
             throw new IllegalArgumentException("fault code has no namespace");
         }
         try {
-            saajBody.removeContents();
+            getSaajBody().removeContents();
             SOAPFault saajFault;
             if (faultStringLocale == null) {
-                saajFault = saajBody.addFault(faultCode, faultString);
+                saajFault = getSaajBody().addFault(faultCode, faultString);
             }
             else {
-                saajFault = saajBody.addFault(faultCode, faultString, faultStringLocale);
+                saajFault = getSaajBody().addFault(faultCode, faultString, faultStringLocale);
             }
             return new Saaj13Soap11Fault(saajFault);
         }
@@ -83,11 +83,11 @@ class Saaj13Soap11Body extends Saaj13SoapBody implements Soap11Body {
 
     private Soap11Fault addStandardFault(String localName, String faultString, Locale faultStringLocale) {
         try {
-            QName faultCode = QNameUtils.createQName(saajBody.getElementQName().getNamespaceURI(), localName,
-                    QNameUtils.getPrefix(saajBody.getElementQName()));
-            saajBody.removeContents();
-            SOAPFault saajFault = faultStringLocale == null ? saajBody.addFault(faultCode, faultString) :
-                    saajBody.addFault(faultCode, faultString, faultStringLocale);
+            QName faultCode = QNameUtils.createQName(getSaajBody().getElementQName().getNamespaceURI(), localName,
+                    QNameUtils.getPrefix(getSaajBody().getElementQName()));
+            getSaajBody().removeContents();
+            SOAPFault saajFault = faultStringLocale == null ? getSaajBody().addFault(faultCode, faultString) :
+                    getSaajBody().addFault(faultCode, faultString, faultStringLocale);
             return new Saaj13Soap11Fault(saajFault);
         }
         catch (SOAPException ex) {
@@ -96,7 +96,7 @@ class Saaj13Soap11Body extends Saaj13SoapBody implements Soap11Body {
     }
 
     public SoapFault getFault() {
-        return new Saaj13Soap11Fault(saajBody.getFault());
+        return new Saaj13Soap11Fault(getSaajBody().getFault());
     }
 
 }

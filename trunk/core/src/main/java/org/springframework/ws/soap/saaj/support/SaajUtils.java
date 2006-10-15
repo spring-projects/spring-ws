@@ -59,12 +59,33 @@ public abstract class SaajUtils {
             saajVersion = SAAJ_13;
         }
         catch (ClassNotFoundException ex) {
-            if (Element.class.isAssignableFrom(SOAPElement.class)) {
+            if (Element.class.isAssignableFrom(SOAPElement.class) && !isWebLogic9Implementation()) {
                 saajVersion = SAAJ_12;
             }
             else {
                 saajVersion = SAAJ_11;
             }
+        }
+    }
+
+    /**
+     * Checks whether we are dealing with a WebLogic 9 implementation of SAAJ. WebLogic 9 does implement SAAJ 1.2, but
+     * throws UnsupportedOperationExceptions when a SAAJ 1.2 method is called.
+     */
+    private static boolean isWebLogic9Implementation() {
+        try {
+            MessageFactory messageFactory = MessageFactory.newInstance();
+            SOAPMessage message = messageFactory.createMessage();
+            try {
+                message.getSOAPBody();
+            }
+            catch (UnsupportedOperationException ex) {
+                return true;
+            }
+            return false;
+        }
+        catch (SOAPException e) {
+            return false;
         }
     }
 

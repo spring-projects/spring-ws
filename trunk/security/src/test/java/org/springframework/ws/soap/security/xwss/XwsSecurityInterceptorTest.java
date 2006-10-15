@@ -25,8 +25,9 @@ import javax.xml.soap.SOAPMessage;
 
 import junit.framework.TestCase;
 import org.springframework.ws.soap.saaj.SaajSoapMessageContext;
-import org.springframework.ws.transport.TransportRequest;
+import org.springframework.ws.soap.saaj.saaj13.Saaj13SoapMessageContext;
 import org.springframework.ws.transport.TransportException;
+import org.springframework.ws.transport.TransportRequest;
 
 public class XwsSecurityInterceptorTest extends TestCase {
 
@@ -52,7 +53,7 @@ public class XwsSecurityInterceptorTest extends TestCase {
 
         };
         SaajSoapMessageContext context =
-                new SaajSoapMessageContext(request, new DummyTransportRequest(), messageFactory);
+                new Saaj13SoapMessageContext(request, new DummyTransportRequest(), messageFactory);
         interceptor.handleRequest(context, null);
         assertEquals("Invalid request", validatedRequest, context.getSaajRequest());
     }
@@ -74,7 +75,7 @@ public class XwsSecurityInterceptorTest extends TestCase {
         };
         SOAPMessage request = messageFactory.createMessage();
         SaajSoapMessageContext context =
-                new SaajSoapMessageContext(request, new DummyTransportRequest(), messageFactory);
+                new Saaj13SoapMessageContext(request, new DummyTransportRequest(), messageFactory);
         context.setSaajResponse(response);
         interceptor.handleResponse(context, null);
         assertEquals("Invalid response", securedResponse, context.getSaajResponse());

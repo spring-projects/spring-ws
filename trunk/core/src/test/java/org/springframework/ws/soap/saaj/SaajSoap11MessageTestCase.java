@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 the original author or authors.
+ * Copyright 2006 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.saaj;
 
 import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -26,15 +27,17 @@ import org.springframework.ws.soap.soap11.AbstractSoap11MessageTestCase;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-public class SaajSoap11MessageTest extends AbstractSoap11MessageTestCase {
+public abstract class SaajSoap11MessageTestCase extends AbstractSoap11MessageTestCase {
 
     private SOAPMessage saajMessage;
 
-    protected SoapMessage createSoapMessage() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance();
+    protected final SoapMessage createSoapMessage() throws Exception {
+        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
         saajMessage = messageFactory.createMessage();
-        return new SaajSoapMessage(saajMessage);
+        return createSaajSoapMessage(saajMessage);
     }
+
+    protected abstract SaajSoapMessage createSaajSoapMessage(SOAPMessage saajMessage);
 
     public void testGetPayloadSource() throws Exception {
         saajMessage.getSOAPBody().addChildElement("child");

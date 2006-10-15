@@ -16,51 +16,40 @@
 
 package org.springframework.ws.soap.saaj.saaj12;
 
-import javax.xml.namespace.QName;
 import javax.xml.soap.DetailEntry;
 import javax.xml.soap.SOAPException;
 import javax.xml.transform.Result;
-import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.dom.DOMSource;
 
-import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapFaultDetailElement;
 import org.springframework.ws.soap.saaj.SaajSoapFaultException;
-import org.springframework.ws.soap.saaj.support.SaajUtils;
 
 /**
  * Internal class that uses SAAJ 1.2 to implement the <code>SoapFaultDetailElement</code> interface.
  *
  * @author Arjen Poutsma
  */
-class Saaj12SoapFaultDetailElement implements SoapFaultDetailElement {
-
-    private DetailEntry saajDetailEntry;
+class Saaj12SoapFaultDetailElement extends Saaj12SoapElement implements SoapFaultDetailElement {
 
     Saaj12SoapFaultDetailElement(DetailEntry saajDetailEntry) {
-        Assert.notNull(saajDetailEntry, "No saajDetailEntry given");
-        this.saajDetailEntry = saajDetailEntry;
+        super(saajDetailEntry);
     }
 
     public Result getResult() {
-        return new DOMResult(saajDetailEntry);
+        return new DOMResult(getSaajDetailEntry());
+    }
+
+    private DetailEntry getSaajDetailEntry() {
+        return (DetailEntry) getSaajElement();
     }
 
     public void addText(String text) {
         try {
-            saajDetailEntry.addTextNode(text);
+            getSaajDetailEntry().addTextNode(text);
         }
         catch (SOAPException ex) {
             throw new SaajSoapFaultException(ex);
         }
     }
 
-    public QName getName() {
-        return SaajUtils.toQName(saajDetailEntry.getElementName());
-    }
-
-    public Source getSource() {
-        return new DOMSource(saajDetailEntry);
-    }
 }

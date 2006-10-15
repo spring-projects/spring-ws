@@ -22,11 +22,8 @@ import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.transform.Result;
-import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.dom.DOMSource;
 
-import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapHeaderException;
 import org.springframework.ws.soap.saaj.SaajSoapHeaderException;
@@ -37,47 +34,36 @@ import org.springframework.ws.soap.saaj.support.SaajUtils;
  *
  * @author Arjen Poutsma
  */
-class Saaj12SoapHeaderElement implements SoapHeaderElement {
-
-    private final SOAPHeaderElement saajHeaderElement;
+class Saaj12SoapHeaderElement extends Saaj12SoapElement implements SoapHeaderElement {
 
     Saaj12SoapHeaderElement(SOAPHeaderElement saajHeaderElement) {
-        Assert.notNull(saajHeaderElement, "No saajHeaderElement given");
-        this.saajHeaderElement = saajHeaderElement;
-    }
-
-    public QName getName() {
-        return SaajUtils.toQName(saajHeaderElement.getElementName());
-    }
-
-    public Source getSource() {
-        return new DOMSource(saajHeaderElement);
+        super(saajHeaderElement);
     }
 
     public String getActorOrRole() {
-        return saajHeaderElement.getActor();
-    }
-
-    public void setActorOrRole(String role) {
-        saajHeaderElement.setActor(role);
+        return getSaajHeaderElement().getActor();
     }
 
     public boolean getMustUnderstand() {
-        return saajHeaderElement.getMustUnderstand();
-    }
-
-    public void setMustUnderstand(boolean mustUnderstand) {
-        saajHeaderElement.setMustUnderstand(mustUnderstand);
+        return getSaajHeaderElement().getMustUnderstand();
     }
 
     public Result getResult() {
-        return new DOMResult(saajHeaderElement);
+        return new DOMResult(getSaajHeaderElement());
+    }
+
+    public void setActorOrRole(String role) {
+        getSaajHeaderElement().setActor(role);
+    }
+
+    public void setMustUnderstand(boolean mustUnderstand) {
+        getSaajHeaderElement().setMustUnderstand(mustUnderstand);
     }
 
     public void addAttribute(QName name, String value) throws SoapHeaderException {
         try {
-            Name saajName = SaajUtils.toName(name, saajHeaderElement, getEnvelope());
-            saajHeaderElement.addAttribute(saajName, value);
+            Name saajName = SaajUtils.toName(name, getSaajHeaderElement(), getEnvelope());
+            getSaajHeaderElement().addAttribute(saajName, value);
         }
         catch (SOAPException ex) {
             throw new SaajSoapHeaderException(ex);
@@ -85,7 +71,10 @@ class Saaj12SoapHeaderElement implements SoapHeaderElement {
     }
 
     private SOAPEnvelope getEnvelope() {
-        return (SOAPEnvelope) saajHeaderElement.getParentElement().getParentElement();
+        return (SOAPEnvelope) getSaajHeaderElement().getParentElement().getParentElement();
     }
 
+    private SOAPHeaderElement getSaajHeaderElement() {
+        return (SOAPHeaderElement) getSaajElement();
+    }
 }

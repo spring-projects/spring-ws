@@ -21,10 +21,7 @@ import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
-import javax.xml.transform.Source;
-import javax.xml.transform.dom.DOMSource;
 
-import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.saaj.SaajSoapHeaderException;
@@ -34,26 +31,19 @@ import org.springframework.ws.soap.saaj.SaajSoapHeaderException;
  *
  * @author Arjen Poutsma
  */
-class Saaj13SoapHeader implements SoapHeader {
-
-    protected final SOAPHeader saajHeader;
+class Saaj13SoapHeader extends Saaj13SoapElement implements SoapHeader {
 
     Saaj13SoapHeader(SOAPHeader saajHeader) {
-        Assert.notNull(saajHeader, "No saajHeader given");
-        this.saajHeader = saajHeader;
+        super(saajHeader);
     }
 
-    public QName getName() {
-        return saajHeader.getElementQName();
-    }
-
-    public Source getSource() {
-        return new DOMSource(saajHeader);
+    protected final SOAPHeader getSaajHeader() {
+        return (SOAPHeader) getSaajElement();
     }
 
     public SoapHeaderElement addHeaderElement(QName name) {
         try {
-            SOAPHeaderElement saajHeaderElement = saajHeader.addHeaderElement(name);
+            SOAPHeaderElement saajHeaderElement = getSaajHeader().addHeaderElement(name);
             return new Saaj13SoapHeaderElement(saajHeaderElement);
         }
         catch (SOAPException ex) {
@@ -62,11 +52,11 @@ class Saaj13SoapHeader implements SoapHeader {
     }
 
     public Iterator examineMustUnderstandHeaderElements(String role) {
-        return new SaajSoapHeaderElementIterator(saajHeader.examineMustUnderstandHeaderElements(role));
+        return new SaajSoapHeaderElementIterator(getSaajHeader().examineMustUnderstandHeaderElements(role));
     }
 
     public Iterator examineAllHeaderElements() {
-        return new SaajSoapHeaderElementIterator(saajHeader.examineAllHeaderElements());
+        return new SaajSoapHeaderElementIterator(getSaajHeader().examineAllHeaderElements());
     }
 
     private static class SaajSoapHeaderElementIterator implements Iterator {

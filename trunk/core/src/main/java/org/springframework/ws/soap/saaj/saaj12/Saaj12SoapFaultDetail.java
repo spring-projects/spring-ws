@@ -24,9 +24,7 @@ import javax.xml.soap.Name;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.transform.Result;
-import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.dom.DOMSource;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapFaultDetail;
@@ -39,31 +37,16 @@ import org.springframework.ws.soap.saaj.support.SaajUtils;
  *
  * @author Arjen Poutsma
  */
-class Saaj12SoapFaultDetail implements SoapFaultDetail {
-
-    private Detail saajDetail;
+class Saaj12SoapFaultDetail extends Saaj12SoapElement implements SoapFaultDetail {
 
     Saaj12SoapFaultDetail(Detail saajDetail) {
-        Assert.notNull(saajDetail, "No saajDetail given");
-        this.saajDetail = saajDetail;
-    }
-
-    public QName getName() {
-        return SaajUtils.toQName(saajDetail.getElementName());
-    }
-
-    public Source getSource() {
-        return new DOMSource(saajDetail);
-    }
-
-    public Result getResult() {
-        return new DOMResult(saajDetail);
+        super(saajDetail);
     }
 
     public SoapFaultDetailElement addFaultDetailElement(QName name) {
         try {
-            Name detailEntryName = SaajUtils.toName(name, saajDetail, getEnvelope());
-            DetailEntry saajDetailEntry = saajDetail.addDetailEntry(detailEntryName);
+            Name detailEntryName = SaajUtils.toName(name, getSaajDetail(), getEnvelope());
+            DetailEntry saajDetailEntry = getSaajDetail().addDetailEntry(detailEntryName);
             return new Saaj12SoapFaultDetailElement(saajDetailEntry);
         }
         catch (SOAPException ex) {
@@ -72,11 +55,19 @@ class Saaj12SoapFaultDetail implements SoapFaultDetail {
     }
 
     public Iterator getDetailEntries() {
-        return new Saaj12SoapFaultDetailIterator(saajDetail.getDetailEntries());
+        return new Saaj12SoapFaultDetailIterator(getSaajDetail().getDetailEntries());
+    }
+
+    public Result getResult() {
+        return new DOMResult(getSaajDetail());
     }
 
     private SOAPEnvelope getEnvelope() {
-        return (SOAPEnvelope) saajDetail.getParentElement().getParentElement().getParentElement();
+        return (SOAPEnvelope) getSaajDetail().getParentElement().getParentElement().getParentElement();
+    }
+
+    private Detail getSaajDetail() {
+        return (Detail) getSaajElement();
     }
 
     private static class Saaj12SoapFaultDetailIterator implements Iterator {
@@ -100,8 +91,5 @@ class Saaj12SoapFaultDetail implements SoapFaultDetail {
         public void remove() {
             saajIterator.remove();
         }
-
     }
-
-
 }

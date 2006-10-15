@@ -39,7 +39,7 @@ import org.springframework.ws.transport.TransportResponse;
  * @author Arjen Poutsma
  * @see SaajSoapMessageContextFactory
  */
-public class SaajSoapMessageContext extends AbstractSoapMessageContext {
+public abstract class SaajSoapMessageContext extends AbstractSoapMessageContext {
 
     private final MessageFactory messageFactory;
 
@@ -50,43 +50,15 @@ public class SaajSoapMessageContext extends AbstractSoapMessageContext {
      * @param transportRequest the transport request
      * @param messageFactory   the message factory used for creating a response
      */
-    public SaajSoapMessageContext(SOAPMessage request,
-                                  TransportRequest transportRequest,
-                                  MessageFactory messageFactory) {
-        super(new SaajSoapMessage(request), transportRequest);
+    protected SaajSoapMessageContext(SaajSoapMessage request,
+                                     TransportRequest transportRequest,
+                                     MessageFactory messageFactory) {
+        super(request, transportRequest);
         Assert.notNull(messageFactory);
         this.messageFactory = messageFactory;
     }
 
-    /**
-     * Returns the request as a SAAJ SOAP message.
-     */
-    public SOAPMessage getSaajRequest() {
-        return ((SaajSoapMessage) getSoapRequest()).getSaajMessage();
-    }
-
-    /**
-     * Sets the request to the given SAAJ SOAP message.
-     */
-    public void setSaajRequest(SOAPMessage request) {
-        setRequest(new SaajSoapMessage(request));
-    }
-
-    /**
-     * Returns the response as a SAAJ SOAP message.
-     */
-    public SOAPMessage getSaajResponse() {
-        return ((SaajSoapMessage) getSoapResponse()).getSaajMessage();
-    }
-
-    /**
-     * Sets the response to the given SAAJ SOAP message.
-     */
-    public void setSaajResponse(SOAPMessage response) {
-        setResponse(new SaajSoapMessage(response));
-    }
-
-    public void sendResponse(TransportResponse transportResponse) throws IOException {
+    public final void sendResponse(TransportResponse transportResponse) throws IOException {
         if (hasResponse()) {
             SOAPMessage response = getSaajResponse();
             try {
@@ -111,17 +83,45 @@ public class SaajSoapMessageContext extends AbstractSoapMessageContext {
                 throw new SaajSoapMessageException("Could not write message to TransportResponse: " + ex.getMessage(),
                         ex);
             }
-
         }
     }
 
     protected SoapMessage createResponseSoapMessage() {
         try {
             SOAPMessage saajMessage = messageFactory.createMessage();
-            return new SaajSoapMessage(saajMessage);
+            return createSaajSoapMessage(saajMessage);
         }
         catch (SOAPException ex) {
             throw new SoapMessageCreationException("Could not create message: " + ex.toString(), ex);
         }
     }
+
+    /**
+     * Creates a new <code>SaajSoapMessage</code> using the given SAAJ message.
+     */
+    protected abstract SaajSoapMessage createSaajSoapMessage(SOAPMessage saajMessage);
+
+    /**
+     * Returns the request as a SAAJ SOAP message.
+     */
+    public final SOAPMessage getSaajRequest() {
+        return ((SaajSoapMessage) getSoapRequest()).getSaajMessage();
+    }
+
+    /**
+     * Returns the response as a SAAJ SOAP message.
+     */
+    public final SOAPMessage getSaajResponse() {
+        return ((SaajSoapMessage) getSoapResponse()).getSaajMessage();
+    }
+
+    /**
+     * Sets the request to the given SAAJ SOAP message.
+     */
+    public abstract void setSaajRequest(SOAPMessage request);
+
+    /**
+     * Sets the response to the given SAAJ SOAP message.
+     */
+    public abstract void setSaajResponse(SOAPMessage response);
 }

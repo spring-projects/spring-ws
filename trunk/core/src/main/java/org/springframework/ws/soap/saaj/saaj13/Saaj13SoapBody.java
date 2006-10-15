@@ -17,7 +17,6 @@
 package org.springframework.ws.soap.saaj.saaj13;
 
 import java.util.Iterator;
-import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPBodyElement;
 import javax.xml.transform.Result;
@@ -25,7 +24,6 @@ import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
-import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapBody;
 
 /**
@@ -34,13 +32,15 @@ import org.springframework.ws.soap.SoapBody;
  *
  * @author Arjen Poutsma
  */
-abstract class Saaj13SoapBody implements SoapBody {
+abstract class Saaj13SoapBody extends Saaj13SoapElement implements SoapBody {
 
-    protected final SOAPBody saajBody;
+    protected Saaj13SoapBody(SOAPBody saajBody) {
+        super(saajBody);
+    }
 
-    Saaj13SoapBody(SOAPBody saajBody) {
-        Assert.notNull(saajBody, "No saajBody given");
-        this.saajBody = saajBody;
+    public final Result getPayloadResult() {
+        getSaajBody().removeContents();
+        return new DOMResult(getSaajBody());
     }
 
     public final Source getPayloadSource() {
@@ -48,21 +48,8 @@ abstract class Saaj13SoapBody implements SoapBody {
         return payloadElement != null ? new DOMSource(payloadElement) : null;
     }
 
-    public final Result getPayloadResult() {
-        saajBody.removeContents();
-        return new DOMResult(saajBody);
-    }
-
     public final boolean hasFault() {
-        return saajBody.hasFault();
-    }
-
-    public final QName getName() {
-        return saajBody.getElementQName();
-    }
-
-    public final Source getSource() {
-        return new DOMSource(saajBody);
+        return getSaajBody().hasFault();
     }
 
     /**
@@ -72,7 +59,7 @@ abstract class Saaj13SoapBody implements SoapBody {
      * @return the message payload, or <code>null</code> if none is set.
      */
     private SOAPBodyElement getPayloadElement() {
-        for (Iterator iterator = saajBody.getChildElements(); iterator.hasNext();) {
+        for (Iterator iterator = getSaajBody().getChildElements(); iterator.hasNext();) {
             Object child = iterator.next();
             if (child instanceof SOAPBodyElement) {
                 return (SOAPBodyElement) child;
@@ -81,4 +68,7 @@ abstract class Saaj13SoapBody implements SoapBody {
         return null;
     }
 
+    protected final SOAPBody getSaajBody() {
+        return (SOAPBody) getSaajElement();
+    }
 }
