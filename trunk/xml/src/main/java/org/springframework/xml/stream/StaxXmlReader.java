@@ -57,12 +57,12 @@ public abstract class StaxXmlReader implements XMLReader {
         this.contentHandler = contentHandler;
     }
 
-    public DTDHandler getDtdHandler() {
-        return dtdHandler;
+    public void setDTDHandler(DTDHandler dtdHandler) {
+        this.dtdHandler = dtdHandler;
     }
 
-    public void setDtdHandler(DTDHandler dtdHandler) {
-        this.dtdHandler = dtdHandler;
+    public DTDHandler getDTDHandler() {
+        return dtdHandler;
     }
 
     public EntityResolver getEntityResolver() {
@@ -115,14 +115,6 @@ public abstract class StaxXmlReader implements XMLReader {
      */
     public void setProperty(String name, Object value) throws SAXNotRecognizedException {
         throw new SAXNotRecognizedException(name);
-    }
-
-    public void setDTDHandler(DTDHandler dtdHandler) {
-        this.setDtdHandler(dtdHandler);
-    }
-
-    public DTDHandler getDTDHandler() {
-        return getDtdHandler();
     }
 
     /**
