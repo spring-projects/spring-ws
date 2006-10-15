@@ -16,14 +16,14 @@
 
 package org.springframework.ws.soap.axiom.support;
 
-import java.util.Locale;
-import javax.xml.namespace.QName;
-
 import junit.framework.TestCase;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
+
+import javax.xml.namespace.QName;
+import java.util.Locale;
 
 public class AxiomUtilsTest extends TestCase {
 
@@ -36,25 +36,25 @@ public class AxiomUtilsTest extends TestCase {
     }
 
     public void testToNamespaceDeclared() throws Exception {
-        QName qName = new QName(element.getNamespace().getName(), "localPart");
+        QName qName = new QName(element.getNamespace().getNamespaceURI(), "localPart");
         OMNamespace namespace = AxiomUtils.toNamespace(qName, element);
         assertNotNull("Invalid namespace", namespace);
-        assertEquals("Invalid namespace", qName.getNamespaceURI(), namespace.getName());
+        assertEquals("Invalid namespace", qName.getNamespaceURI(), namespace.getNamespaceURI());
     }
 
     public void testToNamespaceUndeclared() throws Exception {
         QName qName = new QName("http://www.example.com", "localPart");
         OMNamespace namespace = AxiomUtils.toNamespace(qName, element);
         assertNotNull("Invalid namespace", namespace);
-        assertEquals("Invalid namespace", qName.getNamespaceURI(), namespace.getName());
+        assertEquals("Invalid namespace", qName.getNamespaceURI(), namespace.getNamespaceURI());
         assertFalse("Invalid prefix", "prefix".equals(namespace.getPrefix()));
     }
 
     public void testToNamespacePrefixDeclared() throws Exception {
-        QName qName = new QName(element.getNamespace().getName(), "localPart", "prefix");
+        QName qName = new QName(element.getNamespace().getNamespaceURI(), "localPart", "prefix");
         OMNamespace namespace = AxiomUtils.toNamespace(qName, element);
         assertNotNull("Invalid namespace", namespace);
-        assertEquals("Invalid namespace", qName.getNamespaceURI(), namespace.getName());
+        assertEquals("Invalid namespace", qName.getNamespaceURI(), namespace.getNamespaceURI());
         assertEquals("Invalid prefix", "prefix", namespace.getPrefix());
     }
 
@@ -62,7 +62,7 @@ public class AxiomUtilsTest extends TestCase {
         QName qName = new QName("http://www.example.com", "localPart", "otherPrefix");
         OMNamespace namespace = AxiomUtils.toNamespace(qName, element);
         assertNotNull("Invalid namespace", namespace);
-        assertEquals("Invalid namespace", qName.getNamespaceURI(), namespace.getName());
+        assertEquals("Invalid namespace", qName.getNamespaceURI(), namespace.getNamespaceURI());
         assertEquals("Invalid prefix", qName.getPrefix(), namespace.getPrefix());
     }
 

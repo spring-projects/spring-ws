@@ -16,21 +16,16 @@
 
 package org.springframework.ws.soap.axiom;
 
-import javax.xml.namespace.QName;
-import javax.xml.transform.Source;
-
 import org.apache.axiom.om.OMException;
-import org.apache.axiom.soap.SOAPFactory;
-import org.apache.axiom.soap.SOAPFault;
-import org.apache.axiom.soap.SOAPFaultDetail;
-import org.apache.axiom.soap.SOAPFaultRole;
-import org.apache.axiom.soap.SOAPFaultValue;
-import org.apache.axiom.soap.SOAPProcessingException;
+import org.apache.axiom.soap.*;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapFaultDetail;
 import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.StaxSource;
+
+import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
 
 /**
  * @author Arjen Poutsma
@@ -68,7 +63,7 @@ abstract class AxiomSoapFault implements SoapFault {
         int idx = text.indexOf(':');
         String prefix = text.substring(0, idx);
         String localPart = text.substring(idx + 1);
-        String namespaceUri = axiomFault.getCode().getValue().findNamespaceURI(prefix).getName();
+        String namespaceUri = axiomFault.getCode().getValue().findNamespaceURI(prefix).getNamespaceURI();
         return QNameUtils.createQName(namespaceUri, localPart, prefix);
     }
 

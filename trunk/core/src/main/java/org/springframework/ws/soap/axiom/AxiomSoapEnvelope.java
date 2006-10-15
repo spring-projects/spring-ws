@@ -1,20 +1,15 @@
 package org.springframework.ws.soap.axiom;
 
-import javax.xml.namespace.QName;
-import javax.xml.transform.Source;
-
 import org.apache.axiom.om.OMException;
-import org.apache.axiom.soap.SOAP11Constants;
-import org.apache.axiom.soap.SOAP12Constants;
-import org.apache.axiom.soap.SOAPBody;
-import org.apache.axiom.soap.SOAPEnvelope;
-import org.apache.axiom.soap.SOAPFactory;
-import org.apache.axiom.soap.SOAPHeader;
+import org.apache.axiom.soap.*;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.xml.transform.StaxSource;
+
+import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
 
 /**
  * Axiom-Specific version of <code>org.springframework.ws.soap.SoapEnvelope</code>.
@@ -59,7 +54,7 @@ class AxiomSoapEnvelope implements SoapEnvelope {
             }
             else {
                 SOAPHeader axiomHeader = axiomEnvelope.getHeader();
-                String namespaceURI = axiomEnvelope.getNamespace().getName();
+                String namespaceURI = axiomEnvelope.getNamespace().getNamespaceURI();
                 if (SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(namespaceURI)) {
                     return new AxiomSoapHeader(axiomHeader, axiomFactory);
                 }
@@ -80,7 +75,7 @@ class AxiomSoapEnvelope implements SoapEnvelope {
         if (body == null) {
             try {
                 SOAPBody axiomBody = axiomEnvelope.getBody();
-                String namespaceURI = axiomEnvelope.getNamespace().getName();
+                String namespaceURI = axiomEnvelope.getNamespace().getNamespaceURI();
                 if (SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(namespaceURI)) {
                     body = new AxiomSoap11Body(axiomBody, axiomFactory, payloadCaching);
                 }
