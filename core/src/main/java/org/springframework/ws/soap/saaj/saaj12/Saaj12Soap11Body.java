@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.saaj;
+package org.springframework.ws.soap.saaj.saaj12;
 
 import java.util.Iterator;
 import java.util.Locale;
@@ -33,6 +33,7 @@ import javax.xml.transform.dom.DOMSource;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.SoapFault;
+import org.springframework.ws.soap.saaj.SaajSoapFaultException;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 import org.springframework.ws.soap.soap11.Soap11Body;
 import org.springframework.ws.soap.soap11.Soap11Fault;

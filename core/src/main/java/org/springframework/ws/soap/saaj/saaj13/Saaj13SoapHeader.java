@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.saaj;
+package org.springframework.ws.soap.saaj.saaj13;
 
 import java.util.Iterator;
 import javax.xml.namespace.QName;
-import javax.xml.soap.Name;
-import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
@@ -29,24 +27,24 @@ import javax.xml.transform.dom.DOMSource;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
-import org.springframework.ws.soap.saaj.support.SaajUtils;
+import org.springframework.ws.soap.saaj.SaajSoapHeaderException;
 
 /**
- * Internal class that uses SAAJ 1.2 to implement the <code>SoapHeader</code> interface.
+ * Internal class that uses SAAJ 1.3 to implement the <code>SoapHeader</code> interface.
  *
  * @author Arjen Poutsma
  */
-class Saaj12SoapHeader implements SoapHeader {
+class Saaj13SoapHeader implements SoapHeader {
 
-    private final SOAPHeader saajHeader;
+    protected final SOAPHeader saajHeader;
 
-    Saaj12SoapHeader(SOAPHeader saajHeader) {
+    Saaj13SoapHeader(SOAPHeader saajHeader) {
         Assert.notNull(saajHeader, "No saajHeader given");
         this.saajHeader = saajHeader;
     }
 
     public QName getName() {
-        return SaajUtils.toQName(saajHeader.getElementName());
+        return saajHeader.getElementQName();
     }
 
     public Source getSource() {
@@ -55,9 +53,8 @@ class Saaj12SoapHeader implements SoapHeader {
 
     public SoapHeaderElement addHeaderElement(QName name) {
         try {
-            Name saajName = SaajUtils.toName(name, saajHeader, getEnvelope());
-            SOAPHeaderElement saajHeaderElement = saajHeader.addHeaderElement(saajName);
-            return new Saaj12SoapHeaderElement(saajHeaderElement);
+            SOAPHeaderElement saajHeaderElement = saajHeader.addHeaderElement(name);
+            return new Saaj13SoapHeaderElement(saajHeaderElement);
         }
         catch (SOAPException ex) {
             throw new SaajSoapHeaderException(ex);
@@ -70,10 +67,6 @@ class Saaj12SoapHeader implements SoapHeader {
 
     public Iterator examineAllHeaderElements() {
         return new SaajSoapHeaderElementIterator(saajHeader.examineAllHeaderElements());
-    }
-
-    private SOAPEnvelope getEnvelope() {
-        return (SOAPEnvelope) saajHeader.getParentElement();
     }
 
     private static class SaajSoapHeaderElementIterator implements Iterator {
@@ -90,7 +83,7 @@ class Saaj12SoapHeader implements SoapHeader {
 
         public Object next() {
             SOAPHeaderElement saajHeaderElement = (SOAPHeaderElement) saajIterator.next();
-            return new Saaj12SoapHeaderElement(saajHeaderElement);
+            return new Saaj13SoapHeaderElement(saajHeaderElement);
         }
 
         public void remove() {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.saaj;
+package org.springframework.ws.soap.saaj.saaj12;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPEnvelope;
@@ -22,10 +22,11 @@ import javax.xml.soap.SOAPException;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
-import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapBody;
-import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.SoapHeader;
+import org.springframework.ws.soap.saaj.SaajSoapBodyException;
+import org.springframework.ws.soap.saaj.SaajSoapEnvelope;
+import org.springframework.ws.soap.saaj.SaajSoapHeaderException;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 
 /**
@@ -34,31 +35,29 @@ import org.springframework.ws.soap.saaj.support.SaajUtils;
  *
  * @author Arjen Poutsma
  */
-class Saaj12SoapEnvelope implements SoapEnvelope {
-
-    private final SOAPEnvelope saajEnvelope;
+public class Saaj12SoapEnvelope extends SaajSoapEnvelope {
 
     private Saaj12SoapHeader header;
 
     private Saaj12Soap11Body body;
 
-    Saaj12SoapEnvelope(SOAPEnvelope saajEnvelope) {
-        Assert.notNull(saajEnvelope, "No saajEnvelope given");
-        this.saajEnvelope = saajEnvelope;
+    public Saaj12SoapEnvelope(SOAPEnvelope saajEnvelope) {
+        super(saajEnvelope);
     }
 
     public QName getName() {
-        return SaajUtils.toQName(saajEnvelope.getElementName());
+        return SaajUtils.toQName(getSaajEnvelope().getElementName());
     }
 
     public Source getSource() {
-        return new DOMSource(saajEnvelope);
+        return new DOMSource(getSaajEnvelope());
     }
 
     public SoapHeader getHeader() {
         if (header != null) {
             try {
-                header = saajEnvelope.getHeader() != null ? new Saaj12SoapHeader(saajEnvelope.getHeader()) : null;
+                header = getSaajEnvelope().getHeader() != null ? new Saaj12SoapHeader(getSaajEnvelope().getHeader()) :
+                        null;
             }
             catch (SOAPException ex) {
                 throw new SaajSoapHeaderException(ex);
@@ -70,7 +69,7 @@ class Saaj12SoapEnvelope implements SoapEnvelope {
     public SoapBody getBody() {
         if (body == null) {
             try {
-                body = new Saaj12Soap11Body(saajEnvelope.getBody());
+                body = new Saaj12Soap11Body(getSaajEnvelope().getBody());
             }
             catch (SOAPException ex) {
                 throw new SaajSoapBodyException(ex);

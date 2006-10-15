@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.saaj;
+package org.springframework.ws.soap.saaj.saaj13;
 
 import java.util.Locale;
 import javax.xml.namespace.QName;
@@ -26,37 +26,52 @@ import javax.xml.transform.dom.DOMSource;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapFaultDetail;
-import org.springframework.ws.soap.saaj.support.SaajUtils;
+import org.springframework.ws.soap.saaj.SaajSoapFaultException;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 
 /**
- * Internal class that uses SAAJ 1.2 to implement the <code>Soap11Fault</code> interface.
+ * Internal class that uses SAAJ 1.3 to implement the <code>Soap11Fault</code> interface.
  *
  * @author Arjen Poutsma
  */
-class Saaj12Soap11Fault implements Soap11Fault {
+class Saaj13Soap11Fault implements Soap11Fault {
 
     private final SOAPFault saajFault;
 
-    Saaj12Soap11Fault(SOAPFault saajFault) {
+    Saaj13Soap11Fault(SOAPFault saajFault) {
         Assert.notNull(saajFault, "No saajFault given");
         this.saajFault = saajFault;
     }
 
-    public QName getName() {
-        return SaajUtils.toQName(saajFault.getElementName());
+    public Locale getFaultStringLocale() {
+        return saajFault.getFaultStringLocale();
+    }
+
+    public String getFaultString() {
+        return saajFault.getFaultString();
     }
 
     public Source getSource() {
         return new DOMSource(saajFault);
     }
 
-    public QName getFaultCode() {
-        return SaajUtils.toQName(saajFault.getFaultCodeAsName());
+    public QName getName() {
+        return saajFault.getElementQName();
     }
 
-    public String getFaultString() {
-        return saajFault.getFaultString();
+    public SoapFaultDetail addFaultDetail() {
+        try {
+            Detail saajDetail = saajFault.addDetail();
+            return saajDetail != null ? new Saaj13SoapFaultDetail(saajDetail) : null;
+        }
+        catch (SOAPException ex) {
+            throw new SaajSoapFaultException(ex);
+        }
+    }
+
+    public SoapFaultDetail getFaultDetail() {
+        Detail saajDetail = saajFault.getDetail();
+        return saajDetail != null ? new Saaj13SoapFaultDetail(saajDetail) : null;
     }
 
     public String getFaultActorOrRole() {
@@ -72,22 +87,7 @@ class Saaj12Soap11Fault implements Soap11Fault {
         }
     }
 
-    public Locale getFaultStringLocale() {
-        return saajFault.getFaultStringLocale();
-    }
-
-    public SoapFaultDetail getFaultDetail() {
-        Detail saajDetail = saajFault.getDetail();
-        return saajDetail != null ? new Saaj12SoapFaultDetail(saajDetail) : null;
-    }
-
-    public SoapFaultDetail addFaultDetail() {
-        try {
-            Detail saajDetail = saajFault.addDetail();
-            return saajDetail != null ? new Saaj12SoapFaultDetail(saajDetail) : null;
-        }
-        catch (SOAPException ex) {
-            throw new SaajSoapFaultException(ex);
-        }
+    public QName getFaultCode() {
+        return saajFault.getFaultCodeAsQName();
     }
 }
