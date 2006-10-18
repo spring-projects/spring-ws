@@ -29,6 +29,7 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
 import org.springframework.core.io.Resource;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.namespace.QNameUtils;
 import org.w3c.dom.Element;
@@ -59,7 +60,7 @@ public abstract class SaajUtils {
             saajVersion = SAAJ_13;
         }
         catch (ClassNotFoundException ex) {
-            if (Element.class.isAssignableFrom(SOAPElement.class) && !isWebLogic9Implementation()) {
+            if (Element.class.isAssignableFrom(SOAPElement.class)) {
                 saajVersion = SAAJ_12;
             }
             else {
@@ -72,6 +73,7 @@ public abstract class SaajUtils {
      * Checks whether we are dealing with a WebLogic 9 implementation of SAAJ. WebLogic 9 does implement SAAJ 1.2, but
      * throws UnsupportedOperationExceptions when a SAAJ 1.2 method is called.
      */
+/*
     private static boolean isWebLogic9Implementation() {
         try {
             MessageFactory messageFactory = MessageFactory.newInstance();
@@ -88,6 +90,7 @@ public abstract class SaajUtils {
             return false;
         }
     }
+*/
 
     /**
      * Gets the SAAJ version.
@@ -106,25 +109,25 @@ public abstract class SaajUtils {
      *
      * @param qName          the <code>QName</code> to convert
      * @param resolveElement a <code>SOAPElement</code> used to resolve namespaces to prefixes
-     * @param envelope       a <code>SOAPEnvelope</code> necessary to create the <code>Name</code>
      * @return the converted SAAJ Name
      * @throws SOAPException            if conversion is unsuccessful
      * @throws IllegalArgumentException if <code>qName</code> is not fully qualified
      */
-    public static Name toName(QName qName, SOAPElement resolveElement, SOAPEnvelope envelope) throws SOAPException {
+    public static Name toName(QName qName, SOAPElement resolveElement) throws SOAPException {
         String qNamePrefix = QNameUtils.getPrefix(qName);
+        SOAPEnvelope envelope = getEnvelope(resolveElement);
         if (StringUtils.hasLength(qName.getNamespaceURI()) && StringUtils.hasLength(qNamePrefix)) {
             return envelope.createName(qName.getLocalPart(), qNamePrefix, qName.getNamespaceURI());
         }
         else if (StringUtils.hasLength(qName.getNamespaceURI())) {
-            Iterator prefixes = resolveElement.getVisibleNamespacePrefixes();
+            Iterator prefixes = resolveElement.getNamespacePrefixes();
             while (prefixes.hasNext()) {
                 String prefix = (String) prefixes.next();
                 if (qName.getNamespaceURI().equals(resolveElement.getNamespaceURI(prefix))) {
                     return envelope.createName(qName.getLocalPart(), prefix, qName.getNamespaceURI());
                 }
             }
-            throw new IllegalArgumentException("Could not resolve namespace of QName [" + qName + "]");
+            throw new IllegalArgumentException("Could not resolve prefix of QName [" + qName + "]");
         }
         else {
             return envelope.createName(qName.getLocalPart());
@@ -182,5 +185,23 @@ public abstract class SaajUtils {
         finally {
             is.close();
         }
+    }
+
+    /**
+     * Returns the SAAJ <code>SOAPEnvelope</code> for the given element.
+     *
+     * @param element the element to return the envelope from
+     * @return the envelope, or <code>null</code> if not found
+     */
+    public static SOAPEnvelope getEnvelope(SOAPElement element) {
+        Assert.notNull(element, "Element should not be null");
+        do {
+            if (element instanceof SOAPEnvelope) {
+                return (SOAPEnvelope) element;
+            }
+            element = element.getParentElement();
+        }
+        while (element != null);
+        return null;
     }
 }
