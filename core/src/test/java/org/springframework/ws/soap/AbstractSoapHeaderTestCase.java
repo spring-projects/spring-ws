@@ -50,26 +50,6 @@ public abstract class AbstractSoapHeaderTestCase extends XMLTestCase {
                 "<spring:localName xmlns:spring='http://www.springframework.org'><spring:content/></spring:localName>");
     }
 
-    public void testExamineAllHeaderElement() throws Exception {
-        QName qName = new QName("http://www.springframework.org", "localName", "spring");
-        SoapHeaderElement headerElement = soapHeader.addHeaderElement(qName);
-        assertEquals("Invalid qName for element", qName, headerElement.getName());
-        String payload = "<content xmlns='http://www.springframework.org'/>";
-        assertNotNull("No SoapHeaderElement returned", headerElement);
-        transformer.transform(new StringSource(payload), headerElement.getResult());
-        Iterator iterator = soapHeader.examineAllHeaderElements();
-        assertNotNull("header element iterator is null", iterator);
-        assertTrue("header element iterator has no elements", iterator.hasNext());
-        headerElement = (SoapHeaderElement) iterator.next();
-        assertEquals("Invalid qName for element", qName, headerElement.getName());
-        StringResult result = new StringResult();
-        transformer.transform(headerElement.getSource(), result);
-        assertXMLEqual("Invalid contents of header element",
-                "<spring:localName xmlns:spring='http://www.springframework.org'><spring:content/></spring:localName>",
-                result.toString());
-        assertFalse("header element iterator has too many elements", iterator.hasNext());
-    }
-
     public void testExamineMustUnderstandHeaderElements() throws Exception {
         QName qName1 = new QName("http://www.springframework.org", "localName1", "spring");
         SoapHeaderElement headerElement1 = soapHeader.addHeaderElement(qName1);

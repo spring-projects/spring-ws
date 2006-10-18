@@ -41,7 +41,7 @@ public class SaajUtilsTest extends XMLTestCase {
         SOAPMessage message = messageFactory.createMessage();
         QName qName = new QName("localPart");
         SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
-        Name name = SaajUtils.toName(qName, envelope, envelope);
+        Name name = SaajUtils.toName(qName, envelope);
         assertNotNull("Invalid name", name);
         assertEquals("Invalid local part", qName.getLocalPart(), name.getLocalName());
         assertFalse("Invalid prefix", StringUtils.hasLength(name.getPrefix()));
@@ -53,7 +53,7 @@ public class SaajUtilsTest extends XMLTestCase {
         QName qName = new QName("namespace", "localPart");
         SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
         envelope.addNamespaceDeclaration("prefix", "namespace");
-        Name name = SaajUtils.toName(qName, envelope, envelope);
+        Name name = SaajUtils.toName(qName, envelope);
         assertNotNull("Invalid name", name);
         assertEquals("Invalid namespace", qName.getNamespaceURI(), name.getURI());
         assertEquals("Invalid local part", qName.getLocalPart(), name.getLocalName());
@@ -64,7 +64,7 @@ public class SaajUtilsTest extends XMLTestCase {
         SOAPMessage message = messageFactory.createMessage();
         QName qName = new QName("namespace", "localPart", "prefix");
         SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
-        Name name = SaajUtils.toName(qName, envelope, envelope);
+        Name name = SaajUtils.toName(qName, envelope);
         assertNotNull("Invalid name", name);
         assertEquals("Invalid namespace", qName.getNamespaceURI(), name.getURI());
         assertEquals("Invalid local part", qName.getLocalPart(), name.getLocalName());
@@ -113,5 +113,13 @@ public class SaajUtilsTest extends XMLTestCase {
 
     public void testGetSaajVersion() throws Exception {
         assertEquals("Invalid SAAJ version", SaajUtils.SAAJ_13, SaajUtils.getSaajVersion());
+    }
+
+    public void testGetEnvelope() throws Exception {
+        SOAPMessage message = messageFactory.createMessage();
+        SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
+        assertSame("Invalid envelope returned", envelope, SaajUtils.getEnvelope(envelope));
+        assertSame("Invalid envelope returned", envelope, SaajUtils.getEnvelope(envelope.getBody()));
+        assertSame("Invalid envelope returned", envelope, SaajUtils.getEnvelope(envelope.getHeader()));
     }
 }
