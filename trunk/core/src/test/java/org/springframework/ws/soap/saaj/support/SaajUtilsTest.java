@@ -114,12 +114,4 @@ public class SaajUtilsTest extends XMLTestCase {
     public void testGetSaajVersion() throws Exception {
         assertEquals("Invalid SAAJ version", SaajUtils.SAAJ_13, SaajUtils.getSaajVersion());
     }
-
-    public void testGetEnvelope() throws Exception {
-        SOAPMessage message = messageFactory.createMessage();
-        SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
-        assertSame("Invalid envelope returned", envelope, SaajUtils.getEnvelope(envelope));
-        assertSame("Invalid envelope returned", envelope, SaajUtils.getEnvelope(envelope.getBody()));
-        assertSame("Invalid envelope returned", envelope, SaajUtils.getEnvelope(envelope.getHeader()));
-    }
 }

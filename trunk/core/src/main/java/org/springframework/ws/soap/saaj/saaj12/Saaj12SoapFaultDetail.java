@@ -21,7 +21,6 @@ import javax.xml.namespace.QName;
 import javax.xml.soap.Detail;
 import javax.xml.soap.DetailEntry;
 import javax.xml.soap.Name;
-import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.transform.Result;
 import javax.xml.transform.dom.DOMResult;
@@ -45,7 +44,7 @@ class Saaj12SoapFaultDetail extends Saaj12SoapElement implements SoapFaultDetail
 
     public SoapFaultDetailElement addFaultDetailElement(QName name) {
         try {
-            Name detailEntryName = SaajUtils.toName(name, getSaajDetail(), getEnvelope());
+            Name detailEntryName = SaajUtils.toName(name, getSaajDetail());
             DetailEntry saajDetailEntry = getSaajDetail().addDetailEntry(detailEntryName);
             return new Saaj12SoapFaultDetailElement(saajDetailEntry);
         }
@@ -60,10 +59,6 @@ class Saaj12SoapFaultDetail extends Saaj12SoapElement implements SoapFaultDetail
 
     public Result getResult() {
         return new DOMResult(getSaajDetail());
-    }
-
-    private SOAPEnvelope getEnvelope() {
-        return (SOAPEnvelope) getSaajDetail().getParentElement().getParentElement().getParentElement();
     }
 
     private Detail getSaajDetail() {

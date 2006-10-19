@@ -18,7 +18,6 @@ package org.springframework.ws.soap.saaj.saaj12;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
-import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.transform.Result;
@@ -62,16 +61,12 @@ class Saaj12SoapHeaderElement extends Saaj12SoapElement implements SoapHeaderEle
 
     public void addAttribute(QName name, String value) throws SoapHeaderException {
         try {
-            Name saajName = SaajUtils.toName(name, getSaajHeaderElement(), getEnvelope());
+            Name saajName = SaajUtils.toName(name, getSaajHeaderElement());
             getSaajHeaderElement().addAttribute(saajName, value);
         }
         catch (SOAPException ex) {
             throw new SaajSoapHeaderException(ex);
         }
-    }
-
-    private SOAPEnvelope getEnvelope() {
-        return (SOAPEnvelope) getSaajHeaderElement().getParentElement().getParentElement();
     }
 
     private SOAPHeaderElement getSaajHeaderElement() {

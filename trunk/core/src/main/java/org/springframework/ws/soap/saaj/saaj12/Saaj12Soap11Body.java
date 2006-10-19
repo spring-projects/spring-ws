@@ -57,7 +57,7 @@ class Saaj12Soap11Body extends Saaj12SoapElement implements Soap11Body {
                     "A fault code with namespace and local part must be specific for a custom fault code");
         }
         try {
-            Name name = SaajUtils.toName(faultCode, getSaajBody(), getEnvelope());
+            Name name = SaajUtils.toName(faultCode, getSaajBody());
             getSaajBody().removeContents();
             SOAPFault saajFault;
             if (faultStringLocale == null) {
