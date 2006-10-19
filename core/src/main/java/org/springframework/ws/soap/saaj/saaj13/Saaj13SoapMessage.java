@@ -16,11 +16,10 @@
 
 package org.springframework.ws.soap.saaj.saaj13;
 
-import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPMessage;
 
 import org.springframework.ws.soap.SoapEnvelope;
-import org.springframework.ws.soap.saaj.SaajSoapEnvelopeException;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
 class Saaj13SoapMessage extends SaajSoapMessage {
@@ -34,12 +33,7 @@ class Saaj13SoapMessage extends SaajSoapMessage {
         super(soapMessage);
     }
 
-    protected SoapEnvelope createSaajSoapEnvelope(SOAPMessage saajMessage) {
-        try {
-            return new Saaj13SoapEnvelope(saajMessage.getSOAPPart().getEnvelope());
-        }
-        catch (SOAPException ex) {
-            throw new SaajSoapEnvelopeException(ex);
-        }
+    protected SoapEnvelope createSaajSoapEnvelope(SOAPEnvelope saajEnvelope) {
+        return new Saaj13SoapEnvelope(saajEnvelope);
     }
 }

@@ -49,4 +49,13 @@ public interface SoapHeader extends SoapElement {
      * @see SoapHeaderElement
      */
     Iterator examineMustUnderstandHeaderElements(String actorOrRole) throws SoapHeaderException;
+
+    /**
+     * Returns an <code>Iterator</code> over all the <code>SoapHeaderElement</code>s in this header.
+     *
+     * @return an iterator over all the header elements
+     * @throws SoapHeaderException if the header cannot be returned
+     * @see SoapHeaderElement
+     */
+    Iterator examineAllHeaderElements() throws SoapHeaderException;
 }

@@ -19,7 +19,6 @@ package org.springframework.ws.soap.saaj.saaj12;
 import java.util.Iterator;
 import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
-import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
@@ -42,7 +41,7 @@ class Saaj12SoapHeader extends Saaj12SoapElement implements SoapHeader {
 
     public SoapHeaderElement addHeaderElement(QName name) {
         try {
-            Name saajName = SaajUtils.toName(name, getSaajHeader(), getEnvelope());
+            Name saajName = SaajUtils.toName(name, getSaajHeader());
             SOAPHeaderElement saajHeaderElement = getSaajHeader().addHeaderElement(saajName);
             return new Saaj12SoapHeaderElement(saajHeaderElement);
         }
@@ -57,10 +56,6 @@ class Saaj12SoapHeader extends Saaj12SoapElement implements SoapHeader {
 
     public Iterator examineMustUnderstandHeaderElements(String role) {
         return new Saaj12SoapHeaderElementIterator(getSaajHeader().examineMustUnderstandHeaderElements(role));
-    }
-
-    private SOAPEnvelope getEnvelope() {
-        return (SOAPEnvelope) getSaajHeader().getParentElement();
     }
 
     private SOAPHeader getSaajHeader() {

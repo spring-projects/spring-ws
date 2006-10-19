@@ -60,7 +60,7 @@ public abstract class SaajUtils {
             saajVersion = SAAJ_13;
         }
         catch (ClassNotFoundException ex) {
-            if (Element.class.isAssignableFrom(SOAPElement.class)) {
+            if (Element.class.isAssignableFrom(SOAPElement.class) && !isWebLogic9Implementation()) {
                 saajVersion = SAAJ_12;
             }
             else {
@@ -73,7 +73,6 @@ public abstract class SaajUtils {
      * Checks whether we are dealing with a WebLogic 9 implementation of SAAJ. WebLogic 9 does implement SAAJ 1.2, but
      * throws UnsupportedOperationExceptions when a SAAJ 1.2 method is called.
      */
-/*
     private static boolean isWebLogic9Implementation() {
         try {
             MessageFactory messageFactory = MessageFactory.newInstance();
@@ -90,7 +89,6 @@ public abstract class SaajUtils {
             return false;
         }
     }
-*/
 
     /**
      * Gets the SAAJ version.
@@ -120,14 +118,14 @@ public abstract class SaajUtils {
             return envelope.createName(qName.getLocalPart(), qNamePrefix, qName.getNamespaceURI());
         }
         else if (StringUtils.hasLength(qName.getNamespaceURI())) {
-            Iterator prefixes = resolveElement.getNamespacePrefixes();
+            Iterator prefixes = resolveElement.getVisibleNamespacePrefixes();
             while (prefixes.hasNext()) {
                 String prefix = (String) prefixes.next();
                 if (qName.getNamespaceURI().equals(resolveElement.getNamespaceURI(prefix))) {
                     return envelope.createName(qName.getLocalPart(), prefix, qName.getNamespaceURI());
                 }
             }
-            throw new IllegalArgumentException("Could not resolve prefix of QName [" + qName + "]");
+            throw new IllegalArgumentException("Could not resolve namespace of QName [" + qName + "]");
         }
         else {
             return envelope.createName(qName.getLocalPart());
