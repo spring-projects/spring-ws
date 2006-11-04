@@ -16,18 +16,12 @@
 
 package org.springframework.ws.soap.security.xwss;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.Iterator;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPMessage;
 
 import junit.framework.TestCase;
 import org.springframework.ws.soap.saaj.SaajSoapMessageContext;
 import org.springframework.ws.soap.saaj.saaj13.Saaj13SoapMessageContext;
-import org.springframework.ws.transport.TransportException;
-import org.springframework.ws.transport.TransportRequest;
 
 public class XwsSecurityInterceptorTest extends TestCase {
 
@@ -52,8 +46,7 @@ public class XwsSecurityInterceptorTest extends TestCase {
             }
 
         };
-        SaajSoapMessageContext context =
-                new Saaj13SoapMessageContext(request, new DummyTransportRequest(), messageFactory);
+        SaajSoapMessageContext context = new Saaj13SoapMessageContext(request, messageFactory);
         interceptor.handleRequest(context, null);
         assertEquals("Invalid request", validatedRequest, context.getSaajRequest());
     }
@@ -74,29 +67,10 @@ public class XwsSecurityInterceptorTest extends TestCase {
 
         };
         SOAPMessage request = messageFactory.createMessage();
-        SaajSoapMessageContext context =
-                new Saaj13SoapMessageContext(request, new DummyTransportRequest(), messageFactory);
+        SaajSoapMessageContext context = new Saaj13SoapMessageContext(request, messageFactory);
         context.setSaajResponse(response);
         interceptor.handleResponse(context, null);
         assertEquals("Invalid response", securedResponse, context.getSaajResponse());
     }
 
-    private static class DummyTransportRequest implements TransportRequest {
-
-        public Iterator getHeaderNames() {
-            return Collections.EMPTY_LIST.iterator();
-        }
-
-        public Iterator getHeaders(String name) {
-            return Collections.EMPTY_LIST.iterator();
-        }
-
-        public String getUrl() throws TransportException {
-            return null;
-        }
-
-        public InputStream getInputStream() throws IOException {
-            return null;
-        }
-    }
 }

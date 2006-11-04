@@ -18,8 +18,9 @@ package org.springframework.ws.endpoint;
 
 import junit.framework.TestCase;
 import org.easymock.MockControl;
-
-import org.springframework.ws.mock.MockMessageContext;
+import org.springframework.ws.MockWebServiceMessageFactory;
+import org.springframework.ws.context.DefaultMessageContext;
+import org.springframework.ws.context.MessageContext;
 
 public class MessageEndpointAdapterTest extends TestCase {
 
@@ -40,7 +41,7 @@ public class MessageEndpointAdapterTest extends TestCase {
     }
 
     public void testInvoke() throws Exception {
-        MockMessageContext context = new MockMessageContext();
+        MessageContext context = new DefaultMessageContext(new MockWebServiceMessageFactory());
 
         endpointMock.invoke(context);
         endpointControl.replay();

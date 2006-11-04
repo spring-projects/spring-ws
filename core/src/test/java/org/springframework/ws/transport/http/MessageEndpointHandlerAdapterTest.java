@@ -24,12 +24,11 @@ import org.easymock.MockControl;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.ws.NoEndpointFoundException;
-import org.springframework.ws.context.MessageContextFactory;
+import org.springframework.ws.WebServiceMessageFactory;
+import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.endpoint.MessageEndpoint;
-import org.springframework.ws.mock.MockTransportContext;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.context.SoapMessageContext;
 
 public class MessageEndpointHandlerAdapterTest extends TestCase {
 
@@ -45,54 +44,50 @@ public class MessageEndpointHandlerAdapterTest extends TestCase {
 
     private MockHttpServletResponse httpResponse;
 
-    private MockControl endpointControl;
-
-    private MessageEndpoint endpointMock;
-
     private MockControl factoryControl;
 
-    private MessageContextFactory factoryMock;
-
-    private MockControl contextControl;
-
-    private SoapMessageContext contextMock;
+    private WebServiceMessageFactory factoryMock;
 
     private MockControl messageControl;
 
-    private SoapMessage messageMock;
+    private SoapMessage responseMock;
 
     private MockControl bodyControl;
 
     private SoapBody bodyMock;
 
+    private SoapMessage requestMock;
+
     protected void setUp() throws Exception {
         adapter = new MessageEndpointHandlerAdapter();
         httpRequest = new MockHttpServletRequest();
         httpResponse = new MockHttpServletResponse();
-        endpointControl = MockControl.createControl(MessageEndpoint.class);
-        endpointMock = (MessageEndpoint) endpointControl.getMock();
-        factoryControl = MockControl.createControl(MessageContextFactory.class);
-        factoryMock = (MessageContextFactory) factoryControl.getMock();
-        adapter.setMessageContextFactory(factoryMock);
-        contextControl = MockControl.createControl(SoapMessageContext.class);
-        contextMock = (SoapMessageContext) contextControl.getMock();
+        factoryControl = MockControl.createControl(WebServiceMessageFactory.class);
+        factoryMock = (WebServiceMessageFactory) factoryControl.getMock();
+        adapter.setMessageFactory(factoryMock);
         messageControl = MockControl.createControl(SoapMessage.class);
-        messageMock = (SoapMessage) messageControl.getMock();
+        requestMock = (SoapMessage) messageControl.getMock();
+        responseMock = (SoapMessage) messageControl.getMock();
         bodyControl = MockControl.createControl(SoapBody.class);
         bodyMock = (SoapBody) bodyControl.getMock();
     }
 
     public void testHandleNonPost() throws Exception {
         httpRequest.setMethod("GET");
-        endpointControl.replay();
+        replayMockControls();
+        MessageEndpoint endpoint = new MessageEndpoint() {
+
+            public void invoke(MessageContext messageContext) throws Exception {
+            }
+        };
         try {
-            adapter.handle(httpRequest, httpResponse, endpointMock);
+            adapter.handle(httpRequest, httpResponse, endpoint);
             fail("ServletException expected");
         }
         catch (ServletException ex) {
             // expected
         }
-        endpointControl.verify();
+        verifyMockControls();
     }
 
     public void testHandlePostNoResponse() throws Exception {
@@ -100,16 +95,18 @@ public class MessageEndpointHandlerAdapterTest extends TestCase {
         httpRequest.setContent(MessageEndpointHandlerAdapterTest.REQUEST.getBytes("UTF-8"));
         httpRequest.setContentType("text/xml; charset=\"utf-8\"");
         httpRequest.setCharacterEncoding("UTF-8");
-        endpointMock.invoke(null);
-        endpointControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        factoryMock.createContext(new MockTransportContext());
+        factoryMock.createWebServiceMessage(new HttpServletTransportInputStream(httpRequest));
         factoryControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        factoryControl.setReturnValue(contextMock);
-        contextControl.expectAndReturn(contextMock.hasResponse(), false);
+        factoryControl.setReturnValue(responseMock);
 
         replayMockControls();
+        MessageEndpoint endpoint = new MessageEndpoint() {
 
-        adapter.handle(httpRequest, httpResponse, endpointMock);
+            public void invoke(MessageContext messageContext) throws Exception {
+            }
+        };
+
+        adapter.handle(httpRequest, httpResponse, endpoint);
 
         assertEquals("Invalid status code on response", HttpServletResponse.SC_NO_CONTENT, httpResponse.getStatus());
         assertEquals("Response written", 0, httpResponse.getContentAsString().length());
@@ -121,21 +118,24 @@ public class MessageEndpointHandlerAdapterTest extends TestCase {
         httpRequest.setContent(MessageEndpointHandlerAdapterTest.REQUEST.getBytes("UTF-8"));
         httpRequest.setContentType("text/xml; charset=\"utf-8\"");
         httpRequest.setCharacterEncoding("UTF-8");
-        endpointMock.invoke(null);
-        endpointControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        factoryMock.createContext(new MockTransportContext());
+        factoryMock.createWebServiceMessage(new HttpServletTransportInputStream(httpRequest));
         factoryControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        factoryControl.setReturnValue(contextMock);
-        contextControl.expectAndReturn(contextMock.hasResponse(), true);
-        contextControl.expectAndReturn(contextMock.getResponse(), messageMock);
-        messageControl.expectAndReturn(messageMock.getSoapBody(), bodyMock);
+        factoryControl.setReturnValue(requestMock);
+        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), responseMock);
+        messageControl.expectAndReturn(responseMock.getSoapBody(), bodyMock);
         bodyControl.expectAndReturn(bodyMock.hasFault(), false);
-        contextMock.sendResponse(new HttpTransportResponse(httpResponse));
-        contextControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        responseMock.writeTo(new HttpServletTransportOutputStream(httpResponse));
+        messageControl.setMatcher(MockControl.ALWAYS_MATCHER);
 
         replayMockControls();
+        MessageEndpoint endpoint = new MessageEndpoint() {
 
-        adapter.handle(httpRequest, httpResponse, endpointMock);
+            public void invoke(MessageContext messageContext) throws Exception {
+                messageContext.getResponse();
+            }
+        };
+
+        adapter.handle(httpRequest, httpResponse, endpoint);
 
         assertEquals("Invalid status code on response", HttpServletResponse.SC_OK, httpResponse.getStatus());
         verifyMockControls();
@@ -146,24 +146,26 @@ public class MessageEndpointHandlerAdapterTest extends TestCase {
         httpRequest.setContent(MessageEndpointHandlerAdapterTest.REQUEST.getBytes("UTF-8"));
         httpRequest.setContentType("text/xml; charset=\"utf-8\"");
         httpRequest.setCharacterEncoding("UTF-8");
-        endpointMock.invoke(null);
-        endpointControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        factoryMock.createContext(new MockTransportContext());
+        factoryMock.createWebServiceMessage(new HttpServletTransportInputStream(httpRequest));
         factoryControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        factoryControl.setReturnValue(contextMock);
-        contextControl.expectAndReturn(contextMock.hasResponse(), true);
-        contextControl.expectAndReturn(contextMock.getResponse(), messageMock);
-        messageControl.expectAndReturn(messageMock.getSoapBody(), bodyMock);
+        factoryControl.setReturnValue(requestMock);
+        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), responseMock);
+        messageControl.expectAndReturn(responseMock.getSoapBody(), bodyMock);
         bodyControl.expectAndReturn(bodyMock.hasFault(), true);
-        contextMock.sendResponse(null);
-        contextControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        responseMock.writeTo(new HttpServletTransportOutputStream(httpResponse));
+        messageControl.setMatcher(MockControl.ALWAYS_MATCHER);
 
         replayMockControls();
+        MessageEndpoint endpoint = new MessageEndpoint() {
 
-        adapter.handle(httpRequest, httpResponse, endpointMock);
+            public void invoke(MessageContext messageContext) throws Exception {
+                messageContext.getResponse();
+            }
+        };
 
-        assertEquals("Invalid status code on response",
-                HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+        adapter.handle(httpRequest, httpResponse, endpoint);
+
+        assertEquals("Invalid status code on response", HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                 httpResponse.getStatus());
         verifyMockControls();
     }
@@ -173,16 +175,20 @@ public class MessageEndpointHandlerAdapterTest extends TestCase {
         httpRequest.setContent(MessageEndpointHandlerAdapterTest.REQUEST.getBytes("UTF-8"));
         httpRequest.setContentType("text/xml; charset=\"utf-8\"");
         httpRequest.setCharacterEncoding("UTF-8");
-        endpointMock.invoke(null);
-        endpointControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        endpointControl.setThrowable(new NoEndpointFoundException(null));
-        factoryMock.createContext(new MockTransportContext());
+        factoryMock.createWebServiceMessage(new HttpServletTransportInputStream(httpRequest));
         factoryControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        factoryControl.setReturnValue(contextMock);
+        factoryControl.setReturnValue(requestMock);
 
         replayMockControls();
 
-        adapter.handle(httpRequest, httpResponse, endpointMock);
+        MessageEndpoint endpoint = new MessageEndpoint() {
+
+            public void invoke(MessageContext messageContext) throws Exception {
+                throw new NoEndpointFoundException(messageContext.getRequest());
+            }
+        };
+
+        adapter.handle(httpRequest, httpResponse, endpoint);
         assertEquals("No 404 returned", HttpServletResponse.SC_NOT_FOUND, httpResponse.getStatus());
 
         verifyMockControls();
@@ -190,17 +196,13 @@ public class MessageEndpointHandlerAdapterTest extends TestCase {
     }
 
     private void replayMockControls() {
-        endpointControl.replay();
         factoryControl.replay();
-        contextControl.replay();
         messageControl.replay();
         bodyControl.replay();
     }
 
     private void verifyMockControls() {
-        endpointControl.verify();
         factoryControl.verify();
-        contextControl.verify();
         messageControl.verify();
         bodyControl.verify();
     }

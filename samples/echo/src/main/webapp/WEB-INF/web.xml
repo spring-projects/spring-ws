@@ -10,18 +10,6 @@
     </display-name>
     <description>Returns a given string(only A-Z and a-z chars allowed). See echo.xsd file.</description>
 
-    <!--Location of the Log4J config file, for initialization and refresh checks.
-            Applied by Log4jConfigListener. -->
-    <context-param>
-        <param-name>log4jConfigLocation</param-name>
-        <param-value>/WEB-INF/log4j.properties</param-value>
-    </context-param>
-
-    <!-- Logger for web server specific messages. -->
-    <listener>
-        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
-    </listener>
-
     <!-- Starts the web service servlet. -->
     <servlet>
         <servlet-name>spring-ws</servlet-name>
@@ -45,7 +33,7 @@
     </mime-mapping>
 
     <welcome-file-list>
-        <welcome-file>index.html</welcome-file>    
+        <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
 </web-app>

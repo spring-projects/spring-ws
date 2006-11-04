@@ -20,24 +20,24 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.Iterator;
-import javax.mail.MessagingException;
-import javax.xml.stream.XMLStreamException;
 import javax.activation.DataHandler;
+import javax.xml.stream.XMLStreamException;
 
 import org.apache.axiom.attachments.Attachments;
-import org.apache.axiom.attachments.Part;
 import org.apache.axiom.om.OMException;
+import org.apache.axiom.om.OMOutputFormat;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPMessage;
 import org.apache.axiom.soap.SOAPProcessingException;
 import org.springframework.core.io.InputStreamSource;
+import org.springframework.util.Assert;
 import org.springframework.ws.soap.AbstractSoapMessage;
 import org.springframework.ws.soap.Attachment;
 import org.springframework.ws.soap.SoapEnvelope;
-import org.springframework.util.Assert;
+import org.springframework.ws.soap.SoapVersion;
+import org.springframework.ws.transport.TransportOutputStream;
 
 /**
  * AXIOM-specific implementation of the <code>SoapMessage</code> interface. Accessed via the
@@ -48,7 +48,6 @@ import org.springframework.util.Assert;
  *
  * @author Arjen Poutsma
  * @see SOAPMessage
- * @see AxiomSoapMessageContext
  */
 public class AxiomSoapMessage extends AbstractSoapMessage {
 
@@ -77,6 +76,19 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
 
     /**
      * Create a new <code>AxiomSoapMessage</code> based on the given AXIOM <code>SOAPMessage</code>.
+     *
+     * @param soapMessage    the AXIOM SOAPMessage
+     * @param payloadCaching whether the contents of the SOAP body should be cached or not
+     */
+    public AxiomSoapMessage(SOAPMessage soapMessage, boolean payloadCaching) {
+        axiomMessage = soapMessage;
+        axiomFactory = (SOAPFactory) soapMessage.getSOAPEnvelope().getOMFactory();
+        attachments = null;
+        this.payloadCaching = payloadCaching;
+    }
+
+    /**
+     * Create a new <code>AxiomSoapMessage</code> based on the given AXIOM <code>SOAPMessage</code> and attachments.
      *
      * @param soapMessage    the AXIOM SOAPMessage
      * @param attachments    the attachments
@@ -138,7 +150,18 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
 
     public void writeTo(OutputStream outputStream) throws IOException {
         try {
-            axiomMessage.serialize(outputStream);
+            String charsetEncoding = axiomMessage.getCharsetEncoding();
+
+            OMOutputFormat format = new OMOutputFormat();
+            format.setCharSetEncoding(charsetEncoding);
+            format.setSOAP11(getVersion() == SoapVersion.SOAP_11);
+            if (outputStream instanceof TransportOutputStream) {
+                TransportOutputStream transportOutputStream = (TransportOutputStream) outputStream;
+                String contentType = format.getContentType();
+                contentType += "; charset=\"" + charsetEncoding + "\"";
+                transportOutputStream.addHeader("Content-Type", contentType);
+            }
+            axiomMessage.serializeAndConsume(outputStream, format);
         }
         catch (XMLStreamException ex) {
             throw new AxiomSoapMessageException("Could not write message to OutputStream: " + ex.getMessage(), ex);

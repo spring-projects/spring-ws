@@ -25,9 +25,10 @@ import javax.xml.transform.TransformerFactory;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.soap.SOAPFactory;
-import org.springframework.ws.mock.MockTransportRequest;
+import org.springframework.ws.context.DefaultMessageContext;
+import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.axiom.AxiomSoapMessage;
-import org.springframework.ws.soap.axiom.AxiomSoapMessageContext;
+import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
@@ -75,7 +76,9 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
         SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
         AxiomSoapMessage request = new AxiomSoapMessage(axiomFactory);
         transformer.transform(new StringSource(REQUEST), request.getPayloadResult());
-        AxiomSoapMessageContext context = new AxiomSoapMessageContext(request, new MockTransportRequest());
+        AxiomSoapMessageFactory soapMessageFactory = new AxiomSoapMessageFactory();
+        soapMessageFactory.afterPropertiesSet();
+        MessageContext context = new DefaultMessageContext(request, soapMessageFactory);
 
         MessageEndpoint endpoint = createResponseEndpoint();
         endpoint.invoke(context);
@@ -90,7 +93,9 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
         SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
         AxiomSoapMessage request = new AxiomSoapMessage(axiomFactory);
         transformer.transform(new StringSource(REQUEST), request.getPayloadResult());
-        AxiomSoapMessageContext context = new AxiomSoapMessageContext(request, new MockTransportRequest());
+        AxiomSoapMessageFactory soapMessageFactory = new AxiomSoapMessageFactory();
+        soapMessageFactory.afterPropertiesSet();
+        MessageContext context = new DefaultMessageContext(request, soapMessageFactory);
 
         MessageEndpoint endpoint = createNoResponseEndpoint();
         endpoint.invoke(context);

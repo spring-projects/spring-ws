@@ -20,18 +20,24 @@ import java.util.Collections;
 
 import junit.framework.TestCase;
 import org.easymock.MockControl;
+import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.mock.MockMessageContext;
 
 public class MessageDispatcherTest extends TestCase {
 
     private MessageDispatcher dispatcher;
 
-    private MockMessageContext messageContext;
+    private MessageContext messageContext;
+
+    private MockControl factoryControl;
+
+    private WebServiceMessageFactory factoryMock;
 
     protected void setUp() throws Exception {
         dispatcher = new MessageDispatcher();
-        messageContext = new MockMessageContext();
+        factoryControl = MockControl.createControl(WebServiceMessageFactory.class);
+        factoryMock = (WebServiceMessageFactory) factoryControl.getMock();
+        messageContext = new DefaultMessageContext(new MockWebServiceMessage(), factoryMock);
     }
 
     public void testGetEndpoint() throws Exception {
@@ -44,8 +50,10 @@ public class MessageDispatcherTest extends TestCase {
         mappingControl.expectAndReturn(mappingMock.getEndpoint(messageContext), chain);
 
         mappingControl.replay();
+        factoryControl.replay();
         EndpointInvocationChain result = dispatcher.getEndpoint(messageContext);
         mappingControl.verify();
+        factoryControl.verify();
         assertEquals("getEndpoint returns invalid EndpointInvocationChain", chain, result);
     }
 
@@ -57,8 +65,10 @@ public class MessageDispatcherTest extends TestCase {
         Object endpoint = new Object();
         adapterControl.expectAndReturn(adapterMock.supports(endpoint), true);
         adapterControl.replay();
+        factoryControl.replay();
         EndpointAdapter result = dispatcher.getEndpointAdapter(endpoint);
         adapterControl.verify();
+        factoryControl.verify();
         assertEquals("getEnpointAdapter returns invalid EndpointAdapter", adapterMock, result);
     }
 
@@ -70,6 +80,7 @@ public class MessageDispatcherTest extends TestCase {
         Object endpoint = new Object();
         adapterControl.expectAndReturn(adapterMock.supports(endpoint), false);
         adapterControl.replay();
+        factoryControl.replay();
         try {
             dispatcher.getEndpointAdapter(endpoint);
             fail("getEndpointAdapter does not throw IllegalStateException for unsupported endpoint");
@@ -78,6 +89,7 @@ public class MessageDispatcherTest extends TestCase {
             // Expected
         }
         adapterControl.verify();
+        factoryControl.verify();
     }
 
     public void testProcessEndpointExceptionReturnsResponse() throws Exception {
@@ -98,9 +110,12 @@ public class MessageDispatcherTest extends TestCase {
 
         };
         dispatcher.setEndpointExceptionResolvers(Collections.singletonList(resolver));
+        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), new MockWebServiceMessage());
+        factoryControl.replay();
 
         dispatcher.processEndpointException(messageContext, endpoint, ex);
         assertNotNull("processEndpointException sets no response", messageContext.getResponse());
+        factoryControl.verify();
     }
 
     public void testProcessUnsupportedEndpointException() throws Exception {
@@ -149,10 +164,12 @@ public class MessageDispatcherTest extends TestCase {
                 new EndpointInvocationChain(endpoint, new EndpointInterceptor[]{interceptorMock1, interceptorMock2});
 
         mappingControl.expectAndReturn(mappingMock.getEndpoint(messageContext), chain);
+        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), new MockWebServiceMessage());
 
         mappingControl.replay();
         interceptorControl.replay();
         adapterControl.replay();
+        factoryControl.replay();
         //  response required for interceptor invocation
         messageContext.getResponse();
         dispatcher.dispatch(messageContext);
@@ -160,6 +177,7 @@ public class MessageDispatcherTest extends TestCase {
         mappingControl.verify();
         interceptorControl.verify();
         adapterControl.verify();
+        factoryControl.verify();
     }
 
     public void testFlowNoResponse() throws Exception {
@@ -189,12 +207,14 @@ public class MessageDispatcherTest extends TestCase {
         mappingControl.replay();
         interceptorControl.replay();
         adapterControl.replay();
+        factoryControl.replay();
 
         dispatcher.dispatch(messageContext);
 
         mappingControl.verify();
         interceptorControl.verify();
         adapterControl.verify();
+        factoryControl.verify();
     }
 
     public void testInterceptedRequestFlow() throws Exception {
@@ -218,10 +238,12 @@ public class MessageDispatcherTest extends TestCase {
                 new EndpointInvocationChain(endpoint, new EndpointInterceptor[]{interceptorMock1, interceptorMock2});
 
         mappingControl.expectAndReturn(mappingMock.getEndpoint(messageContext), chain);
+        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), new MockWebServiceMessage());
 
         mappingControl.replay();
         interceptorControl.replay();
         adapterControl.replay();
+        factoryControl.replay();
 
         //  response required for interceptor invocation
         messageContext.getResponse();
@@ -231,6 +253,7 @@ public class MessageDispatcherTest extends TestCase {
         mappingControl.verify();
         interceptorControl.verify();
         adapterControl.verify();
+        factoryControl.verify();
     }
 
     public void testInterceptedResponseFlow() throws Exception {
@@ -255,10 +278,12 @@ public class MessageDispatcherTest extends TestCase {
                 new EndpointInvocationChain(endpoint, new EndpointInterceptor[]{interceptorMock1, interceptorMock2});
 
         mappingControl.expectAndReturn(mappingMock.getEndpoint(messageContext), chain);
+        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), new MockWebServiceMessage());
 
         mappingControl.replay();
         interceptorControl.replay();
         adapterControl.replay();
+        factoryControl.replay();
         //  response required for interceptor invocation
         messageContext.getResponse();
 
@@ -267,6 +292,7 @@ public class MessageDispatcherTest extends TestCase {
         mappingControl.verify();
         interceptorControl.verify();
         adapterControl.verify();
+        factoryControl.verify();
     }
 
 }

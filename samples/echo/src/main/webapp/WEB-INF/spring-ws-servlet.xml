@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
+    <!--<bean class="org.springframework.ws.soap.axiom.AxiomSoapMessageContextFactory"/>-->
     <bean id="payloadMapping" class="org.springframework.ws.endpoint.mapping.PayloadRootQNameEndpointMapping">
         <description>
             This endpoint mapping uses the qualified name of the payload (body contents) to determine the endpoint for

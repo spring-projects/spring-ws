@@ -17,12 +17,16 @@
 package org.springframework.ws.soap.soap11;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Properties;
 
 import junit.framework.Assert;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.Resource;
 import org.springframework.ws.soap.AbstractSoapMessageTestCase;
 import org.springframework.ws.soap.SoapVersion;
+import org.springframework.ws.transport.StubTransportOutputStream;
 
 public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageTestCase {
 
@@ -40,4 +44,28 @@ public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageT
         assertXMLEqual("<Envelope xmlns='http://schemas.xmlsoap.org/soap/envelope/'><Header/><Body/></Envelope>",
                 new String(outputStream.toByteArray(), "UTF-8"));
     }
+
+    public void testWriteToTransportOutputStream() throws Exception {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        StubTransportOutputStream tos = new StubTransportOutputStream(bos);
+        soapMessage.writeTo(tos);
+        String result = bos.toString("UTF-8");
+        assertXMLEqual("<Envelope xmlns='http://schemas.xmlsoap.org/soap/envelope/'><Header/><Body/></Envelope>",
+                result);
+        String contentType = (String) tos.getHeaders().get("Content-Type");
+        assertTrue("Invalid Content-Type set", contentType.indexOf(SoapVersion.SOAP_11.getContentType()) != -1);
+    }
+
+    public void testWriteToTransportResponseAttachment() throws Exception {
+        InputStreamSource inputStreamSource = new ByteArrayResource("contents".getBytes("UTF-8"));
+        soapMessage.addAttachment(inputStreamSource, "text/plain");
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        final Properties headers = new Properties();
+        StubTransportOutputStream tos = new StubTransportOutputStream(bos);
+        soapMessage.writeTo(tos);
+        String contentType = (String) tos.getHeaders().get("Content-Type");
+        assertTrue("Invalid Content-Type set", contentType.indexOf(SoapVersion.SOAP_11.getContentType()) != -1);
+    }
+
+
 }

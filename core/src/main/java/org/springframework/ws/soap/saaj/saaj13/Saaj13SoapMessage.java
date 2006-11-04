@@ -22,14 +22,19 @@ import javax.xml.soap.SOAPMessage;
 import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
-class Saaj13SoapMessage extends SaajSoapMessage {
+/**
+ * SAAJ 1.3 specific implementation of the <code>SoapMessage</code> interface.
+ *
+ * @author Arjen Poutsma
+ */
+public class Saaj13SoapMessage extends SaajSoapMessage {
 
     /**
      * Create a new <code>SaajSoapMessage</code> based on the given SAAJ <code>SOAPMessage</code>.
      *
      * @param soapMessage the SAAJ SOAPMessage
      */
-    protected Saaj13SoapMessage(SOAPMessage soapMessage) {
+    public Saaj13SoapMessage(SOAPMessage soapMessage) {
         super(soapMessage);
     }
 

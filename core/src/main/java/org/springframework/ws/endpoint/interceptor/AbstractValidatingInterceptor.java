@@ -37,7 +37,7 @@ import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapFaultDetail;
 import org.springframework.ws.soap.SoapFaultDetailElement;
-import org.springframework.ws.soap.context.SoapMessageContext;
+import org.springframework.ws.soap.SoapMessage;
 import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
@@ -239,8 +239,8 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
                     for (int i = 0; i < errors.length; i++) {
                         logger.warn("XML validation error on request: " + errors[i].getMessage());
                     }
-                    if (messageContext instanceof SoapMessageContext) {
-                        createRequestValidationFault((SoapMessageContext) messageContext, errors);
+                    if (messageContext.getResponse() instanceof SoapMessage) {
+                        createRequestValidationFault((SoapMessage) messageContext.getResponse(), errors);
                     }
                     return false;
                 }
@@ -296,9 +296,9 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
     /**
      * Creates a response soap message containing a <code>SoapFault</code> that descibes the validation errors.
      */
-    protected void createRequestValidationFault(SoapMessageContext context, SAXParseException[] errors)
+    protected void createRequestValidationFault(SoapMessage response, SAXParseException[] errors)
             throws TransformerException {
-        SoapBody body = context.getSoapResponse().getSoapBody();
+        SoapBody body = response.getSoapBody();
         SoapFault fault = body.addClientOrSenderFault(getFaultStringOrReason(), getFaultStringOrReasonLocale());
         if (getAddValidationErrorDetail()) {
             SoapFaultDetail detail = fault.addFaultDetail();

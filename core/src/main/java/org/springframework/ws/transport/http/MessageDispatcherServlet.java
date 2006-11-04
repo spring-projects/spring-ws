@@ -26,7 +26,7 @@ import org.springframework.ws.EndpointAdapter;
 import org.springframework.ws.EndpointExceptionResolver;
 import org.springframework.ws.EndpointMapping;
 import org.springframework.ws.MessageDispatcher;
-import org.springframework.ws.context.MessageContextFactory;
+import org.springframework.ws.WebServiceMessageFactory;
 
 /**
  * Servlet for simplified dispatching of Web service messages. Delegates to a <code>MessageDispatcher</code> and a
@@ -75,9 +75,9 @@ public class MessageDispatcherServlet extends FrameworkServlet {
     public static final String ENDPOINT_MAPPING_BEAN_NAME = "endpointMapping";
 
     /**
-     * Well-known name for the <code>MessageContextFactory</code> object in the bean factory for this namespace.
+     * Well-known name for the <code>WebServiceMessageFactory</code> object in the bean factory for this namespace.
      */
-    public static final String MESSAGE_CONTEXT_FACTORY_BEAN_NAME = "messageContextFactory";
+    public static final String WEB_SERVICE_MESSAGE_FACTORY_BEAN_NAME = "messageFactory";
 
     /**
      * Well-known name for the <code>MessageDispatcher</code> object in the bean factory for this namespace.
@@ -187,7 +187,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
     }
 
     protected void initFrameworkServlet() throws ServletException, BeansException {
-        initMessageContextFactory();
+        initWebServiceMessageFactory();
         initMessageDispatcher();
     }
 
@@ -343,29 +343,29 @@ public class MessageDispatcherServlet extends FrameworkServlet {
         }
     }
 
-    private void initMessageContextFactory() throws BeansException {
-        MessageContextFactory messageContextFactory;
+    private void initWebServiceMessageFactory() throws BeansException {
+        WebServiceMessageFactory messageFactory;
         try {
-            messageContextFactory = (MessageContextFactory) getWebApplicationContext()
-                    .getBean(MESSAGE_CONTEXT_FACTORY_BEAN_NAME, MessageContextFactory.class);
+            messageFactory = (WebServiceMessageFactory) getWebApplicationContext()
+                    .getBean(WEB_SERVICE_MESSAGE_FACTORY_BEAN_NAME, WebServiceMessageFactory.class);
         }
         catch (NoSuchBeanDefinitionException ignored) {
-            messageContextFactory = (MessageContextFactory) getDefaultStrategy(MessageContextFactory.class);
+            messageFactory = (WebServiceMessageFactory) getDefaultStrategy(WebServiceMessageFactory.class);
             if (logger.isInfoEnabled()) {
-                logger.info("Unable to locate MessageContextFactory with name '" + MESSAGE_CONTEXT_FACTORY_BEAN_NAME +
-                        "': using default [" + messageContextFactory + "]");
+                logger.info("Unable to locate WebServiceMessageFactory with name '" +
+                        WEB_SERVICE_MESSAGE_FACTORY_BEAN_NAME + "': using default [" + messageFactory + "]");
             }
-            if (messageContextFactory instanceof InitializingBean) {
+            if (messageFactory instanceof InitializingBean) {
                 try {
-                    ((InitializingBean) messageContextFactory).afterPropertiesSet();
+                    ((InitializingBean) messageFactory).afterPropertiesSet();
                 }
                 catch (Exception ex) {
-                    throw new BeanInitializationException(
-                            "Could not invoke afterPropertiesSet() on messageContextFactory", ex);
+                    throw new BeanInitializationException("Could not invoke afterPropertiesSet() on message factory",
+                            ex);
                 }
             }
         }
-        handlerAdapter.setMessageContextFactory(messageContextFactory);
+        handlerAdapter.setMessageFactory(messageFactory);
     }
 
     private void initMessageDispatcher() {

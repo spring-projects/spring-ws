@@ -19,7 +19,10 @@ package org.springframework.ws.endpoint.mapping;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
-import org.springframework.ws.mock.MockMessageContext;
+import org.springframework.ws.MockWebServiceMessage;
+import org.springframework.ws.MockWebServiceMessageFactory;
+import org.springframework.ws.context.DefaultMessageContext;
+import org.springframework.ws.context.MessageContext;
 
 public class PayloadRootQNameEndpointMappingTest extends TestCase {
 
@@ -31,7 +34,8 @@ public class PayloadRootQNameEndpointMappingTest extends TestCase {
     }
 
     public void testResolveQNames() throws Exception {
-        MockMessageContext context = new MockMessageContext("<root/>");
+        MockWebServiceMessage request = new MockWebServiceMessage("<root/>");
+        MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
         QName qName = mapping.resolveQName(context);
         assertNotNull("mapping returns null", qName);
@@ -39,7 +43,8 @@ public class PayloadRootQNameEndpointMappingTest extends TestCase {
     }
 
     public void testGetQNameNameNamespace() throws Exception {
-        MockMessageContext context = new MockMessageContext("<prefix:localname xmlns:prefix=\"namespace\"/>");
+        MockWebServiceMessage request = new MockWebServiceMessage("<prefix:localname xmlns:prefix=\"namespace\"/>");
+        MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
         QName qName = mapping.resolveQName(context);
         assertNotNull("mapping returns null", qName);

@@ -16,36 +16,54 @@
 
 package org.springframework.ws.soap.endpoint.mapping;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
+import java.util.Map;
+
 import junit.framework.TestCase;
-import org.springframework.ws.mock.MockMessageContext;
-import org.springframework.ws.mock.MockTransportContext;
-import org.springframework.ws.mock.MockTransportRequest;
-import org.springframework.ws.mock.MockWebServiceMessage;
+import org.springframework.ws.MockWebServiceMessageFactory;
+import org.springframework.ws.context.DefaultMessageContext;
+import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.transport.SimpleTransportContext;
+import org.springframework.ws.transport.StubTransportInputStream;
+import org.springframework.ws.transport.StubTransportOutputStream;
+import org.springframework.ws.transport.TransportContext;
+import org.springframework.ws.transport.TransportContextHolder;
+import org.springframework.ws.transport.TransportInputStream;
+import org.springframework.ws.transport.TransportOutputStream;
 
 public class SoapActionEndpointMappingTest extends TestCase {
 
     private SoapActionEndpointMapping mapping;
 
-    private MockTransportRequest request;
+    private MessageContext context;
 
-    private MockMessageContext context;
+    private Map headers;
 
     protected void setUp() throws Exception {
-        request = new MockTransportRequest();
-        MockTransportContext transportContext = new MockTransportContext(request);
-        context = new MockMessageContext(new MockWebServiceMessage(), transportContext);
+        headers = new HashMap();
+        TransportInputStream tis = new StubTransportInputStream(new ByteArrayInputStream(new byte[0]), headers);
+        TransportOutputStream tos = new StubTransportOutputStream(new ByteArrayOutputStream());
+        TransportContext transportContext = new SimpleTransportContext(tis, tos);
+        TransportContextHolder.setTransportContext(transportContext);
         mapping = new SoapActionEndpointMapping();
+        context = new DefaultMessageContext(new MockWebServiceMessageFactory());
+    }
+
+    protected void tearDown() throws Exception {
+        TransportContextHolder.setTransportContext(null);
     }
 
     public void testGetLookupKeyForMessage() throws Exception {
         String soapAction = "http://springframework.org/spring-ws/SoapAction";
-        request.addHeader(SoapActionEndpointMapping.SOAP_ACTION_HEADER, soapAction);
+        headers.put(SoapActionEndpointMapping.SOAP_ACTION_HEADER, soapAction);
         assertEquals("Invalid lookup key", soapAction, mapping.getLookupKeyForMessage(context));
     }
 
     public void testGetLookupKeyForMessageQuoted() throws Exception {
         String soapAction = "http://springframework.org/spring-ws/SoapAction";
-        request.addHeader(SoapActionEndpointMapping.SOAP_ACTION_HEADER, "\"" + soapAction + "\"");
+        headers.put(SoapActionEndpointMapping.SOAP_ACTION_HEADER, "\"" + soapAction + "\"");
         assertEquals("Invalid lookup key", soapAction, mapping.getLookupKeyForMessage(context));
     }
 

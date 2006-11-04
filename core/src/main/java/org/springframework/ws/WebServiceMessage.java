@@ -47,7 +47,9 @@ public interface WebServiceMessage {
     Result getPayloadResult();
 
     /**
-     * Writes the entire message to the given output stream.
+     * Writes the entire message to the given output stream. If the given stream is an instance of {@link
+     * org.springframework.ws.transport.TransportOutputStream TransportOutputStream}, the corresponding headers will be
+     * writen as well.
      *
      * @param outputStream the stream to write to
      * @throws IOException if an I/O exception occurs

@@ -26,6 +26,7 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.xml.soap.AttachmentPart;
+import javax.xml.soap.MimeHeader;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
@@ -34,12 +35,12 @@ import javax.xml.soap.SOAPMessage;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 import org.springframework.ws.soap.AbstractSoapMessage;
 import org.springframework.ws.soap.Attachment;
 import org.springframework.ws.soap.AttachmentException;
 import org.springframework.ws.soap.SoapEnvelope;
-import org.springframework.ws.soap.SoapVersion;
-import org.springframework.ws.soap.saaj.support.SaajUtils;
+import org.springframework.ws.transport.TransportOutputStream;
 
 /**
  * SAAJ-specific implementation of the <code>SoapMessage</code> interface. Accessed via the
@@ -47,11 +48,10 @@ import org.springframework.ws.soap.saaj.support.SaajUtils;
  *
  * @author Arjen Poutsma
  * @see javax.xml.soap.SOAPMessage
- * @see SaajSoapMessageContext
  */
 public abstract class SaajSoapMessage extends AbstractSoapMessage {
 
-    private final SOAPMessage saajMessage;
+    private SOAPMessage saajMessage;
 
     private SoapEnvelope envelope;
 
@@ -61,6 +61,7 @@ public abstract class SaajSoapMessage extends AbstractSoapMessage {
      * @param soapMessage the SAAJ SOAPMessage
      */
     protected SaajSoapMessage(SOAPMessage soapMessage) {
+        Assert.notNull(soapMessage, "soapMessage must not be null");
         saajMessage = soapMessage;
     }
 
@@ -69,6 +70,14 @@ public abstract class SaajSoapMessage extends AbstractSoapMessage {
      */
     public final SOAPMessage getSaajMessage() {
         return saajMessage;
+    }
+
+    /**
+     * Sets the SAAJ <code>SOAPMessage</code> that this <code>SaajSoapMessage</code> is based on.
+     */
+    public final void setSaajMessage(SOAPMessage soapMessage) {
+        Assert.notNull(soapMessage, "soapMessage must not be null");
+        saajMessage = soapMessage;
     }
 
     public final SoapEnvelope getEnvelope() {
@@ -90,6 +99,21 @@ public abstract class SaajSoapMessage extends AbstractSoapMessage {
         try {
             if (saajMessage.saveRequired()) {
                 saajMessage.saveChanges();
+            }
+            if (outputStream instanceof TransportOutputStream) {
+                TransportOutputStream transportOutputStream = (TransportOutputStream) outputStream;
+                // some SAAJ implementations (Axis 1) do not have a Content-Type header by default
+                MimeHeaders headers = saajMessage.getMimeHeaders();
+                if (ObjectUtils.isEmpty(headers.getHeader("Content-Type"))) {
+                    headers.addHeader("Content-Type", getVersion().getContentType());
+                    if (saajMessage.saveRequired()) {
+                        saajMessage.saveChanges();
+                    }
+                }
+                for (Iterator iterator = headers.getAllHeaders(); iterator.hasNext();) {
+                    MimeHeader mimeHeader = (MimeHeader) iterator.next();
+                    transportOutputStream.addHeader(mimeHeader.getName(), mimeHeader.getValue());
+                }
             }
             saajMessage.writeTo(outputStream);
         }
@@ -161,15 +185,6 @@ public abstract class SaajSoapMessage extends AbstractSoapMessage {
                 throw new UnsupportedOperationException("DataSource name not available");
             }
         };
-    }
-
-    public SoapVersion getVersion() {
-        if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_12) {
-            return SoapVersion.SOAP_11;
-        }
-        else {
-            return super.getVersion();
-        }
     }
 
     /**

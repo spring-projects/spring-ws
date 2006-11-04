@@ -1,15 +1,21 @@
 package org.springframework.ws.transport;
 
 /**
- * Defines the contract for Web service request that come in via a transport. Exposes headers and the inputstream to
- * read from.
+ * Strategy interface for determining the current {@link TransportInputStream} and {@link TransportOutputStream}.
+ * <p/>
+ * An instance of this class can be associated with a thread via the {@link TransportContextHolder} class.
  *
  * @author Arjen Poutsma
  */
 public interface TransportContext {
 
-    TransportRequest getTransportRequest() throws TransportException;
+    /**
+     * Returns the current <code>TransportInputStream</code>.
+     */
+    TransportInputStream getTransportInputStream();
 
-    TransportResponse getTransportResponse() throws TransportException;
-
+    /**
+     * Returns the current <code>TransportOutputStream</code>.
+     */
+    TransportOutputStream getTransportOutputStream();
 }

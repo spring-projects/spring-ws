@@ -151,18 +151,6 @@ public abstract class SaajUtils {
     }
 
     /**
-     * Loads a SAAJ <code>SOAPMessage</code> from the given resource.
-     *
-     * @param resource the resource to read from
-     * @return the loaded SAAJ message
-     * @throws SOAPException if the message cannot be constructed
-     * @throws IOException   if the input stream resource cannot be loaded
-     */
-    public static SOAPMessage loadMessage(Resource resource) throws SOAPException, IOException {
-        return loadMessage(resource, MessageFactory.newInstance());
-    }
-
-    /**
      * Loads a SAAJ <code>SOAPMessage</code> from the given resource with a given message factory.
      *
      * @param resource       the resource to read from

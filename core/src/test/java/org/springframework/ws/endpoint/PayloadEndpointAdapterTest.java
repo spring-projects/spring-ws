@@ -18,7 +18,6 @@ package org.springframework.ws.endpoint;
 
 import java.io.StringReader;
 import java.io.StringWriter;
-
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -27,10 +26,10 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.easymock.MockControl;
-
+import org.springframework.ws.MockWebServiceMessage;
+import org.springframework.ws.MockWebServiceMessageFactory;
+import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.mock.MockMessageContext;
-import org.springframework.ws.mock.MockWebServiceMessage;
 
 public class PayloadEndpointAdapterTest extends XMLTestCase {
 
@@ -62,7 +61,7 @@ public class PayloadEndpointAdapterTest extends XMLTestCase {
             }
         };
         endpoint.invoke(request.getPayloadSource());
-        MessageContext messageContext = new MockMessageContext(request);
+        MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
         adapter.invoke(messageContext, endpoint);
         MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
         assertNotNull("No response created", response);
@@ -70,7 +69,7 @@ public class PayloadEndpointAdapterTest extends XMLTestCase {
     }
 
     public void testInvokeNoResponse() throws Exception {
-        MessageContext messageContext = new MockMessageContext();
+        MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
         endpointMock.invoke(messageContext.getRequest().getPayloadSource());
         endpointControl.setMatcher(MockControl.ALWAYS_MATCHER);
         endpointControl.setReturnValue(null);
