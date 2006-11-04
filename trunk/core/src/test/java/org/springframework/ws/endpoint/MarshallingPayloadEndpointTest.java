@@ -18,7 +18,6 @@ package org.springframework.ws.endpoint;
 
 import java.io.StringReader;
 import java.io.StringWriter;
-
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -28,19 +27,36 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.custommonkey.xmlunit.XMLTestCase;
-
+import org.easymock.MockControl;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
-import org.springframework.ws.mock.MockMessageContext;
-import org.springframework.ws.mock.MockWebServiceMessage;
+import org.springframework.ws.MockWebServiceMessage;
+import org.springframework.ws.WebServiceMessageFactory;
+import org.springframework.ws.context.DefaultMessageContext;
+import org.springframework.ws.context.MessageContext;
 
 public class MarshallingPayloadEndpointTest extends XMLTestCase {
 
-    public void testInvoke() throws Exception {
-        MockWebServiceMessage request = new MockWebServiceMessage("<request/>");
-        final Transformer transformer = TransformerFactory.newInstance().newTransformer();
+    private Transformer transformer;
 
+    private MessageContext context;
+
+    private MockControl factoryControl;
+
+    private WebServiceMessageFactory factoryMock;
+
+    protected void setUp() throws Exception {
+        MockWebServiceMessage request = new MockWebServiceMessage("<request/>");
+        transformer = TransformerFactory.newInstance().newTransformer();
+        factoryControl = MockControl.createControl(WebServiceMessageFactory.class);
+        factoryMock = (WebServiceMessageFactory) factoryControl.getMock();
+
+        context = new DefaultMessageContext(request, factoryMock);
+
+    }
+
+    public void testInvoke() throws Exception {
         Unmarshaller unmarshaller = new Unmarshaller() {
             public Object unmarshal(Source source) throws XmlMappingException {
                 try {
@@ -76,17 +92,18 @@ public class MarshallingPayloadEndpointTest extends XMLTestCase {
         endpoint.setUnmarshaller(unmarshaller);
         endpoint.afterPropertiesSet();
 
-        MockMessageContext context = new MockMessageContext(request);
+        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), new MockWebServiceMessage());
+        factoryControl.replay();
+
         endpoint.invoke(context);
         MockWebServiceMessage response = (MockWebServiceMessage) context.getResponse();
         assertNotNull("Invalid result", response);
         assertXMLEqual("Invalid response", "<result/>", response.getPayloadAsString());
+
+        factoryControl.verify();
     }
 
     public void testInvokeNullResponse() throws Exception {
-        MockWebServiceMessage request = new MockWebServiceMessage("<request/>");
-        final Transformer transformer = TransformerFactory.newInstance().newTransformer();
-
         Unmarshaller unmarshaller = new Unmarshaller() {
             public Object unmarshal(Source source) throws XmlMappingException {
                 try {
@@ -115,9 +132,10 @@ public class MarshallingPayloadEndpointTest extends XMLTestCase {
         endpoint.setMarshaller(marshaller);
         endpoint.setUnmarshaller(unmarshaller);
         endpoint.afterPropertiesSet();
-        MockMessageContext context = new MockMessageContext(request);
+        factoryControl.replay();
         endpoint.invoke(context);
         assertFalse("Response created", context.hasResponse());
+        factoryControl.verify();
     }
 
 }

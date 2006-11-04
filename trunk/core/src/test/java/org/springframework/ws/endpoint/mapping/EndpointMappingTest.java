@@ -17,98 +17,111 @@
 package org.springframework.ws.endpoint.mapping;
 
 import junit.framework.TestCase;
+import org.easymock.MockControl;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ws.EndpointInterceptor;
 import org.springframework.ws.EndpointInvocationChain;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.endpoint.interceptor.EndpointInterceptorAdapter;
-import org.springframework.ws.mock.MockMessageContext;
 
 public class EndpointMappingTest extends TestCase {
 
+    private MessageContext mockContext;
+
+    private MockControl contextControl;
+
+    protected void setUp() throws Exception {
+        contextControl = MockControl.createControl(MessageContext.class);
+        mockContext = (MessageContext) contextControl.getMock();
+    }
+
     public void testDefaultEndpoint() throws Exception {
-        final MockMessageContext context = new MockMessageContext();
         Object defaultEndpoint = new Object();
         AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
             protected Object getEndpointInternal(MessageContext givenRequest) throws Exception {
-                assertEquals("Invalid request passed", context, givenRequest);
+                assertEquals("Invalid request passed", mockContext, givenRequest);
                 return null;
             }
         };
         mapping.setDefaultEndpoint(defaultEndpoint);
+        contextControl.replay();
 
-        EndpointInvocationChain result = mapping.getEndpoint(context);
+        EndpointInvocationChain result = mapping.getEndpoint(mockContext);
         assertNotNull("No EndpointInvocatioChain returned", result);
         assertEquals("Default Endpoint not returned", defaultEndpoint, result.getEndpoint());
+        contextControl.verify();
     }
 
     public void testEndpoint() throws Exception {
-        final MockMessageContext context = new MockMessageContext();
         final Object endpoint = new Object();
         AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
             protected Object getEndpointInternal(MessageContext givenRequest) throws Exception {
-                assertEquals("Invalid request passed", context, givenRequest);
+                assertEquals("Invalid request passed", mockContext, givenRequest);
                 return endpoint;
             }
         };
+        contextControl.replay();
 
-        EndpointInvocationChain result = mapping.getEndpoint(context);
+        EndpointInvocationChain result = mapping.getEndpoint(mockContext);
         assertNotNull("No EndpointInvocatioChain returned", result);
         assertEquals("Unexpected Endpoint returned", endpoint, result.getEndpoint());
+        contextControl.verify();
     }
 
     public void testEndpointInterceptors() throws Exception {
-        final MockMessageContext context = new MockMessageContext();
         final Object endpoint = new Object();
         EndpointInterceptor interceptor = new EndpointInterceptorAdapter();
         AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
             protected Object getEndpointInternal(MessageContext givenRequest) throws Exception {
-                assertEquals("Invalid request passed", context, givenRequest);
+                assertEquals("Invalid request passed", mockContext, givenRequest);
                 return endpoint;
             }
         };
+        contextControl.replay();
         mapping.setInterceptors(new EndpointInterceptor[]{interceptor});
-        EndpointInvocationChain result = mapping.getEndpoint(context);
+        EndpointInvocationChain result = mapping.getEndpoint(mockContext);
         assertEquals("Unexpected amount of EndpointInterceptors returned", 1, result.getInterceptors().length);
         assertEquals("Unexpected EndpointInterceptor returned", interceptor, result.getInterceptors()[0]);
+        contextControl.verify();
     }
 
     public void testEndpointBeanName() throws Exception {
-        final MockMessageContext context = new MockMessageContext();
         StaticApplicationContext applicationContext = new StaticApplicationContext();
         applicationContext.registerSingleton("endpoint", Object.class);
 
         AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
 
             protected Object getEndpointInternal(MessageContext message) throws Exception {
-                assertEquals("Invalid request", context, message);
+                assertEquals("Invalid request", mockContext, message);
                 return "endpoint";
             }
         };
         mapping.setApplicationContext(applicationContext);
+        contextControl.replay();
 
-        EndpointInvocationChain result = mapping.getEndpoint(context);
+        EndpointInvocationChain result = mapping.getEndpoint(mockContext);
         assertNotNull("No endpoint returned", result);
+        contextControl.verify();
     }
 
     public void testEndpointInvalidBeanName() throws Exception {
-        final MockMessageContext context = new MockMessageContext();
-
         StaticApplicationContext applicationContext = new StaticApplicationContext();
         applicationContext.registerSingleton("endpoint", Object.class);
 
         AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
 
             protected Object getEndpointInternal(MessageContext message) throws Exception {
-                assertEquals("Invalid request", context, message);
+                assertEquals("Invalid request", mockContext, message);
                 return "noSuchBean";
             }
         };
         mapping.setApplicationContext(applicationContext);
+        contextControl.replay();
 
-        EndpointInvocationChain result = mapping.getEndpoint(context);
+        EndpointInvocationChain result = mapping.getEndpoint(mockContext);
 
         assertNull("No endpoint returned", result);
+        contextControl.verify();
     }
 
 

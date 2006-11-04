@@ -20,17 +20,16 @@ import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPMessage;
 
 import org.springframework.ws.soap.SoapEnvelope;
+import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
 /**
- * SAAJ 1.2 specific implementation of the <code>SoapMessage</code> interface. Accessed via the
- * <code>SaajSoapMessageContext</code>.
+ * SAAJ 1.2 specific implementation of the <code>SoapMessage</code> interface.
  *
  * @author Arjen Poutsma
  * @see javax.xml.soap.SOAPMessage
- * @see org.springframework.ws.soap.saaj.SaajSoapMessageContext
  */
-class Saaj12SoapMessage extends SaajSoapMessage {
+public class Saaj12SoapMessage extends SaajSoapMessage {
 
     public Saaj12SoapMessage(SOAPMessage soapMessage) {
         super(soapMessage);
@@ -40,4 +39,7 @@ class Saaj12SoapMessage extends SaajSoapMessage {
         return new Saaj12SoapEnvelope(saajEnvelope);
     }
 
+    public SoapVersion getVersion() {
+        return SoapVersion.SOAP_11;
+    }
 }

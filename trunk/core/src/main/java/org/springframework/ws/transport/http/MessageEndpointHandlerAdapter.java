@@ -28,33 +28,38 @@ import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.ws.NoEndpointFoundException;
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.WebServiceMessageFactory;
+import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.context.MessageContextFactory;
 import org.springframework.ws.endpoint.MessageEndpoint;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.transport.SimpleTransportContext;
+import org.springframework.ws.transport.TransportContext;
+import org.springframework.ws.transport.TransportContextHolder;
+import org.springframework.ws.transport.TransportInputStream;
+import org.springframework.ws.transport.TransportOutputStream;
 
 /**
  * Adapter to use the <code>MessageEndpoint</code> interface with the generic <code>DispatcherServlet</code>. Requires a
- * <code>MessageContextFactory</code>, which is used to convert the incoming <code>HttpServletRequest</code> into a
- * <code>MessageContext</code>, and passes that context to the mapped <code>MessageEndpoint</code>. If a response is
- * created, that is sent via the <code>HttpServletResponse</code>.
+ * {@link WebServiceMessageFactory}, which is used to convert the incoming <code>HttpServletRequest</code> into a {@link
+ * WebServiceMessage}, and passes that context to the mapped <code>MessageEndpoint</code>. If a response is created,
+ * that is sent via the <code>HttpServletResponse</code>.
  * <p/>
  * Note that the <code>MessageDispatcher</code> implements the <code>MessageEndpoint</code> interface, enabling this
  * adapter to function as a gateway to further message handling logic.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.endpoint.MessageEndpoint
- * @see MessageContextFactory
  * @see org.springframework.ws.MessageDispatcher
  */
 public class MessageEndpointHandlerAdapter implements HandlerAdapter, InitializingBean {
 
     private static final Log logger = LogFactory.getLog(MessageEndpointHandlerAdapter.class);
 
-    private MessageContextFactory messageContextFactory;
+    private WebServiceMessageFactory messageFactory;
 
-    public void setMessageContextFactory(MessageContextFactory messageContextFactory) {
-        this.messageContextFactory = messageContextFactory;
+    public void setMessageFactory(WebServiceMessageFactory messageFactory) {
+        this.messageFactory = messageFactory;
     }
 
     public long getLastModified(HttpServletRequest request, Object handler) {
@@ -78,34 +83,43 @@ public class MessageEndpointHandlerAdapter implements HandlerAdapter, Initializi
     }
 
     public final void afterPropertiesSet() throws Exception {
-        Assert.notNull(messageContextFactory, "messageContextFactory is required");
-        logger.info("Using message context factory " + messageContextFactory);
+        Assert.notNull(messageFactory, "messageFactory is required");
+        logger.info("Using message factory [" + messageFactory + "]");
     }
 
     private void handlePost(HttpServletRequest httpServletRequest,
                             MessageEndpoint endpoint,
                             HttpServletResponse httpServletResponse) throws Exception {
-        HttpTransportContext transportContext = new HttpTransportContext(httpServletRequest, httpServletResponse);
-        MessageContext messageContext = messageContextFactory.createContext(transportContext);
+        TransportInputStream tis = new HttpServletTransportInputStream(httpServletRequest);
+        TransportOutputStream tos = new HttpServletTransportOutputStream(httpServletResponse);
+
+        TransportContext previousTransportContext = TransportContextHolder.getTransportContext();
+        TransportContextHolder.setTransportContext(new SimpleTransportContext(tis, tos));
+
         try {
+            WebServiceMessage messageRequest = messageFactory.createWebServiceMessage(tis);
+            MessageContext messageContext = new DefaultMessageContext(messageRequest, messageFactory);
             endpoint.invoke(messageContext);
             if (!messageContext.hasResponse()) {
                 httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
             }
             else {
-                WebServiceMessage webServiceResponse = messageContext.getResponse();
-                if (webServiceResponse instanceof SoapMessage &&
-                        ((SoapMessage) webServiceResponse).getSoapBody().hasFault()) {
+                WebServiceMessage messageResponse = messageContext.getResponse();
+                if (messageResponse instanceof SoapMessage &&
+                        ((SoapMessage) messageResponse).getSoapBody().hasFault()) {
                     httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 }
                 else {
                     httpServletResponse.setStatus(HttpServletResponse.SC_OK);
                 }
-                messageContext.sendResponse(new HttpTransportResponse(httpServletResponse));
+                messageResponse.writeTo(tos);
             }
         }
         catch (NoEndpointFoundException ex) {
             httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+        finally {
+            TransportContextHolder.setTransportContext(previousTransportContext);
         }
     }
 }

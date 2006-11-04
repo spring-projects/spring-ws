@@ -19,11 +19,11 @@ package org.springframework.ws.soap.endpoint;
 import java.util.Enumeration;
 import java.util.Properties;
 
+import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.endpoint.AbstractEndpointExceptionResolver;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.context.SoapMessageContext;
 import org.springframework.ws.soap.soap11.Soap11Body;
 
 /**
@@ -63,16 +63,15 @@ public class SoapFaultMappingExceptionResolver extends AbstractEndpointException
     }
 
     protected boolean resolveExceptionInternal(MessageContext messageContext, Object endpoint, Exception ex) {
-        if (!(messageContext instanceof SoapMessageContext)) {
-            throw new IllegalArgumentException("SoapFaultMappingExceptionResolver requires a SoapMessageContext");
-        }
+        Assert.isTrue(messageContext.getResponse() instanceof SoapMessage,
+                "SimpleSoapExceptionResolver requires a SoapMessage");
+
         SoapFaultDefinition definition = getFaultDefinition(ex);
         if (definition == null) {
             return false;
         }
-        SoapMessageContext soapContext = (SoapMessageContext) messageContext;
-        SoapMessage response = soapContext.getSoapResponse();
-        SoapBody soapBody = response.getSoapBody();
+        SoapMessage soapResponse = (SoapMessage) messageContext.getResponse();
+        SoapBody soapBody = soapResponse.getSoapBody();
 
         if (SoapFaultDefinition.SERVER.equals(definition.getFaultCode()) ||
                 SoapFaultDefinition.RECEIVER.equals(definition.getFaultCode())) {

@@ -2,11 +2,12 @@ package org.springframework.ws.soap.endpoint;
 
 import java.util.Locale;
 
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.endpoint.AbstractEndpointExceptionResolver;
 import org.springframework.ws.soap.SoapBody;
-import org.springframework.ws.soap.context.SoapMessageContext;
+import org.springframework.ws.soap.SoapMessage;
 
 /**
  * Simple, SOAP-specific implementation of the <code>EndpointExceptionResolver</code> that stores the exception's
@@ -26,12 +27,11 @@ public class SimpleSoapExceptionResolver extends AbstractEndpointExceptionResolv
     }
 
     protected boolean resolveExceptionInternal(MessageContext messageContext, Object endpoint, Exception ex) {
-        if (!(messageContext instanceof SoapMessageContext)) {
-            throw new IllegalArgumentException("SimpleSoapExceptionResolver requires a SoapMessageContext");
-        }
+        Assert.isTrue(messageContext.getResponse() instanceof SoapMessage,
+                "SimpleSoapExceptionResolver requires a SoapMessage");
+        SoapMessage response = (SoapMessage) messageContext.getResponse();
         String faultString = StringUtils.hasLength(ex.getMessage()) ? ex.getMessage() : ex.toString();
-        SoapMessageContext soapContext = (SoapMessageContext) messageContext;
-        SoapBody body = soapContext.getSoapResponse().getSoapBody();
+        SoapBody body = response.getSoapBody();
         body.addServerOrReceiverFault(faultString, locale);
         return true;
     }

@@ -18,8 +18,10 @@ package org.springframework.ws.endpoint;
 
 import javax.xml.transform.Source;
 
-import org.springframework.ws.mock.MockMessageContext;
-import org.springframework.ws.mock.MockWebServiceMessage;
+import org.springframework.ws.MockWebServiceMessage;
+import org.springframework.ws.MockWebServiceMessageFactory;
+import org.springframework.ws.context.DefaultMessageContext;
+import org.springframework.ws.context.MessageContext;
 import org.springframework.xml.transform.StringSource;
 
 public abstract class AbstractMessageEndpointTestCase extends AbstractEndpointTestCase {
@@ -33,13 +35,16 @@ public abstract class AbstractMessageEndpointTestCase extends AbstractEndpointTe
     public void testNoResponse() throws Exception {
         endpoint = createNoResponseEndpoint();
         StringSource requestSource = new StringSource(REQUEST);
-        MockMessageContext context = new MockMessageContext(new MockWebServiceMessage(requestSource));
+
+        MessageContext context =
+                new DefaultMessageContext(new MockWebServiceMessage(requestSource), new MockWebServiceMessageFactory());
         endpoint.invoke(context);
         assertFalse("Response message created", context.hasResponse());
     }
 
     protected final void testSource(Source requestSource) throws Exception {
-        MockMessageContext context = new MockMessageContext(new MockWebServiceMessage(requestSource));
+        MessageContext context =
+                new DefaultMessageContext(new MockWebServiceMessage(requestSource), new MockWebServiceMessageFactory());
         endpoint.invoke(context);
         assertTrue("No response message created", context.hasResponse());
         assertXMLEqual(RESPONSE, ((MockWebServiceMessage) context.getResponse()).getPayloadAsString());

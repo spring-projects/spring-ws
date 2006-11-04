@@ -16,18 +16,15 @@
 
 package org.springframework.ws.soap.endpoint.interceptor;
 
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPMessage;
-
 import junit.framework.TestCase;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
-import org.springframework.ws.mock.MockTransportRequest;
-import org.springframework.ws.soap.saaj.SaajSoapMessageContext;
-import org.springframework.ws.soap.saaj.saaj13.Saaj13SoapMessageContext;
+import org.springframework.ws.context.DefaultMessageContext;
+import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 
 public class SoapEnvelopeLoggingInterceptorTest extends TestCase {
 
@@ -35,16 +32,16 @@ public class SoapEnvelopeLoggingInterceptorTest extends TestCase {
 
     private CountingAppender appender;
 
-    private SaajSoapMessageContext messageContext;
+    private MessageContext messageContext;
 
     protected void setUp() throws Exception {
         interceptor = new SoapEnvelopeLoggingInterceptor();
         appender = new SoapEnvelopeLoggingInterceptorTest.CountingAppender();
         BasicConfigurator.configure(appender);
         Logger.getRootLogger().setLevel(Level.DEBUG);
-        MessageFactory messageFactory = MessageFactory.newInstance();
-        SOAPMessage saajMessage = messageFactory.createMessage();
-        messageContext = new Saaj13SoapMessageContext(saajMessage, new MockTransportRequest(), messageFactory);
+        SaajSoapMessageFactory factory = new SaajSoapMessageFactory();
+        factory.afterPropertiesSet();
+        messageContext = new DefaultMessageContext(factory);
         appender.reset();
     }
 

@@ -20,7 +20,9 @@ import junit.framework.TestCase;
 import org.easymock.MockControl;
 import org.springframework.ws.EndpointInvocationChain;
 import org.springframework.ws.EndpointMapping;
-import org.springframework.ws.mock.MockMessageContext;
+import org.springframework.ws.MockWebServiceMessageFactory;
+import org.springframework.ws.context.DefaultMessageContext;
+import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapEndpointInvocationChain;
 
 public class DelegatingSoapEndpointMappingTest extends TestCase {
@@ -41,7 +43,7 @@ public class DelegatingSoapEndpointMappingTest extends TestCase {
     public void testGetEndpointMapping() throws Exception {
         String role = "http://www.springframework.org/spring-ws/role";
         endpointMapping.setActorOrRole(role);
-        MockMessageContext context = new MockMessageContext();
+        MessageContext context = new DefaultMessageContext(new MockWebServiceMessageFactory());
         EndpointInvocationChain delegateChain = new EndpointInvocationChain(new Object());
         control.expectAndReturn(mock.getEndpoint(context), delegateChain);
         control.replay();

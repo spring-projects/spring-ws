@@ -24,8 +24,10 @@ import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.ws.mock.MockMessageContext;
-import org.springframework.ws.mock.MockWebServiceMessage;
+import org.springframework.ws.MockWebServiceMessage;
+import org.springframework.ws.MockWebServiceMessageFactory;
+import org.springframework.ws.context.DefaultMessageContext;
+import org.springframework.ws.context.MessageContext;
 import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.transform.StringResult;
 
@@ -55,7 +57,7 @@ public class PayloadTransformingInterceptorTest extends XMLTestCase {
         interceptor.setRequestXslt(xslt);
         interceptor.afterPropertiesSet();
         MockWebServiceMessage request = new MockWebServiceMessage(input);
-        MockMessageContext context = new MockMessageContext(request);
+        MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
         boolean result = interceptor.handleRequest(context, null);
         assertTrue("Invalid interceptor result", result);
@@ -68,7 +70,7 @@ public class PayloadTransformingInterceptorTest extends XMLTestCase {
         interceptor.setResponseXslt(xslt);
         interceptor.afterPropertiesSet();
         MockWebServiceMessage request = new MockWebServiceMessage(input);
-        MockMessageContext context = new MockMessageContext(request);
+        MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
         boolean result = interceptor.handleRequest(context, null);
         assertTrue("Invalid interceptor result", result);
@@ -81,7 +83,7 @@ public class PayloadTransformingInterceptorTest extends XMLTestCase {
         interceptor.setResponseXslt(xslt);
         interceptor.afterPropertiesSet();
         MockWebServiceMessage request = new MockWebServiceMessage(input);
-        MockMessageContext context = new MockMessageContext(request);
+        MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
         MockWebServiceMessage response = (MockWebServiceMessage) context.getResponse();
         response.setPayload(input);
 
@@ -96,7 +98,7 @@ public class PayloadTransformingInterceptorTest extends XMLTestCase {
         interceptor.setRequestXslt(xslt);
         interceptor.afterPropertiesSet();
         MockWebServiceMessage request = new MockWebServiceMessage(input);
-        MockMessageContext context = new MockMessageContext(request);
+        MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
         MockWebServiceMessage response = (MockWebServiceMessage) context.getResponse();
         response.setPayload(input);
 

@@ -29,7 +29,6 @@ import org.springframework.ws.EndpointInterceptor;
 import org.springframework.ws.EndpointInvocationChain;
 import org.springframework.ws.MessageDispatcher;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.soap.context.SoapMessageContext;
 import org.springframework.ws.soap.endpoint.SimpleSoapExceptionResolver;
 import org.springframework.ws.soap.soap12.Soap12Header;
 
@@ -95,19 +94,19 @@ public class SoapMessageDispatcher extends MessageDispatcher {
      * @see SoapHeader#examineMustUnderstandHeaderElements(String)
      */
     protected boolean handleRequest(EndpointInvocationChain mappedEndpoint, MessageContext messageContext) {
-        if (messageContext instanceof SoapMessageContext) {
-            SoapMessageContext soapContext = (SoapMessageContext) messageContext;
-            if (soapContext.getSoapRequest().getSoapHeader() == null) {
+        if (messageContext.getRequest() instanceof SoapMessage) {
+            SoapMessage soapRequest = (SoapMessage) messageContext.getRequest();
+            if (soapRequest.getSoapHeader() == null) {
                 // no headers to process
                 return true;
             }
-            String[] roles = getRoles(mappedEndpoint, soapContext.getSoapRequest().getVersion());
+            String[] roles = getRoles(mappedEndpoint, soapRequest.getVersion());
             if (logger.isDebugEnabled()) {
                 logger.debug("Handling MustUnderstand headers for actors/roles [" +
                         StringUtils.arrayToCommaDelimitedString(roles));
             }
             for (int i = 0; i < roles.length; i++) {
-                if (!handleRequestForRole(mappedEndpoint, soapContext, roles[i])) {
+                if (!handleRequestForRole(mappedEndpoint, messageContext, roles[i])) {
                     return false;
                 }
             }
@@ -142,9 +141,9 @@ public class SoapMessageDispatcher extends MessageDispatcher {
      * @see SoapEndpointInterceptor#understands(SoapHeaderElement)
      */
     private boolean handleRequestForRole(EndpointInvocationChain mappedEndpoint,
-                                         SoapMessageContext messageContext,
+                                         MessageContext messageContext,
                                          String actorOrRole) {
-        SoapHeader requestHeader = messageContext.getSoapRequest().getSoapHeader();
+        SoapHeader requestHeader = ((SoapMessage) messageContext.getRequest()).getSoapHeader();
         List notUnderstoodHeaderNames = new ArrayList();
         for (Iterator iterator = requestHeader.examineMustUnderstandHeaderElements(actorOrRole); iterator.hasNext();) {
             SoapHeaderElement headerElement = (SoapHeaderElement) iterator.next();
@@ -174,10 +173,11 @@ public class SoapMessageDispatcher extends MessageDispatcher {
                 logger.warn("Could not handle mustUnderstand headers: " +
                         StringUtils.collectionToCommaDelimitedString(notUnderstoodHeaderNames) + ". Returning fault");
             }
-            SoapBody responseBody = messageContext.getSoapResponse().getSoapBody();
+            SoapMessage soapResponse = (SoapMessage) messageContext.getResponse();
+            SoapBody responseBody = soapResponse.getSoapBody();
             SoapFault fault = responseBody.addMustUnderstandFault(mustUnderstandFault, mustUnderstandFaultLocale);
             fault.setFaultActorOrRole(actorOrRole);
-            SoapHeader header = messageContext.getSoapResponse().getSoapHeader();
+            SoapHeader header = soapResponse.getSoapHeader();
             if (header instanceof Soap12Header) {
                 Soap12Header soap12Header = (Soap12Header) header;
                 for (Iterator iterator = notUnderstoodHeaderNames.iterator(); iterator.hasNext();) {
@@ -206,9 +206,9 @@ public class SoapMessageDispatcher extends MessageDispatcher {
         if (mappedEndpoint != null && messageContext.hasResponse() &&
                 !ObjectUtils.isEmpty(mappedEndpoint.getInterceptors())) {
             boolean hasFault = false;
-            if (messageContext instanceof SoapMessageContext) {
-                SoapMessageContext soapMessageContext = (SoapMessageContext) messageContext;
-                hasFault = soapMessageContext.getSoapResponse().getSoapBody().hasFault();
+            if (messageContext.getResponse() instanceof SoapMessage) {
+                SoapMessage soapResponse = (SoapMessage) messageContext.getResponse();
+                hasFault = soapResponse.getSoapBody().hasFault();
             }
             boolean resume = true;
             for (int i = interceptorIndex; resume && i >= 0; i--) {

@@ -26,6 +26,8 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.endpoint.mapping.AbstractMapBasedEndpointMapping;
 import org.springframework.ws.soap.SoapEndpointInvocationChain;
 import org.springframework.ws.soap.SoapEndpointMapping;
+import org.springframework.ws.transport.TransportContext;
+import org.springframework.ws.transport.TransportContextHolder;
 
 /**
  * Implementation of the <code>EndpointMapping</code> interface to map from <code>SOAPAction</code> headers to endpoint
@@ -85,7 +87,10 @@ public class SoapActionEndpointMapping extends AbstractMapBasedEndpointMapping i
     }
 
     protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
-        Iterator iterator = messageContext.getTransportRequest().getHeaders(SOAP_ACTION_HEADER);
+        TransportContext transportContext = TransportContextHolder.getTransportContext();
+        Assert.notNull(transportContext,
+                "No TransportContext associated with current thread, cannot read SOAPAction header");
+        Iterator iterator = transportContext.getTransportInputStream().getHeaders(SOAP_ACTION_HEADER);
         String soapAction = "";
         if (iterator.hasNext()) {
             soapAction = (String) iterator.next();

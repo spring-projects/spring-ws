@@ -41,25 +41,25 @@ public interface SoapVersion {
 
         private static final String CONTENT_TYPE = "text/xml";
 
-        private final QName ENVELOPE_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Envelope");
+        private QName ENVELOPE_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Envelope");
 
-        private final QName HEADER_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Header");
+        private QName HEADER_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Header");
 
-        private final QName BODY_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Body");
+        private QName BODY_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Body");
 
-        private final QName FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Fault");
+        private QName FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Fault");
 
-        private final QName MUST_UNDERSTAND_ATTRIBUTE_NAME = new QName(ENVELOPE_NAMESPACE_URI, "mustUnderstand");
+        private QName MUST_UNDERSTAND_ATTRIBUTE_NAME = new QName(ENVELOPE_NAMESPACE_URI, "mustUnderstand");
 
-        private final QName ACTOR_NAME = new QName(ENVELOPE_NAMESPACE_URI, "actor");
+        private QName ACTOR_NAME = new QName(ENVELOPE_NAMESPACE_URI, "actor");
 
-        private final QName CLIENT_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Client");
+        private QName CLIENT_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Client");
 
-        private final QName SERVER_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Server");
+        private QName SERVER_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Server");
 
-        private final QName MUST_UNDERSTAND_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "MustUnderstand");
+        private QName MUST_UNDERSTAND_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "MustUnderstand");
 
-        private final QName VERSION_MISMATCH_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "VersionMismatch");
+        private QName VERSION_MISMATCH_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "VersionMismatch");
 
         public QName getBodyName() {
             return BODY_NAME;
@@ -143,25 +143,25 @@ public interface SoapVersion {
 
         private static final String CONTENT_TYPE = "application/soap+xml";
 
-        private final QName ENVELOPE_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Envelope");
+        private QName ENVELOPE_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Envelope");
 
-        private final QName HEADER_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Header");
+        private QName HEADER_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Header");
 
-        private final QName BODY_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Body");
+        private QName BODY_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Body");
 
-        private final QName FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Fault");
+        private QName FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Fault");
 
-        private final QName MUST_UNDERSTAND_ATTRIBUTE_NAME = new QName(ENVELOPE_NAMESPACE_URI, "mustUnderstand");
+        private QName MUST_UNDERSTAND_ATTRIBUTE_NAME = new QName(ENVELOPE_NAMESPACE_URI, "mustUnderstand");
 
-        private final QName ROLE_NAME = new QName(ENVELOPE_NAMESPACE_URI, "role");
+        private QName ROLE_NAME = new QName(ENVELOPE_NAMESPACE_URI, "role");
 
-        private final QName SENDER_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Sender");
+        private QName SENDER_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Sender");
 
-        private final QName RECEIVER_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Receiver");
+        private QName RECEIVER_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Receiver");
 
-        private final QName MUST_UNDERSTAND_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "MustUnderstand");
+        private QName MUST_UNDERSTAND_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "MustUnderstand");
 
-        private final QName VERSION_MISMATCH_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "VersionMismatch");
+        private QName VERSION_MISMATCH_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "VersionMismatch");
 
         public QName getBodyName() {
             return BODY_NAME;

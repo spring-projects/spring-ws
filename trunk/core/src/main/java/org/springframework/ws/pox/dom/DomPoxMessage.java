@@ -27,6 +27,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.springframework.ws.pox.PoxMessage;
+import org.springframework.ws.transport.TransportOutputStream;
 import org.w3c.dom.Document;
 
 /**
@@ -36,6 +37,8 @@ import org.w3c.dom.Document;
  * @see Document
  */
 public class DomPoxMessage implements PoxMessage {
+
+    private static final String CONTENT_TYPE = "text/xml";
 
     private final Document document;
 
@@ -68,10 +71,14 @@ public class DomPoxMessage implements PoxMessage {
 
     public void writeTo(OutputStream outputStream) throws IOException {
         try {
+            if (outputStream instanceof TransportOutputStream) {
+                TransportOutputStream transportOutputStream = (TransportOutputStream) outputStream;
+                transportOutputStream.addHeader("Content-Type", CONTENT_TYPE);
+            }
             transformer.transform(getPayloadSource(), new StreamResult(outputStream));
         }
         catch (TransformerException ex) {
-            throw new DomPoxMessageException("Could not create transformer", ex);
+            throw new DomPoxMessageException("Could write document: " + ex.getMessage(), ex);
         }
     }
 }

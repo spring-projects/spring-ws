@@ -23,12 +23,13 @@ import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPMessage;
 
 import org.custommonkey.xmlunit.XMLTestCase;
-import org.springframework.ws.mock.MockTransportRequest;
+import org.springframework.ws.context.DefaultMessageContext;
+import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapMessageException;
 import org.springframework.ws.soap.SoapVersion;
-import org.springframework.ws.soap.saaj.SaajSoapMessageContext;
-import org.springframework.ws.soap.saaj.saaj13.Saaj13SoapMessageContext;
+import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
+import org.springframework.ws.soap.saaj.saaj13.Saaj13SoapMessage;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 import org.springframework.ws.soap.soap12.Soap12Fault;
 
@@ -36,8 +37,12 @@ public class SoapFaultMappingExceptionResolverTest extends XMLTestCase {
 
     private SoapFaultMappingExceptionResolver resolver;
 
+    private SaajSoapMessageFactory factory;
+
     protected void setUp() throws Exception {
         resolver = new SoapFaultMappingExceptionResolver();
+        factory = new SaajSoapMessageFactory();
+
     }
 
     public void testGetDepth() throws Exception {
@@ -56,13 +61,14 @@ public class SoapFaultMappingExceptionResolverTest extends XMLTestCase {
 
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
         SOAPMessage message = messageFactory.createMessage();
-        SaajSoapMessageContext context =
-                new Saaj13SoapMessageContext(message, new MockTransportRequest(), messageFactory);
+        factory.setSoapProtocol(SOAPConstants.SOAP_1_1_PROTOCOL);
+        factory.afterPropertiesSet();
+        MessageContext context = new DefaultMessageContext(new Saaj13SoapMessage(message), factory);
 
         boolean result = resolver.resolveException(context, null, new IllegalArgumentException("bla"));
         assertTrue("resolveException returns false", result);
         assertTrue("Context has no response", context.hasResponse());
-        SoapMessage response = context.getSoapResponse();
+        SoapMessage response = (SoapMessage) context.getResponse();
         assertTrue("Resonse has no fault", response.getSoapBody().hasFault());
         Soap11Fault fault = (Soap11Fault) response.getSoapBody().getFault();
         assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getClientOrSenderFaultName(),
@@ -79,13 +85,14 @@ public class SoapFaultMappingExceptionResolverTest extends XMLTestCase {
 
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
         SOAPMessage message = messageFactory.createMessage();
-        SaajSoapMessageContext context =
-                new Saaj13SoapMessageContext(message, new MockTransportRequest(), messageFactory);
+        factory.setSoapProtocol(SOAPConstants.SOAP_1_2_PROTOCOL);
+        factory.afterPropertiesSet();
+        MessageContext context = new DefaultMessageContext(new Saaj13SoapMessage(message), factory);
 
         boolean result = resolver.resolveException(context, null, new IllegalArgumentException("bla"));
         assertTrue("resolveException returns false", result);
         assertTrue("Context has no response", context.hasResponse());
-        SoapMessage response = context.getSoapResponse();
+        SoapMessage response = (SoapMessage) context.getResponse();
         assertTrue("Resonse has no fault", response.getSoapBody().hasFault());
         Soap12Fault fault = (Soap12Fault) response.getSoapBody().getFault();
         assertEquals("Invalid fault code on fault", SoapVersion.SOAP_12.getClientOrSenderFaultName(),
@@ -102,13 +109,14 @@ public class SoapFaultMappingExceptionResolverTest extends XMLTestCase {
 
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
         SOAPMessage message = messageFactory.createMessage();
-        SaajSoapMessageContext context =
-                new Saaj13SoapMessageContext(message, new MockTransportRequest(), messageFactory);
+        factory.setSoapProtocol(SOAPConstants.SOAP_1_1_PROTOCOL);
+        factory.afterPropertiesSet();
+        MessageContext context = new DefaultMessageContext(new Saaj13SoapMessage(message), factory);
 
         boolean result = resolver.resolveException(context, null, new IllegalArgumentException("bla"));
         assertTrue("resolveException returns false", result);
         assertTrue("Context has no response", context.hasResponse());
-        SoapMessage response = context.getSoapResponse();
+        SoapMessage response = (SoapMessage) context.getResponse();
         assertTrue("Resonse has no fault", response.getSoapBody().hasFault());
         Soap11Fault fault = (Soap11Fault) response.getSoapBody().getFault();
         assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getServerOrReceiverFaultName(),
@@ -125,13 +133,14 @@ public class SoapFaultMappingExceptionResolverTest extends XMLTestCase {
 
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
         SOAPMessage message = messageFactory.createMessage();
-        SaajSoapMessageContext context =
-                new Saaj13SoapMessageContext(message, new MockTransportRequest(), messageFactory);
+        factory.setSoapProtocol(SOAPConstants.SOAP_1_2_PROTOCOL);
+        factory.afterPropertiesSet();
+        MessageContext context = new DefaultMessageContext(new Saaj13SoapMessage(message), factory);
 
         boolean result = resolver.resolveException(context, null, new IllegalArgumentException("bla"));
         assertTrue("resolveException returns false", result);
         assertTrue("Context has no response", context.hasResponse());
-        SoapMessage response = context.getSoapResponse();
+        SoapMessage response = (SoapMessage) context.getResponse();
         assertTrue("Resonse has no fault", response.getSoapBody().hasFault());
         Soap12Fault fault = (Soap12Fault) response.getSoapBody().getFault();
         assertEquals("Invalid fault code on fault", SoapVersion.SOAP_12.getServerOrReceiverFaultName(),
@@ -150,13 +159,14 @@ public class SoapFaultMappingExceptionResolverTest extends XMLTestCase {
         resolver.setDefaultFault(defaultFault);
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
         SOAPMessage message = messageFactory.createMessage();
-        SaajSoapMessageContext context =
-                new Saaj13SoapMessageContext(message, new MockTransportRequest(), messageFactory);
+        factory.setSoapProtocol(SOAPConstants.SOAP_1_1_PROTOCOL);
+        factory.afterPropertiesSet();
+        MessageContext context = new DefaultMessageContext(new Saaj13SoapMessage(message), factory);
 
         boolean result = resolver.resolveException(context, null, new IllegalArgumentException("bla"));
         assertTrue("resolveException returns false", result);
         assertTrue("Context has no response", context.hasResponse());
-        SoapMessage response = context.getSoapResponse();
+        SoapMessage response = (SoapMessage) context.getResponse();
         assertTrue("Resonse has no fault", response.getSoapBody().hasFault());
         Soap11Fault fault = (Soap11Fault) response.getSoapBody().getFault();
         assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getClientOrSenderFaultName(),

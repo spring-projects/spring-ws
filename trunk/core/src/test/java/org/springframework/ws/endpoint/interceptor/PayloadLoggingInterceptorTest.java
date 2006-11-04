@@ -22,8 +22,10 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
-import org.springframework.ws.mock.MockMessageContext;
-import org.springframework.ws.mock.MockWebServiceMessage;
+import org.springframework.ws.MockWebServiceMessage;
+import org.springframework.ws.MockWebServiceMessageFactory;
+import org.springframework.ws.context.DefaultMessageContext;
+import org.springframework.ws.context.MessageContext;
 
 public class PayloadLoggingInterceptorTest extends TestCase {
 
@@ -31,7 +33,7 @@ public class PayloadLoggingInterceptorTest extends TestCase {
 
     private CountingAppender appender;
 
-    private MockMessageContext messageContext;
+    private MessageContext messageContext;
 
     protected void setUp() throws Exception {
         interceptor = new PayloadLoggingInterceptor();
@@ -39,7 +41,7 @@ public class PayloadLoggingInterceptorTest extends TestCase {
         BasicConfigurator.configure(appender);
         Logger.getRootLogger().setLevel(Level.DEBUG);
         MockWebServiceMessage request = new MockWebServiceMessage("<request/>");
-        messageContext = new MockMessageContext(request);
+        messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
         appender.reset();
     }
 
