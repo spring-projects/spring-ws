@@ -37,7 +37,7 @@ public class StubTransportInputStream extends TransportInputStream {
         this.headers = headers;
     }
 
-    protected InputStream getInputStream() throws IOException {
+    protected InputStream createInputStream() throws IOException {
         return inputStream;
     }
 

@@ -44,7 +44,7 @@ public class HttpServletTransportInputStream extends TransportInputStream {
         this.httpServletRequest = httpServletRequest;
     }
 
-    protected InputStream getInputStream() throws IOException {
+    protected InputStream createInputStream() throws IOException {
         return httpServletRequest.getInputStream();
     }
 
