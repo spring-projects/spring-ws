@@ -40,7 +40,7 @@ public class JmsTransportInputStream extends TransportInputStream {
         this.textMessage = textMessage;
     }
 
-    protected InputStream getInputStream() throws IOException {
+    protected InputStream createInputStream() throws IOException {
         try {
             return new ByteArrayInputStream(textMessage.getText().getBytes("UTF-8"));
         }

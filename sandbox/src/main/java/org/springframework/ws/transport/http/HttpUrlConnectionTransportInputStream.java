@@ -67,7 +67,7 @@ public class HttpUrlConnectionTransportInputStream extends TransportInputStream 
         }
     }
 
-    protected InputStream getInputStream() throws IOException {
+    protected InputStream createInputStream() throws IOException {
         return connection.getInputStream();
     }
 }

@@ -30,7 +30,16 @@ import java.util.Iterator;
  */
 public abstract class TransportInputStream extends InputStream {
 
+    private InputStream inputStream;
+
     protected TransportInputStream() {
+    }
+
+    private InputStream getInputStream() throws IOException {
+        if (inputStream == null) {
+            inputStream = createInputStream();
+        }
+        return inputStream;
     }
 
     public void close() throws IOException {
@@ -81,7 +90,7 @@ public abstract class TransportInputStream extends InputStream {
     /**
      * Returns the input stream to read from.
      */
-    protected abstract InputStream getInputStream() throws IOException;
+    protected abstract InputStream createInputStream() throws IOException;
 
     /**
      * Returns an iteration over all the header names this request contains. Returns an empty <code>Iterator</code> if

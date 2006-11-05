@@ -39,7 +39,6 @@ public class HttpServletTransportInputStreamTest extends TestCase {
     }
 
     public void testReadInputStream() throws Exception {
-        request.setContent(content);
         byte[] result = FileCopyUtils.copyToByteArray(tis);
         assertTrue("Invalid contents", Arrays.equals(content, result));
     }
