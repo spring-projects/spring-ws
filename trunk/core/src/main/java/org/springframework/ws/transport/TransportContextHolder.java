@@ -24,7 +24,7 @@ package org.springframework.ws.transport;
  */
 public abstract class TransportContextHolder {
 
-    private static final ThreadLocal transportContextHolder = new InheritableThreadLocal();
+    private static final ThreadLocal transportContextHolder = new ThreadLocal();
 
     /**
      * Associate the given <code>TransportContext</code> with the current thread.

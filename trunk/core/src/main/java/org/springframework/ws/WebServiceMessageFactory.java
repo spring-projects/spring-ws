@@ -29,7 +29,7 @@ import java.io.InputStream;
 public interface WebServiceMessageFactory {
 
     /**
-     * Creates a new, empty {@link WebServiceMessage}.
+     * Creates a new, empty <code>WebServiceMessage</code>.
      *
      * @return the empty message
      */
@@ -38,8 +38,8 @@ public interface WebServiceMessageFactory {
     /**
      * Reads {@link WebServiceMessage} from the given input stream.
      * <p/>
-     * If the given stream is an instance of {@link org.springframework.ws.transport.TransportOutputStream
-     * TransportOutputStream}, the headers will be read from the request.
+     * If the given stream is an instance of {@link org.springframework.ws.transport.TransportInputStream
+     * TransportInputStream}, the headers will be read from the request.
      *
      * @param inputStream the inputstream to read the message from
      * @return the created message

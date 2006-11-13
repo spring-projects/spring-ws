@@ -42,6 +42,7 @@ import org.springframework.ws.transport.TransportOutputStream;
  * @author Arjen Poutsma
  */
 public class JmsTransportMessageListener implements MessageListener, InitializingBean {
+    // TODO: implemement SessionAwareMessageListener
 
     private static final Log logger = LogFactory.getLog(JmsTransportMessageListener.class);
 
@@ -65,10 +66,10 @@ public class JmsTransportMessageListener implements MessageListener, Initializin
                 handleTextMessage(textMessage);
             }
             catch (IOException ex) {
-                throw new JmsTransportException("Could not create message: " + ex.getMessage(), ex);
+                logger.error("Could not create message: " + ex.getMessage(), ex);
             }
             catch (Exception ex) {
-                throw new JmsTransportException("Could not handle message: " + ex.getMessage(), ex);
+                logger.error("Could not handle message: " + ex.getMessage(), ex);
             }
         }
         else {
