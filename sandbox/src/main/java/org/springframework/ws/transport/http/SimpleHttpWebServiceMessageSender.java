@@ -20,11 +20,15 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
+ * <code>WebServiceMessageSender</code> implementation that uses standard J2SE facilities to execute POST requests,
+ * without support for HTTP authentication or advanced configuration options.
+ *
  * @author Arjen Poutsma
  */
 public class SimpleHttpWebServiceMessageSender implements WebServiceMessageSender {
 
-    public final WebServiceMessage send(WebServiceMessage message) {
+    public WebServiceMessage send(WebServiceMessage message) {
+
         //TODO implement
         throw new UnsupportedOperationException("Not implemented");
     }

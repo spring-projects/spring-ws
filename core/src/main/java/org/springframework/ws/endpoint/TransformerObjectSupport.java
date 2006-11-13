@@ -42,6 +42,10 @@ public abstract class TransformerObjectSupport {
 
     private static TransformerFactory transformerFactory;
 
+    static {
+        transformerFactory = TransformerFactory.newInstance();
+    }
+
     /**
      * Creates a new <code>Transformer</code>. Must be called per request, as transformer is not thread-safe.
      *
@@ -50,23 +54,7 @@ public abstract class TransformerObjectSupport {
      *          if thrown by JAXP methods
      */
     protected final Transformer createTransformer() throws TransformerConfigurationException {
-        if (transformerFactory == null) {
-            transformerFactory = createTransformerFactory();
-        }
         return transformerFactory.newTransformer();
-    }
-
-    /**
-     * Create a <code>TransformerFactory</code> that this endpoint will use to create <code>Transformer</code>s. Can be
-     * overridden in subclasses, adding further initialization of the factory. The resulting
-     * <code>TransformerFactory</code> is cached, so this method will only be called once.
-     *
-     * @return the created <code>TransformerFactory</code>
-     * @throws TransformerFactoryConfigurationError
-     *          if thrown by JAXP methods
-     */
-    protected TransformerFactory createTransformerFactory() throws TransformerFactoryConfigurationError {
-        return TransformerFactory.newInstance();
     }
 
 }
