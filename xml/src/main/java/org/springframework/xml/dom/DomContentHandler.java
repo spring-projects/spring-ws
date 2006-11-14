@@ -37,11 +37,11 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class DomContentHandler extends DefaultHandler {
 
-    private Document document;
+    private final Document document;
 
-    private List elements = new ArrayList();
+    private final List elements = new ArrayList();
 
-    private Node node;
+    private final Node node;
 
     /**
      * Creates a new instance of the <code>DomContentHandler</code> with the given node.
@@ -54,6 +54,10 @@ public class DomContentHandler extends DefaultHandler {
         if (node instanceof Document) {
             document = (Document) node;
         }
+        else {
+            document = node.getOwnerDocument();
+        }
+        Assert.notNull(document, "document must not be null");
     }
 
     private Node getParent() {

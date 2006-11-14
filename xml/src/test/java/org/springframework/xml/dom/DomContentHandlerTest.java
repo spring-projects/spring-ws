@@ -22,16 +22,23 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 public class DomContentHandlerTest extends XMLTestCase {
 
-    private static final String XML_CONTENT_HANDLER = "<?xml version='1.0' encoding='UTF-8'?>" + "<?pi content?>" +
+    private static final String XML_1 = "<?xml version='1.0' encoding='UTF-8'?>" + "<?pi content?>" +
             "<root xmlns='namespace'>" +
             "<prefix:child xmlns:prefix='namespace2' xmlns:prefix2='namespace3' prefix2:attr='value'>content</prefix:child>" +
             "</root>";
+
+    private static final String XML_2_EXPECTED = "<?xml version='1.0' encoding='UTF-8'?>" + "<root xmlns='namespace'>" +
+            "<child xmlns='namespace2' />" + "</root>";
+
+    private static final String XML_2_SNIPPET =
+            "<?xml version='1.0' encoding='UTF-8'?>" + "<child xmlns='namespace2' />";
 
     private Document expected;
 
@@ -41,20 +48,33 @@ public class DomContentHandlerTest extends XMLTestCase {
 
     private XMLReader xmlReader;
 
+    private DocumentBuilder documentBuilder;
+
     protected void setUp() throws Exception {
         xmlReader = XMLReaderFactory.createXMLReader();
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        documentBuilder = documentBuilderFactory.newDocumentBuilder();
         result = documentBuilder.newDocument();
-        handler = new DomContentHandler(result);
-        expected = documentBuilder.parse(new InputSource(new StringReader(XML_CONTENT_HANDLER)));
+        xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", false);
     }
 
-    public void testContentHandler() throws Exception {
-        xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", false);
+    public void testContentHandlerDocument() throws Exception {
+        handler = new DomContentHandler(result);
+        expected = documentBuilder.parse(new InputSource(new StringReader(XML_1)));
         xmlReader.setContentHandler(handler);
-        xmlReader.parse(new InputSource(new StringReader(XML_CONTENT_HANDLER)));
+        xmlReader.parse(new InputSource(new StringReader(XML_1)));
         assertXMLEqual("Invalid result", expected, result);
+    }
+
+    public void testContentHandlerElement() throws Exception {
+        Element rootElement = result.createElementNS("namespace", "root");
+        result.appendChild(rootElement);
+        handler = new DomContentHandler(rootElement);
+        expected = documentBuilder.parse(new InputSource(new StringReader(XML_2_EXPECTED)));
+        xmlReader.setContentHandler(handler);
+        xmlReader.parse(new InputSource(new StringReader(XML_2_SNIPPET)));
+        assertXMLEqual("Invalid result", expected, result);
+
     }
 }
