@@ -25,7 +25,7 @@ import junit.framework.TestCase;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.transport.SimpleTransportContext;
+import org.springframework.ws.transport.DefaultTransportContext;
 import org.springframework.ws.transport.StubTransportInputStream;
 import org.springframework.ws.transport.StubTransportOutputStream;
 import org.springframework.ws.transport.TransportContext;
@@ -45,7 +45,7 @@ public class SoapActionEndpointMappingTest extends TestCase {
         headers = new HashMap();
         TransportInputStream tis = new StubTransportInputStream(new ByteArrayInputStream(new byte[0]), headers);
         TransportOutputStream tos = new StubTransportOutputStream(new ByteArrayOutputStream());
-        TransportContext transportContext = new SimpleTransportContext(tis, tos);
+        TransportContext transportContext = new DefaultTransportContext(tis, tos);
         TransportContextHolder.setTransportContext(transportContext);
         mapping = new SoapActionEndpointMapping();
         context = new DefaultMessageContext(new MockWebServiceMessageFactory());
