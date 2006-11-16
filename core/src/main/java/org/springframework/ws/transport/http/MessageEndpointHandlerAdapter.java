@@ -33,7 +33,7 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.endpoint.MessageEndpoint;
 import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.transport.SimpleTransportContext;
+import org.springframework.ws.transport.DefaultTransportContext;
 import org.springframework.ws.transport.TransportContext;
 import org.springframework.ws.transport.TransportContextHolder;
 import org.springframework.ws.transport.TransportInputStream;
@@ -94,7 +94,7 @@ public class MessageEndpointHandlerAdapter implements HandlerAdapter, Initializi
         TransportOutputStream tos = new HttpServletTransportOutputStream(httpServletResponse);
 
         TransportContext previousTransportContext = TransportContextHolder.getTransportContext();
-        TransportContextHolder.setTransportContext(new SimpleTransportContext(tis, tos));
+        TransportContextHolder.setTransportContext(new DefaultTransportContext(tis, tos));
 
         try {
             WebServiceMessage messageRequest = messageFactory.createWebServiceMessage(tis);

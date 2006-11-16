@@ -17,21 +17,21 @@
 package org.springframework.ws.transport;
 
 /**
- * Simple implementation of the <code>TransportContext</code> interface.
+ * Default implementation of the <code>TransportContext</code> interface.
  *
  * @author Arjen Poutsma
  */
-public class SimpleTransportContext implements TransportContext {
+public class DefaultTransportContext implements TransportContext {
 
     private final TransportInputStream transportInputStream;
 
     private final TransportOutputStream transportOutputStream;
 
     /**
-     * Creates a new <code>SimpleTransportContext</code> that exposes the given streams.
+     * Creates a new <code>DefaultTransportContext</code> that exposes the given streams.
      */
-    public SimpleTransportContext(TransportInputStream transportInputStream,
-                                  TransportOutputStream transportOutputStream) {
+    public DefaultTransportContext(TransportInputStream transportInputStream,
+                                   TransportOutputStream transportOutputStream) {
         this.transportInputStream = transportInputStream;
         this.transportOutputStream = transportOutputStream;
     }
