@@ -24,7 +24,6 @@ import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.TestCase;
@@ -48,7 +47,13 @@ public class PayloadValidatingInterceptorTest extends TestCase {
 
     private MessageContext context;
 
-    private SaajSoapMessageFactory factory;
+    private SaajSoapMessageFactory soap11Factory;
+
+    private MessageFactory messageFactory;
+
+    private SaajSoapMessageFactory soap12Factory;
+
+    private Transformer transformer;
 
     protected void setUp() throws Exception {
         interceptor = new PayloadValidatingInterceptor();
@@ -57,18 +62,16 @@ public class PayloadValidatingInterceptorTest extends TestCase {
         interceptor.setValidateResponse(true);
         interceptor.afterPropertiesSet();
 
-        factory = new SaajSoapMessageFactory();
-        factory.afterPropertiesSet();
-        context = new DefaultMessageContext(factory);
+        soap11Factory = new SaajSoapMessageFactory(MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL));
+        soap12Factory = new SaajSoapMessageFactory(MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL));
+        transformer = TransformerFactory.newInstance().newTransformer();
     }
 
     public void testHandleInvalidRequestSoap11() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
-        SOAPMessage invalidMessage = messageFactory.createMessage();
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        SoapMessage invalidMessage = (SoapMessage) soap11Factory.createWebServiceMessage();
         InputStream inputStream = getClass().getResourceAsStream("invalidMessage.xml");
-        transformer.transform(new StreamSource(inputStream), new DOMResult(invalidMessage.getSOAPBody()));
-        context = new DefaultMessageContext(new Saaj13SoapMessage(invalidMessage), factory);
+        transformer.transform(new StreamSource(inputStream), invalidMessage.getPayloadResult());
+        context = new DefaultMessageContext(invalidMessage, soap11Factory);
 
         boolean result = interceptor.handleRequest(context, null);
         assertFalse("Invalid response from interceptor", result);
@@ -84,14 +87,10 @@ public class PayloadValidatingInterceptorTest extends TestCase {
     }
 
     public void testHandleInvalidRequestSoap12() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-        SOAPMessage invalidMessage = messageFactory.createMessage();
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        SoapMessage invalidMessage = (SoapMessage) soap12Factory.createWebServiceMessage();
         InputStream inputStream = getClass().getResourceAsStream("invalidMessage.xml");
-        transformer.transform(new StreamSource(inputStream), new DOMResult(invalidMessage.getSOAPBody()));
-        factory.setSoapProtocol(SOAPConstants.SOAP_1_2_PROTOCOL);
-        factory.afterPropertiesSet();
-        context = new DefaultMessageContext(new Saaj13SoapMessage(invalidMessage), factory);
+        transformer.transform(new StreamSource(inputStream), invalidMessage.getPayloadResult());
+        context = new DefaultMessageContext(invalidMessage, soap12Factory);
 
         boolean result = interceptor.handleRequest(context, null);
         assertFalse("Invalid response from interceptor", result);
@@ -113,12 +112,10 @@ public class PayloadValidatingInterceptorTest extends TestCase {
         interceptor.setFaultStringOrReasonLocale(locale);
         interceptor.setAddValidationErrorDetail(false);
 
-        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
-        SOAPMessage invalidMessage = messageFactory.createMessage();
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        SoapMessage invalidMessage = (SoapMessage) soap11Factory.createWebServiceMessage();
         InputStream inputStream = getClass().getResourceAsStream("invalidMessage.xml");
-        transformer.transform(new StreamSource(inputStream), new DOMResult(invalidMessage.getSOAPBody()));
-        context = new DefaultMessageContext(new Saaj13SoapMessage(invalidMessage), factory);
+        transformer.transform(new StreamSource(inputStream), invalidMessage.getPayloadResult());
+        context = new DefaultMessageContext(invalidMessage, soap11Factory);
 
         boolean result = interceptor.handleRequest(context, null);
         assertFalse("Invalid response from interceptor", result);
@@ -171,6 +168,8 @@ public class PayloadValidatingInterceptorTest extends TestCase {
     public void testNamespacesInType() throws Exception {
         // Make sure we use Xerces for this testcase: the JAXP implementation used internally by JDK 1.5 has a bug
         // See http://opensource.atlassian.com/projects/spring/browse/SWS-35
+        String previousSchemaFactory =
+                System.getProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI, "");
         System.setProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI,
                 "org.apache.xerces.jaxp.validation.XMLSchemaFactory");
         try {
@@ -179,13 +178,17 @@ public class PayloadValidatingInterceptorTest extends TestCase {
             MessageFactory messageFactory = MessageFactory.newInstance();
             SOAPMessage saajMessage =
                     SaajUtils.loadMessage(new ClassPathResource("validSoapMessage.xml", getClass()), messageFactory);
+            context = new DefaultMessageContext(new Saaj13SoapMessage(saajMessage),
+                    new SaajSoapMessageFactory(messageFactory));
+
             boolean result = interceptor.handleRequest(context, null);
             assertTrue("Invalid response from interceptor", result);
             assertFalse("Response set", context.hasResponse());
         }
         finally {
             // Reset the property
-            System.setProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI, "");
+            System.setProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI,
+                    previousSchemaFactory);
         }
     }
 

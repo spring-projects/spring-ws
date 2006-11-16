@@ -17,15 +17,14 @@
 package org.springframework.ws.soap.security.xwss;
 
 import java.security.cert.X509Certificate;
-
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.xml.soap.SOAPMessage;
 
 import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
 import com.sun.xml.wss.impl.callback.SignatureKeyCallback;
-
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.security.xwss.callback.AbstractCallbackHandler;
 
 public class XwssMessageInterceptorSignTest extends XwssMessageInterceptorKeyStoreTestCase {
@@ -54,8 +53,9 @@ public class XwssMessageInterceptorSignTest extends XwssMessageInterceptorKeySto
         };
         interceptor.setCallbackHandler(handler);
         interceptor.afterPropertiesSet();
-        SOAPMessage message = loadSaajMessage("empty-soap.xml");
-        SOAPMessage result = interceptor.secureMessage(message);
+        SaajSoapMessage message = loadSaajMessage("empty-soap.xml");
+        interceptor.secureMessage(message);
+        SOAPMessage result = message.getSaajMessage();
         assertNotNull("No result returned", result);
         assertXpathExists("BinarySecurityToken does not exist",
                 "SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:BinarySecurityToken", result);
@@ -88,8 +88,9 @@ public class XwssMessageInterceptorSignTest extends XwssMessageInterceptorKeySto
         };
         interceptor.setCallbackHandler(handler);
         interceptor.afterPropertiesSet();
-        SOAPMessage message = loadSaajMessage("empty-soap.xml");
-        SOAPMessage result = interceptor.secureMessage(message);
+        SaajSoapMessage message = loadSaajMessage("empty-soap.xml");
+        interceptor.secureMessage(message);
+        SOAPMessage result = message.getSaajMessage();
         assertNotNull("No result returned", result);
         assertXpathExists("BinarySecurityToken does not exist",
                 "SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:BinarySecurityToken", result);
@@ -118,8 +119,9 @@ public class XwssMessageInterceptorSignTest extends XwssMessageInterceptorKeySto
         };
         interceptor.setCallbackHandler(handler);
         interceptor.afterPropertiesSet();
-        SOAPMessage message = loadSaajMessage("signed-soap.xml");
-        SOAPMessage result = interceptor.validateMessage(message);
+        SaajSoapMessage message = loadSaajMessage("signed-soap.xml");
+        interceptor.validateMessage(message);
+        SOAPMessage result = message.getSaajMessage();
         assertNotNull("No result returned", result);
         assertXpathNotExists("Security Header not removed", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security", result);
     }

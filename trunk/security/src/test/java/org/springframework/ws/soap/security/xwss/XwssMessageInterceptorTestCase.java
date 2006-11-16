@@ -20,18 +20,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
 import junit.framework.TestCase;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
+import org.springframework.ws.soap.saaj.saaj13.Saaj13SoapMessage;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 public abstract class XwssMessageInterceptorTestCase extends TestCase {
 
@@ -76,14 +76,14 @@ public abstract class XwssMessageInterceptorTestCase extends TestCase {
         assertNull(message, node);
     }
 
-    protected SOAPMessage loadSaajMessage(String fileName) throws SOAPException, IOException {
+    protected SaajSoapMessage loadSaajMessage(String fileName) throws SOAPException, IOException {
         MimeHeaders mimeHeaders = new MimeHeaders();
         mimeHeaders.addHeader("Content-Type", "text/xml");
         InputStream is = null;
         try {
             is = getClass().getResourceAsStream(fileName);
-			assertNotNull("Could not load SAAJ message with name [" + fileName + "]", is);
-            return messageFactory.createMessage(mimeHeaders, is);
+            assertNotNull("Could not load SAAJ message with name [" + fileName + "]", is);
+            return new Saaj13SoapMessage(messageFactory.createMessage(mimeHeaders, is));
         }
         finally {
             if (is != null) {
