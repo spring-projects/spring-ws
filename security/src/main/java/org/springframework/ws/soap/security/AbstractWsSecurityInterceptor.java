@@ -23,10 +23,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapEndpointInterceptor;
 import org.springframework.ws.soap.SoapHeaderElement;
-import org.springframework.ws.soap.SoapBody;
-import org.springframework.ws.soap.context.SoapMessageContext;
+import org.springframework.ws.soap.SoapMessage;
 
 /**
  * Interceptor base class for interceptors that handle WS-Security.
@@ -38,17 +38,17 @@ import org.springframework.ws.soap.context.SoapMessageContext;
  */
 public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInterceptor {
 
+    private static final QName WS_SECURITY_NAME =
+            new QName("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security");
+
     /**
      * Logger available to subclasses.
      */
-    private final Log logger = LogFactory.getLog(getClass());
-
-    private boolean validateRequest = true;
+    protected final Log logger = LogFactory.getLog(getClass());
 
     private boolean secureResponse = true;
 
-    private static final QName WS_SECURITY_NAME =
-            new QName("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security");
+    private boolean validateRequest = true;
 
     /**
      * Indicates whether outgoing responsed are to be secured. Defaults to <code>true</code>.
@@ -66,20 +66,14 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 
     public final boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
         if (validateRequest) {
-            Assert.isTrue(messageContext instanceof SoapMessageContext,
-                    "WsSecurityInterceptor requires a SoapMessageContext");
-            SoapMessageContext soapMessageContext = (SoapMessageContext) messageContext;
+            Assert.isTrue(messageContext.getRequest() instanceof SoapMessage,
+                    "WsSecurityInterceptor requires a SoapMessage request");
             try {
-                validateRequest(soapMessageContext);
+                validateMessage((SoapMessage) messageContext.getRequest());
                 return true;
             }
             catch (WsSecurityValidationException ex) {
-                if (logger.isWarnEnabled()) {
-                    logger.warn("Could not validate request: " + ex.getMessage());
-                }
-                SoapBody response = soapMessageContext.getSoapResponse().getSoapBody();
-                response.addClientOrSenderFault(ex.getMessage(), Locale.ENGLISH);
-                return false;
+                return handleValidationException(ex, messageContext);
             }
         }
         else {
@@ -89,18 +83,14 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 
     public final boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
         if (secureResponse) {
-            Assert.isTrue(messageContext instanceof SoapMessageContext,
-                    "WsSecurityInterceptor requires a SoapMessageContext");
-            SoapMessageContext soapMessageContext = (SoapMessageContext) messageContext;
+            Assert.isTrue(messageContext.getResponse() instanceof SoapMessage,
+                    "WsSecurityInterceptor requires a SoapMessage response");
             try {
-                secureResponse(soapMessageContext);
+                secureMessage((SoapMessage) messageContext.getResponse());
                 return true;
             }
             catch (WsSecuritySecurementException ex) {
-                if (logger.isErrorEnabled()) {
-                    logger.error("Could not secure response: " + ex.getMessage(), ex);
-                }
-                return false;
+                return handleSecurementException(ex, messageContext);
             }
         }
         else {
@@ -108,29 +98,64 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
         }
     }
 
+    /**
+     * Returns <code>true</code>, i.e. faults are not secured.
+     */
     public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
         return true;
+    }
+
+    public boolean understands(SoapHeaderElement headerElement) {
+        return WS_SECURITY_NAME.equals(headerElement.getName());
+    }
+
+    /**
+     * Handles an securement exception. Default implementation logs the given exception, and returns
+     * <code>false</code>.
+     *
+     * @param ex             the validation exception
+     * @param messageContext the message context
+     * @return <code>true</code> to continue processing the message, <code>false</code> (the default) otherwise
+     */
+    protected boolean handleSecurementException(WsSecuritySecurementException ex, MessageContext messageContext) {
+        if (logger.isErrorEnabled()) {
+            logger.error("Could not secure response: " + ex.getMessage(), ex);
+        }
+        return false;
+    }
+
+    /**
+     * Handles an invalid SOAP message. Default implementation logs the given exception, and creates a SOAP 1.1 Client
+     * or SOAP 1.2 Sender Fault with the exception message as fault string, and returns <code>false</code>.
+     *
+     * @param ex             the validation exception
+     * @param messageContext the message context
+     * @return <code>true</code> to continue processing the message, <code>false</code> (the default) otherwise
+     */
+    protected boolean handleValidationException(WsSecurityValidationException ex, MessageContext messageContext) {
+        if (logger.isWarnEnabled()) {
+            logger.warn("Could not validate request: " + ex.getMessage());
+        }
+        SoapBody response = ((SoapMessage) messageContext.getResponse()).getSoapBody();
+        response.addClientOrSenderFault(ex.getMessage(), Locale.ENGLISH);
+        return false;
     }
 
     /**
      * Abstract template method. Subclasses are required to validate the request contained in the given
      * <code>SoapMessageContext</code>, and replace the original request with the validated version.
      *
-     * @param messageContext the soap message context
+     * @param soapMessage the soap message to validate
      * @throws WsSecurityValidationException in case of validation errors
      */
-    protected abstract void validateRequest(SoapMessageContext messageContext) throws WsSecurityValidationException;
+    protected abstract void validateMessage(SoapMessage soapMessage) throws WsSecurityValidationException;
 
     /**
      * Abstract template method. Subclasses are required to secure the response contained in the given
      * <code>SoapMessageContext</code>, and replace the original response with the secured version.
      *
-     * @param messageContext the soap message context
+     * @param soapMessage the soap message to secure
      * @throws WsSecuritySecurementException in case of securement errors
      */
-    protected abstract void secureResponse(SoapMessageContext messageContext) throws WsSecuritySecurementException;
-
-    public boolean understands(SoapHeaderElement headerElement) {
-        return WS_SECURITY_NAME.equals(headerElement.getName());
-    }
+    protected abstract void secureMessage(SoapMessage soapMessage) throws WsSecuritySecurementException;
 }

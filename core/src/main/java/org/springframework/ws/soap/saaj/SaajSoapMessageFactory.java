@@ -53,7 +53,30 @@ public class SaajSoapMessageFactory implements WebServiceMessageFactory, Initial
 
     private String messageFactoryProtocol;
 
+    /**
+     * Default, empty constructor.
+     */
+    public SaajSoapMessageFactory() {
+    }
+
+    /**
+     * Constructor that takes a message factory as an argument.
+     */
+    public SaajSoapMessageFactory(MessageFactory messageFactory) {
+        this.messageFactory = messageFactory;
+    }
+
+    /**
+     * Returns the SAAJ <code>MessageFactory</code> used.
+     */
+    public MessageFactory getSaajMessageFactory() {
+        return messageFactory;
+    }
+
     public void afterPropertiesSet() throws Exception {
+        if (messageFactory != null) {
+            return;
+        }
         try {
             if (SaajUtils.getSaajVersion() >= SaajUtils.SAAJ_13) {
                 if (!StringUtils.hasLength(messageFactoryProtocol)) {
