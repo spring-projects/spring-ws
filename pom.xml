@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws</artifactId>
@@ -27,12 +28,14 @@
         <repository>
             <id>static.springframework.org</id>
             <url>
-                scp://static.springframework.org/var/www/domains/springframework.org/static/htdocs/maven2</url>
+                scp://static.springframework.org/var/www/domains/springframework.org/static/htdocs/maven2
+            </url>
         </repository>
         <snapshotRepository>
             <id>static.springframework.org</id>
             <url>
-                scp://static.springframework.org/var/www/domains/springframework.org/static/htdocs/maven2-snapshots</url>
+                scp://static.springframework.org/var/www/domains/springframework.org/static/htdocs/maven2-snapshots
+            </url>
         </snapshotRepository>
     </distributionManagement>
     <inceptionYear>2005</inceptionYear>
@@ -68,10 +71,10 @@
     <scm>
         <connection>
             scm:svn:https://svn.sourceforge.net/svnroot/springframework/spring-ws/trunk/
-		</connection>
+        </connection>
         <developerConnection>
             scm:svn:https://svn.sourceforge.net/svnroot/springframework/spring-ws/trunk/
-		</developerConnection>
+        </developerConnection>
         <url>http://svn.sourceforge.net/viewvc/springframework/spring-ws/trunk/</url>
     </scm>
     <modules>
@@ -79,7 +82,7 @@
         <module>oxm</module>
         <module>core</module>
         <module>security</module>
-  </modules>
+    </modules>
     <profiles>
         <profile>
             <id>jdk1.5</id>
@@ -103,6 +106,9 @@
             </modules>
         </profile>
     </profiles>
+    <properties>
+        <spring.version>1.2.8</spring.version>
+    </properties>
     <repositories>
         <repository>
             <id>java.net</id>
@@ -360,42 +366,48 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
-                <version>1.2.8</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-beans</artifactId>
-                <version>1.2.8</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
-                <version>1.2.8</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-web</artifactId>
-                <version>1.2.8</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-webmvc</artifactId>
-                <version>1.2.8</version>
+                <version>${spring.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>struts</groupId>
+                        <artifactId>struts</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-hibernate</artifactId>
-                <version>1.2.8</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-jdbc</artifactId>
-                <version>1.2.8</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-mock</artifactId>
-                <version>1.2.8</version>
+                <version>${spring.version}</version>
                 <scope>test</scope>
             </dependency>
             <!-- XML handling dependencies -->
@@ -425,9 +437,9 @@
                 <version>1.3.03</version>
             </dependency>
             <dependency>
-                <groupId>woodstox</groupId>
+                <groupId>org.codehaus.woodstox</groupId>
                 <artifactId>wstx-asl</artifactId>
-                <version>3.0.2</version>
+                <version>3.1.0</version>
             </dependency>
             <dependency>
                 <groupId>jdom</groupId>
