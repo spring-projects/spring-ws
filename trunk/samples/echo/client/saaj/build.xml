@@ -1,15 +1,35 @@
 <?xml version="1.0"?>
 
-<project name="spring-ws-airline-sample-saaj-client" default="build">
+<project name="spring-ws-airline-sample-saaj-client" default="build" xmlns:artifact="urn:maven-artifact-ant">
     <property name="bin.dir" value="bin"/>
     <property name="src.dir" value="src"/>
 
-    <target name="build">
+    <target name="init">
+        <typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant">
+            <classpath>
+                <pathelement location="lib/maven-artifact-ant-2.0.4-dep.jar"/>
+            </classpath>
+        </typedef>
+
+        <artifact:remoteRepository id="java.net" url="https://maven-repository.dev.java.net/nonav/repository"
+                                   layout="legacy"/>
+
+        <artifact:dependencies pathId="compile.classpath">
+            <remoteRepository refid="java.net" />
+            <dependency groupId="javax.xml.soap" artifactId="saaj-api" version="1.3"/>
+        </artifact:dependencies>
+
+        <artifact:dependencies pathId="runtime.classpath">
+            <remoteRepository refid="java.net" />
+            <dependency groupId="com.sun.xml.messaging.saaj" artifactId="saaj-impl" version="1.3"/>
+        </artifact:dependencies>
+
+    </target>
+
+    <target name="build" depends="init">
         <mkdir dir="${bin.dir}"/>
         <javac srcdir="${src.dir}" destdir="${bin.dir}">
-            <classpath>
-                <pathelement location="lib/saaj-api.jar"/>
-            </classpath>
+            <classpath refid="compile.classpath"/>
         </javac>
     </target>
 
@@ -21,14 +41,9 @@
 
     <target name="echo" depends="build">
         <java classname="org.springframework.ws.samples.echo.client.saaj.EchoClient" fork="true" failonerror="true">
-            <classpath>
-                <pathelement location="${bin.dir}"/>
-                <pathelement location="lib/saaj-api.jar"/>
-                <pathelement location="lib/saaj-impl.jar"/>
-                <pathelement location="lib/mail.jar"/>
-                <pathelement location="lib/activation.jar"/>
-                <pathelement location="lib/xercesImpl.jar"/>
-            </classpath>
+            <classpath refid="compile.classpath" />
+            <classpath refid="runtime.classpath" />
+            <classpath location="${bin.dir}"/>
         </java>
     </target>
 
