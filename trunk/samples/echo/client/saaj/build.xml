@@ -21,7 +21,6 @@
 
     <target name="echo" depends="build">
         <java classname="org.springframework.ws.samples.echo.client.saaj.EchoClient" fork="true" failonerror="true">
-            <arg value="http://localhost:7001/echo/services"/>
             <classpath>
                 <pathelement location="${bin.dir}"/>
                 <pathelement location="lib/saaj-api.jar"/>

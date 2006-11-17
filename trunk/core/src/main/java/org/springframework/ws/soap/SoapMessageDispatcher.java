@@ -103,7 +103,7 @@ public class SoapMessageDispatcher extends MessageDispatcher {
             String[] roles = getRoles(mappedEndpoint, soapRequest.getVersion());
             if (logger.isDebugEnabled()) {
                 logger.debug("Handling MustUnderstand headers for actors/roles [" +
-                        StringUtils.arrayToCommaDelimitedString(roles));
+                        StringUtils.arrayToCommaDelimitedString(roles) + "]");
             }
             for (int i = 0; i < roles.length; i++) {
                 if (!handleRequestForRole(mappedEndpoint, messageContext, roles[i])) {
