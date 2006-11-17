@@ -88,6 +88,7 @@ public class JmsTransportMessageListener extends ServerTransportObjectSupport
 
     public void onMessage(Message message, Session session) throws JMSException {
         if (message instanceof TextMessage) {
+            logger.info("Received message [" + message.getJMSMessageID() + "]");
             try {
                 TransportInputStream tis = new JmsTransportInputStream((TextMessage) message);
                 TransportOutputStream tos;
@@ -100,7 +101,7 @@ public class JmsTransportMessageListener extends ServerTransportObjectSupport
                 handle(tis, tos, getMessageEndpoint());
             }
             catch (Exception ex) {
-                throw new JMSException(ex.getMessage());
+                logger.error(ex, ex);
             }
         }
         else {
@@ -111,8 +112,13 @@ public class JmsTransportMessageListener extends ServerTransportObjectSupport
     protected void handleResponse(TransportInputStream tis, TransportOutputStream tos, WebServiceMessage response)
             throws Exception {
         if (tos != null) {
-            TextMessage requestMessage = ((JmsTransportInputStream) tis).getTextMessage();
-            TextMessage responseMessage = ((JmsTransportOutputStream) tos).getTextMessage();
+            Message requestMessage = ((JmsTransportInputStream) tis).getTextMessage();
+            if (requestMessage.getJMSReplyTo() == null) {
+                logger.warn("Incoming message has no ReplyTo set, not sending response");
+                return;
+            }
+            response.writeTo(tos);
+            Message responseMessage = ((JmsTransportOutputStream) tos).getTextMessage();
             Session session = ((JmsTransportOutputStream) tos).getSession();
             MessageProducer producer = session.createProducer(requestMessage.getJMSReplyTo());
             try {
