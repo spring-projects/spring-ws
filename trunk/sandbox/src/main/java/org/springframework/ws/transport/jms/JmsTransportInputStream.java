@@ -29,15 +29,32 @@ import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.ws.transport.support.EnumerationIterator;
 
 /**
+ * JMS specific implementation of the <code>TransportInputStream</code> interface. Exposes a JMS
+ * <code>TextMessage</code>.
+ *
  * @author Arjen Poutsma
+ * @see #getTextMessage()
  */
 public class JmsTransportInputStream extends TransportInputStream {
 
     private final TextMessage textMessage;
 
-    public JmsTransportInputStream(TextMessage textMessage) throws IOException {
+    /**
+     * Constructs a new instance of the <code>JmsTransportInputStream</code> using the provided JMS
+     * <code>TextMessage</code>.
+     *
+     * @param textMessage the JMS message
+     */
+    public JmsTransportInputStream(TextMessage textMessage) {
         Assert.notNull(textMessage, "textMessage must not be null");
         this.textMessage = textMessage;
+    }
+
+    /**
+     * Returns the wrapped JMS <code>TextMessage</code>.
+     */
+    public TextMessage getTextMessage() {
+        return textMessage;
     }
 
     protected InputStream createInputStream() throws IOException {
