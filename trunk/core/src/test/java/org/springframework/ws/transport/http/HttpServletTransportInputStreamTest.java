@@ -29,16 +29,14 @@ public class HttpServletTransportInputStreamTest extends TestCase {
 
     private MockHttpServletRequest request;
 
-    private byte[] content;
-
     protected void setUp() throws Exception {
         request = new MockHttpServletRequest();
-        content = "content".getBytes("UTF-8");
-        request.setContent(content);
         tis = new HttpServletTransportInputStream(request);
     }
 
     public void testReadInputStream() throws Exception {
+        byte[] content = "content".getBytes("UTF-8");
+        request.setContent(content);
         byte[] result = FileCopyUtils.copyToByteArray(tis);
         assertTrue("Invalid contents", Arrays.equals(content, result));
     }
