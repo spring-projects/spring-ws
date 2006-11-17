@@ -49,8 +49,7 @@ public class JmsTransportOutputStream extends TransportOutputStream {
      * @see javax.jms.Message#setJMSCorrelationID(String)
      */
     public JmsTransportOutputStream(Session session) {
-        Assert.notNull(session, "session must not be null");
-        this.session = session;
+        this(session, null);
     }
 
     /**
@@ -63,7 +62,6 @@ public class JmsTransportOutputStream extends TransportOutputStream {
      */
     public JmsTransportOutputStream(Session session, String correlationId) {
         Assert.notNull(session, "session must not be null");
-        Assert.hasLength(correlationId, "correlationId must not be null");
         this.session = session;
         this.correlationId = correlationId;
     }
@@ -107,6 +105,15 @@ public class JmsTransportOutputStream extends TransportOutputStream {
     }
 
     private class TextMessageOutputStream extends ByteArrayOutputStream {
+
+        public void flush() throws IOException {
+            try {
+                getTextMessage().setText(new String(toString("UTF-8")));
+            }
+            catch (JMSException ex) {
+                throw new IOException("Could not set message text: " + ex.getMessage());
+            }
+        }
 
         public void close() throws IOException {
             try {
