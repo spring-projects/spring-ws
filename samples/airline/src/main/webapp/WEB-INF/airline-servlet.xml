@@ -9,10 +9,10 @@
             supports MessageEndpoints instances as handlers.
             It uses a SAAJ to construct SoapMessageContexts (and SoapMessages).
         </description>
-        <property name="messageContextFactory" ref="messageContextFactory"/>
+        <property name="messageFactory" ref="messageFactory"/>
     </bean>
 
-    <bean id="messageContextFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageContextFactory"/>
+    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
 
     <bean id="wsdlDefinitionHandlerAdapter" class="org.springframework.ws.transport.http.WsdlDefinitionHandlerAdapter">
         <description>
