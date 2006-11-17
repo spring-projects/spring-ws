@@ -24,26 +24,67 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.ws.transport.TransportOutputStream;
 
 /**
+ * JMS specific implementation of the <code>TransportOutputStream</code> interface. Exposes a JMS
+ * <code>TextMessage</code>, constructed lazily using a <code>Session</code>.
+ *
  * @author Arjen Poutsma
+ * @see #getTextMessage()
  */
 public class JmsTransportOutputStream extends TransportOutputStream {
 
     private TextMessage textMessage;
 
-    private Session session;
+    private final Session session;
 
+    private String correlationId;
+
+    /**
+     * Constructs a new instance of the <code>JmsTransportOutputStream</code> with the given session.
+     *
+     * @param session the JMS session
+     * @see javax.jms.Message#setJMSCorrelationID(String)
+     */
     public JmsTransportOutputStream(Session session) {
         Assert.notNull(session, "session must not be null");
         this.session = session;
     }
 
-    private TextMessage getTextMessage() throws IOException {
+    /**
+     * Constructs a new instance of the <code>JmsTransportOutputStream</code> with the given session and correlation ID.
+     * The correlation ID is used for creating a response to a request JMS message.
+     *
+     * @param session       the JMS session
+     * @param correlationId the correlation id
+     * @see javax.jms.Message#setJMSCorrelationID(String)
+     */
+    public JmsTransportOutputStream(Session session, String correlationId) {
+        Assert.notNull(session, "session must not be null");
+        Assert.hasLength(correlationId, "correlationId must not be null");
+        this.session = session;
+        this.correlationId = correlationId;
+    }
+
+    /**
+     * Returns the wrapped JMS <code>Session</code>.
+     */
+    public Session getSession() {
+        return session;
+    }
+
+    /**
+     * Returns the wrapped JMS <code>TextMessage</code>. Created lazily.
+     */
+    public TextMessage getTextMessage() throws IOException {
         if (textMessage == null) {
             try {
                 textMessage = session.createTextMessage();
+                if (StringUtils.hasLength(correlationId)) {
+                    textMessage.setJMSCorrelationID(correlationId);
+                }
             }
             catch (JMSException ex) {
                 throw new IOException("Could not create text message: " + ex.getMessage());
@@ -53,7 +94,7 @@ public class JmsTransportOutputStream extends TransportOutputStream {
     }
 
     protected OutputStream getOutputStream() throws IOException {
-        return new TextMessageOutputStream(getTextMessage());
+        return new TextMessageOutputStream();
     }
 
     public void addHeader(String name, String value) throws IOException {
@@ -65,17 +106,11 @@ public class JmsTransportOutputStream extends TransportOutputStream {
         }
     }
 
-    private static class TextMessageOutputStream extends ByteArrayOutputStream {
-
-        private final TextMessage textMessage;
-
-        public TextMessageOutputStream(TextMessage textMessage) {
-            this.textMessage = textMessage;
-        }
+    private class TextMessageOutputStream extends ByteArrayOutputStream {
 
         public void close() throws IOException {
             try {
-                textMessage.setText(new String(toString("UTF-8")));
+                getTextMessage().setText(new String(toString("UTF-8")));
             }
             catch (JMSException ex) {
                 throw new IOException("Could not set message text: " + ex.getMessage());

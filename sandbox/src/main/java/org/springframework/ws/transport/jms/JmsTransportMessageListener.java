@@ -16,94 +16,114 @@
 
 package org.springframework.ws.transport.jms;
 
-import java.io.IOException;
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
+import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.jms.listener.SessionAwareMessageListener;
+import org.springframework.jms.support.JmsUtils;
 import org.springframework.util.Assert;
-import org.springframework.ws.NoEndpointFoundException;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.WebServiceMessageFactory;
-import org.springframework.ws.context.DefaultMessageContext;
-import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.endpoint.MessageEndpoint;
-import org.springframework.ws.transport.DefaultTransportContext;
-import org.springframework.ws.transport.TransportContext;
-import org.springframework.ws.transport.TransportContextHolder;
+import org.springframework.ws.transport.ServerTransportObjectSupport;
 import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.ws.transport.TransportOutputStream;
 
 /**
+ * JMS <code>MessageListener</code> that can be used to handle incoming JMS messages. Requires a
+ * <code>WebServiceMessageFactory</code> which is used to convert the incoming JMS <code>TextMessage</code> into a
+ * <code>WebServiceMessage</code>, and passes that context to the required <code>MessageEndpoint</code>. If a response
+ * is created, it is sent using a response JMS message.
+ * <p/>
+ * This class implements both <code>MessageListener</code>, for
+ * <p/>
+ * Note that the <code>MessageDispatcher</code> implements the <code>MessageEndpoint</code> interface, enabling this
+ * adapter to function as a gateway to further message handling logic.
+ *
  * @author Arjen Poutsma
+ * @see #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
+ * @see #setMessageEndpoint(org.springframework.ws.endpoint.MessageEndpoint)
  */
-public class JmsTransportMessageListener implements MessageListener, InitializingBean {
-    // TODO: implemement SessionAwareMessageListener
+public class JmsTransportMessageListener extends ServerTransportObjectSupport
+        implements SessionAwareMessageListener, MessageListener, InitializingBean {
 
     private static final Log logger = LogFactory.getLog(JmsTransportMessageListener.class);
 
-    private WebServiceMessageFactory messageFactory;
+    private MessageEndpoint messageEndpoint;
 
-    private MessageEndpoint endpoint;
+    /**
+     * Returns the <code>MessageEndpoint</code> used by this listener.
+     */
+    public MessageEndpoint getMessageEndpoint() {
+        return messageEndpoint;
+    }
 
-    public void setMessageFactory(WebServiceMessageFactory messageFactory) {
-        this.messageFactory = messageFactory;
+    /**
+     * Sets the <code>MessageEndpoint</code> used by this listener.
+     */
+    public void setMessageEndpoint(MessageEndpoint messageEndpoint) {
+        this.messageEndpoint = messageEndpoint;
     }
 
     public void afterPropertiesSet() throws Exception {
-        Assert.notNull(messageFactory, "messageFactory is required");
-        logger.info("Using message factory [" + messageFactory + "]");
+        Assert.notNull(getMessageFactory(), "messageFactory is required");
+        Assert.notNull(getMessageEndpoint(), "messageEndpoint must not be null");
+        logger.info("Using message factory [" + getMessageFactory() + "]");
     }
 
     public void onMessage(Message message) {
+        try {
+            onMessage(message, null);
+        }
+        catch (JMSException ex) {
+            logger.error("Could not handle message: " + ex.getMessage(), ex);
+        }
+    }
+
+    public void onMessage(Message message, Session session) throws JMSException {
         if (message instanceof TextMessage) {
-            TextMessage textMessage = (TextMessage) message;
             try {
-                handleTextMessage(textMessage);
-            }
-            catch (IOException ex) {
-                logger.error("Could not create message: " + ex.getMessage(), ex);
+                TransportInputStream tis = new JmsTransportInputStream((TextMessage) message);
+                TransportOutputStream tos;
+                if (session == null) {
+                    tos = null;
+                }
+                else {
+                    tos = new JmsTransportOutputStream(session, ((TextMessage) message).getJMSCorrelationID());
+                }
+                handle(tis, tos, getMessageEndpoint());
             }
             catch (Exception ex) {
-                logger.error("Could not handle message: " + ex.getMessage(), ex);
+                throw new JMSException(ex.getMessage());
             }
         }
         else {
-            throw new JmsTransportException("JmsTransportMessageListener can only handle TextMessages");
+            throw new IllegalArgumentException("JmsTransportMessageListener can only handle TextMessages");
         }
     }
 
-    private void handleTextMessage(TextMessage textMessage) throws Exception {
-        TransportInputStream tis = new JmsTransportInputStream(textMessage);
-        TransportOutputStream tos = new JmsTransportOutputStream(getSession());
-
-        TransportContext previousTransportContext = TransportContextHolder.getTransportContext();
-        TransportContextHolder.setTransportContext(new DefaultTransportContext(tis, tos));
-
-        try {
-            WebServiceMessage messageRequest = messageFactory.createWebServiceMessage(tis);
-            MessageContext messageContext = new DefaultMessageContext(messageRequest, messageFactory);
-            endpoint.invoke(messageContext);
-            if (messageContext.hasResponse()) {
-                WebServiceMessage messageResponse = messageContext.getResponse();
-                messageResponse.writeTo(tos);
+    protected void handleResponse(TransportInputStream tis, TransportOutputStream tos, WebServiceMessage response)
+            throws Exception {
+        if (tos != null) {
+            TextMessage requestMessage = ((JmsTransportInputStream) tis).getTextMessage();
+            TextMessage responseMessage = ((JmsTransportOutputStream) tos).getTextMessage();
+            Session session = ((JmsTransportOutputStream) tos).getSession();
+            MessageProducer producer = session.createProducer(requestMessage.getJMSReplyTo());
+            try {
+                producer.send(responseMessage);
+            }
+            finally {
+                JmsUtils.closeMessageProducer(producer);
             }
         }
-        catch (NoEndpointFoundException ex) {
-            // do nothing
+        else {
+            logger.warn("JMS Session is not available, sending of response is impossible");
         }
-        finally {
-            TransportContextHolder.setTransportContext(previousTransportContext);
-        }
-
-    }
-
-    private Session getSession() {
-        //TODO implement
-        throw new UnsupportedOperationException("Not implemented");
     }
 }

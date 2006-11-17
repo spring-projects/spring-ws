@@ -20,47 +20,31 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.Assert;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.ws.NoEndpointFoundException;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.WebServiceMessageFactory;
-import org.springframework.ws.context.DefaultMessageContext;
-import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.endpoint.MessageEndpoint;
 import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.transport.DefaultTransportContext;
-import org.springframework.ws.transport.TransportContext;
-import org.springframework.ws.transport.TransportContextHolder;
+import org.springframework.ws.transport.ServerTransportObjectSupport;
 import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.ws.transport.TransportOutputStream;
 
 /**
  * Adapter to use the <code>MessageEndpoint</code> interface with the generic <code>DispatcherServlet</code>. Requires a
- * {@link WebServiceMessageFactory}, which is used to convert the incoming <code>HttpServletRequest</code> into a {@link
- * WebServiceMessage}, and passes that context to the mapped <code>MessageEndpoint</code>. If a response is created,
- * that is sent via the <code>HttpServletResponse</code>.
+ * <code>WebServiceMessageFactory</code> which is used to convert the incoming <code>HttpServletRequest</code> into a
+ * <code>WebServiceMessage</code>, and passes that context to the mapped <code>MessageEndpoint</code>. If a response is
+ * created, that is sent via the <code>HttpServletResponse</code>.
  * <p/>
  * Note that the <code>MessageDispatcher</code> implements the <code>MessageEndpoint</code> interface, enabling this
  * adapter to function as a gateway to further message handling logic.
  *
  * @author Arjen Poutsma
+ * @see #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
+ * @see org.springframework.ws.WebServiceMessageFactory
  * @see org.springframework.ws.endpoint.MessageEndpoint
  * @see org.springframework.ws.MessageDispatcher
  */
-public class MessageEndpointHandlerAdapter implements HandlerAdapter, InitializingBean {
-
-    private static final Log logger = LogFactory.getLog(MessageEndpointHandlerAdapter.class);
-
-    private WebServiceMessageFactory messageFactory;
-
-    public void setMessageFactory(WebServiceMessageFactory messageFactory) {
-        this.messageFactory = messageFactory;
-    }
+public class MessageEndpointHandlerAdapter extends ServerTransportObjectSupport implements HandlerAdapter {
 
     public long getLastModified(HttpServletRequest request, Object handler) {
         return -1L;
@@ -70,7 +54,9 @@ public class MessageEndpointHandlerAdapter implements HandlerAdapter, Initializi
                                HttpServletResponse httpServletResponse,
                                Object handler) throws Exception {
         if ("POST".equals(httpServletRequest.getMethod())) {
-            handlePost(httpServletRequest, (MessageEndpoint) handler, httpServletResponse);
+            TransportInputStream tis = new HttpServletTransportInputStream(httpServletRequest);
+            TransportOutputStream tos = new HttpServletTransportOutputStream(httpServletResponse);
+            handle(tis, tos, (MessageEndpoint) handler);
             return null;
         }
         else {
@@ -82,44 +68,35 @@ public class MessageEndpointHandlerAdapter implements HandlerAdapter, Initializi
         return handler instanceof MessageEndpoint;
     }
 
-    public final void afterPropertiesSet() throws Exception {
-        Assert.notNull(messageFactory, "messageFactory is required");
-        logger.info("Using message factory [" + messageFactory + "]");
+    /**
+     * Sets the response code to 204, No Content.
+     */
+    protected void handleNoResponse(TransportInputStream tis, TransportOutputStream tos) {
+        HttpServletResponse httpServletResponse = ((HttpServletTransportOutputStream) tos).getHttpServletResponse();
+        httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 
-    private void handlePost(HttpServletRequest httpServletRequest,
-                            MessageEndpoint endpoint,
-                            HttpServletResponse httpServletResponse) throws Exception {
-        TransportInputStream tis = new HttpServletTransportInputStream(httpServletRequest);
-        TransportOutputStream tos = new HttpServletTransportOutputStream(httpServletResponse);
+    /**
+     * Sets the response code to 200, OK, for normal responses. Set the code to 500, Internal Server Error, in case of a
+     * SOAP Fault,
+     */
+    protected void handleResponse(TransportInputStream tis, TransportOutputStream tos, WebServiceMessage response)
+            throws Exception {
+        HttpServletResponse httpServletResponse = ((HttpServletTransportOutputStream) tos).getHttpServletResponse();
+        if (response instanceof SoapMessage && ((SoapMessage) response).getSoapBody().hasFault()) {
+            httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+        else {
+            httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+        }
+        response.writeTo(tos);
+    }
 
-        TransportContext previousTransportContext = TransportContextHolder.getTransportContext();
-        TransportContextHolder.setTransportContext(new DefaultTransportContext(tis, tos));
-
-        try {
-            WebServiceMessage messageRequest = messageFactory.createWebServiceMessage(tis);
-            MessageContext messageContext = new DefaultMessageContext(messageRequest, messageFactory);
-            endpoint.invoke(messageContext);
-            if (!messageContext.hasResponse()) {
-                httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
-            }
-            else {
-                WebServiceMessage messageResponse = messageContext.getResponse();
-                if (messageResponse instanceof SoapMessage &&
-                        ((SoapMessage) messageResponse).getSoapBody().hasFault()) {
-                    httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                }
-                else {
-                    httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-                }
-                messageResponse.writeTo(tos);
-            }
-        }
-        catch (NoEndpointFoundException ex) {
-            httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        }
-        finally {
-            TransportContextHolder.setTransportContext(previousTransportContext);
-        }
+    /**
+     * Sets the response code to 404, Not Found.
+     */
+    protected void handleNoEndpointFound(TransportInputStream tis, TransportOutputStream tos) {
+        HttpServletResponse httpServletResponse = ((HttpServletTransportOutputStream) tos).getHttpServletResponse();
+        httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
 }
