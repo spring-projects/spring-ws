@@ -91,8 +91,11 @@ public class AxiomSoapMessageFactory implements WebServiceMessageFactory, Initia
         this.payloadCaching = payloadCaching;
     }
 
-    public void afterPropertiesSet() throws Exception {
+    public AxiomSoapMessageFactory() {
         inputFactory = XMLInputFactory.newInstance();
+    }
+
+    public void afterPropertiesSet() throws Exception {
         if (logger.isInfoEnabled()) {
             logger.info(payloadCaching ? "Enabled payload caching" : "Disabled payload caching");
         }
