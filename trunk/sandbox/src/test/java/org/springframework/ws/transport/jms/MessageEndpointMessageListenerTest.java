@@ -1,4 +1,6 @@
 /*
+*/
+/*
  * Copyright 2006 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/*
 
 package org.springframework.ws.transport.jms;
 
@@ -20,15 +23,17 @@ import javax.jms.BytesMessage;
 import javax.jms.Destination;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
-import javax.jms.TextMessage;
+import javax.jms.StreamMessage;
 
 import junit.framework.TestCase;
+import org.codehaus.activemq.message.ActiveMQBytesMessage;
+import org.codehaus.activemq.message.ActiveMQTopic;
 import org.easymock.MockControl;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.endpoint.MessageEndpoint;
 
-public class JmsTransportMessageListenerTest extends TestCase {
+public class MessageEndpointMessageListenerTest extends TestCase {
 
     private static final String REQUEST = " <SOAP-ENV:Envelope\n" +
             "  xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\"\n" +
@@ -36,24 +41,28 @@ public class JmsTransportMessageListenerTest extends TestCase {
             "       <m:GetLastTradePrice xmlns:m=\"Some-URI\">\n" + "           <symbol>DIS</symbol>\n" +
             "       </m:GetLastTradePrice>\n" + "   </SOAP-ENV:Body>\n" + "</SOAP-ENV:Envelope>";
 
-    private JmsTransportMessageListener messageListener;
+    private MessageEndpointMessageListener messageListener;
 
-    private MockControl messageControl;
+    private BytesMessage request;
 
-    private TextMessage requestMock;
+    private MockControl sessionControl;
+
+    private Session sessionMock;
 
     protected void setUp() throws Exception {
-        messageListener = new JmsTransportMessageListener();
-        messageControl = MockControl.createControl(TextMessage.class);
-        requestMock = (TextMessage) messageControl.getMock();
+        messageListener = new MessageEndpointMessageListener();
+        request = new ActiveMQBytesMessage();
+        request.writeBytes(REQUEST.getBytes("UTF-8"));
         messageListener.setMessageFactory(new MockWebServiceMessageFactory());
+        sessionControl = MockControl.createControl(Session.class);
+        sessionMock = (Session) sessionControl.getMock();
     }
 
     public void testOnMessageInvalidMessage() throws Exception {
-        MockControl mockControl = MockControl.createControl(BytesMessage.class);
-        BytesMessage bytesMessage = (BytesMessage) mockControl.getMock();
+        MockControl mockControl = MockControl.createControl(StreamMessage.class);
+        StreamMessage message = (StreamMessage) mockControl.getMock();
         try {
-            messageListener.onMessage(bytesMessage);
+            messageListener.onMessage(message, sessionMock);
             fail("Expected IllegalArgumentException");
         }
         catch (IllegalArgumentException ex) {
@@ -62,8 +71,6 @@ public class JmsTransportMessageListenerTest extends TestCase {
     }
 
     public void testOnMessageNoResponse() throws Exception {
-        messageControl.expectAndReturn(requestMock.getText(), REQUEST);
-        messageControl.replay();
 
         MessageEndpoint endpoint = new MessageEndpoint() {
 
@@ -72,28 +79,22 @@ public class JmsTransportMessageListenerTest extends TestCase {
         };
         messageListener.setMessageEndpoint(endpoint);
 
-        messageListener.onMessage(requestMock);
-
-        messageControl.verify();
+        request.reset();
+        messageListener.onMessage(request, sessionMock);
     }
 
     public void testOnMessageResponse() throws Exception {
-        MockControl sessionControl = MockControl.createControl(Session.class);
-        Session sessionMock = (Session) sessionControl.getMock();
         MockControl producerControl = MockControl.createControl(MessageProducer.class);
         MessageProducer producerMock = (MessageProducer) producerControl.getMock();
-        TextMessage responseMock = (TextMessage) messageControl.getMock();
-        messageControl.expectAndReturn(requestMock.getText(), REQUEST);
+        BytesMessage response = new ActiveMQBytesMessage();
         String correlationId = "correlationId";
-        Destination replyTo = new Destination() {
-        };
-        messageControl.expectAndReturn(requestMock.getJMSCorrelationID(), correlationId);
-        sessionControl.expectAndReturn(sessionMock.createTextMessage(), responseMock);
-        responseMock.setJMSCorrelationID(correlationId);
-        messageControl.expectAndReturn(requestMock.getJMSReplyTo(), replyTo);
+        Destination replyTo = new ActiveMQTopic();
+        request.setJMSCorrelationID(correlationId);
+        request.setJMSReplyTo(replyTo);
+        request.reset();
+        sessionControl.expectAndReturn(sessionMock.createBytesMessage(), response);
         sessionControl.expectAndReturn(sessionMock.createProducer(replyTo), producerMock);
-        producerMock.send(responseMock);
-        messageControl.replay();
+        producerMock.send(response);
         sessionControl.replay();
         producerControl.replay();
 
@@ -105,10 +106,11 @@ public class JmsTransportMessageListenerTest extends TestCase {
         };
         messageListener.setMessageEndpoint(endpoint);
 
-        messageListener.onMessage(requestMock, sessionMock);
+        messageListener.onMessage(request, sessionMock);
 
-        messageControl.verify();
         sessionControl.verify();
         producerControl.verify();
+        assertEquals("Invalid correlationId", correlationId, response.getJMSCorrelationID());
     }
-}
+
+}*/
