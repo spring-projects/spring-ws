@@ -16,13 +16,13 @@
 
 package org.springframework.ws.transport.jms;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.Iterator;
+import javax.jms.BytesMessage;
 import javax.jms.JMSException;
-import javax.jms.TextMessage;
+import javax.jms.MessageEOFException;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.transport.TransportInputStream;
@@ -30,45 +30,40 @@ import org.springframework.ws.transport.support.EnumerationIterator;
 
 /**
  * JMS specific implementation of the <code>TransportInputStream</code> interface. Exposes a JMS
- * <code>TextMessage</code>.
+ * <code>BytesMessage</code>.
  *
  * @author Arjen Poutsma
- * @see #getTextMessage()
+ * @see #getMessage()
  */
 public class JmsTransportInputStream extends TransportInputStream {
 
-    private final TextMessage textMessage;
+    private final BytesMessage message;
 
     /**
      * Constructs a new instance of the <code>JmsTransportInputStream</code> using the provided JMS
-     * <code>TextMessage</code>.
+     * <code>BytesMessage</code>.
      *
-     * @param textMessage the JMS message
+     * @param message the JMS message
      */
-    public JmsTransportInputStream(TextMessage textMessage) {
-        Assert.notNull(textMessage, "textMessage must not be null");
-        this.textMessage = textMessage;
+    public JmsTransportInputStream(BytesMessage message) {
+        Assert.notNull(message, "message must not be null");
+        this.message = message;
     }
 
     /**
-     * Returns the wrapped JMS <code>TextMessage</code>.
+     * Returns the wrapped JMS message.
      */
-    public TextMessage getTextMessage() {
-        return textMessage;
+    public BytesMessage getMessage() {
+        return message;
     }
 
     protected InputStream createInputStream() throws IOException {
-        try {
-            return new ByteArrayInputStream(textMessage.getText().getBytes("UTF-8"));
-        }
-        catch (JMSException ex) {
-            throw new IOException("Could not get text of message: " + ex.getMessage());
-        }
+        return new BytesMessageInputStream();
     }
 
     public Iterator getHeaderNames() throws IOException {
         try {
-            return new EnumerationIterator(textMessage.getPropertyNames());
+            return new EnumerationIterator(message.getPropertyNames());
         }
         catch (JMSException ex) {
             throw new IOException("Could not get property names: " + ex.getMessage());
@@ -77,11 +72,52 @@ public class JmsTransportInputStream extends TransportInputStream {
 
     public Iterator getHeaders(String name) throws IOException {
         try {
-            String value = textMessage.getStringProperty(name);
+            String value = message.getStringProperty(name);
             return Collections.singletonList(value).iterator();
         }
         catch (JMSException ex) {
             throw new IOException("Could not get property value: " + ex.getMessage());
+        }
+    }
+
+    /**
+     * InputStream that wraps the JMS <code>BytesMessage</code>.
+     */
+    private class BytesMessageInputStream extends InputStream {
+
+        public int read(byte b[]) throws IOException {
+            try {
+                return message.readBytes(b);
+            }
+            catch (JMSException ex) {
+                throw new IOException(ex.getMessage());
+            }
+        }
+
+        public int read(byte b[], int off, int len) throws IOException {
+            if (off == 0) {
+                try {
+                    return message.readBytes(b, len);
+                }
+                catch (JMSException ex) {
+                    throw new IOException(ex.getMessage());
+                }
+            }
+            else {
+                return super.read(b, off, len);
+            }
+        }
+
+        public int read() throws IOException {
+            try {
+                return message.readByte();
+            }
+            catch (MessageEOFException ex) {
+                return -1;
+            }
+            catch (JMSException ex) {
+                throw new IOException(ex.getMessage());
+            }
         }
     }
 }

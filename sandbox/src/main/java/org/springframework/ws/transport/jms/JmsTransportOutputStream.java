@@ -16,12 +16,11 @@
 
 package org.springframework.ws.transport.jms;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -29,14 +28,14 @@ import org.springframework.ws.transport.TransportOutputStream;
 
 /**
  * JMS specific implementation of the <code>TransportOutputStream</code> interface. Exposes a JMS
- * <code>TextMessage</code>, constructed lazily using a <code>Session</code>.
+ * <code>BytesMessage</code>, constructed lazily using a <code>Session</code>.
  *
  * @author Arjen Poutsma
- * @see #getTextMessage()
+ * @see #getMessage()
  */
 public class JmsTransportOutputStream extends TransportOutputStream {
 
-    private TextMessage textMessage;
+    private BytesMessage message;
 
     private final Session session;
 
@@ -74,54 +73,67 @@ public class JmsTransportOutputStream extends TransportOutputStream {
     }
 
     /**
-     * Returns the wrapped JMS <code>TextMessage</code>. Created lazily.
+     * Returns the wrapped JMS <code>BytesMessage</code>. Created lazily.
      */
-    public TextMessage getTextMessage() throws IOException {
-        if (textMessage == null) {
+    public BytesMessage getMessage() throws IOException {
+        if (message == null) {
             try {
-                textMessage = session.createTextMessage();
+                message = session.createBytesMessage();
                 if (StringUtils.hasLength(correlationId)) {
-                    textMessage.setJMSCorrelationID(correlationId);
+                    message.setJMSCorrelationID(correlationId);
                 }
             }
             catch (JMSException ex) {
-                throw new IOException("Could not create text message: " + ex.getMessage());
+                throw new IOException("Could not create message: " + ex.getMessage());
             }
         }
-        return textMessage;
+        return message;
     }
 
     protected OutputStream getOutputStream() throws IOException {
-        return new TextMessageOutputStream();
+        return new BytesMessageOutputStream();
     }
 
     public void addHeader(String name, String value) throws IOException {
         try {
-            getTextMessage().setStringProperty(name, value);
+            getMessage().setStringProperty(name, value);
         }
         catch (JMSException ex) {
             throw new IOException("Could not set property " + ex.getMessage());
         }
     }
 
-    private class TextMessageOutputStream extends ByteArrayOutputStream {
+    /**
+     * OutputStream that wraps the JMS <code>BytesMessage</code>.
+     */
+    private class BytesMessageOutputStream extends OutputStream {
 
-        public void flush() throws IOException {
+        public void write(byte b[]) throws IOException {
             try {
-                getTextMessage().setText(new String(toString("UTF-8")));
+                getMessage().writeBytes(b);
             }
             catch (JMSException ex) {
-                throw new IOException("Could not set message text: " + ex.getMessage());
+                throw new IOException(ex.getMessage());
             }
         }
 
-        public void close() throws IOException {
+        public void write(byte b[], int off, int len) throws IOException {
             try {
-                getTextMessage().setText(new String(toString("UTF-8")));
+                getMessage().writeBytes(b, off, len);
             }
             catch (JMSException ex) {
-                throw new IOException("Could not set message text: " + ex.getMessage());
+                throw new IOException(ex.getMessage());
+            }
+        }
+
+        public void write(int b) throws IOException {
+            try {
+                getMessage().writeByte((byte) b);
+            }
+            catch (JMSException ex) {
+                throw new IOException(ex.getMessage());
             }
         }
     }
+
 }

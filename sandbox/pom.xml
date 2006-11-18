@@ -9,24 +9,6 @@
     <artifactId>spring-ws-sandbox</artifactId>
     <packaging>jar</packaging>
     <name>Spring WS Sandbox</name>
-    <profiles>
-        <profile>
-            <id>spring-2.0</id>
-            <activation>
-                <property>
-                    <name>spring.version</name>
-                    <value>2.0</value>
-                </property>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-jms</artifactId>
-                    <version>${spring.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
     <dependencies>
         <!-- Spring-WS dependencies -->
         <dependency>
@@ -54,6 +36,10 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-mock</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jms</artifactId>
+        </dependency>
         <!-- JEE dependencies -->
         <dependency>
             <groupId>javax.xml.soap</groupId>
@@ -78,6 +64,11 @@
             <artifactId>commons-httpclient</artifactId>
             <version>3.0.1</version>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>activemq</groupId>
+            <artifactId>activemq</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mortbay.jetty</groupId>
