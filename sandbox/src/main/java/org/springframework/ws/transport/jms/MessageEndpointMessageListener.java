@@ -39,7 +39,6 @@ import org.springframework.jms.listener.SessionAwareMessageListener;
 public class MessageEndpointMessageListener extends JmsReceiverObjectSupport implements SessionAwareMessageListener {
 
     public void onMessage(Message message, Session session) throws JMSException {
-        logger.info("Received request [" + message.getJMSMessageID() + "]");
         try {
             handle((BytesMessage) message, session);
         }
