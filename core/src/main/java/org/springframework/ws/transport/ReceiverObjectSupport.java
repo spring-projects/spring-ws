@@ -34,7 +34,7 @@ import org.springframework.ws.endpoint.MessageEndpoint;
  * @author Arjen Poutsma
  * @see #handle(TransportInputStream,TransportOutputStream,org.springframework.ws.endpoint.MessageEndpoint)
  */
-public abstract class ServerTransportObjectSupport implements InitializingBean {
+public abstract class ReceiverObjectSupport implements InitializingBean {
 
     /**
      * Logger available to subclasses.
@@ -87,8 +87,9 @@ public abstract class ServerTransportObjectSupport implements InitializingBean {
     }
 
     /**
-     * Invoked from <code>handle()</code> when no response is given. Default implementation does nothing. Can be
-     * overriden to set certain transport-specific headers.
+     * Invoked from {@link #handle(TransportInputStream,TransportOutputStream,org.springframework.ws.endpoint.MessageEndpoint)}
+     * when no response is given. Default implementation does nothing. Can be overriden to set certain
+     * transport-specific response headers.
      *
      * @param tis the transport input stream
      * @param tos the transport output stream
@@ -97,9 +98,9 @@ public abstract class ServerTransportObjectSupport implements InitializingBean {
     }
 
     /**
-     * Handles the sending of the response. Invoked from <code>handle()</code>. Default implementation writes the given
-     * response to the given <code>TransportOutputStream</code>. Can be overriden to set certain transport-specific
-     * headers.
+     * Handles the sending of the response. Invoked from {@link #handle(TransportInputStream,TransportOutputStream,org.springframework.ws.endpoint.MessageEndpoint)}.
+     * Default implementation writes the given response to the given <code>TransportOutputStream</code>. Can be
+     * overriden to set certain transport-specific headers.
      *
      * @param tis      the transport input stream
      * @param tos      the transport output stream
@@ -112,8 +113,9 @@ public abstract class ServerTransportObjectSupport implements InitializingBean {
     }
 
     /**
-     * Invoked when no suitable endpoint is found. Default implementation does nothing. Can be overriden to set certain
-     * transport-specific headers.
+     * Invoked from {@link #handle(TransportInputStream,TransportOutputStream,org.springframework.ws.endpoint.MessageEndpoint)}
+     * when no suitable endpoint is found. Default implementation does nothing. Can be overriden to set certain
+     * transport-specific response headers.
      *
      * @param tis the transport input stream
      * @param tos the transport output stream
