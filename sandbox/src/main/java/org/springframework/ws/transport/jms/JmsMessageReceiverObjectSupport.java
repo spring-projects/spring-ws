@@ -26,7 +26,7 @@ import org.springframework.jms.support.JmsUtils;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.endpoint.MessageEndpoint;
-import org.springframework.ws.transport.ReceiverObjectSupport;
+import org.springframework.ws.transport.MessageReceiverObjectSupport;
 import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.ws.transport.TransportOutputStream;
 
@@ -39,7 +39,7 @@ import org.springframework.ws.transport.TransportOutputStream;
  * @author Arjen Poutsma
  * @see #handle(javax.jms.Message,javax.jms.Session)
  */
-public abstract class JmsReceiverObjectSupport extends ReceiverObjectSupport implements InitializingBean {
+public abstract class JmsMessageReceiverObjectSupport extends MessageReceiverObjectSupport implements InitializingBean {
 
     private MessageEndpoint messageEndpoint;
 

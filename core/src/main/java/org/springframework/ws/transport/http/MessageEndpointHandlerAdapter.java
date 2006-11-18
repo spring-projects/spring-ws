@@ -25,7 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.endpoint.MessageEndpoint;
 import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.transport.ReceiverObjectSupport;
+import org.springframework.ws.transport.MessageReceiverObjectSupport;
 import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.ws.transport.TransportOutputStream;
 
@@ -44,7 +44,7 @@ import org.springframework.ws.transport.TransportOutputStream;
  * @see org.springframework.ws.endpoint.MessageEndpoint
  * @see org.springframework.ws.MessageDispatcher
  */
-public class MessageEndpointHandlerAdapter extends ReceiverObjectSupport implements HandlerAdapter {
+public class MessageEndpointHandlerAdapter extends MessageReceiverObjectSupport implements HandlerAdapter {
 
     public long getLastModified(HttpServletRequest request, Object handler) {
         return -1L;

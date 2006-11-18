@@ -112,7 +112,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
         WebServiceMessage request = getMessageFactory().createWebServiceMessage();
         try {
             callback.doInWebServiceMessage(request);
-            WebServiceMessage response = getMessageSender().send(request);
+            WebServiceMessage response = null; //getMessageSender().send(request);
             if (response == null) {
                 return null;
             }

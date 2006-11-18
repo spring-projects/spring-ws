@@ -34,7 +34,7 @@ import org.springframework.ws.endpoint.MessageEndpoint;
  * @author Arjen Poutsma
  * @see #handle(TransportInputStream,TransportOutputStream,org.springframework.ws.endpoint.MessageEndpoint)
  */
-public abstract class ReceiverObjectSupport implements InitializingBean {
+public abstract class MessageReceiverObjectSupport implements InitializingBean {
 
     /**
      * Logger available to subclasses.

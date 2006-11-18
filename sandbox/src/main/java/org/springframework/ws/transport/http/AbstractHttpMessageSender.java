@@ -16,20 +16,11 @@
 
 package org.springframework.ws.transport.http;
 
-import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.transport.WebServiceMessageSender;
+import org.springframework.ws.transport.MessageSender;
 
 /**
- * <code>WebServiceMessageSender</code> implementation that uses standard J2SE facilities to execute POST requests,
- * without support for HTTP authentication or advanced configuration options.
- *
  * @author Arjen Poutsma
  */
-public class SimpleHttpWebServiceMessageSender implements WebServiceMessageSender {
+public abstract class AbstractHttpMessageSender implements MessageSender {
 
-    public WebServiceMessage send(WebServiceMessage message) {
-
-        //TODO implement
-        throw new UnsupportedOperationException("Not implemented");
-    }
 }
