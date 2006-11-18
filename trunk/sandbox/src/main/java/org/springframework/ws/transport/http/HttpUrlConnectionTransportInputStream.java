@@ -68,6 +68,11 @@ public class HttpUrlConnectionTransportInputStream extends TransportInputStream 
     }
 
     protected InputStream createInputStream() throws IOException {
-        return connection.getInputStream();
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_INTERNAL_ERROR) {
+            return connection.getErrorStream();
+        }
+        else {
+            return connection.getInputStream();
+        }
     }
 }

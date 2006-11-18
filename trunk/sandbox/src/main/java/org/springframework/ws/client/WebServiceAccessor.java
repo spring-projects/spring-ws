@@ -20,7 +20,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.endpoint.TransformerObjectSupport;
-import org.springframework.ws.transport.WebServiceMessageSender;
+import org.springframework.ws.transport.MessageSender;
 
 /**
  * Base class for <code>WebServiceTemplate</code> and other WS-accessing helpers.
@@ -31,7 +31,7 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
 
     private WebServiceMessageFactory messageFactory;
 
-    private WebServiceMessageSender messageSender;
+    private MessageSender messageSender;
 
     /**
      * Returns the message factory used for creating messages.
@@ -50,14 +50,14 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
     /**
      * Returns the message sender.
      */
-    public WebServiceMessageSender getMessageSender() {
+    public MessageSender getMessageSender() {
         return messageSender;
     }
 
     /**
      * Sets the message sender.
      */
-    public void setMessageSender(WebServiceMessageSender messageSender) {
+    public void setMessageSender(MessageSender messageSender) {
         this.messageSender = messageSender;
     }
 

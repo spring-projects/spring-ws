@@ -16,6 +16,8 @@
 
 package org.springframework.ws.context;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,26 +69,24 @@ public class DefaultMessageContext implements MessageContext {
         return properties;
     }
 
-    /**
-     * Returns the request message.
-     *
-     * @return the request message
-     */
     public WebServiceMessage getRequest() {
         return request;
     }
 
-    /**
-     * Returns the response message. Creates a new response if no response is present.
-     *
-     * @return the response message
-     * @see #hasResponse()
-     */
     public WebServiceMessage getResponse() {
         if (response == null) {
             response = messageFactory.createWebServiceMessage();
         }
         return response;
+    }
+
+    public void readResponse(InputStream inputStream) throws IOException {
+        if (response != null) {
+            throw new IllegalStateException("Response message already created");
+        }
+        else {
+            response = messageFactory.createWebServiceMessage(inputStream);
+        }
     }
 
     /**

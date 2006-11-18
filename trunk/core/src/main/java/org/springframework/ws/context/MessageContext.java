@@ -16,6 +16,9 @@
 
 package org.springframework.ws.context;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.springframework.ws.WebServiceMessage;
 
 /**
@@ -47,6 +50,15 @@ public interface MessageContext {
      * @return <code>true</code> if this context has a response; <code>false</code> otherwise
      */
     boolean hasResponse();
+
+    /**
+     * Reads a response message from the given input stream.
+     *
+     * @param inputStream the stream to read the response from
+     * @throws IOException           in case of I/O errors
+     * @throws IllegalStateException if a response has already been created
+     */
+    void readResponse(InputStream inputStream) throws IOException;
 
     /**
      * Sets the name and value of a property associated with the <code>MessageContext</code>. If the
