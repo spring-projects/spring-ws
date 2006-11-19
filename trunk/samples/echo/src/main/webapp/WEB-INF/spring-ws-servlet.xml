@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
-<beans>
-    <!--<bean class="org.springframework.ws.soap.axiom.AxiomSoapMessageContextFactory"/>-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <description>
+        This web application context contains Spring-WS beans. The beans defined in this context are automatically
+        detected by Spring-WS, similar to the way Controllers are picked up in Spring Web MVC.
+    </description>
+
     <bean id="payloadMapping" class="org.springframework.ws.endpoint.mapping.PayloadRootQNameEndpointMapping">
         <description>
             This endpoint mapping uses the qualified name of the payload (body contents) to determine the endpoint for
@@ -40,7 +46,10 @@
         <property name="echoService" ref="echoService"/>
     </bean>
 
-    <!-- "Business" (POJO) services -->
-    <bean id="echoService" class="org.springframework.ws.samples.echo.service.impl.EchoServiceImpl"/>
+    <bean id="echoService" class="org.springframework.ws.samples.echo.service.impl.EchoServiceImpl">
+        <description>
+            This bean is our "business" service.
+        </description>
+    </bean>
 
 </beans>

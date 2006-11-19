@@ -52,6 +52,10 @@ public abstract class AbstractHttpWebServiceMessageSenderTestCase extends TestCa
 
     }
 
+    protected final void tearDown() throws Exception {
+        jettyServer.stop();
+    }
+
     private static class EchoServlet extends GenericServlet {
 
         public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {

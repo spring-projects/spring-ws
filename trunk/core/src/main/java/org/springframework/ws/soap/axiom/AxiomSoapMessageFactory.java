@@ -37,7 +37,7 @@ import org.apache.axiom.soap.impl.llom.soap12.SOAP12Factory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.transport.TransportInputStream;
@@ -110,10 +110,14 @@ public class AxiomSoapMessageFactory implements WebServiceMessageFactory, Initia
         if (inputStream instanceof TransportInputStream) {
             TransportInputStream transportInputStream = (TransportInputStream) inputStream;
             Iterator iterator = transportInputStream.getHeaders(CONTENT_TYPE_HEADER);
-            Assert.isTrue(iterator.hasNext(), "No " + CONTENT_TYPE_HEADER + " header present of TransportRequest");
-            contentType = (String) iterator.next();
+            if (iterator.hasNext()) {
+                contentType = (String) iterator.next();
+            }
         }
-        Assert.hasLength(contentType, "No " + CONTENT_TYPE_HEADER + " header present of TransportRequest");
+        if (!StringUtils.hasLength(contentType)) {
+            // fall back to SOAP 1.1 as a default
+            contentType = SOAP11Constants.SOAP_11_CONTENT_TYPE;
+        }
         try {
             if (isMultiPartRelated(contentType)) {
                 return createMultiPartAxiomSoapMessage(inputStream, contentType);

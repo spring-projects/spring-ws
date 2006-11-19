@@ -10,7 +10,7 @@ import org.springframework.ws.context.MessageContext;
 public interface MessageSender {
 
     /**
-     * Sends the given message context. The response message, if any,  is stored in the context.
+     * Sends the given message context. The response message, if any, is stored in the context.
      *
      * @param messageContext the message to be sent
      */

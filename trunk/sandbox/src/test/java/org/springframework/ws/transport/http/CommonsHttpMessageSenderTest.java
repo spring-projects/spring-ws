@@ -25,14 +25,14 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.saaj.saaj13.Saaj13SoapMessage;
 
-public class HttpUrlConnectionMessageSenderTest extends AbstractHttpWebServiceMessageSenderTestCase {
+public class CommonsHttpMessageSenderTest extends AbstractHttpWebServiceMessageSenderTestCase {
 
-    private HttpUrlConnectionMessageSender sender;
+    private CommonsHttpMessageSender sender;
 
     private MessageFactory messageFactory;
 
     protected void onSetUp() throws Exception {
-        sender = new HttpUrlConnectionMessageSender();
+        sender = new CommonsHttpMessageSender();
         sender.setUrl(new URL(URL));
         messageFactory = MessageFactory.newInstance();
     }
