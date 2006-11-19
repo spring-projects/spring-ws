@@ -30,14 +30,19 @@ import org.springframework.ws.transport.TransportOutputStream;
 /**
  * <code>MessageSender</code> implementation that uses standard J2SE facilities to execute POST requests, without
  * support for HTTP authentication or advanced configuration options.
+ * <p/>
+ * Designed for easy subclassing, customizing specific template methods. However, consider {@link
+ * org.springframework.ws.transport.http.CommonsHttpMessageSender} for more sophisticated needs: the J2SE
+ * <code>HttpURLConnection</code> is rather limited in its capabilities.
  *
  * @author Arjen Poutsma
+ * @see java.net.HttpURLConnection
  */
 public class HttpUrlConnectionMessageSender implements MessageSender {
 
-    private URL url;
-
     private static final String HTTP_METHOD_POST = "POST";
+
+    private URL url;
 
     /**
      * Returns the url used by this message sender.
@@ -55,11 +60,15 @@ public class HttpUrlConnectionMessageSender implements MessageSender {
 
     public void send(MessageContext messageContext) throws IOException {
         HttpURLConnection connection = openConnection();
-        prepareConnection(connection);
-        writeRequestMessage(connection, messageContext.getRequest());
-        validateResponse(connection);
-        readResponse(connection, messageContext);
-        connection.disconnect();
+        try {
+            prepareConnection(connection);
+            writeRequestMessage(connection, messageContext.getRequest());
+            validateResponse(connection);
+            readResponse(connection, messageContext);
+        }
+        finally {
+            connection.disconnect();
+        }
     }
 
     protected HttpURLConnection openConnection() throws IOException {
@@ -77,28 +86,6 @@ public class HttpUrlConnectionMessageSender implements MessageSender {
         connection.setDoOutput(true);
     }
 
-    protected void writeRequestMessage(HttpURLConnection connection, WebServiceMessage message) throws IOException {
-        TransportOutputStream tos = null;
-        try {
-            tos = new HttpUrlConnectionTransportOutputStream(connection);
-            message.writeTo(tos);
-            tos.flush();
-        }
-        finally {
-            if (tos != null) {
-                tos.close();
-            }
-        }
-    }
-
-    protected void validateResponse(HttpURLConnection connection) throws IOException {
-        int responseCode = connection.getResponseCode();
-        if (responseCode != HttpURLConnection.HTTP_INTERNAL_ERROR && responseCode / 100 != 2) {
-            throw new IOException("Did not receive successful HTTP response: status code = " + responseCode +
-                    ", status message = [" + connection.getResponseMessage() + "]");
-        }
-    }
-
     protected void readResponse(HttpURLConnection connection, MessageContext messageContext) throws IOException {
         if (connection.getResponseCode() == HttpURLConnection.HTTP_NO_CONTENT || connection.getContentLength() == 0) {
             return;
@@ -111,6 +98,28 @@ public class HttpUrlConnectionMessageSender implements MessageSender {
         finally {
             if (tis != null) {
                 tis.close();
+            }
+        }
+    }
+
+    protected void validateResponse(HttpURLConnection connection) throws IOException {
+        int responseCode = connection.getResponseCode();
+        if (responseCode != HttpURLConnection.HTTP_INTERNAL_ERROR && responseCode / 100 != 2) {
+            throw new IOException("Did not receive successful HTTP response: status code = " + responseCode +
+                    ", status message = [" + connection.getResponseMessage() + "]");
+        }
+    }
+
+    protected void writeRequestMessage(HttpURLConnection connection, WebServiceMessage message) throws IOException {
+        TransportOutputStream tos = null;
+        try {
+            tos = new HttpUrlConnectionTransportOutputStream(connection);
+            message.writeTo(tos);
+            tos.flush();
+        }
+        finally {
+            if (tos != null) {
+                tos.close();
             }
         }
     }

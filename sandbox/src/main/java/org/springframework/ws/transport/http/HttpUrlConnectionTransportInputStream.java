@@ -30,15 +30,38 @@ import org.springframework.util.StringUtils;
 import org.springframework.ws.transport.TransportInputStream;
 
 /**
+ * Implementation of the <code>TransportInputStream</code> interface based on {@link java.net.HttpURLConnection}.
+ * Exposes the <code>HttpURLConnection</code>.
+ *
  * @author Arjen Poutsma
  */
 public class HttpUrlConnectionTransportInputStream extends TransportInputStream {
 
     private final HttpURLConnection connection;
 
+    /**
+     * Constructs a new instance of the <code>HttpUrlConnectionTransportInputStream</code> based on the given
+     * <code>HttpURLConnection</code>.
+     */
     public HttpUrlConnectionTransportInputStream(HttpURLConnection connection) throws IOException {
         Assert.notNull(connection, "connection must not be null");
         this.connection = connection;
+    }
+
+    /**
+     * Returns the wrapped <code>HttpURLConnection</code>.
+     */
+    public HttpURLConnection getConnection() {
+        return connection;
+    }
+
+    protected InputStream createInputStream() throws IOException {
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_INTERNAL_ERROR) {
+            return connection.getErrorStream();
+        }
+        else {
+            return connection.getInputStream();
+        }
     }
 
     public Iterator getHeaderNames() throws IOException {
@@ -64,15 +87,6 @@ public class HttpUrlConnectionTransportInputStream extends TransportInputStream 
         else {
             Set tokens = StringUtils.commaDelimitedListToSet(headerField);
             return tokens.iterator();
-        }
-    }
-
-    protected InputStream createInputStream() throws IOException {
-        if (connection.getResponseCode() == HttpURLConnection.HTTP_INTERNAL_ERROR) {
-            return connection.getErrorStream();
-        }
-        else {
-            return connection.getInputStream();
         }
     }
 }

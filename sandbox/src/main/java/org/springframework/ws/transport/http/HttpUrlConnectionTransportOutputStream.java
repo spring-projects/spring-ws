@@ -24,12 +24,19 @@ import org.springframework.util.Assert;
 import org.springframework.ws.transport.TransportOutputStream;
 
 /**
+ * Implementation of the <code>TransportOutputStream</code> interface based on {@link java.net.HttpURLConnection}.
+ * Exposes the <code>HttpURLConnection</code>.
+ *
  * @author Arjen Poutsma
  */
 public class HttpUrlConnectionTransportOutputStream extends TransportOutputStream {
 
     private final HttpURLConnection connection;
 
+    /**
+     * Constructs a new instance of the <code>HttpUrlConnectionTransportOutputStream</code> based on the given
+     * <code>HttpURLConnection</code>.
+     */
     public HttpUrlConnectionTransportOutputStream(HttpURLConnection connection) throws IOException {
         Assert.notNull(connection, "connection must not be null");
         this.connection = connection;
@@ -41,5 +48,12 @@ public class HttpUrlConnectionTransportOutputStream extends TransportOutputStrea
 
     protected OutputStream getOutputStream() throws IOException {
         return connection.getOutputStream();
+    }
+
+    /**
+     * Returns the wrapped <code>HttpURLConnection</code>.
+     */
+    public HttpURLConnection getConnection() {
+        return connection;
     }
 }
