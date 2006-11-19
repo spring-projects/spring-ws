@@ -185,18 +185,6 @@
                     <childDelegation>false</childDelegation>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-clover-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>pre-site</phase>
-                        <goals>
-                            <goal>instrument</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <!-- IDEs -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -396,12 +384,17 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
-                <artifactId>spring-hibernate</artifactId>
+                <artifactId>spring-hibernate3</artifactId>
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-jdbc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jms</artifactId>
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
@@ -620,6 +613,28 @@
                 <artifactId>jms</artifactId>
                 <version>1.1</version>
                 <scope>provided</scope>
+            </dependency>
+            <!-- JMS dependendencies -->
+            <dependency>
+                <groupId>activemq</groupId>
+                <artifactId>activemq</artifactId>
+                <version>2.1</version>
+                <exclusions></exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.mantamq</groupId>
+                <artifactId>manta</artifactId>
+                <version>1.9</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.management</groupId>
+                        <artifactId>jmx_remote</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>javax.management</groupId>
+                        <artifactId>jmx</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <!-- Logging dependencies -->
             <dependency>
