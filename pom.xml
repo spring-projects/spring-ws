@@ -614,7 +614,7 @@
                 <version>1.1</version>
                 <scope>provided</scope>
             </dependency>
-            <!-- JMS dependendencies -->
+            <!-- Transport dependendencies -->
             <dependency>
                 <groupId>activemq</groupId>
                 <artifactId>activemq</artifactId>
@@ -622,19 +622,9 @@
                 <exclusions></exclusions>
             </dependency>
             <dependency>
-                <groupId>org.mantamq</groupId>
-                <artifactId>manta</artifactId>
-                <version>1.9</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>javax.management</groupId>
-                        <artifactId>jmx_remote</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>javax.management</groupId>
-                        <artifactId>jmx</artifactId>
-                    </exclusion>
-                </exclusions>
+                <groupId>commons-httpclient</groupId>
+                <artifactId>commons-httpclient</artifactId>
+                <version>3.0.1</version>
             </dependency>
             <!-- Logging dependencies -->
             <dependency>
