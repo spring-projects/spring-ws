@@ -50,18 +50,13 @@
     </target>
 
 
-    <target name="build" depends="init">
+    <target name="build" depends="generate">
         <mkdir dir="${bin.dir}"/>
         <javac destdir="${bin.dir}">
             <src path="${src.dir}"/>
             <src path="${gen.dir}"/>
             <classpath refid="compile.classpath"/>
         </javac>
-        <copy todir="${bin.dir}">
-            <fileset dir="${src.dir}">
-                <exclude name="**/*.java"/>
-            </fileset>
-        </copy>
     </target>
 
     <target name="clean">
