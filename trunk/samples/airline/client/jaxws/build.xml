@@ -23,7 +23,7 @@
             </classpath>
         </taskdef>
         <wsimport wsdl="http://localhost:8080/airline/airline.wsdl" destdir="${bin.dir}" sourcedestdir="${src.dir}"
-                  package="org.springframework.ws.samples.airline.client.jws"/>
+                  package="org.springframework.ws.samples.airline.client.jaxws"/>
     </target>
 
     <target name="build" depends="init">
