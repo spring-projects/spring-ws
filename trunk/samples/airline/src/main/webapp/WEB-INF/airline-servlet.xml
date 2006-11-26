@@ -7,12 +7,9 @@
         <description>
             The handlerAdapter makes sure that Spring's DispatcherServlet
             supports MessageEndpoints instances as handlers.
-            It uses a SAAJ to construct SoapMessageContexts (and SoapMessages).
         </description>
         <property name="messageFactory" ref="messageFactory"/>
     </bean>
-
-    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
 
     <bean id="wsdlDefinitionHandlerAdapter" class="org.springframework.ws.transport.http.WsdlDefinitionHandlerAdapter">
         <description>

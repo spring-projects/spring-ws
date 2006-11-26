@@ -22,7 +22,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.joda.time.YearMonthDay;
-
 import org.springframework.util.Assert;
 import org.springframework.ws.samples.airline.dao.FlightDao;
 import org.springframework.ws.samples.airline.dao.TicketDao;
@@ -32,6 +31,7 @@ import org.springframework.ws.samples.airline.domain.Passenger;
 import org.springframework.ws.samples.airline.domain.ServiceClass;
 import org.springframework.ws.samples.airline.domain.Ticket;
 import org.springframework.ws.samples.airline.security.FrequentFlyerSecurityService;
+import org.springframework.ws.samples.airline.security.StubFrequentFlyerSecurityService;
 import org.springframework.ws.samples.airline.service.AirlineService;
 import org.springframework.ws.samples.airline.service.NoSeatAvailableException;
 import org.springframework.ws.samples.airline.service.NoSuchFlightException;
@@ -43,13 +43,13 @@ import org.springframework.ws.samples.airline.service.NoSuchFlightException;
  */
 public class AirlineServiceImpl implements AirlineService {
 
-    private final static Log logger = LogFactory.getLog(AirlineServiceImpl.class);
+    private static final Log logger = LogFactory.getLog(AirlineServiceImpl.class);
 
     private FlightDao flightDao;
 
     private TicketDao ticketDao;
 
-    private FrequentFlyerSecurityService frequentFlyerSecurityService;
+    private FrequentFlyerSecurityService frequentFlyerSecurityService = new StubFrequentFlyerSecurityService();
 
     public void setFlightDao(FlightDao flightDao) {
         this.flightDao = flightDao;

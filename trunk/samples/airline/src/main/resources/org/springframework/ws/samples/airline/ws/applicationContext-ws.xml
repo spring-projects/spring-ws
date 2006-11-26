@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
-
-<beans>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
     <description>
         This application context contains the Spring-WS beans.
     </description>
 
+    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory">
+        <description>
+            The MessageFactory is used to create new SOAP messages from incoming requests. It is referenced in
+            airline-servlet.xml and applicationContext-ws-jms.xml.
+        </description>
+    </bean>
+
     <bean id="messageDispatcher" class="org.springframework.ws.soap.SoapMessageDispatcher">
         <description>
             The MessageDispatcher is responsible for routing messages to endpoints. It uses three endpoint mappings to
-            determine the endpoint suitable for handling a particular incoming request. This is not a recommended
-            approach, it's done here only for illustration purposes.
+            determine the endpoint suitable for handling a particular incoming request. Having three mappings is not a
+            recommended approach, it's done here only for illustration purposes.
         </description>
         <property name="endpointMappings">
             <list>
