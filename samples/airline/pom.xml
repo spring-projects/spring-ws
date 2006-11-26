@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <artifactId>spring-ws-samples</artifactId>
         <groupId>org.springframework.ws</groupId>
@@ -19,7 +20,7 @@
                         <configuration>
                             <tasks>
                                 <ant antfile="${basedir}/build-maven2.xml" inheritRefs="true">
-                                    <target name="generate-sources" />
+                                    <target name="generate-sources"/>
                                 </ant>
                             </tasks>
                             <sourceRoot>${project.build.directory}/generated-sources/main/java</sourceRoot>
@@ -46,10 +47,15 @@
             <groupId>org.springframework.ws</groupId>
             <artifactId>spring-ws-security</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.ws</groupId>
+            <artifactId>spring-ws-sandbox</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- Spring dependencies -->
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-hibernate</artifactId>
+            <artifactId>spring-hibernate3</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -58,6 +64,10 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-mock</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jms</artifactId>
         </dependency>
         <!-- XML handling dependencies -->
         <dependency>
@@ -150,11 +160,26 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>3.1.11</version>
         </dependency>
+        <!-- JMS depdendencies -->
         <dependency>
-            <groupId>hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <version>1.8.0.4</version>
-            <scope>test</scope>
+            <groupId>javax.jms</groupId>
+            <artifactId>jms</artifactId>
+            <version>1.1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>geronimo-spec</groupId>
+            <artifactId>geronimo-spec-j2ee-management</artifactId>
+            <version>1.0-rc4</version>
+        </dependency>
+        <dependency>
+            <groupId>activemq</groupId>
+            <artifactId>activemq</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>concurrent</groupId>
+            <artifactId>concurrent</artifactId>
+            <version>1.3.4</version>
         </dependency>
         <!-- Various dependencies -->
         <dependency>
@@ -167,6 +192,5 @@
             <artifactId>joda-time-hibernate</artifactId>
             <version>0.8</version>
         </dependency>
-
     </dependencies>
 </project>

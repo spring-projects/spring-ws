@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions name="airline"
+             xmlns:types="http://www.springframework.org/spring-ws/samples/airline/schemas"
              targetNamespace="http://www.springframework.org/spring-ws/samples/airline/definitions"
              xmlns:tns="http://www.springframework.org/spring-ws/samples/airline/definitions"
-             xmlns:types="http://www.springframework.org/spring-ws/samples/airline/schemas"
              xmlns="http://schemas.xmlsoap.org/wsdl/"
              xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
     <types>
