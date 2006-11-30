@@ -37,7 +37,17 @@ public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBea
 
     private Resource wsdlResource;
 
-    public void setWsdl(Resource wsdlResource) {
+    /**
+     * Constructs a new <code>SimpleWsdl11Definition</code>. Calling <code>setWsdl</code> is required.
+     *
+     * @see #setWsdl(org.springframework.core.io.Resource)
+     */
+    public SimpleWsdl11Definition() {
+    }
+
+    /** Constructs a new <code>SimpleWsdl11Definition</code> with the given resource. */
+    public SimpleWsdl11Definition(Resource wsdlResource) {
+        Assert.notNull(wsdlResource, "wsdlResource must not be null");
         this.wsdlResource = wsdlResource;
     }
 
@@ -53,5 +63,9 @@ public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBea
         catch (IOException ex) {
             throw new WsdlDefinitionException("Could not create source from " + wsdlResource, ex);
         }
+    }
+
+    public void setWsdl(Resource wsdlResource) {
+        this.wsdlResource = wsdlResource;
     }
 }
