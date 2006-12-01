@@ -22,11 +22,13 @@ import org.springframework.core.OrderComparator;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.FrameworkServlet;
+import org.springframework.web.util.WebUtils;
 import org.springframework.ws.EndpointAdapter;
 import org.springframework.ws.EndpointExceptionResolver;
 import org.springframework.ws.EndpointMapping;
 import org.springframework.ws.MessageDispatcher;
 import org.springframework.ws.WebServiceMessageFactory;
+import org.springframework.ws.wsdl.WsdlDefinition;
 
 /**
  * Servlet for simplified dispatching of Web service messages. Delegates to a <code>MessageDispatcher</code> and a
@@ -74,14 +76,10 @@ public class MessageDispatcherServlet extends FrameworkServlet {
      */
     public static final String ENDPOINT_MAPPING_BEAN_NAME = "endpointMapping";
 
-    /**
-     * Well-known name for the <code>WebServiceMessageFactory</code> object in the bean factory for this namespace.
-     */
+    /** Well-known name for the <code>WebServiceMessageFactory</code> object in the bean factory for this namespace. */
     public static final String WEB_SERVICE_MESSAGE_FACTORY_BEAN_NAME = "messageFactory";
 
-    /**
-     * Well-known name for the <code>MessageDispatcher</code> object in the bean factory for this namespace.
-     */
+    /** Well-known name for the <code>MessageDispatcher</code> object in the bean factory for this namespace. */
     public static final String MESSAGE_DISPATCHER_BEAN_NAME = "messageDispatcher";
 
     /**
@@ -90,32 +88,34 @@ public class MessageDispatcherServlet extends FrameworkServlet {
      */
     private static final String DEFAULT_STRATEGIES_PATH = "MessageDispatcherServlet.properties";
 
+    /** Suffix of a WSDL request uri. */
+    private static final String WSDL_SUFFIX_NAME = ".wsdl";
+
     private static final Properties defaultStrategies = new Properties();
 
-    /**
-     * Detect all <code>EndpointAdapter</code>s or just expect "endpointAdapter" bean?
-     */
+    /** Detect all <code>EndpointAdapter</code>s or just expect "endpointAdapter" bean? */
     private boolean detectAllEndpointAdapters = true;
 
-    /**
-     * Detect all <code>EndpointExceptionResolver</code>s or just expect "endpointExceptionResolver" bean?
-     */
+    /** Detect all <code>EndpointExceptionResolver</code>s or just expect "endpointExceptionResolver" bean? */
     private boolean detectAllEndpointExceptionResolvers = true;
 
-    /**
-     * Detect all <code>EndpointMapping</code>s or just expect "endpointMapping" bean?
-     */
+    /** Detect all <code>EndpointMapping</code>s or just expect "endpointMapping" bean? */
     private boolean detectAllEndpointMappings = true;
 
-    /**
-     * The <code>MessageEndpointHandlerAdapter</code> used by this servlet.
-     */
-    private MessageEndpointHandlerAdapter handlerAdapter = new MessageEndpointHandlerAdapter();
+    /** Detect all <code>WsdlDefinition</code>s? */
+    private boolean detectAllWsdlDefinitions = true;
 
-    /**
-     * The <code>MessageDispatcher</code> used by this servlet.
-     */
+    /** The <code>MessageEndpointHandlerAdapter</code> used by this servlet. */
+    private MessageEndpointHandlerAdapter messageEndpointHandlerAdapter = new MessageEndpointHandlerAdapter();
+
+    /** The <code>WsdlDefinitionHandlerAdapter</code> used by this servlet. */
+    private WsdlDefinitionHandlerAdapter wsdlDefinitionHandlerAdapter = new WsdlDefinitionHandlerAdapter();
+
+    /** The <code>MessageDispatcher</code> used by this servlet. */
     private MessageDispatcher messageDispatcher;
+
+    /** Keys are beans names, values are <code>WsdlDefinition</code>s. */
+    private Map wsdlDefinitions;
 
     static {
         // Load default strategy implementations from properties file.
@@ -136,9 +136,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
         }
     }
 
-    /**
-     * Returns the <code>MessageDispatcher</code> used by this servlet.
-     */
+    /** Returns the <code>MessageDispatcher</code> used by this servlet. */
     protected MessageDispatcher getMessageDispatcher() {
         return messageDispatcher;
     }
@@ -182,18 +180,56 @@ public class MessageDispatcherServlet extends FrameworkServlet {
         this.detectAllEndpointMappings = detectAllEndpointMappings;
     }
 
+    /**
+     * Set whether to detect all <code>WsdlDefinition</code> beans in this servlet's context.
+     * <p/>
+     * Default is <code>true</code>.
+     *
+     * @see org.springframework.ws.wsdl.WsdlDefinition
+     */
+    public void setDetectAllWsdlDefinitions(boolean detectAllWsdlDefinitions) {
+        this.detectAllWsdlDefinitions = detectAllWsdlDefinitions;
+    }
+
     protected long getLastModified(HttpServletRequest req) {
-        return handlerAdapter.getLastModified(req, messageDispatcher);
+        return messageEndpointHandlerAdapter.getLastModified(req, messageDispatcher);
     }
 
     protected void initFrameworkServlet() throws ServletException, BeansException {
         initWebServiceMessageFactory();
         initMessageDispatcher();
+        initWsdlDefinitions();
     }
 
     protected void doService(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
             throws Exception {
-        handlerAdapter.handle(httpServletRequest, httpServletResponse, messageDispatcher);
+        WsdlDefinition definition = getWsdlDefinition(httpServletRequest);
+        if (definition != null) {
+            wsdlDefinitionHandlerAdapter.handle(httpServletRequest, httpServletResponse, definition);
+        }
+        else {
+            messageEndpointHandlerAdapter.handle(httpServletRequest, httpServletResponse, messageDispatcher);
+        }
+    }
+
+    /**
+     * Determines the <code>WsdlDefinition</code> for a given request, or <code>null</code> if none is found.
+     * <p/>
+     * Default implementation checks whether the request method is GET, whether the request uri ends with ".wsdl", and
+     * if there is a <code>WsdlDefinition</code> with the same name as the filename in the request uri.
+     *
+     * @param request the <code>HttpServletRequest</code>
+     * @return a definition, or <code>null</code>
+     * @throws Exception in case of errors
+     */
+    protected WsdlDefinition getWsdlDefinition(HttpServletRequest request) throws Exception {
+        if ("GET".equals(request.getMethod()) && request.getRequestURI().endsWith(WSDL_SUFFIX_NAME)) {
+            String fileName = WebUtils.extractFilenameFromUrlPath(request.getRequestURI());
+            return (WsdlDefinition) wsdlDefinitions.get(fileName);
+        }
+        else {
+            return null;
+        }
     }
 
     /**
@@ -365,7 +401,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
                 }
             }
         }
-        handlerAdapter.setMessageFactory(messageFactory);
+        messageEndpointHandlerAdapter.setMessageFactory(messageFactory);
     }
 
     private void initMessageDispatcher() {
@@ -385,6 +421,14 @@ public class MessageDispatcherServlet extends FrameworkServlet {
             initEndpointMappings();
             initEndpointAdapters();
             initEndpointExceptionResolvers();
+        }
+    }
+
+    private void initWsdlDefinitions() {
+        if (detectAllWsdlDefinitions) {
+            // Find all WsdlDefinitions in the ApplicationContext, incuding ancestor contexts.
+            wsdlDefinitions = BeanFactoryUtils
+                    .beansOfTypeIncludingAncestors(getWebApplicationContext(), WsdlDefinition.class, true, false);
         }
     }
 }
