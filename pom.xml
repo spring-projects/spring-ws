@@ -102,6 +102,7 @@
                 </property>
             </activation>
             <modules>
+                <module>all</module>
                 <module>release</module>
             </modules>
         </profile>
@@ -165,6 +166,11 @@
                     <artifactId>maven-assembly-plugin</artifactId>
                     <version>2.1</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.0-beta-4</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -185,6 +191,13 @@
                     <childDelegation>false</childDelegation>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <tagBase>https://svn.sourceforge.net/svnroot/springframework/spring-projects/tags/</tagBase>
+                </configuration>
+            </plugin>
             <!-- IDEs -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -201,50 +214,6 @@
                 <configuration>
                     <downloadSources>true</downloadSources>
                     <downloadJavadocs>true</downloadJavadocs>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <tagBase>https://svn.sourceforge.net/svnroot/springframework/spring-projects/tags/</tagBase>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <aggregate>true</aggregate>
-                    <breakiterator>true</breakiterator>
-                    <groups>
-                        <group>
-                            <title>Spring-WS</title>
-                            <packages>org.springframework.ws*</packages>
-                        </group>
-                        <group>
-                            <title>Spring-OXM</title>
-                            <packages>org.springframework.oxm*</packages>
-                        </group>
-                        <group>
-                            <title>Spring-XML</title>
-                            <packages>org.springframework.xml*</packages>
-                        </group>
-                    </groups>
-                    <excludePackageNames>org.springframework.ws.samples</excludePackageNames>
-                    <links>
-                        <link>http://java.sun.com/j2se/1.4.2/docs/api</link>
-                        <link>http://java.sun.com/j2ee/1.4/docs/api</link>
-                        <link>http://java.sun.com/webservices/docs/2.0/api</link>
-                        <link>http://java.sun.com/webservices/docs/2.0/xws-security/api/</link>
-                        <link>http://static.springframework.org/spring/docs/1.2.x/api</link>
-                        <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
-                        <link>http://xmlbeans.apache.org/docs/2.0.0/reference</link>
-                        <link>http://jibx.sourceforge.net/api</link>
-                        <link>http://ws.apache.org/commons/axiom/apidocs/</link>
-                        <link>http://dom4j.org/apidocs/</link>
-                        <link>http://jdom.org/docs/apidocs/</link>
-                        <link>http://www.xom.nu/apidocs/</link>
-                        <link>http://acegisecurity.org/multiproject/acegi-security/apidocs/</link>
-                    </links>
                 </configuration>
             </plugin>
         </plugins>
@@ -294,6 +263,7 @@
                         <link>http://jdom.org/docs/apidocs/</link>
                         <link>http://www.xom.nu/apidocs/</link>
                         <link>http://acegisecurity.org/multiproject/acegi-security/apidocs/</link>
+                        <link>http://www.extreme.indiana.edu/apis/wsdl4j/</link>
                     </links>
                 </configuration>
             </plugin>
@@ -535,7 +505,7 @@
             <dependency>
                 <groupId>wsdl4j</groupId>
                 <artifactId>wsdl4j</artifactId>
-                <version>1.5.2</version>
+                <version>1.6.1</version>
             </dependency>
             <!-- WS-Security dependencies -->
             <dependency>
@@ -619,7 +589,6 @@
                 <groupId>activemq</groupId>
                 <artifactId>activemq</artifactId>
                 <version>2.1</version>
-                <exclusions></exclusions>
             </dependency>
             <dependency>
                 <groupId>commons-httpclient</groupId>
