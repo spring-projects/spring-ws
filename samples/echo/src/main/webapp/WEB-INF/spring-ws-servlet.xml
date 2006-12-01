@@ -28,7 +28,7 @@
             This interceptor validates both incoming and outgoing message contents according to the 'echo.xsd' XML
             Schema file.
         </description>
-        <property name="schema" value="/echo.xsd"/>
+        <property name="schema" value="/WEB-INF/echo.xsd"/>
         <property name="validateRequest" value="true"/>
         <property name="validateResponse" value="true"/>
     </bean>
@@ -44,6 +44,25 @@
             This endpoint handles echo requests.
         </description>
         <property name="echoService" ref="echoService"/>
+    </bean>
+
+    <bean id="echo" class="org.springframework.ws.wsdl.wsdl11.DynamicWsdl11Definition">
+        <description>
+            This bean definition represents a WSDL definition that is generated at runtime, based on the builder defined
+            below. It can be retrieved by going to /echo/echo.wsdl (i.e. the bean name corresponds to the filename).
+        </description>
+        <property name="builder">
+            <description>
+                The builder creates a WSDL from the 'echo.xsd' schema. It detects all elements that ends with 'Request',
+                finds corresponding 'Response' messages, and creates an operation based on that. All operations are put
+                in a portType with name 'Echo', and binding and service are created.
+            </description>
+            <bean class="org.springframework.ws.wsdl.wsdl11.builder.XsdBasedSoap11Wsdl4jDefinitionBuilder">
+                <property name="schema" value="/WEB-INF/echo.xsd"/>
+                <property name="portTypeName" value="Echo"/>
+                <property name="locationUri" value="http://localhost:8080/echo/services"/>
+            </bean>
+        </property>
     </bean>
 
     <bean id="echoService" class="org.springframework.ws.samples.echo.service.impl.EchoServiceImpl">

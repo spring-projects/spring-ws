@@ -19,7 +19,7 @@
     <!-- We map all service request to the springws servlet. -->
     <servlet-mapping>
         <servlet-name>spring-ws</servlet-name>
-        <url-pattern>/services</url-pattern>
+        <url-pattern>/*</url-pattern>
     </servlet-mapping>
 
     <mime-mapping>

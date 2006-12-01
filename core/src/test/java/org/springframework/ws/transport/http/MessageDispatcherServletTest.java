@@ -1,11 +1,19 @@
 package org.springframework.ws.transport.http;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
-import junit.framework.TestCase;
+import org.custommonkey.xmlunit.XMLTestCase;
+import org.custommonkey.xmlunit.XMLUnit;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.MutablePropertyValues;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.support.StaticWebApplicationContext;
@@ -13,8 +21,10 @@ import org.springframework.ws.MessageDispatcher;
 import org.springframework.ws.endpoint.PayloadEndpointAdapter;
 import org.springframework.ws.endpoint.mapping.PayloadRootQNameEndpointMapping;
 import org.springframework.ws.soap.endpoint.SimpleSoapExceptionResolver;
+import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
+import org.w3c.dom.Document;
 
-public class MessageDispatcherServletTest extends TestCase {
+public class MessageDispatcherServletTest extends XMLTestCase {
 
     private ServletConfig config;
 
@@ -70,6 +80,21 @@ public class MessageDispatcherServletTest extends TestCase {
         assertStrategies(SimpleSoapExceptionResolver.class, messageDispatcher.getEndpointExceptionResolvers());
     }
 
+    public void testDetectWsdlDefinitions() throws Exception {
+        servlet.setContextClass(WsdlDefinitionWebApplicationContext.class);
+        servlet.init(config);
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/definition.wsdl");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        servlet.service(request, response);
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(true);
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        Document result = documentBuilder.parse(new ByteArrayInputStream(response.getContentAsByteArray()));
+        Document expected = documentBuilder.parse(getClass().getResourceAsStream("wsdl11-input.wsdl"));
+        XMLUnit.setIgnoreWhitespace(true);
+        assertXMLEqual("Invalid WSDL written", expected, result);
+    }
+
     private static class DetectWebApplicationContext extends StaticWebApplicationContext {
 
         public void refresh() throws BeansException, IllegalStateException {
@@ -101,6 +126,16 @@ public class MessageDispatcherServletTest extends TestCase {
             registerSingleton(MessageDispatcherServlet.ENDPOINT_ADAPTER_BEAN_NAME, PayloadEndpointAdapter.class);
             registerSingleton(MessageDispatcherServlet.ENDPOINT_EXCEPTION_RESOLVER_BEAN_NAME,
                     SimpleSoapExceptionResolver.class);
+            super.refresh();
+        }
+    }
+
+    private static class WsdlDefinitionWebApplicationContext extends StaticWebApplicationContext {
+
+        public void refresh() throws BeansException, IllegalStateException {
+            MutablePropertyValues mpv = new MutablePropertyValues();
+            mpv.addPropertyValue("wsdl", new ClassPathResource("wsdl11-input.wsdl", getClass()));
+            registerSingleton("definition", SimpleWsdl11Definition.class, mpv);
             super.refresh();
         }
     }
