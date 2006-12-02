@@ -11,7 +11,7 @@
     <section>
         <title>MessageDispatcher</title>
         <para>
-            Spring-WS is designed around a central dispatching mechanism, which forwards
+            Spring-WS is designed around a central dispatching mechanism, which received and forwards incoming
         </para>
     </section>
     <section>
