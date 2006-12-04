@@ -57,7 +57,7 @@ public abstract class AbstractSaxPayloadEndpoint extends TransformerObjectSuppor
      *
      * @return a SAX content handler to be used for parsing
      */
-    protected abstract ContentHandler createContentHandler();
+    protected abstract ContentHandler createContentHandler() throws Exception;
 
     /**
      * Returns the response to be given, if any. This method is called after the request payload has been parse using
@@ -66,5 +66,5 @@ public abstract class AbstractSaxPayloadEndpoint extends TransformerObjectSuppor
      *
      * @param contentHandler the content handler used to parse the request
      */
-    protected abstract Source getResponse(ContentHandler contentHandler);
+    protected abstract Source getResponse(ContentHandler contentHandler) throws Exception;
 }
