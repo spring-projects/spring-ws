@@ -31,6 +31,7 @@ import org.springframework.xml.transform.StaxResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
+import org.w3c.dom.Attr;
 
 public abstract class AbstractMarshallerTestCase extends XMLTestCase {
 
@@ -61,6 +62,9 @@ public abstract class AbstractMarshallerTestCase extends XMLTestCase {
         marshaller.marshal(flights, domResult);
         Document expected = builder.newDocument();
         Element flightsElement = expected.createElementNS("http://samples.springframework.org/flight", "tns:flights");
+        Attr namespace = expected.createAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:tns");
+        namespace.setNodeValue("http://samples.springframework.org/flight");
+        flightsElement.setAttributeNode(namespace);
         expected.appendChild(flightsElement);
         Element flightElement = expected.createElementNS("http://samples.springframework.org/flight", "tns:flight");
         flightsElement.appendChild(flightElement);
