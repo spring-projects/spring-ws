@@ -65,7 +65,7 @@ public class StaxEventXmlReader extends StaxXmlReader {
             }
         }
         catch (XMLStreamException ex) {
-            throw new IllegalStateException("Could not read first element: " + ex.getMessage(), ex);
+            throw new IllegalStateException("Could not read first element: " + ex.getMessage());
         }
 
         this.reader = reader;
