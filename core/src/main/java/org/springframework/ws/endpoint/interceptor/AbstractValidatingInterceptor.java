@@ -285,7 +285,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
         Assert.notEmpty(schemas, "setting either the schema or schemas property is required");
         Assert.hasLength(schemaLanguage, "schemaLanguage is required");
         for (int i = 0; i < schemas.length; i++) {
-            Assert.isTrue(schemas[i].exists(), "schema [" + schemas + "] does not exist");
+            Assert.isTrue(schemas[i].exists(), "schema [" + schemas[i] + "] does not exist");
         }
         if (logger.isInfoEnabled()) {
             logger.info("Validating using " + StringUtils.arrayToCommaDelimitedString(schemas));
