@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.saaj.saaj13;
+package org.springframework.ws.soap.saaj;
 
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPMessage;
 
-import org.springframework.ws.soap.SoapBody;
-import org.springframework.ws.soap.soap12.AbstractSoap12BodyTestCase;
+import org.springframework.ws.soap.SoapHeader;
+import org.springframework.ws.soap.soap12.AbstractSoap12HeaderTestCase;
 
-public class Saaj13Soap12BodyTest extends AbstractSoap12BodyTestCase {
+public class SaajSoap12HeaderTest extends AbstractSoap12HeaderTestCase {
 
-    protected SoapBody createSoapBody() throws Exception {
+    protected SoapHeader createSoapHeader() throws Exception {
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
         SOAPMessage saajMessage = messageFactory.createMessage();
-        return new Saaj13Soap12Body(saajMessage.getSOAPBody());
+        return new SaajSoap12Header(saajMessage.getSOAPHeader());
     }
-
 }

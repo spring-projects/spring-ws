@@ -27,17 +27,15 @@ import org.springframework.ws.soap.soap11.AbstractSoap11MessageTestCase;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-public abstract class SaajSoap11MessageTestCase extends AbstractSoap11MessageTestCase {
+public class SaajSoap11MessageTest extends AbstractSoap11MessageTestCase {
 
     private SOAPMessage saajMessage;
 
     protected final SoapMessage createSoapMessage() throws Exception {
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
         saajMessage = messageFactory.createMessage();
-        return createSaajSoapMessage(saajMessage);
+        return new SaajSoapMessage(saajMessage);
     }
-
-    protected abstract SaajSoapMessage createSaajSoapMessage(SOAPMessage saajMessage);
 
     public void testGetPayloadSource() throws Exception {
         saajMessage.getSOAPBody().addChildElement("child");

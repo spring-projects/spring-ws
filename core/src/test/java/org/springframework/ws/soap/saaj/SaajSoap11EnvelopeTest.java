@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.saaj.saaj12;
+package org.springframework.ws.soap.saaj;
 
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPMessage;
 
-import org.springframework.ws.soap.AbstractAttachmentTestCase;
-import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.SoapEnvelope;
+import org.springframework.ws.soap.soap11.AbstractSoap11EnvelopeTestCase;
 
-public class Saaj12AttachmentTest extends AbstractAttachmentTestCase {
+public class SaajSoap11EnvelopeTest extends AbstractSoap11EnvelopeTestCase {
 
-    protected SoapMessage createMessage() throws Exception {
+    protected SoapEnvelope createSoapEnvelope() throws Exception {
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
         SOAPMessage saajMessage = messageFactory.createMessage();
-        return new Saaj12SoapMessage(saajMessage);
+        return new SaajSoapEnvelope(saajMessage.getSOAPPart().getEnvelope());
     }
 }
