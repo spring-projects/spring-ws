@@ -14,19 +14,11 @@
         <module>echo</module>
         <module>airline</module>
     </modules>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>mortbay-repo</id>
-            <name>mortbay-repo</name>
-            <url>http://www.mortbay.org/maven2/release</url>
-        </pluginRepository>
-    </pluginRepositories>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>maven-jetty-plugin</artifactId>
-                <version>6.0.0rc0</version>
                 <configuration>
                     <scanIntervalSeconds>3</scanIntervalSeconds>
                 </configuration>
