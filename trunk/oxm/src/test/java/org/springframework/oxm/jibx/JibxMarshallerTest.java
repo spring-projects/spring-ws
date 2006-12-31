@@ -18,6 +18,8 @@ package org.springframework.oxm.jibx;
 
 import org.springframework.oxm.AbstractMarshallerTestCase;
 import org.springframework.oxm.Marshaller;
+import org.springframework.xml.transform.StringResult;
+import org.custommonkey.xmlunit.XMLUnit;
 
 public class JibxMarshallerTest extends AbstractMarshallerTestCase {
 
@@ -44,6 +46,20 @@ public class JibxMarshallerTest extends AbstractMarshallerTestCase {
         }
         catch (IllegalArgumentException e) {
         }
+    }
+
+    public void testIndentation() throws Exception {
+        ((JibxMarshaller) marshaller).setIndent(4);
+        StringResult result = new StringResult();
+        marshaller.marshal(flights, result);
+        XMLUnit.setIgnoreWhitespace(false);
+        String expected = "<?xml version=\"1.0\"?>\n" +
+                "<flights xmlns=\"http://samples.springframework.org/flight\">\n" +
+                "    <flight>\n" +
+                "        <number>42</number>\n" +
+                "    </flight>\n" +
+                "</flights>";
+        assertXMLEqual(expected, result.toString());
     }
 
 }

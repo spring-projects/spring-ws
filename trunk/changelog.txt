@@ -11,6 +11,9 @@ Package org.springframework.oxm.castor
 * CastorMarshaller uses a XMLClassDescriptorResolver instead of a Mapping (#SWS-54)
 * CastorMarshaller marshals to DOM trees correctly (#SWS-59)
 
+Package org.springframework.oxm.jibx
+* added indent property to pretty print JiBX output (#SWS-72)
+
 Package org.springframework.ws.context
 * Refactored MessageContextFactory, SoapMessageContextFactory and implementations into WebServiceMessageFactory
 

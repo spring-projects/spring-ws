@@ -82,18 +82,21 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
 
     private TransformerFactory transfomerFactory;
 
-    /**
-     * Sets the optional binding name for this instance.
-     */
+    private int indent = -1;
+
+    /** Sets the optional binding name for this instance. */
     public void setBindingName(String bindingName) {
         this.bindingName = bindingName;
     }
 
-    /**
-     * Sets the target class for this instance. This property is required.
-     */
+    /** Sets the target class for this instance. This property is required. */
     public void setTargetClass(Class targetClass) {
         this.targetClass = targetClass;
+    }
+
+    /** Sets the number of nesting indent spaces. Default is <code>-1</code>, i.e. no indentation. */
+    public void setIndent(int indent) {
+        this.indent = indent;
     }
 
     public void afterPropertiesSet() throws Exception {
@@ -133,7 +136,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
      * @param marshalling indicates whether the exception occurs during marshalling (<code>true</code>), or
      *                    unmarshalling (<code>false</code>)
      * @return the corresponding <code>XmlMappingException</code> instance
-     * @see JibxUtils#convertJibxException(org.jibx.runtime.JiBXException, boolean)
+     * @see JibxUtils#convertJibxException(org.jibx.runtime.JiBXException,boolean)
      */
     public XmlMappingException convertJibxException(JiBXException ex, boolean marshalling) {
         return JibxUtils.convertJibxException(ex, marshalling);
@@ -158,7 +161,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
     protected void marshalOutputStream(Object graph, OutputStream outputStream)
             throws XmlMappingException, IOException {
         try {
-            IMarshallingContext marshallingContext = bindingFactory.createMarshallingContext();
+            IMarshallingContext marshallingContext = createMarshallingContext();
             marshallingContext.marshalDocument(graph, null, null, outputStream);
         }
         catch (JiBXException ex) {
@@ -185,7 +188,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
 
     protected void marshalWriter(Object graph, Writer writer) throws XmlMappingException, IOException {
         try {
-            IMarshallingContext marshallingContext = bindingFactory.createMarshallingContext();
+            IMarshallingContext marshallingContext = createMarshallingContext();
             marshallingContext.marshalDocument(graph, null, null, writer);
         }
         catch (JiBXException ex) {
@@ -201,7 +204,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
 
     protected void marshalXmlStreamWriter(Object graph, XMLStreamWriter streamWriter) throws XmlMappingException {
         try {
-            MarshallingContext marshallingContext = (MarshallingContext) bindingFactory.createMarshallingContext();
+            MarshallingContext marshallingContext = (MarshallingContext) createMarshallingContext();
             IXMLWriter xmlWriter = new StAXWriter(marshallingContext.getNamespaces(), streamWriter);
             marshallingContext.setXmlWriter(xmlWriter);
             marshallingContext.marshalDocument(graph);
@@ -229,7 +232,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
 
     protected Object unmarshalInputStream(InputStream inputStream) throws XmlMappingException, IOException {
         try {
-            IUnmarshallingContext unmarshallingContext = bindingFactory.createUnmarshallingContext();
+            IUnmarshallingContext unmarshallingContext = createUnmarshallingContext();
             return unmarshallingContext.unmarshalDocument(inputStream, null);
         }
         catch (JiBXException ex) {
@@ -239,7 +242,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
 
     protected Object unmarshalReader(Reader reader) throws XmlMappingException, IOException {
         try {
-            IUnmarshallingContext unmarshallingContext = bindingFactory.createUnmarshallingContext();
+            IUnmarshallingContext unmarshallingContext = createUnmarshallingContext();
             return unmarshallingContext.unmarshalDocument(reader);
         }
         catch (JiBXException ex) {
@@ -276,8 +279,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
 
     protected Object unmarshalXmlStreamReader(XMLStreamReader streamReader) {
         try {
-            UnmarshallingContext unmarshallingContext =
-                    (UnmarshallingContext) bindingFactory.createUnmarshallingContext();
+            UnmarshallingContext unmarshallingContext = (UnmarshallingContext) createUnmarshallingContext();
             IXMLReader xmlReader = new StAXReaderWrapper(streamReader, null, true);
             unmarshallingContext.setDocument(xmlReader);
             return unmarshallingContext.unmarshalElement();
@@ -286,4 +288,28 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
             throw convertJibxException(ex, false);
         }
     }
+
+    /**
+     * Creates a new <code>IMarshallingContext</code>, set with the correct indentation.
+     *
+     * @return the created marshalling context
+     * @throws JiBXException in case of errors
+     */
+    protected IMarshallingContext createMarshallingContext() throws JiBXException {
+        IMarshallingContext marshallingContext = bindingFactory.createMarshallingContext();
+        marshallingContext.setIndent(indent);
+        return marshallingContext;
+    }
+
+    /**
+     * Creates a new <code>IUnmarshallingContext</code>, set with the correct indentation.
+     *
+     * @return the created unmarshalling context
+     * @throws JiBXException in case of errors
+     */
+    protected IUnmarshallingContext createUnmarshallingContext() throws JiBXException {
+        return bindingFactory.createUnmarshallingContext();
+    }
+
+
 }
