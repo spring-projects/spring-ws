@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+    <fileSets>
+        <fileSet>
+            <includes>
+                <include>readme.txt</include>
+                <include>license.txt</include>
+                <include>changelog.txt</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</component>
