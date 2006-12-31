@@ -99,19 +99,6 @@
                 <module>oxm-tiger</module>
             </modules>
         </profile>
-        <profile>
-            <id>release</id>
-            <activation>
-                <property>
-                    <name>enableCiProfile</name>
-                    <value>true</value>
-                </property>
-            </activation>
-            <modules>
-                <module>all</module>
-                <module>release</module>
-            </modules>
-        </profile>
     </profiles>
     <properties>
         <spring.version>2.0.1</spring.version>
