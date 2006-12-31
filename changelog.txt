@@ -21,6 +21,9 @@ Package org.springframework.ws.soap
 * added setId() method to Attachment, to set the Content-ID of MIME attachments (#SWS-53)
 * added getResult() to SoapFaultDetail (#SWS-57)
 
+Package org.springframework.ws.soap
+* refactored SAAJ from two separate hierarchies (SAAJ 1.2 and SAAJ 1.3) into one, using bridge pattern
+
 Package org.springframework.ws.soap.security.xwss.callback
 * DefaultTimestampValidator no longer requires Expired in request (#SWS-55)
 * Digest passwords are handled correctly in the SimplePasswordValidationCallbackHandler (#SWS-56)
