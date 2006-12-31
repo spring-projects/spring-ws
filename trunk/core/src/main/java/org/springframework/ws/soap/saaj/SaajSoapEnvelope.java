@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.saaj.saaj12;
+package org.springframework.ws.soap.saaj;
 
+import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
@@ -23,29 +24,33 @@ import javax.xml.soap.SOAPHeader;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.SoapHeader;
-import org.springframework.ws.soap.saaj.SaajSoapBodyException;
-import org.springframework.ws.soap.saaj.SaajSoapHeaderException;
 
 /**
- * Internal class that uses SAAJ 1.2 to implement the <code>SoapEnvelope</code> interface. Used by
- * <code>SaajSoapMessage</code>.
+ * SAAJ-specific implementation of the <code>SoapEnvelope</code> interface. Wraps a {@link
+ * javax.xml.soap.SOAPEnvelope}.
  *
  * @author Arjen Poutsma
  */
-class Saaj12SoapEnvelope extends Saaj12SoapElement implements SoapEnvelope {
+class SaajSoapEnvelope extends SaajSoapElement implements SoapEnvelope {
 
-    private Saaj12Soap11Body body;
+    private SaajSoapBody body;
 
-    private Saaj12SoapHeader header;
+    private SaajSoapHeader header;
 
-    public Saaj12SoapEnvelope(SOAPEnvelope saajEnvelope) {
-        super(saajEnvelope);
+    public SaajSoapEnvelope(SOAPEnvelope envelope) {
+        super(envelope);
     }
 
-    public final SoapBody getBody() {
+    public SoapBody getBody() {
         if (body == null) {
             try {
-                body = new Saaj12Soap11Body(getSaajEnvelope().getBody());
+                SOAPBody saajBody = getImplementation().getBody(getSaajEnvelope());
+                if (getImplementation().isSoap11(saajBody)) {
+                    body = new SaajSoap11Body(saajBody);
+                }
+                else {
+                    body = new SaajSoap12Body(saajBody);
+                }
             }
             catch (SOAPException ex) {
                 throw new SaajSoapBodyException(ex);
@@ -54,12 +59,17 @@ class Saaj12SoapEnvelope extends Saaj12SoapElement implements SoapEnvelope {
         return body;
     }
 
-    public final SoapHeader getHeader() {
+    public SoapHeader getHeader() {
         if (header == null) {
             try {
-                SOAPHeader saajHeader = getSaajEnvelope().getHeader();
+                SOAPHeader saajHeader = getImplementation().getHeader(getSaajEnvelope());
                 if (saajHeader != null) {
-                    header = new Saaj12SoapHeader(saajHeader);
+                    if (getImplementation().isSoap11(saajHeader)) {
+                        header = new SaajSoapHeader(saajHeader);
+                    }
+                    else {
+                        header = new SaajSoap12Header(saajHeader);
+                    }
                 }
                 else {
                     header = null;
@@ -75,4 +85,5 @@ class Saaj12SoapEnvelope extends Saaj12SoapElement implements SoapEnvelope {
     protected SOAPEnvelope getSaajEnvelope() {
         return (SOAPEnvelope) getSaajElement();
     }
+
 }

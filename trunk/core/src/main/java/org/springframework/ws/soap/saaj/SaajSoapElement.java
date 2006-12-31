@@ -14,35 +14,42 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.saaj.saaj12;
+package org.springframework.ws.soap.saaj;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPElement;
 import javax.xml.transform.Source;
-import javax.xml.transform.dom.DOMSource;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapElement;
-import org.springframework.ws.soap.saaj.support.SaajUtils;
 
-abstract class Saaj12SoapElement implements SoapElement {
+/**
+ * SAAJ-specific implementation of the <code>SoapElement</code> interface. Wraps a {@link javax.xml.soap.SOAPElement}.
+ *
+ * @author Arjen Poutsma
+ */
+class SaajSoapElement implements SoapElement {
 
-    private final SOAPElement saajElement;
+    private final SOAPElement element;
 
-    protected Saaj12SoapElement(SOAPElement saajElement) {
-        Assert.notNull(saajElement, "No saajElement given");
-        this.saajElement = saajElement;
+    public SaajSoapElement(SOAPElement element) {
+        Assert.notNull(element, "element must not be null");
+        this.element = element;
+    }
+
+    public Source getSource() {
+        return getImplementation().getSource(element);
+    }
+
+    public QName getName() {
+        return getImplementation().getName(element);
     }
 
     protected SOAPElement getSaajElement() {
-        return saajElement;
+        return element;
     }
 
-    public final QName getName() {
-        return SaajUtils.toQName(saajElement.getElementName());
-    }
-
-    public final Source getSource() {
-        return new DOMSource(saajElement);
+    protected SaajImplementation getImplementation() {
+        return SaajImplementation.getImplementation();
     }
 }

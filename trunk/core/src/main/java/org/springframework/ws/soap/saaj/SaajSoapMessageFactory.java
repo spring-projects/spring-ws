@@ -24,7 +24,6 @@ import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,8 +32,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.soap.SoapMessageCreationException;
-import org.springframework.ws.soap.saaj.saaj12.Saaj12SoapMessage;
-import org.springframework.ws.soap.saaj.saaj13.Saaj13SoapMessage;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 import org.springframework.ws.transport.TransportInputStream;
 
@@ -67,6 +64,13 @@ public class SaajSoapMessageFactory implements WebServiceMessageFactory, Initial
     }
 
     /**
+     * Sets the SAAJ <code>MessageFactory</code>.
+     */
+    public void setMessageFactory(MessageFactory messageFactory) {
+        this.messageFactory = messageFactory;
+    }
+
+    /**
      * Returns the SAAJ <code>MessageFactory</code> used.
      */
     public MessageFactory getSaajMessageFactory() {
@@ -95,7 +99,7 @@ public class SaajSoapMessageFactory implements WebServiceMessageFactory, Initial
             }
             else {
                 throw new IllegalStateException(
-                        "SaajSoapMessageContextFactory requires SAAJ 1.2, which was not" + "found on the classpath");
+                        "SaajSoapMessageFactory requires SAAJ 1.2, which was not" + "found on the classpath");
             }
         }
         catch (SOAPException ex) {
@@ -105,7 +109,7 @@ public class SaajSoapMessageFactory implements WebServiceMessageFactory, Initial
 
     public WebServiceMessage createWebServiceMessage() {
         try {
-            return createSaajSoapMessage(messageFactory.createMessage());
+            return new SaajSoapMessage(messageFactory.createMessage());
         }
         catch (SOAPException ex) {
             throw new SoapMessageCreationException("Could not create empty message: " + ex.getMessage(), ex);
@@ -128,23 +132,10 @@ public class SaajSoapMessageFactory implements WebServiceMessageFactory, Initial
             }
         }
         try {
-            return createSaajSoapMessage(messageFactory.createMessage(mimeHeaders, inputStream));
+            return new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, inputStream));
         }
         catch (SOAPException ex) {
             throw new SoapMessageCreationException("Could not create message from InputStream: " + ex.getMessage(), ex);
-        }
-    }
-
-    private WebServiceMessage createSaajSoapMessage(SOAPMessage requestMessage) {
-        if (SaajUtils.getSaajVersion() >= SaajUtils.SAAJ_13) {
-            return new Saaj13SoapMessage(requestMessage);
-        }
-        else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_12) {
-            return new Saaj12SoapMessage(requestMessage);
-        }
-        else {
-            throw new IllegalStateException(
-                    "SaajSoapMessageContextFactory requires SAAJ 1.2, which was not" + "found on the classpath");
         }
     }
 

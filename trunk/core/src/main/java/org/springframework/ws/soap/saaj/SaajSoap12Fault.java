@@ -14,55 +14,32 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.saaj.saaj13;
+package org.springframework.ws.soap.saaj;
 
 import java.util.Iterator;
 import java.util.Locale;
 import javax.xml.namespace.QName;
-import javax.xml.soap.Detail;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
-import javax.xml.transform.Source;
-import javax.xml.transform.dom.DOMSource;
 
-import org.springframework.ws.soap.SoapFaultDetail;
-import org.springframework.ws.soap.saaj.SaajSoapFaultException;
 import org.springframework.ws.soap.soap12.Soap12Fault;
 
 /**
- * Internal class that uses SAAJ 1.3 to implement the <code>Soap12Fault</code> interface.
- *
  * @author Arjen Poutsma
  */
-class Saaj13Soap12Fault implements Soap12Fault {
+class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
 
-    private final SOAPFault saajFault;
-
-    Saaj13Soap12Fault(SOAPFault saajFault) {
-        this.saajFault = saajFault;
+    public SaajSoap12Fault(SOAPFault fault) {
+        super(fault);
     }
 
-    public QName getName() {
-        return saajFault.getElementQName();
+    public String getFaultActorOrRole() {
+        return getImplementation().getFaultRole(getSaajFault());
     }
 
-    public Source getSource() {
-        return new DOMSource(saajFault);
-    }
-
-    public QName getFaultCode() {
-        return saajFault.getFaultCodeAsQName();
-    }
-
-    public SoapFaultDetail getFaultDetail() {
-        Detail saajDetail = saajFault.getDetail();
-        return saajDetail != null ? new Saaj13SoapFaultDetail(saajDetail) : null;
-    }
-
-    public SoapFaultDetail addFaultDetail() {
+    public void setFaultActorOrRole(String faultRole) {
         try {
-            Detail saajDetail = saajFault.addDetail();
-            return saajDetail != null ? new Saaj13SoapFaultDetail(saajDetail) : null;
+            getImplementation().setFaultRole(getSaajFault(), faultRole);
         }
         catch (SOAPException ex) {
             throw new SaajSoapFaultException(ex);
@@ -70,25 +47,12 @@ class Saaj13Soap12Fault implements Soap12Fault {
     }
 
     public Iterator getFaultSubcodes() {
-        return saajFault.getFaultSubcodes();
+        return getImplementation().getFaultSubcodes(getSaajFault());
     }
 
     public void addFaultSubcode(QName subcode) {
         try {
-            saajFault.appendFaultSubcode(subcode);
-        }
-        catch (SOAPException ex) {
-            throw new SaajSoapFaultException(ex);
-        }
-    }
-
-    public String getFaultActorOrRole() {
-        return saajFault.getFaultRole();
-    }
-
-    public void setFaultActorOrRole(String uri) {
-        try {
-            saajFault.setFaultRole(uri);
+            getImplementation().appendFaultSubcode(getSaajFault(), subcode);
         }
         catch (SOAPException ex) {
             throw new SaajSoapFaultException(ex);
@@ -96,33 +60,36 @@ class Saaj13Soap12Fault implements Soap12Fault {
     }
 
     public String getFaultNode() {
-        return saajFault.getFaultNode();
+        return getImplementation().getFaultNode(getSaajFault());
     }
 
     public void setFaultNode(String uri) {
         try {
-            saajFault.setFaultNode(uri);
+            getImplementation().setFaultNode(getSaajFault(), uri);
         }
         catch (SOAPException ex) {
             throw new SaajSoapFaultException(ex);
         }
+
     }
 
     public void setFaultReasonText(Locale locale, String text) {
         try {
-            saajFault.addFaultReasonText(text, locale);
+            getImplementation().setFaultReasonText(getSaajFault(), locale, text);
         }
         catch (SOAPException ex) {
             throw new SaajSoapFaultException(ex);
         }
+
     }
 
     public String getFaultReasonText(Locale locale) {
         try {
-            return saajFault.getFaultReasonText(locale);
+            return getImplementation().getFaultReasonText(getSaajFault(), locale);
         }
         catch (SOAPException ex) {
             throw new SaajSoapFaultException(ex);
         }
+
     }
 }
