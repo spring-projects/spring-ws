@@ -71,13 +71,8 @@
         </dependency>
         <!-- SOAP dependencies -->
         <dependency>
-            <groupId>ws-commons</groupId>
-            <artifactId>axiom-api</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>ws-commons</groupId>
             <artifactId>axiom-impl</artifactId>
+            <groupId>org.apache.ws.commons.axiom</groupId>
             <optional>true</optional>
         </dependency>
         <dependency>
