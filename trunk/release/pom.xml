@@ -147,12 +147,9 @@
         </dependency>
         <!-- SOAP dependencies -->
         <dependency>
-            <groupId>ws-commons</groupId>
-            <artifactId>axiom-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ws-commons</groupId>
             <artifactId>axiom-impl</artifactId>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <version>1.2.1</version>
         </dependency>
         <dependency>
             <groupId>com.sun.xml.messaging.saaj</groupId>
