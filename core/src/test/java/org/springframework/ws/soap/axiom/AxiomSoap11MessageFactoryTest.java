@@ -27,8 +27,4 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
         return factory;
     }
 
-    public void testCreateSoapMessageAttachment() throws Exception {
-        // Axiom 1.1.1 has a fatal bug with regard to SwA
-    }
-
 }
