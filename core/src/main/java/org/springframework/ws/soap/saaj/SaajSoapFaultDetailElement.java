@@ -14,42 +14,41 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.saaj.saaj12;
+package org.springframework.ws.soap.saaj;
 
 import javax.xml.soap.DetailEntry;
 import javax.xml.soap.SOAPException;
 import javax.xml.transform.Result;
-import javax.xml.transform.dom.DOMResult;
 
 import org.springframework.ws.soap.SoapFaultDetailElement;
-import org.springframework.ws.soap.saaj.SaajSoapFaultException;
 
 /**
- * Internal class that uses SAAJ 1.2 to implement the <code>SoapFaultDetailElement</code> interface.
+ * SAAJ-specific implementation of the <code>SoapFaultDetailElement</code> interface. Wraps a {@link
+ * javax.xml.soap.DetailEntry}.
  *
  * @author Arjen Poutsma
  */
-class Saaj12SoapFaultDetailElement extends Saaj12SoapElement implements SoapFaultDetailElement {
+class SaajSoapFaultDetailElement extends SaajSoapElement implements SoapFaultDetailElement {
 
-    Saaj12SoapFaultDetailElement(DetailEntry saajDetailEntry) {
-        super(saajDetailEntry);
+    SaajSoapFaultDetailElement(DetailEntry entry) {
+        super(entry);
     }
 
     public Result getResult() {
-        return new DOMResult(getSaajDetailEntry());
-    }
-
-    private DetailEntry getSaajDetailEntry() {
-        return (DetailEntry) getSaajElement();
+        return getImplementation().getResult(getSaajDetailEntry());
     }
 
     public void addText(String text) {
         try {
-            getSaajDetailEntry().addTextNode(text);
+            getImplementation().addTextNode(getSaajDetailEntry(), text);
         }
         catch (SOAPException ex) {
             throw new SaajSoapFaultException(ex);
         }
+    }
+
+    protected DetailEntry getSaajDetailEntry() {
+        return (DetailEntry) getSaajElement();
     }
 
 }

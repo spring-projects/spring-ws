@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.saaj.saaj13;
+package org.springframework.ws.soap.saaj;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
@@ -22,24 +22,24 @@ import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
 
 import org.springframework.ws.soap.SoapHeaderElement;
-import org.springframework.ws.soap.saaj.SaajSoapHeaderException;
 import org.springframework.ws.soap.soap12.Soap12Header;
 
 /**
- * Internal class that uses SAAJ 1.3 to implement the <code>Soap12Header</code> interface.
+ * SAAJ-specific implementation of the <code>Soap12Header</code> interface. Wraps a {@link javax.xml.soap.SOAPHeader}.
  *
  * @author Arjen Poutsma
  */
-class Saaj13Soap12Header extends Saaj13SoapHeader implements Soap12Header {
+class SaajSoap12Header extends SaajSoapHeader implements Soap12Header {
 
-    Saaj13Soap12Header(SOAPHeader saajHeader) {
-        super(saajHeader);
+    SaajSoap12Header(SOAPHeader header) {
+        super(header);
     }
 
     public SoapHeaderElement addNotUnderstoodHeaderElement(QName headerName) {
         try {
-            SOAPHeaderElement saajHeaderElement = getSaajHeader().addNotUnderstoodHeaderElement(headerName);
-            return new Saaj13SoapHeaderElement(saajHeaderElement);
+            SOAPHeaderElement headerElement =
+                    getImplementation().addNotUnderstoodHeaderElement(getSaajHeader(), headerName);
+            return new SaajSoapHeaderElement(headerElement);
         }
         catch (SOAPException ex) {
             throw new SaajSoapHeaderException(ex);
@@ -48,8 +48,9 @@ class Saaj13Soap12Header extends Saaj13SoapHeader implements Soap12Header {
 
     public SoapHeaderElement addUpgradeHeaderElement(String[] supportedSoapUris) {
         try {
-            SOAPHeaderElement saajHeaderElement = getSaajHeader().addUpgradeHeaderElement(supportedSoapUris);
-            return new Saaj13SoapHeaderElement(saajHeaderElement);
+            SOAPHeaderElement headerElement =
+                    getImplementation().addUpgradeHeaderElement(getSaajHeader(), supportedSoapUris);
+            return new SaajSoapHeaderElement(headerElement);
         }
         catch (SOAPException ex) {
             throw new SaajSoapHeaderException(ex);
