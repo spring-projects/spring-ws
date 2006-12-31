@@ -101,9 +101,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         this.payloadCaching = payloadCaching;
     }
 
-    /**
-     * Return the AXIOM <code>SOAPMessage</code> that this <code>AxiomSoapMessage</code> is based on.
-     */
+    /** Return the AXIOM <code>SOAPMessage</code> that this <code>AxiomSoapMessage</code> is based on. */
     public final SOAPMessage getAxiomMessage() {
         return axiomMessage;
     }
@@ -171,9 +169,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         }
     }
 
-    /**
-     * Axiom-specific implementation of <code>org.springframework.ws.soap.Attachment</code>
-     */
+    /** Axiom-specific implementation of <code>org.springframework.ws.soap.Attachment</code> */
     private static class AxiomAttachment implements Attachment {
 
         private final DataHandler dataHandler;
@@ -204,7 +200,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         }
 
         public long getSize() {
-            throw new UnsupportedOperationException("Axiom does not support setting the Content-ID of attachments.");
+            throw new UnsupportedOperationException("Axiom does not support getting the size of attachments.");
         }
     }
 
