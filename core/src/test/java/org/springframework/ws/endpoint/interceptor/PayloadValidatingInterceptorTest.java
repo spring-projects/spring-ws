@@ -35,8 +35,8 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
-import org.springframework.ws.soap.saaj.saaj13.Saaj13SoapMessage;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 import org.springframework.ws.soap.soap12.Soap12Fault;
@@ -48,8 +48,6 @@ public class PayloadValidatingInterceptorTest extends TestCase {
     private MessageContext context;
 
     private SaajSoapMessageFactory soap11Factory;
-
-    private MessageFactory messageFactory;
 
     private SaajSoapMessageFactory soap12Factory;
 
@@ -178,7 +176,7 @@ public class PayloadValidatingInterceptorTest extends TestCase {
             MessageFactory messageFactory = MessageFactory.newInstance();
             SOAPMessage saajMessage =
                     SaajUtils.loadMessage(new ClassPathResource("validSoapMessage.xml", getClass()), messageFactory);
-            context = new DefaultMessageContext(new Saaj13SoapMessage(saajMessage),
+            context = new DefaultMessageContext(new SaajSoapMessage(saajMessage),
                     new SaajSoapMessageFactory(messageFactory));
 
             boolean result = interceptor.handleRequest(context, null);
