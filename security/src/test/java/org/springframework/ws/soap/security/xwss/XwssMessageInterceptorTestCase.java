@@ -27,7 +27,6 @@ import javax.xml.soap.SOAPMessage;
 
 import junit.framework.TestCase;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
-import org.springframework.ws.soap.saaj.saaj13.Saaj13SoapMessage;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
 import org.w3c.dom.Document;
@@ -83,7 +82,7 @@ public abstract class XwssMessageInterceptorTestCase extends TestCase {
         try {
             is = getClass().getResourceAsStream(fileName);
             assertNotNull("Could not load SAAJ message with name [" + fileName + "]", is);
-            return new Saaj13SoapMessage(messageFactory.createMessage(mimeHeaders, is));
+            return new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, is));
         }
         finally {
             if (is != null) {
