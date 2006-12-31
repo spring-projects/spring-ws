@@ -28,8 +28,8 @@ import junit.framework.TestCase;
 import org.easymock.MockControl;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
-import org.springframework.ws.soap.saaj.saaj13.Saaj13SoapMessage;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 import org.springframework.ws.soap.soap12.Soap12Fault;
 
@@ -59,7 +59,7 @@ public class SoapMessageDispatcherTest extends TestCase {
         header.setMustUnderstand(true);
         factory.setSoapProtocol(SOAPConstants.SOAP_1_1_PROTOCOL);
         factory.afterPropertiesSet();
-        MessageContext context = new DefaultMessageContext(new Saaj13SoapMessage(request), factory);
+        MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
         interceptorMock.understands(null);
         interceptorControl.setMatcher(MockControl.ALWAYS_MATCHER);
         interceptorControl.setReturnValue(true);
@@ -82,7 +82,7 @@ public class SoapMessageDispatcherTest extends TestCase {
         header.setRole(SOAPConstants.URI_SOAP_1_2_ROLE_NEXT);
         factory.setSoapProtocol(SOAPConstants.SOAP_1_2_PROTOCOL);
         factory.afterPropertiesSet();
-        MessageContext context = new DefaultMessageContext(new Saaj13SoapMessage(request), factory);
+        MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
         interceptorMock.understands(null);
         interceptorControl.setMatcher(MockControl.ALWAYS_MATCHER);
         interceptorControl.setReturnValue(true);
@@ -105,7 +105,7 @@ public class SoapMessageDispatcherTest extends TestCase {
         header.setMustUnderstand(true);
         factory.setSoapProtocol(SOAPConstants.SOAP_1_1_PROTOCOL);
         factory.afterPropertiesSet();
-        MessageContext context = new DefaultMessageContext(new Saaj13SoapMessage(request), factory);
+        MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
         interceptorMock.understands(null);
         interceptorControl.setMatcher(MockControl.ALWAYS_MATCHER);
         interceptorControl.setReturnValue(false);
@@ -138,7 +138,7 @@ public class SoapMessageDispatcherTest extends TestCase {
         header.setRole(SOAPConstants.URI_SOAP_1_2_ROLE_NEXT);
         factory.setSoapProtocol(SOAPConstants.SOAP_1_2_PROTOCOL);
         factory.afterPropertiesSet();
-        MessageContext context = new DefaultMessageContext(new Saaj13SoapMessage(request), factory);
+        MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
         interceptorMock.understands(null);
         interceptorControl.setMatcher(MockControl.ALWAYS_MATCHER);
         interceptorControl.setReturnValue(false);
@@ -178,7 +178,7 @@ public class SoapMessageDispatcherTest extends TestCase {
         header.setMustUnderstand(true);
         factory.setSoapProtocol(SOAPConstants.SOAP_1_1_PROTOCOL);
         factory.afterPropertiesSet();
-        MessageContext context = new DefaultMessageContext(new Saaj13SoapMessage(request), factory);
+        MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
         interceptorMock.understands(null);
         interceptorControl.setMatcher(MockControl.ALWAYS_MATCHER);
         interceptorControl.setReturnValue(true);
@@ -202,7 +202,7 @@ public class SoapMessageDispatcherTest extends TestCase {
         header.setMustUnderstand(true);
         factory.setSoapProtocol(SOAPConstants.SOAP_1_2_PROTOCOL);
         factory.afterPropertiesSet();
-        MessageContext context = new DefaultMessageContext(new Saaj13SoapMessage(request), factory);
+        MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
         interceptorMock.understands(null);
         interceptorControl.setMatcher(MockControl.ALWAYS_MATCHER);
         interceptorControl.setReturnValue(true);
@@ -222,7 +222,7 @@ public class SoapMessageDispatcherTest extends TestCase {
         request.getSOAPHeader().detachNode();
         factory.setSoapProtocol(SOAPConstants.SOAP_1_1_PROTOCOL);
         factory.afterPropertiesSet();
-        MessageContext context = new DefaultMessageContext(new Saaj13SoapMessage(request), factory);
+        MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
         interceptorControl.replay();
 
         SoapEndpointInvocationChain chain = new SoapEndpointInvocationChain(new Object(),
