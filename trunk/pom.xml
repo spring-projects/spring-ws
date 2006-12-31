@@ -37,13 +37,19 @@
                 scp://static.springframework.org/var/www/domains/springframework.org/static/htdocs/maven2-snapshots
             </url>
         </snapshotRepository>
+        <site>
+            <id>static.springframework.org</id>
+            <url>
+                scp://static.springframework.org/var/www/domains/springframework.org/static/htdocs/spring-ws/site
+            </url>
+        </site>
     </distributionManagement>
     <inceptionYear>2005</inceptionYear>
     <developers>
         <developer>
             <id>poutsma</id>
             <name>Arjen Poutsma</name>
-            <email>arjenp at interface21.com</email>
+            <email>apoutsma at interface21.com</email>
             <organization>Interface21</organization>
             <organizationUrl>http://www.interface21.com</organizationUrl>
             <roles>
@@ -142,18 +148,10 @@
                     <childDelegation>false</childDelegation>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <tagBase>https://svn.sourceforge.net/svnroot/springframework/spring-projects/tags/</tagBase>
-                </configuration>
-            </plugin>
             <!-- IDEs -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-eclipse-plugin</artifactId>
-                <version>2.2</version>
                 <configuration>
                     <downloadSources>true</downloadSources>
                 </configuration>
@@ -161,7 +159,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-idea-plugin</artifactId>
-                <version>2.0</version>
                 <configuration>
                     <downloadSources>true</downloadSources>
                     <downloadJavadocs>true</downloadJavadocs>
@@ -173,7 +170,17 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <configuration>
+                    <aggregate>true</aggregate>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
+                <configuration>
+                    <aggregate>true</aggregate>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -217,6 +224,10 @@
                         <link>http://www.extreme.indiana.edu/apis/wsdl4j/</link>
                     </links>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
             </plugin>
         </plugins>
     </reporting>
@@ -397,7 +408,8 @@
                 <artifactId>xpp3</artifactId>
                 <version>1.1.3.4.O</version>
             </dependency>
-            <!-- O/X Mapping dependencies --><!-- Castor -->
+            <!-- O/X Mapping dependencies -->
+            <!-- Castor -->
             <dependency>
                 <groupId>org.codehaus.castor</groupId>
                 <artifactId>castor</artifactId>
