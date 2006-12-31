@@ -22,8 +22,8 @@ import javax.xml.soap.SOAPMessage;
 
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
-import org.springframework.ws.soap.saaj.saaj13.Saaj13SoapMessage;
 
 public class CommonsHttpMessageSenderTest extends AbstractHttpWebServiceMessageSenderTestCase {
 
@@ -40,7 +40,7 @@ public class CommonsHttpMessageSenderTest extends AbstractHttpWebServiceMessageS
     public void testSend() throws Exception {
         SOAPMessage message = messageFactory.createMessage();
         message.getMimeHeaders().addHeader(HEADER_NAME, HEADER_VALUE);
-        Saaj13SoapMessage request = new Saaj13SoapMessage(message);
+        SaajSoapMessage request = new SaajSoapMessage(message);
         MessageContext context = new DefaultMessageContext(request, new SaajSoapMessageFactory(messageFactory));
 //        AxiomSoapMessageFactory soapMessageFactory = new AxiomSoapMessageFactory();
 //        MessageContext context = new DefaultMessageContext(soapMessageFactory);
