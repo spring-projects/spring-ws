@@ -18,7 +18,9 @@ package org.springframework.ws.soap.axiom;
 
 import java.util.Iterator;
 import javax.xml.namespace.QName;
+import javax.xml.transform.Result;
 import javax.xml.transform.Source;
+import javax.xml.transform.sax.SAXResult;
 
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMNamespace;
@@ -55,6 +57,10 @@ class AxiomSoapHeader implements SoapHeader {
 
     public Source getSource() {
         return new StaxSource(axiomHeader.getXMLStreamReader());
+    }
+
+    public Result getResult() {
+        return new SAXResult(new AxiomContentHandler(axiomHeader));
     }
 
     public SoapHeaderElement addHeaderElement(QName name) {

@@ -38,7 +38,7 @@ public interface SoapFaultDetail extends SoapElement {
     SoapFaultDetailElement addFaultDetailElement(QName name);
 
     /**
-     * Returns the <code>Source</code> of this element. This result does not include the element itself.
+     * Returns a <code>Result</code> that represents the concents of the detail.
      * <p/>
      * The result can be used for marshalling.
      *

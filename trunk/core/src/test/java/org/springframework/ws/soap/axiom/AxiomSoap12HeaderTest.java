@@ -29,4 +29,6 @@ public class AxiomSoap12HeaderTest extends AbstractSoap12HeaderTestCase {
         return axiomSoapMessage.getSoapHeader();
     }
 
+    public void testGetResult() throws Exception {
+    }
 }
