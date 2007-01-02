@@ -18,6 +18,7 @@ package org.springframework.ws.soap;
 
 import java.util.Iterator;
 import javax.xml.namespace.QName;
+import javax.xml.transform.Result;
 
 /**
  * Represents the <code>Header</code> element in a SOAP message. A SOAP header contains <code>SoapHeaderElement</code>s,
@@ -28,6 +29,15 @@ import javax.xml.namespace.QName;
  * @see SoapEnvelope#getHeader()
  */
 public interface SoapHeader extends SoapElement {
+
+    /**
+     * Returns a <code>Result</code> that represents the concents of the header.
+     * <p/>
+     * The result can be used for marshalling.
+     *
+     * @return the <code>Result</code> of this element
+     */
+    Result getResult();
 
     /**
      * Adds a new <code>SoapHeaderElement</code> with the specified qualified name to this header.

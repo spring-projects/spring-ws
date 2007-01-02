@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2007 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
+import javax.xml.transform.Result;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapHeader;
@@ -60,6 +61,10 @@ class SaajSoapHeader extends SaajSoapElement implements SoapHeader {
 
     protected SOAPHeader getSaajHeader() {
         return (SOAPHeader) getSaajElement();
+    }
+
+    public Result getResult() {
+        return getImplementation().getResult(getSaajHeader());
     }
 
     private static class SaajSoapHeaderElementIterator implements Iterator {

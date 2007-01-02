@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2007 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,12 +55,11 @@ import org.springframework.ws.transport.TransportOutputStream;
  */
 abstract class SaajImplementation {
 
+    /** Protected constructor to prevent instantiation. */
     protected SaajImplementation() {
     }
 
-    /**
-     * Returns the singleton instance for the version of SAAJ in use.
-     */
+    /** Returns the singleton instance for the version of SAAJ in use. */
     public static SaajImplementation getImplementation() {
         if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_12) {
             return Saaj12Implementation.getInstance();
@@ -73,58 +72,121 @@ abstract class SaajImplementation {
         }
     }
 
+    /** Returns the name of the given element. */
     public abstract QName getName(SOAPElement element);
 
+    /** Returns the readable <code>Source</code> of the given element. */
     public Source getSource(SOAPElement element) {
         return new DOMSource(element);
     }
 
+    /** Returns the writable <code>Result</code> of the given element. */
     public Result getResult(SOAPElement element) {
         return new DOMResult(element);
     }
 
+    /** Returns the envelope of the given message. */
     public SOAPEnvelope getEnvelope(SOAPMessage message) throws SOAPException {
         return message.getSOAPPart().getEnvelope();
     }
 
+    /** Returns the header of the given envelope. */
     public SOAPHeader getHeader(SOAPEnvelope envelope) throws SOAPException {
         return envelope.getHeader();
     }
 
+    /** Returns the body of the given envelope. */
     public SOAPBody getBody(SOAPEnvelope envelope) throws SOAPException {
         return envelope.getBody();
     }
 
+    /** Returns all header elements. */
+    public Iterator examineAllHeaderElements(SOAPHeader header) {
+        return header.examineAllHeaderElements();
+    }
+
+    /** Returns all header elements for which the must understand attribute is true, given the actor or role. */
+    public Iterator examineMustUnderstandHeaderElements(SOAPHeader header, String actorOrRole) {
+        return header.examineMustUnderstandHeaderElements(actorOrRole);
+    }
+
+    public abstract SOAPHeaderElement addHeaderElement(SOAPHeader header, QName name) throws SOAPException;
+
+    /** Returns the SOAP 1.1 actor or SOAP 1.2 role attribute for the given header element. */
     public String getActorOrRole(SOAPHeaderElement headerElement) {
         return headerElement.getActor();
     }
 
+    /** Sets the SOAP 1.1 actor or SOAP 1.2 role attribute for the given header element. */
     public void setActorOrRole(SOAPHeaderElement headerElement, String actorOrRole) {
         headerElement.setActor(actorOrRole);
     }
 
+    /** Gets the must understand attribute for the given header element. */
     public boolean getMustUnderstand(SOAPHeaderElement headerElement) {
         return headerElement.getMustUnderstand();
     }
 
+    /** Sets the must understand attribute for the given header element. */
     public void setMustUnderstand(SOAPHeaderElement headerElement, boolean mustUnderstand) {
         headerElement.setMustUnderstand(mustUnderstand);
     }
 
+    /** Returns <code>true</code> if the body has a fault, <code>false</code> otherwise. */
+    public boolean hasFault(SOAPBody body) {
+        return body.hasFault();
+    }
+
+    /** Returns the fault for the given body, if any. */
+    public SOAPFault getFault(SOAPBody body) {
+        return body.getFault();
+    }
+
+    /** Adds a fault to the given body. */
+    public abstract SOAPFault addFault(SOAPBody body, QName faultCode, String faultString, Locale locale)
+            throws SOAPException;
+
+    /** Returns the fault code for the given fault. */
     public abstract QName getFaultCode(SOAPFault fault);
 
+    /** Returns the actor for the given fault. */
     public String getFaultActor(SOAPFault fault) {
         return fault.getFaultActor();
     }
 
+    /** Sets the actor for the given fault. */
     public void setFaultActor(SOAPFault fault, String actorOrRole) throws SOAPException {
         fault.setFaultActor(actorOrRole);
     }
+
+    /** Returns the fault string for the given fault. */
+    public String getFaultString(SOAPFault fault) {
+        return fault.getFaultString();
+    }
+
+    /** Returns the fault string language for the given fault. */
+    public Locale getFaultStringLocale(SOAPFault fault) {
+        return fault.getFaultStringLocale();
+    }
+
+    /** Returns the fault detail for the given fault. */
+    public Detail getFaultDetail(SOAPFault fault) {
+        return fault.getDetail();
+    }
+
+    /** Adds a fault detail for the given fault. */
+    public Detail addFaultDetail(SOAPFault fault) throws SOAPException {
+        return fault.addDetail();
+    }
+
+    /** Adds a detail entry to the given detail. */
+    public abstract DetailEntry addDetailEntry(Detail detail, QName name) throws SOAPException;
 
     public void addTextNode(DetailEntry detailEntry, String text) throws SOAPException {
         detailEntry.addTextNode(text);
     }
 
+    /** Returns an iteration over all detail entries. */
     public Iterator getDetailEntries(Detail detail) {
         return detail.getDetailEntries();
     }
@@ -139,31 +201,11 @@ abstract class SaajImplementation {
         return null;
     }
 
-    public boolean hasFault(SOAPBody body) {
-        return body.hasFault();
-    }
-
-    public SOAPFault getFault(SOAPBody body) {
-        return body.getFault();
-    }
-
     public abstract boolean isSoap11(SOAPElement element);
 
     public void removeContents(SOAPElement element) {
         element.removeContents();
     }
-
-    public abstract DetailEntry addDetailEntry(Detail detail, QName name) throws SOAPException;
-
-    public Iterator examineAllHeaderElements(SOAPHeader header) {
-        return header.examineAllHeaderElements();
-    }
-
-    public Iterator examineMustUnderstandHeaderElements(SOAPHeader header, String actorOrRole) {
-        return header.examineMustUnderstandHeaderElements(actorOrRole);
-    }
-
-    public abstract SOAPHeaderElement addHeaderElement(SOAPHeader header, QName name) throws SOAPException;
 
     public abstract String getFaultRole(SOAPFault fault);
 
@@ -173,22 +215,6 @@ abstract class SaajImplementation {
 
     public abstract SOAPHeaderElement addUpgradeHeaderElement(SOAPHeader header, String[] supportedSoapUris)
             throws SOAPException;
-
-    public Detail getFaultDetail(SOAPFault fault) {
-        return fault.getDetail();
-    }
-
-    public Detail addFaultDetail(SOAPFault fault) throws SOAPException {
-        return fault.addDetail();
-    }
-
-    public String getFaultString(SOAPFault fault) {
-        return fault.getFaultString();
-    }
-
-    public Locale getFaultStringLocale(SOAPFault fault) {
-        return fault.getFaultStringLocale();
-    }
 
     public abstract Iterator getFaultSubcodes(SOAPFault fault);
 
@@ -201,9 +227,6 @@ abstract class SaajImplementation {
     public abstract String getFaultReasonText(SOAPFault fault, Locale locale) throws SOAPException;
 
     public abstract void setFaultReasonText(SOAPFault fault, Locale locale, String text) throws SOAPException;
-
-    public abstract SOAPFault addFault(SOAPBody body, QName faultCode, String faultString, Locale locale)
-            throws SOAPException;
 
     public void writeTo(SOAPMessage message, OutputStream outputStream) throws SOAPException, IOException {
         if (message.saveRequired()) {

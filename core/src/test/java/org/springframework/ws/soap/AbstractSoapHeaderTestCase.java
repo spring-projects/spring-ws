@@ -89,12 +89,21 @@ public abstract class AbstractSoapHeaderTestCase extends XMLTestCase {
         assertFalse("header element iterator has too many elements", iterator.hasNext());
     }
 
+    public void testGetResult() throws Exception {
+        String content =
+                "<spring:localName xmlns:spring='http://www.springframework.org'><spring:content/></spring:localName>";
+        transformer.transform(new StringSource(content), soapHeader.getResult());
+        Iterator iterator = soapHeader.examineAllHeaderElements();
+        assertTrue("Header has no children", iterator.hasNext());
+        SoapHeaderElement headerElement = (SoapHeaderElement) iterator.next();
+        assertFalse("Header has too many children", iterator.hasNext());
+        assertHeaderElementEqual(headerElement, content);
+    }
+
     protected void assertHeaderElementEqual(SoapHeaderElement headerElement, String expected) throws Exception {
         StringResult result = new StringResult();
         transformer.transform(headerElement.getSource(), result);
-        assertXMLEqual("Invalid contents of header element",
-                "<spring:localName xmlns:spring='http://www.springframework.org'><spring:content/></spring:localName>",
-                result.toString());
+        assertXMLEqual("Invalid contents of header element", expected, result.toString());
     }
 
 }
