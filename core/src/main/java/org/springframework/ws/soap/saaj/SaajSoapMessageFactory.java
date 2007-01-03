@@ -50,60 +50,60 @@ public class SaajSoapMessageFactory implements WebServiceMessageFactory, Initial
 
     private String messageFactoryProtocol;
 
-    /**
-     * Default, empty constructor.
-     */
+    /** Default, empty constructor. */
     public SaajSoapMessageFactory() {
     }
 
-    /**
-     * Constructor that takes a message factory as an argument.
-     */
+    /** Constructor that takes a message factory as an argument. */
     public SaajSoapMessageFactory(MessageFactory messageFactory) {
         this.messageFactory = messageFactory;
     }
 
-    /**
-     * Sets the SAAJ <code>MessageFactory</code>.
-     */
+    /** Sets the SAAJ <code>MessageFactory</code>. */
     public void setMessageFactory(MessageFactory messageFactory) {
         this.messageFactory = messageFactory;
     }
 
-    /**
-     * Returns the SAAJ <code>MessageFactory</code> used.
-     */
+    /** Returns the SAAJ <code>MessageFactory</code> used. */
     public MessageFactory getSaajMessageFactory() {
         return messageFactory;
     }
 
     public void afterPropertiesSet() throws Exception {
-        if (messageFactory != null) {
-            return;
+        if (messageFactory == null) {
+            try {
+                if (SaajUtils.getSaajVersion() >= SaajUtils.SAAJ_13) {
+                    if (!StringUtils.hasLength(messageFactoryProtocol)) {
+                        messageFactoryProtocol = SOAPConstants.DEFAULT_SOAP_PROTOCOL;
+                    }
+                    if (logger.isInfoEnabled()) {
+                        logger.info("Creating SAAJ 1.3 MessageFactory with " + messageFactoryProtocol);
+                    }
+                    messageFactory = MessageFactory.newInstance(messageFactoryProtocol);
+                }
+                else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_12) {
+                    if (logger.isInfoEnabled()) {
+                        logger.info("Creating SAAJ 1.2 MessageFactory");
+                    }
+                    messageFactory = MessageFactory.newInstance();
+                }
+                else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_11) {
+                    if (logger.isInfoEnabled()) {
+                        logger.info("Creating SAAJ 1.1 MessageFactory");
+                    }
+                    messageFactory = MessageFactory.newInstance();
+                }
+                else {
+                    throw new IllegalStateException(
+                            "SaajSoapMessageFactory requires SAAJ 1.2, which was not" + "found on the classpath");
+                }
+            }
+            catch (SOAPException ex) {
+                throw new SoapMessageCreationException("Could not create MessageFactory: " + ex.getMessage(), ex);
+            }
         }
-        try {
-            if (SaajUtils.getSaajVersion() >= SaajUtils.SAAJ_13) {
-                if (!StringUtils.hasLength(messageFactoryProtocol)) {
-                    messageFactoryProtocol = SOAPConstants.DEFAULT_SOAP_PROTOCOL;
-                }
-                if (logger.isInfoEnabled()) {
-                    logger.info("Creating SAAJ 1.3 MessageFactory with " + messageFactoryProtocol);
-                }
-                messageFactory = MessageFactory.newInstance(messageFactoryProtocol);
-            }
-            else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_12) {
-                if (logger.isInfoEnabled()) {
-                    logger.info("Creating SAAJ 1.2 MessageFactory");
-                }
-                messageFactory = MessageFactory.newInstance();
-            }
-            else {
-                throw new IllegalStateException(
-                        "SaajSoapMessageFactory requires SAAJ 1.2, which was not" + "found on the classpath");
-            }
-        }
-        catch (SOAPException ex) {
-            throw new SoapMessageCreationException("Could not create MessageFactory: " + ex.getMessage(), ex);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Using MessageFactory class [" + messageFactory.getClass().getName() + "]");
         }
     }
 

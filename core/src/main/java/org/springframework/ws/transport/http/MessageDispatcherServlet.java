@@ -136,6 +136,9 @@ public class MessageDispatcherServlet extends FrameworkServlet {
         }
     }
 
+    public MessageDispatcherServlet() {
+    }
+
     /** Returns the <code>MessageDispatcher</code> used by this servlet. */
     protected MessageDispatcher getMessageDispatcher() {
         return messageDispatcher;

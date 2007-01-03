@@ -16,8 +16,10 @@
 
 package org.springframework.ws.soap.saaj;
 
+import java.util.Iterator;
 import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPConstants;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -32,13 +34,13 @@ public class SaajSoap11MessageTest extends AbstractSoap11MessageTestCase {
     private SOAPMessage saajMessage;
 
     protected final SoapMessage createSoapMessage() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+        MessageFactory messageFactory = MessageFactory.newInstance();
         saajMessage = messageFactory.createMessage();
         return new SaajSoapMessage(saajMessage);
     }
 
     public void testGetPayloadSource() throws Exception {
-        saajMessage.getSOAPBody().addChildElement("child");
+        saajMessage.getSOAPPart().getEnvelope().getBody().addChildElement("child");
         Source source = soapMessage.getPayloadSource();
         StringResult result = new StringResult();
         transformer.transform(source, result);
@@ -46,8 +48,9 @@ public class SaajSoap11MessageTest extends AbstractSoap11MessageTestCase {
     }
 
     public void testGetPayloadSourceText() throws Exception {
-        saajMessage.getSOAPBody().addTextNode(" ");
-        saajMessage.getSOAPBody().addChildElement("child");
+        SOAPBody body = saajMessage.getSOAPPart().getEnvelope().getBody();
+        body.addTextNode(" ");
+        body.addChildElement("child");
         Source source = soapMessage.getPayloadSource();
         StringResult result = new StringResult();
         transformer.transform(source, result);
@@ -58,8 +61,11 @@ public class SaajSoap11MessageTest extends AbstractSoap11MessageTestCase {
         StringSource source = new StringSource("<child/>");
         Result result = soapMessage.getPayloadResult();
         transformer.transform(source, result);
-        assertTrue("No child nodes created", saajMessage.getSOAPBody().hasChildNodes());
-        assertEquals("Invalid child node created", "child", saajMessage.getSOAPBody().getFirstChild().getLocalName());
+        SOAPBody body = saajMessage.getSOAPPart().getEnvelope().getBody();
+        Iterator iterator = body.getChildElements();
+        assertTrue("No child nodes created", iterator.hasNext());
+        SOAPBodyElement bodyElement = (SOAPBodyElement) iterator.next();
+        assertEquals("Invalid child node created", "child", bodyElement.getElementName().getLocalName());
     }
 
 }

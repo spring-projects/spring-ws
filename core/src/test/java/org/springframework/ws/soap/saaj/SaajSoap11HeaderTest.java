@@ -17,7 +17,6 @@
 package org.springframework.ws.soap.saaj;
 
 import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPMessage;
 
 import org.springframework.ws.soap.SoapHeader;
@@ -26,8 +25,8 @@ import org.springframework.ws.soap.soap11.AbstractSoap11HeaderTestCase;
 public class SaajSoap11HeaderTest extends AbstractSoap11HeaderTestCase {
 
     protected SoapHeader createSoapHeader() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+        MessageFactory messageFactory = MessageFactory.newInstance();
         SOAPMessage saajMessage = messageFactory.createMessage();
-        return new SaajSoapHeader(saajMessage.getSOAPHeader());
+        return new SaajSoapHeader(saajMessage.getSOAPPart().getEnvelope().getHeader());
     }
 }

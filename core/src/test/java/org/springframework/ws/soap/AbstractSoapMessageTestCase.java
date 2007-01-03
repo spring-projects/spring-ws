@@ -51,7 +51,7 @@ public abstract class AbstractSoapMessageTestCase extends AbstractWebServiceMess
         assertNotNull("Attachment iterator is null", iterator);
         assertTrue("Attachment iterator has no elements", iterator.hasNext());
         Attachment attachment = (Attachment) iterator.next();
-        assertEquals("Invalid conent-id", contentType, attachment.getContentType());
+        assertEquals("Invalid content-id", contentType, attachment.getContentType());
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         FileCopyUtils.copy(attachment.getInputStream(), os);
         String result = new String(os.toByteArray(), "UTF-8");
