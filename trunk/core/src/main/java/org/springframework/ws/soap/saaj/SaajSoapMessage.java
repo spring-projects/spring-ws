@@ -35,6 +35,7 @@ import org.springframework.ws.soap.AbstractSoapMessage;
 import org.springframework.ws.soap.Attachment;
 import org.springframework.ws.soap.AttachmentException;
 import org.springframework.ws.soap.SoapEnvelope;
+import org.springframework.ws.soap.saaj.support.SaajUtils;
 
 /**
  * SAAJ-specific implementation of the <code>SoapMessage</code> interface. Accessed via the
@@ -59,16 +60,12 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         saajMessage = soapMessage;
     }
 
-    /**
-     * Return the SAAJ <code>SOAPMessage</code> that this <code>SaajSoapMessage</code> is based on.
-     */
+    /** Return the SAAJ <code>SOAPMessage</code> that this <code>SaajSoapMessage</code> is based on. */
     public SOAPMessage getSaajMessage() {
         return saajMessage;
     }
 
-    /**
-     * Sets the SAAJ <code>SOAPMessage</code> that this <code>SaajSoapMessage</code> is based on.
-     */
+    /** Sets the SAAJ <code>SOAPMessage</code> that this <code>SaajSoapMessage</code> is based on. */
     public void setSaajMessage(SOAPMessage soapMessage) {
         Assert.notNull(soapMessage, "soapMessage must not be null");
         saajMessage = soapMessage;
@@ -133,7 +130,18 @@ public class SaajSoapMessage extends AbstractSoapMessage {
     }
 
     protected SaajImplementation getImplementation() {
-        return SaajImplementation.getImplementation();
+        if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_13) {
+            return Saaj13Implementation.getInstance();
+        }
+        else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_12) {
+            return Saaj12Implementation.getInstance();
+        }
+        else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_11) {
+            return Saaj11Implementation.getInstance();
+        }
+        else {
+            throw new IllegalStateException("Could not find SAAJ on the classpath");
+        }
     }
 
     private static class SaajAttachmentIterator implements Iterator {

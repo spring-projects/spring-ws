@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2007 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,18 @@
 
 package org.springframework.ws.soap.saaj;
 
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPMessage;
+public class Saaj11ImplementationTest extends AbstractSaajImplementationTestCase {
 
-import org.springframework.ws.soap.SoapBody;
-import org.springframework.ws.soap.soap11.AbstractSoap11BodyTestCase;
-
-public class SaajSoap11BodyTest extends AbstractSoap11BodyTestCase {
-
-    protected SoapBody createSoapBody() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance();
-        SOAPMessage saajMessage = messageFactory.createMessage();
-        return new SaajSoap11Body(saajMessage.getSOAPPart().getEnvelope().getBody());
+    protected SaajImplementation createSaajImplementation() {
+        return Saaj11Implementation.getInstance();
     }
 
+    public void testGetFaultCode() throws Exception {
+    }
+
+    public void testGetFaultStringLocale() throws Exception {
+    }
+
+    public void testAddFault() throws Exception {
+    }
 }

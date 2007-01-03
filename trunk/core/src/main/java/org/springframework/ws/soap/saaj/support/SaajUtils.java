@@ -126,7 +126,7 @@ public abstract class SaajUtils {
                     return envelope.createName(qName.getLocalPart(), prefix, qName.getNamespaceURI());
                 }
             }
-            throw new IllegalArgumentException("Could not resolve namespace of QName [" + qName + "]");
+            return envelope.createName(qName.getLocalPart(), "", qName.getNamespaceURI());
         }
         else {
             return envelope.createName(qName.getLocalPart());

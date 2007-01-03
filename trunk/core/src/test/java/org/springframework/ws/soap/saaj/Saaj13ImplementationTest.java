@@ -19,7 +19,7 @@ package org.springframework.ws.soap.saaj;
 public class Saaj13ImplementationTest extends AbstractSaajImplementationTestCase {
 
     protected SaajImplementation createSaajImplementation() {
-        return Saaj13Implementation.getImplementation();
+        return Saaj13Implementation.getInstance();
     }
 
 }

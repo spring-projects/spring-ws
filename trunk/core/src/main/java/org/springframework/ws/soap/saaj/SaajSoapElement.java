@@ -22,6 +22,7 @@ import javax.xml.transform.Source;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapElement;
+import org.springframework.ws.soap.saaj.support.SaajUtils;
 
 /**
  * SAAJ-specific implementation of the <code>SoapElement</code> interface. Wraps a {@link javax.xml.soap.SOAPElement}.
@@ -50,6 +51,17 @@ class SaajSoapElement implements SoapElement {
     }
 
     protected SaajImplementation getImplementation() {
-        return SaajImplementation.getImplementation();
+        if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_13) {
+            return Saaj13Implementation.getInstance();
+        }
+        else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_12) {
+            return Saaj12Implementation.getInstance();
+        }
+        else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_11) {
+            return Saaj11Implementation.getInstance();
+        }
+        else {
+            throw new IllegalStateException("Could not find SAAJ on the classpath");
+        }
     }
 }

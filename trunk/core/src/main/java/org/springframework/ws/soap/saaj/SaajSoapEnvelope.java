@@ -24,6 +24,7 @@ import javax.xml.soap.SOAPHeader;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.SoapHeader;
+import org.springframework.ws.soap.SoapVersion;
 
 /**
  * SAAJ-specific implementation of the <code>SoapEnvelope</code> interface. Wraps a {@link
@@ -45,7 +46,8 @@ class SaajSoapEnvelope extends SaajSoapElement implements SoapEnvelope {
         if (body == null) {
             try {
                 SOAPBody saajBody = getImplementation().getBody(getSaajEnvelope());
-                if (getImplementation().isSoap11(saajBody)) {
+                if (getImplementation().getName(saajBody).getNamespaceURI()
+                        .equals(SoapVersion.SOAP_11.getEnvelopeNamespaceUri())) {
                     body = new SaajSoap11Body(saajBody);
                 }
                 else {
@@ -64,7 +66,8 @@ class SaajSoapEnvelope extends SaajSoapElement implements SoapEnvelope {
             try {
                 SOAPHeader saajHeader = getImplementation().getHeader(getSaajEnvelope());
                 if (saajHeader != null) {
-                    if (getImplementation().isSoap11(saajHeader)) {
+                    if (getImplementation().getName(saajHeader).getNamespaceURI()
+                            .equals(SoapVersion.SOAP_11.getEnvelopeNamespaceUri())) {
                         header = new SaajSoapHeader(saajHeader);
                     }
                     else {

@@ -16,25 +16,43 @@
 
 package org.springframework.ws.soap.saaj;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.Locale;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
 import javax.xml.namespace.QName;
+import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.Detail;
 import javax.xml.soap.DetailEntry;
+import javax.xml.soap.MimeHeader;
+import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
+import javax.xml.soap.SOAPMessage;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
+
+import org.springframework.util.ObjectUtils;
+import org.springframework.ws.soap.SoapVersion;
+import org.springframework.ws.transport.TransportOutputStream;
 
 /**
  * SAAJ 1.3 specific implementation of the <code>SaajImplementation</code> interface.
  *
  * @author Arjen Poutsma
  */
-class Saaj13Implementation extends SaajImplementation {
+public class Saaj13Implementation implements SaajImplementation {
 
     private static final Saaj13Implementation INSTANCE = new Saaj13Implementation();
 
@@ -113,5 +131,147 @@ class Saaj13Implementation extends SaajImplementation {
         else {
             return body.addFault(faultCode, faultString, locale);
         }
+    }
+
+    public Source getSource(SOAPElement element) {
+        return new DOMSource(element);
+    }
+
+    public Result getResult(SOAPElement element) {
+        return new DOMResult(element);
+    }
+
+    public SOAPEnvelope getEnvelope(SOAPMessage message) throws SOAPException {
+        return message.getSOAPPart().getEnvelope();
+    }
+
+    public SOAPHeader getHeader(SOAPEnvelope envelope) throws SOAPException {
+        return envelope.getHeader();
+    }
+
+    public SOAPBody getBody(SOAPEnvelope envelope) throws SOAPException {
+        return envelope.getBody();
+    }
+
+    public Iterator examineAllHeaderElements(SOAPHeader header) {
+        return header.examineAllHeaderElements();
+    }
+
+    public Iterator examineMustUnderstandHeaderElements(SOAPHeader header, String actorOrRole) {
+        return header.examineMustUnderstandHeaderElements(actorOrRole);
+    }
+
+    public String getActorOrRole(SOAPHeaderElement headerElement) {
+        return headerElement.getActor();
+    }
+
+    public void setActorOrRole(SOAPHeaderElement headerElement, String actorOrRole) {
+        headerElement.setActor(actorOrRole);
+    }
+
+    public boolean getMustUnderstand(SOAPHeaderElement headerElement) {
+        return headerElement.getMustUnderstand();
+    }
+
+    public void setMustUnderstand(SOAPHeaderElement headerElement, boolean mustUnderstand) {
+        headerElement.setMustUnderstand(mustUnderstand);
+    }
+
+    public boolean hasFault(SOAPBody body) {
+        return body.hasFault();
+    }
+
+    public SOAPFault getFault(SOAPBody body) {
+        return body.getFault();
+    }
+
+    public String getFaultActor(SOAPFault fault) {
+        return fault.getFaultActor();
+    }
+
+    public void setFaultActor(SOAPFault fault, String actorOrRole) throws SOAPException {
+        fault.setFaultActor(actorOrRole);
+    }
+
+    public String getFaultString(SOAPFault fault) {
+        return fault.getFaultString();
+    }
+
+    public Locale getFaultStringLocale(SOAPFault fault) {
+        return fault.getFaultStringLocale();
+    }
+
+    public Detail getFaultDetail(SOAPFault fault) {
+        return fault.getDetail();
+    }
+
+    public Detail addFaultDetail(SOAPFault fault) throws SOAPException {
+        return fault.addDetail();
+    }
+
+    public void addTextNode(DetailEntry detailEntry, String text) throws SOAPException {
+        detailEntry.addTextNode(text);
+    }
+
+    public Iterator getDetailEntries(Detail detail) {
+        return detail.getDetailEntries();
+    }
+
+    public SOAPBodyElement getFirstBodyElement(SOAPBody body) {
+        for (Iterator iterator = body.getChildElements(); iterator.hasNext();) {
+            Object child = iterator.next();
+            if (child instanceof SOAPBodyElement) {
+                return (SOAPBodyElement) child;
+            }
+        }
+        return null;
+    }
+
+    public void removeContents(SOAPElement element) {
+        element.removeContents();
+    }
+
+    public void writeTo(SOAPMessage message, OutputStream outputStream) throws SOAPException, IOException {
+        if (message.saveRequired()) {
+            message.saveChanges();
+        }
+        if (outputStream instanceof TransportOutputStream) {
+            TransportOutputStream transportOutputStream = (TransportOutputStream) outputStream;
+            // some SAAJ implementations (Axis 1) do not have a Content-Type header by default
+            MimeHeaders headers = message.getMimeHeaders();
+            if (ObjectUtils.isEmpty(headers.getHeader("Content-Type"))) {
+                SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
+                if (envelope.getElementQName().getNamespaceURI()
+                        .equals(SoapVersion.SOAP_11.getEnvelopeNamespaceUri())) {
+                    headers.addHeader("Content-Type", SoapVersion.SOAP_11.getContentType());
+                }
+                else {
+                    headers.addHeader("Content-Type", SoapVersion.SOAP_12.getContentType());
+                }
+                if (message.saveRequired()) {
+                    message.saveChanges();
+                }
+            }
+            for (Iterator iterator = headers.getAllHeaders(); iterator.hasNext();) {
+                MimeHeader mimeHeader = (MimeHeader) iterator.next();
+                transportOutputStream.addHeader(mimeHeader.getName(), mimeHeader.getValue());
+            }
+        }
+        message.writeTo(outputStream);
+
+    }
+
+    public Iterator getAttachments(SOAPMessage message) {
+        return message.getAttachments();
+    }
+
+    public Iterator getAttachment(SOAPMessage message, MimeHeaders mimeHeaders) {
+        return message.getAttachments(mimeHeaders);
+    }
+
+    public AttachmentPart addAttachmentPart(SOAPMessage message, DataSource dataSource) {
+        AttachmentPart attachmentPart = message.createAttachmentPart(new DataHandler(dataSource));
+        message.addAttachmentPart(attachmentPart);
+        return attachmentPart;
     }
 }
