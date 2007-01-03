@@ -24,7 +24,8 @@ import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.XMLReader;
 
 /**
- * Abstract base class for SAX <code>XMLReader</code> implementations.
+ * Abstract base class for SAX <code>XMLReader</code> implementations. Contains properties as defined in {@link
+ * XMLReader}, and does not recognize any features
  *
  * @author Arjen Poutsma
  * @see #setContentHandler(org.xml.sax.ContentHandler)
@@ -36,11 +37,11 @@ public abstract class AbstractXmlReader implements XMLReader {
 
     private DTDHandler dtdHandler;
 
-    protected ContentHandler contentHandler;
+    private ContentHandler contentHandler;
 
     private EntityResolver entityResolver;
 
-    protected ErrorHandler errorHandler;
+    private ErrorHandler errorHandler;
 
     public ContentHandler getContentHandler() {
         return contentHandler;

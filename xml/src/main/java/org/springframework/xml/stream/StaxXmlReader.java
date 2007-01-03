@@ -68,8 +68,8 @@ public abstract class StaxXmlReader extends AbstractXmlReader {
         catch (XMLStreamException ex) {
             SAXParseException saxException = new SAXParseException(ex.getMessage(), null, null,
                     ex.getLocation().getLineNumber(), ex.getLocation().getColumnNumber(), ex);
-            if (errorHandler != null) {
-                errorHandler.fatalError(saxException);
+            if (getErrorHandler() != null) {
+                getErrorHandler().fatalError(saxException);
             }
             else {
                 throw saxException;
@@ -84,14 +84,12 @@ public abstract class StaxXmlReader extends AbstractXmlReader {
      * @see ContentHandler#setDocumentLocator(org.xml.sax.Locator)
      */
     protected void setLocator(Location location) {
-        if (contentHandler != null) {
-            contentHandler.setDocumentLocator(new StaxLocator(location));
+        if (getContentHandler() != null) {
+            getContentHandler().setDocumentLocator(new StaxLocator(location));
         }
     }
 
-    /**
-     * Template-method that parses the StAX reader passed at construction-time.
-     */
+    /** Template-method that parses the StAX reader passed at construction-time. */
     protected abstract void parseInternal() throws SAXException, XMLStreamException;
 
     /**
