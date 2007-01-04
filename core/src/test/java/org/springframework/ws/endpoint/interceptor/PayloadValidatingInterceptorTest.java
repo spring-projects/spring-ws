@@ -16,6 +16,7 @@
 
 package org.springframework.ws.endpoint.interceptor;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Locale;
 import javax.xml.XMLConstants;
@@ -26,7 +27,9 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
-import junit.framework.TestCase;
+import org.apache.axiom.soap.SOAPFactory;
+import org.apache.axiom.soap.impl.llom.soap11.SOAP11Factory;
+import org.custommonkey.xmlunit.XMLTestCase;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.ws.MockWebServiceMessage;
@@ -35,13 +38,16 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
+import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 import org.springframework.ws.soap.soap12.Soap12Fault;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.LocatorImpl;
 
-public class PayloadValidatingInterceptorTest extends TestCase {
+public class PayloadValidatingInterceptorTest extends XMLTestCase {
 
     private PayloadValidatingInterceptor interceptor;
 
@@ -248,4 +254,25 @@ public class PayloadValidatingInterceptorTest extends TestCase {
         boolean result = interceptor.handleResponse(context, null);
         assertTrue("Invalid response from interceptor", result);
     }
+
+    public void testCreateRequestValidationFaultAxiom() throws Exception {
+        SOAPFactory soapFactory = new SOAP11Factory();
+        AxiomSoapMessage message = new AxiomSoapMessage(soapFactory);
+        LocatorImpl locator = new LocatorImpl();
+        locator.setLineNumber(0);
+        locator.setColumnNumber(0);
+        SAXParseException[] exceptions = new SAXParseException[]{new SAXParseException("Message 1", locator),
+                new SAXParseException("Message 2", locator),};
+        interceptor.createRequestValidationFault(message, exceptions);
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        message.writeTo(os);
+        assertXMLEqual("<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
+                "<soapenv:Header />" + "<soapenv:Body>" + "<soapenv:Fault>" + "<faultcode>soapenv:Client</faultcode>" +
+                "<faultstring>Validation error</faultstring>" + "<detail>" +
+                "<spring-ws:ValidationError xmlns:spring-ws=\"http://springframework.org/spring-ws\">Message 1</spring-ws:ValidationError>" +
+                "<spring-ws:ValidationError xmlns:spring-ws=\"http://springframework.org/spring-ws\">Message 2</spring-ws:ValidationError>" +
+                "</detail>" + "</soapenv:Fault>" + "</soapenv:Body>" + "</soapenv:Envelope>", os.toString());
+
+    }
+
 }

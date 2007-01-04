@@ -45,7 +45,7 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
         assertEquals("Invalid fault code", new QName("http://schemas.xmlsoap.org/soap/envelope/", "MustUnderstand"),
                 fault.getFaultCode());
         assertPayloadEqual("<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'>" +
-                "<faultcode>SOAP-ENV:MustUnderstand</faultcode>" +
+                "<faultcode>" + soapBody.getName().getPrefix() + ":MustUnderstand</faultcode>" +
                 "<faultstring>SOAP Must Understand Error</faultstring></SOAP-ENV:Fault>");
     }
 
@@ -54,8 +54,8 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
         assertEquals("Invalid fault code", new QName("http://schemas.xmlsoap.org/soap/envelope/", "Client"),
                 fault.getFaultCode());
         assertPayloadEqual("<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'>" +
-                "<faultcode>SOAP-ENV:Client</faultcode>" + "<faultstring>faultString</faultstring>" +
-                "</SOAP-ENV:Fault>");
+                "<faultcode>" + soapBody.getName().getPrefix() + ":Client</faultcode>" +
+                "<faultstring>faultString</faultstring>" + "</SOAP-ENV:Fault>");
     }
 
     public void testAddServerFault() throws Exception {
@@ -63,18 +63,18 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
         assertEquals("Invalid fault code", new QName("http://schemas.xmlsoap.org/soap/envelope/", "Server"),
                 fault.getFaultCode());
         assertPayloadEqual("<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'>" +
-                "<faultcode>SOAP-ENV:Server</faultcode>" + "<faultstring>faultString</faultstring>" +
-                "</SOAP-ENV:Fault>");
+                "<faultcode>" + soapBody.getName().getPrefix() + ":Server</faultcode>" +
+                "<faultstring>faultString</faultstring>" + "</SOAP-ENV:Fault>");
     }
 
     public void testAddFault() throws Exception {
         QName faultCode = new QName("http://www.springframework.org", "fault", "spring");
-        Soap11Fault fault = ((Soap11Body) soapBody).addFault(faultCode, "faultString", Locale.ENGLISH);
+        String faultString = "faultString";
+        Soap11Fault fault = ((Soap11Body) soapBody).addFault(faultCode, faultString, Locale.ENGLISH);
         assertNotNull("Null returned", fault);
         assertTrue("SoapBody has no fault", soapBody.hasFault());
         assertNotNull("SoapBody has no fault", soapBody.getFault());
         assertEquals("Invalid fault code", faultCode, fault.getFaultCode());
-        String faultString = "faultString";
         assertEquals("Invalid fault string", faultString, fault.getFaultString());
         assertEquals("Invalid fault string locale", Locale.ENGLISH, fault.getFaultStringLocale());
         String actor = "http://www.springframework.org/actor";
@@ -87,18 +87,25 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
     }
 
     public void testAddFaultWithDetail() throws Exception {
-        SoapFault fault = ((Soap11Body) soapBody)
-                .addFault(new QName("namespace", "localPart", "prefix"), "Fault", null);
+        QName faultCode = new QName("http://www.springframework.org", "fault", "spring");
+        String faultString = "faultString";
+        SoapFault fault = ((Soap11Body) soapBody).addFault(faultCode, faultString, null);
         SoapFaultDetail detail = fault.addFaultDetail();
-        SoapFaultDetailElement detailElement =
-                detail.addFaultDetailElement(new QName("namespace", "localPart", "prefix"));
+        QName detailName = new QName("http://www.springframework.org", "detailEntry", "spring");
+        SoapFaultDetailElement detailElement1 = detail.addFaultDetailElement(detailName);
         StringSource detailContents = new StringSource("<detailContents xmlns='namespace'/>");
-        transformer.transform(detailContents, detailElement.getResult());
-        assertPayloadEqual("<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'>" +
-                "<faultcode xmlns:prefix='namespace'>prefix:localPart</faultcode>" +
-                "<faultstring>Fault</faultstring>" +
-                "<detail><prefix:localPart xmlns:prefix='namespace'><detailContents xmlns='namespace'/>" +
-                "</prefix:localPart></detail></SOAP-ENV:Fault>");
+        transformer.transform(detailContents, detailElement1.getResult());
+        SoapFaultDetailElement detailElement2 = detail.addFaultDetailElement(detailName);
+        detailContents = new StringSource("<detailContents xmlns='namespace'/>");
+        transformer.transform(detailContents, detailElement2.getResult());
+        assertPayloadEqual(
+                "<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/' xmlns:spring='http://www.springframework.org'>" +
+                        "<faultcode>spring:fault</faultcode>" + "<faultstring>" + faultString + "</faultstring>" +
+                        "<detail>" +
+                        "<spring:detailEntry xmlns:spring='http://www.springframework.org'><detailContents xmlns='namespace'/></spring:detailEntry>" +
+                        "<spring:detailEntry xmlns:spring='http://www.springframework.org'><detailContents xmlns='namespace'/></spring:detailEntry>" +
+                        "</detail>" + "</SOAP-ENV:Fault>");
+
     }
 
     public void testAddFaultWithDetailResult() throws Exception {
