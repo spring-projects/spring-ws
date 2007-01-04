@@ -94,7 +94,7 @@ public class SaajXmlReader extends AbstractXmlReader {
     }
 
     private void handleText(Text text) throws SAXException {
-        if (!text.isComment() && getContentHandler() != null) {
+        if (getContentHandler() != null) {
             char[] ch = text.getValue().toCharArray();
             getContentHandler().characters(ch, 0, ch.length);
         }

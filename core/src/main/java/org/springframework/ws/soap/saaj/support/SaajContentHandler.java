@@ -25,6 +25,7 @@ import javax.xml.soap.SOAPException;
 
 import org.springframework.core.CollectionFactory;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -78,10 +79,12 @@ public class SaajContentHandler implements ContentHandler {
             String childPrefix = getPrefix(qName);
             SOAPElement child = element.addChildElement(localName, childPrefix, uri);
             for (int i = 0; i < atts.getLength(); i++) {
-                String attributePrefix = getPrefix(atts.getQName(i));
-                if (!"xmlns".equals(atts.getLocalName(i))) {
-                    Name attributeName = envelope.createName(atts.getLocalName(i), attributePrefix, atts.getURI(i));
-                    child.addAttribute(attributeName, atts.getValue(i));
+                if (StringUtils.hasLength(atts.getLocalName(i))) {
+                    String attributePrefix = getPrefix(atts.getQName(i));
+                    if (!"xmlns".equals(atts.getLocalName(i))) {
+                        Name attributeName = envelope.createName(atts.getLocalName(i), attributePrefix, atts.getURI(i));
+                        child.addAttribute(attributeName, atts.getValue(i));
+                    }
                 }
             }
             for (Iterator iterator = namespaces.keySet().iterator(); iterator.hasNext();) {
