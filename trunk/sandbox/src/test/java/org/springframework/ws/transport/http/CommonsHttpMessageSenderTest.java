@@ -22,7 +22,6 @@ import javax.xml.soap.SOAPMessage;
 
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 
 public class CommonsHttpMessageSenderTest extends AbstractHttpWebServiceMessageSenderTestCase {
@@ -40,11 +39,8 @@ public class CommonsHttpMessageSenderTest extends AbstractHttpWebServiceMessageS
     public void testSend() throws Exception {
         SOAPMessage message = messageFactory.createMessage();
         message.getMimeHeaders().addHeader(HEADER_NAME, HEADER_VALUE);
-        SaajSoapMessage request = new SaajSoapMessage(message);
-        MessageContext context = new DefaultMessageContext(request, new SaajSoapMessageFactory(messageFactory));
-//        AxiomSoapMessageFactory soapMessageFactory = new AxiomSoapMessageFactory();
-//        MessageContext context = new DefaultMessageContext(soapMessageFactory);
-        sender.send(context);
+        MessageContext context = new DefaultMessageContext(new SaajSoapMessageFactory(messageFactory));
+        sender.sendAndReceive(context);
         assertTrue("No response", context.hasResponse());
 
         context.getResponse().writeTo(System.out);

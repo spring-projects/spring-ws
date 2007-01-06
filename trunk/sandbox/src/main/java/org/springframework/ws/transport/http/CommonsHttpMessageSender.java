@@ -25,11 +25,11 @@ import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.transport.MessageSender;
 import org.springframework.ws.transport.TransportInputStream;
+import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
- * <code>MessageSender</code> implementation that uses <a href="http://jakarta.apache.org/commons/httpclient">Jakarta
+ * <code>WebServiceMessageSender</code> implementation that uses <a href="http://jakarta.apache.org/commons/httpclient">Jakarta
  * Commons HttpClient</a> to execute POST requests.
  * <p/>
  * Allows to use a preconfigured HttpClient instance, potentially with authentication, HTTP connection pooling, etc.
@@ -38,7 +38,7 @@ import org.springframework.ws.transport.TransportInputStream;
  * @author Arjen Poutsma
  * @see org.springframework.ws.transport.http.HttpUrlConnectionMessageSender
  */
-public class CommonsHttpMessageSender implements MessageSender {
+public class CommonsHttpMessageSender implements WebServiceMessageSender {
 
     private HttpClient httpClient;
 
@@ -69,7 +69,7 @@ public class CommonsHttpMessageSender implements MessageSender {
         this.httpClient = httpClient;
     }
 
-    public void send(MessageContext messageContext) throws IOException {
+    public void sendAndReceive(MessageContext messageContext) throws IOException {
         PostMethod postMethod = createPostMethod();
         try {
             writeRequestMessage(postMethod, messageContext.getRequest());
