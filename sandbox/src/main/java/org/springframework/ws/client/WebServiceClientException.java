@@ -16,14 +16,18 @@
 
 package org.springframework.ws.client;
 
-import java.io.IOException;
-
-import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.WebServiceException;
 
 /**
  * @author Arjen Poutsma
  */
-public interface WebServiceMessageCallback {
+public class WebServiceClientException extends WebServiceException {
 
-    void doInMessage(WebServiceMessage message) throws IOException;
+    public WebServiceClientException(String msg) {
+        super(msg);
+    }
+
+    public WebServiceClientException(String msg, Throwable ex) {
+        super(msg, ex);
+    }
 }

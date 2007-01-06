@@ -94,7 +94,7 @@ public class MessageEndpointMessageListenerTest extends TestCase {
         request.reset();
         sessionControl.expectAndReturn(sessionMock.createBytesMessage(), response);
         sessionControl.expectAndReturn(sessionMock.createProducer(replyTo), producerMock);
-        producerMock.send(response);
+        producerMock.sendAndReceive(response);
         sessionControl.replay();
         producerControl.replay();
 

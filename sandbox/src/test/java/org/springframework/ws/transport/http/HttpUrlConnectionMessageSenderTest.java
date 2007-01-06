@@ -44,7 +44,7 @@ public class HttpUrlConnectionMessageSenderTest extends AbstractHttpWebServiceMe
         MessageContext context = new DefaultMessageContext(request, new SaajSoapMessageFactory(messageFactory));
 //        AxiomSoapMessageFactory soapMessageFactory = new AxiomSoapMessageFactory();
 //        MessageContext context = new DefaultMessageContext(soapMessageFactory);
-        sender.send(context);
+        sender.sendAndReceive(context);
         assertTrue("No response", context.hasResponse());
 
         context.getResponse().writeTo(System.out);

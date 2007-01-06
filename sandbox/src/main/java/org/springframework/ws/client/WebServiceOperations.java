@@ -16,7 +16,11 @@
 
 package org.springframework.ws.client;
 
+import java.io.IOException;
+import javax.xml.transform.Result;
 import javax.xml.transform.Source;
+
+import org.springframework.ws.WebServiceMessage;
 
 /**
  * @author Arjen Poutsma
@@ -27,19 +31,21 @@ public interface WebServiceOperations {
      * Sends a web service message that contains the given payload. Returns the payload of the response message, if
      * any.
      *
-     * @param payload the payload of the message.
+     * @param requestPayload the payload of the request message
      * @return the payload of the response message, or <code>null</code> if no response is given
      */
-    Source send(Source payload);
+    Source sendAndReceive(Source requestPayload) throws IOException;
 
     /**
      * Sends a web service message that contains the given payload, marshalled by the configured
      * <code>Marshaller</code>. Returns the unmarshalled payload of the response message, if any.
      *
-     * @param payload the object to marshal into a message payload
+     * @param requestPayload the object to marshal into the request message payload
      * @return the unmarshalled payload of the response message, or <code>null</code> if no response is given
      */
-    Object marshalAndSend(Object payload);
+    Object marshalAndSend(Object requestPayload) throws IOException;
 
-    Object send(WebServiceMessageCallback callback, WebServiceMessageExtractor extractor);
+    WebServiceMessage sendAndReceive(WebServiceMessageCallback callback) throws IOException;
+
+    void sendAndReceive(Source requestPayload, Result result) throws IOException;
 }

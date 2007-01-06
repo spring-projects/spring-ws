@@ -7,13 +7,14 @@ import org.springframework.ws.context.MessageContext;
 /**
  * @author Arjen Poutsma
  */
-public interface MessageSender {
+public interface WebServiceMessageSender {
 
     /**
      * Sends the given message context. The response message, if any, is stored in the context.
      *
      * @param messageContext the message to be sent
+     * @throws IOException in case of I/O errors
      */
-    void send(MessageContext messageContext) throws IOException;
+    void sendAndReceive(MessageContext messageContext) throws IOException;
 
 }

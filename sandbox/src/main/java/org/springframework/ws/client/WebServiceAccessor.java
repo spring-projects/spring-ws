@@ -19,19 +19,25 @@ package org.springframework.ws.client;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessageFactory;
+import org.springframework.ws.context.DefaultMessageContext;
+import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.endpoint.TransformerObjectSupport;
-import org.springframework.ws.transport.MessageSender;
+import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
- * Base class for <code>WebServiceTemplate</code> and other WS-accessing helpers.
+ * Base class for <code>WebServiceTemplate</code> and other WS-accessing helpers. Defines common properties like the
+ * {@link org.springframework.ws.WebServiceMessageFactory} and {@link org.springframework.ws.transport.WebServiceMessageSender}.
+ * <p/>
+ * Not intended to be used directly. See {@link org.springframework.ws.client.WebServiceTemplate}.
  *
  * @author Arjen Poutsma
+ * @see org.springframework.ws.client.WebServiceTemplate
  */
 public abstract class WebServiceAccessor extends TransformerObjectSupport implements InitializingBean {
 
     private WebServiceMessageFactory messageFactory;
 
-    private MessageSender messageSender;
+    private WebServiceMessageSender messageSender;
 
     /**
      * Returns the message factory used for creating messages.
@@ -50,15 +56,25 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
     /**
      * Returns the message sender.
      */
-    public MessageSender getMessageSender() {
+    public WebServiceMessageSender getMessageSender() {
         return messageSender;
     }
 
     /**
      * Sets the message sender.
      */
-    public void setMessageSender(MessageSender messageSender) {
+    public void setMessageSender(WebServiceMessageSender messageSender) {
         this.messageSender = messageSender;
+    }
+
+    /**
+     * Returns a <code>MessageContext</code> with an empty message, and the defined
+     * <code>WebServiceMessageFactory</code>.
+     *
+     * @return the created message context
+     */
+    protected MessageContext createMessageContext() {
+        return new DefaultMessageContext(getMessageFactory());
     }
 
     public void afterPropertiesSet() throws Exception {
