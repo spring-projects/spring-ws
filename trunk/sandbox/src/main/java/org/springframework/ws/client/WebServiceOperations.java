@@ -24,6 +24,7 @@ import org.springframework.ws.WebServiceMessage;
 
 /**
  * @author Arjen Poutsma
+ * @see org.springframework.ws.client.WebServiceTemplate
  */
 public interface WebServiceOperations {
 
@@ -37,15 +38,30 @@ public interface WebServiceOperations {
     Source sendAndReceive(Source requestPayload) throws IOException;
 
     /**
-     * Sends a web service message that contains the given payload, marshalled by the configured
-     * <code>Marshaller</code>. Returns the unmarshalled payload of the response message, if any.
+     * Sends a web service message that contains the given payload. Writes the response, if any, to the given {@link
+     * Result}.
+     *
+     * @param requestPayload the payload of the request message
+     * @param responseResult the result to write the response payload to
+     * @return <code>true</code> if a response was received; <code>false</code> otherwise
+     */
+    boolean sendAndReceive(Source requestPayload, Result responseResult) throws IOException;
+
+    /**
+     * Sends a web service message that contains the given payload, marshalled by the configured {@link
+     * org.springframework.oxm.Marshaller}. Returns the unmarshalled payload of the response message, if any.
      *
      * @param requestPayload the object to marshal into the request message payload
      * @return the unmarshalled payload of the response message, or <code>null</code> if no response is given
      */
-    Object marshalAndSend(Object requestPayload) throws IOException;
+    Object sendAndReceive(Object requestPayload) throws IOException;
 
+    /**
+     * Sends a web service message that can be manipulated with the given callback. Returns the response message, if
+     * any.
+     *
+     * @param callback the callback to be used for manipulating the request message
+     * @return the response message, or <code>null</code> if no response is given
+     */
     WebServiceMessage sendAndReceive(WebServiceMessageCallback callback) throws IOException;
-
-    void sendAndReceive(Source requestPayload, Result result) throws IOException;
 }

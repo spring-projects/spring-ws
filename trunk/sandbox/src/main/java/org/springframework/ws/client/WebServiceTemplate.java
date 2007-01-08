@@ -64,7 +64,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
         this.unmarshaller = unmarshaller;
     }
 
-    public Object marshalAndSend(final Object requestPayload) throws IOException {
+    public Object sendAndReceive(final Object requestPayload) throws IOException {
         checkMarshallerAndUnmarshaller();
         WebServiceMessage response = sendAndReceive(new WebServiceMessageCallback() {
 
@@ -80,21 +80,25 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
         }
     }
 
-    public void sendAndReceive(final Source requestPayload, Result result) throws IOException {
+    public boolean sendAndReceive(final Source requestPayload, Result result) throws IOException {
         Source responsePayload = sendAndReceive(requestPayload);
         if (responsePayload != null) {
             try {
                 Transformer transformer = createTransformer();
                 transformer.transform(responsePayload, result);
+                return true;
             }
             catch (TransformerException e) {
                 throw new WebServiceClientException("Could not transform payload of responsePayload message");
             }
         }
+        else {
+            return false;
+        }
     }
 
     public Source sendAndReceive(final Source requestPayload) throws IOException {
-        return (Source) sendAndReceive(new WebServiceMessageCallback() {
+        WebServiceMessage response = sendAndReceive(new WebServiceMessageCallback() {
             public void doInMessage(WebServiceMessage message) {
                 try {
                     Transformer transformer = createTransformer();
@@ -105,6 +109,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                 }
             }
         });
+        return response != null ? response.getPayloadSource() : null;
     }
 
     public WebServiceMessage sendAndReceive(WebServiceMessageCallback requestCallback) throws IOException {
