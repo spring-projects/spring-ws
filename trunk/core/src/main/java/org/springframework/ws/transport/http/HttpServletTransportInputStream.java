@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.ws.transport.TransportException;
 import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.ws.transport.support.EnumerationIterator;
 
@@ -55,11 +54,11 @@ public class HttpServletTransportInputStream extends TransportInputStream {
         return httpServletRequest;
     }
 
-    public Iterator getHeaderNames() throws TransportException {
+    public Iterator getHeaderNames() {
         return new EnumerationIterator(httpServletRequest.getHeaderNames());
     }
 
-    public Iterator getHeaders(String name) throws TransportException {
+    public Iterator getHeaders(String name) {
         return new EnumerationIterator(httpServletRequest.getHeaders(name));
     }
 }

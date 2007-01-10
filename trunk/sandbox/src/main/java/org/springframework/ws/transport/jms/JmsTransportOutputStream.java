@@ -84,7 +84,7 @@ public class JmsTransportOutputStream extends TransportOutputStream {
                 }
             }
             catch (JMSException ex) {
-                throw new IOException("Could not create message: " + ex.getMessage());
+                throw new JmsTransportException("Could not create message", ex);
             }
         }
         return message;
@@ -99,7 +99,7 @@ public class JmsTransportOutputStream extends TransportOutputStream {
             getMessage().setStringProperty(name, value);
         }
         catch (JMSException ex) {
-            throw new IOException("Could not set property " + ex.getMessage());
+            throw new JmsTransportException("Could not set property", ex);
         }
     }
 
@@ -113,7 +113,7 @@ public class JmsTransportOutputStream extends TransportOutputStream {
                 getMessage().writeBytes(b);
             }
             catch (JMSException ex) {
-                throw new IOException(ex.getMessage());
+                throw new JmsTransportException(ex);
             }
         }
 
@@ -122,7 +122,7 @@ public class JmsTransportOutputStream extends TransportOutputStream {
                 getMessage().writeBytes(b, off, len);
             }
             catch (JMSException ex) {
-                throw new IOException(ex.getMessage());
+                throw new JmsTransportException(ex);
             }
         }
 
@@ -131,7 +131,7 @@ public class JmsTransportOutputStream extends TransportOutputStream {
                 getMessage().writeByte((byte) b);
             }
             catch (JMSException ex) {
-                throw new IOException(ex.getMessage());
+                throw new JmsTransportException(ex);
             }
         }
     }

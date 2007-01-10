@@ -66,7 +66,7 @@ public class JmsTransportInputStream extends TransportInputStream {
             return new EnumerationIterator(message.getPropertyNames());
         }
         catch (JMSException ex) {
-            throw new IOException("Could not get property names: " + ex.getMessage());
+            throw new JmsTransportException("Could not get property names", ex);
         }
     }
 
@@ -76,7 +76,7 @@ public class JmsTransportInputStream extends TransportInputStream {
             return Collections.singletonList(value).iterator();
         }
         catch (JMSException ex) {
-            throw new IOException("Could not get property value: " + ex.getMessage());
+            throw new JmsTransportException("Could not get property value", ex);
         }
     }
 
@@ -90,7 +90,7 @@ public class JmsTransportInputStream extends TransportInputStream {
                 return message.readBytes(b);
             }
             catch (JMSException ex) {
-                throw new IOException(ex.getMessage());
+                throw new JmsTransportException(ex);
             }
         }
 
@@ -100,7 +100,7 @@ public class JmsTransportInputStream extends TransportInputStream {
                     return message.readBytes(b, len);
                 }
                 catch (JMSException ex) {
-                    throw new IOException(ex.getMessage());
+                    throw new JmsTransportException(ex);
                 }
             }
             else {
@@ -116,7 +116,7 @@ public class JmsTransportInputStream extends TransportInputStream {
                 return -1;
             }
             catch (JMSException ex) {
-                throw new IOException(ex.getMessage());
+                throw new JmsTransportException(ex);
             }
         }
     }

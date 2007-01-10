@@ -14,19 +14,26 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.transport;
+package org.springframework.ws.transport.jms;
 
-import java.io.IOException;
+import javax.jms.JMSException;
+
+import org.springframework.ws.transport.TransportException;
 
 /**
- * Abstract base class for exceptions related to the transport layer.
- *
  * @author Arjen Poutsma
  */
-public abstract class TransportException extends IOException {
+public class JmsTransportException extends TransportException {
 
-    protected TransportException(String msg) {
+    public JmsTransportException(String msg) {
         super(msg);
     }
 
+    public JmsTransportException(String msg, JMSException ex) {
+        super(msg + ": " + ex.getMessage());
+    }
+
+    public JmsTransportException(JMSException ex) {
+        super(ex.getMessage());
+    }
 }

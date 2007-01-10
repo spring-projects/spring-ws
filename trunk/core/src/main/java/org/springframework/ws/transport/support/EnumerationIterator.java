@@ -20,8 +20,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 
 /**
- * Private static class that adapts a header enumeration provided by the HttpServletRequest and provides it as an
- * iterator.
+ * Adapts an {@link Enumeration} to follow the interface of {@link Iterator}.
  *
  * @author Arjen Poutsma
  */
