@@ -61,6 +61,8 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
 
     private AxiomSoapEnvelope envelope;
 
+    private String soapAction;
+
     /**
      * Create a new, empty <code>AxiomSoapMessage</code>.
      *
@@ -72,18 +74,21 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         axiomMessage = axiomFactory.createSOAPMessage(soapEnvelope, soapEnvelope.getBuilder());
         attachments = null;
         payloadCaching = true;
+        soapAction = "";
     }
 
     /**
      * Create a new <code>AxiomSoapMessage</code> based on the given AXIOM <code>SOAPMessage</code>.
      *
      * @param soapMessage    the AXIOM SOAPMessage
+     * @param soapAction     the value of the SOAP Action header
      * @param payloadCaching whether the contents of the SOAP body should be cached or not
      */
-    public AxiomSoapMessage(SOAPMessage soapMessage, boolean payloadCaching) {
+    public AxiomSoapMessage(SOAPMessage soapMessage, String soapAction, boolean payloadCaching) {
         axiomMessage = soapMessage;
         axiomFactory = (SOAPFactory) soapMessage.getSOAPEnvelope().getOMFactory();
         attachments = null;
+        this.soapAction = soapAction;
         this.payloadCaching = payloadCaching;
     }
 
@@ -92,16 +97,23 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
      *
      * @param soapMessage    the AXIOM SOAPMessage
      * @param attachments    the attachments
+     * @param soapAction     the value of the SOAP Action header
      * @param payloadCaching whether the contents of the SOAP body should be cached or not
      */
-    public AxiomSoapMessage(SOAPMessage soapMessage, Attachments attachments, boolean payloadCaching) {
+    public AxiomSoapMessage(SOAPMessage soapMessage,
+                            Attachments attachments,
+                            String soapAction,
+                            boolean payloadCaching) {
         axiomMessage = soapMessage;
         axiomFactory = (SOAPFactory) soapMessage.getSOAPEnvelope().getOMFactory();
         this.attachments = attachments;
+        this.soapAction = soapAction;
         this.payloadCaching = payloadCaching;
     }
 
-    /** Return the AXIOM <code>SOAPMessage</code> that this <code>AxiomSoapMessage</code> is based on. */
+    /**
+     * Return the AXIOM <code>SOAPMessage</code> that this <code>AxiomSoapMessage</code> is based on.
+     */
     public final SOAPMessage getAxiomMessage() {
         return axiomMessage;
     }
@@ -116,6 +128,14 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
             }
         }
         return envelope;
+    }
+
+    public String getSoapAction() {
+        return soapAction;
+    }
+
+    public void setSoapAction(String soapAction) {
+        this.soapAction = soapAction;
     }
 
     public Attachment getAttachment(String contentId) {
@@ -169,7 +189,9 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         }
     }
 
-    /** Axiom-specific implementation of <code>org.springframework.ws.soap.Attachment</code> */
+    /**
+     * Axiom-specific implementation of <code>org.springframework.ws.soap.Attachment</code>
+     */
     private static class AxiomAttachment implements Attachment {
 
         private final DataHandler dataHandler;

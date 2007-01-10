@@ -76,6 +76,12 @@ public abstract class AbstractSoapMessageTestCase extends AbstractWebServiceMess
         }
     }
 
+    public void testSoapAction() throws Exception {
+        String soapAction = "SoapAction";
+        soapMessage.setSoapAction(soapAction);
+        assertEquals("Invalid SOAP Action", soapAction, soapMessage.getSoapAction());
+    }
+
     protected abstract Resource[] getSoapSchemas();
 
 

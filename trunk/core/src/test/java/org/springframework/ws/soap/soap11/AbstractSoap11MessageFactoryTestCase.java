@@ -40,12 +40,15 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
         InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11.xml");
         final Properties headers = new Properties();
         headers.setProperty("Content-Type", "text/xml");
+        String soapAction = "http://springframework.org/spring-ws/Action";
+        headers.setProperty("SOAPAction", soapAction);
         TransportInputStream tis = new StubTransportInputStream(is, headers);
 
         WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
         assertTrue("Not a SoapMessage", message instanceof SoapMessage);
         SoapMessage soapMessage = (SoapMessage) message;
         assertEquals("Invalid soap version", SoapVersion.SOAP_11, soapMessage.getVersion());
+        assertEquals("Invalid soap action", soapAction, soapMessage.getSoapAction());
     }
 
     public void testCreateSoapMessageAttachment() throws Exception {

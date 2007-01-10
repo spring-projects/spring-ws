@@ -45,128 +45,215 @@ import javax.xml.transform.Source;
  */
 public interface SaajImplementation {
 
-    /** Returns the name of the given element. */
+    /**
+     * Returns the name of the given element.
+     */
     QName getName(SOAPElement element);
 
-    /** Returns the readable <code>Source</code> of the given element. */
+    /**
+     * Returns the readable <code>Source</code> of the given element.
+     */
     Source getSource(SOAPElement element);
 
-    /** Returns the writable <code>Result</code> of the given element. */
+    /**
+     * Returns the writable <code>Result</code> of the given element.
+     */
     Result getResult(SOAPElement element);
 
-    /** Returns the envelope of the given message. */
+    /**
+     * Returns the envelope of the given message.
+     */
     SOAPEnvelope getEnvelope(SOAPMessage message) throws SOAPException;
 
-    /** Returns the header of the given envelope. */
+    /**
+     * Returns the header of the given envelope.
+     */
     SOAPHeader getHeader(SOAPEnvelope envelope) throws SOAPException;
 
-    /** Returns the body of the given envelope. */
+    /**
+     * Returns the body of the given envelope.
+     */
     SOAPBody getBody(SOAPEnvelope envelope) throws SOAPException;
 
-    /** Adds a header element to the given header. */
+    /**
+     * Adds a header element to the given header.
+     */
     SOAPHeaderElement addHeaderElement(SOAPHeader header, QName name) throws SOAPException;
 
-    /** Returns all header elements. */
+    /**
+     * Returns all header elements.
+     */
     Iterator examineAllHeaderElements(SOAPHeader header);
 
-    /** Returns all header elements for which the must understand attribute is true, given the actor or role. */
+    /**
+     * Returns all header elements for which the must understand attribute is true, given the actor or role.
+     */
     Iterator examineMustUnderstandHeaderElements(SOAPHeader header, String actorOrRole);
 
-    /** Returns the SOAP 1.1 actor or SOAP 1.2 role attribute for the given header element. */
+    /**
+     * Returns the SOAP 1.1 actor or SOAP 1.2 role attribute for the given header element.
+     */
     String getActorOrRole(SOAPHeaderElement headerElement);
 
-    /** Sets the SOAP 1.1 actor or SOAP 1.2 role attribute for the given header element. */
+    /**
+     * Sets the SOAP 1.1 actor or SOAP 1.2 role attribute for the given header element.
+     */
     void setActorOrRole(SOAPHeaderElement headerElement, String actorOrRole);
 
-    /** Gets the must understand attribute for the given header element. */
+    /**
+     * Gets the must understand attribute for the given header element.
+     */
     boolean getMustUnderstand(SOAPHeaderElement headerElement);
 
-    /** Sets the must understand attribute for the given header element. */
+    /**
+     * Sets the must understand attribute for the given header element.
+     */
     void setMustUnderstand(SOAPHeaderElement headerElement, boolean mustUnderstand);
 
-    /** Returns <code>true</code> if the body has a fault, <code>false</code> otherwise. */
+    /**
+     * Returns <code>true</code> if the body has a fault, <code>false</code> otherwise.
+     */
     boolean hasFault(SOAPBody body);
 
-    /** Returns the fault for the given body, if any. */
+    /**
+     * Returns the fault for the given body, if any.
+     */
     SOAPFault getFault(SOAPBody body);
 
-    /** Adds a fault to the given body. */
+    /**
+     * Adds a fault to the given body.
+     */
     SOAPFault addFault(SOAPBody body, QName faultCode, String faultString, Locale locale) throws SOAPException;
 
-    /** Returns the fault code for the given fault. */
+    /**
+     * Returns the fault code for the given fault.
+     */
     QName getFaultCode(SOAPFault fault);
 
-    /** Returns the actor for the given fault. */
+    /**
+     * Returns the actor for the given fault.
+     */
     String getFaultActor(SOAPFault fault);
 
-    /** Sets the actor for the given fault. */
+    /**
+     * Sets the actor for the given fault.
+     */
     void setFaultActor(SOAPFault fault, String actorOrRole) throws SOAPException;
 
-    /** Returns the fault string for the given fault. */
+    /**
+     * Returns the fault string for the given fault.
+     */
     String getFaultString(SOAPFault fault);
 
-    /** Returns the fault string language for the given fault. */
+    /**
+     * Returns the fault string language for the given fault.
+     */
     Locale getFaultStringLocale(SOAPFault fault);
 
-    /** Adds a detail entry to the given detail. */
+    /**
+     * Adds a detail entry to the given detail.
+     */
     DetailEntry addDetailEntry(Detail detail, QName name) throws SOAPException;
 
-    /** Returns the fault detail for the given fault. */
+    /**
+     * Returns the fault detail for the given fault.
+     */
     Detail getFaultDetail(SOAPFault fault);
 
-    /** Adds a fault detail for the given fault. */
+    /**
+     * Adds a fault detail for the given fault.
+     */
     Detail addFaultDetail(SOAPFault fault) throws SOAPException;
 
     void addTextNode(DetailEntry detailEntry, String text) throws SOAPException;
 
-    /** Returns an iteration over all detail entries. */
+    /**
+     * Returns an iteration over all detail entries.
+     */
     Iterator getDetailEntries(Detail detail);
 
-    /** Returns the first child element of the given body. */
+    /**
+     * Returns the first child element of the given body.
+     */
     SOAPBodyElement getFirstBodyElement(SOAPBody body);
 
-    /** Removes the contents (i.e. children) of the element. */
+    /**
+     * Removes the contents (i.e. children) of the element.
+     */
     void removeContents(SOAPElement element);
 
-    /** Writes the given message to the given stream. */
+    /**
+     * Writes the given message to the given stream.
+     */
     void writeTo(SOAPMessage message, OutputStream outputStream) throws SOAPException, IOException;
 
-    /** Returns an iteration over all attachments in the message. */
+    /**
+     * Returns the MIME headers of the message.
+     */
+    MimeHeaders getMimeHeaders(SOAPMessage message);
+
+    /**
+     * Returns an iteration over all attachments in the message.
+     */
     Iterator getAttachments(SOAPMessage message);
 
-    /** Returns an iteration over all attachments in the message with the given headers. */
+    /**
+     * Returns an iteration over all attachments in the message with the given headers.
+     */
     Iterator getAttachment(SOAPMessage message, MimeHeaders mimeHeaders);
 
-    /** Adds an attachment to the given message. */
+    /**
+     * Adds an attachment to the given message.
+     */
     AttachmentPart addAttachmentPart(SOAPMessage message, DataSource dataSource);
 
-    /** Adds a not understood header element to the given header. */
+    /**
+     * Adds a not understood header element to the given header.
+     */
     SOAPHeaderElement addNotUnderstoodHeaderElement(SOAPHeader header, QName name) throws SOAPException;
 
-    /** Adds a upgrade header element to the given header. */
+    /**
+     * Adds a upgrade header element to the given header.
+     */
     SOAPHeaderElement addUpgradeHeaderElement(SOAPHeader header, String[] supportedSoapUris) throws SOAPException;
 
-    /** Returns the fault role. */
+    /**
+     * Returns the fault role.
+     */
     String getFaultRole(SOAPFault fault);
 
-    /** Sets the fault role. */
+    /**
+     * Sets the fault role.
+     */
     void setFaultRole(SOAPFault fault, String role) throws SOAPException;
 
-    /** Returns the fault sub code. */
+    /**
+     * Returns the fault sub code.
+     */
     Iterator getFaultSubcodes(SOAPFault fault);
 
-    /** Adds a fault sub code. */
+    /**
+     * Adds a fault sub code.
+     */
     void appendFaultSubcode(SOAPFault fault, QName subcode) throws SOAPException;
 
-    /** Returns the fault node. */
+    /**
+     * Returns the fault node.
+     */
     String getFaultNode(SOAPFault fault);
 
-    /** Sets the fault node. */
+    /**
+     * Sets the fault node.
+     */
     void setFaultNode(SOAPFault fault, String uri) throws SOAPException;
 
-    /** Returns the fault reason text. */
+    /**
+     * Returns the fault reason text.
+     */
     String getFaultReasonText(SOAPFault fault, Locale locale) throws SOAPException;
 
-    /** Sets the fault reason text. */
+    /**
+     * Sets the fault reason text.
+     */
     void setFaultReasonText(SOAPFault fault, Locale locale, String text) throws SOAPException;
 }
