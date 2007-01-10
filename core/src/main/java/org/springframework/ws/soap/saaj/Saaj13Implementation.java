@@ -261,6 +261,10 @@ public class Saaj13Implementation implements SaajImplementation {
 
     }
 
+    public MimeHeaders getMimeHeaders(SOAPMessage message) {
+        return message.getMimeHeaders();
+    }
+
     public Iterator getAttachments(SOAPMessage message) {
         return message.getAttachments();
     }

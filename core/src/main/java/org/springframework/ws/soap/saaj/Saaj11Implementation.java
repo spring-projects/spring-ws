@@ -127,27 +127,37 @@ public class Saaj11Implementation implements SaajImplementation {
         return fault;
     }
 
-    /** Returns the envelope of the given message. */
+    /**
+     * Returns the envelope of the given message.
+     */
     public SOAPEnvelope getEnvelope(SOAPMessage message) throws SOAPException {
         return message.getSOAPPart().getEnvelope();
     }
 
-    /** Returns the header of the given envelope. */
+    /**
+     * Returns the header of the given envelope.
+     */
     public SOAPHeader getHeader(SOAPEnvelope envelope) throws SOAPException {
         return envelope.getHeader();
     }
 
-    /** Returns the body of the given envelope. */
+    /**
+     * Returns the body of the given envelope.
+     */
     public SOAPBody getBody(SOAPEnvelope envelope) throws SOAPException {
         return envelope.getBody();
     }
 
-    /** Returns all header elements. */
+    /**
+     * Returns all header elements.
+     */
     public Iterator examineAllHeaderElements(SOAPHeader header) {
         return header.getChildElements();
     }
 
-    /** Returns all header elements for which the must understand attribute is true, given the actor or role. */
+    /**
+     * Returns all header elements for which the must understand attribute is true, given the actor or role.
+     */
     public Iterator examineMustUnderstandHeaderElements(SOAPHeader header, String actorOrRole) {
         List result = new ArrayList();
         for (Iterator iterator = header.examineHeaderElements(actorOrRole); iterator.hasNext();) {
@@ -159,62 +169,86 @@ public class Saaj11Implementation implements SaajImplementation {
         return result.iterator();
     }
 
-    /** Returns the SOAP 1.1 actor or SOAP 1.2 role attribute for the given header element. */
+    /**
+     * Returns the SOAP 1.1 actor or SOAP 1.2 role attribute for the given header element.
+     */
     public String getActorOrRole(SOAPHeaderElement headerElement) {
         return headerElement.getActor();
     }
 
-    /** Sets the SOAP 1.1 actor or SOAP 1.2 role attribute for the given header element. */
+    /**
+     * Sets the SOAP 1.1 actor or SOAP 1.2 role attribute for the given header element.
+     */
     public void setActorOrRole(SOAPHeaderElement headerElement, String actorOrRole) {
         headerElement.setActor(actorOrRole);
     }
 
-    /** Gets the must understand attribute for the given header element. */
+    /**
+     * Gets the must understand attribute for the given header element.
+     */
     public boolean getMustUnderstand(SOAPHeaderElement headerElement) {
         return headerElement.getMustUnderstand();
     }
 
-    /** Sets the must understand attribute for the given header element. */
+    /**
+     * Sets the must understand attribute for the given header element.
+     */
     public void setMustUnderstand(SOAPHeaderElement headerElement, boolean mustUnderstand) {
         headerElement.setMustUnderstand(mustUnderstand);
     }
 
-    /** Returns <code>true</code> if the body has a fault, <code>false</code> otherwise. */
+    /**
+     * Returns <code>true</code> if the body has a fault, <code>false</code> otherwise.
+     */
     public boolean hasFault(SOAPBody body) {
         return body.hasFault();
     }
 
-    /** Returns the fault for the given body, if any. */
+    /**
+     * Returns the fault for the given body, if any.
+     */
     public SOAPFault getFault(SOAPBody body) {
         return body.getFault();
     }
 
-    /** Returns the actor for the given fault. */
+    /**
+     * Returns the actor for the given fault.
+     */
     public String getFaultActor(SOAPFault fault) {
         return fault.getFaultActor();
     }
 
-    /** Sets the actor for the given fault. */
+    /**
+     * Sets the actor for the given fault.
+     */
     public void setFaultActor(SOAPFault fault, String actorOrRole) throws SOAPException {
         fault.setFaultActor(actorOrRole);
     }
 
-    /** Returns the fault string for the given fault. */
+    /**
+     * Returns the fault string for the given fault.
+     */
     public String getFaultString(SOAPFault fault) {
         return fault.getFaultString();
     }
 
-    /** Returns the fault string language for the given fault. */
+    /**
+     * Returns the fault string language for the given fault.
+     */
     public Locale getFaultStringLocale(SOAPFault fault) {
         return Locale.ENGLISH;
     }
 
-    /** Returns the fault detail for the given fault. */
+    /**
+     * Returns the fault detail for the given fault.
+     */
     public Detail getFaultDetail(SOAPFault fault) {
         return fault.getDetail();
     }
 
-    /** Adds a fault detail for the given fault. */
+    /**
+     * Adds a fault detail for the given fault.
+     */
     public Detail addFaultDetail(SOAPFault fault) throws SOAPException {
         return fault.addDetail();
     }
@@ -223,7 +257,9 @@ public class Saaj11Implementation implements SaajImplementation {
         detailEntry.addTextNode(text);
     }
 
-    /** Returns an iteration over all detail entries. */
+    /**
+     * Returns an iteration over all detail entries.
+     */
     public Iterator getDetailEntries(Detail detail) {
         return detail.getDetailEntries();
     }
@@ -265,6 +301,10 @@ public class Saaj11Implementation implements SaajImplementation {
         }
         message.writeTo(outputStream);
 
+    }
+
+    public MimeHeaders getMimeHeaders(SOAPMessage message) {
+        return message.getMimeHeaders();
     }
 
     public Iterator getAttachments(SOAPMessage message) {

@@ -31,6 +31,7 @@ import javax.xml.soap.SOAPMessage;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 import org.springframework.ws.soap.AbstractSoapMessage;
 import org.springframework.ws.soap.Attachment;
 import org.springframework.ws.soap.AttachmentException;
@@ -46,6 +47,8 @@ import org.springframework.ws.soap.saaj.support.SaajUtils;
  */
 public class SaajSoapMessage extends AbstractSoapMessage {
 
+    private static final String SOAP_ACTION_HEADER = "SOAPAction";
+
     private SOAPMessage saajMessage;
 
     private SoapEnvelope envelope;
@@ -60,12 +63,16 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         saajMessage = soapMessage;
     }
 
-    /** Return the SAAJ <code>SOAPMessage</code> that this <code>SaajSoapMessage</code> is based on. */
+    /**
+     * Return the SAAJ <code>SOAPMessage</code> that this <code>SaajSoapMessage</code> is based on.
+     */
     public SOAPMessage getSaajMessage() {
         return saajMessage;
     }
 
-    /** Sets the SAAJ <code>SOAPMessage</code> that this <code>SaajSoapMessage</code> is based on. */
+    /**
+     * Sets the SAAJ <code>SOAPMessage</code> that this <code>SaajSoapMessage</code> is based on.
+     */
     public void setSaajMessage(SOAPMessage soapMessage) {
         Assert.notNull(soapMessage, "soapMessage must not be null");
         saajMessage = soapMessage;
@@ -74,7 +81,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
     public SoapEnvelope getEnvelope() {
         if (envelope == null) {
             try {
-                SOAPEnvelope saajEnvelope = getImplementation().getEnvelope(saajMessage);
+                SOAPEnvelope saajEnvelope = getImplementation().getEnvelope(getSaajMessage());
                 envelope = new SaajSoapEnvelope(saajEnvelope);
             }
             catch (SOAPException ex) {
@@ -84,9 +91,20 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         return envelope;
     }
 
+    public String getSoapAction() {
+        MimeHeaders mimeHeaders = getImplementation().getMimeHeaders(getSaajMessage());
+        String[] values = mimeHeaders.getHeader(SOAP_ACTION_HEADER);
+        return ObjectUtils.isEmpty(values) ? null : values[0];
+    }
+
+    public void setSoapAction(String soapAction) {
+        MimeHeaders mimeHeaders = getImplementation().getMimeHeaders(getSaajMessage());
+        mimeHeaders.setHeader(SOAP_ACTION_HEADER, soapAction);
+    }
+
     public void writeTo(OutputStream outputStream) throws IOException {
         try {
-            getImplementation().writeTo(saajMessage, outputStream);
+            getImplementation().writeTo(getSaajMessage(), outputStream);
         }
         catch (SOAPException ex) {
             throw new SaajSoapMessageException("Could not write message to OutputStream: " + ex.getMessage(), ex);
@@ -94,14 +112,14 @@ public class SaajSoapMessage extends AbstractSoapMessage {
     }
 
     public Iterator getAttachments() throws AttachmentException {
-        Iterator iterator = getImplementation().getAttachments(saajMessage);
+        Iterator iterator = getImplementation().getAttachments(getSaajMessage());
         return new SaajAttachmentIterator(iterator);
     }
 
     public Attachment getAttachment(String contentId) {
         MimeHeaders mimeHeaders = new MimeHeaders();
         mimeHeaders.addHeader("Content-Id", contentId);
-        Iterator iterator = getImplementation().getAttachment(saajMessage, mimeHeaders);
+        Iterator iterator = getImplementation().getAttachment(getSaajMessage(), mimeHeaders);
         if (!iterator.hasNext()) {
             return null;
         }
@@ -114,7 +132,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
     public Attachment addAttachment(File file) throws AttachmentException {
         Assert.notNull(file, "File must not be null");
         DataSource dataSource = new FileDataSource(file);
-        AttachmentPart attachmentPart = getImplementation().addAttachmentPart(saajMessage, dataSource);
+        AttachmentPart attachmentPart = getImplementation().addAttachmentPart(getSaajMessage(), dataSource);
         return new SaajAttachment(attachmentPart);
     }
 
@@ -125,7 +143,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
                     "SAAJ requires an InputStreamSource that creates a fresh stream for every call.");
         }
         DataSource dataSource = new InputStreamSourceDataSource(inputStreamSource, contentType);
-        AttachmentPart saajAttachment = getImplementation().addAttachmentPart(saajMessage, dataSource);
+        AttachmentPart saajAttachment = getImplementation().addAttachmentPart(getSaajMessage(), dataSource);
         return new SaajAttachment(saajAttachment);
     }
 

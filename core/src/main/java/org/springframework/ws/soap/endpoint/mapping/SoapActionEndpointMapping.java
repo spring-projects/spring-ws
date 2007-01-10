@@ -16,8 +16,6 @@
 
 package org.springframework.ws.soap.endpoint.mapping;
 
-import java.util.Iterator;
-
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.EndpointInterceptor;
@@ -26,8 +24,7 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.endpoint.mapping.AbstractMapBasedEndpointMapping;
 import org.springframework.ws.soap.SoapEndpointInvocationChain;
 import org.springframework.ws.soap.SoapEndpointMapping;
-import org.springframework.ws.transport.TransportContext;
-import org.springframework.ws.transport.TransportContextHolder;
+import org.springframework.ws.soap.SoapMessage;
 
 /**
  * Implementation of the <code>EndpointMapping</code> interface to map from <code>SOAPAction</code> headers to endpoint
@@ -52,11 +49,6 @@ import org.springframework.ws.transport.TransportContextHolder;
  * @author Arjen Poutsma
  */
 public class SoapActionEndpointMapping extends AbstractMapBasedEndpointMapping implements SoapEndpointMapping {
-
-    /**
-     * The name of the SOAPAction <code>TransportRequest</code> header.
-     */
-    public static final String SOAP_ACTION_HEADER = "SOAPAction";
 
     private String[] actorsOrRoles;
 
@@ -87,20 +79,19 @@ public class SoapActionEndpointMapping extends AbstractMapBasedEndpointMapping i
     }
 
     protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
-        TransportContext transportContext = TransportContextHolder.getTransportContext();
-        Assert.notNull(transportContext,
-                "No TransportContext associated with current thread, cannot read SOAPAction header");
-        Iterator iterator = transportContext.getTransportInputStream().getHeaders(SOAP_ACTION_HEADER);
-        String soapAction = "";
-        if (iterator.hasNext()) {
-            soapAction = (String) iterator.next();
-        }
-        if (StringUtils.hasLength(soapAction) && soapAction.charAt(0) == '"' &&
-                soapAction.charAt(soapAction.length() - 1) == '"') {
-            return soapAction.substring(1, soapAction.length() - 1);
+        if (messageContext.getRequest() instanceof SoapMessage) {
+            SoapMessage request = (SoapMessage) messageContext.getRequest();
+            String soapAction = request.getSoapAction();
+            if (StringUtils.hasLength(soapAction) && soapAction.charAt(0) == '"' &&
+                    soapAction.charAt(soapAction.length() - 1) == '"') {
+                return soapAction.substring(1, soapAction.length() - 1);
+            }
+            else {
+                return soapAction;
+            }
         }
         else {
-            return soapAction;
+            return null;
         }
     }
 

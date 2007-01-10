@@ -70,6 +70,8 @@ public class AxiomSoapMessageFactory implements WebServiceMessageFactory, Initia
 
     private static final String DEFAULT_CHAR_SET_ENCODING = "UTF-8";
 
+    private static final String SOAP_ACTION_HEADER = "SOAPAction";
+
     private static final String MULTI_PART_RELATED_CONTENT_TYPE = "multipart/related";
 
     private static final Log logger = LogFactory.getLog(AxiomSoapMessageFactory.class);
@@ -107,11 +109,16 @@ public class AxiomSoapMessageFactory implements WebServiceMessageFactory, Initia
 
     public WebServiceMessage createWebServiceMessage(InputStream inputStream) throws IOException {
         String contentType = null;
+        String soapAction = "";
         if (inputStream instanceof TransportInputStream) {
             TransportInputStream transportInputStream = (TransportInputStream) inputStream;
             Iterator iterator = transportInputStream.getHeaders(CONTENT_TYPE_HEADER);
             if (iterator.hasNext()) {
                 contentType = (String) iterator.next();
+            }
+            iterator = transportInputStream.getHeaders(SOAP_ACTION_HEADER);
+            if (iterator.hasNext()) {
+                soapAction = (String) iterator.next();
             }
         }
         if (!StringUtils.hasLength(contentType)) {
@@ -120,10 +127,10 @@ public class AxiomSoapMessageFactory implements WebServiceMessageFactory, Initia
         }
         try {
             if (isMultiPartRelated(contentType)) {
-                return createMultiPartAxiomSoapMessage(inputStream, contentType);
+                return createMultiPartAxiomSoapMessage(inputStream, contentType, soapAction);
             }
             else {
-                return createAxiomSoapMessage(inputStream, contentType);
+                return createAxiomSoapMessage(inputStream, contentType, soapAction);
             }
         }
         catch (XMLStreamException ex) {
@@ -141,20 +148,21 @@ public class AxiomSoapMessageFactory implements WebServiceMessageFactory, Initia
     /**
      * Creates an AxiomSoapMessage without attachments.
      */
-    private WebServiceMessage createAxiomSoapMessage(InputStream inputStream, String contentType)
+    private WebServiceMessage createAxiomSoapMessage(InputStream inputStream, String contentType, String soapAction)
             throws XMLStreamException {
         XMLStreamReader reader = inputFactory.createXMLStreamReader(inputStream, getCharSetEncoding(contentType));
         SOAPFactory soapFactory = getSoapFactory(contentType);
         StAXSOAPModelBuilder builder = new StAXSOAPModelBuilder(reader, soapFactory, soapFactory.getSoapVersionURI());
         SOAPMessage soapMessage = builder.getSoapMessage();
-        return new AxiomSoapMessage(soapMessage, payloadCaching);
+        return new AxiomSoapMessage(soapMessage, soapAction, payloadCaching);
     }
 
     /**
      * Creates an AxiomSoapMessage with attachments.
      */
-    private AxiomSoapMessage createMultiPartAxiomSoapMessage(InputStream inputStream, String contentType)
-            throws XMLStreamException {
+    private AxiomSoapMessage createMultiPartAxiomSoapMessage(InputStream inputStream,
+                                                             String contentType,
+                                                             String soapAction) throws XMLStreamException {
         Attachments attachments = new Attachments(inputStream, contentType);
         if (!(attachments.getAttachmentSpecType().equals(MTOMConstants.SWA_TYPE) ||
                 attachments.getAttachmentSpecType().equals(MTOMConstants.MTOM_TYPE))) {
@@ -171,7 +179,7 @@ public class AxiomSoapMessageFactory implements WebServiceMessageFactory, Initia
         else if (attachments.getAttachmentSpecType().equals(MTOMConstants.MTOM_TYPE)) {
             builder = new MTOMStAXSOAPModelBuilder(reader, attachments, soapFactory.getSoapVersionURI());
         }
-        return new AxiomSoapMessage(builder.getSoapMessage(), attachments, payloadCaching);
+        return new AxiomSoapMessage(builder.getSoapMessage(), attachments, soapAction, payloadCaching);
     }
 
     private SOAPFactory getSoapFactory(String contentType) {
