@@ -21,6 +21,7 @@ import org.easymock.MockControl;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.transport.WebServiceMessageSender;
 
 public class WebServiceAccessorTest extends TestCase {
 
@@ -31,11 +32,15 @@ public class WebServiceAccessorTest extends TestCase {
     }
 
     public void testCreateMessageContext() throws Exception {
+        MockControl senderControl = MockControl.createControl(WebServiceMessageSender.class);
+        WebServiceMessageSender senderMock = (WebServiceMessageSender) senderControl.getMock();
+        accessor.setMessageSender(senderMock);
         MockControl factoryControl = MockControl.createControl(WebServiceMessageFactory.class);
         WebServiceMessageFactory factoryMock = (WebServiceMessageFactory) factoryControl.getMock();
         accessor.setMessageFactory(factoryMock);
         MockControl messageControl = MockControl.createControl(WebServiceMessage.class);
         WebServiceMessage messageMock = (WebServiceMessage) messageControl.getMock();
+        accessor.afterPropertiesSet();
 
         factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), messageMock);
 

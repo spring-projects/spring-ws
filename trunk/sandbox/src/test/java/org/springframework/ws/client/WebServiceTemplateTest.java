@@ -20,7 +20,7 @@ import java.io.IOException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
-import junit.framework.TestCase;
+import org.custommonkey.xmlunit.XMLTestCase;
 import org.easymock.MockControl;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
@@ -31,7 +31,7 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-public class WebServiceTemplateTest extends TestCase {
+public class WebServiceTemplateTest extends XMLTestCase {
 
     private WebServiceTemplate template;
 
@@ -59,7 +59,7 @@ public class WebServiceTemplateTest extends TestCase {
         template.setMarshaller(null);
         replayMockControls();
         try {
-            template.sendAndReceive(new Object());
+            template.marshalSendAndReceive(new Object());
             fail("IllegalStateException expected");
         }
         catch (IllegalStateException ex) {
@@ -72,7 +72,7 @@ public class WebServiceTemplateTest extends TestCase {
         template.setUnmarshaller(null);
         replayMockControls();
         try {
-            template.sendAndReceive(new Object());
+            template.marshalSendAndReceive(new Object());
             fail("IllegalStateException expected");
         }
         catch (IllegalStateException ex) {
@@ -129,6 +129,19 @@ public class WebServiceTemplateTest extends TestCase {
         assertNull("Invalid response", response);
     }
 
+    public void testSendAndReceiveResultResponse() throws Exception {
+        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), requestMock);
+        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), responseMock);
+        messageControl.expectAndReturn(requestMock.getPayloadResult(), new StringResult());
+        Source expected = new StringSource("<response/>");
+        messageControl.expectAndReturn(responseMock.getPayloadSource(), expected);
+        template.setMessageSender(new ResponseMessageSender());
+        replayMockControls();
+        Result result = new StringResult();
+        template.sendAndReceive(new StringSource("<request />"), result);
+        assertXMLEqual("Invalid response", "<response/>", result.toString());
+    }
+
     public void testSendAndReceiveMarshallResponse() throws Exception {
         template.setMessageSender(new ResponseMessageSender());
         MockControl marshallerControl = MockControl.createControl(Marshaller.class);
@@ -153,7 +166,7 @@ public class WebServiceTemplateTest extends TestCase {
         marshallerControl.replay();
         unmarshallerControl.replay();
 
-        Object response = template.sendAndReceive(request);
+        Object response = template.marshalSendAndReceive(request);
 
         assertEquals("Invalid response", expected, response);
 
@@ -180,7 +193,7 @@ public class WebServiceTemplateTest extends TestCase {
         replayMockControls();
         marshallerControl.replay();
 
-        Object response = template.sendAndReceive(request);
+        Object response = template.marshalSendAndReceive(request);
 
         assertNull("Invalid response", response);
 
