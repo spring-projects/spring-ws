@@ -38,6 +38,16 @@ public interface WebServiceOperations {
     Source sendAndReceive(Source requestPayload) throws IOException;
 
     /**
+     * Sends a web service message that contains the given payload. Returns the payload of the response message, if any.
+     * The given callback allows changing of the request message after the payload has been written to it.
+     *
+     * @param requestPayload  the payload of the request message
+     * @param requestCallback callback to change message, can be <code>null</code>
+     * @return the payload of the response message, or <code>null</code> if no response is given
+     */
+    Source sendAndReceive(Source requestPayload, WebServiceMessageCallback requestCallback) throws IOException;
+
+    /**
      * Sends a web service message that contains the given payload. Writes the response, if any, to the given {@link
      * Result}.
      *
@@ -48,20 +58,43 @@ public interface WebServiceOperations {
     boolean sendAndReceive(Source requestPayload, Result responseResult) throws IOException;
 
     /**
+     * Sends a web service message that contains the given payload. Writes the response, if any, to the given {@link
+     * Result}. The given callback allows changing of the request message after the payload has been written to it.
+     *
+     * @param requestPayload  the payload of the request message
+     * @param requestCallback callback to change message, can be <code>null</code>
+     * @param responseResult  the result to write the response payload to
+     * @return <code>true</code> if a response was received; <code>false</code> otherwise
+     */
+    boolean sendAndReceive(Source requestPayload, WebServiceMessageCallback requestCallback, Result responseResult)
+            throws IOException;
+
+    /**
      * Sends a web service message that contains the given payload, marshalled by the configured {@link
      * org.springframework.oxm.Marshaller}. Returns the unmarshalled payload of the response message, if any.
      *
      * @param requestPayload the object to marshal into the request message payload
      * @return the unmarshalled payload of the response message, or <code>null</code> if no response is given
      */
-    Object sendAndReceive(Object requestPayload) throws IOException;
+    Object marshalSendAndReceive(Object requestPayload) throws IOException;
+
+    /**
+     * Sends a web service message that contains the given payload, marshalled by the configured {@link
+     * org.springframework.oxm.Marshaller}. Returns the unmarshalled payload of the response message, if any. The given
+     * callback allows changing of the request message after the payload has been marshalled to it.
+     *
+     * @param requestPayload  the object to marshal into the request message payload
+     * @param requestCallback callback to change message, can be <code>null</code>
+     * @return the unmarshalled payload of the response message, or <code>null</code> if no response is given
+     */
+    Object marshalSendAndReceive(Object requestPayload, WebServiceMessageCallback requestCallback) throws IOException;
 
     /**
      * Sends a web service message that can be manipulated with the given callback. Returns the response message, if
      * any.
      *
-     * @param callback the callback to be used for manipulating the request message
+     * @param requestCallback the requestCallback to be used for manipulating the request message
      * @return the response message, or <code>null</code> if no response is given
      */
-    WebServiceMessage sendAndReceive(WebServiceMessageCallback callback) throws IOException;
+    WebServiceMessage sendAndReceive(WebServiceMessageCallback requestCallback) throws IOException;
 }

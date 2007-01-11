@@ -64,12 +64,20 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
         this.unmarshaller = unmarshaller;
     }
 
-    public Object sendAndReceive(final Object requestPayload) throws IOException {
+    public Object marshalSendAndReceive(final Object requestPayload) throws IOException {
+        return marshalSendAndReceive(requestPayload, null);
+    }
+
+    public Object marshalSendAndReceive(final Object requestPayload, final WebServiceMessageCallback requestCallback)
+            throws IOException {
         checkMarshallerAndUnmarshaller();
         WebServiceMessage response = sendAndReceive(new WebServiceMessageCallback() {
 
             public void doInMessage(WebServiceMessage message) throws IOException {
                 getMarshaller().marshal(requestPayload, message.getPayloadResult());
+                if (requestCallback != null) {
+                    requestCallback.doInMessage(message);
+                }
             }
         });
         if (response != null) {
@@ -80,12 +88,18 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
         }
     }
 
-    public boolean sendAndReceive(final Source requestPayload, Result result) throws IOException {
-        Source responsePayload = sendAndReceive(requestPayload);
+    public boolean sendAndReceive(Source requestPayload, Result responseResult) throws IOException {
+        return sendAndReceive(requestPayload, null, responseResult);
+    }
+
+    public boolean sendAndReceive(Source requestPayload,
+                                  WebServiceMessageCallback requestCallback,
+                                  Result responseResult) throws IOException {
+        Source responsePayload = sendAndReceive(requestPayload, requestCallback);
         if (responsePayload != null) {
             try {
                 Transformer transformer = createTransformer();
-                transformer.transform(responsePayload, result);
+                transformer.transform(responsePayload, responseResult);
                 return true;
             }
             catch (TransformerException e) {
@@ -98,11 +112,19 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     }
 
     public Source sendAndReceive(final Source requestPayload) throws IOException {
+        return sendAndReceive(requestPayload, (WebServiceMessageCallback) null);
+    }
+
+    public Source sendAndReceive(final Source requestPayload, final WebServiceMessageCallback requestCallback)
+            throws IOException {
         WebServiceMessage response = sendAndReceive(new WebServiceMessageCallback() {
-            public void doInMessage(WebServiceMessage message) {
+            public void doInMessage(WebServiceMessage message) throws IOException {
                 try {
                     Transformer transformer = createTransformer();
                     transformer.transform(requestPayload, message.getPayloadResult());
+                    if (requestCallback != null) {
+                        requestCallback.doInMessage(message);
+                    }
                 }
                 catch (TransformerException ex) {
                     throw new WebServiceClientException("Could not transform payload to request message", ex);
