@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2007 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,25 @@
 
 package org.springframework.xml.transform;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.dom.DOMResult;
 
 import org.custommonkey.xmlunit.XMLTestCase;
-import org.w3c.dom.Document;
+import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Element;
 
-public class StringResultTest extends XMLTestCase {
+public class ResourceSourceTest extends XMLTestCase {
 
-    public void testStringResult() throws Exception {
-        Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-        Element element = document.createElementNS("namespace", "prefix:localName");
-        document.appendChild(element);
+    public void testStringSource() throws Exception {
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        StringResult result = new StringResult();
-        transformer.transform(new DOMSource(document), result);
-        assertXMLEqual("Invalid result", "<prefix:localName xmlns:prefix='namespace'/>", result.toString());
+        DOMResult result = new DOMResult();
+        ResourceSource source = new ResourceSource(new ClassPathResource("resourceSource.xml", getClass()));
+        transformer.transform(source, result);
+        Element rootElement = (Element) result.getNode().getFirstChild();
+        assertEquals("Invalid local name", "content", rootElement.getLocalName());
+        assertEquals("Invalid prefix", "prefix", rootElement.getPrefix());
+        assertEquals("Invalid namespace", "namespace", rootElement.getNamespaceURI());
     }
 
 }
