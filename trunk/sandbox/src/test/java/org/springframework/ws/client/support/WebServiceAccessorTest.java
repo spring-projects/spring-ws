@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.client;
+package org.springframework.ws.client.support;
 
 import junit.framework.TestCase;
 import org.easymock.MockControl;

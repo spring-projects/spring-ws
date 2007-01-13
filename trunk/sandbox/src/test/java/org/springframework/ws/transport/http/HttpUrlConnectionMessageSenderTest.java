@@ -16,37 +16,9 @@
 
 package org.springframework.ws.transport.http;
 
-import java.net.URL;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPMessage;
-
-import org.springframework.ws.context.DefaultMessageContext;
-import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.soap.saaj.SaajSoapMessage;
-import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
-
 public class HttpUrlConnectionMessageSenderTest extends AbstractHttpWebServiceMessageSenderTestCase {
 
-    private HttpUrlConnectionMessageSender sender;
-
-    private MessageFactory messageFactory;
-
-    protected void onSetUp() throws Exception {
-        sender = new HttpUrlConnectionMessageSender();
-        sender.setUrl(new URL(URL));
-        messageFactory = MessageFactory.newInstance();
-    }
-
-    public void testSend() throws Exception {
-        SOAPMessage message = messageFactory.createMessage();
-        message.getMimeHeaders().addHeader(HEADER_NAME, HEADER_VALUE);
-        SaajSoapMessage request = new SaajSoapMessage(message);
-        MessageContext context = new DefaultMessageContext(request, new SaajSoapMessageFactory(messageFactory));
-//        AxiomSoapMessageFactory soapMessageFactory = new AxiomSoapMessageFactory();
-//        MessageContext context = new DefaultMessageContext(soapMessageFactory);
-        sender.sendAndReceive(context);
-        assertTrue("No response", context.hasResponse());
-
-        context.getResponse().writeTo(System.out);
+    protected AbstractHttpWebServiceMessageSender createMessageSender() {
+        return new HttpUrlConnectionMessageSender();
     }
 }

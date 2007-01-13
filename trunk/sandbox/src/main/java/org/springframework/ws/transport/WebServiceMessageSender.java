@@ -5,6 +5,9 @@ import java.io.IOException;
 import org.springframework.ws.context.MessageContext;
 
 /**
+ * Defines the methods for classes capable of sending and receiving {@link org.springframework.ws.WebServiceMessage}
+ * instances across a transport.
+ *
  * @author Arjen Poutsma
  */
 public interface WebServiceMessageSender {

@@ -16,33 +16,10 @@
 
 package org.springframework.ws.transport.http;
 
-import java.net.URL;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPMessage;
-
-import org.springframework.ws.context.DefaultMessageContext;
-import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
-
 public class CommonsHttpMessageSenderTest extends AbstractHttpWebServiceMessageSenderTestCase {
 
-    private CommonsHttpMessageSender sender;
-
-    private MessageFactory messageFactory;
-
-    protected void onSetUp() throws Exception {
-        sender = new CommonsHttpMessageSender();
-        sender.setUrl(new URL(URL));
-        messageFactory = MessageFactory.newInstance();
+    protected AbstractHttpWebServiceMessageSender createMessageSender() {
+        return new CommonsHttpMessageSender();
     }
 
-    public void testSend() throws Exception {
-        SOAPMessage message = messageFactory.createMessage();
-        message.getMimeHeaders().addHeader(HEADER_NAME, HEADER_VALUE);
-        MessageContext context = new DefaultMessageContext(new SaajSoapMessageFactory(messageFactory));
-        sender.sendAndReceive(context);
-        assertTrue("No response", context.hasResponse());
-
-        context.getResponse().writeTo(System.out);
-    }
 }
