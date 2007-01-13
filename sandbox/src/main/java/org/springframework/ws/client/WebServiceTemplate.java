@@ -25,7 +25,10 @@ import javax.xml.transform.TransformerException;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.WebServiceMessageFactory;
+import org.springframework.ws.client.support.WebServiceAccessor;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
  * @author Arjen Poutsma
@@ -35,6 +38,29 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     private Marshaller marshaller;
 
     private Unmarshaller unmarshaller;
+
+    /**
+     * Creates a new <code>WebServiceTemplate</code>.
+     * <p/>
+     * <b>Note</b> that the message factory and message sender properties have to be set before this template can be
+     * used.
+     *
+     * @see #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
+     * @see #setMessageSender(org.springframework.ws.transport.WebServiceMessageSender)
+     */
+    public WebServiceTemplate() {
+    }
+
+    /**
+     * Creates a new <code>WebServiceTemplate</code> based on the given message factory and message sender.
+     *
+     * @param messageFactory the message factory to use
+     * @param messageSender  the message sender to use
+     */
+    public WebServiceTemplate(WebServiceMessageFactory messageFactory, WebServiceMessageSender messageSender) {
+        setMessageFactory(messageFactory);
+        setMessageSender(messageSender);
+    }
 
     /**
      * Returns the marshaller for this template.

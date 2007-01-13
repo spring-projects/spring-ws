@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.client;
+package org.springframework.ws.client.support;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;

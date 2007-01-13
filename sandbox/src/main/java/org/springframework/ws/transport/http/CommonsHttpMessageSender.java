@@ -17,7 +17,6 @@
 package org.springframework.ws.transport.http;
 
 import java.io.IOException;
-import java.net.URL;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
@@ -26,7 +25,6 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.transport.TransportInputStream;
-import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
  * <code>WebServiceMessageSender</code> implementation that uses <a href="http://jakarta.apache.org/commons/httpclient">Jakarta
@@ -38,11 +36,9 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  * @author Arjen Poutsma
  * @see org.springframework.ws.transport.http.HttpUrlConnectionMessageSender
  */
-public class CommonsHttpMessageSender implements WebServiceMessageSender {
+public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSender {
 
     private HttpClient httpClient;
-
-    private URL url;
 
     /**
      * Create a new instance of the <code>CommonsHttpMessageSender</code> with a default <code>HttpClient</code> that
@@ -165,19 +161,5 @@ public class CommonsHttpMessageSender implements WebServiceMessageSender {
                 tis.close();
             }
         }
-    }
-
-    /**
-     * Returns the url used by this message sender.
-     */
-    public URL getUrl() {
-        return url;
-    }
-
-    /**
-     * Sets the url used by this message sender.
-     */
-    public void setUrl(URL url) {
-        this.url = url;
     }
 }

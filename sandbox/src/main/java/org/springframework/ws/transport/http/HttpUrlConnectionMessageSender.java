@@ -18,14 +18,12 @@ package org.springframework.ws.transport.http;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLConnection;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.ws.transport.TransportOutputStream;
-import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
  * <code>WebServiceMessageSender</code> implementation that uses standard J2SE facilities to execute POST requests,
@@ -38,25 +36,9 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  * @author Arjen Poutsma
  * @see java.net.HttpURLConnection
  */
-public class HttpUrlConnectionMessageSender implements WebServiceMessageSender {
+public class HttpUrlConnectionMessageSender extends AbstractHttpWebServiceMessageSender {
 
     private static final String HTTP_METHOD_POST = "POST";
-
-    private URL url;
-
-    /**
-     * Returns the url used by this message sender.
-     */
-    public URL getUrl() {
-        return url;
-    }
-
-    /**
-     * Sets the url used by this message sender.
-     */
-    public void setUrl(URL url) {
-        this.url = url;
-    }
 
     public void sendAndReceive(MessageContext messageContext) throws IOException {
         HttpURLConnection connection = openConnection();
@@ -123,4 +105,5 @@ public class HttpUrlConnectionMessageSender implements WebServiceMessageSender {
             }
         }
     }
+
 }
