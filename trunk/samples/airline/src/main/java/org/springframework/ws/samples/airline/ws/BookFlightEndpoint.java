@@ -29,7 +29,6 @@ import org.joda.time.YearMonthDay;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.ws.endpoint.AbstractJDomPayloadEndpoint;
 import org.springframework.ws.samples.airline.domain.Airport;
 import org.springframework.ws.samples.airline.domain.Flight;
 import org.springframework.ws.samples.airline.domain.FrequentFlyer;
@@ -37,6 +36,7 @@ import org.springframework.ws.samples.airline.domain.Passenger;
 import org.springframework.ws.samples.airline.domain.ServiceClass;
 import org.springframework.ws.samples.airline.domain.Ticket;
 import org.springframework.ws.samples.airline.service.AirlineService;
+import org.springframework.ws.server.endpoint.AbstractJDomPayloadEndpoint;
 
 public class BookFlightEndpoint extends AbstractJDomPayloadEndpoint implements InitializingBean {
 
@@ -116,12 +116,12 @@ public class BookFlightEndpoint extends AbstractJDomPayloadEndpoint implements I
     protected Element createFlightElement(Flight flight) {
         Element flightElement = new Element("flight", namespace);
         flightElement.addContent(new Element("number", namespace).setText(flight.getNumber()));
-        flightElement.addContent(new Element("departureTime",
-                namespace).setText(dateTimeFormatter.print(flight.getDepartureTime())));
+        flightElement.addContent(
+                new Element("departureTime", namespace).setText(dateTimeFormatter.print(flight.getDepartureTime())));
         flightElement.addContent(createAirportElement("from", flight.getFrom()));
         flightElement
-                .addContent(new Element("arrivalTime",
-                        namespace).setText(dateTimeFormatter.print(flight.getArrivalTime())));
+                .addContent(new Element("arrivalTime", namespace).setText(
+                        dateTimeFormatter.print(flight.getArrivalTime())));
         flightElement.addContent(createAirportElement("to", flight.getTo()));
         flightElement.addContent(createServiceClassElement(flight.getServiceClass()));
         return flightElement;

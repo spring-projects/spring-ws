@@ -55,6 +55,10 @@
         <!-- Spring dependencies -->
         <dependency>
             <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-hibernate3</artifactId>
         </dependency>
         <dependency>
@@ -138,7 +142,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate</artifactId>
-            <version>3.1.3</version>
+            <version>3.2.1.ga</version>
         </dependency>
         <dependency>
             <groupId>commons-dbcp</groupId>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
     <description>
         This application context contains the Spring-WS beans.
@@ -13,7 +12,7 @@
         </description>
     </bean>
 
-    <bean id="messageDispatcher" class="org.springframework.ws.soap.SoapMessageDispatcher">
+    <bean id="messageDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
         <description>
             The MessageDispatcher is responsible for routing messages to endpoints. It uses three endpoint mappings to
             determine the endpoint suitable for handling a particular incoming request. Having three mappings is not a
@@ -42,7 +41,7 @@
         <property name="wsdl" value="/airline.wsdl"/>
     </bean>
 
-    <bean id="payloadMapping" class="org.springframework.ws.endpoint.mapping.PayloadRootQNameEndpointMapping">
+    <bean id="payloadMapping" class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
         <description>
             This endpoint mapping uses the qualified name of the payload (body contents) to determine the endpoint for
             an incoming message. The name GetFlightsRequest with namespace
@@ -61,7 +60,7 @@
         </property>
     </bean>
 
-    <bean id="soapActionMapping" class="org.springframework.ws.soap.endpoint.mapping.SoapActionEndpointMapping">
+    <bean id="soapActionMapping" class="org.springframework.ws.soap.server.endpoint.mapping.SoapActionEndpointMapping">
         <description>
             This endpoint mapping uses SOAP Actions to determine the endpoint for an incoming message. The key
             http://www.springframework.org/spring-ws/samples/airline/BookFlight is mapped to the bookFlightEndpoint.
@@ -82,7 +81,8 @@
         </property>
     </bean>
 
-    <bean id="validatingInterceptor" class="org.springframework.ws.endpoint.interceptor.PayloadValidatingInterceptor">
+    <bean id="validatingInterceptor"
+          class="org.springframework.ws.server.endpoint.interceptor.PayloadValidatingInterceptor">
         <description>
             This interceptor validates both incoming and outgoing message contents according to the 'airline.xsd' XML
             Schema file.
@@ -92,7 +92,7 @@
         <property name="validateResponse" value="true"/>
     </bean>
 
-    <bean id="loggingInterceptor" class="org.springframework.ws.endpoint.interceptor.PayloadLoggingInterceptor">
+    <bean id="loggingInterceptor" class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor">
         <description>
             This interceptor logs the message payload.
         </description>
@@ -123,7 +123,8 @@
         <property name="validating" value="true"/>
     </bean>
 
-    <bean id="endpointExceptionResolver" class="org.springframework.ws.soap.endpoint.SoapFaultMappingExceptionResolver">
+    <bean id="endpointExceptionResolver"
+          class="org.springframework.ws.soap.server.endpoint.SoapFaultMappingExceptionResolver">
         <description>
             This exception resolver maps exceptions to SOAP Faults. The business logic exceptions
             NoSeatAvailableException and NoSuchFlightException are mapped to custom SOAP Fault. Both

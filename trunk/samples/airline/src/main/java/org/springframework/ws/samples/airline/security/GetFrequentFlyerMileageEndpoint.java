@@ -18,10 +18,9 @@ package org.springframework.ws.samples.airline.security;
 
 import org.jdom.Element;
 import org.jdom.Namespace;
-
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.ws.endpoint.AbstractJDomPayloadEndpoint;
 import org.springframework.ws.samples.airline.service.AirlineService;
+import org.springframework.ws.server.endpoint.AbstractJDomPayloadEndpoint;
 
 /**
  * Endpoint that returns the amount of frequent flyer miles for the currently logged in user. Secured via a WS-Security

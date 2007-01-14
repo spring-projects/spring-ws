@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-<beans>
     <description>
         This application context contains the WS-Security and Acegi beans.
     </description>
@@ -25,7 +25,7 @@
 
     <!-- ===================== WS-SECURITY  ============================== -->
 
-    <bean id="secureMapping" class="org.springframework.ws.soap.endpoint.mapping.SoapActionEndpointMapping">
+    <bean id="secureMapping" class="org.springframework.ws.soap.server.endpoint.mapping.SoapActionEndpointMapping">
         <description>
             This SOAP Action endpoint mapping is used for endpoints that are secured via WS-Security. It uses a
             securityInterceptor to validate incoming messages.
@@ -33,12 +33,13 @@
         <property name="mappings">
             <props>
                 <prop key="http://www.springframework.org/spring-ws/samples/airline/GetFrequentFlyerMileage">
-                    getFrequentFlyerMileageEndpoint</prop>
+                    getFrequentFlyerMileageEndpoint
+                </prop>
             </props>
         </property>
         <property name="interceptors">
             <list>
-                <bean class="org.springframework.ws.soap.endpoint.interceptor.SoapEnvelopeLoggingInterceptor"/>
+                <bean class="org.springframework.ws.soap.server.endpoint.interceptor.SoapEnvelopeLoggingInterceptor"/>
                 <ref local="wsSecurityInterceptor"/>
             </list>
         </property>

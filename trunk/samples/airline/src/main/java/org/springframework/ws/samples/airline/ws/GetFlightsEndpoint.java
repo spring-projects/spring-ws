@@ -20,8 +20,6 @@ import java.util.List;
 
 import org.joda.time.YearMonthDay;
 import org.joda.time.chrono.ISOChronology;
-
-import org.springframework.ws.endpoint.AbstractMarshallingPayloadEndpoint;
 import org.springframework.ws.samples.airline.schema.Airport;
 import org.springframework.ws.samples.airline.schema.Flight;
 import org.springframework.ws.samples.airline.schema.GetFlightsRequest;
@@ -31,6 +29,7 @@ import org.springframework.ws.samples.airline.schema.impl.AirportImpl;
 import org.springframework.ws.samples.airline.schema.impl.FlightImpl;
 import org.springframework.ws.samples.airline.schema.impl.GetFlightsResponseImpl;
 import org.springframework.ws.samples.airline.service.AirlineService;
+import org.springframework.ws.server.endpoint.AbstractMarshallingPayloadEndpoint;
 
 /**
  * Endpoint that returns a list of flights with a given number, and that lie between a given start and end date. It uses
