@@ -28,10 +28,10 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  * Base class for <code>WebServiceTemplate</code> and other WS-accessing helpers. Defines common properties like the
  * {@link org.springframework.ws.WebServiceMessageFactory} and {@link org.springframework.ws.transport.WebServiceMessageSender}.
  * <p/>
- * Not intended to be used directly. See {@link org.springframework.ws.client.WebServiceTemplate}.
+ * Not intended to be used directly. See {@link org.springframework.ws.client.core.WebServiceTemplate}.
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.client.WebServiceTemplate
+ * @see org.springframework.ws.client.core.WebServiceTemplate
  */
 public abstract class WebServiceAccessor extends TransformerObjectSupport implements InitializingBean {
 

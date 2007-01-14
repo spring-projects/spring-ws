@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.client;
+package org.springframework.ws.client.core;
 
 import java.io.IOException;
 
 import org.springframework.ws.WebServiceMessage;
 
 /**
+ * Generic callback interface for code that operates on a {@link WebServiceMessage}. Allows to execute any number of
+ * operations on the message, for example set the contents of the message, or set the <code>SOAPAction</code> header.
+ *
  * @author Arjen Poutsma
  */
 public interface WebServiceMessageCallback {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.client;
+package org.springframework.ws.client.core;
 
 import java.io.IOException;
 import javax.xml.transform.Result;

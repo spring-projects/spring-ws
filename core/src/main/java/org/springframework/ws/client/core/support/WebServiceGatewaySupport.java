@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.client.support;
+package org.springframework.ws.client.core.support;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,26 +23,26 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.ws.WebServiceMessageFactory;
-import org.springframework.ws.client.WebServiceTemplate;
+import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
  * Convenient super class for application classes that need Web service access.
  * <p/>
  * Requires a {@link org.springframework.ws.WebServiceMessageFactory} and {@link org.springframework.ws.transport.WebServiceMessageSender},
- * or a {@link org.springframework.ws.client.WebServiceTemplate} instance to be set. It will create its own
+ * or a {@link org.springframework.ws.client.core.WebServiceTemplate} instance to be set. It will create its own
  * <code>WebServiceTemplate</code> if <code>WebServiceMessageFactory</code> and <code>WebServiceMessageSender</code> are
  * passed in.
  * <p/>
  * In addition to the message factory and sender properties, this gateway offers {@link
  * org.springframework.oxm.Marshaller} and {@link org.springframework.oxm.Unmarshaller} properties. Setting these is
- * required when the {@link org.springframework.ws.client.WebServiceTemplate#marshalSendAndReceive(Object) marshalling
- * methods} of the template are to be used.
+ * required when the {@link org.springframework.ws.client.core.WebServiceTemplate#marshalSendAndReceive(Object)
+ * marshalling methods} of the template are to be used.
  *
  * @author Arjen Poutsma
  * @see #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
  * @see #setMessageSender(org.springframework.ws.transport.WebServiceMessageSender)
- * @see org.springframework.ws.client.WebServiceTemplate
+ * @see org.springframework.ws.client.core.WebServiceTemplate
  * @see #setMarshaller(org.springframework.oxm.Marshaller)
  */
 public abstract class WebServiceGatewaySupport implements InitializingBean {
@@ -112,7 +112,7 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
      * Sets the <code>Marshaller</code> used by the gateway. Setting this property is only required if the marshalling
      * functionality of <code>WebServiceTemplate</code> is to be used.
      *
-     * @see org.springframework.ws.client.WebServiceTemplate#marshalSendAndReceive
+     * @see org.springframework.ws.client.core.WebServiceTemplate#marshalSendAndReceive
      */
     public void setMarshaller(Marshaller marshaller) {
         this.marshaller = marshaller;
@@ -129,7 +129,7 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
      * Sets the <code>Unmarshaller</code> used by the gateway. Setting this property is only required if the marshalling
      * functionality of <code>WebServiceTemplate</code> is to be used.
      *
-     * @see org.springframework.ws.client.WebServiceTemplate#marshalSendAndReceive
+     * @see org.springframework.ws.client.core.WebServiceTemplate#marshalSendAndReceive
      */
     public final void setUnmarshaller(Unmarshaller unmarshaller) {
         this.unmarshaller = unmarshaller;
