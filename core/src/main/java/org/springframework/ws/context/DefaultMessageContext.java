@@ -26,7 +26,7 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 
 /**
- * Simple implementation of <code>MessageContext</code>.
+ * Default implementation of <code>MessageContext</code>.
  *
  * @author Arjen Poutsma
  */
@@ -56,17 +56,10 @@ public class DefaultMessageContext implements MessageContext {
      * factory.
      */
     public DefaultMessageContext(WebServiceMessage request, WebServiceMessageFactory messageFactory) {
-        Assert.notNull(request, "No request given");
+        Assert.notNull(request, "request must not be null");
         Assert.notNull(messageFactory, "messageFactory must not be null");
         this.request = request;
         this.messageFactory = messageFactory;
-    }
-
-    private Map getProperties() {
-        if (properties == null) {
-            properties = new HashMap();
-        }
-        return properties;
     }
 
     public WebServiceMessage getRequest() {
@@ -80,6 +73,10 @@ public class DefaultMessageContext implements MessageContext {
         return response;
     }
 
+    public boolean hasResponse() {
+        return response != null;
+    }
+
     public void readResponse(InputStream inputStream) throws IOException {
         if (response != null) {
             throw new IllegalStateException("Response message already created");
@@ -89,61 +86,30 @@ public class DefaultMessageContext implements MessageContext {
         }
     }
 
-    /**
-     * Check if this message context contains a property with the given name.
-     *
-     * @param name the name of the property to look fo
-     * @return <code>true</code> if the <code>MessageContext</code> contains the property; <code>false</code> otherwise
-     */
     public boolean containsProperty(String name) {
         return getProperties().containsKey(name);
     }
 
-    /**
-     * Gets the value of a specific property from the <code>MessageContext</code>.
-     *
-     * @param name name of the property whose value is to be retrieved
-     * @return value of the property
-     */
     public Object getProperty(String name) {
         return getProperties().get(name);
     }
 
-    /**
-     * Return the names of all properties in this <code>MessageContext</code>.
-     *
-     * @return the names of all properties in this context, or an empty array if none defined
-     */
     public String[] getPropertyNames() {
         return (String[]) getProperties().keySet().toArray(new String[getProperties().size()]);
     }
 
-    /**
-     * Indicates whether this context has a resonse.
-     *
-     * @return <code>true</code> if this context has a response; <code>false</code> otherwise
-     */
-    public boolean hasResponse() {
-        return response != null;
-    }
-
-    /**
-     * Removes a property from the <code>MessageContext</code>.
-     *
-     * @param name name of the property to be removed
-     */
     public void removeProperty(String name) {
         getProperties().remove(name);
     }
 
-    /**
-     * Sets the name and value of a property associated with the <code>MessageContext</code>. If the
-     * <code>MessageContext</code> contains a value of the same property, the old value is replaced.
-     *
-     * @param name  name of the property associated with the value
-     * @param value value of the property
-     */
     public void setProperty(String name, Object value) {
         getProperties().put(name, value);
+    }
+
+    private Map getProperties() {
+        if (properties == null) {
+            properties = new HashMap();
+        }
+        return properties;
     }
 }
