@@ -19,7 +19,7 @@ package org.springframework.ws.client.core;
 import org.springframework.ws.WebServiceMessage;
 
 /**
- * Defines the interface for objects than can resolve received {@link org.springframework.ws.WebServiceMessage}.
+ * Defines the interface for objects than can resolve faults in received {@link org.springframework.ws.WebServiceMessage}.
  *
  * @author Arjen Poutsma
  */
