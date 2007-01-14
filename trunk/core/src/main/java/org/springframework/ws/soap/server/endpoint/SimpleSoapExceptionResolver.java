@@ -1,4 +1,4 @@
-package org.springframework.ws.soap.endpoint;
+package org.springframework.ws.soap.server.endpoint;
 
 import java.util.Locale;
 
