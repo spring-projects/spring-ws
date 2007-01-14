@@ -17,7 +17,6 @@
 package org.springframework.ws.soap.soap11;
 
 import java.io.ByteArrayOutputStream;
-import java.util.Properties;
 
 import junit.framework.Assert;
 import org.springframework.core.io.ByteArrayResource;
@@ -48,19 +47,22 @@ public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageT
     public void testWriteToTransportOutputStream() throws Exception {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         StubTransportOutputStream tos = new StubTransportOutputStream(bos);
+        String soapAction = "http://springframework.org/spring-ws/Action";
+        soapMessage.setSoapAction(soapAction);
         soapMessage.writeTo(tos);
         String result = bos.toString("UTF-8");
         assertXMLEqual("<Envelope xmlns='http://schemas.xmlsoap.org/soap/envelope/'><Header/><Body/></Envelope>",
                 result);
         String contentType = (String) tos.getHeaders().get("Content-Type");
         assertTrue("Invalid Content-Type set", contentType.indexOf(SoapVersion.SOAP_11.getContentType()) != -1);
+        String resultSoapAction = (String) tos.getHeaders().get("SOAPAction");
+        assertEquals("Invalid soap action", soapAction, resultSoapAction);
     }
 
     public void testWriteToTransportResponseAttachment() throws Exception {
         InputStreamSource inputStreamSource = new ByteArrayResource("contents".getBytes("UTF-8"));
         soapMessage.addAttachment(inputStreamSource, "text/plain");
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        final Properties headers = new Properties();
         StubTransportOutputStream tos = new StubTransportOutputStream(bos);
         soapMessage.writeTo(tos);
         String contentType = (String) tos.getHeaders().get("Content-Type");

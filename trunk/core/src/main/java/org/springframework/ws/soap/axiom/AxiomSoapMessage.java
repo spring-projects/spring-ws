@@ -135,7 +135,12 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
     }
 
     public void setSoapAction(String soapAction) {
-        this.soapAction = soapAction;
+        if (soapAction == null) {
+            this.soapAction = "";
+        }
+        else {
+            this.soapAction = soapAction;
+        }
     }
 
     public Attachment getAttachment(String contentId) {
@@ -178,6 +183,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
                 String contentType = format.getContentType();
                 contentType += "; charset=\"" + charsetEncoding + "\"";
                 transportOutputStream.addHeader("Content-Type", contentType);
+                transportOutputStream.addHeader("SOAPAction", soapAction);
             }
             axiomMessage.serializeAndConsume(outputStream, format);
         }
