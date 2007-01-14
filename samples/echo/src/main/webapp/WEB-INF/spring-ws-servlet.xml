@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
     <description>
@@ -8,7 +7,7 @@
         detected by Spring-WS, similar to the way Controllers are picked up in Spring Web MVC.
     </description>
 
-    <bean id="payloadMapping" class="org.springframework.ws.endpoint.mapping.PayloadRootQNameEndpointMapping">
+    <bean id="payloadMapping" class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
         <description>
             This endpoint mapping uses the qualified name of the payload (body contents) to determine the endpoint for
             an incoming message. Every message is passed to the default endpoint. Additionally, messages are logged
@@ -23,7 +22,8 @@
         </property>
     </bean>
 
-    <bean id="validatingInterceptor" class="org.springframework.ws.endpoint.interceptor.PayloadValidatingInterceptor">
+    <bean id="validatingInterceptor"
+          class="org.springframework.ws.server.endpoint.interceptor.PayloadValidatingInterceptor">
         <description>
             This interceptor validates both incoming and outgoing message contents according to the 'echo.xsd' XML
             Schema file.
@@ -33,7 +33,7 @@
         <property name="validateResponse" value="true"/>
     </bean>
 
-    <bean id="loggingInterceptor" class="org.springframework.ws.endpoint.interceptor.PayloadLoggingInterceptor">
+    <bean id="loggingInterceptor" class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor">
         <description>
             This interceptor logs the message payload.
         </description>
