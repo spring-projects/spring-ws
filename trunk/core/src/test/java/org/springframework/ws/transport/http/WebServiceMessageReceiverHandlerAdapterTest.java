@@ -27,7 +27,7 @@ import org.springframework.ws.NoEndpointFoundException;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.server.endpoint.MessageEndpoint;
+import org.springframework.ws.transport.WebServiceMessageReceiver;
 
 public class WebServiceMessageReceiverHandlerAdapterTest extends TestCase {
 
@@ -68,9 +68,9 @@ public class WebServiceMessageReceiverHandlerAdapterTest extends TestCase {
     public void testHandleNonPost() throws Exception {
         httpRequest.setMethod("GET");
         replayMockControls();
-        MessageEndpoint endpoint = new MessageEndpoint() {
+        WebServiceMessageReceiver endpoint = new WebServiceMessageReceiver() {
 
-            public void invoke(MessageContext messageContext) throws Exception {
+            public void receive(MessageContext messageContext) throws Exception {
             }
         };
         try {
@@ -93,9 +93,9 @@ public class WebServiceMessageReceiverHandlerAdapterTest extends TestCase {
         factoryControl.setReturnValue(responseMock);
 
         replayMockControls();
-        MessageEndpoint endpoint = new MessageEndpoint() {
+        WebServiceMessageReceiver endpoint = new WebServiceMessageReceiver() {
 
-            public void invoke(MessageContext messageContext) throws Exception {
+            public void receive(MessageContext messageContext) throws Exception {
             }
         };
 
@@ -120,9 +120,9 @@ public class WebServiceMessageReceiverHandlerAdapterTest extends TestCase {
         messageControl.setMatcher(MockControl.ALWAYS_MATCHER);
 
         replayMockControls();
-        MessageEndpoint endpoint = new MessageEndpoint() {
+        WebServiceMessageReceiver endpoint = new WebServiceMessageReceiver() {
 
-            public void invoke(MessageContext messageContext) throws Exception {
+            public void receive(MessageContext messageContext) throws Exception {
                 messageContext.getResponse();
             }
         };
@@ -147,9 +147,9 @@ public class WebServiceMessageReceiverHandlerAdapterTest extends TestCase {
         messageControl.setMatcher(MockControl.ALWAYS_MATCHER);
 
         replayMockControls();
-        MessageEndpoint endpoint = new MessageEndpoint() {
+        WebServiceMessageReceiver endpoint = new WebServiceMessageReceiver() {
 
-            public void invoke(MessageContext messageContext) throws Exception {
+            public void receive(MessageContext messageContext) throws Exception {
                 messageContext.getResponse();
             }
         };
@@ -172,9 +172,9 @@ public class WebServiceMessageReceiverHandlerAdapterTest extends TestCase {
 
         replayMockControls();
 
-        MessageEndpoint endpoint = new MessageEndpoint() {
+        WebServiceMessageReceiver endpoint = new WebServiceMessageReceiver() {
 
-            public void invoke(MessageContext messageContext) throws Exception {
+            public void receive(MessageContext messageContext) throws Exception {
                 throw new NoEndpointFoundException(messageContext.getRequest());
             }
         };
