@@ -16,15 +16,14 @@
 
 package org.springframework.ws.samples.echo.ws;
 
+import org.springframework.util.Assert;
+import org.springframework.ws.samples.echo.service.EchoService;
+import org.springframework.ws.server.endpoint.AbstractDomPayloadEndpoint;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-
-import org.springframework.util.Assert;
-import org.springframework.ws.endpoint.AbstractDomPayloadEndpoint;
-import org.springframework.ws.samples.echo.service.EchoService;
 
 /**
  * Simple echoing Web service endpoint. Uses a <code>EchoService</code> to create a response string.
