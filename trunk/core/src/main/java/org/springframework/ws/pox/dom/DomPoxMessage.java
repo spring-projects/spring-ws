@@ -69,6 +69,10 @@ public class DomPoxMessage implements PoxMessage {
         return new DOMSource(document);
     }
 
+    public boolean hasFault() {
+        return false;
+    }
+
     public void writeTo(OutputStream outputStream) throws IOException {
         try {
             if (outputStream instanceof TransportOutputStream) {

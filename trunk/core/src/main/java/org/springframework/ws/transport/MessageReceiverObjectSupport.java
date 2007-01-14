@@ -25,14 +25,14 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.endpoint.MessageEndpoint;
+import org.springframework.ws.server.endpoint.MessageEndpoint;
 
 /**
  * Convenience base class for server-side transport objects. Contains a {@link WebServiceMessageFactory}, and has
  * methods for handling incoming <code>WebServiceMessage</code> requests.
  *
  * @author Arjen Poutsma
- * @see #handle(TransportInputStream,TransportOutputStream,org.springframework.ws.endpoint.MessageEndpoint)
+ * @see #handle(TransportInputStream,TransportOutputStream,org.springframework.ws.server.endpoint.MessageEndpoint)
  */
 public abstract class MessageReceiverObjectSupport implements InitializingBean {
 
@@ -87,7 +87,7 @@ public abstract class MessageReceiverObjectSupport implements InitializingBean {
     }
 
     /**
-     * Invoked from {@link #handle(TransportInputStream,TransportOutputStream,org.springframework.ws.endpoint.MessageEndpoint)}
+     * Invoked from {@link #handle(TransportInputStream,TransportOutputStream,org.springframework.ws.server.endpoint.MessageEndpoint)}
      * when no response is given. Default implementation does nothing. Can be overriden to set certain
      * transport-specific response headers.
      *
@@ -98,7 +98,7 @@ public abstract class MessageReceiverObjectSupport implements InitializingBean {
     }
 
     /**
-     * Handles the sending of the response. Invoked from {@link #handle(TransportInputStream,TransportOutputStream,org.springframework.ws.endpoint.MessageEndpoint)}.
+     * Handles the sending of the response. Invoked from {@link #handle(TransportInputStream,TransportOutputStream,org.springframework.ws.server.endpoint.MessageEndpoint)}.
      * Default implementation writes the given response to the given <code>TransportOutputStream</code>. Can be
      * overriden to set certain transport-specific headers.
      *
@@ -113,7 +113,7 @@ public abstract class MessageReceiverObjectSupport implements InitializingBean {
     }
 
     /**
-     * Invoked from {@link #handle(TransportInputStream,TransportOutputStream,org.springframework.ws.endpoint.MessageEndpoint)}
+     * Invoked from {@link #handle(TransportInputStream,TransportOutputStream,org.springframework.ws.server.endpoint.MessageEndpoint)}
      * when no suitable endpoint is found. Default implementation does nothing. Can be overriden to set certain
      * transport-specific response headers.
      *

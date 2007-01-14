@@ -20,7 +20,7 @@ import javax.xml.transform.Source;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.endpoint.AbstractLoggingInterceptor;
+import org.springframework.ws.server.endpoint.AbstractLoggingInterceptor;
 import org.springframework.ws.soap.SoapEndpointInterceptor;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;

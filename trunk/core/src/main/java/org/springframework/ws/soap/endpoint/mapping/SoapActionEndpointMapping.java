@@ -18,13 +18,13 @@ package org.springframework.ws.soap.endpoint.mapping;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import org.springframework.ws.EndpointInterceptor;
-import org.springframework.ws.EndpointInvocationChain;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.endpoint.mapping.AbstractMapBasedEndpointMapping;
-import org.springframework.ws.soap.SoapEndpointInvocationChain;
+import org.springframework.ws.server.EndpointInterceptor;
+import org.springframework.ws.server.EndpointInvocationChain;
+import org.springframework.ws.server.endpoint.mapping.AbstractMapBasedEndpointMapping;
 import org.springframework.ws.soap.SoapEndpointMapping;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.server.SoapEndpointInvocationChain;
 
 /**
  * Implementation of the <code>EndpointMapping</code> interface to map from <code>SOAPAction</code> headers to endpoint
@@ -69,7 +69,7 @@ public class SoapActionEndpointMapping extends AbstractMapBasedEndpointMapping i
      * @param endpoint     the endpoint
      * @param interceptors the endpoint interceptors
      * @return the created invocation chain
-     * @see #setInterceptors(org.springframework.ws.EndpointInterceptor[])
+     * @see #setInterceptors(org.springframework.ws.server.EndpointInterceptor[])
      * @see #setActorsOrRoles(String[])
      */
     protected final EndpointInvocationChain createEndpointInvocationChain(MessageContext messageContext,

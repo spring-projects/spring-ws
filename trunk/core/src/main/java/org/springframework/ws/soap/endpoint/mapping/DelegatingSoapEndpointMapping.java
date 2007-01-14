@@ -18,11 +18,11 @@ package org.springframework.ws.soap.endpoint.mapping;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
-import org.springframework.ws.EndpointInvocationChain;
-import org.springframework.ws.EndpointMapping;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.soap.SoapEndpointInvocationChain;
+import org.springframework.ws.server.EndpointInvocationChain;
+import org.springframework.ws.server.EndpointMapping;
 import org.springframework.ws.soap.SoapEndpointMapping;
+import org.springframework.ws.soap.server.SoapEndpointInvocationChain;
 
 /**
  * <code>EndpointMapping</code> implement that adds SOAP actors or roles to a delegate endpoint. Delegates to another
@@ -71,8 +71,7 @@ public class DelegatingSoapEndpointMapping implements InitializingBean, SoapEndp
      */
     public EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception {
         EndpointInvocationChain delegateChain = delegate.getEndpoint(messageContext);
-        return new SoapEndpointInvocationChain(delegateChain.getEndpoint(),
-                delegateChain.getInterceptors(),
+        return new SoapEndpointInvocationChain(delegateChain.getEndpoint(), delegateChain.getInterceptors(),
                 actorsOrRoles);
     }
 

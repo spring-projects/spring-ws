@@ -46,6 +46,8 @@ public class MockWebServiceMessage implements WebServiceMessage {
 
     private final StringBuffer content;
 
+    private boolean fault = false;
+
     public MockWebServiceMessage() {
         content = new StringBuffer();
     }
@@ -98,6 +100,14 @@ public class MockWebServiceMessage implements WebServiceMessage {
 
     public Source getPayloadSource() {
         return new StringSource(content.toString());
+    }
+
+    public boolean hasFault() {
+        return fault;
+    }
+
+    public void setFault(boolean fault) {
+        this.fault = fault;
     }
 
     public void writeTo(OutputStream outputStream) throws IOException {

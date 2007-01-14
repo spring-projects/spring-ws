@@ -5,7 +5,7 @@ import java.util.Locale;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.endpoint.AbstractEndpointExceptionResolver;
+import org.springframework.ws.server.endpoint.AbstractEndpointExceptionResolver;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapMessage;
 

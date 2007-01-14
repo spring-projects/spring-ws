@@ -31,7 +31,7 @@ import org.codehaus.activemq.message.ActiveMQTopic;
 import org.easymock.MockControl;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.endpoint.MessageEndpoint;
+import org.springframework.ws.server.endpoint.MessageEndpoint;
 
 public class MessageEndpointMessageListenerTest extends TestCase {
 

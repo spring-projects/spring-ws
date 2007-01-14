@@ -23,11 +23,11 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.FrameworkServlet;
 import org.springframework.web.util.WebUtils;
-import org.springframework.ws.EndpointAdapter;
-import org.springframework.ws.EndpointExceptionResolver;
-import org.springframework.ws.EndpointMapping;
-import org.springframework.ws.MessageDispatcher;
 import org.springframework.ws.WebServiceMessageFactory;
+import org.springframework.ws.server.EndpointAdapter;
+import org.springframework.ws.server.EndpointExceptionResolver;
+import org.springframework.ws.server.EndpointMapping;
+import org.springframework.ws.server.MessageDispatcher;
 import org.springframework.ws.wsdl.WsdlDefinition;
 
 /**
@@ -46,7 +46,7 @@ import org.springframework.ws.wsdl.WsdlDefinition;
  *
  * @author Arjen Poutsma
  * @see org.springframework.web.servlet.DispatcherServlet
- * @see org.springframework.ws.MessageDispatcher
+ * @see org.springframework.ws.server.MessageDispatcher
  * @see org.springframework.ws.transport.http.MessageEndpointHandlerAdapter
  */
 public class MessageDispatcherServlet extends FrameworkServlet {
@@ -56,7 +56,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
      * when <code>detectAllEndpointAdapters</code> is turned off.
      *
      * @see #setDetectAllEndpointAdapters(boolean)
-     * @see org.springframework.ws.EndpointAdapter
+     * @see org.springframework.ws.server.EndpointAdapter
      */
     public static final String ENDPOINT_ADAPTER_BEAN_NAME = "endpointAdapter";
 
@@ -76,10 +76,14 @@ public class MessageDispatcherServlet extends FrameworkServlet {
      */
     public static final String ENDPOINT_MAPPING_BEAN_NAME = "endpointMapping";
 
-    /** Well-known name for the <code>WebServiceMessageFactory</code> object in the bean factory for this namespace. */
+    /**
+     * Well-known name for the <code>WebServiceMessageFactory</code> object in the bean factory for this namespace.
+     */
     public static final String WEB_SERVICE_MESSAGE_FACTORY_BEAN_NAME = "messageFactory";
 
-    /** Well-known name for the <code>MessageDispatcher</code> object in the bean factory for this namespace. */
+    /**
+     * Well-known name for the <code>MessageDispatcher</code> object in the bean factory for this namespace.
+     */
     public static final String MESSAGE_DISPATCHER_BEAN_NAME = "messageDispatcher";
 
     /**
@@ -88,33 +92,51 @@ public class MessageDispatcherServlet extends FrameworkServlet {
      */
     private static final String DEFAULT_STRATEGIES_PATH = "MessageDispatcherServlet.properties";
 
-    /** Suffix of a WSDL request uri. */
+    /**
+     * Suffix of a WSDL request uri.
+     */
     private static final String WSDL_SUFFIX_NAME = ".wsdl";
 
     private static final Properties defaultStrategies = new Properties();
 
-    /** Detect all <code>EndpointAdapter</code>s or just expect "endpointAdapter" bean? */
+    /**
+     * Detect all <code>EndpointAdapter</code>s or just expect "endpointAdapter" bean?
+     */
     private boolean detectAllEndpointAdapters = true;
 
-    /** Detect all <code>EndpointExceptionResolver</code>s or just expect "endpointExceptionResolver" bean? */
+    /**
+     * Detect all <code>EndpointExceptionResolver</code>s or just expect "endpointExceptionResolver" bean?
+     */
     private boolean detectAllEndpointExceptionResolvers = true;
 
-    /** Detect all <code>EndpointMapping</code>s or just expect "endpointMapping" bean? */
+    /**
+     * Detect all <code>EndpointMapping</code>s or just expect "endpointMapping" bean?
+     */
     private boolean detectAllEndpointMappings = true;
 
-    /** Detect all <code>WsdlDefinition</code>s? */
+    /**
+     * Detect all <code>WsdlDefinition</code>s?
+     */
     private boolean detectAllWsdlDefinitions = true;
 
-    /** The <code>MessageEndpointHandlerAdapter</code> used by this servlet. */
+    /**
+     * The <code>MessageEndpointHandlerAdapter</code> used by this servlet.
+     */
     private MessageEndpointHandlerAdapter messageEndpointHandlerAdapter = new MessageEndpointHandlerAdapter();
 
-    /** The <code>WsdlDefinitionHandlerAdapter</code> used by this servlet. */
+    /**
+     * The <code>WsdlDefinitionHandlerAdapter</code> used by this servlet.
+     */
     private WsdlDefinitionHandlerAdapter wsdlDefinitionHandlerAdapter = new WsdlDefinitionHandlerAdapter();
 
-    /** The <code>MessageDispatcher</code> used by this servlet. */
+    /**
+     * The <code>MessageDispatcher</code> used by this servlet.
+     */
     private MessageDispatcher messageDispatcher;
 
-    /** Keys are beans names, values are <code>WsdlDefinition</code>s. */
+    /**
+     * Keys are beans names, values are <code>WsdlDefinition</code>s.
+     */
     private Map wsdlDefinitions;
 
     static {
@@ -139,7 +161,9 @@ public class MessageDispatcherServlet extends FrameworkServlet {
     public MessageDispatcherServlet() {
     }
 
-    /** Returns the <code>MessageDispatcher</code> used by this servlet. */
+    /**
+     * Returns the <code>MessageDispatcher</code> used by this servlet.
+     */
     protected MessageDispatcher getMessageDispatcher() {
         return messageDispatcher;
     }
@@ -151,7 +175,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
      * Default is <code>true</code>. Turn this off if you want this servlet to use a single adapter, despite multiple
      * adapter beans being defined in the context.
      *
-     * @see org.springframework.ws.EndpointAdapter
+     * @see org.springframework.ws.server.EndpointAdapter
      */
     public void setDetectAllEndpointAdapters(boolean detectAllEndpointAdapters) {
         this.detectAllEndpointAdapters = detectAllEndpointAdapters;
@@ -164,7 +188,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
      * Default is <code>true</code>. Turn this off if you want this servlet to use a single exception resolver, despite
      * multiple resolver beans being defined in the context.
      *
-     * @see org.springframework.ws.EndpointExceptionResolver
+     * @see org.springframework.ws.server.EndpointExceptionResolver
      */
     public void setDetectAllEndpointExceptionResolvers(boolean detectAllEndpointExceptionResolvers) {
         this.detectAllEndpointExceptionResolvers = detectAllEndpointExceptionResolvers;
@@ -177,7 +201,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
      * Default is <code>true</code>. Turn this off if you want this servlet to use a single mapping, despite multiple
      * mapping beans being defined in the context.
      *
-     * @see org.springframework.ws.EndpointMapping
+     * @see org.springframework.ws.server.EndpointMapping
      */
     public void setDetectAllEndpointMappings(boolean detectAllEndpointMappings) {
         this.detectAllEndpointMappings = detectAllEndpointMappings;
@@ -298,7 +322,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
      * Initialize the <code>EndpointAdapters</code> used by this class. If no adapter beans are defined in the bean
      * factory for this namespace, we default to the strategies in <code>MessageDispatcher</code>.
      *
-     * @see org.springframework.ws.MessageDispatcher#initDefaultStrategies()
+     * @see org.springframework.ws.server.MessageDispatcher#initDefaultStrategies()
      */
     private void initEndpointAdapters() throws BeansException {
         if (detectAllEndpointAdapters) {
@@ -356,7 +380,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
      * Initialize the <code>EndpointMappings</code> used by this class. If no mapping beans are defined in the
      * BeanFactory for this namespace, we default to the strategies in <code>MessageDispatcher</code>.
      *
-     * @see org.springframework.ws.MessageDispatcher#initDefaultStrategies()
+     * @see org.springframework.ws.server.MessageDispatcher#initDefaultStrategies()
      */
     private void initEndpointMappings() throws BeansException {
         if (detectAllEndpointMappings) {

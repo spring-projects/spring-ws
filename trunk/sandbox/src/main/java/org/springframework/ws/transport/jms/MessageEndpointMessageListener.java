@@ -34,7 +34,7 @@ import org.springframework.jms.listener.SessionAwareMessageListener;
  *
  * @author Arjen Poutsma
  * @see #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
- * @see #setMessageEndpoint(org.springframework.ws.endpoint.MessageEndpoint)
+ * @see #setMessageEndpoint(org.springframework.ws.server.endpoint.MessageEndpoint)
  */
 public class MessageEndpointMessageListener extends JmsMessageReceiverObjectSupport
         implements SessionAwareMessageListener {
