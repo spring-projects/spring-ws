@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.client;
+package org.springframework.ws.client.core;
 
 import java.io.IOException;
 import javax.xml.transform.Result;
@@ -23,8 +23,11 @@ import javax.xml.transform.Source;
 import org.springframework.ws.WebServiceMessage;
 
 /**
+ * Specifies a basic set of Web service operations. Implemented by {@link WebServiceTemplate}. Not often used directly,
+ * but a useful option to enhance testability, as it can easily be mocked or stubbed.
+ *
  * @author Arjen Poutsma
- * @see org.springframework.ws.client.WebServiceTemplate
+ * @see WebServiceTemplate
  */
 public interface WebServiceOperations {
 

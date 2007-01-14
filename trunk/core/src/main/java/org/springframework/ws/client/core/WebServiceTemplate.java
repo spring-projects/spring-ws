@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.client;
+package org.springframework.ws.client.core;
 
 import java.io.IOException;
 import javax.xml.transform.Result;
@@ -26,11 +26,18 @@ import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
+import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.support.WebServiceAccessor;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
+ * <strong>The central class for client-side Web services.</strong> It provides a message-driven approach to sending and
+ * receiving {@link org.springframework.ws.WebServiceMessage} instances.
+ * <p/>
+ * Code using this class need only implement callback interfaces, provide {@link Source} objects to read data from, or
+ * use the pluggable {@link Marshaller} support.
+ *
  * @author Arjen Poutsma
  */
 public class WebServiceTemplate extends WebServiceAccessor implements WebServiceOperations {
