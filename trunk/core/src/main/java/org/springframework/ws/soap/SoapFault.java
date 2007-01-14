@@ -34,6 +34,12 @@ public interface SoapFault extends SoapElement {
     QName getFaultCode();
 
     /**
+     * Returns the fault string or reason. For SOAP 1.1, this returns the fault string. For SOAP 1.2, this returns the
+     * fault reason for the default locale.
+     */
+    String getFaultStringOrReason();
+
+    /**
      * Returns the fault actor or role. For SOAP 1.1, this returns the actor. For SOAP 1.2, this returns the role.
      */
     String getFaultActorOrRole();

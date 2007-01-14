@@ -63,6 +63,18 @@ public abstract class AbstractSoapMessage implements SoapMessage {
         return getSoapBody().hasFault();
     }
 
+    /**
+     * Returns <code>getSoapBody().getFault().getFaultStringOrReason()</code>.
+     */
+    public String getFaultReason() {
+        if (hasFault()) {
+            return getSoapBody().getFault().getFaultStringOrReason();
+        }
+        else {
+            return null;
+        }
+    }
+
     public SoapVersion getVersion() {
         if (version == null) {
             String envelopeNamespace = getEnvelope().getName().getNamespaceURI();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2007 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.soap11;
+package org.springframework.ws.client.core;
 
-import java.util.Locale;
-
-import org.springframework.ws.soap.SoapFault;
+import org.springframework.ws.WebServiceMessage;
 
 /**
- * Subinterface of <code>SoapFault</code> that exposes SOAP 1.1 functionality. Necessary because SOAP 1.1 differs from
- * SOAP 1.2 with respect to SOAP Faults.
+ * Simple fault resolver that simply throws a {@link WebServiceFaultException} when a fault occurs.
  *
  * @author Arjen Poutsma
+ * @see WebServiceFaultException
  */
-public interface Soap11Fault extends SoapFault {
+public class SimpleFaultResolver implements FaultResolver {
 
     /**
-     * Returns the locale of the fault string.
+     * Throws a new <code>WebServiceFaultException</code>.
      */
-    Locale getFaultStringLocale();
-
+    public void resolveFault(WebServiceMessage message) {
+        throw new WebServiceFaultException(message.getFaultReason());
+    }
 }

@@ -86,7 +86,7 @@ public class PayloadValidatingInterceptorTest extends XMLTestCase {
         assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getClientOrSenderFaultName(),
                 fault.getFaultCode());
         assertEquals("Invalid fault string on fault", PayloadValidatingInterceptor.DEFAULT_FAULTSTRING_OR_REASON,
-                fault.getFaultString());
+                fault.getFaultStringOrReason());
         assertNotNull("No Detail on fault", fault.getFaultDetail());
     }
 
@@ -129,7 +129,7 @@ public class PayloadValidatingInterceptorTest extends XMLTestCase {
         Soap11Fault fault = (Soap11Fault) response.getSoapBody().getFault();
         assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getClientOrSenderFaultName(),
                 fault.getFaultCode());
-        assertEquals("Invalid fault string on fault", faultString, fault.getFaultString());
+        assertEquals("Invalid fault string on fault", faultString, fault.getFaultStringOrReason());
         assertEquals("Invalid fault string locale on fault", locale, fault.getFaultStringLocale());
         assertNull("Detail on fault", fault.getFaultDetail());
     }

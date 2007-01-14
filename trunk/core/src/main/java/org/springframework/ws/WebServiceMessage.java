@@ -62,4 +62,9 @@ public interface WebServiceMessage {
      */
     boolean hasFault();
 
+    /**
+     * Returns the fault reason message, if any. Returns <code>null</code> when no fault is present.
+     */
+    String getFaultReason();
+
 }

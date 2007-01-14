@@ -46,7 +46,7 @@ class SaajSoap11Fault extends SaajSoapFault implements Soap11Fault {
         }
     }
 
-    public String getFaultString() {
+    public String getFaultStringOrReason() {
         return getImplementation().getFaultString(getSaajFault());
     }
 

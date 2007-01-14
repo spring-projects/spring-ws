@@ -84,6 +84,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
     public void testSendAndReceiveMessageResponse() throws Exception {
         factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), requestMock);
         factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), responseMock);
+        messageControl.expectAndReturn(responseMock.hasFault(), false);
         template.setMessageSender(new ResponseMessageSender());
         replayMockControls();
         WebServiceMessage response = template.sendAndReceive(new WebServiceMessageCallback() {
@@ -108,9 +109,31 @@ public class WebServiceTemplateTest extends XMLTestCase {
         verifyMockControls();
     }
 
+    public void testSendAndReceiveMessageFaultResponse() throws Exception {
+        MockControl resolverControl = MockControl.createControl(FaultResolver.class);
+        FaultResolver resolverMock = (FaultResolver) resolverControl.getMock();
+        template.setFaultResolver(resolverMock);
+        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), requestMock);
+        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), responseMock);
+        messageControl.expectAndReturn(responseMock.hasFault(), true);
+        resolverMock.resolveFault(responseMock);
+        template.setMessageSender(new ResponseMessageSender());
+        replayMockControls();
+        resolverControl.replay();
+        WebServiceMessage response = template.sendAndReceive(new WebServiceMessageCallback() {
+            public void doInMessage(WebServiceMessage message) throws IOException {
+                assertEquals("Invalid request message", requestMock, message);
+            }
+        });
+        assertNull("Invalid response", response);
+        verifyMockControls();
+        resolverControl.verify();
+    }
+
     public void testSendAndReceiveSourceResponse() throws Exception {
         factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), requestMock);
         factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), responseMock);
+        messageControl.expectAndReturn(responseMock.hasFault(), false);
         messageControl.expectAndReturn(requestMock.getPayloadResult(), new StringResult());
         Source expected = new StringSource("<response/>");
         messageControl.expectAndReturn(responseMock.getPayloadSource(), expected);
@@ -132,6 +155,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
     public void testSendAndReceiveResultResponse() throws Exception {
         factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), requestMock);
         factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), responseMock);
+        messageControl.expectAndReturn(responseMock.hasFault(), false);
         messageControl.expectAndReturn(requestMock.getPayloadResult(), new StringResult());
         Source expected = new StringSource("<response/>");
         messageControl.expectAndReturn(responseMock.getPayloadSource(), expected);
@@ -159,6 +183,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
         messageControl.expectAndReturn(requestMock.getPayloadResult(), requestResult);
         marshallerMock.marshal(request, requestResult);
         factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), responseMock);
+        messageControl.expectAndReturn(responseMock.hasFault(), false);
         messageControl.expectAndReturn(responseMock.getPayloadSource(), responseSource);
         unmarshallerControl.expectAndReturn(unmarshallerMock.unmarshal(responseSource), expected);
 

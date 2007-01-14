@@ -117,6 +117,10 @@ class AxiomSoap12Fault extends AxiomSoapFault implements Soap12Fault {
         }
     }
 
+    public String getFaultStringOrReason() {
+        return getFaultReasonText(Locale.getDefault());
+    }
+
     public String getFaultReasonText(Locale locale) {
         SOAPFaultReason faultReason = axiomFault.getReason();
         String language = AxiomUtils.toLanguage(locale);

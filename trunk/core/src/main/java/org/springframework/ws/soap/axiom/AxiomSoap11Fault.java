@@ -35,7 +35,7 @@ class AxiomSoap11Fault extends AxiomSoapFault implements Soap11Fault {
         super(axiomFault, axiomFactory);
     }
 
-    public String getFaultString() {
+    public String getFaultStringOrReason() {
         if (axiomFault.getReason() != null) {
             SOAPFaultText soapText = axiomFault.getReason().getFirstSOAPText();
             if (soapText != null) {
