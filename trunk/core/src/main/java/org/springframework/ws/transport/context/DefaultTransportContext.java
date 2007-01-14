@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.transport;
+package org.springframework.ws.transport.context;
+
+import org.springframework.ws.transport.TransportInputStream;
+import org.springframework.ws.transport.TransportOutputStream;
 
 /**
  * Default implementation of the <code>TransportContext</code> interface.

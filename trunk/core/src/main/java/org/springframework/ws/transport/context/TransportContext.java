@@ -1,7 +1,11 @@
-package org.springframework.ws.transport;
+package org.springframework.ws.transport.context;
+
+import org.springframework.ws.transport.TransportInputStream;
+import org.springframework.ws.transport.TransportOutputStream;
 
 /**
- * Strategy interface for determining the current {@link TransportInputStream} and {@link TransportOutputStream}.
+ * Strategy interface for determining the current {@link org.springframework.ws.transport.TransportInputStream} and
+ * {@link org.springframework.ws.transport.TransportOutputStream}.
  * <p/>
  * An instance of this class can be associated with a thread via the {@link TransportContextHolder} class.
  *

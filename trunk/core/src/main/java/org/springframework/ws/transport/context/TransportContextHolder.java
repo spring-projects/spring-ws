@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ws.transport;
+package org.springframework.ws.transport.context;
 
 /**
  * Simple holder class that associates a <code>TransportContext</code> instance with the current thread. The

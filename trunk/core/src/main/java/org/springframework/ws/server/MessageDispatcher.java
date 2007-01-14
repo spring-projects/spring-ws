@@ -26,9 +26,9 @@ import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.util.ObjectUtils;
 import org.springframework.ws.NoEndpointFoundException;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.server.endpoint.MessageEndpoint;
 import org.springframework.ws.server.endpoint.MessageEndpointAdapter;
 import org.springframework.ws.server.endpoint.PayloadEndpointAdapter;
+import org.springframework.ws.transport.WebServiceMessageReceiver;
 
 /**
  * Central dispatcher for use withing Spring-WS. Dispatches Web service messages to registered endoints.
@@ -43,9 +43,6 @@ import org.springframework.ws.server.endpoint.PayloadEndpointAdapter;
  * <code>endpointAdapters</code> property.</li> <li>Its exception resolution strategy can be specified via a
  * <code>EndpointExceptionResolver</code>, for example mapping certain exceptions to SOAP Faults. Default is none.
  * Additional exception resolvers can be added through the <code>endpointExceptionResolvers</code> property.</li> </ul>
- * A web application can use any number of <code>MessageDispatcher</code>s.</b> Since a <code>MessageDispatcher</code>
- * also implements <code>MessageEndpoint</code>, it is also possible to chain them: one dispatcher can be registered as
- * the endpoint of another, though the <code>MessageEndpointAdapter</code>.
  *
  * @author Arjen Poutsma
  * @see EndpointMapping
@@ -53,7 +50,7 @@ import org.springframework.ws.server.endpoint.PayloadEndpointAdapter;
  * @see EndpointExceptionResolver
  * @see org.springframework.web.servlet.DispatcherServlet
  */
-public class MessageDispatcher implements MessageEndpoint, BeanNameAware {
+public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAware {
 
     /**
      * Log category to use when no mapped endpoint is found for a request.
@@ -143,7 +140,7 @@ public class MessageDispatcher implements MessageEndpoint, BeanNameAware {
         this.beanName = beanName;
     }
 
-    public void invoke(MessageContext messageContext) throws Exception {
+    public void receive(MessageContext messageContext) throws Exception {
         if (logger.isDebugEnabled()) {
             logger.debug("MessageDispatcher with name '" + beanName + "' received request [" +
                     messageContext.getRequest() + "]");

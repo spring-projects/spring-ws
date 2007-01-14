@@ -29,7 +29,7 @@ import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
 
-public class MessageEndpointHandlerAdapterTest extends TestCase {
+public class WebServiceMessageReceiverHandlerAdapterTest extends TestCase {
 
     private static final String REQUEST = " <SOAP-ENV:Envelope\n" +
             "  xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\"\n" +
@@ -37,7 +37,7 @@ public class MessageEndpointHandlerAdapterTest extends TestCase {
             "       <m:GetLastTradePrice xmlns:m=\"Some-URI\">\n" + "           <symbol>DIS</symbol>\n" +
             "       </m:GetLastTradePrice>\n" + "   </SOAP-ENV:Body>\n" + "</SOAP-ENV:Envelope>";
 
-    private MessageEndpointHandlerAdapter adapter;
+    private WebServiceMessageReceiverHandlerAdapter adapter;
 
     private MockHttpServletRequest httpRequest;
 
@@ -54,7 +54,7 @@ public class MessageEndpointHandlerAdapterTest extends TestCase {
     private WebServiceMessage requestMock;
 
     protected void setUp() throws Exception {
-        adapter = new MessageEndpointHandlerAdapter();
+        adapter = new WebServiceMessageReceiverHandlerAdapter();
         httpRequest = new MockHttpServletRequest();
         httpResponse = new MockHttpServletResponse();
         factoryControl = MockControl.createControl(WebServiceMessageFactory.class);
@@ -85,7 +85,7 @@ public class MessageEndpointHandlerAdapterTest extends TestCase {
 
     public void testHandlePostNoResponse() throws Exception {
         httpRequest.setMethod("POST");
-        httpRequest.setContent(MessageEndpointHandlerAdapterTest.REQUEST.getBytes("UTF-8"));
+        httpRequest.setContent(REQUEST.getBytes("UTF-8"));
         httpRequest.setContentType("text/xml; charset=\"utf-8\"");
         httpRequest.setCharacterEncoding("UTF-8");
         factoryMock.createWebServiceMessage(new HttpServletTransportInputStream(httpRequest));
@@ -108,7 +108,7 @@ public class MessageEndpointHandlerAdapterTest extends TestCase {
 
     public void testHandlePostResponse() throws Exception {
         httpRequest.setMethod("POST");
-        httpRequest.setContent(MessageEndpointHandlerAdapterTest.REQUEST.getBytes("UTF-8"));
+        httpRequest.setContent(REQUEST.getBytes("UTF-8"));
         httpRequest.setContentType("text/xml; charset=\"utf-8\"");
         httpRequest.setCharacterEncoding("UTF-8");
         factoryMock.createWebServiceMessage(new HttpServletTransportInputStream(httpRequest));
@@ -135,7 +135,7 @@ public class MessageEndpointHandlerAdapterTest extends TestCase {
 
     public void testHandlePostFault() throws Exception {
         httpRequest.setMethod("POST");
-        httpRequest.setContent(MessageEndpointHandlerAdapterTest.REQUEST.getBytes("UTF-8"));
+        httpRequest.setContent(REQUEST.getBytes("UTF-8"));
         httpRequest.setContentType("text/xml; charset=\"utf-8\"");
         httpRequest.setCharacterEncoding("UTF-8");
         factoryMock.createWebServiceMessage(new HttpServletTransportInputStream(httpRequest));
@@ -163,7 +163,7 @@ public class MessageEndpointHandlerAdapterTest extends TestCase {
 
     public void testHandleNotFound() throws Exception {
         httpRequest.setMethod("POST");
-        httpRequest.setContent(MessageEndpointHandlerAdapterTest.REQUEST.getBytes("UTF-8"));
+        httpRequest.setContent(REQUEST.getBytes("UTF-8"));
         httpRequest.setContentType("text/xml; charset=\"utf-8\"");
         httpRequest.setCharacterEncoding("UTF-8");
         factoryMock.createWebServiceMessage(new HttpServletTransportInputStream(httpRequest));

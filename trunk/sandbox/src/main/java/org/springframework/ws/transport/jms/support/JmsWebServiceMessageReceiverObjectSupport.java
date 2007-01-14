@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.transport.jms;
+package org.springframework.ws.transport.jms.support;
 
 import javax.jms.BytesMessage;
 import javax.jms.Message;
@@ -25,41 +25,44 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.server.endpoint.MessageEndpoint;
-import org.springframework.ws.transport.MessageReceiverObjectSupport;
 import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.ws.transport.TransportOutputStream;
+import org.springframework.ws.transport.WebServiceMessageReceiver;
+import org.springframework.ws.transport.jms.JmsTransportInputStream;
+import org.springframework.ws.transport.jms.JmsTransportOutputStream;
+import org.springframework.ws.transport.support.WebServiceMessageReceiverObjectSupport;
 
 /**
- * Convenience base class for JMS server-side transport objects. Contains a {@link MessageEndpoint}, and has methods for
- * handling incoming JMS <code>Message</code> requests.
+ * Convenience base class for JMS server-side transport objects. Contains a {@link WebServiceMessageReceiver}, and has
+ * methods for handling incoming JMS <code>Message</code> requests.
  * <p/>
  * This class can be used as a base for a EJB MessageDrivenBean, or using Spring-2.0's MessageDriven POJO's.
  *
  * @author Arjen Poutsma
  * @see #handle(javax.jms.Message,javax.jms.Session)
  */
-public abstract class JmsMessageReceiverObjectSupport extends MessageReceiverObjectSupport implements InitializingBean {
+public abstract class JmsWebServiceMessageReceiverObjectSupport extends WebServiceMessageReceiverObjectSupport
+        implements InitializingBean {
 
-    private MessageEndpoint messageEndpoint;
+    private WebServiceMessageReceiver messageReceiver;
 
     /**
-     * Returns the <code>MessageEndpoint</code> used by this listener.
+     * Returns the <code>WebServiceMessageReceiver</code> used by this listener.
      */
-    public MessageEndpoint getMessageEndpoint() {
-        return messageEndpoint;
+    public WebServiceMessageReceiver getMessageReceiver() {
+        return messageReceiver;
     }
 
     /**
-     * Sets the <code>MessageEndpoint</code> used by this listener.
+     * Sets the <code>WebServiceMessageReceiver</code> used by this listener.
      */
-    public void setMessageEndpoint(MessageEndpoint messageEndpoint) {
-        this.messageEndpoint = messageEndpoint;
+    public void setMessageReceiver(WebServiceMessageReceiver messageReceiver) {
+        this.messageReceiver = messageReceiver;
     }
 
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(getMessageFactory(), "messageFactory is required");
-        Assert.notNull(getMessageEndpoint(), "messageEndpoint must not be null");
+        Assert.notNull(getMessageReceiver(), "messageReceiver must not be null");
         logger.info("Using message factory [" + getMessageFactory() + "]");
     }
 
@@ -74,7 +77,7 @@ public abstract class JmsMessageReceiverObjectSupport extends MessageReceiverObj
         if (request instanceof BytesMessage) {
             TransportInputStream tis = new JmsTransportInputStream((BytesMessage) request);
             TransportOutputStream tos = new JmsTransportOutputStream(session, request.getJMSCorrelationID());
-            handle(tis, tos, getMessageEndpoint());
+            handle(tis, tos, getMessageReceiver());
         }
         else {
             throw new IllegalArgumentException(
