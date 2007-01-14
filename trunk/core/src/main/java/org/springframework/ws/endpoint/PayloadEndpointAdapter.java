@@ -22,6 +22,7 @@ import javax.xml.transform.Transformer;
 import org.springframework.ws.EndpointAdapter;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
  * Adapter to use a <code>PayloadEndpoint</code> as the endpoint for a <code>EndpointInvocationChain</code>.

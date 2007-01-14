@@ -24,6 +24,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.DocumentResult;
 import org.dom4j.io.DocumentSource;
+import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
  * Abstract base class for endpoints that handle the message payload as dom4j elements. Offers the message payload as a

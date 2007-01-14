@@ -20,6 +20,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.sax.SAXResult;
 
+import org.springframework.xml.transform.TransformerObjectSupport;
 import org.xml.sax.ContentHandler;
 
 /**

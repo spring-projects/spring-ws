@@ -24,6 +24,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
+import org.springframework.xml.transform.TransformerObjectSupport;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -36,7 +37,7 @@ import org.w3c.dom.Element;
  *
  * @author Arjen Poutsma
  * @author Alef Arendsen
- * @see #invokeInternal(org.w3c.dom.Element, org.w3c.dom.Document)
+ * @see #invokeInternal(org.w3c.dom.Element,org.w3c.dom.Document)
  */
 public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSupport implements PayloadEndpoint {
 
@@ -103,8 +104,8 @@ public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSuppor
      */
     protected DocumentBuilderFactory createDocumentBuilderFactory() throws ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setValidating(this.validating);
-        factory.setNamespaceAware(this.namespaceAware);
+        factory.setValidating(validating);
+        factory.setNamespaceAware(namespaceAware);
         return factory;
     }
 

@@ -17,7 +17,6 @@
 package org.springframework.ws.endpoint;
 
 import java.io.StringWriter;
-
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -28,6 +27,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.springframework.ws.EndpointInterceptor;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
  * Abstract base class for <code>EndpointInterceptor</code> instances that log a part of a

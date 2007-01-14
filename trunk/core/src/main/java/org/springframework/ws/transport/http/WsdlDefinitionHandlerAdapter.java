@@ -34,8 +34,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.ws.endpoint.TransformerObjectSupport;
 import org.springframework.ws.wsdl.WsdlDefinition;
+import org.springframework.xml.transform.TransformerObjectSupport;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
 import org.w3c.dom.Attr;
@@ -69,7 +69,7 @@ import org.w3c.dom.Node;
  * @see WsdlDefinition
  * @see #setTransformLocations(boolean)
  * @see #setLocationExpression(String)
- * @see #transformLocation(String, javax.servlet.http.HttpServletRequest)
+ * @see #transformLocation(String,javax.servlet.http.HttpServletRequest)
  */
 public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport implements HandlerAdapter, InitializingBean {
 
@@ -161,18 +161,14 @@ public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport imple
         try {
             if (location.startsWith("/")) {
                 // a relative path, prepend the context path
-                URL newLocation = new URL(request.getScheme(),
-                        request.getServerName(),
-                        request.getServerPort(),
+                URL newLocation = new URL(request.getScheme(), request.getServerName(), request.getServerPort(),
                         request.getContextPath() + location);
                 return newLocation.toString();
             }
             else {
                 // a full url
                 URL oldLocation = new URL(location);
-                URL newLocation = new URL(request.getScheme(),
-                        request.getServerName(),
-                        request.getServerPort(),
+                URL newLocation = new URL(request.getScheme(), request.getServerName(), request.getServerPort(),
                         oldLocation.getFile());
                 return newLocation.toString();
             }
@@ -192,7 +188,7 @@ public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport imple
      *
      * @see #setLocationExpression(String)
      * @see #setTransformLocations(boolean)
-     * @see #transformLocation(String, javax.servlet.http.HttpServletRequest)
+     * @see #transformLocation(String,javax.servlet.http.HttpServletRequest)
      */
     protected void transformLocations(Document definitionDocument, HttpServletRequest request) throws Exception {
         Node[] locationNodes = locationXPathExpression.evaluateAsNodes(definitionDocument);
