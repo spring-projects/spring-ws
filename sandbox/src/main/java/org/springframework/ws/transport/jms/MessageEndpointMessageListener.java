@@ -22,6 +22,7 @@ import javax.jms.Message;
 import javax.jms.Session;
 
 import org.springframework.jms.listener.SessionAwareMessageListener;
+import org.springframework.ws.transport.jms.support.JmsWebServiceMessageReceiverObjectSupport;
 
 /**
  * Spring-2.0 <code>SessionAwareMessageListener</code> that can be used to handle incoming JMS messages. Requires a
@@ -34,9 +35,9 @@ import org.springframework.jms.listener.SessionAwareMessageListener;
  *
  * @author Arjen Poutsma
  * @see #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
- * @see #setMessageEndpoint(org.springframework.ws.server.endpoint.MessageEndpoint)
+ * @see #setMessageReceiver(org.springframework.ws.transport.WebServiceMessageReceiver)
  */
-public class MessageEndpointMessageListener extends JmsMessageReceiverObjectSupport
+public class MessageEndpointMessageListener extends JmsWebServiceMessageReceiverObjectSupport
         implements SessionAwareMessageListener {
 
     public void onMessage(Message message, Session session) throws JMSException {

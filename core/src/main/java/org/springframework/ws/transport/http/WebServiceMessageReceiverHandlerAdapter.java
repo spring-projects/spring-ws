@@ -23,27 +23,29 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.server.endpoint.MessageEndpoint;
-import org.springframework.ws.transport.MessageReceiverObjectSupport;
 import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.ws.transport.TransportOutputStream;
+import org.springframework.ws.transport.WebServiceMessageReceiver;
+import org.springframework.ws.transport.support.WebServiceMessageReceiverObjectSupport;
 
 /**
- * Adapter to use the <code>MessageEndpoint</code> interface with the generic <code>DispatcherServlet</code>. Requires a
- * <code>WebServiceMessageFactory</code> which is used to convert the incoming <code>HttpServletRequest</code> into a
- * <code>WebServiceMessage</code>, and passes that context to the mapped <code>MessageEndpoint</code>. If a response is
- * created, that is sent via the <code>HttpServletResponse</code>.
+ * Adapter to use the {@link WebServiceMessageReceiver} interface with the generic {@link
+ * org.springframework.web.servlet.DispatcherServlet}. Requires a {@link org.springframework.ws.WebServiceMessageFactory}
+ * which is used to convert the incoming <code>HttpServletRequest</code> into a <code>WebServiceMessage</code>, and
+ * passes that context to the mapped <code>WebServiceMessageReceiver</code>. If a response is created, that is sent via
+ * the <code>HttpServletResponse</code>.
  * <p/>
- * Note that the <code>MessageDispatcher</code> implements the <code>MessageEndpoint</code> interface, enabling this
- * adapter to function as a gateway to further message handling logic.
+ * Note that the <code>MessageDispatcher</code> implements the <code>WebServiceMessageReceiver</code> interface,
+ * enabling this adapter to function as a gateway to further message handling logic.
  *
  * @author Arjen Poutsma
  * @see #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
+ * @see org.springframework.ws.transport.WebServiceMessageReceiver
  * @see org.springframework.ws.WebServiceMessageFactory
- * @see org.springframework.ws.server.endpoint.MessageEndpoint
  * @see org.springframework.ws.server.MessageDispatcher
  */
-public class MessageEndpointHandlerAdapter extends MessageReceiverObjectSupport implements HandlerAdapter {
+public class WebServiceMessageReceiverHandlerAdapter extends WebServiceMessageReceiverObjectSupport
+        implements HandlerAdapter {
 
     public long getLastModified(HttpServletRequest request, Object handler) {
         return -1L;
@@ -55,7 +57,7 @@ public class MessageEndpointHandlerAdapter extends MessageReceiverObjectSupport 
         if ("POST".equals(httpServletRequest.getMethod())) {
             TransportInputStream tis = new HttpServletTransportInputStream(httpServletRequest);
             TransportOutputStream tos = new HttpServletTransportOutputStream(httpServletResponse);
-            handle(tis, tos, (MessageEndpoint) handler);
+            handle(tis, tos, (WebServiceMessageReceiver) handler);
             return null;
         }
         else {
@@ -64,7 +66,7 @@ public class MessageEndpointHandlerAdapter extends MessageReceiverObjectSupport 
     }
 
     public boolean supports(Object handler) {
-        return handler instanceof MessageEndpoint;
+        return handler instanceof WebServiceMessageReceiver;
     }
 
     /**

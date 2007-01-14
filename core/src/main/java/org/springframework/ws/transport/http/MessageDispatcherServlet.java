@@ -32,10 +32,10 @@ import org.springframework.ws.wsdl.WsdlDefinition;
 
 /**
  * Servlet for simplified dispatching of Web service messages. Delegates to a <code>MessageDispatcher</code> and a
- * <code>MessageEndpointHandlerAdapter</code>.
+ * <code>WebServiceMessageReceiverHandlerAdapter</code>.
  * <p/>
  * This servlet is a convenient alternative for a standard Spring-MVC <code>DispatcherServlet</code> with a separate
- * <code>MessageEndpointHandlerAdapter</code> and a <code>MessageDispatcher</code>.
+ * <code>WebServiceMessageReceiverHandlerAdapter</code> and a <code>MessageDispatcher</code>.
  * <p/>
  * This servlet automatically detects <code>EndpointAdapter</code>s, <code>EndpointMapping</code>s, and
  * <code>EndpointExceptionResolver</code>s, by type (when the corresponding detectAll* property is enabled) or by type
@@ -47,7 +47,7 @@ import org.springframework.ws.wsdl.WsdlDefinition;
  * @author Arjen Poutsma
  * @see org.springframework.web.servlet.DispatcherServlet
  * @see org.springframework.ws.server.MessageDispatcher
- * @see org.springframework.ws.transport.http.MessageEndpointHandlerAdapter
+ * @see org.springframework.ws.transport.http.WebServiceMessageReceiverHandlerAdapter
  */
 public class MessageDispatcherServlet extends FrameworkServlet {
 
@@ -120,9 +120,10 @@ public class MessageDispatcherServlet extends FrameworkServlet {
     private boolean detectAllWsdlDefinitions = true;
 
     /**
-     * The <code>MessageEndpointHandlerAdapter</code> used by this servlet.
+     * The <code>WebServiceMessageReceiverHandlerAdapter</code> used by this servlet.
      */
-    private MessageEndpointHandlerAdapter messageEndpointHandlerAdapter = new MessageEndpointHandlerAdapter();
+    private WebServiceMessageReceiverHandlerAdapter messageReceiverHandlerAdapter =
+            new WebServiceMessageReceiverHandlerAdapter();
 
     /**
      * The <code>WsdlDefinitionHandlerAdapter</code> used by this servlet.
@@ -219,7 +220,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
     }
 
     protected long getLastModified(HttpServletRequest req) {
-        return messageEndpointHandlerAdapter.getLastModified(req, messageDispatcher);
+        return messageReceiverHandlerAdapter.getLastModified(req, messageDispatcher);
     }
 
     protected void initFrameworkServlet() throws ServletException, BeansException {
@@ -235,7 +236,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
             wsdlDefinitionHandlerAdapter.handle(httpServletRequest, httpServletResponse, definition);
         }
         else {
-            messageEndpointHandlerAdapter.handle(httpServletRequest, httpServletResponse, messageDispatcher);
+            messageReceiverHandlerAdapter.handle(httpServletRequest, httpServletResponse, messageDispatcher);
         }
     }
 
@@ -428,7 +429,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
                 }
             }
         }
-        messageEndpointHandlerAdapter.setMessageFactory(messageFactory);
+        messageReceiverHandlerAdapter.setMessageFactory(messageFactory);
     }
 
     private void initMessageDispatcher() {

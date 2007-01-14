@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.transport;
+package org.springframework.ws.transport.support;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,16 +25,21 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.server.endpoint.MessageEndpoint;
+import org.springframework.ws.transport.TransportInputStream;
+import org.springframework.ws.transport.TransportOutputStream;
+import org.springframework.ws.transport.WebServiceMessageReceiver;
+import org.springframework.ws.transport.context.DefaultTransportContext;
+import org.springframework.ws.transport.context.TransportContext;
+import org.springframework.ws.transport.context.TransportContextHolder;
 
 /**
  * Convenience base class for server-side transport objects. Contains a {@link WebServiceMessageFactory}, and has
  * methods for handling incoming <code>WebServiceMessage</code> requests.
  *
  * @author Arjen Poutsma
- * @see #handle(TransportInputStream,TransportOutputStream,org.springframework.ws.server.endpoint.MessageEndpoint)
+ * @see #handle(org.springframework.ws.transport.TransportInputStream,org.springframework.ws.transport.TransportOutputStream,org.springframework.ws.transport.WebServiceMessageReceiver)
  */
-public abstract class MessageReceiverObjectSupport implements InitializingBean {
+public abstract class WebServiceMessageReceiverObjectSupport implements InitializingBean {
 
     /**
      * Logger available to subclasses.
@@ -62,7 +67,7 @@ public abstract class MessageReceiverObjectSupport implements InitializingBean {
         logger.info("Using message factory [" + messageFactory + "]");
     }
 
-    protected final void handle(TransportInputStream tis, TransportOutputStream tos, MessageEndpoint endpoint)
+    protected final void handle(TransportInputStream tis, TransportOutputStream tos, WebServiceMessageReceiver receiver)
             throws Exception {
         TransportContext previousTransportContext = TransportContextHolder.getTransportContext();
         TransportContextHolder.setTransportContext(new DefaultTransportContext(tis, tos));
@@ -70,7 +75,7 @@ public abstract class MessageReceiverObjectSupport implements InitializingBean {
         try {
             WebServiceMessage messageRequest = getMessageFactory().createWebServiceMessage(tis);
             MessageContext messageContext = new DefaultMessageContext(messageRequest, getMessageFactory());
-            endpoint.invoke(messageContext);
+            receiver.receive(messageContext);
             if (!messageContext.hasResponse()) {
                 handleNoResponse(tis, tos);
             }
@@ -87,7 +92,7 @@ public abstract class MessageReceiverObjectSupport implements InitializingBean {
     }
 
     /**
-     * Invoked from {@link #handle(TransportInputStream,TransportOutputStream,org.springframework.ws.server.endpoint.MessageEndpoint)}
+     * Invoked from {@link #handle(org.springframework.ws.transport.TransportInputStream,org.springframework.ws.transport.TransportOutputStream,org.springframework.ws.transport.WebServiceMessageReceiver)}
      * when no response is given. Default implementation does nothing. Can be overriden to set certain
      * transport-specific response headers.
      *
@@ -98,7 +103,7 @@ public abstract class MessageReceiverObjectSupport implements InitializingBean {
     }
 
     /**
-     * Handles the sending of the response. Invoked from {@link #handle(TransportInputStream,TransportOutputStream,org.springframework.ws.server.endpoint.MessageEndpoint)}.
+     * Handles the sending of the response. Invoked from {@link #handle(org.springframework.ws.transport.TransportInputStream,org.springframework.ws.transport.TransportOutputStream,org.springframework.ws.transport.WebServiceMessageReceiver)}.
      * Default implementation writes the given response to the given <code>TransportOutputStream</code>. Can be
      * overriden to set certain transport-specific headers.
      *
@@ -113,7 +118,7 @@ public abstract class MessageReceiverObjectSupport implements InitializingBean {
     }
 
     /**
-     * Invoked from {@link #handle(TransportInputStream,TransportOutputStream,org.springframework.ws.server.endpoint.MessageEndpoint)}
+     * Invoked from {@link #handle(org.springframework.ws.transport.TransportInputStream,org.springframework.ws.transport.TransportOutputStream,org.springframework.ws.transport.WebServiceMessageReceiver)}
      * when no suitable endpoint is found. Default implementation does nothing. Can be overriden to set certain
      * transport-specific response headers.
      *
