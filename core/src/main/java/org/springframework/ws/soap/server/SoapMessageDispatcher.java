@@ -36,7 +36,7 @@ import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
-import org.springframework.ws.soap.endpoint.SimpleSoapExceptionResolver;
+import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
 import org.springframework.ws.soap.soap12.Soap12Header;
 
 /**
@@ -82,7 +82,7 @@ public class SoapMessageDispatcher extends MessageDispatcher {
      *
      * @see org.springframework.ws.server.MessageDispatcher#initDefaultStrategies()
      * @see #setEndpointExceptionResolvers(java.util.List)
-     * @see org.springframework.ws.soap.endpoint.SimpleSoapExceptionResolver
+     * @see org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver
      */
     protected void initDefaultStrategies() {
         super.initDefaultStrategies();

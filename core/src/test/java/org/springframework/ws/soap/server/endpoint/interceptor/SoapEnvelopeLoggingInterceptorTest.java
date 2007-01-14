@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.endpoint.interceptor;
+package org.springframework.ws.soap.server.endpoint.interceptor;
 
 import junit.framework.TestCase;
 import org.apache.log4j.AppenderSkeleton;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.endpoint.interceptor;
+package org.springframework.ws.soap.server.endpoint.interceptor;
 
 import javax.xml.transform.Source;
 

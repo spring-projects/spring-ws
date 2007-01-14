@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.endpoint.mapping;
+package org.springframework.ws.soap.server.endpoint.mapping;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;

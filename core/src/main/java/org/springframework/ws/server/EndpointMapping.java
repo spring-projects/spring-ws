@@ -33,7 +33,7 @@ import org.springframework.ws.context.MessageContext;
  * @author Arjen Poutsma
  * @see org.springframework.ws.server.endpoint.mapping.AbstractEndpointMapping
  * @see org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping
- * @see org.springframework.ws.soap.endpoint.mapping.SoapActionEndpointMapping
+ * @see org.springframework.ws.soap.server.endpoint.mapping.SoapActionEndpointMapping
  */
 public interface EndpointMapping {
 

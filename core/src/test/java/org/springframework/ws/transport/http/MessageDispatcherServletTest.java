@@ -20,7 +20,7 @@ import org.springframework.web.context.support.StaticWebApplicationContext;
 import org.springframework.ws.server.MessageDispatcher;
 import org.springframework.ws.server.endpoint.PayloadEndpointAdapter;
 import org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping;
-import org.springframework.ws.soap.endpoint.SimpleSoapExceptionResolver;
+import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
 import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
 import org.w3c.dom.Document;
 
