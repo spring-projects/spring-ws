@@ -18,12 +18,12 @@ package org.springframework.ws.soap.endpoint.mapping;
 
 import junit.framework.TestCase;
 import org.easymock.MockControl;
-import org.springframework.ws.EndpointInvocationChain;
-import org.springframework.ws.EndpointMapping;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.soap.SoapEndpointInvocationChain;
+import org.springframework.ws.server.EndpointInvocationChain;
+import org.springframework.ws.server.EndpointMapping;
+import org.springframework.ws.soap.server.SoapEndpointInvocationChain;
 
 public class DelegatingSoapEndpointMappingTest extends TestCase {
 

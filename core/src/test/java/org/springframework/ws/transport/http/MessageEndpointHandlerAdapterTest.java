@@ -24,11 +24,10 @@ import org.easymock.MockControl;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.ws.NoEndpointFoundException;
+import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.endpoint.MessageEndpoint;
-import org.springframework.ws.soap.SoapBody;
-import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.server.endpoint.MessageEndpoint;
 
 public class MessageEndpointHandlerAdapterTest extends TestCase {
 
@@ -50,13 +49,9 @@ public class MessageEndpointHandlerAdapterTest extends TestCase {
 
     private MockControl messageControl;
 
-    private SoapMessage responseMock;
+    private WebServiceMessage responseMock;
 
-    private MockControl bodyControl;
-
-    private SoapBody bodyMock;
-
-    private SoapMessage requestMock;
+    private WebServiceMessage requestMock;
 
     protected void setUp() throws Exception {
         adapter = new MessageEndpointHandlerAdapter();
@@ -65,11 +60,9 @@ public class MessageEndpointHandlerAdapterTest extends TestCase {
         factoryControl = MockControl.createControl(WebServiceMessageFactory.class);
         factoryMock = (WebServiceMessageFactory) factoryControl.getMock();
         adapter.setMessageFactory(factoryMock);
-        messageControl = MockControl.createControl(SoapMessage.class);
-        requestMock = (SoapMessage) messageControl.getMock();
-        responseMock = (SoapMessage) messageControl.getMock();
-        bodyControl = MockControl.createControl(SoapBody.class);
-        bodyMock = (SoapBody) bodyControl.getMock();
+        messageControl = MockControl.createControl(WebServiceMessage.class);
+        requestMock = (WebServiceMessage) messageControl.getMock();
+        responseMock = (WebServiceMessage) messageControl.getMock();
     }
 
     public void testHandleNonPost() throws Exception {
@@ -122,8 +115,7 @@ public class MessageEndpointHandlerAdapterTest extends TestCase {
         factoryControl.setMatcher(MockControl.ALWAYS_MATCHER);
         factoryControl.setReturnValue(requestMock);
         factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), responseMock);
-        messageControl.expectAndReturn(responseMock.getSoapBody(), bodyMock);
-        bodyControl.expectAndReturn(bodyMock.hasFault(), false);
+        messageControl.expectAndReturn(responseMock.hasFault(), false);
         responseMock.writeTo(new HttpServletTransportOutputStream(httpResponse));
         messageControl.setMatcher(MockControl.ALWAYS_MATCHER);
 
@@ -150,8 +142,7 @@ public class MessageEndpointHandlerAdapterTest extends TestCase {
         factoryControl.setMatcher(MockControl.ALWAYS_MATCHER);
         factoryControl.setReturnValue(requestMock);
         factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), responseMock);
-        messageControl.expectAndReturn(responseMock.getSoapBody(), bodyMock);
-        bodyControl.expectAndReturn(bodyMock.hasFault(), true);
+        messageControl.expectAndReturn(responseMock.hasFault(), true);
         responseMock.writeTo(new HttpServletTransportOutputStream(httpResponse));
         messageControl.setMatcher(MockControl.ALWAYS_MATCHER);
 
@@ -198,13 +189,11 @@ public class MessageEndpointHandlerAdapterTest extends TestCase {
     private void replayMockControls() {
         factoryControl.replay();
         messageControl.replay();
-        bodyControl.replay();
     }
 
     private void verifyMockControls() {
         factoryControl.verify();
         messageControl.verify();
-        bodyControl.verify();
     }
 
 }

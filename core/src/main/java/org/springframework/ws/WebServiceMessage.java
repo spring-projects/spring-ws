@@ -48,12 +48,18 @@ public interface WebServiceMessage {
 
     /**
      * Writes the entire message to the given output stream. If the given stream is an instance of {@link
-     * org.springframework.ws.transport.TransportOutputStream TransportOutputStream}, the corresponding headers will be
-     * writen as well.
+     * org.springframework.ws.transport.TransportOutputStream}, the corresponding headers will be writen as well.
      *
      * @param outputStream the stream to write to
      * @throws IOException if an I/O exception occurs
      */
     void writeTo(OutputStream outputStream) throws IOException;
+
+    /**
+     * Indicates whether this message contains a fault.
+     *
+     * @return <code>true</code> if the message has a fault; <code>false</code> otherwise
+     */
+    boolean hasFault();
 
 }

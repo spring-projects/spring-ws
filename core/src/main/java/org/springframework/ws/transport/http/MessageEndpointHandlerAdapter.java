@@ -23,8 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.endpoint.MessageEndpoint;
-import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.server.endpoint.MessageEndpoint;
 import org.springframework.ws.transport.MessageReceiverObjectSupport;
 import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.ws.transport.TransportOutputStream;
@@ -41,8 +40,8 @@ import org.springframework.ws.transport.TransportOutputStream;
  * @author Arjen Poutsma
  * @see #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
  * @see org.springframework.ws.WebServiceMessageFactory
- * @see org.springframework.ws.endpoint.MessageEndpoint
- * @see org.springframework.ws.MessageDispatcher
+ * @see org.springframework.ws.server.endpoint.MessageEndpoint
+ * @see org.springframework.ws.server.MessageDispatcher
  */
 public class MessageEndpointHandlerAdapter extends MessageReceiverObjectSupport implements HandlerAdapter {
 
@@ -83,7 +82,7 @@ public class MessageEndpointHandlerAdapter extends MessageReceiverObjectSupport 
     protected void handleResponse(TransportInputStream tis, TransportOutputStream tos, WebServiceMessage response)
             throws Exception {
         HttpServletResponse httpServletResponse = ((HttpServletTransportOutputStream) tos).getHttpServletResponse();
-        if (response instanceof SoapMessage && ((SoapMessage) response).getSoapBody().hasFault()) {
+        if (response.hasFault()) {
             httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
         else {

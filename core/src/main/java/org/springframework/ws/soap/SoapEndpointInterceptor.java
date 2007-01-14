@@ -16,8 +16,8 @@
 
 package org.springframework.ws.soap;
 
-import org.springframework.ws.EndpointInterceptor;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.server.EndpointInterceptor;
 
 /**
  * SOAP-specific extension of the <code>EndpointInterceptor</code> interface. Allows for handling of SOAP faults, which

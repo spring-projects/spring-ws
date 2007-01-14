@@ -21,7 +21,7 @@ import java.util.Properties;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.endpoint.AbstractEndpointExceptionResolver;
+import org.springframework.ws.server.endpoint.AbstractEndpointExceptionResolver;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.soap11.Soap11Body;

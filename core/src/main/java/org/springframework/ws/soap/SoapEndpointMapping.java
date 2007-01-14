@@ -16,7 +16,7 @@
 
 package org.springframework.ws.soap;
 
-import org.springframework.ws.EndpointMapping;
+import org.springframework.ws.server.EndpointMapping;
 
 /**
  * SOAP-specific sub-interface of the <code>EndpointMapping</code>.  Adds associated actors (SOAP 1.1) or roles (SOAP

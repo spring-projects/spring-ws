@@ -25,7 +25,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.endpoint.MessageEndpoint;
+import org.springframework.ws.server.endpoint.MessageEndpoint;
 import org.springframework.ws.transport.MessageReceiverObjectSupport;
 import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.ws.transport.TransportOutputStream;
