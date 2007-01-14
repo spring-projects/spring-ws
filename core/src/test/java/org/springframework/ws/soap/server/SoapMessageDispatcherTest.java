@@ -128,7 +128,7 @@ public class SoapMessageDispatcherTest extends TestCase {
         assertEquals("Invalid fault code", new QName(SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE, "MustUnderstand"),
                 fault.getFaultCode());
         assertEquals("Invalid fault string", SoapMessageDispatcher.DEFAULT_MUST_UNDERSTAND_FAULT,
-                fault.getFaultString());
+                fault.getFaultStringOrReason());
         assertEquals("Invalid fault string locale", Locale.ENGLISH, fault.getFaultStringLocale());
         assertEquals("Invalid fault actor", SOAPConstants.URI_SOAP_ACTOR_NEXT, fault.getFaultActorOrRole());
         interceptorControl.verify();

@@ -75,7 +75,7 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
         assertTrue("SoapBody has no fault", soapBody.hasFault());
         assertNotNull("SoapBody has no fault", soapBody.getFault());
         assertEquals("Invalid fault code", faultCode, fault.getFaultCode());
-        assertEquals("Invalid fault string", faultString, fault.getFaultString());
+        assertEquals("Invalid fault string", faultString, fault.getFaultStringOrReason());
         assertEquals("Invalid fault string locale", Locale.ENGLISH, fault.getFaultStringLocale());
         String actor = "http://www.springframework.org/actor";
         fault.setFaultActorOrRole(actor);

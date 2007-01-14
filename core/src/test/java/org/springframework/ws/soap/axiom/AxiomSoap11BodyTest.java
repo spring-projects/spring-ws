@@ -44,7 +44,7 @@ public class AxiomSoap11BodyTest extends AbstractSoap11BodyTestCase {
         assertTrue("SoapBody has no fault", soapBody.hasFault());
         assertNotNull("SoapBody has no fault", soapBody.getFault());
         assertEquals("Invalid fault code", faultCode, fault.getFaultCode());
-        assertEquals("Invalid fault string", faultString, fault.getFaultString());
+        assertEquals("Invalid fault string", faultString, fault.getFaultStringOrReason());
         String actor = "http://www.springframework.org/actor";
         fault.setFaultActorOrRole(actor);
         assertEquals("Invalid fault actor", actor, fault.getFaultActorOrRole());

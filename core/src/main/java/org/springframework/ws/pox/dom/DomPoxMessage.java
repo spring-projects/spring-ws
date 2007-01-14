@@ -73,6 +73,10 @@ public class DomPoxMessage implements PoxMessage {
         return false;
     }
 
+    public String getFaultReason() {
+        return null;
+    }
+
     public void writeTo(OutputStream outputStream) throws IOException {
         try {
             if (outputStream instanceof TransportOutputStream) {

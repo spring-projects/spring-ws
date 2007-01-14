@@ -24,6 +24,7 @@ import javax.xml.transform.TransformerException;
 
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
+import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.client.WebServiceClientException;
@@ -37,6 +38,8 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  * <p/>
  * Code using this class need only implement callback interfaces, provide {@link Source} objects to read data from, or
  * use the pluggable {@link Marshaller} support.
+ * <p/>
+ * This template uses a {@link SimpleFaultResolver} to handle responses that contain faults.
  *
  * @author Arjen Poutsma
  */
@@ -45,6 +48,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     private Marshaller marshaller;
 
     private Unmarshaller unmarshaller;
+
+    private FaultResolver faultResolver = new SimpleFaultResolver();
 
     /**
      * Creates a new <code>WebServiceTemplate</code>.
@@ -95,6 +100,21 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      */
     public void setUnmarshaller(Unmarshaller unmarshaller) {
         this.unmarshaller = unmarshaller;
+    }
+
+    /**
+     * Returns the fault resolver for this template.
+     */
+    public FaultResolver getFaultResolver() {
+        return faultResolver;
+    }
+
+    /**
+     * Sets the fault resolver for this template.
+     */
+    public void setFaultResolver(FaultResolver faultResolver) {
+        Assert.notNull(faultResolver, "faultResolver must not be null");
+        this.faultResolver = faultResolver;
     }
 
     public Object marshalSendAndReceive(final Object requestPayload) throws IOException {
@@ -173,12 +193,15 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
             requestCallback.doInMessage(messageContext.getRequest());
         }
         getMessageSender().sendAndReceive(messageContext);
-        if (messageContext.hasResponse()) {
-            return messageContext.getResponse();
-        }
-        else {
+        if (!messageContext.hasResponse()) {
             return null;
         }
+        WebServiceMessage response = messageContext.getResponse();
+        if (response.hasFault()) {
+            getFaultResolver().resolveFault(response);
+            return null;
+        }
+        return response;
     }
 
     private void checkMarshallerAndUnmarshaller() throws IllegalStateException {
