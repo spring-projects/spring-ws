@@ -14,8 +14,19 @@ Package org.springframework.oxm.castor
 Package org.springframework.oxm.jibx
 * added indent property to pretty print JiBX output (#SWS-72)
 
+Package org.springframework.ws
+* moved MessageDispatcher, EndpointAdapter, EndpointExceptionResolver, EndpointInterceptor, EndpointMapping, and
+  EndpointInvocationChain to org.springframework.ws.server package
+
+Package org.springframework.ws.client
+* Added client-side support based on WebServiceTemplate (#SWS-58)
+
 Package org.springframework.ws.context
 * Refactored MessageContextFactory, SoapMessageContextFactory and implementations into WebServiceMessageFactory
+
+Package org.springframework.ws.endpoint
+* moved TransformerObjectSupport to org.springframework.xml.transform
+* moved all endpoint subclasses to org.springframework.ws.server.endpoint
 
 Package org.springframework.ws.soap
 * added setId() method to Attachment, to set the Content-ID of MIME attachments (#SWS-53)
@@ -24,12 +35,19 @@ Package org.springframework.ws.soap
 Package org.springframework.ws.soap
 * refactored SAAJ from two separate hierarchies (SAAJ 1.2 and SAAJ 1.3) into one, using bridge pattern
 
+Package org.springframework.ws.soap.endpoint
+* moved all endpoint subclasses to org.springframework.ws.soap.server.endpoint
+
 Package org.springframework.ws.soap.security.xwss.callback
 * DefaultTimestampValidator no longer requires Expired in request (#SWS-55)
 * Digest passwords are handled correctly in the SimplePasswordValidationCallbackHandler (#SWS-56)
 
+Package org.springframework.ws.transport
+* moved TransportContext and TransportContextHolder to org.springframework.ws.transport.context package
+
 Package org.springframework.ws.transport.http
 * added MessageDispatcherServlet (#SWS-60)
+* renamed MessageEndpointHandlerAdapter to WebServiceReceiverHandlerAdapter
 
 Package org.springframework.ws.wsdl.wsdl11.builder
 * added Wsdl11DefinitionBuilder
