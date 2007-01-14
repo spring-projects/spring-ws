@@ -21,8 +21,8 @@ import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.endpoint.TransformerObjectSupport;
 import org.springframework.ws.transport.WebServiceMessageSender;
+import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
  * Base class for <code>WebServiceTemplate</code> and other WS-accessing helpers. Defines common properties like the

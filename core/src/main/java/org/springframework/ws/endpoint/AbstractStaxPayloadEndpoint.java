@@ -19,6 +19,8 @@ package org.springframework.ws.endpoint;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 
+import org.springframework.xml.transform.TransformerObjectSupport;
+
 /**
  * Abstract base class for endpoints use StAX. Provides an <code>XMLInputFactory</code> and an
  * <code>XMLOutputFactory</code>.

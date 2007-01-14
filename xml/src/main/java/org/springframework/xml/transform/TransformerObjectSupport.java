@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.endpoint;
+package org.springframework.xml.transform;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
  * Convenient base class for objects that use a <code>Transformer</code>. Subclasses can call
- * <code>createTransformer</code> to obtain a transformer. This should be done per incoming request, because
- * <code>Transformer</code> instances are not thread-safe.
+ * <code>createTransformer</code> to obtain a transformer. This should be done per thread (i.e. per incoming request),
+ * because <code>Transformer</code> instances are not thread-safe.
  *
  * @author Arjen Poutsma
  * @see Transformer
