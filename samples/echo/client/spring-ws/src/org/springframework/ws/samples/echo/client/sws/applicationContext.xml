@@ -14,7 +14,7 @@
         <property name="url" value="http://localhost:8080/echo/services"/>
     </bean>
 
-    <bean id="commonsMessageSender" class="org.springframework.ws.transport.http.HttpUrlConnectionMessageSender">
+    <bean id="commonsMessageSender" class="org.springframework.ws.transport.http.CommonsHttpMessageSender">
         <property name="url" value="http://localhost:8080/echo/services"/>
     </bean>
 
