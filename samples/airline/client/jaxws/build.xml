@@ -3,6 +3,7 @@
 <project name="spring-ws-airline-sample-jax-ws-client" default="build" xmlns:artifact="urn:maven-artifact-ant">
 	<property name="bin.dir" value="bin"/>
 	<property name="src.dir" value="src"/>
+	<property name="gen.dir" value="gen"/>
 	<property name="lib.dir" value="lib"/>
 
 	<target name="init">
@@ -45,14 +46,16 @@
 	</target>
 
 	<target name="generate" depends="init">
+		<mkdir dir="${gen.dir}"/>
 		<taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport"  classpathref="generate.classpath" />
-		<wsimport wsdl="http://localhost:8080/airline/airline.wsdl" destdir="${bin.dir}" sourcedestdir="${src.dir}"
+		<wsimport wsdl="http://localhost:8080/airline/airline.wsdl" destdir="${bin.dir}"
 			package="org.springframework.ws.samples.airline.client.jaxws"/>
 	</target>
 
 	<target name="build" depends="generate">
 		<javac srcdir="${src.dir}" destdir="${bin.dir}" debug="true">
             <classpath refid="compile.classpath"/>
+            <classpath location="${bin.dir}"/>
 		</javac>
 	</target>
 
@@ -61,7 +64,7 @@
 	</target>
 
 	<target name="run" depends="build">
-		<java classname="org.springframework.ws.samples.airline.client.jws.Main" fork="true" failonerror="true">
+		<java classname="org.springframework.ws.samples.airline.client.jaxws.Main" fork="true" failonerror="true">
             <classpath refid="compile.classpath"/>
             <classpath refid="runtime.classpath"/>
             <classpath location="${bin.dir}"/>

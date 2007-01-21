@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.samples.airline.client.jws;
+package org.springframework.ws.samples.airline.client.jaxws;
 
 import java.net.MalformedURLException;
 import java.net.URL;
