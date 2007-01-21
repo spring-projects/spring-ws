@@ -77,7 +77,7 @@ public class MessageEndpointMessageListenerTest extends TestCase {
             public void invoke(MessageContext messageContext) throws Exception {
             }
         };
-        messageListener.setMessageEndpoint(endpoint);
+        messageListener.setMessageReceiver(endpoint);
 
         request.reset();
         messageListener.onMessage(request, sessionMock);
@@ -104,7 +104,7 @@ public class MessageEndpointMessageListenerTest extends TestCase {
                 messageContext.getResponse();
             }
         };
-        messageListener.setMessageEndpoint(endpoint);
+        messageListener.setMessageReceiver(endpoint);
 
         messageListener.onMessage(request, sessionMock);
 
