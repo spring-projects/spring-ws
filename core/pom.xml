@@ -20,7 +20,6 @@
         <dependency>
             <groupId>org.springframework.ws</groupId>
             <artifactId>spring-oxm</artifactId>
-            <optional>true</optional>
         </dependency>
         <!-- Spring dependencies -->
         <dependency>
