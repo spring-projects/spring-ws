@@ -22,6 +22,104 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>castor-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>generate-test-sources</phase>
+                        <configuration>
+                            <schema>${basedir}/src/test/resources/org/springframework/oxm/flight.xsd</schema>
+                            <dest>${project.build.directory}/generated-sources/test/java</dest>
+                            <packaging>org.springframework.oxm.castor</packaging>
+                            <properties>${basedir}/src/test/castor/castorbuilder.properties</properties>
+                        </configuration>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.castor</groupId>
+                        <artifactId>castor</artifactId>
+                        <version>1.0.5</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>adaptx</groupId>
+                                <artifactId>adaptx</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>ant</groupId>
+                                <artifactId>ant</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>cglib</groupId>
+                                <artifactId>cglib-full</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>com.cenqua.clover</groupId>
+                                <artifactId>clover</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>oro</groupId>
+                                <artifactId>oro</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>jakarta-regexp</groupId>
+                                <artifactId>jakarta-regexp</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>javax.servlet</groupId>
+                                <artifactId>servlet-api</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>javax.transaction</groupId>
+                                <artifactId>jta</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>ldapsdk</groupId>
+                                <artifactId>ldapsdk</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>log4j</groupId>
+                                <artifactId>log4j</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>xerces</groupId>
+                                <artifactId>xerces</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>xmlbeans-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>xmlbeans-test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <inherited>true</inherited>
+                <configuration>
+                    <schemaDirectory>${basedir}/src/test/resources/org/springframework/oxm/</schemaDirectory>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>xmlbeans</groupId>
+                        <artifactId>xbean</artifactId>
+                        <version>2.1.0</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>stax</groupId>
+                        <artifactId>stax</artifactId>
+                        <version>1.2.0</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
@@ -85,11 +183,58 @@
             <artifactId>xercesImpl</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- O/X Mapping dependencies --><!-- Castor -->
+        <!-- O/X Mapping dependencies -->
+        <!-- Castor -->
         <dependency>
             <groupId>org.codehaus.castor</groupId>
             <artifactId>castor</artifactId>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>adaptx</groupId>
+                    <artifactId>adaptx</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ant</groupId>
+                    <artifactId>ant</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>cglib</groupId>
+                    <artifactId>cglib-full</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.cenqua.clover</groupId>
+                    <artifactId>clover</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>oro</groupId>
+                    <artifactId>oro</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta-regexp</groupId>
+                    <artifactId>jakarta-regexp</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.transaction</groupId>
+                    <artifactId>jta</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ldapsdk</groupId>
+                    <artifactId>ldapsdk</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xerces</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- JAXB -->
         <dependency>
