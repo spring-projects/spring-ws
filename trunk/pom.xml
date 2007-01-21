@@ -25,10 +25,11 @@
         </notifiers>
     </ciManagement>
     <distributionManagement>
+        <downloadUrl>http://www.springframework.org/spring-ws</downloadUrl>
         <repository>
-            <id>static.springframework.org</id>
+            <id>local</id>
             <url>
-                scp://static.springframework.org/var/www/domains/springframework.org/static/htdocs/maven2
+                file:///Users/arjen/Projects/Spring/repos/repo
             </url>
         </repository>
         <snapshotRepository>
@@ -205,6 +206,7 @@
                         <link>http://www.xom.nu/apidocs/</link>
                         <link>http://acegisecurity.org/multiproject/acegi-security/apidocs/</link>
                         <link>http://www.extreme.indiana.edu/apis/wsdl4j/</link>
+                        <link>http://jakarta.apache.org/commons/httpclient/apidocs/</link>
                     </links>
                 </configuration>
             </plugin>
@@ -278,6 +280,11 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-aop</artifactId>
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
@@ -395,7 +402,7 @@
             <dependency>
                 <groupId>org.codehaus.castor</groupId>
                 <artifactId>castor</artifactId>
-                <version>1.0.3</version>
+                <version>1.0.5</version>
             </dependency>
             <!-- JAXB -->
             <dependency>
