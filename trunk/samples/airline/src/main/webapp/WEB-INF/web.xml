@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
          version="2.4">
     <display-name>Spring-WS Airline Sample</display-name>
@@ -20,8 +19,6 @@
             classpath:org/springframework/ws/samples/airline/service/applicationContext.xml
             <!-- Remove the following line if you want to disable WS-Security and Acegi -->
             classpath:org/springframework/ws/samples/airline/security/applicationContext-security.xml
-            <!-- Remove the following line if you want to disable JMS support -->
-            classpath:org/springframework/ws/samples/airline/ws/applicationContext-ws-jms.xml
             classpath:org/springframework/ws/samples/airline/ws/applicationContext-ws.xml
         </param-value>
     </context-param>
