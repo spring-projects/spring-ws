@@ -27,7 +27,8 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.soap11.Soap11Body;
 
 /**
- * Exception resolver that generates a <code>&lt;soap:fault&gt;</code> based on the given exception.
+ * Exception resolver that allows for mapping exception class names to SOAP Faults. The mappings are set using the
+ * <code>exceptionMappings</code> property, the format of which is documented in {@link SoapFaultDefinitionEditor}.
  *
  * @author Arjen Poutsma
  */
@@ -44,12 +45,15 @@ public class SoapFaultMappingExceptionResolver extends AbstractEndpointException
      * The values of the given properties object should use the format described in
      * <code>SoapFaultDefinitionEditor</code>.
      * <p/>
-     * Follows the same matching algorithm as RuleBasedTransactionAttribute and RollbackRuleAttribute.
+     * Follows the same matching algorithm as <code>RuleBasedTransactionAttribute</code> and
+     * <code>RollbackRuleAttribute</code>.
      *
      * @param mappings exception patterns (can also be fully qualified class names) as keys, fault definition texts as
      *                 values
      * @see SoapFaultDefinitionEditor
      * @see org.springframework.web.servlet.handler.SimpleMappingExceptionResolver
+     * @see org.springframework.transaction.interceptor.RuleBasedTransactionAttribute
+     * @see org.springframework.transaction.interceptor.RollbackRuleAttribute
      */
     public void setExceptionMappings(Properties mappings) {
         exceptionMappings = mappings;
