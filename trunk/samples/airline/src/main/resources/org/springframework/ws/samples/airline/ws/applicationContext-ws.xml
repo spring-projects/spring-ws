@@ -82,7 +82,7 @@
     </bean>
 
     <bean id="validatingInterceptor"
-          class="org.springframework.ws.server.endpoint.interceptor.PayloadValidatingInterceptor">
+          class="org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor">
         <description>
             This interceptor validates both incoming and outgoing message contents according to the 'airline.xsd' XML
             Schema file.
