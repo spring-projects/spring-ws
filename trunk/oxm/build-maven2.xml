@@ -4,7 +4,7 @@
     <property name="schema" value="${basedir}/src/test/resources/org/springframework/oxm/flight.xsd"/>
     <property name="generate.target.directory" value="${basedir}/target/generated-sources/test/java"/>
 
-    <target name="generate-test-sources" depends="generate-test-jaxb">
+    <target name="generate-test-sources" depends="generate-test-jaxb,generate-test-xmlbeans,generate-test-castor">
         <copy todir="${basedir}/target/test-classes">
             <fileset dir="${generate.target.directory}">
                 <exclude name="**/*.java"/>
@@ -24,6 +24,18 @@
              schema="${schema}">
             <produces dir="${generate.target.directory}" includes="**/*.java"/>
         </xjc>
+    </target>
+
+    <target name="generate-test-xmlbeans">
+        <taskdef name="xmlbean" classname="org.apache.xmlbeans.impl.tool.XMLBean" classpathref="maven.test.classpath"/>
+        <xmlbean schema="${schema}" classgendir="${basedir}/target/test-classes" classpathref="maven.test.classpath"/>
+    </target>
+
+    <target name="generate-test-castor" depends="generate-test-init">
+        <taskdef name="castor-srcgen" classname="org.exolab.castor.tools.ant.taskdefs.CastorSourceGenTask"
+                 classpathref="maven.test.classpath"/>
+        <castor-srcgen types="j2" warnings="false" file="${schema}"
+                       todir="${generate.target.directory}" package="org.springframework.oxm.castor"/>
     </target>
 
     <target name="test-compile" depends="test-compile-jibx"/>
