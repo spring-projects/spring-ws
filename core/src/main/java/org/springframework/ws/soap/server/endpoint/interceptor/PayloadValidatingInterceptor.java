@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.server.endpoint.interceptor;
+package org.springframework.ws.soap.server.endpoint.interceptor;
 
 import javax.xml.transform.Source;
 
@@ -27,16 +27,18 @@ import org.springframework.ws.WebServiceMessage;
  * When the payload is invalid, this interceptor stops processing of the interceptor chain. Additionally, if the message
  * is a SOAP request message, a SOAP Fault is created as reply. Invalid SOAP responses do not result in a fault.
  * <p/>
- * The schema to validate against is set with the <code>schema</code> property. By default, only the request message is
- * validated, but this behaviour can be changed using the <code>validateRequest</code> and <code>validateResponse</code>
- * properties. Responses that contains faults are not validated.
+ * The schema to validate against is set with the <code>schema</code> property or <code>schemas</code> property. By
+ * default, only the request message is validated, but this behaviour can be changed using the
+ * <code>validateRequest</code> and <code>validateResponse</code> properties. Responses that contains faults are not
+ * validated.
  *
  * @author Arjen Poutsma
- * @see #setSchema
+ * @see #setSchema(org.springframework.core.io.Resource)
+ * @see #setSchemas(org.springframework.core.io.Resource[])
  * @see #setValidateRequest(boolean)
  * @see #setValidateResponse(boolean)
  */
-public class PayloadValidatingInterceptor extends AbstractValidatingInterceptor {
+public class PayloadValidatingInterceptor extends AbstractFaultCreatingValidatingInterceptor {
 
     /**
      * Returns the payload source of the given message.

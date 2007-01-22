@@ -17,13 +17,9 @@
 package org.springframework.ws.server.endpoint.interceptor;
 
 import java.io.IOException;
-import java.util.Locale;
-import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -32,12 +28,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
-import org.springframework.ws.soap.SoapBody;
-import org.springframework.ws.soap.SoapFault;
-import org.springframework.ws.soap.SoapFaultDetail;
-import org.springframework.ws.soap.SoapFaultDetailElement;
-import org.springframework.ws.soap.SoapMessage;
-import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.TransformerObjectSupport;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
@@ -50,8 +40,7 @@ import org.xml.sax.SAXParseException;
  * <code>getValidationResponseSource</code> template methods.
  * <p/>
  * By default, only the request message is validated, but this behaviour can be changed using the
- * <code>validateRequest</code> and <code>validateResponse</code> properties. Responses that contains SOAP faults are
- * not validated.
+ * <code>validateRequest</code> and <code>validateResponse</code> properties.
  *
  * @author Arjen Poutsma
  * @see #getValidationRequestSource(org.springframework.ws.WebServiceMessage)
@@ -59,31 +48,6 @@ import org.xml.sax.SAXParseException;
  */
 public abstract class AbstractValidatingInterceptor extends TransformerObjectSupport
         implements EndpointInterceptor, InitializingBean {
-
-    /**
-     * Default SOAP Fault Detail name used when a validation errors occur on the request.
-     *
-     * @see #setDetailElementName(javax.xml.namespace.QName)
-     */
-    public static final QName DEFAULT_DETAIL_ELEMENT_NAME =
-            QNameUtils.createQName("http://springframework.org/spring-ws", "ValidationError", "spring-ws");
-
-    /**
-     * Default SOAP Fault string used when a validation errors occur on the request.
-     *
-     * @see #setFaultStringOrReason(String)
-     */
-    public static final String DEFAULT_FAULTSTRING_OR_REASON = "Validation error";
-
-    protected final Log logger = LogFactory.getLog(getClass());
-
-    private boolean addValidationErrorDetail = true;
-
-    private QName detailElementName = DEFAULT_DETAIL_ELEMENT_NAME;
-
-    private String faultStringOrReason = DEFAULT_FAULTSTRING_OR_REASON;
-
-    private Locale faultStringOrReasonLocale = Locale.ENGLISH;
 
     private String schemaLanguage = XmlValidatorFactory.SCHEMA_W3C_XML;
 
@@ -94,73 +58,6 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
     private boolean validateResponse = false;
 
     private XmlValidator validator;
-
-    public boolean getAddValidationErrorDetail() {
-        return addValidationErrorDetail;
-    }
-
-    /**
-     * Indicates whether a SOAP Fault detail element should be created when a validation error occurs. This detail
-     * element will contain the exact validation errors. It is only added when the underlying message is a
-     * <code>SoapMessage</code>. Defaults to <code>true</code>.
-     *
-     * @see org.springframework.ws.soap.SoapFault#addFaultDetail()
-     */
-    public void setAddValidationErrorDetail(boolean addValidationErrorDetail) {
-        this.addValidationErrorDetail = addValidationErrorDetail;
-    }
-
-    /**
-     * Returns the fault detail element name when validation errors occur on the request.
-     */
-    public QName getDetailElementName() {
-        return detailElementName;
-    }
-
-    /**
-     * Sets the fault detail element name when validation errors occur on the request. Defaults to
-     * <code>DEFAULT_DETAIL_ELEMENT_NAME</code>.
-     *
-     * @see #DEFAULT_DETAIL_ELEMENT_NAME
-     */
-    public void setDetailElementName(QName detailElementName) {
-        this.detailElementName = detailElementName;
-    }
-
-    /**
-     * Sets the SOAP <code>faultstring</code> or <code>Reason</code> used when validation errors occur on the request.
-     */
-    public String getFaultStringOrReason() {
-        return faultStringOrReason;
-    }
-
-    /**
-     * Sets the SOAP <code>faultstring</code> or <code>Reason</code> used when validation errors occur on the request.
-     * It is only added when the underlying message is a <code>SoapMessage</code>. Defaults to
-     * <code>DEFAULT_FAULTSTRING_OR_REASON</code>.
-     *
-     * @see #DEFAULT_FAULTSTRING_OR_REASON
-     */
-    public void setFaultStringOrReason(String faultStringOrReason) {
-        this.faultStringOrReason = faultStringOrReason;
-    }
-
-    /**
-     * Returns the SOAP fault reason locale used when validation errors occur on the request.
-     */
-    public Locale getFaultStringOrReasonLocale() {
-        return faultStringOrReasonLocale;
-    }
-
-    /**
-     * Sets the SOAP fault reason locale used when validation errors occur on the request.  It is only added when the
-     * underlying message is a <code>SoapMessage</code>. Defaults to English.
-     *
-     * @see java.util.Locale#ENGLISH
-     */
-    public void setFaultStringOrReasonLocale(Locale faultStringOrReasonLocale) {
-        this.faultStringOrReasonLocale = faultStringOrReasonLocale;
-    }
 
     public String getSchemaLanguage() {
         return schemaLanguage;
@@ -236,13 +133,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
             if (requestSource != null) {
                 SAXParseException[] errors = validator.validate(requestSource);
                 if (!ObjectUtils.isEmpty(errors)) {
-                    for (int i = 0; i < errors.length; i++) {
-                        logger.warn("XML validation error on request: " + errors[i].getMessage());
-                    }
-                    if (messageContext.getResponse() instanceof SoapMessage) {
-                        createRequestValidationFault((SoapMessage) messageContext.getResponse(), errors);
-                    }
-                    return false;
+                    return handleRequestValidationErrors(messageContext, errors);
                 }
                 else if (logger.isDebugEnabled()) {
                     logger.debug("Request message validated");
@@ -250,6 +141,22 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
             }
         }
         return true;
+    }
+
+    /**
+     * Template method that is called when the request message contains validation errors. Default implementation logs
+     * all errors, and returns <code>false</code>, i.e. do not process the request.
+     *
+     * @param messageContext the message context
+     * @param errors         the validation errors
+     * @return <code>true</code> to continue processing the request, <code>false</code> (the default) otherwise
+     */
+    protected boolean handleRequestValidationErrors(MessageContext messageContext, SAXParseException[] errors)
+            throws TransformerException {
+        for (int i = 0; i < errors.length; i++) {
+            logger.warn("XML validation error on request: " + errors[i].getMessage());
+        }
+        return false;
     }
 
     /**
@@ -268,10 +175,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
             if (responseSource != null) {
                 SAXParseException[] errors = validator.validate(responseSource);
                 if (!ObjectUtils.isEmpty(errors)) {
-                    for (int i = 0; i < errors.length; i++) {
-                        logger.error("XML validation error on response: " + errors[i].getMessage());
-                    }
-                    return false;
+                    return handleResponseValidationErrors(messageContext, errors);
                 }
                 else if (logger.isDebugEnabled()) {
                     logger.debug("Response message validated");
@@ -279,6 +183,21 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
             }
         }
         return true;
+    }
+
+    /**
+     * Template method that is called when the response message contains validation errors. Default implementation logs
+     * all errors, and returns <code>false</code>, i.e. do not send the response.
+     *
+     * @param messageContext the message context
+     * @param errors         the validation errors @return <code>true</code> to continue sending the response,
+     *                       <code>false</code> (the default) otherwise
+     */
+    protected boolean handleResponseValidationErrors(MessageContext messageContext, SAXParseException[] errors) {
+        for (int i = 0; i < errors.length; i++) {
+            logger.error("XML validation error on response: " + errors[i].getMessage());
+        }
+        return false;
     }
 
     public void afterPropertiesSet() throws Exception {
@@ -291,22 +210,6 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
             logger.info("Validating using " + StringUtils.arrayToCommaDelimitedString(schemas));
         }
         validator = XmlValidatorFactory.createValidator(schemas, schemaLanguage);
-    }
-
-    /**
-     * Creates a response soap message containing a <code>SoapFault</code> that descibes the validation errors.
-     */
-    protected void createRequestValidationFault(SoapMessage response, SAXParseException[] errors)
-            throws TransformerException {
-        SoapBody body = response.getSoapBody();
-        SoapFault fault = body.addClientOrSenderFault(getFaultStringOrReason(), getFaultStringOrReasonLocale());
-        if (getAddValidationErrorDetail()) {
-            SoapFaultDetail detail = fault.addFaultDetail();
-            for (int i = 0; i < errors.length; i++) {
-                SoapFaultDetailElement detailElement = detail.addFaultDetailElement(getDetailElementName());
-                detailElement.addText(errors[i].getMessage());
-            }
-        }
     }
 
     /**
