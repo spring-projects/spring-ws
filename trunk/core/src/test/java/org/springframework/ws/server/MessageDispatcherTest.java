@@ -20,10 +20,15 @@ import java.util.Collections;
 
 import junit.framework.TestCase;
 import org.easymock.MockControl;
+import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ws.MockWebServiceMessage;
+import org.springframework.ws.NoEndpointFoundException;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.server.endpoint.PayloadEndpointAdapter;
+import org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping;
+import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
 
 public class MessageDispatcherTest extends TestCase {
 
@@ -94,17 +99,22 @@ public class MessageDispatcherTest extends TestCase {
         factoryControl.verify();
     }
 
-    public void testProcessEndpointExceptionReturnsResponse() throws Exception {
-
-        final Object endpoint = new Object();
+    public void testResolveException() throws Exception {
         final Exception ex = new Exception();
+        EndpointMapping endpointMapping = new EndpointMapping() {
+
+            public EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception {
+                throw ex;
+            }
+        };
+        dispatcher.setEndpointMappings(Collections.singletonList(endpointMapping));
         EndpointExceptionResolver resolver = new EndpointExceptionResolver() {
 
             public boolean resolveException(MessageContext givenMessageContext,
                                             Object givenEndpoint,
                                             Exception givenException) {
                 assertEquals("Invalid message context", messageContext, givenMessageContext);
-                assertEquals("Invalid endpoint", endpoint, givenEndpoint);
+                assertNull("Invalid endpoint", givenEndpoint);
                 assertEquals("Invalid exception", ex, givenException);
                 givenMessageContext.getResponse();
                 return true;
@@ -115,7 +125,7 @@ public class MessageDispatcherTest extends TestCase {
         factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), new MockWebServiceMessage());
         factoryControl.replay();
 
-        dispatcher.processEndpointException(messageContext, endpoint, ex);
+        dispatcher.dispatch(messageContext);
         assertNotNull("processEndpointException sets no response", messageContext.getResponse());
         factoryControl.verify();
     }
@@ -295,6 +305,39 @@ public class MessageDispatcherTest extends TestCase {
         interceptorControl.verify();
         adapterControl.verify();
         factoryControl.verify();
+    }
+
+    public void testNoEndpointFound() throws Exception {
+        dispatcher.setEndpointMappings(Collections.EMPTY_LIST);
+        try {
+            dispatcher.receive(messageContext);
+            fail("NoEndpointFoundException expected");
+        }
+        catch (NoEndpointFoundException ex) {
+            // expected
+        }
+    }
+
+    public void testDetectStrategies() throws Exception {
+        StaticApplicationContext applicationContext = new StaticApplicationContext();
+        applicationContext.registerSingleton("mapping", PayloadRootQNameEndpointMapping.class);
+        applicationContext.registerSingleton("adapter", PayloadEndpointAdapter.class);
+        applicationContext.registerSingleton("resolver", SimpleSoapExceptionResolver.class);
+        dispatcher.setApplicationContext(applicationContext);
+        assertEquals("Invalid amount of mappings detected", 1, dispatcher.getEndpointMappings().size());
+        assertTrue("Invalid mappings detected",
+                dispatcher.getEndpointMappings().get(0) instanceof PayloadRootQNameEndpointMapping);
+        assertEquals("Invalid amount of adapters detected", 1, dispatcher.getEndpointAdapters().size());
+        assertTrue("Invalid mappings detected",
+                dispatcher.getEndpointAdapters().get(0) instanceof PayloadEndpointAdapter);
+        assertEquals("Invalid amount of resolvers detected", 1, dispatcher.getEndpointExceptionResolvers().size());
+        assertTrue("Invalid mappings detected",
+                dispatcher.getEndpointExceptionResolvers().get(0) instanceof SimpleSoapExceptionResolver);
+    }
+
+    public void testDefaultStrategies() throws Exception {
+        StaticApplicationContext applicationContext = new StaticApplicationContext();
+        dispatcher.setApplicationContext(applicationContext);
     }
 
 }
