@@ -14,7 +14,7 @@ the project update their applications:
 
 * MessageContextFactory
 	
-	The MessageContextFactory has been refactored into the WebServiceMessageFactory:
+	The MessageContextFactory has been refactored into the WebServiceMessageFactory, and doesn't create MessageContexts any more, but WebServiceMessages. This change is mostly internal, but you need to change the name of the factory:
 		
 	* If you used AxiomSoapMessageContextFactory before, replace it with AxiomSoapMessageFactory.
 	
@@ -22,15 +22,40 @@ the project update their applications:
 	
 * MessageDispatcher
 
+	To make a clear distinction between server-side and client-side code, we had to move the various server-side classes.
+
 	* The MessageDispatcher has been moved to the EndpointInvocationChain to org.springframework.ws.server package.
 	
 	* The SoapMessageDispatcher has been moved to the EndpointInvocationChain to org.springframework.ws.soap.server 
 	package.
 	
-* Endpoint interceptors
+	* All of MessageDispatcher's  strategy interfaces (EndpointAdapter, EndpointInterceptor, EndpointMapping, EndpointExceptionResolver) have been moved from  org.springframework.ws to org.springframework.ws.server.
+
+** Endpoints
+
+	* All endpoint implementations and adpters in org.springframework.ws.endpoint have been moved to org.springframework.ws.server.endpoint
+
+	* TransformerObjectSupport has been moved into the Spring-XML module.
+	
+** Endpoint interceptors
 
 	* All EndpointInterceptors in org.springframework.ws.endpoint.interceptor have been moved to org.springframework.ws.server.endpoint.interceptor
 
 	* All EndpointInterceptors in org.springframework.ws.soap.endpoint.interceptor have been moved to org.springframework.ws.soap.server.endpoint.interceptor
 	
-	* 
+	* The PayloadValidatingInterceptor has been moved to org.springframework.ws.soap.server.endpoint.interceptor as well.
+	
+** Endpoint mappings
+
+	* All EndpointMappings in org.springframework.ws.endpoint.mapping have been moved to org.springframework.ws.server.endpoint.mapping
+
+	* All EndpointInterceptors in org.springframework.ws.soap.endpoint.mapping have been moved to org.springframework.ws.soap.server.endpoint.mapping
+
+** Endpoint exception resolvers
+
+	* All EndpointExceptionResolvers in org.springframework.ws.soap.endpoint have been moved to org.springframework.ws.soap.server.endpoint.
+	
+* TransportContext
+
+	* TransportContext and TransportContextHolder to org.springframework.ws.transport.context package.
+	
