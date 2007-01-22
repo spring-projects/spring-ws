@@ -45,6 +45,10 @@ import org.springframework.xml.namespace.QNameEditor;
  * <pre>
  * CLIENT,Client error
  * </pre>
+ * or
+ * <pre>
+ * {http://springframework.org/spring-ws}spring-ws:FatalError},A fatal error has occurred
+ * </pre>
  *
  * @author Arjen Poutsma
  * @see javax.xml.namespace.QName#toString()
