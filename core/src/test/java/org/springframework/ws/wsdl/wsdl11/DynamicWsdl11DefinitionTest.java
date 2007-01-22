@@ -18,7 +18,6 @@ package org.springframework.ws.wsdl.wsdl11;
 
 import junit.framework.TestCase;
 import org.easymock.MockControl;
-import org.springframework.ws.wsdl.wsdl11.builder.Wsdl11DefinitionBuilder;
 
 public class DynamicWsdl11DefinitionTest extends TestCase {
 

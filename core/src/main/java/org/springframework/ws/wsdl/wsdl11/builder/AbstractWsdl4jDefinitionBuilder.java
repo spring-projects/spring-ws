@@ -27,6 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ws.wsdl.WsdlDefinitionException;
 import org.springframework.ws.wsdl.wsdl11.Wsdl11Definition;
+import org.springframework.ws.wsdl.wsdl11.Wsdl11DefinitionBuilder;
 import org.springframework.ws.wsdl.wsdl11.Wsdl4jDefinition;
 import org.springframework.ws.wsdl.wsdl11.Wsdl4jDefinitionException;
 
@@ -38,13 +39,19 @@ import org.springframework.ws.wsdl.wsdl11.Wsdl4jDefinitionException;
  */
 public abstract class AbstractWsdl4jDefinitionBuilder implements Wsdl11DefinitionBuilder {
 
-    /** Logger available to subclasses. */
+    /**
+     * Logger available to subclasses.
+     */
     protected final Log logger = LogFactory.getLog(getClass());
 
-    /** WSDL4J extension registry. Lazily created in <code>createExtension()</code>. */
+    /**
+     * WSDL4J extension registry. Lazily created in <code>createExtension()</code>.
+     */
     private ExtensionRegistry extensionRegistry;
 
-    /** The WSDL4J <code>Definition</code> created by <code>buildDefinition()</code>. */
+    /**
+     * The WSDL4J <code>Definition</code> created by <code>buildDefinition()</code>.
+     */
     private Definition definition;
 
     public final void buildDefinition() throws WsdlDefinitionException {

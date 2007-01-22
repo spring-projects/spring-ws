@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.wsdl.wsdl11.builder;
+package org.springframework.ws.wsdl.wsdl11;
 
 import org.springframework.ws.wsdl.WsdlDefinitionException;
-import org.springframework.ws.wsdl.wsdl11.Wsdl11Definition;
 
 /**
  * Defines the contract for classes that can create a {@link Wsdl11Definition} at runtime.
