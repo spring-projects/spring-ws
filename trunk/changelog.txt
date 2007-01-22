@@ -28,6 +28,10 @@ Package org.springframework.ws.endpoint
 * moved TransformerObjectSupport to org.springframework.xml.transform
 * moved all endpoint subclasses to org.springframework.ws.server.endpoint
 
+Package org.springframework.ws.endpoint.interceptor
+* moved PayloadValidatingInterceptor to org.springframework.soap.server.endpoint.interceptor, because it contains
+  SOAP-specific features
+
 Package org.springframework.ws.soap
 * added setId() method to Attachment, to set the Content-ID of MIME attachments (#SWS-53)
 * added getResult() to SoapFaultDetail (#SWS-57)
@@ -49,8 +53,10 @@ Package org.springframework.ws.transport.http
 * added MessageDispatcherServlet (#SWS-60)
 * renamed MessageEndpointHandlerAdapter to WebServiceReceiverHandlerAdapter
 
-Package org.springframework.ws.wsdl.wsdl11.builder
+Package org.springframework.ws.wsdl.wsdl11
 * added Wsdl11DefinitionBuilder
+
+Package org.springframework.ws.wsdl.wsdl11.builder
 * added XsdBasedSoap11Wsdl4jDefinitionBuilder that generates a WSDL based on a schema (#SWS-67)
 
 Package org.springframework.xml.dom
@@ -61,6 +67,7 @@ Package org.springframework.xml.stream
 
 Samples
 * added JAX-WS client for Airline sample
+* added Spring-WS client for Echo sample
 
 Changes in version 1.0-M2
 -------------------------
