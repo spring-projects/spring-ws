@@ -100,6 +100,12 @@
                 <module>oxm-tiger</module>
             </modules>
         </profile>
+        <profile>
+            <id>samples</id>
+            <modules>
+                <module>samples</module>
+            </modules>
+        </profile>
     </profiles>
     <properties>
         <spring.version>2.0.2</spring.version>
