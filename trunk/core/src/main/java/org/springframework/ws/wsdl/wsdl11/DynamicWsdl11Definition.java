@@ -20,7 +20,6 @@ import javax.xml.transform.Source;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
-import org.springframework.ws.wsdl.wsdl11.builder.Wsdl11DefinitionBuilder;
 
 /**
  * <code>Wsdl11Definition</code> that creates a WSDL definition at runtime, using a {@link Wsdl11DefinitionBuilder}. Can
@@ -28,7 +27,7 @@ import org.springframework.ws.wsdl.wsdl11.builder.Wsdl11DefinitionBuilder;
  * and <code>buildConcretePart</code> properties.
  *
  * @author Arjen Poutsma
- * @see #setBuilder(org.springframework.ws.wsdl.wsdl11.builder.Wsdl11DefinitionBuilder)
+ * @see #setBuilder(Wsdl11DefinitionBuilder)
  * @see #setBuildAbstractPart(boolean)
  * @see #setBuildConcretePart(boolean)
  */
