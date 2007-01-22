@@ -17,18 +17,27 @@
 package org.springframework.ws.server;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.OrderComparator;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.ws.NoEndpointFoundException;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.server.endpoint.MessageEndpointAdapter;
-import org.springframework.ws.server.endpoint.PayloadEndpointAdapter;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
+import org.springframework.ws.transport.support.DefaultStrategiesHelper;
 
 /**
  * Central dispatcher for use withing Spring-WS. Dispatches Web service messages to registered endoints.
@@ -50,7 +59,7 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
  * @see EndpointExceptionResolver
  * @see org.springframework.web.servlet.DispatcherServlet
  */
-public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAware {
+public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAware, ApplicationContextAware {
 
     /**
      * Log category to use when no mapped endpoint is found for a request.
@@ -66,6 +75,8 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
      * Logger available to subclasses.
      */
     protected final Log logger = LogFactory.getLog(getClass());
+
+    private final DefaultStrategiesHelper defaultStrategiesHelper;
 
     /**
      * The registered bean name for this dispatcher.
@@ -91,7 +102,8 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
      * Initializes a new instance of the <code>MessageDispatcher</code>.
      */
     public MessageDispatcher() {
-        initDefaultStrategies();
+        Resource resource = new ClassPathResource(ClassUtils.getShortName(getClass()) + ".properties", getClass());
+        defaultStrategiesHelper = new DefaultStrategiesHelper(resource);
     }
 
     /**
@@ -138,6 +150,12 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 
     public void setBeanName(String beanName) {
         this.beanName = beanName;
+    }
+
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        initEndpointAdapters(applicationContext);
+        initEndpointExceptionResolvers(applicationContext);
+        initEndpointMappings(applicationContext);
     }
 
     public void receive(MessageContext messageContext) throws Exception {
@@ -261,21 +279,6 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
     }
 
     /**
-     * Initialize the default implementations for the dispatcher's strategies: <code>MessageEndpointAdapter</code> and
-     * <code>PayloadEndpointAdapter</code>.
-     *
-     * @see #setEndpointAdapters(java.util.List)
-     * @see org.springframework.ws.server.endpoint.MessageEndpointAdapter
-     * @see org.springframework.ws.server.endpoint.PayloadEndpointAdapter
-     */
-    protected void initDefaultStrategies() {
-        List defaultEndpointAdapters = new ArrayList();
-        defaultEndpointAdapters.add(new MessageEndpointAdapter());
-        defaultEndpointAdapters.add(new PayloadEndpointAdapter());
-        setEndpointAdapters(defaultEndpointAdapters);
-    }
-
-    /**
      * Determine an error <code>SOAPMessage</code> respone via the registered <code>EndpointExceptionResolvers</code>.
      * Most likely, the response contains a <code>SOAPFault</code>. If no suitable resolver was found, the exception is
      * rethrown.
@@ -320,6 +323,78 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
             for (int i = interceptorIndex; resume && i >= 0; i--) {
                 EndpointInterceptor interceptor = mappedEndpoint.getInterceptors()[i];
                 resume = interceptor.handleResponse(messageContext, mappedEndpoint.getEndpoint());
+            }
+        }
+    }
+
+    /**
+     * Initialize the <code>EndpointAdapters</code> used by this class. If no adapter beans are explictely set by using
+     * the <code>endpointAdapters</code> property, we use the default strategies.
+     *
+     * @see #setEndpointAdapters(java.util.List)
+     */
+    private void initEndpointAdapters(ApplicationContext applicationContext) throws BeansException {
+        if (endpointAdapters == null) {
+            Map matchingBeans = BeanFactoryUtils
+                    .beansOfTypeIncludingAncestors(applicationContext, EndpointAdapter.class, true, false);
+            if (!matchingBeans.isEmpty()) {
+                endpointAdapters = new ArrayList(matchingBeans.values());
+                Collections.sort(endpointAdapters, new OrderComparator());
+            }
+            else {
+                endpointAdapters =
+                        defaultStrategiesHelper.getDefaultStrategies(EndpointAdapter.class, applicationContext);
+                if (logger.isInfoEnabled() && !endpointAdapters.isEmpty()) {
+                    logger.info("No EndpointAdapters found, using defaults");
+                }
+            }
+        }
+    }
+
+    /**
+     * Initialize the <code>EndpointExceptionResolver</code> used by this class. If no resolver beans are explictely set
+     * by using the <code>endpointExceptionResolvers</code> property, we use the default strategies.
+     *
+     * @see #setEndpointExceptionResolvers(java.util.List)
+     */
+    private void initEndpointExceptionResolvers(ApplicationContext applicationContext) throws BeansException {
+        if (endpointExceptionResolvers == null) {
+            Map matchingBeans = BeanFactoryUtils
+                    .beansOfTypeIncludingAncestors(applicationContext, EndpointExceptionResolver.class, true, false);
+            if (!matchingBeans.isEmpty()) {
+                endpointExceptionResolvers = new ArrayList(matchingBeans.values());
+                Collections.sort(endpointExceptionResolvers, new OrderComparator());
+            }
+            else {
+                endpointExceptionResolvers = defaultStrategiesHelper
+                        .getDefaultStrategies(EndpointExceptionResolver.class, applicationContext);
+                if (logger.isInfoEnabled() && !endpointExceptionResolvers.isEmpty()) {
+                    logger.info("No EndpointExceptionResolvers found, using defaults");
+                }
+            }
+        }
+    }
+
+    /**
+     * Initialize the <code>EndpointMappings</code> used by this class. If no mapping beans are explictely set by using
+     * the <code>endpointMappings</code> property, we use the default strategies.
+     *
+     * @see #setEndpointMappings(java.util.List)
+     */
+    private void initEndpointMappings(ApplicationContext applicationContext) throws BeansException {
+        if (endpointMappings == null) {
+            Map matchingBeans = BeanFactoryUtils
+                    .beansOfTypeIncludingAncestors(applicationContext, EndpointMapping.class, true, false);
+            if (!matchingBeans.isEmpty()) {
+                endpointMappings = new ArrayList(matchingBeans.values());
+                Collections.sort(endpointMappings, new OrderComparator());
+            }
+            else {
+                endpointMappings = defaultStrategiesHelper
+                        .getDefaultStrategies(EndpointMapping.class, applicationContext);
+                if (logger.isInfoEnabled() && !endpointMappings.isEmpty()) {
+                    logger.info("No EndpointMappings found, using defaults");
+                }
             }
         }
     }

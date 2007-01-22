@@ -17,7 +17,6 @@
 package org.springframework.ws.soap.server;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -36,7 +35,6 @@ import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
-import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
 import org.springframework.ws.soap.soap12.Soap12Header;
 
 /**
@@ -74,19 +72,6 @@ public class SoapMessageDispatcher extends MessageDispatcher {
      */
     public void setMustUnderstandFaultLocale(Locale mustUnderstandFaultLocale) {
         this.mustUnderstandFaultLocale = mustUnderstandFaultLocale;
-    }
-
-    /**
-     * Initialize the default implementations for the dispatcher's strategies, in addition to the strategies defined in
-     * the base class: a <code>SimpleSoapExceptionResolver</code> as exception resolver.
-     *
-     * @see org.springframework.ws.server.MessageDispatcher#initDefaultStrategies()
-     * @see #setEndpointExceptionResolvers(java.util.List)
-     * @see org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver
-     */
-    protected void initDefaultStrategies() {
-        super.initDefaultStrategies();
-        setEndpointExceptionResolvers(Collections.singletonList(new SimpleSoapExceptionResolver()));
     }
 
     /**
