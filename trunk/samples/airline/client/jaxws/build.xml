@@ -9,15 +9,11 @@
 		<mkdir dir="${bin.dir}"/>
 		<typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant">
 			<classpath>
-				<pathelement location="${basedir}/../maven-artifact-ant-2.0.4-dep.jar"/>
+                <pathelement location="${basedir}/../../../maven-artifact-ant-2.0.4-dep.jar"/>
 			</classpath>
 		</typedef>
 
-		<artifact:remoteRepository id="java.net" url="https://maven-repository.dev.java.net/nonav/repository"
-			layout="legacy" />
-
 		<artifact:dependencies pathId="generate.classpath">
-            <remoteRepository refid="java.net"/>
 			<dependency groupId="com.sun.xml.ws" artifactId="jaxws-tools" version="EA3"/>
 			<dependency groupId="com.sun.xml.bind" artifactId="jaxb-xjc" version="2.1-EA2"/>
 			<dependency groupId="com.sun.xml.stream.buffer" artifactId="streambuffer" version="0.3"/>
@@ -27,12 +23,10 @@
 		</artifact:dependencies>
 
 		<artifact:dependencies pathId="compile.classpath">
-			<remoteRepository refid="java.net"/>
 			<dependency groupId="javax.xml.ws" artifactId="jaxws-api" version="2.1-SNAPSHOT"/>
 		</artifact:dependencies>
 
 		<artifact:dependencies pathId="runtime.classpath">
-			<remoteRepository refid="java.net"/>
 			<dependency groupId="com.sun.xml.ws" artifactId="jaxws-rt" version="EA3"/>
 			<dependency groupId="com.sun.xml.bind" artifactId="jaxb-impl" version="2.1-EA2"/>
 			<dependency groupId="com.sun.xml.bind" artifactId="jaxb-xjc" version="2.1-EA2"/>
