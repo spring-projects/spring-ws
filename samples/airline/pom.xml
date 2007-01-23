@@ -9,7 +9,148 @@
     <artifactId>airline</artifactId>
     <packaging>war</packaging>
     <name>Spring WS Airline Sample</name>
+    <profiles>
+        <profile>
+            <id>hsqldb</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>hsqldb</groupId>
+                    <artifactId>hsqldb</artifactId>
+                    <version>1.8.0.7</version>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+            <properties>
+                <!-- Change these properties to reflect your HSQLDB connection settings -->
+                <jdbc.driverClassName>org.hsqldb.jdbcDriver</jdbc.driverClassName>
+                <jdbc.username>sa</jdbc.username>
+                <jdbc.password></jdbc.password>
+                <jdbc.url>jdbc:hsqldb:hsql://localhost/airline</jdbc.url>
+                <hibernate.dialect>org.hibernate.dialect.HSQLDialect</hibernate.dialect>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>sql-maven-plugin</artifactId>
+                        <dependencies>
+                            <dependency>
+                                <groupId>hsqldb</groupId>
+                                <artifactId>hsqldb</artifactId>
+                                <version>1.8.0.7</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <driver>${jdbc.driverClassName}</driver>
+                            <url>${jdbc.url}</url>
+                            <username>${jdbc.username}</username>
+                            <password>${jdbc.password}</password>
+                            <srcFiles>
+                                <srcFile>${basedir}/src/main/sql/hsqldb/airline-schema.sql</srcFile>
+                                <srcFile>${basedir}/src/main/sql/airline-dataload.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>mysql</id>
+            <dependencies>
+                <dependency>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                    <version>5.0.4</version>
+                </dependency>
+            </dependencies>
+            <properties>
+                <!-- Change these properties to reflect your MySQL connection settings -->
+                <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
+                <jdbc.username>airline</jdbc.username>
+                <jdbc.password>airline</jdbc.password>
+                <jdbc.url>jdbc:mysql://localhost/airline</jdbc.url>
+                <hibernate.dialect>org.hibernate.dialect.MySQLInnoDBDialect</hibernate.dialect>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>sql-maven-plugin</artifactId>
+                        <dependencies>
+                            <dependency>
+                                <groupId>mysql</groupId>
+                                <artifactId>mysql-connector-java</artifactId>
+                                <version>5.0.4</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <driver>${jdbc.driverClassName}</driver>
+                            <url>${jdbc.url}</url>
+                            <username>${jdbc.username}</username>
+                            <password>${jdbc.password}</password>
+                            <srcFiles>
+                                <srcFile>${basedir}/src/main/sql/mysql/airline-schema.sql</srcFile>
+                                <srcFile>${basedir}/src/main/sql/airline-dataload.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>postgresql</id>
+            <dependencies>
+                <dependency>
+                    <groupId>postgresql</groupId>
+                    <artifactId>postgresql</artifactId>
+                    <version>8.1-407.jdbc3</version>
+                </dependency>
+            </dependencies>
+            <properties>
+                <!-- Change these properties to reflect your PostgreSQL connection settings -->                
+                <jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
+                <jdbc.username>airline</jdbc.username>
+                <jdbc.password>airline</jdbc.password>
+                <jdbc.url>jdbc:postgresql://localhost/airline</jdbc.url>
+                <hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>sql-maven-plugin</artifactId>
+                        <dependencies>
+                            <dependency>
+                                <groupId>postgresql</groupId>
+                                <artifactId>postgresql</artifactId>
+                                <version>8.1-407.jdbc3</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <driver>${jdbc.driverClassName}</driver>
+                            <url>${jdbc.url}</url>
+                            <username>${jdbc.username}</username>
+                            <password>${jdbc.password}</password>
+                            <srcFiles>
+                                <srcFile>${basedir}/src/main/sql/postgresql/airline-schema.sql</srcFile>
+                                <srcFile>${basedir}/src/main/sql/airline-dataload.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -155,9 +296,10 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.0.4</version>
+            <groupId>hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>1.8.0.7</version>
+            <scope>test</scope>
         </dependency>
         <!-- Various dependencies -->
         <dependency>
