@@ -1,4 +1,4 @@
-SPRING WEB SERVICES 1.0-M2 (September 2006)
+SPRING WEB SERVICES 1.0-M3 (Januari 2007)
 -------------------------------
 http://www.springframework.org/spring-ws
 http://forum.springframework.org/forumdisplay.php?f=39
@@ -14,7 +14,7 @@ XMLBeans, Castor, JiBX and XStream; and a Web service framework that resembles S
 
 2. RELEASE INFO
 
-Spring-WS requires J2SE 1.4 and J2EE 1.4.  J2SE 1.5 is required for building.
+Spring-WS requires J2SE 1.4 and J2EE 1.4.  J2SE 1.5 is required for building. J2SE 1.6 is not yet supported.
 
 Release contents:
 
@@ -35,29 +35,33 @@ Spring-WS is released under the terms of the Apache Software License (see licens
 3. DISTRIBUTION JAR FILES
 
 The following distinct jar files are included in the distribution. This list specifies the respective contents and
-third-party dependencies. Libraries in [brackets] are optional, i.e. just necessary for certain functionality.
+third-party dependencies. Libraries in [brackets] are optional, i.e. just necessary for certain functionality. For an 
+exact list of Spring-WS project dependencies see the respective Maven2 pom.xml files.
 
-* spring-oxm-1.0-m2.jar
+* spring-oxm-1.0-m3.jar
 - Contents: The Spring Object/XML Mapping framework
 - Dependencies: Commons Logging, spring-beans, spring-core
-                [Log4J, JAXB, Castor, XMLBeans, StAX, JiBX, XStream]
+                [Log4J, JAXB 1, Castor, XMLBeans, StAX, JiBX, XStream]
 
-* spring-ws-core-1.0-m2.jar
+* spring-oxm-1.0-m3.jar
+- Contents: The Spring Object/XML Mapping framework for Java 5
+- Dependencies: Commons Logging, spring-beans, spring-core, JAXB 2
+
+* spring-ws-core-1.0-m3.jar
 - Contents: The Spring-WS Core
-- Dependencies: Commons Logging, spring-beans, spring-core, spring-context
-                [Log4J, spring-oxm, spring-web, spring-webmvc, SAAJ, JDOM, StAX, Servlet API, JAF, Axiom, DOM4J, XOM]
+- Dependencies: Commons Logging, spring-beans, spring-core, spring-context, spring-oxm
+                [Log4J, spring-web, spring-webmvc, SAAJ, JDOM, StAX, Servlet API, JAF, Axiom, DOM4J, XOM]
 
-* spring-ws-security-1.0-m2.jar
+* spring-ws-security-1.0-m3.jar
 - Contents: Spring-WS Security integration
 - Dependencies: Commons Logging, spring-beans, spring-core, spring-context, spring-ws-core
                 [Log4J, xmlsdig, xmlsec, XWS-security, Acegi]
 
-* spring-xml-1.0-m2.jar
+* spring-xml-1.0-m3.jar
 - Contents: Spring XML utility framework
 - Dependencies: Commons Logging, spring-beans, spring-core
                 [StAX, Xalan, Jaxen]
 
-For an exact list of Spring-WS project dependencies see the respective pom.xml files.
 
 4. WHERE TO START
 
@@ -66,7 +70,7 @@ This distribution contains documentation and two sample applications illustratin
 A great way to get started is to review and run the sample applications, supplementing with reference manual
 material as needed. You will require Maven 2, which can be downloaded from http://maven.apache.org/, for building
 Spring-WS. To build deployable .war files for all samples, simply access the "samples" directory and
-execute the "mvn package" command.
+execute the "mvn package" command, or run "mvn jetty:run" to run the samples directly in a Jetty 6 Web container.
 
 More information on deploying Spring-WS sample applications can be found at:
 	samples/readme.txt
