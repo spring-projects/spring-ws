@@ -104,6 +104,12 @@
                 <module>samples</module>
             </modules>
         </profile>
+        <profile>
+            <id>doc</id>
+            <modules>
+                <module>doc</module>
+            </modules>
+        </profile>
     </profiles>
     <properties>
         <spring.version>2.0.2</spring.version>

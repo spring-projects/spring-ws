@@ -20,55 +20,44 @@
             <binaries>
                 <unpack>false</unpack>
             </binaries>
+            <sources>
+                <outputDirectory>modules/${artifactId}</outputDirectory>
+            </sources>
         </moduleSet>
     </moduleSets>
     <fileSets>
+        <!-- Documentation -->
         <fileSet>
              <directory>target/site/apidocs</directory>
              <outputDirectory>docs/api</outputDirectory>
        </fileSet>
+        <fileSet>
+             <directory>doc/target/docbkx</directory>
+             <outputDirectory>docs/reference</outputDirectory>
+             <excludes>
+                 <exclude>**/*.fo</exclude>
+            </excludes>             
+       </fileSet>
+       <!-- Samples -->
        <fileSet>
             <directory>samples</directory>
             <outputDirectory>samples</outputDirectory>
             <includes>
-                <include>readme.txt</include>
+                <include>**/readme.txt</include>
             </includes>
             <lineEnding>dos</lineEnding>
         </fileSet>
         <fileSet>
             <directory>samples</directory>
             <outputDirectory>samples</outputDirectory>
-            <includes>
-                <include>pom.xml</include>
-                <include>echo/**</include>
-                <include>airline/**</include>
-            </includes>
             <excludes>
                 <exclude>**/target/**</exclude>
                 <exclude>**/target</exclude>
                 <exclude>**/*.iml</exclude>
                 <exclude>**/META-INF/*</exclude>
                 <exclude>**/*.log</exclude>
+                <exclude>**/readme.txt</exclude>
             </excludes>
         </fileSet>
-<!--
-        <fileSet>
-            <directory>..</directory>
-            <outputDirectory>/modules</outputDirectory>
-            <includes>
-                <include>spring-xml/**/*</include>
-                <include>spring-oxm/**/*</include>
-                <include>spring-oxm-tiger/**/*</include>
-                <include>spring-ws-core/**/*</include>
-                <include>spring-ws-security/**/*</include>
-            </includes>
-            <excludes>
-                <exclude>**/docs/**</exclude>
-                <exclude>**/target/**</exclude>
-                <exclude>**/target</exclude>
-                <exclude>**/*.iml</exclude>
-            </excludes>
-        </fileSet>
--->
     </fileSets>
 </assembly>
