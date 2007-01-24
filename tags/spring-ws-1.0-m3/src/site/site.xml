@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Spring Web Services">
+	<bannerLeft>
+		<name>Spring Web Services</name>
+		<href>http://www.springframework.org/spring-ws</href>
+	</bannerLeft>
+	
+	<body>
+		<links>
+			<item name="Spring Framework" href="http://www.springframework.org" />
+			<item name="Spring Web Services" href="http://www.springframework.org/spring-ws" />
+		</links>
+		<menu name="Documentation">
+			<item name="Upgrading" href="upgrading.html"/>
+			<item name="Resources" href="resources.html"/>
+		</menu>
+		<menu name="Support">
+			<item name="Support Forums" href="http://forum.springframework.org/forumdisplay.php?f=39"/>
+			<item name="JIRA" href="http://opensource.atlassian.com/projects/spring/browse/SWS"/>
+		</menu>
+		${modules}
+		${reports}
+	</body>
+	
+
+	
+</project>

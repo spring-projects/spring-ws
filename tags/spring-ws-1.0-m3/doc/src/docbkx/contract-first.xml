@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="contract">
+    <title>Writing Contract-first Web Services</title>
+
+    <section id="contract-introduction">
+        <title>Introduction</title>
+        <para>
+            In this chapter, we will give an overall tutorial on how to approach Web services development in
+            contract-first style, i.e. starting with the XML Schema/WSDL contract instead of Java code. Spring-WS
+            focusses on this development style, and this chapter might help you get started. Note that this chapter
+            contains almost no Spring-WS specific information: it is mostly about XML, schema's, and WSDL.
+        </para>
+        <para>
+            In this tutorial, we will define a Web service that can be used for Human Resources. Clients can send
+            holiday request forms to this service to book a holiday. It is based on a metaphor for Service Oriented
+            Architectures originally though of by <ulink
+            url="http://blog.springframework.com/arjen/archives/2006/02/06/what-is-so-hard-about-soa/"><citetitle>Dan
+            North</citetitle></ulink>.
+        </para>
+        <para>
+            The most important thing when doing contract-first Web service development is to try and think in terms of
+            XML. This means that Java-language concepts are of lesser importance. It is the XML that is sent across the
+            wire, and you should focus on that.
+        </para>
+    </section>
+    <section>
+        <title>The Messages</title>
+        <para>
+            In this section, we will focus on the actual XML messages that are sent to and from the service. We will        
+            start out by determining what these messages look like.
+        </para>
+        <section>
+            <title>Holiday</title>
+            <para>
+                In the scenario, we have to deal with holiday request, so it makes sense to determine what a holiday
+                looks like:
+                <programlisting>
+<![CDATA[<Holiday xmlns="http://mycompany.com/holidays/schemas">
+    <StartDate>2006-07-03</StartDate>
+    <EndDate>2006-07-07</EndDate>
+</Holiday>]]></programlisting>
+            </para>
+            <para>
+                A holiday consists of a start date and an end date. We decided to use the standard
+                <ulink url="http://www.cl.cam.ac.uk/~mgk25/iso-time.html"><citetitle>ISO 8601</citetitle></ulink> date
+                format for the dates, because that will save a lot of parsing hassle. We also added a namespace to the 
+                element, to make sure our elements can used within other XML documents.
+            </para>
+        </section>
+        <section>
+            <title>Employee</title>
+            <para>
+                There is also the notion of an employee in the scenario. Here's what it looks like:
+                <programlisting>
+<![CDATA[<Employee xmlns="http://mycompany.com/holidays/schemas">
+    <Number>42</Number>
+    <FirstName>Arjen</FirstName>
+    <LastName>Poutsma</LastName>
+</Employee>]]></programlisting>
+            </para>
+            <para>
+                We have used the same namespace as before. If this employee element could be used in other scenarios,
+                it might make sense to use a different namespace, such as
+                <literal>&quot;http://mycompany.com/employees/schemas&quot;</literal>.
+            </para>
+        </section>
+        <section id="contract-holiday-request">
+            <title>HolidayRequest</title>
+            <para>
+                Both the holiday and employee element can be put in a <literal>HolidayRequest</literal>:
+                <programlisting>
+<![CDATA[<HolidayRequest xmlns="http://mycompany.com/holidays/schemas">
+    <Holiday>
+        <StartDate>2006-07-03</StartDate>
+        <EndDate>2006-07-07</EndDate>
+    </Holiday>
+    <Employee>
+        <Number>42</Number>
+        <FirstName>Arjen</FirstName>
+        <LastName>Poutsma</LastName>
+    </Employee>
+</HolidayRequest>]]></programlisting>
+            </para>
+            <para>
+                The order of the two element does not matter: <literal>Employee</literal> could have been the first     
+                element just as well. As long as all the data is there; that's what is important.
+                In fact, the data is the only thing that is important: we are taking a <emphasis>data-driven</emphasis> 
+                approach.
+            </para>
+        </section>
+    </section>
+    <section id="contract-schema">        
+        <title>The Schema</title>
+        <para>
+            Now that we have seen some examples of the XML data that we will use, it makes sense to formalize this into
+            a schema. Basically, there are four different ways of defining a grammar for XML:
+            <itemizedlist>
+                <listitem><para>DTDs</para></listitem>
+                <listitem><para>
+                    <ulink url="http://www.w3.org/XML/Schema"><citetitle>XML Schema (XSD)</citetitle></ulink>
+                </para></listitem>
+                <listitem><para>
+                    <ulink url="http://www.relaxng.org/"><citetitle>RELAX NG</citetitle></ulink>
+                </para></listitem>
+                <listitem><para>
+                    <ulink url="http://www.schematron.com/"><citetitle>Schematron</citetitle></ulink>
+                </para></listitem>
+            </itemizedlist>
+        </para>
+        <para>
+            DTDs have limited namespaces support, so they are not suitable for Web services. Relax NG and Schematron are
+            certainly easier than XSDs. Unfortunately, they are not so widely supported across platforms. We will use 
+            XML Schema.
+        </para>
+        <para>
+          By far the easiest way to create a XSD is to infer it from sample documents. Any good XML editor or Java IDE
+          offers this functionality. Basically, these tools use some sample XML documents, and generate a schema from it
+          that validates them all. The end result certainly needs to be polished up, but it's a great starting
+          point.
+        </para>
+        <para>
+            Using the sample described in <xref linkend="contract-holiday-request"/>, we end up with the following 
+            generated schema:
+            <programlisting>
+<![CDATA[<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        elementFormDefault="qualified"
+        targetNamespace="http://mycompany.com/holidays/schemas"
+        xmlns:holidays="http://mycompany.com/holidays/schemas">
+    <xs:element name="HolidayRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="holidays:Holiday"/>
+                <xs:element ref="holidays:Employee"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Holiday">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="holidays:StartDate"/>
+                <xs:element ref="holidays:EndDate"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="StartDate" type="xs:NMTOKEN"/>
+    <xs:element name="EndDate" type="xs:NMTOKEN"/>
+    <xs:element name="Employee">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="holidays:Number"/>
+                <xs:element ref="holidays:FirstName"/>
+                <xs:element ref="holidays:LastName"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Number" type="xs:integer"/>
+    <xs:element name="FirstName" type="xs:NCName"/>
+    <xs:element name="LastName" type="xs:NCName"/>
+</xs:schema>]]></programlisting>
+        </para>
+        <para>
+            The generated schema can obviously be improved. The first thing to notice is that everything is a root-level
+            element. This means that the Web service should be able to accept all of these elements as data. This is not
+            desirable: we only want to accept a <literal>HolidayRequest</literal>. By removing the wrapping element tags
+            (thus keeping the types), and inlining the results, we can accomplish this.
+            <programlisting>
+&lt;xs:schema xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot;
+        xmlns:holidays=&quot;http://mycompany.com/holidays/schemas&quot;
+        elementFormDefault=&quot;qualified&quot;
+        targetNamespace=&quot;http://mycompany.com/holidays/schemas&quot;&gt;
+    &lt;xs:element name=&quot;HolidayRequest&quot;&gt;
+        &lt;xs:complexType&gt;
+            &lt;xs:sequence&gt;
+                &lt;xs:element name=&quot;Holiday&quot; <emphasis>type=&quot;holidays:HolidayType&quot;</emphasis>/&gt;
+                &lt;xs:element name=&quot;Employee&quot; <emphasis>type=&quot;holidays:EmployeeType&quot;</emphasis>/&gt;
+            &lt;/xs:sequence&gt;
+        &lt;/xs:complexType&gt;
+    &lt;/xs:element&gt;
+    &lt;xs:complexType name=&quot;HolidayType&quot;&gt;
+        &lt;xs:sequence&gt;
+            &lt;xs:element name=&quot;StartDate&quot; type=&quot;xs:NMTOKEN&quot;/&gt;
+            &lt;xs:element name=&quot;EndDate&quot; type=&quot;xs:NMTOKEN&quot;/&gt;
+        &lt;/xs:sequence&gt;
+    &lt;/xs:complexType&gt;
+    &lt;xs:complexType name=&quot;EmployeeType&quot;&gt;
+        &lt;xs:sequence&gt;
+            &lt;xs:element name=&quot;Number&quot; type=&quot;xs:integer&quot;/&gt;
+            &lt;xs:element name=&quot;FirstName&quot; type=&quot;xs:NCName&quot;/&gt;
+            &lt;xs:element name=&quot;LastName&quot; type=&quot;xs:NCName&quot;/&gt;
+        &lt;/xs:sequence&gt;
+    &lt;/xs:complexType&gt;
+&lt;/xs:schema&gt;</programlisting>
+        </para>
+        <para>
+            The schema still has one problem: with a schema like this, you can expect the following messages to 
+            validate:
+            <programlisting>
+<![CDATA[<HolidayRequest xmlns="http://mycompany.com/holidays/schemas">
+    <Holiday>
+        <StartDate>this is not a date</StartDate>
+        <EndDate>neither is this</EndDate>
+    </Holiday>
+    ...
+</HolidayRequest>]]></programlisting>
+        </para>
+        <para>
+          Clearly, we must make sure that the start and end date are really dates. XML Schema has an excellent built-in 
+          <literal>date</literal> type which we can use. We also change the <literal>NCName</literal>s to
+          <literal>string</literal>s. Finally, we change the <literal>sequence</literal> in
+          <literal>HolidayRequest</literal> to <literal>all</literal>. This tells the XML parser that the order of
+          <literal>Holiday</literal> and <literal>Employee</literal> is not significant. Our final XSD looks like this:
+          <programlisting>
+&lt;xs:schema xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot;
+        xmlns:holidays=&quot;http://mycompany.com/holidays/schemas&quot;
+        elementFormDefault=&quot;qualified&quot;
+        targetNamespace=&quot;http://mycompany.com/holidays/schemas&quot;&gt;
+    &lt;xs:element name=&quot;HolidayRequest&quot;&gt;
+        &lt;xs:complexType&gt;
+            &lt;<emphasis>xs:all</emphasis>&gt;
+                &lt;xs:element name=&quot;Holiday&quot; type=&quot;holidays:HolidayType&quot;/&gt;
+                &lt;xs:element name=&quot;Employee&quot; type=&quot;holidays:EmployeeType&quot;/&gt;
+            &lt;/<emphasis>xs:all</emphasis>&gt;
+        &lt;/xs:complexType&gt;
+    &lt;/xs:element&gt;
+    &lt;xs:complexType name=&quot;HolidayType&quot;&gt;
+        &lt;xs:sequence&gt;
+            &lt;xs:element name=&quot;StartDate&quot; <emphasis>type=&quot;xs:date&quot;</emphasis>/&gt;
+            &lt;xs:element name=&quot;EndDate&quot; <emphasis>type=&quot;xs:date&quot;</emphasis>/&gt;
+        &lt;/xs:sequence&gt;
+    &lt;/xs:complexType&gt;
+    &lt;xs:complexType name=&quot;EmployeeType&quot;&gt;
+        &lt;xs:sequence&gt;
+            &lt;xs:element name=&quot;Number&quot; type=&quot;xs:integer&quot;/&gt;
+            &lt;xs:element name=&quot;FirstName&quot; <emphasis>type=&quot;xs:string&quot;</emphasis>/&gt;
+            &lt;xs:element name=&quot;LastName&quot; <emphasis>type=&quot;xs:string&quot;</emphasis>/&gt;
+        &lt;/xs:sequence&gt;
+    &lt;/xs:complexType&gt;
+&lt;/xs:schema&gt;</programlisting>
+        </para>
+        <para>
+            We can store this file with a convenient name such as <filename>holidays.xsd</filename>.
+        </para>
+    </section>
+    <section id="contract-wsdl">
+        <title>The WSDL</title>
+        <para>
+            Which leaves the WSDL. We start our WSDL with the standard preamble, and by importing our existing XSD. To
+            separate the schema from the definition, we will use a separate namespace for the WSDL definitions:
+            <literal>&quot;http://mycompany.com/holidays/definitions&quot;</literal>.
+            <programlisting>
+&lt;wsdl:definitions name=&quot;HumanResources&quot;
+        targetNamespace=&quot;http://mycompany.com/holidays/definitions&quot;
+        xmlns:tns=&quot;http://mycompany.com/holidays/definitions&quot;
+        <emphasis>xmlns:types=&quot;http://mycompany.com/holidays/schemas&quot;</emphasis>
+        xmlns:soap=&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot;
+        xmlns:wsdl=&quot;http://schemas.xmlsoap.org/wsdl/&quot;&gt;
+    &lt;wsdl:types&gt;
+        &lt;xsd:schema xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+            <emphasis>&lt;xsd:import namespace=&quot;http://mycompany.com/holidays/schemas&quot; 
+                schemaLocation=&quot;holidays.xsd&quot;/&gt;</emphasis>
+        &lt;/xsd:schema&gt;
+    &lt;/wsdl:types&gt;
+&lt;/wsdl:definitions&gt;</programlisting>
+        </para>
+        <para>
+            Next, we define our messages based on the written schema. We only have one message: one with the
+            <literal>HolidayRequest</literal> we put in the schema:
+            <programlisting>
+&lt;wsdl:definitions name=&quot;HumanResources&quot;
+        targetNamespace=&quot;http://mycompany.com/holidays/definitions&quot;
+        xmlns:tns=&quot;http://mycompany.com/holidays/definitions&quot;
+        xmlns:types=&quot;http://mycompany.com/holidays/schemas&quot;
+        xmlns:soap=&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot;
+        xmlns:wsdl=&quot;http://schemas.xmlsoap.org/wsdl/&quot;&gt;
+    &lt;wsdl:types&gt;
+        &lt;xsd:schema xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+            &lt;xsd:import namespace=&quot;http://mycompany.com/holidays/schemas&quot; 
+                schemaLocation=&quot;holidays.xsd&quot;/&gt;
+        &lt;/xsd:schema&gt;
+    &lt;/wsdl:types&gt;
+    <emphasis>&lt;wsdl:message name=&quot;RequestHolidayInput&quot;&gt;</emphasis>
+        <emphasis>&lt;wsdl:part name=&quot;body&quot; element=&quot;types:HolidayRequest&quot; /&gt;</emphasis>
+    <emphasis>&lt;/wsdl:message&gt;</emphasis>
+&lt;/wsdl:definitions&gt;</programlisting>
+        </para>
+        <para>
+          We add the messages to a port type as operations:
+          <programlisting>
+&lt;wsdl:definitions name=&quot;HumanResources&quot;
+        targetNamespace=&quot;http://mycompany.com/holidays/definitions&quot;
+        xmlns:tns=&quot;http://mycompany.com/holidays/definitions&quot;
+        xmlns:types=&quot;http://mycompany.com/holidays/schemas&quot;
+        xmlns:soap=&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot;
+        xmlns:wsdl=&quot;http://schemas.xmlsoap.org/wsdl/&quot;&gt;
+    &lt;wsdl:types&gt;
+        &lt;xsd:schema xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+            &lt;xsd:import namespace=&quot;http://mycompany.com/holidays/schemas&quot; 
+                schemaLocation=&quot;holidays.xsd&quot;/&gt;
+        &lt;/xsd:schema&gt;
+    &lt;/wsdl:types&gt;
+    &lt;wsdl:message name=&quot;RequestHolidayInput&quot;&gt;
+        &lt;wsdl:part name=&quot;body&quot; element=&quot;types:HolidayRequest&quot; /&gt;
+    &lt;/wsdl:message&gt;
+    <emphasis>&lt;wsdl:portType name=&quot;HumanResourcesPortType&quot;&gt;</emphasis>
+        <emphasis>&lt;wsdl:operation name=&quot;RequestHoliday&quot;&gt;</emphasis>
+            <emphasis>&lt;wsdl:input message=&quot;tns:RequestHolidayInput&quot; /&gt;</emphasis>
+        <emphasis>&lt;/wsdl:operation&gt;</emphasis>
+    <emphasis>&lt;/wsdl:portType&gt;</emphasis>
+&lt;/wsdl:definitions&gt;</programlisting>
+        </para>
+        <para>
+            That finished the abstract part of the WSDL (the interface, as it were), and leaves the concrete part. This
+            part consists of a <literal>binding</literal>, which tells the client <emphasis>how</emphasis> to invoke the
+            operations you've just defined; and a <literal>service</literal>, which tells it <emphasis>where</emphasis>
+            to invoke it.
+        </para>
+        <para>
+          Adding a concrete part is pretty standard: just refer to the abstract part you defined previously, make sure
+          you use <emphasis>document/literal</emphasis> for the <literal>&lt;soap:binding&gt;</literal> elements
+          (anything else is not interoperable), pick a <literal>soapAction</literal> (in this case
+          <literal>http://example.com/RequestHoliday</literal>, but any URI will do), and determine the
+          <literal>location</literal> URL where you want request to come in (in this case
+          <literal>http://mycompany.com/humanresources</literal>):
+          <programlisting>
+&lt;wsdl:definitions name=&quot;HumanResources&quot;
+        targetNamespace=&quot;http://mycompany.com/holidays/definitions&quot;
+        xmlns:tns=&quot;http://mycompany.com/holidays/definitions&quot;
+        xmlns:types=&quot;http://mycompany.com/holidays/schemas&quot;
+        xmlns:soap=&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot;
+        xmlns:wsdl=&quot;http://schemas.xmlsoap.org/wsdl/&quot;&gt;
+    &lt;wsdl:types&gt;
+        &lt;xsd:schema xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+            &lt;xsd:import namespace=&quot;http://mycompany.com/holidays/schemas&quot; 
+                schemaLocation=&quot;holidays.xsd&quot;/&gt;
+        &lt;/xsd:schema&gt;
+    &lt;/wsdl:types&gt;
+    &lt;wsdl:message name=&quot;RequestHolidayInput&quot;&gt;
+        &lt;wsdl:part name=&quot;body&quot; element=&quot;types:HolidayRequest&quot; /&gt;
+    &lt;/wsdl:message&gt;
+    &lt;wsdl:portType name=&quot;HumanResourcesPortType&quot;&gt;
+        &lt;wsdl:operation name=&quot;RequestHoliday&quot;&gt;
+            &lt;wsdl:input message=&quot;tns:RequestHolidayInput&quot; /&gt;
+        &lt;/wsdl:operation&gt;
+    &lt;/wsdl:portType&gt;
+    &lt;wsdl:binding name=&quot;HumanResourcesBinding&quot; type=&quot;tns:HumanResourcesPortType&quot;&gt;
+        &lt;soap:binding <emphasis>style=&quot;document</emphasis>&quot; transport=&quot;http://schemas.xmlsoap.org/soap/http&quot; /&gt;
+        &lt;wsdl:operation name=&quot;RequestHoliday&quot;&gt;
+            &lt;soap:operation <emphasis>soapAction=&quot;http://example.com/RequestHoliday&quot;</emphasis> /&gt;
+                &lt;wsdl:input&gt;
+                &lt;soap:body <emphasis>use=&quot;literal&quot;</emphasis> /&gt;
+            &lt;/wsdl:input&gt;
+        &lt;/wsdl:operation&gt;
+    &lt;/wsdl:binding&gt;
+    &lt;wsdl:service name=&quot;HumanResourcesService&quot;&gt;
+        &lt;wsdl:port name=&quot;HumanResourcesPort&quot; binding=&quot;tns:HumanResourcesBinding&quot;&gt;
+            &lt;soap:address <emphasis>location=&quot;http://mycompany.com/humanresources&quot;</emphasis> /&gt;
+        &lt;/wsdl:port&gt;
+    &lt;/wsdl:service&gt;
+&lt;/wsdl:definitions&gt;</programlisting>
+        </para>
+        <para>
+            This is the final WSDL. We will describe how to implement the resulting schema and WSDL in the next chapter.
+        </para>
+    </section>
+</chapter>

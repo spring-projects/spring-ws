@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="echoClient" class="org.springframework.ws.samples.echo.client.sws.EchoClient">
+        <property name="messageFactory">
+            <bean class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+        </property>
+        <property name="messageSender" ref="commonsMessageSender"/>
+        <property name="request" value="classpath:org/springframework/ws/samples/echo/client/sws/echoRequest.xml"/>
+    </bean>
+
+    <bean id="urlMessageSender" class="org.springframework.ws.transport.http.HttpUrlConnectionMessageSender">
+        <property name="url" value="http://localhost:8080/echo/services"/>
+    </bean>
+
+    <bean id="commonsMessageSender" class="org.springframework.ws.transport.http.CommonsHttpMessageSender">
+        <property name="url" value="http://localhost:8080/echo/services"/>
+    </bean>
+
+</beans>

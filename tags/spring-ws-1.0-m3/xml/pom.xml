@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>spring-ws</artifactId>
+        <groupId>org.springframework.ws</groupId>
+        <version>1.0-m3</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>spring-xml</artifactId>
+    <packaging>jar</packaging>
+    <name>Spring XML</name>
+    <description>Various XML support classes for Spring Web Services</description>
+    <dependencies>
+        <!-- XML handling dependencies -->
+        <dependency>
+            <groupId>stax</groupId>
+            <artifactId>stax-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>jaxen</groupId>
+            <artifactId>jaxen</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.woodstox</groupId>
+            <artifactId>wstx-asl</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

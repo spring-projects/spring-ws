@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+    <description>
+        This application context contains the Spring-WS beans.
+    </description>
+
+    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory">
+        <description>
+            The MessageFactory is used to create new SOAP messages from incoming requests. It is referenced in
+            airline-servlet.xml and applicationContext-ws-jms.xml.
+        </description>
+    </bean>
+
+    <bean id="messageDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+        <description>
+            The MessageDispatcher is responsible for routing messages to endpoints. It uses three endpoint mappings to
+            determine the endpoint suitable for handling a particular incoming request. Having three mappings is not a
+            recommended approach, it's done here only for illustration purposes.
+        </description>
+        <property name="endpointMappings">
+            <list>
+                <ref local="payloadMapping"/>
+                <ref local="soapActionMapping"/>
+                <!-- Remove the following line if you want to disable WS-Security and Acegi -->
+                <ref bean="secureMapping"/>
+            </list>
+        </property>
+        <property name="endpointExceptionResolvers">
+            <list>
+                <ref local="endpointExceptionResolver"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="airlineWsdl" class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
+        <description>
+            This bean definition represents the airline.wsdl file found in the root of the web application. It is used
+            by the WsdlDefinitionHandlerAdapter in airline-servlet.xml.
+        </description>
+        <property name="wsdl" value="/airline.wsdl"/>
+    </bean>
+
+    <bean id="payloadMapping" class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
+        <description>
+            This endpoint mapping uses the qualified name of the payload (body contents) to determine the endpoint for
+            an incoming message. The name GetFlightsRequest with namespace
+            http://www.springframework.org/spring-ws/samples/airline/schemas is mapped to the getFlightsEndpoint.
+            Additionally, messages are logged using the logging interceptor.
+        </description>
+        <property name="mappings">
+            <props>
+                <prop key="{http://www.springframework.org/spring-ws/samples/airline/schemas}GetFlightsRequest">
+                    getFlightsEndpoint
+                </prop>
+            </props>
+        </property>
+        <property name="interceptors">
+            <ref local="loggingInterceptor"/>
+        </property>
+    </bean>
+
+    <bean id="soapActionMapping" class="org.springframework.ws.soap.server.endpoint.mapping.SoapActionEndpointMapping">
+        <description>
+            This endpoint mapping uses SOAP Actions to determine the endpoint for an incoming message. The key
+            http://www.springframework.org/spring-ws/samples/airline/BookFlight is mapped to the bookFlightEndpoint.
+            Additionally, message are logged and validated.
+        </description>
+        <property name="mappings">
+            <props>
+                <prop key="http://www.springframework.org/spring-ws/samples/airline/BookFlight">
+                    bookFlightEndpoint
+                </prop>
+            </props>
+        </property>
+        <property name="interceptors">
+            <list>
+                <ref local="loggingInterceptor"/>
+                <ref local="validatingInterceptor"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="validatingInterceptor"
+          class="org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor">
+        <description>
+            This interceptor validates both incoming and outgoing message contents according to the 'airline.xsd' XML
+            Schema file.
+        </description>
+        <property name="schema" value="airline.xsd"/>
+        <property name="validateRequest" value="true"/>
+        <property name="validateResponse" value="true"/>
+    </bean>
+
+    <bean id="loggingInterceptor" class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor">
+        <description>
+            This interceptor logs the message payload.
+        </description>
+    </bean>
+
+    <bean id="bookFlightEndpoint" class="org.springframework.ws.samples.airline.ws.BookFlightEndpoint">
+        <description>
+            This endpoint handles book flight request.
+        </description>
+        <property name="airlineService" ref="airlineService"/>
+    </bean>
+
+    <bean id="getFlightsEndpoint" class="org.springframework.ws.samples.airline.ws.GetFlightsEndpoint">
+        <description>
+            This endpoint handles get flights request.
+        </description>
+        <property name="airlineService" ref="airlineService"/>
+        <property name="marshaller" ref="jaxbMarshaller"/>
+        <property name="unmarshaller" ref="jaxbMarshaller"/>
+    </bean>
+
+    <bean id="jaxbMarshaller" class="org.springframework.oxm.jaxb.Jaxb1Marshaller">
+        <description>
+            The validating JAXB Marshaller is used by the getFlightsEndpoint to unmarshal XML to objects and
+            vice-versa.
+        </description>
+        <property name="contextPath" value="org.springframework.ws.samples.airline.schema"/>
+        <property name="validating" value="true"/>
+    </bean>
+
+    <bean id="endpointExceptionResolver"
+          class="org.springframework.ws.soap.server.endpoint.SoapFaultMappingExceptionResolver">
+        <description>
+            This exception resolver maps exceptions to SOAP Faults. The business logic exceptions
+            NoSeatAvailableException and NoSuchFlightException are mapped to custom SOAP Fault. Both
+            UnmarshallingException andValidationFailureException are mapped to a SOAP Fault with a "Sender" fault code.
+            All other exceptions are mapped to a "Receiver" error code, the default.
+        </description>
+        <property name="defaultFault">
+            <value>RECEIVER,Server error</value>
+        </property>
+        <property name="exceptionMappings">
+            <props>
+                <prop key="org.springframework.ws.samples.airline.service.NoSeatAvailableException">
+                    {http://www.springframework.org/spring-ws/samples/airline}airline:NoMoreSeats, No more seats
+                    available
+                </prop>
+                <prop key="org.springframework.ws.samples.airline.service.NoSuchFlightException">
+                    {http://www.springframework.org/spring-ws/samples/airline}airline:NoSuchFlight, No such flight
+                    exists
+                </prop>
+                <prop key="org.springframework.oxm.UnmarshallingFailureException">SENDER,Invalid request</prop>
+                <prop key="org.springframework.oxm.ValidationFailureException">SENDER,Invalid request</prop>
+            </props>
+        </property>
+    </bean>
+
+</beans>

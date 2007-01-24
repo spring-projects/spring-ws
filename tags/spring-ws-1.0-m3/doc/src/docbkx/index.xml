@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN" "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd" [
+        <!ENTITY preface            SYSTEM "preface.xml">
+        <!ENTITY overview           SYSTEM "overview.xml">
+        <!ENTITY contract-first     SYSTEM "contract-first.xml">
+        <!ENTITY ws                 SYSTEM "ws.xml">
+        <!ENTITY security           SYSTEM "security.xml">
+        <!ENTITY oxm                SYSTEM "oxm.xml">
+        <!ENTITY bibliography       SYSTEM "bibliography.xml">
+        ]>
+<book xmlns:xi="http://www.w3.org/2001/XInclude">
+
+    <bookinfo>
+        <title>Spring Web Services</title>
+        <subtitle>
+            Reference Documentation
+        </subtitle>
+        <releaseinfo>Version &version;</releaseinfo>
+        <pubdate>(Work in progress)</pubdate>
+
+        <authorgroup>
+            <author>
+                <firstname>Arjen</firstname>
+                <surname>Poutsma</surname>
+            </author>
+        </authorgroup>
+
+        <legalnotice>Copies of this document may be made for your own use and for distribution to others, provided that
+            you do not charge any fee for such copies and further provided that each copy contains this Copyright
+            Notice, whether distributed in print or electronically.
+        </legalnotice>
+    </bookinfo>
+
+    <toc/>
+
+    &preface;
+
+    &overview;
+
+    &contract-first;
+
+    &ws;
+
+    &security;
+
+    &oxm;
+
+    &bibliography;
+
+</book>
