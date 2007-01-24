@@ -22,8 +22,7 @@ import java.util.List;
 import junit.framework.TestCase;
 import org.easymock.MockControl;
 import org.joda.time.DateTime;
-import org.joda.time.YearMonthDay;
-
+import org.joda.time.LocalDate;
 import org.springframework.ws.samples.airline.dao.FlightDao;
 import org.springframework.ws.samples.airline.dao.TicketDao;
 import org.springframework.ws.samples.airline.domain.Flight;
@@ -153,14 +152,12 @@ public class AirlineServiceImplTest extends TestCase {
     public void testGetFlights() throws Exception {
         String toCode = "to";
         String fromCode = "from";
-        YearMonthDay departureDate = new YearMonthDay(2006, 1, 31);
+        LocalDate departureDate = new LocalDate(2006, 1, 31);
         Flight flight = new Flight();
         List flights = new ArrayList();
         flights.add(flight);
-        DateTime startOfPeriod = new DateTime(2006, 1, 31, 0, 0, 0, 0);
-        DateTime endOfPeriod = new DateTime(2006, 2, 1, 0, 0, 0, 0);
         flightDaoControl.expectAndReturn(
-                flightDaoMock.findFlights(fromCode, toCode, startOfPeriod, endOfPeriod, ServiceClass.ECONOMY), flights);
+                flightDaoMock.findFlights(fromCode, toCode, departureDate.toInterval(), ServiceClass.ECONOMY), flights);
         flightDaoControl.replay();
         ticketDaoControl.replay();
         securityServiceControl.replay();
@@ -172,14 +169,12 @@ public class AirlineServiceImplTest extends TestCase {
     public void testGetFlightsDefaultServiceClass() throws Exception {
         String toCode = "to";
         String fromCode = "from";
-        YearMonthDay departureDate = new YearMonthDay(2006, 1, 31);
+        LocalDate departureDate = new LocalDate(2006, 1, 31);
         Flight flight = new Flight();
         List flights = new ArrayList();
         flights.add(flight);
-        DateTime startOfPeriod = new DateTime(2006, 1, 31, 0, 0, 0, 0);
-        DateTime endOfPeriod = new DateTime(2006, 2, 1, 0, 0, 0, 0);
         flightDaoControl.expectAndReturn(
-                flightDaoMock.findFlights(fromCode, toCode, startOfPeriod, endOfPeriod, ServiceClass.ECONOMY), flights);
+                flightDaoMock.findFlights(fromCode, toCode, departureDate.toInterval(), ServiceClass.ECONOMY), flights);
         flightDaoControl.replay();
         ticketDaoControl.replay();
         securityServiceControl.replay();

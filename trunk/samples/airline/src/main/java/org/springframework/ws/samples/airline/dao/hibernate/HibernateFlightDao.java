@@ -18,7 +18,7 @@ package org.springframework.ws.samples.airline.dao.hibernate;
 import java.util.List;
 
 import org.joda.time.DateTime;
-
+import org.joda.time.Interval;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.ws.samples.airline.dao.FlightDao;
@@ -38,15 +38,12 @@ public class HibernateFlightDao extends HibernateDaoSupport implements FlightDao
         getHibernateTemplate().update(flight);
     }
 
-    public List findFlights(String fromAirportCode,
-                            String toAirportCode,
-                            DateTime startOfPeriod,
-                            DateTime endOfPeriod,
-                            ServiceClass serviceClass) throws DataAccessException {
+    public List findFlights(String fromAirportCode, String toAirportCode, Interval interval, ServiceClass serviceClass)
+            throws DataAccessException {
         return getHibernateTemplate().findByNamedParam("from Flight f where f.from.code = :from " +
                 "and f.to.code = :to and " + "f.departureTime >= :start and f.departureTime <= :end and " +
                 "f.serviceClass = :class", new String[]{"from", "to", "start", "end", "class"},
-                new Object[]{fromAirportCode, toAirportCode, startOfPeriod, endOfPeriod, serviceClass});
+                new Object[]{fromAirportCode, toAirportCode, interval.getStart(), interval.getEnd(), serviceClass});
     }
 
 }

@@ -18,7 +18,9 @@ package org.springframework.ws.samples.airline.ws;
 import java.util.Iterator;
 import java.util.List;
 
-import org.joda.time.YearMonthDay;
+import org.joda.time.Chronology;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDate;
 import org.joda.time.chrono.ISOChronology;
 import org.springframework.ws.samples.airline.schema.Airport;
 import org.springframework.ws.samples.airline.schema.Flight;
@@ -48,7 +50,10 @@ public class GetFlightsEndpoint extends AbstractMarshallingPayloadEndpoint {
 
     protected Object invokeInternal(Object requestObject) throws Exception {
         GetFlightsRequest request = (GetFlightsRequest) requestObject;
-        YearMonthDay departureDate = new YearMonthDay(request.getDepartureDate(), ISOChronology.getInstance());
+
+        DateTimeZone dateTimeZone = DateTimeZone.forTimeZone(request.getDepartureDate().getTimeZone());
+        Chronology chronology = ISOChronology.getInstance(dateTimeZone);
+        LocalDate departureDate = new LocalDate(request.getDepartureDate(), chronology);
         if (logger.isDebugEnabled()) {
             logger.debug("Request for flights from '" + request.getFrom() + "' to '" + request.getTo() + "' on " +
                     departureDate);

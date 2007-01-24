@@ -19,8 +19,8 @@ To execute the sample with the supplied HSQLDB:
 
 1. Start a command shell in the subdirectory hsqldb, and run "ant". This starts a HSQLDB server with a database named
    airline.
-2. Run "mvn sql:execute" to create the schema and insert data into the database.
-3. Run "mvn jetty:run" to run the sample in the Jetty6 Web container.
+2. Run "mvn -P hsqldb sql:execute" to create the schema and insert data into the database.
+3. Run "mvn -P hsqldb jetty:run" to run the sample in the Jetty6 Web container.
 
 To execute the sample with MySQL or PostgreSQL:
 

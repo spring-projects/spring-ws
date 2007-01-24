@@ -21,6 +21,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.joda.time.YearMonthDay;
 import org.springframework.util.Assert;
 import org.springframework.ws.samples.airline.dao.FlightDao;
@@ -107,7 +108,7 @@ public class AirlineServiceImpl implements AirlineService {
 
     public List getFlights(String fromAirportCode,
                            String toAirportCode,
-                           YearMonthDay departureDate,
+                           LocalDate departureDate,
                            ServiceClass serviceClass) {
         if (serviceClass == null) {
             serviceClass = ServiceClass.ECONOMY;
@@ -116,8 +117,6 @@ public class AirlineServiceImpl implements AirlineService {
             logger.debug(
                     "Getting flights from '" + fromAirportCode + "' to '" + toAirportCode + "' on " + departureDate);
         }
-        DateTime startOfPeriod = departureDate.toDateTimeAtMidnight();
-        DateTime endOfPeriod = startOfPeriod.plusDays(1);
-        return flightDao.findFlights(fromAirportCode, toAirportCode, startOfPeriod, endOfPeriod, serviceClass);
+        return flightDao.findFlights(fromAirportCode, toAirportCode, departureDate.toInterval(), serviceClass);
     }
 }
