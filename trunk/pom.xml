@@ -4,7 +4,7 @@
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-m3</version>
+    <version>1.0-m4-SNAPSHOT</version>
     <name>Spring Web Services</name>
     <description>Spring Web Services Framework</description>
     <url>http://www.springframework.org/spring-ws</url>
@@ -78,9 +78,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/tags/spring-ws-1.0-m3</connection>
-        <developerConnection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/tags/spring-ws-1.0-m3</developerConnection>
-        <url>http://svn.sourceforge.net/viewvc/springframework/spring-ws/tags/spring-ws-1.0-m3</url>
+        <connection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk</connection>
+        <developerConnection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk</developerConnection>
+        <url>http://svn.sourceforge.net/viewvc/springframework/spring-ws/trunk/</url>
     </scm>
     <modules>
         <module>xml</module>
