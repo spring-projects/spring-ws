@@ -18,8 +18,7 @@ package org.springframework.ws.samples.airline.service;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.joda.time.YearMonthDay;
-
+import org.joda.time.LocalDate;
 import org.springframework.ws.samples.airline.domain.ServiceClass;
 import org.springframework.ws.samples.airline.domain.Ticket;
 
@@ -40,10 +39,7 @@ public interface AirlineService {
      * @return a list of flights
      * @see org.springframework.ws.samples.airline.domain.Flight
      */
-    List getFlights(String fromAirportCode,
-                    String toAirportCode,
-                    YearMonthDay departureDate,
-                    ServiceClass serviceClass);
+    List getFlights(String fromAirportCode, String toAirportCode, LocalDate departureDate, ServiceClass serviceClass);
 
     /**
      * Books a single flight for a number of passengers. Passengers can be either specified by name or by frequent flyer

@@ -16,19 +16,24 @@
 package org.springframework.ws.samples.airline.ws;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import junit.framework.TestCase;
 import org.easymock.MockControl;
 import org.joda.time.DateTime;
-import org.joda.time.YearMonthDay;
-
+import org.joda.time.LocalDate;
+import org.springframework.oxm.jaxb.Jaxb1Marshaller;
+import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.samples.airline.domain.Flight;
 import org.springframework.ws.samples.airline.schema.GetFlightsRequest;
 import org.springframework.ws.samples.airline.schema.GetFlightsResponse;
 import org.springframework.ws.samples.airline.schema.ServiceClass;
 import org.springframework.ws.samples.airline.schema.impl.GetFlightsRequestImpl;
 import org.springframework.ws.samples.airline.service.AirlineService;
+import org.springframework.xml.transform.StringResult;
+import org.springframework.xml.transform.StringSource;
 
 public class GetFlightsEndpointTest extends TestCase {
 
@@ -48,7 +53,7 @@ public class GetFlightsEndpointTest extends TestCase {
     public void testInvoke() throws Exception {
         String fromAirportCode = "ABC";
         String toAirportCode = "DEF";
-        YearMonthDay departureDate = new YearMonthDay();
+        LocalDate departureDate = new LocalDate();
         GetFlightsRequest request = new GetFlightsRequestImpl();
         request.setFrom(fromAirportCode);
         request.setTo(toAirportCode);
@@ -70,6 +75,44 @@ public class GetFlightsEndpointTest extends TestCase {
         org.springframework.ws.samples.airline.schema.Flight responseFlight =
                 (org.springframework.ws.samples.airline.schema.Flight) response.getFlight().get(0);
         assertEquals("Invalid flight number on flight", "1", responseFlight.getNumber());
+    }
+
+    public void testMarshalling() throws Exception {
+        Jaxb1Marshaller marshaller = new Jaxb1Marshaller();
+        marshaller.setContextPath("org.springframework.ws.samples.airline.schema");
+        marshaller.setValidating(true);
+        marshaller.afterPropertiesSet();
+        endpoint.setMarshaller(marshaller);
+        endpoint.setUnmarshaller(marshaller);
+
+        MockControl contextControl = MockControl.createControl(MessageContext.class);
+        MessageContext contextMock = (MessageContext) contextControl.getMock();
+        MockControl messageControl = MockControl.createControl(WebServiceMessage.class);
+        WebServiceMessage requestMock = (WebServiceMessage) messageControl.getMock();
+        WebServiceMessage responseMock = (WebServiceMessage) messageControl.getMock();
+
+        contextControl.expectAndReturn(contextMock.getRequest(), requestMock);
+        StringSource source = new StringSource(
+                "<GetFlightsRequest xmlns=\"http://www.springframework.org/spring-ws/samples/airline/schemas\"><from>AMS</from><to>VCE</to><departureDate>2006-01-31Z</departureDate></GetFlightsRequest>");
+        messageControl.expectAndReturn(requestMock.getPayloadSource(), source);
+        String fromAirportCode = "AMS";
+        String toAirportCode = "VCE";
+        LocalDate departureDate = new LocalDate(2006, 1, 31);
+        serviceControl.expectAndReturn(serviceMock.getFlights(fromAirportCode, toAirportCode, departureDate, null),
+                Collections.EMPTY_LIST);
+        contextControl.expectAndReturn(contextMock.getResponse(), responseMock);
+        StringResult result = new StringResult();
+        messageControl.expectAndReturn(responseMock.getPayloadResult(), result);
+
+        contextControl.replay();
+        messageControl.replay();
+        serviceControl.replay();
+
+        endpoint.invoke(contextMock);
+
+        contextControl.verify();
+        messageControl.verify();
+        serviceControl.verify();
     }
 
 }

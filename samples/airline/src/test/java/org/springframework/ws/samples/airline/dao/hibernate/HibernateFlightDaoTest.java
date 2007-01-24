@@ -18,6 +18,7 @@ package org.springframework.ws.samples.airline.dao.hibernate;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.springframework.test.AbstractTransactionalDataSourceSpringContextTests;
 import org.springframework.ws.samples.airline.domain.Airport;
 import org.springframework.ws.samples.airline.domain.Flight;
@@ -35,6 +36,8 @@ public class HibernateFlightDaoTest extends AbstractTransactionalDataSourceSprin
 
     private DateTime arrivalTime;
 
+    private Interval interval;
+
     protected String[] getConfigLocations() {
         return new String[]{
                 "classpath:org/springframework/ws/samples/airline/dao/hibernate/applicationContext-hibernate.xml"};
@@ -47,6 +50,7 @@ public class HibernateFlightDaoTest extends AbstractTransactionalDataSourceSprin
     protected void onSetUpBeforeTransaction() throws Exception {
         departureTime = new DateTime(2006, 1, 31, 10, 5, 0, 0);
         arrivalTime = new DateTime(2006, 1, 31, 12, 25, 0, 0);
+        interval = new Interval(departureTime, arrivalTime);
     }
 
     protected void onSetUpInTransaction() throws Exception {
@@ -60,7 +64,7 @@ public class HibernateFlightDaoTest extends AbstractTransactionalDataSourceSprin
         jdbcTemplate
                 .update("INSERT INTO FLIGHT(NUMBER, DEPARTURE_TIME, FROM_AIRPORT_CODE, ARRIVAL_TIME, TO_AIRPORT_CODE, SERVICE_CLASS, SEATS_AVAILABLE, MILES) " +
                         "VALUES ('KL020','2006-01-31 10:05:00', 'RTM', '2006-01-31 12:25:00', 'OSL', 'business', 90, 10)");
-        List flights = flightDao.findFlights("RTM", "OSL", departureTime, arrivalTime, ServiceClass.BUSINESS);
+        List flights = flightDao.findFlights("RTM", "OSL", interval, ServiceClass.BUSINESS);
         assertNotNull("Invalid result", flights);
         assertEquals("Invalid amount of flights", 1, flights.size());
     }
@@ -70,7 +74,7 @@ public class HibernateFlightDaoTest extends AbstractTransactionalDataSourceSprin
                 .update("INSERT INTO FLIGHT(NUMBER, DEPARTURE_TIME, FROM_AIRPORT_CODE, ARRIVAL_TIME, TO_AIRPORT_CODE, SERVICE_CLASS, SEATS_AVAILABLE, MILES) " +
                         "VALUES ('KL020','2006-01-31 10:05:00', 'RTM', '2006-01-31 12:25:00', 'OSL', 'business', 90, 10)");
         DateTime dateTime = new DateTime(2006, 6, 1, 0, 0, 0, 0);
-        List flights = flightDao.findFlights("RTM", "OSL", dateTime, dateTime, ServiceClass.BUSINESS);
+        List flights = flightDao.findFlights("RTM", "OSL", new Interval(dateTime, dateTime), ServiceClass.BUSINESS);
         assertNotNull("Invalid result", flights);
         assertEquals("Invalid amount of flights", 0, flights.size());
     }

@@ -18,18 +18,15 @@ package org.springframework.ws.samples.airline.dao;
 import java.util.List;
 
 import org.joda.time.DateTime;
-
+import org.joda.time.Interval;
 import org.springframework.dao.DataAccessException;
 import org.springframework.ws.samples.airline.domain.Flight;
 import org.springframework.ws.samples.airline.domain.ServiceClass;
 
 public interface FlightDao {
 
-    List findFlights(String fromAirportCode,
-                     String toAirportCode,
-                     DateTime startOfPeriod,
-                     DateTime endOfPeriod,
-                     ServiceClass serviceClass) throws DataAccessException;
+    List findFlights(String fromAirportCode, String toAirportCode, Interval interval, ServiceClass serviceClass)
+            throws DataAccessException;
 
     Flight getFlight(String flightNumber, DateTime departureTime);
 
