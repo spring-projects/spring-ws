@@ -14,8 +14,12 @@
         <artifact:remoteRepository id="java.net" url="https://maven-repository.dev.java.net/nonav/repository"
                                    layout="legacy"/>
 
+        <artifact:remoteRepository id="spring-ext"
+                                   url="https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/"/>
+
         <artifact:dependencies pathId="compile.classpath">
             <remoteRepository refid="java.net"/>
+            <remoteRepository refid="spring-ext"/>
             <dependency groupId="javax.xml.soap" artifactId="saaj-api" version="1.3"/>
             <dependency groupId="com.sun.xml.wss" artifactId="xws-security" version="2.0-ea2"/>
             <dependency groupId="com.sun.org.apache.xml.security" artifactId="xmlsec" version="2.0"/>
