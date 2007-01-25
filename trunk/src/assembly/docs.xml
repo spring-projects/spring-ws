@@ -8,5 +8,6 @@
                 <include>changelog.txt</include>
             </includes>
         </fileSet>
+        <lineEnding>dos</lineEnding>
     </fileSets>
 </component>
