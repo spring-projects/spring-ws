@@ -14,13 +14,18 @@
         <artifact:remoteRepository id="java.net" url="https://maven-repository.dev.java.net/nonav/repository"
                                    layout="legacy"/>
 
+        <artifact:remoteRepository id="spring-ext"
+            url="https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/"/>
+
         <artifact:dependencies pathId="compile.classpath">
             <remoteRepository refid="java.net" />
+            <remoteRepository refid="spring-ext" />
             <dependency groupId="javax.xml.soap" artifactId="saaj-api" version="1.3"/>
         </artifact:dependencies>
 
         <artifact:dependencies pathId="runtime.classpath">
             <remoteRepository refid="java.net" />
+            <remoteRepository refid="spring-ext" />
             <dependency groupId="com.sun.xml.messaging.saaj" artifactId="saaj-impl" version="1.3"/>
         </artifact:dependencies>
 
