@@ -12,6 +12,7 @@
 		</links>
 		<menu name="Documentation">
 			<item name="Upgrading" href="upgrading.html"/>
+			<item name="Tutorial" href="tutorial/tutorial1.html"/>
 			<item name="Resources" href="resources.html"/>
 		</menu>
 		<menu name="Support">
