@@ -1,0 +1,340 @@
+                                          -----------------------------------
+                                          Writing Contract-first Web Services
+                                          -----------------------------------
+
+Introduction
+
+    This is an overall tutorial on how to approach Web services development in contract-first style, i.e. starting with the XML Schema/WSDL contract instead of Java code. Spring Web Services focusses on this development style, and this
+tutorial helps you get started. Note that this chapter contains almost no Spring-WS specific information: it is mostly
+about XML, XSD, and WSDL.
+
+    In this tutorial, we will define a Web service that can be used for Human Resources. Clients can send
+holiday request forms to this service to book a holiday. It is based on a metaphor for Service Oriented Architectures
+originally though of by {{{url="http://blog.springframework.com/arjen/archives/2006/02/06/what-is-so-hard-about-soa/}Dan
+North}}.
+
+    The most important thing when doing contract-first Web service development is to try and think in terms of
+XML. This means that Java-language concepts are of lesser importance. It is the XML that is sent across the wire, and
+you should focus on that.
+
+The Messages
+
+    In this section, we will focus on the actual XML messages that are sent to and from the service. We will        
+start out by determining what these messages look like.
+
+* Holiday
+
+    In the scenario, we have to deal with holiday request, so it makes sense to determine what a holiday looks like:
+
++-------------------------------------
+<Holiday xmlns="http://mycompany.com/holidays/schemas">
+    <StartDate>2006-07-03</StartDate>
+    <EndDate>2006-07-07</EndDate>
+</Holiday>
++-------------------------------------
+
+    A holiday consists of a start date and an end date. We decided to use the standard 
+{{{http://www.cl.cam.ac.uk/~mgk25/iso-time.html}ISO 8601}} date format for the dates, because that will save a lot of
+parsing hassle. We also added a namespace to the element, to make sure our elements can used within other XML documents.
+
+* Employee
+
+    There is also the notion of an employee in the scenario. Here's what it looks like:
+
++-------------------------------------
+<Employee xmlns="http://mycompany.com/holidays/schemas">
+    <Number>42</Number>
+    <FirstName>Arjen</FirstName>
+    <LastName>Poutsma</LastName>
+</Employee>
++-------------------------------------
+
+
+    We have used the same namespace as before. If this employee element could be used in other scenarios, it might make
+sense to use a different namespace, such as <<<"http://mycompany.com/employees/schemas">>>.
+
+* HolidayRequest
+
+    Both the holiday and employee element can be put in a <<<HolidayRequest>>>:
+
++-------------------------------------
+<HolidayRequest xmlns="http://mycompany.com/holidays/schemas">
+    <Holiday>
+        <StartDate>2006-07-03</StartDate>
+        <EndDate>2006-07-07</EndDate>
+    </Holiday>
+    <Employee>
+        <Number>42</Number>
+        <FirstName>Arjen</FirstName>
+        <LastName>Poutsma</LastName>
+    </Employee>
+</HolidayRequest>
++-------------------------------------
+
+    The order of the two element does not matter: <<<Employee>>> could have been the first element just as
+well. As long as all the data is there; that's what is important. In fact, the data is the only thing that is
+important: we are taking a <data-driven> approach.
+
+The Schema
+
+    Now that we have seen some examples of the XML data that we will use, it makes sense to formalize this into
+a schema. Basically, there are four different ways of defining a grammar for XML:
+
+        * DTDs
+    
+        * {{{http://www.w3.org/XML/Schema}XML Schema (XSD)}}
+    
+        * {{{http://www.relaxng.org/}RELAX NG}}
+    
+        * {{{http://www.schematron.com/}Schematron}}
+
+    DTDs have limited namespaces support, so they are not suitable for Web services. Relax NG and Schematron are
+certainly easier than XSDs. Unfortunately, they are not so widely supported across platforms. We will use XML
+Schema.
+
+    By far the easiest way to create a XSD is to infer it from sample documents. Any good XML editor or Java IDE
+offers this functionality. Basically, these tools use some sample XML documents, and generate a schema from it
+that validates them all. The end result certainly needs to be polished up, but it's a great starting
+point.
+
+    Using the sample described above, we end up with the following generated schema:
+
++-------------------------------------
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        elementFormDefault="qualified"
+        targetNamespace="http://mycompany.com/holidays/schemas"
+        xmlns:holidays="http://mycompany.com/holidays/schemas">
+    <xs:element name="HolidayRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="holidays:Holiday"/>
+                <xs:element ref="holidays:Employee"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Holiday">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="holidays:StartDate"/>
+                <xs:element ref="holidays:EndDate"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="StartDate" type="xs:NMTOKEN"/>
+    <xs:element name="EndDate" type="xs:NMTOKEN"/>
+    <xs:element name="Employee">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="holidays:Number"/>
+                <xs:element ref="holidays:FirstName"/>
+                <xs:element ref="holidays:LastName"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Number" type="xs:integer"/>
+    <xs:element name="FirstName" type="xs:NCName"/>
+    <xs:element name="LastName" type="xs:NCName"/>
+</xs:schema>
++-------------------------------------
+
+    The generated schema can obviously be improved. The first thing to notice is that everything is a root-level
+element. This means that the Web service should be able to accept all of these elements as data. This is not desirable:
+we only want to accept a <<<HolidayRequest>>>. By removing the wrapping element tags (thus keeping the
+types), and inlining the results, we can accomplish this.
+
++-------------------------------------
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:holidays="http://mycompany.com/holidays/schemas"
+        elementFormDefault="qualified"
+        targetNamespace="http://mycompany.com/holidays/schemas">
+    <xs:element name="HolidayRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Holiday" <type="holidays:HolidayType">/>
+                <xs:element name="Employee" <type="holidays:EmployeeType">/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="HolidayType">
+        <xs:sequence>
+            <xs:element name="StartDate" type="xs:NMTOKEN"/>
+            <xs:element name="EndDate" type="xs:NMTOKEN"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="EmployeeType">
+        <xs:sequence>
+            <xs:element name="Number" type="xs:integer"/>
+            <xs:element name="FirstName" type="xs:NCName"/>
+            <xs:element name="LastName" type="xs:NCName"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
++-------------------------------------
+
+    The schema still has one problem: with a schema like this, you can expect the following messages to
+validate:
+
++-------------------------------------
+<HolidayRequest xmlns="http://mycompany.com/holidays/schemas">
+    <Holiday>
+        <StartDate>this is not a date</StartDate>
+        <EndDate>neither is this</EndDate>
+    </Holiday>
+    ...
+</HolidayRequest>
++-------------------------------------
+
+    Clearly, we must make sure that the start and end date are really dates. XML Schema has an excellent built-in
+<<<date>>> type which we can use. We also change the <<<NCName>>>s to <<<string>>>s. Finally, we change the
+<<<sequence>>> in <<<HolidayRequest>>> to <<<all>>>. This tells the XML parser that the order of <<<Holiday>>> and
+<<<Employee>>> is not significant. Our final XSD looks like this:
+
++-------------------------------------
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:holidays="http://mycompany.com/holidays/schemas"
+        elementFormDefault="qualified"
+        targetNamespace="http://mycompany.com/holidays/schemas">
+    <xs:element name="HolidayRequest">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="Holiday" type="holidays:HolidayType"/>
+                <xs:element name="Employee" type="holidays:EmployeeType"/>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="HolidayType">
+        <xs:sequence>
+            <xs:element name="StartDate" <type="xs:date">/>
+            <xs:element name="EndDate" <type="xs:date">/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="EmployeeType">
+        <xs:sequence>
+            <xs:element name="Number" type="xs:integer"/>
+            <xs:element name="FirstName" <type="xs:string">/>
+            <xs:element name="LastName" <type="xs:string">/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
++-------------------------------------
+
+    We can store this file with a convenient name such as <<<holidays.xsd>>>.
+
+The WSDL
+
+    Which leaves the WSDL. We start our WSDL with the standard preamble, and by importing our existing XSD. To
+separate the schema from the definition, we will use a separate namespace for the WSDL definitions:
+<<<"http://mycompany.com/holidays/definitions">>>.
+
++-------------------------------------
+<wsdl:definitions name="HumanResources"
+        targetNamespace="http://mycompany.com/holidays/definitions"
+        xmlns:tns="http://mycompany.com/holidays/definitions"
+        <xmlns:types="http://mycompany.com/holidays/schemas">
+        xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+        xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <wsdl:types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:import namespace="http://mycompany.com/holidays/schemas" 
+                schemaLocation="holidays.xsd"/>
+        </xsd:schema>
+    </wsdl:types>
+</wsdl:definitions>
++-------------------------------------
+
+    Next, we define our messages based on the written schema. We only have one message: one with the
+<<<HolidayRequest>>> we put in the schema:
+
++-------------------------------------
+<wsdl:definitions name="HumanResources"
+        targetNamespace="http://mycompany.com/holidays/definitions"
+        xmlns:tns="http://mycompany.com/holidays/definitions"
+        xmlns:types="http://mycompany.com/holidays/schemas"
+        xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+        xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <wsdl:types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:import namespace="http://mycompany.com/holidays/schemas" 
+                schemaLocation="holidays.xsd"/>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="RequestHolidayInput">>
+        <wsdl:part name="body" element="types:HolidayRequest" />
+    </wsdl:message>
+</wsdl:definitions>
++-------------------------------------
+
+    We add the messages to a port type as operations:
+
++-------------------------------------
+<wsdl:definitions name="HumanResources"
+        targetNamespace="http://mycompany.com/holidays/definitions"
+        xmlns:tns="http://mycompany.com/holidays/definitions"
+        xmlns:types="http://mycompany.com/holidays/schemas"
+        xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+        xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <wsdl:types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:import namespace="http://mycompany.com/holidays/schemas" 
+                schemaLocation="holidays.xsd"/>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="RequestHolidayInput">
+        <wsdl:part name="body" element="types:HolidayRequest" />
+    </wsdl:message>
+    <wsdl:portType name="HumanResourcesPortType">
+        <wsdl:operation name="RequestHoliday">
+            <wsdl:input message="tns:RequestHolidayInput" />
+        </wsdl:operation>
+    </wsdl:portType>
+</wsdl:definitions>
++-------------------------------------
+
+    That finished the abstract part of the WSDL (the interface, as it were), and leaves the concrete part. This
+part consists of a <<<binding>>>, which tells the client <how> to invoke the operations you've just defined; and a
+<<<service>>>, which tells it <where> to invoke it.
+
+    Adding a concrete part is pretty standard: just refer to the abstract part you defined previously, make sure
+you use <document/literal> for the <<<soap:binding>>> elements (anything else is not interoperable), pick a
+<<<soapAction>>> (in this case <<<http://example.com/RequestHoliday>>>, but any URI will do), and determine the
+<<<location>>> URL where you want request to come in (in this case <<<http://mycompany.com/humanresources>>>):
+
++-------------------------------------
+<wsdl:definitions name="HumanResources"
+        targetNamespace="http://mycompany.com/holidays/definitions"
+        xmlns:tns="http://mycompany.com/holidays/definitions"
+        xmlns:types="http://mycompany.com/holidays/schemas"
+        xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+        xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <wsdl:types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:import namespace="http://mycompany.com/holidays/schemas" 
+                schemaLocation="holidays.xsd"/>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="RequestHolidayInput">
+        <wsdl:part name="body" element="types:HolidayRequest" />
+    </wsdl:message>
+    <wsdl:portType name="HumanResourcesPortType">
+        <wsdl:operation name="RequestHoliday">
+            <wsdl:input message="tns:RequestHolidayInput" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="HumanResourcesBinding" type="tns:HumanResourcesPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="RequestHoliday">
+            <soap:operation <soapAction="http://example.com/RequestHoliday" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>                
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="HumanResourcesService">
+        <wsdl:port name="HumanResourcesPort" binding="tns:HumanResourcesBinding">
+            <soap:address location="http://mycompany.com/humanresources" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
++-------------------------------------
+
+    This is the final WSDL. We will describe how to implement the resulting schema and WSDL in the next chapter.

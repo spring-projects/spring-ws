@@ -2,10 +2,6 @@
                                                        Resources
                                                        ---------
 
-Tutorial
-
-	* {{{http://blog.springframework.com/arjen/archives/2006/06/09/tutorial-writing-contract-first-web-services/}Writing Contract-first Web Services}}
-
 SOAP Reference
 
 	Below are some resources which help you understand SOAP in general. These are not tied to Spring-WS.
