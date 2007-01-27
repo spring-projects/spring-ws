@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
 /**
  * Implementation of the <code>EndpointMapping</code> interface to map from the qualified name of the request payload
  * root element. Supports both mapping to bean instances and mapping to bean names: the latter is required for prototype
- * handlers.
+ * endpoints.
  * <p/>
  * The <code>endpointMap</code> property is suitable for populating the endpoint map with bean references, e.g. via the
  * map element in XML bean definitions.
