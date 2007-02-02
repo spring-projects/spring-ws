@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws</artifactId>
     <packaging>pom</packaging>
     <version>1.0-m4-SNAPSHOT</version>
     <name>Spring Web Services</name>
-    <description>Spring Web Services Framework</description>
+    <description>
+        Spring Web Services is a product of the Spring community focused on creating document-driven Web services.
+        It aims to facilitate contract-first SOAP service development, allowing for the creation of flexible web
+        services using one of the many ways to manipulate XML payloads.
+    </description>
     <url>http://www.springframework.org/spring-ws</url>
     <issueManagement>
         <system>JIRA</system>
@@ -78,8 +83,10 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk</connection>
-        <developerConnection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk</developerConnection>
+        <connection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk
+        </connection>
+        <developerConnection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk
+        </developerConnection>
         <url>http://svn.sourceforge.net/viewvc/springframework/spring-ws/trunk/</url>
     </scm>
     <modules>
@@ -500,7 +507,7 @@
             <dependency>
                 <groupId>org.acegisecurity</groupId>
                 <artifactId>acegi-security</artifactId>
-                <version>1.0.2</version>
+                <version>1.0.3</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.springframework</groupId>
