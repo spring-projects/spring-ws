@@ -87,7 +87,7 @@ public class DefaultTimestampValidator implements TimestampValidationCallback.Ti
 
     private Date parseDate(String date) throws TimestampValidationCallback.TimestampValidationException {
         SimpleDateFormat calendarFormatter1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        SimpleDateFormat calendarFormatter2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.'sss'Z'");
+        SimpleDateFormat calendarFormatter2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.'SSS'Z'");
 
         try {
             try {
