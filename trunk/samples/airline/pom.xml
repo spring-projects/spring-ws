@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <artifactId>spring-ws-samples</artifactId>
         <groupId>org.springframework.ws</groupId>
@@ -23,10 +24,10 @@
                 <!-- Change these properties to reflect your HSQLDB connection settings -->
                 <jdbc.driverClassName>org.hsqldb.jdbcDriver</jdbc.driverClassName>
                 <jdbc.username>sa</jdbc.username>
-                <jdbc.password />
+                <jdbc.password/>
                 <jdbc.url>jdbc:hsqldb:hsql://localhost/airline</jdbc.url>
                 <hibernate.dialect>org.hibernate.dialect.HSQLDialect</hibernate.dialect>
-                <hibernate.hbm2ddl.auto />
+                <hibernate.hbm2ddl.auto/>
             </properties>
             <build>
                 <plugins>
@@ -70,7 +71,7 @@
                 <jdbc.password>airline</jdbc.password>
                 <jdbc.url>jdbc:mysql://localhost/airline</jdbc.url>
                 <hibernate.dialect>org.hibernate.dialect.MySQLInnoDBDialect</hibernate.dialect>
-                <hibernate.hbm2ddl.auto />
+                <hibernate.hbm2ddl.auto/>
             </properties>
             <build>
                 <plugins>
@@ -114,7 +115,7 @@
                 <jdbc.password>airline</jdbc.password>
                 <jdbc.url>jdbc:postgresql://localhost/airline</jdbc.url>
                 <hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
-                <hibernate.hbm2ddl.auto />
+                <hibernate.hbm2ddl.auto/>
             </properties>
             <build>
                 <plugins>
@@ -148,7 +149,7 @@
              The following values are for using an in-memory database, which is used for testing -->
         <jdbc.driverClassName>org.hsqldb.jdbcDriver</jdbc.driverClassName>
         <jdbc.username>sa</jdbc.username>
-        <jdbc.password />
+        <jdbc.password/>
         <jdbc.url>jdbc:hsqldb:mem:airline</jdbc.url>
         <hibernate.dialect>org.hibernate.dialect.HSQLDialect</hibernate.dialect>
         <hibernate.hbm2ddl.auto>create-drop</hibernate.hbm2ddl.auto>
@@ -157,7 +158,17 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
                 <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>**/*.properties</exclude>
+                </excludes>
+                <filtering>false</filtering>
             </resource>
         </resources>
         <plugins>
@@ -170,7 +181,7 @@
                         <configuration>
                             <tasks>
                                 <ant antfile="${basedir}/build-maven2.xml" inheritRefs="true">
-                                    <target name="generate-sources" />
+                                    <target name="generate-sources"/>
                                 </ant>
                             </tasks>
                             <sourceRoot>${project.build.directory}/generated-sources/main/java</sourceRoot>
