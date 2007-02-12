@@ -46,6 +46,7 @@
 				<classname>CommonsHttpMessageSender</classname>, which uses the Jakarta Commons HttpClient. Use the 
 				latter if you need more advanced and easy-to-use functionality.	Both HTTP message senders require an 
 				URL to be set using the <property>url</property> property.
+			</para>
 		</section>
 	</section>
 </chapter>
