@@ -1,87 +1,117 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
 <chapter id="security">
-    <title>Securing your Web services with Spring-WS</title>
+	<title>Securing your Web services with Spring-WS</title>
 
-    <section id="security-introduction">
-        <title>Introduction</title>
-        <para>
-            In this chapter, we will show you how to add WS-Security aspects to your Web services. We
-            will focus on the three different areas of WS-Security, namely:
-        </para>
-        <formalpara>
-            <title>Authentication</title>
-            <para>
-                This is the process of determining whether a <emphasis>principal</emphasis> is who they claim to be.
-                In this context, a "principal" generally means a user, device or some other system which can perform an
-                action in your application.
-            </para>
-        </formalpara>
-        <formalpara>
-            <title>Digital signatures</title>
-            <para>
-                The digital signature of a message is a piece of information based on both the document and the signer's
-                private key. It is created through the use of a hash function and a private signing function
-                (encrypting with the signer's private key).
-            </para>
-        </formalpara>
-        <formalpara>
-            <title>Encryption and Decryption</title>
-            <para>
-                <emphasis>Encryption</emphasis> is the process of transforming data into a form that is impossible to
-                read without the appropriate key. It is mainly used to keep information hidden from anyone for whom it
-                is not intended. <emphasis>Decryption</emphasis> is the reverse of encryption; it is the process of
-                transforming of encrypted data back into an readable form.
-            </para>
-        </formalpara>
-        <para>
-            All of these three areas are implemented using the <classname>XwsSecurityInterceptor</classname>, which we
-            will describe in <xref linkend="security-xws-security-interceptor"/>
-        </para>
-        <note>
-            <para>
-                Note that WS-Security (especially encryption and signing) requires substantial amounts of memory, 
-                and will also decrease performance. If performance is important to you, you might want to consider using 
-                not using WS-Security.
-            </para>
-        </note>
-    </section>
-    <section id="security-xws-security-interceptor">
-        <title>XwsSecurityInterceptor</title>
-        <para>
-            The <classname>XwsSecurityInterceptor</classname> is an <classname>EndpointInterceptor</classname> (see
-            <xref linkend="ws-endpoint-interceptor"/>) that is based on SUN's XML and Web Services Security package
-            (XWSS). This WS-Security implementation is part of the Java Web Services Developer Pack (<ulink
-                url="http://java.sun.com/webservices/"><citetitle>Java WSDP</citetitle></ulink>).
-        </para>
-        <para>
-            Like any other endpoint interceptor, it is defined in the endpoint mapping (see <xref
-                linkend="ws-endpoint-mapping"/>). This means that you can be selective about adding WS-Security support:
-            some endpoint mappings require it, while others do not.
-        </para>
-        <para>
-            The <classname>XwsSecurityInterceptor</classname> requires a <emphasis>security policy file</emphasis> to
-            operate. This XML file tells the interceptor what security aspects to require from incoming SOAP messages,
-            and what aspects to add to outgoing messages. The basic format of the policy file will be explained in the
-            following sections, but you can find a more in-depth tutorial <ulink
-                url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp564887">
-            <citetitle>here</citetitle></ulink>. You can set the policy with the
-            <methodname>policyConfiguration</methodname> property, which requires a Spring resource.
-            The policy file can contain multiple elements, e.g. require a username
-            token on incoming messages, and sign all outgoing messages. It contains a
-            <literal>SecurityConfiguration</literal> element as root (not a <literal>JAXRPCSecurity</literal>
-            element).
-        </para>
-        <para>
-            Additionally, the security interceptor requires one or more <classname>CallbackHandler</classname>s to
-            operate. These handlers are used to retrieve certificates, private keys, validate user credentials, etc.
-            Spring-WS offers handlers for most common security concerns, e.g. authenticating against a Acegi
-            authentication manager, signing outgoing messages based on a X509 certificate. The following sections
-            will indicate what callback handler to use for which security concern. You can set the callback handlers
-            using the <methodname>callbackHandler</methodname> or <methodname>callbackHandlers</methodname> property.
-        </para>
-        <para>
-            Here is an example that shows how to wire the <classname>XwsSecurityInterceptor</classname> up:
-            <programlisting><![CDATA[
+	<section id="security-introduction">
+		<title>Introduction</title>
+		<para>
+			In this chapter, we will show you how to add WS-Security aspects to your Web services. We will focus on the
+			three different areas of WS-Security, namely:
+		</para>
+		<formalpara>
+			<title>Authentication</title>
+			<para>
+				This is the process of determining whether a
+				<emphasis>principal</emphasis>
+				is who they claim to be. In this context, a "principal" generally means a user, device or some other
+				system which can perform an action in your application.
+			</para>
+		</formalpara>
+		<formalpara>
+			<title>Digital signatures</title>
+			<para>
+				The digital signature of a message is a piece of information based on both the document and the signer's
+				private key. It is created through the use of a hash function and a private signing function (encrypting
+				with the signer's private key).
+			</para>
+		</formalpara>
+		<formalpara>
+			<title>Encryption and Decryption</title>
+			<para>
+				<emphasis>Encryption</emphasis>
+				is the process of transforming data into a form that is impossible to read without the appropriate key.
+				It is mainly used to keep information hidden from anyone for whom it is not intended.
+				<emphasis>Decryption</emphasis>
+				is the reverse of encryption; it is the process of transforming of encrypted data back into an readable
+				form.
+			</para>
+		</formalpara>
+		<para>
+			All of these three areas are implemented using the
+			<classname>XwsSecurityInterceptor</classname>
+			, which we will describe in
+			<xref linkend="security-xws-security-interceptor" />
+		</para>
+		<note>
+			<para>
+				Note that WS-Security (especially encryption and signing) requires substantial amounts of memory, and
+				will also decrease performance. If performance is important to you, you might want to consider using not
+				using WS-Security.
+			</para>
+		</note>
+	</section>
+	<section id="security-xws-security-interceptor">
+		<title>XwsSecurityInterceptor</title>
+		<para>
+			The
+			<classname>XwsSecurityInterceptor</classname>
+			is an
+			<classname>EndpointInterceptor</classname>
+			(see
+			<xref linkend="ws-endpoint-interceptor" />
+			) that is based on SUN's XML and Web Services Security package (XWSS). This WS-Security implementation is
+			part of the Java Web Services Developer Pack (
+			<ulink url="http://java.sun.com/webservices/">
+				<citetitle>Java WSDP</citetitle>
+			</ulink>
+			).
+		</para>
+		<para>
+			Like any other endpoint interceptor, it is defined in the endpoint mapping (see
+			<xref linkend="ws-endpoint-mapping" />
+			). This means that you can be selective about adding WS-Security support: some endpoint mappings require it,
+			while others do not.
+		</para>
+		<para>
+			The
+			<classname>XwsSecurityInterceptor</classname>
+			requires a
+			<emphasis>security policy file</emphasis>
+			to operate. This XML file tells the interceptor what security aspects to require from incoming SOAP
+			messages, and what aspects to add to outgoing messages. The basic format of the policy file will be
+			explained in the following sections, but you can find a more in-depth tutorial
+			<ulink url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp564887">
+				<citetitle>here</citetitle>
+			</ulink>
+			. You can set the policy with the
+			<methodname>policyConfiguration</methodname>
+			property, which requires a Spring resource. The policy file can contain multiple elements, e.g. require a
+			username token on incoming messages, and sign all outgoing messages. It contains a
+			<literal>SecurityConfiguration</literal>
+			element as root (not a
+			<literal>JAXRPCSecurity</literal>
+			element).
+		</para>
+		<para>
+			Additionally, the security interceptor requires one or more
+			<classname>CallbackHandler</classname>
+			s to operate. These handlers are used to retrieve certificates, private keys, validate user credentials,
+			etc. Spring-WS offers handlers for most common security concerns, e.g. authenticating against a Acegi
+			authentication manager, signing outgoing messages based on a X509 certificate. The following sections will
+			indicate what callback handler to use for which security concern. You can set the callback handlers using
+			the
+			<methodname>callbackHandler</methodname>
+			or
+			<methodname>callbackHandlers</methodname>
+			property.
+		</para>
+		<para>
+			Here is an example that shows how to wire the
+			<classname>XwsSecurityInterceptor</classname>
+			up:
+			<programlisting><![CDATA[
 <beans>
     <bean id="wsSecurityInterceptor"
         class="org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor">
@@ -140,13 +170,15 @@
         </formalpara>
         <section>
             <title>KeyTool</title>
-            Supplied with your Java Virtual Machine is the <command>keytool</command>, a key and certificate management
-            utility. You can use this tool to create new key stores, add new private keys and certificates to them, etc.
-            It is beyond the scope of this document to provide a full reference of the <command>keytool</command>
-            command, but you can find a reference <ulink
-                url="http://java.sun.com/j2se/1.4.2/docs/tooldocs/windows/keytool.html">
-            <citetitle>here</citetitle></ulink>, or by giving the command <prompt>keytool -help</prompt> on the command
-            line.
+            <para>
+	            Supplied with your Java Virtual Machine is the <command>keytool</command>, a key and certificate
+	            management utility. You can use this tool to create new key stores, add new private keys and 
+	            certificates to them, etc. It is beyond the scope of this document to provide a full reference of 
+	            the <command>keytool</command> command, but you can find a reference <ulink
+	                url="http://java.sun.com/j2se/1.5.0/docs/tooldocs/windows/keytool.html">
+	            <citetitle>here</citetitle></ulink>, or by giving the command <prompt>keytool -help</prompt> on 
+	            the command line.
+            </para>
         </section>
         <section>
             <title>KeyStoreFactoryBean</title>

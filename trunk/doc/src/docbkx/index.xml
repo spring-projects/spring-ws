@@ -1,50 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN" "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd" [
-        <!ENTITY preface            SYSTEM "preface.xml">
-        <!ENTITY overview           SYSTEM "overview.xml">
-        <!ENTITY contract-first     SYSTEM "contract-first.xml">
-        <!ENTITY ws                 SYSTEM "ws.xml">
-        <!ENTITY security           SYSTEM "security.xml">
-        <!ENTITY oxm                SYSTEM "oxm.xml">
-        <!ENTITY bibliography       SYSTEM "bibliography.xml">
-        ]>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN" "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
 <book xmlns:xi="http://www.w3.org/2001/XInclude">
 
-    <bookinfo>
-        <title>Spring Web Services</title>
-        <subtitle>
-            Reference Documentation
-        </subtitle>
-        <releaseinfo>Version &version;</releaseinfo>
-        <pubdate>(Work in progress)</pubdate>
+	<bookinfo>
+		<title>Spring Web Services</title>
+		<subtitle>Reference Documentation</subtitle>
+		<releaseinfo>
+			Version
+			&version;
+		</releaseinfo>
+		<pubdate>(Work in progress)</pubdate>
 
-        <authorgroup>
-            <author>
-                <firstname>Arjen</firstname>
-                <surname>Poutsma</surname>
-            </author>
-        </authorgroup>
+		<authorgroup>
+			<author>
+				<firstname>Arjen</firstname>
+				<surname>Poutsma</surname>
+			</author>
+		</authorgroup>
 
-        <legalnotice>Copies of this document may be made for your own use and for distribution to others, provided that
-            you do not charge any fee for such copies and further provided that each copy contains this Copyright
-            Notice, whether distributed in print or electronically.
-        </legalnotice>
-    </bookinfo>
+		<legalnotice>
+			<para>
+				Copies of this document may be made for your own use and for distribution to others, provided that you
+				do not charge any fee for such copies and further provided that each copy contains this Copyright
+				Notice, whether distributed in print or electronically.
+			</para>
+		</legalnotice>
+	</bookinfo>
 
-    <toc/>
+	<toc />
 
-    &preface;
-
-    &overview;
-
-    &contract-first;
-
-    &ws;
-
-    &security;
-
-    &oxm;
-
-    &bibliography;
+	<xi:include href="preface.xml" />
+	<xi:include href="overview.xml" />
+	<xi:include href="contract-first.xml" />
+	<xi:include href="server.xml" />
+	<xi:include href="client.xml" />
+	<xi:include href="security.xml" />
+	<xi:include href="oxm.xml" />
+	<xi:include href="bibliography.xml" />
 
 </book>

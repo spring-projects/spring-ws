@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<chapter id="client">
+	<title>Using Spring Web Services on the Client</title>
+	<section>
+		<title>Introduction</title>
+		<para>
+			Spring-WS provides a client-side Web service API that allows for consistent, XML-driven access to Web
+			services. It also allows for use of <link linkend="oxm">marshallers and unmarshallers</link>.
+		</para>
+		<para>
+			The package <package>org.springframework.ws.client.core</package> provides the core functionality for using
+			the client-side access API. It contains template classes that simplifies the use of Web services, much like
+			the <classname>JdbcTemplate</classname> does for JDBC. The design principle common to Spring template 
+			classes is to provide helper methods to perform common operations and for more sophisticated usage, delegate
+			the essence of the processing task to user implemented callback interfaces. The Web service template 
+			follows the same design. The classes offer various
+			convenience methods for the sending and receiving of XML messages, marshalling objects to XML before sending,
+			and allows for multiple transports,
+		</para>
+	</section>
+	<section>
+		<title>Using the client-side API</title>
+		<section>
+			<title><classname>WebServiceTemplate</classname></title>
+			<para>
+				The <classname>WebServiceTemplate</classname> is the core class for client-side Web service access in 
+				Spring-WS. It contains methods for sending <classname>Source</classname> objects, and receiving response
+				messages as either <classname>Source</classname> or <classname>Result</classname>. Additionally, it can
+				marshal objects to XML before sending them across a transport, and unmarshal the response XML into an
+				object again.
+			</para>
+		</section>
+		<section>
+			<title>Transports</title>
+			<para>
+				The <classname>WebServiceTemplate</classname> requires a reference to a 
+				<classname>MessageSender</classname>. The message sender is responsible for sending the XML message
+				across a transport layer. 
+			</para>
+			<para>
+				There are two implementations of the <classname>MessageSender</classname> interface for sending messages
+				via HTTP. The simplest implementation is the <classname>HttpUrlConnectionMessageSender</classname>, 
+				which uses the facilities provided by Java SE itself. The alternative is the 
+				<classname>CommonsHttpMessageSender</classname>, which uses the Jakarta Commons HttpClient. Use the 
+				latter if you need more advanced and easy-to-use functionality.	Both HTTP message senders require an 
+				URL to be set using the <property>url</property> property.
+		</section>
+	</section>
+</chapter>
