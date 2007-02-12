@@ -1,72 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
 <chapter id="oxm">
-    <title>Marshalling XML using O/X Mappers</title>
+	<title>Marshalling XML using O/X Mappers</title>
 
-    <section id="oxm-introduction">
-        <title>Introduction</title>
-        <para>
-            In this chapter, we will describe Spring's Object/XML Mapping support. Object/XML Mapping, or O/X mapping
-            for short, is the act of converting an XML document to and from an object. This conversion process is also
-            known as XML Marshalling, or XML Serialization. This chapter uses these terms interchangeably.
-        </para>
-        <para>
-            Within the field of O/X mapping, a <emphasis>marshaller</emphasis> is responsible for serializing an object
-            (graph) to XML. In similar fashion, an <emphasis>unmarshaller</emphasis> deserializes the XML to an object
-            graph. This XML can take the form of a DOM document, an input or output stream, or a SAX handler.
-        </para>
-        <para>
-            Some of the benefits of using Spring for your O/X mapping needs are:
-        </para>
-        <formalpara>
-            <title>Ease of configuration</title>
-            <para>
-                Spring's bean factory makes it easy to configure marshallers, without needing to construct JAXB context,
-                JiBX binding factories, etc. The marshallers can be configured as any other bean in your application
-                context.
-            </para>
-        </formalpara>
-        <formalpara>
-            <title>Consistent Interfaces</title>
-            <para>
-                Spring's O/X mapping operates through two global interfaces: the
-                <classname>Marshaller</classname>
-                and
-                <classname>Unmarshaller</classname>
-                interface. These abstractions allow you to switch O/X mapping
-                frameworks with relative ease, with little or no changes required on the classes that do the
-                marshalling. This approach has the additional benefit of making it possible to do XML marshalling with a
-                mix-and-match approach (e.g. some marshalling performed using JAXB, other using XMLBeans) in a
-                non-intrusive fashion, leveraging the strength of each technology.
-            </para>
-        </formalpara>
-        <formalpara>
-            <title>Consistent Exception Hierarchy</title>
-            <para>
-                Spring provides a conversion from exceptions from the underlying O/X mapping tool to its own
-                exception hierarchy with the
-                <classname>XmlMappingException</classname>
-                as the root exception. As can be
-                expected, these runtime exceptions wrap the original exception so no information is lost.
-            </para>
-        </formalpara>
-    </section>
-    <section id="oxm-marshaller-unmarshaller">
-        <title>Marshaller and Unmarshaller</title>
-        <para>
-            As stated in the introduction, a
-            <emphasis>marshaller</emphasis>
-            serializes an object to XML, and an
-            <emphasis>unmarshaller</emphasis>
-            deserializes XML stream to an object. In this section, we will describe
-            the two Spring interfaces used for this purpose.
-        </para>
-        <section>
-            <title>Marshaller</title>
-            <para>
-                Spring abstracts all marshalling operations behind the
-                <classname>org.springframework.oxm.Marshaller</classname>
-                interface, which is listed below.
-                <programlisting><![CDATA[
+	<section id="oxm-introduction">
+		<title>Introduction</title>
+		<para>
+			In this chapter, we will describe Spring's Object/XML Mapping support. Object/XML Mapping, or O/X mapping
+			for short, is the act of converting an XML document to and from an object. This conversion process is also
+			known as XML Marshalling, or XML Serialization. This chapter uses these terms interchangeably.
+		</para>
+		<para>
+			Within the field of O/X mapping, a
+			<emphasis>marshaller</emphasis>
+			is responsible for serializing an object (graph) to XML. In similar fashion, an
+			<emphasis>unmarshaller</emphasis>
+			deserializes the XML to an object graph. This XML can take the form of a DOM document, an input or output
+			stream, or a SAX handler.
+		</para>
+		<para>Some of the benefits of using Spring for your O/X mapping needs are:</para>
+		<formalpara>
+			<title>Ease of configuration</title>
+			<para>
+				Spring's bean factory makes it easy to configure marshallers, without needing to construct JAXB context,
+				JiBX binding factories, etc. The marshallers can be configured as any other bean in your application
+				context.
+			</para>
+		</formalpara>
+		<formalpara>
+			<title>Consistent Interfaces</title>
+			<para>
+				Spring's O/X mapping operates through two global interfaces: the
+				<classname>Marshaller</classname>
+				and
+				<classname>Unmarshaller</classname>
+				interface. These abstractions allow you to switch O/X mapping frameworks with relative ease, with little
+				or no changes required on the classes that do the marshalling. This approach has the additional benefit
+				of making it possible to do XML marshalling with a mix-and-match approach (e.g. some marshalling
+				performed using JAXB, other using XMLBeans) in a non-intrusive fashion, leveraging the strength of each
+				technology.
+			</para>
+		</formalpara>
+		<formalpara>
+			<title>Consistent Exception Hierarchy</title>
+			<para>
+				Spring provides a conversion from exceptions from the underlying O/X mapping tool to its own exception
+				hierarchy with the
+				<classname>XmlMappingException</classname>
+				as the root exception. As can be expected, these runtime exceptions wrap the original exception so no
+				information is lost.
+			</para>
+		</formalpara>
+	</section>
+	<section id="oxm-marshaller-unmarshaller">
+		<title>Marshaller and Unmarshaller</title>
+		<para>
+			As stated in the introduction, a <emphasis>marshaller</emphasis> serializes an object to XML, and an 
+			<emphasis>unmarshaller</emphasis> deserializes XML stream to an object. In this section, we will describe 
+			the two Spring interfaces used for this purpose.
+		</para>
+		<section>
+			<title>Marshaller</title>
+			<para>
+				Spring abstracts all marshalling operations behind the
+				<classname>org.springframework.oxm.Marshaller</classname>
+				interface, which is listed below.
+				<programlisting><![CDATA[
 public interface Marshaller {
 
     /**
@@ -127,7 +127,6 @@ public interface Marshaller {
                         </tbody>
                     </tgroup>
                 </informaltable>
-            </para>
             <note>
                 <para>
                     Although the
@@ -141,6 +140,7 @@ public interface Marshaller {
                     manages this.
                 </para>
             </note>
+            </para>
         </section>
         <section>
             <title>Unmarshaller</title>
@@ -606,12 +606,12 @@ public class Application {
     ...
 
 </beans>]]></programlisting>
-        </section>
         <note>
             <para>
                 Note that XStream is an XML serialization library, not a data binding library. Therefore, it has
                 limited namespace support. As such, it is rather unsuitable for usage within Web services.
             </para>
         </note>
+        </section>
     </section>
 </chapter>
