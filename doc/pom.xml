@@ -40,7 +40,7 @@
                 <configuration>
                     <includes>index.xml</includes>
                     <chunkedOutput>true</chunkedOutput>
-                    <xincludeSupport>true</xincludeSupport>                    
+                    <xincludeSupported>true</xincludeSupported>                    
                     <entities>
                         <entity>
                             <name>version</name>
