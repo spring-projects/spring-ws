@@ -7,10 +7,11 @@
 	
 	<body>
 		<links>
-			<item name="Spring Framework" href="http://www.springframework.org" />
-			<item name="Spring Web Services" href="http://www.springframework.org/spring-ws" />
+			<item name="Spring Framework" href="http://www.springframework.org/" />
+			<item name="Spring Web Services" href="http://www.springframework.org/spring-ws/" />
 		</links>
 		<menu name="Documentation">
+		    <item name="FAQ" href="faq.html"/>
 			<item name="Upgrading" href="upgrading.html"/>
 			<item name="Tutorial" href="tutorial/tutorial1.html"/>
 			<item name="Resources" href="resources.html"/>
