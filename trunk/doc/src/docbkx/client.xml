@@ -48,5 +48,15 @@
 				URL to be set using the <property>url</property> property.
 			</para>
 		</section>
+		<section>
+			<title>Message factories</title>
+			<para>
+				In addition to a message sender, the <classname>WebServiceTemplate</classname> requires a Web service 
+				message factory. As explained in <xref linkend="message-factories"/>, there are two message factories 
+				for SOAP: <classname>SaajSoapMessageFactory</classname> and 
+				<classname>AxiomSoapMessageFactory</classname>.
+			</para>
+		</section>
+		
 	</section>
 </chapter>
