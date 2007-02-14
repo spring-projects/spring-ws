@@ -37,7 +37,7 @@ import org.springframework.ws.transport.TransportInputStream;
 
 /**
  * SAAJ-specific implementation of the {@link org.springframework.ws.WebServiceMessageFactory WebServiceMessageFactory}.
- * This factory will use SAAJ 1.3 when found, or fall back to SAAJ 1.2.
+ * This factory will use SAAJ 1.3 when found, or fall back to SAAJ 1.2 or 1.1.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.soap.saaj.SaajSoapMessage
@@ -50,21 +50,29 @@ public class SaajSoapMessageFactory implements WebServiceMessageFactory, Initial
 
     private String messageFactoryProtocol;
 
-    /** Default, empty constructor. */
+    /**
+     * Default, empty constructor.
+     */
     public SaajSoapMessageFactory() {
     }
 
-    /** Constructor that takes a message factory as an argument. */
+    /**
+     * Constructor that takes a message factory as an argument.
+     */
     public SaajSoapMessageFactory(MessageFactory messageFactory) {
         this.messageFactory = messageFactory;
     }
 
-    /** Sets the SAAJ <code>MessageFactory</code>. */
+    /**
+     * Sets the SAAJ <code>MessageFactory</code>.
+     */
     public void setMessageFactory(MessageFactory messageFactory) {
         this.messageFactory = messageFactory;
     }
 
-    /** Returns the SAAJ <code>MessageFactory</code> used. */
+    /**
+     * Returns the SAAJ <code>MessageFactory</code> used.
+     */
     public MessageFactory getSaajMessageFactory() {
         return messageFactory;
     }
