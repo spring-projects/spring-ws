@@ -4,12 +4,15 @@ body {
 	margin: 0.5em 0pt 0.5em 0pt;
 	padding: 0pt;
 }
-body, td, select, input, li{
-  font-family: Verdana, Helvetica, Arial, sans-serif;
+body, p, td, li, ul, ol {
+	font-family: Verdana,Helvetica,Arial,sans-serif;
 }
 code{
   font-family: Courier, monospace;
   font-size: 13px;
+}
+.section {
+	padding: 0;
 }
 a {
   text-decoration: none;
@@ -51,34 +54,40 @@ a.newWindow, a.newWindow:link, a.newWindow:visited, a.newWindow:active, a.newWin
   padding-right: 18px;
 }
 h1, h2, h3, h4, h5, h6 {
-  font-family: Verdana, Arial, Helvetica, SunSans-Regular,  sans-serif
+  font-family: Verdana, Arial, Helvetica, sans-serif
   margin: 0;
 }
-h1 {
-	color: rgb(182, 167, 96);
-}
 h2 {
+	color: #658a16;
+	font-size: 1.2em;
+	padding: 0;
+	border: 0;
+	background-color: #FFF;
+}
+h3 {
   padding: 2px 5px;
   color: #5F6C30;
   font-size: 1.2em;
   background-color: #E5EEC4;
-  border: 1px solid #CDDE8E;
-}
-h3 {
-	color: #AF9D6F;
-  font-size: 1.1em;
-  border-bottom: 1px dotted #AF9D6F;
+  border: 1px solid #CDDE8E;	
 }
 h4 {
-  color: #8be;
-  font-size: .8em;}
+	color: #af9d6f;
+	font-size: 1.1em;
+	border-top-width: 0;
+	border-left-width: 0;
+	border-right-width: 0;
+	border-bottom-width: 1px;
+	border-bottom-style: dotted;
+	border-bottom-color: #af9d6f;
+}
 h5 {
 	  color: #96c6f6;
 	  font-size: .8em;
 }
 p {
-  line-height: 1.3em;
-  font-size: small;
+  margin: 0 0 1.3em 0;
+  padding: 0;
 }
 #breadcrumbs {
   border-top: 1px solid #aaa;
@@ -90,7 +99,7 @@ p {
 }
 #leftColumn {
 	font-size: 0.75em;
-	padding: 10px 5px 10px 5px;
+	padding: 10px 5px #999 5px;
   margin: 10px 0 0 5px;
   border: 1px solid rgb(67, 67, 32);
   background-color: rgb(226, 243, 184);
