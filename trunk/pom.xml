@@ -94,6 +94,7 @@
         <module>oxm</module>
         <module>core</module>
         <module>security</module>
+        <module>archetype</module>
     </modules>
     <profiles>
         <profile>
