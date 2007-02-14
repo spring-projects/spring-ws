@@ -27,7 +27,6 @@ import javax.xml.soap.Detail;
 import javax.xml.soap.DetailEntry;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
@@ -175,7 +174,7 @@ public interface SaajImplementation {
     /**
      * Returns the first child element of the given body.
      */
-    SOAPBodyElement getFirstBodyElement(SOAPBody body);
+    SOAPElement getFirstBodyElement(SOAPBody body);
 
     /**
      * Removes the contents (i.e. children) of the element.

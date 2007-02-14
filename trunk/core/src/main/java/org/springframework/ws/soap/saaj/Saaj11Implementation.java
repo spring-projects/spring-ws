@@ -32,7 +32,6 @@ import javax.xml.soap.MimeHeader;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
@@ -264,11 +263,11 @@ public class Saaj11Implementation implements SaajImplementation {
         return detail.getDetailEntries();
     }
 
-    public SOAPBodyElement getFirstBodyElement(SOAPBody body) {
+    public SOAPElement getFirstBodyElement(SOAPBody body) {
         for (Iterator iterator = body.getChildElements(); iterator.hasNext();) {
             Object child = iterator.next();
-            if (child instanceof SOAPBodyElement) {
-                return (SOAPBodyElement) child;
+            if (child instanceof SOAPElement) {
+                return (SOAPElement) child;
             }
         }
         return null;

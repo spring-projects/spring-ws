@@ -105,6 +105,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
     public void writeTo(OutputStream outputStream) throws IOException {
         try {
             getImplementation().writeTo(getSaajMessage(), outputStream);
+            outputStream.flush();
         }
         catch (SOAPException ex) {
             throw new SaajSoapMessageException("Could not write message to OutputStream: " + ex.getMessage(), ex);
