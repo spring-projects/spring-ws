@@ -13,7 +13,7 @@ Frequently Asked Questions
 
 	Yes it does, but it requires some work. Java 1.4 is bundled with the older XML parser Crimson, which does not handle 
 	namespaces correctly. Additionally, it is bundled with an older version of Xalan, which also has problems. 
-	Unfortunately, placing newer versions of these on the classpath does not override them.
+	Unfortunately, placing newer versions of these on the class path does not override them.
 	See {{{http://xml.apache.org/xalan-j/faq.html#faq-N100D6}this FAQ}} entry on the Xalan site, and also 
 	{{{http://xerces.apache.org/xerces2-j/faq-general.html#faq-4}this entry}} on the Xerces site.
 	
@@ -41,7 +41,9 @@ Frequently Asked Questions
 | SUN Glassfish      | 1.3          |
 *--------------------+--------------+
 
-	<<When I run a Spring-WS application that uses SAAJ, I get the following stacktrace:>>
+	Additionally, Java SE 6 includes SAAJ 1.3.
+
+	<<When I run a Spring-WS application that uses SAAJ, I get the following stack trace:>>
 
 +---------------
 java.lang.NoSuchMethodError: javax.xml.soap.MessageFactory.newInstance(Ljava/lang/String;)Ljavax/xml/soap/MessageFactory;
@@ -51,9 +53,9 @@ java.lang.NoSuchMethodError: javax.xml.soap.MessageFactory.newInstance(Ljava/lan
 
 	Like most J2EE libraries, SAAJ consists of two parts: the API that consists of interfaces (<<<saaj-api.jar>>>), 
 	and the implementation (<<<saaj-impl.jar>>>).
-	The stacktrace is due to the fact that you are using a new version of the API (SAAJ 1.3), while your application
+	The stack trace is due to the fact that you are using a new version of the API (SAAJ 1.3), while your application
 	server provides an earlier version of the implementation (SAAJ 1.2 or even 1.1). Spring-WS supports all three 
 	versions of SAAJ (1.1 through 1.3), but things break when it sees the 1.3 API, while there is no 1.3 implementation.
 
-	The solution therefore is quite simple: to remove the newer 1.3 version of the API, from the classpath, and replace 
+	The solution therefore is quite simple: to remove the newer 1.3 version of the API, from the class path, and replace 
 	it with the version supported by your application server.
