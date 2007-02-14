@@ -17,7 +17,7 @@
 package org.springframework.ws.soap.saaj;
 
 import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPBodyElement;
+import javax.xml.soap.SOAPElement;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
@@ -35,7 +35,7 @@ abstract class SaajSoapBody extends SaajSoapElement implements SoapBody {
     }
 
     public Source getPayloadSource() {
-        SOAPBodyElement bodyElement = getImplementation().getFirstBodyElement(getSaajBody());
+        SOAPElement bodyElement = getImplementation().getFirstBodyElement(getSaajBody());
         return bodyElement == null ? null : getImplementation().getSource(bodyElement);
     }
 
