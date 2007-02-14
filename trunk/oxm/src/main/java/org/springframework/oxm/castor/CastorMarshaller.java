@@ -42,6 +42,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.AbstractMarshaller;
 import org.springframework.oxm.XmlMappingException;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.xml.dom.DomContentHandler;
 import org.springframework.xml.stream.StaxEventContentHandler;
 import org.springframework.xml.stream.StaxEventXmlReader;
@@ -61,7 +63,7 @@ import org.xml.sax.ext.LexicalHandler;
  * <p/>
  * If a target class is specified using <code>setTargetClass</code>, the <code>CastorMarshaller</code> can only be used
  * to unmarshall XML that represents that specific class. If you want to unmarshall multiple classes, you have to
- * provide a mapping file using <code>setMappingLocation</code>.
+ * provide a mapping file using <code>setMappingLocations</code>.
  * <p/>
  * Due to Castor's API, it is required to set the encoding used for writing to output streams. It defaults to
  * <code>UTF-8</code>.
@@ -70,6 +72,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @see #setEncoding(String)
  * @see #setTargetClass(Class)
  * @see #setMappingLocation(org.springframework.core.io.Resource)
+ * @see #setMappingLocations(org.springframework.core.io.Resource[])
  */
 public class CastorMarshaller extends AbstractMarshaller implements InitializingBean {
 
@@ -78,7 +81,7 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
      */
     public static final String DEFAULT_ENCODING = "UTF-8";
 
-    private Resource mappingLocation;
+    private Resource[] mappingLocations;
 
     private String encoding;
 
@@ -115,20 +118,27 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
     }
 
     /**
-     * Sets the location of the Castor XML Mapping file.
+     * Sets the locations of the Castor XML Mapping files.
      */
     public void setMappingLocation(Resource mappingLocation) {
-        this.mappingLocation = mappingLocation;
+        mappingLocations = new Resource[]{mappingLocation};
+    }
+
+    /**
+     * Sets the locations of the Castor XML Mapping files.
+     */
+    public void setMappingLocations(Resource[] mappingLocations) {
+        this.mappingLocations = mappingLocations;
     }
 
     public final void afterPropertiesSet() throws IOException {
-        if (mappingLocation != null && targetClass != null) {
-            throw new IllegalArgumentException("Cannot set both the 'mappingLocation' and 'targetClass' property. " +
-                    "Set targetClass for unmarshalling a single class, and 'mappingLocation' for multiple classes'");
+        if (mappingLocations != null && targetClass != null) {
+            throw new IllegalArgumentException("Cannot set both the 'mappingLocations' and 'targetClass' property. " +
+                    "Set targetClass for unmarshalling a single class, and 'mappingLocations' for multiple classes'");
         }
         if (logger.isInfoEnabled()) {
-            if (mappingLocation != null) {
-                logger.info("Configured using " + mappingLocation);
+            if (mappingLocations != null) {
+                logger.info("Configured using " + StringUtils.arrayToCommaDelimitedString(mappingLocations));
             }
             else if (targetClass != null) {
                 logger.info("Configured for target class [" + targetClass.getName() + "]");
@@ -138,19 +148,32 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
             }
         }
         try {
-            createClassDescriptorResolver();
+            classDescriptorResolver = createClassDescriptorResolver(mappingLocations, targetClass);
         }
         catch (MappingException ex) {
             throw new CastorSystemException("Could not load Castor mapping: " + ex.getMessage(), ex);
         }
     }
 
-    private void createClassDescriptorResolver() throws MappingException, IOException {
-        classDescriptorResolver = (XMLClassDescriptorResolver) ClassDescriptorResolverFactory
+    /**
+     * Creates the Castor <code>XMLClassDescriptorResolver</code>. Subclasses can override this to create a custom
+     * resolver.
+     * <p/>
+     * The default implementation loads mapping files if defined, or loads the target class if not defined.
+     *
+     * @return the created resolver
+     * @throws MappingException when the mapping file cannot be loaded
+     * @throws IOException      in case of I/O errors
+     */
+    protected XMLClassDescriptorResolver createClassDescriptorResolver(Resource[] mappingLocations, Class targetClass)
+            throws MappingException, IOException {
+        XMLClassDescriptorResolver classDescriptorResolver = (XMLClassDescriptorResolver) ClassDescriptorResolverFactory
                 .createClassDescriptorResolver(BindingType.XML);
-        if (mappingLocation != null) {
+        if (!ObjectUtils.isEmpty(mappingLocations)) {
             Mapping mapping = new Mapping();
-            mapping.loadMapping(new InputSource(mappingLocation.getInputStream()));
+            for (int i = 0; i < mappingLocations.length; i++) {
+                mapping.loadMapping(new InputSource(mappingLocations[i].getInputStream()));
+            }
             MappingUnmarshaller mappingUnmarshaller = new MappingUnmarshaller();
             MappingLoader mappingLoader = mappingUnmarshaller.getMappingLoader(mapping, BindingType.XML);
             classDescriptorResolver.setMappingLoader(mappingLoader);
@@ -159,6 +182,7 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
         else if (targetClass != null) {
             classDescriptorResolver.setClassLoader(targetClass.getClassLoader());
         }
+        return classDescriptorResolver;
     }
 
     /**
