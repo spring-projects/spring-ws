@@ -150,32 +150,6 @@
                         <artifactId>xercesImpl</artifactId>
                         <version>2.8.1</version>
                     </dependency>
-                    <!-- Apache Data Binding dependencies -->
-                    <dependency>
-                        <groupId>org.apache.axis2</groupId>
-                        <artifactId>axis2-adb</artifactId>
-                        <version>1.1.1</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.apache.axis2</groupId>
-                        <artifactId>axis2-adb-codegen</artifactId>
-                        <version>1.1.1</version>
-                    </dependency>                    
-                    <dependency>
-                        <groupId>org.apache.axis2</groupId>
-                        <artifactId>axis2-kernel</artifactId>
-                        <version>1.1.1</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.apache.ws.commons.schema</groupId>
-                        <artifactId>XmlSchema</artifactId>
-                        <version>1.2</version>
-                    </dependency>
-                    <dependency>
-                        <artifactId>axiom-impl</artifactId>
-                        <groupId>org.apache.ws.commons.axiom</groupId>
-                        <version>1.2.1</version>
-                    </dependency>                    
                 </dependencies>
             </plugin>
         </plugins>
