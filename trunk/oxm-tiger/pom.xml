@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <artifactId>spring-ws</artifactId>
         <groupId>org.springframework.ws</groupId>
@@ -22,11 +23,12 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>generate-jaxb2-sources</id>
                         <phase>generate-test-sources</phase>
                         <configuration>
                             <tasks>
                                 <ant antfile="${basedir}/build-maven2.xml" inheritRefs="true">
-                                    <target name="generate-test-sources" />
+                                    <target name="generate-test-sources"/>
                                 </ant>
                             </tasks>
                             <testSourceRoot>${project.build.directory}/generated-sources/test/java</testSourceRoot>
@@ -44,6 +46,24 @@
         <dependency>
             <groupId>org.springframework.ws</groupId>
             <artifactId>spring-oxm</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jaxb-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-libs</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.msv.datatype.xsd</groupId>
+                    <artifactId>xsdlib</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- XML handling dependencies -->
         <dependency>
@@ -70,6 +90,5 @@
             <version>2.0.3</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 </project>
