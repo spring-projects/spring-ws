@@ -1,0 +1,30 @@
+                                             -----------------------------
+                                             Spring Web Services Snapshots
+                                             -----------------------------
+
+Snapshot Builds
+
+	These builds are provided for testing and development purposes only. They are built by a Continuum process 
+	automatically using the latest snapshot from Subversion.
+	
+	The snapshots are deloyed to a Maven2 snapshot repository. To use it, just add the following repository to the POM:
+
++---------------
+<repository>
+    <id>springframework.org</id>
+    <name>Springframework Maven SNAPSHOT Repository</name>
+    <url>http://static.springframework.org/maven2-snapshots/</url>
+</repository>
++---------------
+
+	Individual dependencies can then by added like so:
+
++---------------
+<dependency>
+    <groupId>org.springframework.ws</groupId>
+    <artifactId>spring-ws-core</artifactId>
+    <version>1.0-m4-SNAPSHOT</version>
+</dependency>
++---------------
+
+	Additionally, there are {{{http://static.springframework.org/maven2-snapshots/org/springframework/ws/spring-ws/1.0-m4-SNAPSHOT/}zips}} available which contain all jars.

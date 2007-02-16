@@ -9,7 +9,7 @@ Frequently Asked Questions
 	
 * Java
 
-	<<When I run Spring-WS under Java SE 1.4, the resulting SOAP message does not contain valid namespaces. Does Spring-WS work under Java 1.4?>>
+** Does Spring-WS work under Java 1.4?
 
 	Yes it does, but it requires some work. Java 1.4 is bundled with the older XML parser Crimson, which does not handle 
 	namespaces correctly. Additionally, it is bundled with an older version of Xalan, which also has problems. 
@@ -22,13 +22,13 @@ Frequently Asked Questions
 
 * SAAJ
 
-	<<What is SAAJ?>>
+** What is SAAJ?
 	
 	SAAJ is the SOAP with Attachments API for Java. Previously, it has been part of JAXM, but it has been released as a
 	seperate API as part of the {{{http://java.sun.com/webservices/jwsdp/index.jsp}Java Web Service Developer Pack}}, 
 	and also as part of J2EE 1.4. SAAJ is generally known as the package <<<javax.xml.soap>>>.
 	
-	<<What version of SAAJ does my application server support?>>
+** What version of SAAJ does my application server support?
 	
 	See below:
 	
@@ -43,13 +43,7 @@ Frequently Asked Questions
 
 	Additionally, Java SE 6 includes SAAJ 1.3.
 
-	<<When I run a Spring-WS application that uses SAAJ, I get the following stack trace:>>
-
-+---------------
-java.lang.NoSuchMethodError: javax.xml.soap.MessageFactory.newInstance(Ljava/lang/String;)Ljavax/xml/soap/MessageFactory;
-+---------------
-
-	<<What can I do about it?>>
+** I get a <<<java.lang.NoSuchMethodError: javax.xml.soap.MessageFactory.newInstance(Ljava/lang/String;)Ljavax/xml/soap/MessageFactory;>>>
 
 	Like most J2EE libraries, SAAJ consists of two parts: the API that consists of interfaces (<<<saaj-api.jar>>>), 
 	and the implementation (<<<saaj-impl.jar>>>).

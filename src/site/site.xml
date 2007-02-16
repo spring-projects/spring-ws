@@ -10,6 +10,10 @@
 			<item name="Spring Framework" href="http://www.springframework.org/" />
 			<item name="Spring Web Services" href="http://www.springframework.org/spring-ws/" />
 		</links>
+		<menu name="Downloads">
+		    <item name="Releases" href="downloads/releases.html"/>
+		    <item name="Snapshots" href="downloads/snapshots.html"/>		    
+	    </menu>
 		<menu name="Documentation">
 		    <item name="FAQ" href="faq.html"/>
 			<item name="Upgrading" href="upgrading.html"/>
