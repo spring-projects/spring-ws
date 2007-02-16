@@ -10,7 +10,7 @@ about XML, XSD, and WSDL.
 
     In this tutorial, we will define a Web service that can be used for Human Resources. Clients can send
 holiday request forms to this service to book a holiday. It is based on a metaphor for Service Oriented Architectures
-originally though of by {{{url="http://blog.springframework.com/arjen/archives/2006/02/06/what-is-so-hard-about-soa/}Dan
+originally though of by {{{http://blog.springframework.com/arjen/archives/2006/02/06/what-is-so-hard-about-soa/}Dan
 North}}.
 
     The most important thing when doing contract-first Web service development is to try and think in terms of
