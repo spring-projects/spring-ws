@@ -2,7 +2,9 @@
                                                        Resources
                                                        ---------
 
-SOAP Reference
+Resources
+
+* SOAP Reference
 
 	Below are some resources which help you understand SOAP in general. These are not tied to Spring-WS.
 
@@ -19,7 +21,7 @@ SOAP Reference
 
 	* {{{http://www.amazon.com/gp/product/0131488740}Web Services Platform Architecture}} is a good book on SOAP, WSDL, and all current and upcoming WS-* specifications
 
-XSD Reference
+* XSD Reference
 
 	Below are some resources which help you understand XSD schemas in general. These are not tied to Spring-WS.
 
@@ -32,7 +34,7 @@ XSD Reference
 
 	* {{{http://www.amazon.com/gp/product/0201740958}Essential XML Quick Reference}}, a good reference on XML, XPath, 	XSL, XSD, and more
 
-WSDL Reference
+* WSDL Reference
 
 	Below are some resources which help you understand WSDL in general. These are not tied to Spring-WS.
 
@@ -45,7 +47,7 @@ WSDL Reference
 
 	* {{{http://www.amazon.com/gp/product/0131488740}Web Services Platform Architecture}} is a good book on SOAP, WSDL, and all current and upcoming WS-* specifications
 
-WS-Security Reference
+* WS-Security Reference
 
 	Below are some resources which help you understand WS-Security in general. These are not tied to Spring-WS.
 

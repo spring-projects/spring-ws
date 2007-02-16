@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="Spring Web Services">
+    <skin>
+        <groupId>org.springframework.maven.skins</groupId>
+        <artifactId>maven-spring-skin</artifactId>
+        <version>1.0</version>
+      </skin>
 	<bannerLeft>
-		<name>Spring Web Services</name>
+		<src>http://www.springframework.org/files/xdev-spring_logo.jpg</src>
 		<href>http://www.springframework.org/spring-ws</href>
 	</bannerLeft>
-	
+	<bannerRight>
+	    <src>http://www.springframework.org/files/banners/i21-banner-stamped.jpg</src>
+	    <href>http://www.springframework.com/</href>
+	</bannerRight>
 	<body>
 		<links>
-			<item name="Spring Framework" href="http://www.springframework.org/" />
-			<item name="Spring Web Services" href="http://www.springframework.org/spring-ws/" />
+			<item name="Spring Framework" href="http://www.springframework.org/"/>
+			<item name="Spring Web Services" href="http://www.springframework.org/spring-ws/"/>
 		</links>
 		<menu name="Downloads">
 		    <item name="Releases" href="downloads/releases.html"/>
@@ -24,10 +32,6 @@
 			<item name="Support Forums" href="http://forum.springframework.org/forumdisplay.php?f=39"/>
 			<item name="JIRA" href="http://opensource.atlassian.com/projects/spring/browse/SWS"/>
 		</menu>
-		${modules}
-		${reports}
+        <menu ref="reports" />
 	</body>
-	
-
-	
 </project>
