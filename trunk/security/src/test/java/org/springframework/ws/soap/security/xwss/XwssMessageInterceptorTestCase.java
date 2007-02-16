@@ -16,21 +16,23 @@
 
 package org.springframework.ws.soap.security.xwss;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
-
 import junit.framework.TestCase;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.MimeHeaders;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class XwssMessageInterceptorTestCase extends TestCase {
 
@@ -78,16 +80,15 @@ public abstract class XwssMessageInterceptorTestCase extends TestCase {
     protected SaajSoapMessage loadSaajMessage(String fileName) throws SOAPException, IOException {
         MimeHeaders mimeHeaders = new MimeHeaders();
         mimeHeaders.addHeader("Content-Type", "text/xml");
-        InputStream is = null;
+        Resource resource = new ClassPathResource(fileName, getClass());
+        InputStream is = resource.getInputStream();
         try {
-            is = getClass().getResourceAsStream(fileName);
-            assertNotNull("Could not load SAAJ message with name [" + fileName + "]", is);
+            assertTrue("Could not load SAAJ message [" + resource + "]", resource.exists());
+            is = resource.getInputStream();
             return new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, is));
         }
         finally {
-            if (is != null) {
-                is.close();
-            }
+            is.close();
         }
     }
 
