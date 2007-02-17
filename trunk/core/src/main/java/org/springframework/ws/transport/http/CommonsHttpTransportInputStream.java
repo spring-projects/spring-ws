@@ -51,7 +51,7 @@ public class CommonsHttpTransportInputStream extends TransportInputStream {
     }
 
     public Iterator getHeaderNames() throws IOException {
-        Header[] headers = postMethod.getRequestHeaders();
+        Header[] headers = postMethod.getResponseHeaders();
         String[] names = new String[headers.length];
         for (int i = 0; i < headers.length; i++) {
             names[i] = headers[i].getName();
