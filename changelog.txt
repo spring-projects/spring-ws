@@ -16,6 +16,9 @@ Package org.springframework.ws.soap.saaj
 Package org.springframework.ws.soap.security.xwss.callback
 * DefaultTimestapValidator now handles timestamps with milliseconds correctly (#SWS-89)
 
+Package org.springframework.ws.transport.http
+* fixed issue with reading response HTTP headers
+
 Changes in version 1.0-M3
 -------------------------
 Package org.springframework.oxm.castor
