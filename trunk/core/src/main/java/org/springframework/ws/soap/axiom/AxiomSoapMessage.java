@@ -186,6 +186,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
                 transportOutputStream.addHeader("SOAPAction", soapAction);
             }
             axiomMessage.serializeAndConsume(outputStream, format);
+            outputStream.flush();
         }
         catch (XMLStreamException ex) {
             throw new AxiomSoapMessageException("Could not write message to OutputStream: " + ex.getMessage(), ex);
