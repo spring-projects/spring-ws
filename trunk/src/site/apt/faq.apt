@@ -19,6 +19,15 @@ Frequently Asked Questions
 	
 	The only solution that works is to add newer versions of Xerces and Xalan in the lib/endorsed directory of your JDK, 
 	as explained in those FAQs.
+	
+** Why do the Spring-WS unit tests fail under Mac OS X?
+
+	For some reason, Apple decided to include a Java 1.4 compatibility jar with their JDK 1.5. This jar includes the 
+	XML parsers which were included in Java 1.4. No other JDK distribution does this, so it is unclear what the purpose
+	of this compatibility jar is.
+	
+	The jar can be found at <<</System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/.compatibility/14compatibility.jar>>>. 
+	You can safely remove or rename it, and the tests will run again.
 
 * SAAJ
 
