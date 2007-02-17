@@ -50,9 +50,13 @@ public abstract class AbstractHttpWebServiceMessageSenderTestCase extends XMLTes
 
     protected Server jettyServer;
 
-    protected static final String HEADER_NAME = "SOAPAction";
+    private static final String REQUEST_HEADER_NAME = "RequestHeader";
 
-    protected static final String HEADER_VALUE = "http://springframework.org/spring-ws";
+    private static final String REQUEST_HEADER_VALUE = "RequestHeaderValue";
+
+    private static final String RESPONSE_HEADER_NAME = "ResponseHeader";
+
+    private static final String RESPONSE_HEADER_VALUE = "ResponseHeaderValue";
 
     protected static final String URL = "http://localhost:8888";
 
@@ -95,16 +99,22 @@ public abstract class AbstractHttpWebServiceMessageSenderTestCase extends XMLTes
     public void testSendAndReceiveResponse() throws Exception {
         messageSender.setUrl(new URL("http://localhost:8888/response"));
         SOAPMessage saajRequest = messageFactory.createMessage();
-        saajRequest.getMimeHeaders().addHeader(HEADER_NAME, HEADER_VALUE);
+        saajRequest.getMimeHeaders().addHeader(REQUEST_HEADER_NAME, REQUEST_HEADER_VALUE);
         transformer.transform(new StringSource(REQUEST), new DOMResult(saajRequest.getSOAPBody()));
         SaajSoapMessage request = new SaajSoapMessage(saajRequest);
         MessageContext context = new DefaultMessageContext(request, new SaajSoapMessageFactory(messageFactory));
         messageSender.sendAndReceive(context);
         assertXMLEqual(EXPECTED_SOAP_REQUEST, receivedRequest.toString());
-        assertEquals("Invalid header value received", HEADER_VALUE, receivedHeader);
+        assertEquals("Invalid header value received on server side", REQUEST_HEADER_VALUE, receivedHeader);
         assertTrue("No response", context.hasResponse());
+        SaajSoapMessage response = (SaajSoapMessage) context.getResponse();
+        SOAPMessage saajResponse = response.getSaajMessage();
+        assertNotNull("No header value received on client side",
+                saajResponse.getMimeHeaders().getHeader(RESPONSE_HEADER_NAME));
+        assertEquals("Invalid header value received on client side", RESPONSE_HEADER_VALUE,
+                saajResponse.getMimeHeaders().getHeader(RESPONSE_HEADER_NAME)[0]);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        context.getResponse().writeTo(os);
+        response.writeTo(os);
         assertXMLEqual(RESPONSE, os.toString("UTF-8"));
     }
 
@@ -125,11 +135,12 @@ public abstract class AbstractHttpWebServiceMessageSenderTestCase extends XMLTes
                 StringResult requestResult = new StringResult();
                 transformer.transform(new StreamSource(req.getInputStream()), requestResult);
                 receivedRequest = requestResult.toString();
-                receivedHeader = ((HttpServletRequest) req).getHeader(HEADER_NAME);
+                receivedHeader = ((HttpServletRequest) req).getHeader(REQUEST_HEADER_NAME);
 
                 HttpServletResponse httpServletResponse = (HttpServletResponse) res;
                 httpServletResponse.setStatus(HttpServletResponse.SC_OK);
                 httpServletResponse.addHeader("Content-Type", "text/xml");
+                httpServletResponse.addHeader(RESPONSE_HEADER_NAME, RESPONSE_HEADER_VALUE);
                 FileCopyUtils.copy(RESPONSE.getBytes("UTF-8"), res.getOutputStream());
             }
             catch (TransformerException ex) {
@@ -145,7 +156,7 @@ public abstract class AbstractHttpWebServiceMessageSenderTestCase extends XMLTes
                 StringResult requestResult = new StringResult();
                 transformer.transform(new StreamSource(req.getInputStream()), requestResult);
                 receivedRequest = requestResult.toString();
-                receivedHeader = ((HttpServletRequest) req).getHeader(HEADER_NAME);
+                receivedHeader = ((HttpServletRequest) req).getHeader(REQUEST_HEADER_NAME);
 
                 HttpServletResponse httpServletResponse = (HttpServletResponse) res;
                 httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);

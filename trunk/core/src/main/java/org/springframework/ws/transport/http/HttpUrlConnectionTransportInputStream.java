@@ -69,7 +69,7 @@ public class HttpUrlConnectionTransportInputStream extends TransportInputStream 
         // Header field 0 is the status line, so we start at 1
         int i = 1;
         while (true) {
-            String headerName = connection.getHeaderField(i);
+            String headerName = connection.getHeaderFieldKey(i);
             if (!StringUtils.hasLength(headerName)) {
                 break;
             }
