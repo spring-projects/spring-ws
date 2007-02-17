@@ -34,7 +34,7 @@ public class StubTransportOutputStream extends TransportOutputStream {
         this.outputStream = outputStream;
     }
 
-    protected OutputStream getOutputStream() throws IOException {
+    protected OutputStream createOutputStream() throws IOException {
         return outputStream;
     }
 

@@ -41,7 +41,7 @@ public class HttpServletTransportOutputStream extends TransportOutputStream {
         this.httpServletResponse = httpServletResponse;
     }
 
-    protected OutputStream getOutputStream() throws IOException {
+    protected OutputStream createOutputStream() throws IOException {
         return httpServletResponse.getOutputStream();
     }
 

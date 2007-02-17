@@ -43,7 +43,7 @@ public class MailTransportOutputStream extends TransportOutputStream {
         }
     }
 
-    protected OutputStream getOutputStream() throws IOException {
+    protected OutputStream createOutputStream() throws IOException {
         try {
             return message.getDataHandler().getOutputStream();
         }

@@ -53,7 +53,7 @@ public class CommonsHttpTransportOutputStream extends TransportOutputStream {
         postMethod.setRequestEntity(new ByteArrayRequestEntity(bos.toByteArray()));
     }
 
-    protected OutputStream getOutputStream() throws IOException {
+    protected OutputStream createOutputStream() throws IOException {
         return bos;
     }
 

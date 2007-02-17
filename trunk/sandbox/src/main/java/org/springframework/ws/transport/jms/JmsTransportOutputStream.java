@@ -90,7 +90,7 @@ public class JmsTransportOutputStream extends TransportOutputStream {
         return message;
     }
 
-    protected OutputStream getOutputStream() throws IOException {
+    protected OutputStream createOutputStream() throws IOException {
         return new BytesMessageOutputStream();
     }
 
