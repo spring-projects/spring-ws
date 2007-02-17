@@ -21,16 +21,14 @@ import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.jms.support.JmsUtils;
-import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.ws.transport.TransportOutputStream;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
 import org.springframework.ws.transport.jms.JmsTransportInputStream;
 import org.springframework.ws.transport.jms.JmsTransportOutputStream;
-import org.springframework.ws.transport.support.WebServiceMessageReceiverObjectSupport;
+import org.springframework.ws.transport.support.SimpleWebServiceMessageReceiverObjectSupport;
 
 /**
  * Convenience base class for JMS server-side transport objects. Contains a {@link WebServiceMessageReceiver}, and has
@@ -41,30 +39,7 @@ import org.springframework.ws.transport.support.WebServiceMessageReceiverObjectS
  * @author Arjen Poutsma
  * @see #handle(javax.jms.Message,javax.jms.Session)
  */
-public abstract class JmsWebServiceMessageReceiverObjectSupport extends WebServiceMessageReceiverObjectSupport
-        implements InitializingBean {
-
-    private WebServiceMessageReceiver messageReceiver;
-
-    /**
-     * Returns the <code>WebServiceMessageReceiver</code> used by this listener.
-     */
-    public WebServiceMessageReceiver getMessageReceiver() {
-        return messageReceiver;
-    }
-
-    /**
-     * Sets the <code>WebServiceMessageReceiver</code> used by this listener.
-     */
-    public void setMessageReceiver(WebServiceMessageReceiver messageReceiver) {
-        this.messageReceiver = messageReceiver;
-    }
-
-    public void afterPropertiesSet() throws Exception {
-        Assert.notNull(getMessageFactory(), "messageFactory is required");
-        Assert.notNull(getMessageReceiver(), "messageReceiver must not be null");
-        logger.info("Using message factory [" + getMessageFactory() + "]");
-    }
+public abstract class JmsWebServiceMessageReceiverObjectSupport extends SimpleWebServiceMessageReceiverObjectSupport {
 
     /**
      * Handles an incoming <code>Message</code>s. Uses the given <code>Session</code> to create a response request.
@@ -77,7 +52,7 @@ public abstract class JmsWebServiceMessageReceiverObjectSupport extends WebServi
         if (request instanceof BytesMessage) {
             TransportInputStream tis = new JmsTransportInputStream((BytesMessage) request);
             TransportOutputStream tos = new JmsTransportOutputStream(session, request.getJMSCorrelationID());
-            handle(tis, tos, getMessageReceiver());
+            handle(tis, tos);
         }
         else {
             throw new IllegalArgumentException(

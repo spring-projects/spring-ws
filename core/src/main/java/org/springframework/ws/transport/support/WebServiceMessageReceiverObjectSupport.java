@@ -115,6 +115,7 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
     protected void handleResponse(TransportInputStream tis, TransportOutputStream tos, WebServiceMessage response)
             throws Exception {
         response.writeTo(tos);
+        tos.flush();
     }
 
     /**

@@ -46,7 +46,7 @@ public class HttpUrlConnectionTransportOutputStream extends TransportOutputStrea
         connection.setRequestProperty(name, value);
     }
 
-    protected OutputStream getOutputStream() throws IOException {
+    protected OutputStream createOutputStream() throws IOException {
         return connection.getOutputStream();
     }
 

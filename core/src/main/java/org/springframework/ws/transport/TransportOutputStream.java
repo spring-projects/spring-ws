@@ -28,7 +28,16 @@ import java.io.OutputStream;
  */
 public abstract class TransportOutputStream extends OutputStream {
 
+    private OutputStream outputStream;
+
     protected TransportOutputStream() {
+    }
+
+    private OutputStream getOutputStream() throws IOException {
+        if (outputStream == null) {
+            outputStream = createOutputStream();
+        }
+        return outputStream;
     }
 
     public void close() throws IOException {
@@ -63,5 +72,5 @@ public abstract class TransportOutputStream extends OutputStream {
     /**
      * Returns the output stream to write to.
      */
-    protected abstract OutputStream getOutputStream() throws IOException;
+    protected abstract OutputStream createOutputStream() throws IOException;
 }
