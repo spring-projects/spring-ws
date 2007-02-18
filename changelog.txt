@@ -7,6 +7,11 @@ Changes in version 1.0-RC1
 Package org.springframework.oxm.castor
 * fixed #SWS-88: Allow CastorMarshaller to accept more than one mapping file
 
+Package org.springframework.ws.client.core
+* replaced method which returned a Source from WebServiceTemplate with SourceExtractor methods, because the Source
+  could be closed before returned. 
+
+
 Package org.springframework.ws.server.endpoint
 * added XPathPayloadEndpointMapping (#SWS-85).
 
@@ -15,6 +20,9 @@ Package org.springframework.ws.soap.saaj
 
 Package org.springframework.ws.soap.security.xwss.callback
 * DefaultTimestapValidator now handles timestamps with milliseconds correctly (#SWS-89)
+
+Package org.springframework.ws.transport
+* fixed #SWS-86: Stream closed before response read with WebServiceTemplate + Axis SAAJ Soap Messages
 
 Package org.springframework.ws.transport.http
 * fixed issue with reading response HTTP headers
