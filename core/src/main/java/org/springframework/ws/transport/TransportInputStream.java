@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 
+import org.springframework.util.Assert;
+
 /**
  * A <code>TransportInputStream</code> is an input stream with MIME input headers. It is used to construct {@link
  * org.springframework.ws.WebServiceMessage WebServiceMessages} from a transport.
@@ -38,6 +40,7 @@ public abstract class TransportInputStream extends InputStream {
     private InputStream getInputStream() throws IOException {
         if (inputStream == null) {
             inputStream = createInputStream();
+            Assert.notNull(inputStream, "inputStream must not be null");
         }
         return inputStream;
     }
@@ -55,6 +58,7 @@ public abstract class TransportInputStream extends InputStream {
             getInputStream().mark(readlimit);
         }
         catch (IOException e) {
+            // ignored
         }
     }
 

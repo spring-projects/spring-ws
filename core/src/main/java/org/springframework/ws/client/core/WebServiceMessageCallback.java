@@ -28,5 +28,11 @@ import org.springframework.ws.WebServiceMessage;
  */
 public interface WebServiceMessageCallback {
 
+    /**
+     * Gets called by <code>WebServiceTemplate.sendAndReceice</code> with a <code>WebServiceMessage</code>.
+     *
+     * @param message the message
+     * @throws IOException in case of I/O errors
+     */
     void doInMessage(WebServiceMessage message) throws IOException;
 }

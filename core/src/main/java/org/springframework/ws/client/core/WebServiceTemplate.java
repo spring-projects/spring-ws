@@ -20,6 +20,7 @@ import java.io.IOException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import org.springframework.oxm.Marshaller;
@@ -30,6 +31,7 @@ import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.support.WebServiceAccessor;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
@@ -117,14 +119,23 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
         this.faultResolver = faultResolver;
     }
 
+    /*
+     * Marshalling methods
+     */
+
     public Object marshalSendAndReceive(final Object requestPayload) throws IOException {
         return marshalSendAndReceive(requestPayload, null);
     }
 
     public Object marshalSendAndReceive(final Object requestPayload, final WebServiceMessageCallback requestCallback)
             throws IOException {
-        checkMarshallerAndUnmarshaller();
-        WebServiceMessage response = sendAndReceive(new WebServiceMessageCallback() {
+        if (getMarshaller() == null) {
+            throw new IllegalStateException("No marshaller registered. Check configuration of WebServiceTemplate.");
+        }
+        if (getUnmarshaller() == null) {
+            throw new IllegalStateException("No unmarshaller registered. Check configuration of WebServiceTemplate.");
+        }
+        return sendAndReceive(new WebServiceMessageCallback() {
 
             public void doInMessage(WebServiceMessage message) throws IOException {
                 getMarshaller().marshal(requestPayload, message.getPayloadResult());
@@ -132,48 +143,104 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                     requestCallback.doInMessage(message);
                 }
             }
+        }, new WebServiceMessageExtractor() {
+
+            public Object extractData(WebServiceMessage message) throws IOException {
+                return getUnmarshaller().unmarshal(message.getPayloadSource());
+            }
         });
-        if (response != null) {
-            return getUnmarshaller().unmarshal(response.getPayloadSource());
+    }
+
+    /*
+     * Result-handling methods
+     */
+
+    public void sendAndReceive(Source requestPayload, Result responseResult) throws IOException {
+        sendAndReceive(requestPayload, null, responseResult);
+    }
+
+    public void sendAndReceive(Source requestPayload,
+                               WebServiceMessageCallback requestCallback,
+                               final Result responseResult) throws IOException {
+        try {
+            final Transformer transformer = createTransformer();
+            doSendAndReceive(transformer, requestPayload, requestCallback, new SourceExtractor() {
+
+                public Object extractData(Source source) throws IOException {
+                    try {
+                        transformer.transform(source, responseResult);
+                    }
+                    catch (TransformerException ex) {
+                        throw new WebServiceClientException("Could not transform payload", ex);
+                    }
+                    return null;
+                }
+            });
         }
-        else {
-            return null;
+        catch (TransformerException ex) {
+            throw new WebServiceClientException("Could not create transformer", ex);
         }
     }
 
-    public boolean sendAndReceive(Source requestPayload, Result responseResult) throws IOException {
-        return sendAndReceive(requestPayload, null, responseResult);
-    }
-
-    public boolean sendAndReceive(Source requestPayload,
-                                  WebServiceMessageCallback requestCallback,
-                                  Result responseResult) throws IOException {
-        Source responsePayload = sendAndReceive(requestPayload, requestCallback);
-        if (responsePayload != null) {
-            try {
-                Transformer transformer = createTransformer();
-                transformer.transform(responsePayload, responseResult);
-                return true;
-            }
-            catch (TransformerException e) {
-                throw new WebServiceClientException("Could not transform payload of responsePayload message");
-            }
-        }
-        else {
-            return false;
-        }
-    }
-
+    /*
+     * Source-handling methods
+     */
+/*
     public Source sendAndReceive(final Source requestPayload) throws IOException {
         return sendAndReceive(requestPayload, (WebServiceMessageCallback) null);
     }
+*/
 
-    public Source sendAndReceive(final Source requestPayload, final WebServiceMessageCallback requestCallback)
+    /*
+        public Source sendAndReceive(final Source requestPayload, final WebServiceMessageCallback requestCallback)
+                throws IOException {
+            return (Source) sendAndReceive(new WebServiceMessageCallback() {
+                public void doInMessage(WebServiceMessage message) throws IOException {
+                    try {
+                        Transformer transformer = createTransformer();
+                        transformer.transform(requestPayload, message.getPayloadResult());
+                        if (requestCallback != null) {
+                            requestCallback.doInMessage(message);
+                        }
+                    }
+                    catch (TransformerException ex) {
+                        throw new WebServiceClientException("Could not transform payload to request message", ex);
+                    }
+                }
+            }, new WebServiceMessageExtractor() {
+
+                public Object extractData(WebServiceMessage message) throws IOException {
+                    return message.getPayloadSource();
+                }
+            });
+        }
+    */
+
+    public Object sendAndReceive(final Source requestPayload, final SourceExtractor responseExtractor)
             throws IOException {
-        WebServiceMessage response = sendAndReceive(new WebServiceMessageCallback() {
+        return sendAndReceive(requestPayload, null, responseExtractor);
+    }
+
+    public Object sendAndReceive(final Source requestPayload,
+                                 final WebServiceMessageCallback requestCallback,
+                                 final SourceExtractor responseExtractor) throws IOException {
+
+        try {
+            return doSendAndReceive(createTransformer(), requestPayload, requestCallback, responseExtractor);
+        }
+        catch (TransformerConfigurationException ex) {
+            throw new WebServiceClientException("Could not create transformer", ex);
+        }
+    }
+
+    private Object doSendAndReceive(final Transformer transformer,
+                                    final Source requestPayload,
+                                    final WebServiceMessageCallback requestCallback,
+                                    final SourceExtractor responseExtractor) throws IOException {
+        Assert.notNull(responseExtractor, "responseExtractor must not be null");
+        return sendAndReceive(new WebServiceMessageCallback() {
             public void doInMessage(WebServiceMessage message) throws IOException {
                 try {
-                    Transformer transformer = createTransformer();
                     transformer.transform(requestPayload, message.getPayloadResult());
                     if (requestCallback != null) {
                         requestCallback.doInMessage(message);
@@ -183,34 +250,78 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                     throw new WebServiceClientException("Could not transform payload to request message", ex);
                 }
             }
-        });
-        return response != null ? response.getPayloadSource() : null;
+        }, new SourceExtractorMessageExtractor(responseExtractor));
     }
 
-    public WebServiceMessage sendAndReceive(WebServiceMessageCallback requestCallback) throws IOException {
+    /*
+    * WebServiceMessage-handling methods
+    */
+
+    public void sendAndReceive(WebServiceMessageCallback requestCallback, WebServiceMessageCallback responseCallback)
+            throws IOException {
+        Assert.notNull(responseCallback, "responseCallback must not be null");
+        sendAndReceive(requestCallback, new WebServiceMessageCallbackMessageExtractor(responseCallback));
+    }
+
+    public Object sendAndReceive(WebServiceMessageCallback requestCallback,
+                                 WebServiceMessageExtractor responseExtractor) throws IOException {
+        Assert.notNull(responseExtractor, "response extractor must not be null");
+        WebServiceConnection connection = getMessageSender().createConnection();
         MessageContext messageContext = createMessageContext();
-        if (requestCallback != null) {
-            requestCallback.doInMessage(messageContext.getRequest());
+        try {
+            if (requestCallback != null) {
+                requestCallback.doInMessage(messageContext.getRequest());
+            }
+            connection.sendAndReceive(messageContext);
+            if (!messageContext.hasResponse()) {
+                return null;
+            }
+            WebServiceMessage response = messageContext.getResponse();
+            if (response.hasFault()) {
+                getFaultResolver().resolveFault(response);
+                return null;
+            }
+            else {
+                return responseExtractor.extractData(response);
+            }
         }
-        getMessageSender().sendAndReceive(messageContext);
-        if (!messageContext.hasResponse()) {
-            return null;
+        finally {
+            connection.close();
         }
-        WebServiceMessage response = messageContext.getResponse();
-        if (response.hasFault()) {
-            getFaultResolver().resolveFault(response);
-            return null;
-        }
-        return response;
     }
 
-    private void checkMarshallerAndUnmarshaller() throws IllegalStateException {
-        if (getMarshaller() == null) {
-            throw new IllegalStateException("No marshaller registered. Check configuration of WebServiceTemplate.");
+    /**
+     * Adapter to enable use of a WebServiceMessageCallback inside a WebServiceMessageExtractor.
+     */
+    private static class WebServiceMessageCallbackMessageExtractor implements WebServiceMessageExtractor {
+
+        private final WebServiceMessageCallback callback;
+
+        public WebServiceMessageCallbackMessageExtractor(WebServiceMessageCallback callback) {
+            this.callback = callback;
         }
-        if (getUnmarshaller() == null) {
-            throw new IllegalStateException("No unmarshaller registered. Check configuration of WebServiceTemplate.");
+
+        public Object extractData(WebServiceMessage message) throws IOException {
+            callback.doInMessage(message);
+            return null;
         }
     }
+
+    /**
+     * Adapter to enable use of a SourceExtractor inside a WebServiceMessageExtractor.
+     */
+    private static class SourceExtractorMessageExtractor implements WebServiceMessageExtractor {
+
+        private final SourceExtractor sourceExtractor;
+
+        public SourceExtractorMessageExtractor(SourceExtractor sourceExtractor) {
+            this.sourceExtractor = sourceExtractor;
+        }
+
+        public Object extractData(WebServiceMessage message) throws IOException {
+            return sourceExtractor.extractData(message.getPayloadSource());
+        }
+    }
+
 
 }
