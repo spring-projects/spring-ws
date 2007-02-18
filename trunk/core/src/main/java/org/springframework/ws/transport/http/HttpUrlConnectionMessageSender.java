@@ -20,10 +20,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URLConnection;
 
-import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.transport.TransportInputStream;
-import org.springframework.ws.transport.TransportOutputStream;
+import org.springframework.ws.transport.WebServiceConnection;
 
 /**
  * <code>WebServiceMessageSender</code> implementation that uses standard J2SE facilities to execute POST requests,
@@ -38,72 +35,12 @@ import org.springframework.ws.transport.TransportOutputStream;
  */
 public class HttpUrlConnectionMessageSender extends AbstractHttpWebServiceMessageSender {
 
-    private static final String HTTP_METHOD_POST = "POST";
-
-    public void sendAndReceive(MessageContext messageContext) throws IOException {
-        HttpURLConnection connection = openConnection();
-        try {
-            prepareConnection(connection);
-            writeRequestMessage(connection, messageContext.getRequest());
-            validateResponse(connection);
-            readResponse(connection, messageContext);
-        }
-        finally {
-            connection.disconnect();
-        }
-    }
-
-    protected HttpURLConnection openConnection() throws IOException {
+    public WebServiceConnection createConnection() throws IOException {
         URLConnection con = getUrl().openConnection();
         if (!(con instanceof HttpURLConnection)) {
-            throw new IOException("URL [" + getUrl() + "] is not an HTTP URL");
+            throw new HttpTransportException("URL [" + getUrl() + "] is not an HTTP URL");
         }
-        return (HttpURLConnection) con;
-    }
-
-    protected void prepareConnection(HttpURLConnection connection) throws IOException {
-        connection.setRequestMethod(HTTP_METHOD_POST);
-        connection.setUseCaches(false);
-        connection.setDoInput(true);
-        connection.setDoOutput(true);
-    }
-
-    protected void readResponse(HttpURLConnection connection, MessageContext messageContext) throws IOException {
-        if (connection.getResponseCode() == HttpURLConnection.HTTP_NO_CONTENT || connection.getContentLength() == 0) {
-            return;
-        }
-        TransportInputStream tis = null;
-        try {
-            tis = new HttpUrlConnectionTransportInputStream(connection);
-            messageContext.readResponse(tis);
-        }
-        finally {
-            if (tis != null) {
-                tis.close();
-            }
-        }
-    }
-
-    protected void validateResponse(HttpURLConnection connection) throws IOException {
-        int responseCode = connection.getResponseCode();
-        if (responseCode != HttpURLConnection.HTTP_INTERNAL_ERROR && responseCode / 100 != 2) {
-            throw new IOException("Did not receive successful HTTP response: status code = " + responseCode +
-                    ", status message = [" + connection.getResponseMessage() + "]");
-        }
-    }
-
-    protected void writeRequestMessage(HttpURLConnection connection, WebServiceMessage message) throws IOException {
-        TransportOutputStream tos = null;
-        try {
-            tos = new HttpUrlConnectionTransportOutputStream(connection);
-            message.writeTo(tos);
-            tos.flush();
-        }
-        finally {
-            if (tos != null) {
-                tos.close();
-            }
-        }
+        return new HttpUrlConnectionWebServiceConnection((HttpURLConnection) con);
     }
 
 }

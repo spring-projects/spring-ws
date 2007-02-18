@@ -27,11 +27,19 @@ import org.springframework.oxm.Unmarshaller;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
 public class WebServiceTemplateTest extends XMLTestCase {
+
+    private static final WebServiceMessageExtractor SIMPLE_EXTRACTOR = new WebServiceMessageExtractor() {
+
+        public Object extractData(WebServiceMessage message) throws IOException {
+            return message;
+        }
+    };
 
     private WebServiceTemplate template;
 
@@ -87,11 +95,11 @@ public class WebServiceTemplateTest extends XMLTestCase {
         messageControl.expectAndReturn(responseMock.hasFault(), false);
         template.setMessageSender(new ResponseMessageSender());
         replayMockControls();
-        WebServiceMessage response = template.sendAndReceive(new WebServiceMessageCallback() {
+        WebServiceMessage response = (WebServiceMessage) template.sendAndReceive(new WebServiceMessageCallback() {
             public void doInMessage(WebServiceMessage message) throws IOException {
                 assertEquals("Invalid request message", requestMock, message);
             }
-        });
+        }, SIMPLE_EXTRACTOR);
         assertEquals("Invalid response", responseMock, response);
         verifyMockControls();
     }
@@ -100,11 +108,11 @@ public class WebServiceTemplateTest extends XMLTestCase {
         factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), requestMock);
         template.setMessageSender(new NoResponseMessageSender());
         replayMockControls();
-        WebServiceMessage response = template.sendAndReceive(new WebServiceMessageCallback() {
+        WebServiceMessage response = (WebServiceMessage) template.sendAndReceive(new WebServiceMessageCallback() {
             public void doInMessage(WebServiceMessage message) throws IOException {
                 assertEquals("Invalid request message", requestMock, message);
             }
-        });
+        }, SIMPLE_EXTRACTOR);
         assertNull("No response", response);
         verifyMockControls();
     }
@@ -120,27 +128,33 @@ public class WebServiceTemplateTest extends XMLTestCase {
         template.setMessageSender(new ResponseMessageSender());
         replayMockControls();
         resolverControl.replay();
-        WebServiceMessage response = template.sendAndReceive(new WebServiceMessageCallback() {
+        WebServiceMessage response = (WebServiceMessage) template.sendAndReceive(new WebServiceMessageCallback() {
             public void doInMessage(WebServiceMessage message) throws IOException {
                 assertEquals("Invalid request message", requestMock, message);
             }
-        });
+        }, SIMPLE_EXTRACTOR);
         assertNull("Invalid response", response);
         verifyMockControls();
         resolverControl.verify();
     }
 
-    public void testSendAndReceiveSourceResponse() throws Exception {
+    public void testSendAndReceiveSourceExtractor() throws Exception {
         factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), requestMock);
         factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), responseMock);
         messageControl.expectAndReturn(responseMock.hasFault(), false);
         messageControl.expectAndReturn(requestMock.getPayloadResult(), new StringResult());
-        Source expected = new StringSource("<response/>");
+        final Source expected = new StringSource("<response/>");
         messageControl.expectAndReturn(responseMock.getPayloadSource(), expected);
         template.setMessageSender(new ResponseMessageSender());
         replayMockControls();
-        Source response = template.sendAndReceive(new StringSource("<request />"));
-        assertEquals("Invalid response", expected, response);
+        Object result = template.sendAndReceive(new StringSource("<request />"), new SourceExtractor() {
+
+            public Object extractData(Source source) throws IOException {
+                assertEquals("Invalid response", expected, source);
+                return null;
+            }
+        });
+        assertNull("Invalid result", result);
     }
 
     public void testSendAndReceiveSourceNoResponse() throws Exception {
@@ -148,8 +162,14 @@ public class WebServiceTemplateTest extends XMLTestCase {
         messageControl.expectAndReturn(requestMock.getPayloadResult(), new StringResult());
         template.setMessageSender(new NoResponseMessageSender());
         replayMockControls();
-        Source response = template.sendAndReceive(new StringSource("<request />"));
-        assertNull("Invalid response", response);
+        Object result = template.sendAndReceive(new StringSource("<request />"), new SourceExtractor() {
+
+            public Object extractData(Source source) throws IOException {
+                assertNull("Invalid response", source);
+                return null;
+            }
+        });
+        assertNull("Invalid result", result);
     }
 
     public void testSendAndReceiveResultResponse() throws Exception {
@@ -238,16 +258,37 @@ public class WebServiceTemplateTest extends XMLTestCase {
 
     private class NoResponseMessageSender implements WebServiceMessageSender {
 
+        public WebServiceConnection createConnection() throws IOException {
+            return new NoResponseConnection();
+        }
+    }
+
+    private class NoResponseConnection implements WebServiceConnection {
+
         public void sendAndReceive(MessageContext messageContext) throws IOException {
             assertEquals("Invalid request message", requestMock, messageContext.getRequest());
+        }
+
+        public void close() throws IOException {
         }
     }
 
     private class ResponseMessageSender implements WebServiceMessageSender {
 
+        public WebServiceConnection createConnection() throws IOException {
+            return new ResponseConnection();
+        }
+    }
+
+    private class ResponseConnection implements WebServiceConnection {
+
         public void sendAndReceive(MessageContext messageContext) throws IOException {
             assertEquals("Invalid request message", requestMock, messageContext.getRequest());
             messageContext.getResponse();
         }
+
+        public void close() throws IOException {
+        }
     }
+
 }

@@ -43,6 +43,7 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
+import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
@@ -103,19 +104,25 @@ public abstract class AbstractHttpWebServiceMessageSenderTestCase extends XMLTes
         transformer.transform(new StringSource(REQUEST), new DOMResult(saajRequest.getSOAPBody()));
         SaajSoapMessage request = new SaajSoapMessage(saajRequest);
         MessageContext context = new DefaultMessageContext(request, new SaajSoapMessageFactory(messageFactory));
-        messageSender.sendAndReceive(context);
-        assertXMLEqual(EXPECTED_SOAP_REQUEST, receivedRequest.toString());
-        assertEquals("Invalid header value received on server side", REQUEST_HEADER_VALUE, receivedHeader);
-        assertTrue("No response", context.hasResponse());
-        SaajSoapMessage response = (SaajSoapMessage) context.getResponse();
-        SOAPMessage saajResponse = response.getSaajMessage();
-        assertNotNull("No header value received on client side",
-                saajResponse.getMimeHeaders().getHeader(RESPONSE_HEADER_NAME));
-        assertEquals("Invalid header value received on client side", RESPONSE_HEADER_VALUE,
-                saajResponse.getMimeHeaders().getHeader(RESPONSE_HEADER_NAME)[0]);
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        response.writeTo(os);
-        assertXMLEqual(RESPONSE, os.toString("UTF-8"));
+        WebServiceConnection connection = messageSender.createConnection();
+        try {
+            connection.sendAndReceive(context);
+            assertXMLEqual(EXPECTED_SOAP_REQUEST, receivedRequest.toString());
+            assertEquals("Invalid header value received on server side", REQUEST_HEADER_VALUE, receivedHeader);
+            assertTrue("No response", context.hasResponse());
+            SaajSoapMessage response = (SaajSoapMessage) context.getResponse();
+            SOAPMessage saajResponse = response.getSaajMessage();
+            assertNotNull("No header value received on client side",
+                    saajResponse.getMimeHeaders().getHeader(RESPONSE_HEADER_NAME));
+            assertEquals("Invalid header value received on client side", RESPONSE_HEADER_VALUE,
+                    saajResponse.getMimeHeaders().getHeader(RESPONSE_HEADER_NAME)[0]);
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            response.writeTo(os);
+            assertXMLEqual(RESPONSE, os.toString("UTF-8"));
+        }
+        finally {
+            connection.close();
+        }
     }
 
     public void testSendAndReceiveNoResponse() throws Exception {
@@ -124,8 +131,14 @@ public abstract class AbstractHttpWebServiceMessageSenderTestCase extends XMLTes
         transformer.transform(new StringSource(REQUEST), new DOMResult(saajRequest.getSOAPBody()));
         SaajSoapMessage request = new SaajSoapMessage(saajRequest);
         MessageContext context = new DefaultMessageContext(request, new SaajSoapMessageFactory(messageFactory));
-        messageSender.sendAndReceive(context);
-        assertFalse("Response", context.hasResponse());
+        WebServiceConnection connection = messageSender.createConnection();
+        try {
+            connection.sendAndReceive(context);
+            assertFalse("Response", context.hasResponse());
+        }
+        finally {
+            connection.close();
+        }
     }
 
     private class ResponseServlet extends GenericServlet {

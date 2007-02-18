@@ -19,6 +19,8 @@ package org.springframework.ws.transport;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.springframework.util.Assert;
+
 /**
  * A <code>TransportOutputStream</code> is an output stream with MIME input headers. It is used to write {@link
  * org.springframework.ws.WebServiceMessage WebServiceMessages} to a transport.
@@ -36,6 +38,7 @@ public abstract class TransportOutputStream extends OutputStream {
     private OutputStream getOutputStream() throws IOException {
         if (outputStream == null) {
             outputStream = createOutputStream();
+            Assert.notNull(outputStream, "outputStream must not be null");
         }
         return outputStream;
     }

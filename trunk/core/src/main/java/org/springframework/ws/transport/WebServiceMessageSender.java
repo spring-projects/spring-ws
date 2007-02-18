@@ -2,22 +2,23 @@ package org.springframework.ws.transport;
 
 import java.io.IOException;
 
-import org.springframework.ws.context.MessageContext;
-
 /**
  * Defines the methods for classes capable of sending and receiving {@link org.springframework.ws.WebServiceMessage}
  * instances across a transport.
+ * <p/>
+ * The <code>WebServiceMessageSender</code> is basically a factory for {@link WebServiceConnection} objects.
  *
  * @author Arjen Poutsma
+ * @see WebServiceConnection
  */
 public interface WebServiceMessageSender {
 
     /**
-     * Sends the given message context. The response message, if any, is stored in the context.
+     * Create a new <code>WebServiceConnection</code>.
      *
-     * @param messageContext the message to be sent
+     * @return the new connection
      * @throws IOException in case of I/O errors
      */
-    void sendAndReceive(MessageContext messageContext) throws IOException;
+    WebServiceConnection createConnection() throws IOException;
 
 }
