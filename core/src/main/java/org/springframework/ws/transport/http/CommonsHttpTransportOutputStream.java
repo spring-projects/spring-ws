@@ -31,7 +31,7 @@ import org.springframework.ws.transport.TransportOutputStream;
  *
  * @author Arjen Poutsma
  */
-public class CommonsHttpTransportOutputStream extends TransportOutputStream {
+class CommonsHttpTransportOutputStream extends TransportOutputStream {
 
     private final PostMethod postMethod;
 
