@@ -33,7 +33,7 @@ import org.springframework.ws.transport.TransportInputStream;
  *
  * @author Arjen Poutsma
  */
-public class CommonsHttpTransportInputStream extends TransportInputStream {
+class CommonsHttpTransportInputStream extends TransportInputStream {
 
     private final PostMethod postMethod;
 
