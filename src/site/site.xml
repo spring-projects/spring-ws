@@ -15,9 +15,12 @@
 	</bannerRight>
 	<body>
 		<links>
-			<item name="Spring Framework" href="http://www.springframework.org/"/>
-			<item name="Spring Web Services" href="http://www.springframework.org/spring-ws/"/>
+			<item name="Spring Framework" href="http://www.springframework.org/" />
+			<item name="Spring Web Services" href="http://www.springframework.org/spring-ws/" />
 		</links>
+		<menu name="Overview">
+			<item name="Home" href="/"/>
+		</menu>
 		<menu name="Downloads">
 		    <item name="Releases" href="downloads/releases.html"/>
 		    <item name="Snapshots" href="downloads/snapshots.html"/>		    
@@ -26,12 +29,12 @@
 		    <item name="FAQ" href="faq.html"/>
 			<item name="Upgrading" href="upgrading.html"/>
 			<item name="Tutorial" href="tutorial/tutorial1.html"/>
-			<item name="Resources" href="resources.html"/>
+			<item name="Resources &amp; Tools" href="resources.html"/>
 		</menu>
 		<menu name="Support">
 			<item name="Support Forums" href="http://forum.springframework.org/forumdisplay.php?f=39"/>
 			<item name="JIRA" href="http://opensource.atlassian.com/projects/spring/browse/SWS"/>
 		</menu>
-        <menu ref="reports" />
+		<menu ref="reports" />
 	</body>
 </project>
