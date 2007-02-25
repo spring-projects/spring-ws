@@ -29,7 +29,7 @@ import org.springframework.ws.transport.TransportOutputStream;
  * @author Arjen Poutsma
  * @see #getHttpServletResponse()
  */
-public class HttpServletTransportOutputStream extends TransportOutputStream {
+class HttpServletTransportOutputStream extends TransportOutputStream {
 
     private final HttpServletResponse httpServletResponse;
 
