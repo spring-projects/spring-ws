@@ -29,7 +29,7 @@ import org.springframework.ws.transport.TransportOutputStream;
  *
  * @author Arjen Poutsma
  */
-public class HttpUrlConnectionTransportOutputStream extends TransportOutputStream {
+class HttpUrlConnectionTransportOutputStream extends TransportOutputStream {
 
     private final HttpURLConnection connection;
 
@@ -48,12 +48,5 @@ public class HttpUrlConnectionTransportOutputStream extends TransportOutputStrea
 
     protected OutputStream createOutputStream() throws IOException {
         return connection.getOutputStream();
-    }
-
-    /**
-     * Returns the wrapped <code>HttpURLConnection</code>.
-     */
-    public HttpURLConnection getConnection() {
-        return connection;
     }
 }

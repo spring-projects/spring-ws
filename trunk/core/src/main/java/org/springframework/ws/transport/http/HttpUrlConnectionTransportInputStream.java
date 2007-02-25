@@ -35,7 +35,7 @@ import org.springframework.ws.transport.TransportInputStream;
  *
  * @author Arjen Poutsma
  */
-public class HttpUrlConnectionTransportInputStream extends TransportInputStream {
+class HttpUrlConnectionTransportInputStream extends TransportInputStream {
 
     private final HttpURLConnection connection;
 
@@ -46,13 +46,6 @@ public class HttpUrlConnectionTransportInputStream extends TransportInputStream 
     public HttpUrlConnectionTransportInputStream(HttpURLConnection connection) throws IOException {
         Assert.notNull(connection, "connection must not be null");
         this.connection = connection;
-    }
-
-    /**
-     * Returns the wrapped <code>HttpURLConnection</code>.
-     */
-    public HttpURLConnection getConnection() {
-        return connection;
     }
 
     protected InputStream createInputStream() throws IOException {
