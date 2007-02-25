@@ -31,7 +31,7 @@ import org.springframework.ws.transport.support.EnumerationIterator;
  * @author Arjen Poutsma
  * @see #getHttpServletRequest()
  */
-public class HttpServletTransportInputStream extends TransportInputStream {
+class HttpServletTransportInputStream extends TransportInputStream {
 
     private final HttpServletRequest httpServletRequest;
 
