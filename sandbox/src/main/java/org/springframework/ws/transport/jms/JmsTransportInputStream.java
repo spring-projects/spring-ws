@@ -35,7 +35,7 @@ import org.springframework.ws.transport.support.EnumerationIterator;
  * @author Arjen Poutsma
  * @see #getMessage()
  */
-public class JmsTransportInputStream extends TransportInputStream {
+class JmsTransportInputStream extends TransportInputStream {
 
     private final BytesMessage message;
 

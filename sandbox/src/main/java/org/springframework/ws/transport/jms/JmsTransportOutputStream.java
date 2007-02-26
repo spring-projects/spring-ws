@@ -33,7 +33,7 @@ import org.springframework.ws.transport.TransportOutputStream;
  * @author Arjen Poutsma
  * @see #getMessage()
  */
-public class JmsTransportOutputStream extends TransportOutputStream {
+class JmsTransportOutputStream extends TransportOutputStream {
 
     private BytesMessage message;
 
