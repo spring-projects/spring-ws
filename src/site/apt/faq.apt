@@ -41,14 +41,14 @@ Frequently Asked Questions
 	
 	See below:
 	
-*--------------------+--------------+
-| Application Server | SAAJ Version |
-*--------------------+--------------+
-| BEA WebLogic 8     | 1.1          |
-| BEA WebLogic 9     | 1.2          |
-| IBM WebSphere 6    | 1.2          |
-| SUN Glassfish      | 1.3          |
-*--------------------+--------------+
+*---------------------+----------------+
+|| Application Server || SAAJ Version ||
+*---------------------+----------------+
+| BEA WebLogic 8      | 1.1            |
+| BEA WebLogic 9      | 1.2            |
+| IBM WebSphere 6     | 1.2            |
+| SUN Glassfish       | 1.3            |
+*---------------------+----------------+
 
 	Additionally, Java SE 6 includes SAAJ 1.3.
 
