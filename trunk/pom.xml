@@ -87,7 +87,7 @@
         </connection>
         <developerConnection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk
         </developerConnection>
-        <url>http://svn.sourceforge.net/viewvc/springframework/spring-ws/trunk/</url>
+        <url>http://fisheye3.cenqua.com/browse/springframework/spring-ws/trunk</url>
     </scm>
     <modules>
         <module>xml</module>
@@ -141,6 +141,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.3</version>
                 <configuration>
                     <forkMode>once</forkMode>
                     <childDelegation>false</childDelegation>
@@ -194,6 +195,7 @@
                 <configuration>
                     <aggregate>true</aggregate>
                     <breakiterator>true</breakiterator>
+                    <stylesheetfile>${basedir}/src/site/resources/css/javadoc.css</stylesheetfile>
                     <groups>
                         <group>
                             <title>Spring-WS</title>
@@ -421,32 +423,6 @@
                 <groupId>org.codehaus.castor</groupId>
                 <artifactId>castor</artifactId>
                 <version>1.0.5</version>
-            </dependency>
-            <!-- JAXB -->
-            <dependency>
-                <groupId>javax.xml.bind</groupId>
-                <artifactId>jaxb-api</artifactId>
-                <version>1.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-impl</artifactId>
-                <version>1.0.6</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-libs</artifactId>
-                <version>1.0.6</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-xjc</artifactId>
-                <version>1.0.6</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.msv.datatype.xsd</groupId>
-                <artifactId>xsdlib</artifactId>
-                <version>20060615</version>
             </dependency>
             <!-- XMLBeans -->
             <dependency>
