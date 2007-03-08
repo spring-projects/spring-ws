@@ -94,16 +94,16 @@
             </question>
             <answer>
                 <p>If you get the following stack trace:</p>
-                <code>
-                    org.springframework.beans.factory.BeanCreationException: Error creating bean with name
-                    'org.springframework.ws.soap.saaj.SaajSoapMessageContextFactory#e4cb82' defined in ServletContext
-                    resource [/WEB-INF/springws-servlet.xml]: Invocation of init method failed;
-                    nested exception is java.lang.NoSuchMethodError:
-                    javax.xml.soap.MessageFactory.newInstance(Ljava/lang/String;)Ljavax/xml/soap/MessageFactory;
-                    Caused by:
-                    java.lang.NoSuchMethodError:
-                    javax.xml.soap.MessageFactory.newInstance(Ljava/lang/String;)Ljavax/xml/soap/MessageFactory;
-                </code>
+<pre>
+org.springframework.beans.factory.BeanCreationException:
+  Error creating bean with name 'org.springframework.ws.soap.saaj.SaajSoapMessageContextFactory'
+  defined in ServletContext resource [/WEB-INF/springws-servlet.xml]:
+  Invocation of init method failed;
+nested exception is java.lang.NoSuchMethodError: 
+  javax.xml.soap.MessageFactory.newInstance(Ljava/lang/String;)Ljavax/xml/soap/MessageFactory;
+Caused by:
+  java.lang.NoSuchMethodError: javax.xml.soap.MessageFactory.newInstance(Ljava/lang/String;)Ljavax/xml/soap/MessageFactory;
+</pre>
                 <p>
                     Like most J2EE libraries, SAAJ consists of two parts: the API that consists of interfaces (
                     <tt>saaj-api.jar</tt>
