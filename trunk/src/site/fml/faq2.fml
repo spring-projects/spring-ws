@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faqs title="Frequently Asked Questions" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="http://maven.apache.org/maven-1.x/plugins/faq/faq.xsd">
+    <part id="java">
+        <title>Java</title>
+        <faq id="java-1.4">
+            <question>Does Spring-WS work under Java 1.4?</question>
+            <answer>
+                <p>
+                    Spring Web Services works under Java 1.4, but it requires some effort to make it work. Java 1.4 is
+                    bundled with the older XML parser Crimson, which does not handle namespaces correctly. Additionally,
+                    it is bundled with an older version of Xalan, which also has problems.
+                    Unfortunately, placing newer versions of these on the class path does not override them.
+                    See
+                    <a href="http://xml.apache.org/xalan-j/faq.html#faq-N100D6">this FAQ</a>
+                    entry on the Xalan site, and also
+                    <a href="http://xerces.apache.org/xerces2-j/faq-general.html#faq-4">this entry</a>
+                    on the Xerces site.
+                </p>
+                <p>
+                    The only solution that works is to add newer versions of Xerces and Xalan in the lib/endorsed
+                    directory of your JDK, as explained in those FAQs.
+                </p>
+            </answer>
+        </faq>
+        <faq id="osx">
+            <question>Why do the Spring-WS unit tests fail under Mac OS X?</question>
+            <answer>
+                <p>
+                    For some reason, Apple decided to include a Java 1.4 compatibility jar with their JDK 1.5. This jar
+                    includes the XML parsers which were included in Java 1.4. No other JDK distribution does this, so it
+                    is unclear what the purpose of this compatibility jar is.
+                </p>
+                <p>
+                    The jar can be found at
+                    <tt>
+                        /System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/.compatibility/14compatibility.jar
+                    </tt>
+                    .
+                    You can safely remove or rename it, and the tests will run again.
+                </p>
+            </answer>
+        </faq>
+    </part>
+    <part id="saaj">
+        <title>SAAJ</title>
+        <faq id="whats-saaj">
+            <question>What is SAAJ?</question>
+            <answer>
+                SAAJ is the SOAP with Attachments API for Java. Previously, it has been part of JAXM, but it has been
+                released as a seperate API as part of the
+                <a href="http://java.sun.com/webservices/jwsdp/index.jsp">Java Web Service
+                    Developer Pack
+                </a>
+                , and also as part of J2EE 1.4. SAAJ is generally known as the package
+                <tt>javax.xml.soap</tt>
+                .
+            </answer>
+        </faq>
+        <faq id="saaj-versions">
+            <question>What version of SAAJ does my application server support?</question>
+            <answer>
+                <table class="bodyTable">
+                    <tbody>
+                        <tr>
+                            <th>Application Server</th>
+                            <th>SAAJ Version</th>
+                        </tr>
+                        <tr>
+                            <td>BEA WebLogic 8</td>
+                            <td>1.1</td>
+                        </tr>
+                        <tr>
+                            <td>BEA WebLogic 9</td>
+                            <td>1.2</td>
+                        </tr>
+                        <tr>
+                            <td>IBM WebSphere 6</td>
+                            <td>1.2</td>
+                        </tr>
+                        <tr>
+                            <td>SUN Glassfish 1</td>
+                            <td>1.3</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>Additionally, Java SE 6 includes SAAJ 1.3.</p>
+            </answer>
+        </faq>
+        <faq id="saaj-nosuchmethod">
+            <question>I get an
+                <tt>NoSuchMethodError</tt>
+                when using SAAJ. What can I do about it?
+            </question>
+            <answer>
+                <p>If you get the following stack trace:</p>
+                <code>
+                    org.springframework.beans.factory.BeanCreationException: Error creating bean with name
+                    'org.springframework.ws.soap.saaj.SaajSoapMessageContextFactory#e4cb82' defined in ServletContext
+                    resource [/WEB-INF/springws-servlet.xml]: Invocation of init method failed;
+                    nested exception is java.lang.NoSuchMethodError:
+                    javax.xml.soap.MessageFactory.newInstance(Ljava/lang/String;)Ljavax/xml/soap/MessageFactory;
+                    Caused by:
+                    java.lang.NoSuchMethodError:
+                    javax.xml.soap.MessageFactory.newInstance(Ljava/lang/String;)Ljavax/xml/soap/MessageFactory;
+                </code>
+                <p>
+                    Like most J2EE libraries, SAAJ consists of two parts: the API that consists of interfaces (
+                    <tt>saaj-api.jar</tt>
+                    ) and the implementation (
+                    <tt>saaj-impl.jar</tt>
+                    ).
+                    The stack trace is due to the fact that you are using a new version of the API (SAAJ 1.3), while
+                    your application server provides an earlier version of the implementation (SAAJ 1.2 or even 1.1).
+                    Spring-WS supports all three versions of SAAJ (1.1 through 1.3), but things break when it sees
+                    the 1.3 API, while there is no 1.3 implementation.
+                </p>
+                <p>
+                    The solution therefore is quite simple: to remove the newer 1.3 version of the API, from the class
+                    path, and replace it with the version supported by your application server.
+                </p>
+            </answer>
+        </faq>
+    </part>
+    <part id="wsdl">
+        <title>WSDL</title>
+        <faq id="wsdl-retrieve">
+            <question>How do I retrieve the WSDL from a Service? The &amp;WSDL query parameter does not work.</question>
+            <answer>
+                <p>
+                    The &amp;WSDL query parameter is a way to get a WSDL of a class. In SWS, a service is generally not
+                    implemented as a single class, but as a collection of endpoints.
+                </p>
+                <p>
+                    There are two ways to expose a WSDL:
+                    <ul>
+                        <li>
+                            Simply add the WSDL to the root of the WAR, and the file is served normally. This has the
+                            disadvantage
+                            that the "location" attribute in the WSDL is static, i.e. it does not necessarily reflect
+                            the
+                            host name
+                            of
+                            the
+                            server. That is why in the airline sample
+                            <tt>airline-servlet.xml</tt>
+                            , we define an
+                            <tt>WsdlDefinitionHandlerAdapter</tt>
+                            there, which
+                            transforms the
+                            location.
+                        </li>
+                        <li>Use the
+                            <tt>MessageDispatcherServlet</tt>
+                            , which is done is the echo sample. Every
+                            <tt>WsdlDefinition</tt>
+                            listed in the
+                            <tt>*-servlet.xml</tt>
+                            will be exposed under the bean name. So if you define a
+                            <tt>WsdlDefinition</tt>
+                            named
+                            <tt>echo</tt>
+                            , it will be
+                            exposed as
+                            <tt>echo.wsdl</tt>
+                            . (i.e.
+                            <tt>http://localhost:8080/echo/echo.wsdl
+                            </tt>
+                            ).
+                        </li>
+                    </ul>
+                </p>
+            </answer>
+        </faq>
+    </part>
+</faqs>

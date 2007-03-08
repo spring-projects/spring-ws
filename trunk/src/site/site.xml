@@ -3,38 +3,46 @@
     <skin>
         <groupId>org.springframework.maven.skins</groupId>
         <artifactId>maven-spring-skin</artifactId>
-        <version>1.0</version>
-      </skin>
-	<bannerLeft>
-		<src>http://www.springframework.org/files/xdev-spring_logo.jpg</src>
-		<href>http://www.springframework.org/spring-ws</href>
-	</bannerLeft>
-	<bannerRight>
-	    <src>http://www.springframework.org/files/banners/i21-banner-stamped.jpg</src>
-	    <href>http://www.springframework.com/</href>
-	</bannerRight>
-	<body>
-		<links>
-			<item name="Spring Framework" href="http://www.springframework.org/" />
-			<item name="Spring Web Services" href="http://www.springframework.org/spring-ws/" />
-		</links>
-		<menu name="Overview">
-			<item name="Home" href="/"/>
-		</menu>
-		<menu name="Downloads">
-		    <item name="Releases" href="downloads/releases.html"/>
-		    <item name="Snapshots" href="downloads/snapshots.html"/>		    
-	    </menu>
-		<menu name="Documentation">
-		    <item name="FAQ" href="faq.html"/>
-			<item name="Upgrading" href="upgrading.html"/>
-			<item name="Tutorial" href="tutorial/tutorial1.html"/>
-			<item name="Resources &amp; Tools" href="resources.html"/>
-		</menu>
-		<menu name="Support">
-			<item name="Support Forums" href="http://forum.springframework.org/forumdisplay.php?f=39"/>
-			<item name="JIRA" href="http://opensource.atlassian.com/projects/spring/browse/SWS"/>
-		</menu>
-		<menu ref="reports" />
-	</body>
+        <version>1.0.1-SNAPSHOT</version>
+    </skin>
+    <publishDate position="top" format="dd-MM-yy"/>
+    <bannerLeft>
+        <src>http://www.springframework.org/files/xdev-spring_logo.jpg</src>
+        <href>http://www.springframework.org/spring-ws</href>
+    </bannerLeft>
+    <bannerRight>
+        <src>http://www.springframework.org/files/banners/i21-banner-stamped.jpg</src>
+        <href>http://www.springframework.com/</href>
+    </bannerRight>
+    <body>
+        <links>
+            <item name="Spring Framework" href="http://www.springframework.org/"/>
+            <item name="Spring Web Services" href="http://www.springframework.org/spring-ws/"/>
+        </links>
+        <menu name="Overview">
+            <item name="Home" href="/"/>
+            <item name="Downloads" href="downloads/releases.html"/>
+        </menu>
+        <menu name="Documentation">
+            <item name="API" href="apidocs/index.html"/>
+            <item name="Reference"
+                href="http://static.springframework.org/spring-ws/docs/1.0-m3/reference/html/index.html"/>
+            <item name="FAQ" href="faq.html"/>
+            <item name="Upgrading" href="upgrading.html"/>
+            <item name="Tutorial" href="tutorial/tutorial1.html"/>
+            <item name="Resources &amp; Tools" href="resources.html"/>
+        </menu>
+        <menu name="Support">
+            <item name="Support Forums" href="http://forum.springframework.org/forumdisplay.php?f=39"/>
+            <item name="JIRA" href="http://opensource.atlassian.com/projects/spring/browse/SWS"/>
+        </menu>
+        <menu ref="reports"/>
+    </body>
+    <poweredBy>
+        <logo name="Powered by Spring" href="http://www.springframework.org" img="images/logos/powered-by-spring_small.png"/>
+        <logo name="Hosted on SourceForge.net" href="http://sourceforge.net" img="http://sourceforge.net/sflogo.php?group_id=73357&amp;type=1"/>
+        <logo name="Powered by JIRA" href="http://www.atlassian.com/software/jira/" img="images/logos/jira.png"/>
+        <logo name="Powered by Structure 101" href="http://www.headwaysoftware.com/products/structure101/" img="images/logos/s101d.png"/>
+        <logo name="Build with Maven 2" href="http://maven.apache.org" img="images/logos/maven-feather.png"/>
+    </poweredBy>
 </project>
