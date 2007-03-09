@@ -5,7 +5,7 @@
         <artifactId>maven-spring-skin</artifactId>
         <version>1.0.1</version>
     </skin>
-    <publishDate position="top" format="dd-MM-yy"/>
+    <publishDate position="left" format="yyyy-MM-dd"/>
     <bannerLeft>
         <src>http://www.springframework.org/files/xdev-spring_logo.jpg</src>
         <href>http://www.springframework.org/spring-ws</href>
