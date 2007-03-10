@@ -86,7 +86,7 @@ public abstract class XmlValidatorFactory {
         Assert.isTrue(SCHEMA_W3C_XML.equals(schemaLanguage) || SCHEMA_RELAX_NG.equals(schemaLanguage),
                 "Invalid schema language: " + schemaLanguage);
         for (int i = 0; i < schemaResources.length; i++) {
-            Assert.isTrue(schemaResources[i].exists(), "schema [" + schemaResources + "] does not exist");
+            Assert.isTrue(schemaResources[i].exists(), "schema [" + schemaResources[i] + "] does not exist");
         }
         if (JaxpVersion.getJaxpVersion() >= JaxpVersion.JAXP_13) {
             logger.debug("Creating JAXP 1.3 XmlValidator");

@@ -77,9 +77,9 @@ public class SimpleNamespaceContext implements NamespaceContext {
      * @param bindings the bindings
      */
     public void setBindings(Map bindings) {
-        for (Iterator iterator = bindings.keySet().iterator(); iterator.hasNext();) {
-            String prefix = (String) iterator.next();
-            bindNamespaceUri(prefix, (String) bindings.get(prefix));
+        for (Iterator iterator = bindings.entrySet().iterator(); iterator.hasNext();) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            bindNamespaceUri((String) entry.getKey(), (String) entry.getValue());
         }
     }
 
