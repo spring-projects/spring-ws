@@ -120,7 +120,7 @@
         </profile>
     </profiles>
     <properties>
-        <spring.version>2.0.2</spring.version>
+        <spring.version>2.0.3</spring.version>
     </properties>
     <repositories>
         <repository>
@@ -216,7 +216,7 @@
                         <link>http://java.sun.com/j2ee/1.4/docs/api</link>
                         <link>http://java.sun.com/webservices/docs/2.0/api</link>
                         <link>http://java.sun.com/webservices/docs/2.0/xws-security/api/</link>
-                        <link>http://static.springframework.org/spring/docs/1.2.x/api</link>
+                        <link>http://static.springframework.org/spring/docs/2.0.x/api</link>
                         <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
                         <link>http://xmlbeans.apache.org/docs/2.0.0/reference</link>
                         <link>http://jibx.sourceforge.net/api</link>
