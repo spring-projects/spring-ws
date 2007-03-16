@@ -62,3 +62,6 @@ the project update their applications:
 
     * The <<<MessageEndpointAdapter>>> has been renamed to <<<WebServiceMessageReceiverHandlerAdapter>>>, but still resides in the same package (<<<org.springframework.ws.transport.http>>>).
     
+* SoapMessageContext
+    
+    * The <<<SoapMessageContext>>> has been removed. The <<<MessageContext>>> offers the same functionality, though it might require casting.
