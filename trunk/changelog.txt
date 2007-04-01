@@ -7,10 +7,12 @@ Changes in version 1.0-RC1
 Package org.springframework.oxm.castor
 * fixed #SWS-88: Allow CastorMarshaller to accept more than one mapping file
 
+Package org.springframework.omx.xstream
+* fixed #SWS-100: Cannot set DateConverter in XStreamMarshaller.setConverters(Converter[])
+
 Package org.springframework.ws.client.core
 * replaced method which returned a Source from WebServiceTemplate with SourceExtractor methods, because the Source
   could be closed before returned. 
-
 
 Package org.springframework.ws.server.endpoint
 * added XPathPayloadEndpointMapping (#SWS-85).
