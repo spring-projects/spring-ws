@@ -5,14 +5,14 @@
 Introduction
 
     This is the first part of an overall tutorial on how to approach Web services development in contract-first style,
-i.e. starting with the XML Schema/WSDL contract instead of Java code. Spring Web Services focusses on this
+i.e. starting with the XML Schema/WSDL contract instead of Java code. Spring Web Services focuses on this
 development style, and this tutorial helps you get started. Note that this page contains almost no Spring-WS
 specific information: it is mostly about XML, XSD, and WSDL. The {{{tutorial2.html}second page}} focusses on
 implementing this contract using Spring-WS.
 
     In this tutorial, we will define a Web service that can be used for Human Resources. Clients can send
 holiday request forms to this service to book a holiday. It is based on a metaphor for Service Oriented Architectures
-originally though of by {{{http://blog.springframework.com/arjen/archives/2006/02/06/what-is-so-hard-about-soa/}Dan
+originally thought of by {{{http://blog.springframework.com/arjen/archives/2006/02/06/what-is-so-hard-about-soa/}Dan
 North}}.
 
     The most important thing when doing contract-first Web service development is to try and think in terms of
