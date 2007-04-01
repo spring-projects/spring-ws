@@ -33,6 +33,8 @@ import javax.xml.stream.XMLStreamWriter;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.ConverterMatcher;
+import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
@@ -70,8 +72,8 @@ import org.xml.sax.ext.LexicalHandler;
  * @author Arjen Poutsma
  * @see #setEncoding(String)
  * @see #DEFAULT_ENCODING
- * @see #setAliases(java.util.Map)
- * @see #setConverters(com.thoughtworks.xstream.converters.Converter[])
+ * @see #setAliases(Map)
+ * @see #setConverters(ConverterMatcher[])
  */
 public class XStreamMarshaller extends AbstractMarshaller {
 
@@ -114,11 +116,23 @@ public class XStreamMarshaller extends AbstractMarshaller {
     }
 
     /**
-     * Sets the <code>Converters</code> to be registered with the <code>XStream</code> instance.
+     * Sets the <code>Converters</code> or <code>SingleValueConverters</code> to be registered with the
+     * <code>XStream</code> instance.
+     *
+     * @see Converter
+     * @see SingleValueConverter
      */
-    public void setConverters(Converter[] converters) {
+    public void setConverters(ConverterMatcher[] converters) {
         for (int i = 0; i < converters.length; i++) {
-            xstream.registerConverter(converters[i]);
+            if (converters[i] instanceof Converter) {
+                xstream.registerConverter((Converter) converters[i], i);
+            }
+            else if (converters[i] instanceof SingleValueConverter) {
+                xstream.registerConverter((SingleValueConverter) converters[i], i);
+            }
+            else {
+                throw new IllegalArgumentException("Invalid ConverterMatcher [" + converters[i] + "]");
+            }
         }
     }
 
@@ -126,23 +140,22 @@ public class XStreamMarshaller extends AbstractMarshaller {
      * Set a alias/type map, consisting of string aliases mapped to <code>Class</code> instances (or Strings to be
      * converted to <code>Class</code> instances).
      *
-     * @see ClassEditor
+     * @see org.springframework.beans.propertyeditors.ClassEditor
      */
     public void setAliases(Map aliases) {
-        for (Iterator iterator = aliases.keySet().iterator(); iterator.hasNext();) {
-            String name = (String) iterator.next();
-            Object value = aliases.get(name);
+        for (Iterator iterator = aliases.entrySet().iterator(); iterator.hasNext();) {
+            Map.Entry entry = (Map.Entry) iterator.next();
             // Check whether we need to convert from String to Class.
             Class type = null;
-            if (value instanceof Class) {
-                type = (Class) value;
+            if (entry.getValue() instanceof Class) {
+                type = (Class) entry.getValue();
             }
             else {
                 ClassEditor editor = new ClassEditor();
-                editor.setAsText(String.valueOf(value));
+                editor.setAsText(String.valueOf(entry.getValue()));
                 type = (Class) editor.getValue();
             }
-            addAlias(name, type);
+            addAlias((String) entry.getKey(), type);
         }
     }
 
@@ -166,7 +179,7 @@ public class XStreamMarshaller extends AbstractMarshaller {
      * @param marshalling indicates whether the exception occurs during marshalling (<code>true</code>), or
      *                    unmarshalling (<code>false</code>)
      * @return the corresponding <code>XmlMappingException</code> instance
-     * @see XStreamUtils#convertXStreamException(Exception, boolean)
+     * @see XStreamUtils#convertXStreamException(Exception,boolean)
      */
     public XmlMappingException convertXStreamException(Exception ex, boolean marshalling) {
         return XStreamUtils.convertXStreamException(ex, marshalling);
@@ -276,6 +289,7 @@ public class XStreamMarshaller extends AbstractMarshaller {
 
     protected Object unmarshalSaxReader(XMLReader xmlReader, InputSource inputSource)
             throws XmlMappingException, IOException {
-        throw new UnsupportedOperationException("XStreamMarshaller does not support unmarshalling using SAX XMLReaders");
+        throw new UnsupportedOperationException(
+                "XStreamMarshaller does not support unmarshalling using SAX XMLReaders");
     }
 }
