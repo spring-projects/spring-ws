@@ -16,6 +16,7 @@
 
 package org.springframework.ws.server;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -61,89 +62,61 @@ import org.springframework.ws.transport.support.DefaultStrategiesHelper;
  */
 public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAware, ApplicationContextAware {
 
-    /**
-     * Log category to use when no mapped endpoint is found for a request.
-     */
+    /** Log category to use when no mapped endpoint is found for a request. */
     public static final String ENDPOINT_NOT_FOUND_LOG_CATEGORY = "org.springframework.ws.EndpointNotFound";
 
-    /**
-     * Additional logger to use when no mapped endpoint is found for a request.
-     */
+    /** Additional logger to use when no mapped endpoint is found for a request. */
     protected static final Log endpointNotFoundLogger = LogFactory.getLog(ENDPOINT_NOT_FOUND_LOG_CATEGORY);
 
-    /**
-     * Logger available to subclasses.
-     */
+    /** Logger available to subclasses. */
     protected final Log logger = LogFactory.getLog(getClass());
 
     private final DefaultStrategiesHelper defaultStrategiesHelper;
 
-    /**
-     * The registered bean name for this dispatcher.
-     */
+    /** The registered bean name for this dispatcher. */
     private String beanName;
 
-    /**
-     * List of EndpointAdapters used in this dispatcher
-     */
+    /** List of EndpointAdapters used in this dispatcher */
     private List endpointAdapters;
 
-    /**
-     * List of EndpointExceptionResolvers used in this dispatcher
-     */
+    /** List of EndpointExceptionResolvers used in this dispatcher */
     private List endpointExceptionResolvers;
 
-    /**
-     * List of EndpointMappings used in this dispatcher
-     */
+    /** List of EndpointMappings used in this dispatcher */
     private List endpointMappings;
 
-    /**
-     * Initializes a new instance of the <code>MessageDispatcher</code>.
-     */
+    /** Initializes a new instance of the <code>MessageDispatcher</code>. */
     public MessageDispatcher() {
         Resource resource = new ClassPathResource(ClassUtils.getShortName(getClass()) + ".properties", getClass());
         defaultStrategiesHelper = new DefaultStrategiesHelper(resource);
     }
 
-    /**
-     * Returns the <code>EndpointAdapter</code>s to use by this <code>MessageDispatcher</code>.
-     */
+    /** Returns the <code>EndpointAdapter</code>s to use by this <code>MessageDispatcher</code>. */
     public List getEndpointAdapters() {
         return endpointAdapters;
     }
 
-    /**
-     * Sets the <code>EndpointAdapter</code>s to use by this <code>MessageDispatcher</code>.
-     */
+    /** Sets the <code>EndpointAdapter</code>s to use by this <code>MessageDispatcher</code>. */
     public void setEndpointAdapters(List endpointAdapters) {
         this.endpointAdapters = endpointAdapters;
     }
 
-    /**
-     * Returns the <code>EndpointExceptionResolver</code>s to use by this <code>MessageDispatcher</code>.
-     */
+    /** Returns the <code>EndpointExceptionResolver</code>s to use by this <code>MessageDispatcher</code>. */
     public List getEndpointExceptionResolvers() {
         return endpointExceptionResolvers;
     }
 
-    /**
-     * Sets the <code>EndpointExceptionResolver</code>s to use by this <code>MessageDispatcher</code>.
-     */
+    /** Sets the <code>EndpointExceptionResolver</code>s to use by this <code>MessageDispatcher</code>. */
     public void setEndpointExceptionResolvers(List endpointExceptionResolvers) {
         this.endpointExceptionResolvers = endpointExceptionResolvers;
     }
 
-    /**
-     * Returns the <code>EndpointMapping</code>s to use by this <code>MessageDispatcher</code>.
-     */
+    /** Returns the <code>EndpointMapping</code>s to use by this <code>MessageDispatcher</code>. */
     public List getEndpointMappings() {
         return endpointMappings;
     }
 
-    /**
-     * Sets the <code>EndpointMapping</code>s to use by this <code>MessageDispatcher</code>.
-     */
+    /** Sets the <code>EndpointMapping</code>s to use by this <code>MessageDispatcher</code>. */
     public void setEndpointMappings(List endpointMappings) {
         this.endpointMappings = endpointMappings;
     }
@@ -163,10 +136,26 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
             logger.debug("MessageDispatcher with name '" + beanName + "' received request [" +
                     messageContext.getRequest() + "]");
         }
+        if (logger.isTraceEnabled()) {
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            messageContext.getRequest().writeTo(os);
+            logger.trace("Request contents: " + os.toString("UTF-8"));
+        }
         dispatch(messageContext);
-        if (logger.isDebugEnabled() && messageContext.hasResponse()) {
-            logger.debug("MessageDispatcher with name '" + beanName + "' sends response [" +
-                    messageContext.getResponse() + "]");
+        if (messageContext.hasResponse()) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("MessageDispatcher with name '" + beanName + "' sends response [" +
+                        messageContext.getResponse() + "] for request [" + messageContext.getRequest() + "]");
+            }
+            if (logger.isTraceEnabled()) {
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                messageContext.getResponse().writeTo(os);
+                logger.trace("Response contents: " + os.toString("UTF-8"));
+            }
+        }
+        else if (logger.isDebugEnabled()) {
+            logger.debug("MessageDispatcher with name '" + beanName + "' sends no response for request [" +
+                    messageContext.getRequest() + "]");
         }
     }
 
