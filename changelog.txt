@@ -7,6 +7,9 @@ Changes in version 1.0-RC1
 Package org.springframework.oxm.castor
 * fixed #SWS-88: Allow CastorMarshaller to accept more than one mapping file
 
+Package org.springframework.oxm.jibx
+* fixed #SWS-97: OXM Marshal encoding definition
+
 Package org.springframework.omx.xstream
 * fixed #SWS-100: Cannot set DateConverter in XStreamMarshaller.setConverters(Converter[])
 
