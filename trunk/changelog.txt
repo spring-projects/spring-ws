@@ -6,6 +6,7 @@ Changes in version 1.0-RC1
 -------------------------
 Package org.springframework.oxm.castor
 * fixed #SWS-88: Allow CastorMarshaller to accept more than one mapping file
+* fixed #SWS-96: set WhitespacePreserve flag in CastorMarshaller
 
 Package org.springframework.oxm.jibx
 * fixed #SWS-97: OXM Marshal encoding definition
