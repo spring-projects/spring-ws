@@ -39,6 +39,9 @@ Package org.springframework.ws.wsdl.wsdl11.builder
 Package org.springframework.xml.stream
 * prefixed all abstract classes with Abstract
 
+Samples
+* fixed #SWS-93: new location for log4j.properties
+
 Changes in version 1.0-M3
 -------------------------
 Package org.springframework.oxm.castor
