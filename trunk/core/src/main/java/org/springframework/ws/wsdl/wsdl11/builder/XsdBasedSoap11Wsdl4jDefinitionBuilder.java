@@ -220,7 +220,7 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
         for (int i = 0; i < elements.getLength(); i++) {
             Element element = (Element) elements.item(i);
             QName elementName = getSchemaElementName(element);
-            if (isRequestMessage(elementName) || isResponseMessage(elementName)) {
+            if (elementName != null && (isRequestMessage(elementName) || isResponseMessage(elementName))) {
                 Message message = definition.createMessage();
                 populateMessage(message, element);
                 Part part = definition.createPart();
