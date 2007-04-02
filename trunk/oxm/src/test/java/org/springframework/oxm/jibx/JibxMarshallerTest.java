@@ -16,10 +16,10 @@
 
 package org.springframework.oxm.jibx;
 
+import org.custommonkey.xmlunit.XMLUnit;
 import org.springframework.oxm.AbstractMarshallerTestCase;
 import org.springframework.oxm.Marshaller;
 import org.springframework.xml.transform.StringResult;
-import org.custommonkey.xmlunit.XMLUnit;
 
 public class JibxMarshallerTest extends AbstractMarshallerTestCase {
 
@@ -54,12 +54,18 @@ public class JibxMarshallerTest extends AbstractMarshallerTestCase {
         marshaller.marshal(flights, result);
         XMLUnit.setIgnoreWhitespace(false);
         String expected = "<?xml version=\"1.0\"?>\n" +
-                "<flights xmlns=\"http://samples.springframework.org/flight\">\n" +
-                "    <flight>\n" +
-                "        <number>42</number>\n" +
-                "    </flight>\n" +
-                "</flights>";
+                "<flights xmlns=\"http://samples.springframework.org/flight\">\n" + "    <flight>\n" +
+                "        <number>42</number>\n" + "    </flight>\n" + "</flights>";
         assertXMLEqual(expected, result.toString());
+    }
+
+    public void testEncodingAndStandalone() throws Exception {
+        ((JibxMarshaller) marshaller).setEncoding("ISO-8859-1");
+        ((JibxMarshaller) marshaller).setStandalone(Boolean.TRUE);
+        StringResult result = new StringResult();
+        marshaller.marshal(flights, result);
+        assertTrue("Encoding and standalone not set",
+                result.toString().startsWith("<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>"));
     }
 
 }
