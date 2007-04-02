@@ -76,26 +76,35 @@ import org.xml.sax.ext.LexicalHandler;
  */
 public class CastorMarshaller extends AbstractMarshaller implements InitializingBean {
 
-    /**
-     * The default encoding used for stream access.
-     */
+    /** The default encoding used for stream access. */
     public static final String DEFAULT_ENCODING = "UTF-8";
 
     private Resource[] mappingLocations;
 
-    private String encoding;
+    private String encoding = DEFAULT_ENCODING;
 
     private Class targetClass;
 
     private XMLClassDescriptorResolver classDescriptorResolver;
 
+    private boolean validating = false;
+
+    private boolean whitespacePreserve = false;
+
     /**
-     * Returns the encoding to be used for stream access. If this property is not set, the default encoding is used.
-     *
-     * @see #DEFAULT_ENCODING
+     * Set if the Castor <code>Unmarshaller</code> should validate the incoming document. Default is
+     * <code>false</code>.
      */
-    private String getEncoding() {
-        return encoding != null ? encoding : DEFAULT_ENCODING;
+    public void setValidating(boolean validating) {
+        this.validating = validating;
+    }
+
+    /**
+     * Indicates whether the Castor <code>Unmarshaller</code> should preserve "ignorable" whitespace. Default is
+     * <code>false</code>.
+     */
+    public void setWhitespacePreserve(boolean whitespacePreserve) {
+        this.whitespacePreserve = whitespacePreserve;
     }
 
     /**
@@ -117,16 +126,12 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
         this.targetClass = targetClass;
     }
 
-    /**
-     * Sets the locations of the Castor XML Mapping files.
-     */
+    /** Sets the locations of the Castor XML Mapping files. */
     public void setMappingLocation(Resource mappingLocation) {
         mappingLocations = new Resource[]{mappingLocation};
     }
 
-    /**
-     * Sets the locations of the Castor XML Mapping files.
-     */
+    /** Sets the locations of the Castor XML Mapping files. */
     public void setMappingLocations(Resource[] mappingLocations) {
         this.mappingLocations = mappingLocations;
     }
@@ -213,6 +218,8 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
             unmarshaller = new Unmarshaller();
         }
         unmarshaller.setResolver(classDescriptorResolver);
+        unmarshaller.setValidation(validating);
+        unmarshaller.setWhitespacePreserve(whitespacePreserve);
         return unmarshaller;
     }
 
@@ -243,7 +250,7 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
 
     protected void marshalOutputStream(Object graph, OutputStream outputStream)
             throws XmlMappingException, IOException {
-        OutputStreamWriter writer = new OutputStreamWriter(outputStream, getEncoding());
+        OutputStreamWriter writer = new OutputStreamWriter(outputStream, encoding);
         marshalWriter(graph, writer);
     }
 
