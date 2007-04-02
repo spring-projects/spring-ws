@@ -9,10 +9,6 @@
         <param-value>airline.root</param-value>
     </context-param>
     <context-param>
-        <param-name>log4jConfigLocation</param-name>
-        <param-value>/WEB-INF/log4j.properties</param-value>
-    </context-param>
-    <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
             classpath:org/springframework/ws/samples/airline/dao/hibernate/applicationContext-hibernate.xml
@@ -22,9 +18,6 @@
             classpath:org/springframework/ws/samples/airline/ws/applicationContext-ws.xml
         </param-value>
     </context-param>
-    <listener>
-        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
-    </listener>
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
