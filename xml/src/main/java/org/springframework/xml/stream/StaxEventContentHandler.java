@@ -41,7 +41,7 @@ import org.xml.sax.Locator;
  * @see XMLEvent
  * @see XMLEventConsumer
  */
-public class StaxEventContentHandler extends StaxContentHandler {
+public class StaxEventContentHandler extends AbstractStaxContentHandler {
 
     private final XMLEventFactory eventFactory;
 
@@ -115,9 +115,7 @@ public class StaxEventContentHandler extends StaxContentHandler {
         eventConsumer.add(event);
     }
 
-    /**
-     * Creates and returns a list of <code>NameSpace</code> objects from the <code>NamespaceContext</code>.
-     */
+    /** Creates and returns a list of <code>NameSpace</code> objects from the <code>NamespaceContext</code>. */
     private List createNamespaces(SimpleNamespaceContext namespaceContext) {
         List namespaces = new ArrayList();
         String defaultNamespaceUri = namespaceContext.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX);
