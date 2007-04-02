@@ -19,12 +19,11 @@ package org.springframework.xml.stream;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 
+import org.springframework.xml.namespace.QNameUtils;
+import org.springframework.xml.namespace.SimpleNamespaceContext;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-
-import org.springframework.xml.namespace.QNameUtils;
-import org.springframework.xml.namespace.SimpleNamespaceContext;
 
 /**
  * Abstract base class for SAX <code>ContentHandler</code> implementations that use StAX as a basis. All methods
@@ -33,7 +32,7 @@ import org.springframework.xml.namespace.SimpleNamespaceContext;
  *
  * @author Arjen Poutsma
  */
-public abstract class StaxContentHandler implements ContentHandler {
+public abstract class AbstractStaxContentHandler implements ContentHandler {
 
     private SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext();
 
@@ -67,7 +66,7 @@ public abstract class StaxContentHandler implements ContentHandler {
     /**
      * Binds the given prefix to the given namespaces.
      *
-     * @see SimpleNamespaceContext#bindNamespaceUri(String, String)
+     * @see SimpleNamespaceContext#bindNamespaceUri(String,String)
      */
     public final void startPrefixMapping(String prefix, String uri) {
         namespaceContext.bindNamespaceUri(prefix, uri);

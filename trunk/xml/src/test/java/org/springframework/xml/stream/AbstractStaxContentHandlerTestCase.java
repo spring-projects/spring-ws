@@ -19,7 +19,6 @@ package org.springframework.xml.stream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
-
 import javax.xml.stream.XMLStreamException;
 
 import org.custommonkey.xmlunit.XMLTestCase;
@@ -40,7 +39,7 @@ public abstract class AbstractStaxContentHandlerTestCase extends XMLTestCase {
 
     public void testContentHandler() throws Exception {
         StringWriter stringWriter = new StringWriter();
-        StaxContentHandler handler = createStaxContentHandler(stringWriter);
+        AbstractStaxContentHandler handler = createStaxContentHandler(stringWriter);
         xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", false);
         xmlReader.setContentHandler(handler);
         xmlReader.parse(new InputSource(new StringReader(XML_CONTENT_HANDLER)));
@@ -49,14 +48,14 @@ public abstract class AbstractStaxContentHandlerTestCase extends XMLTestCase {
 
     public void testContentHandlerNamespacePrefixes() throws Exception {
         StringWriter stringWriter = new StringWriter();
-        StaxContentHandler handler = createStaxContentHandler(stringWriter);
+        AbstractStaxContentHandler handler = createStaxContentHandler(stringWriter);
         xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
         xmlReader.setContentHandler(handler);
         xmlReader.parse(new InputSource(new StringReader(XML_CONTENT_HANDLER)));
         assertXMLEqual("Invalid result", XML_CONTENT_HANDLER, stringWriter.toString());
     }
 
-    protected abstract StaxContentHandler createStaxContentHandler(Writer writer) throws XMLStreamException;
+    protected abstract AbstractStaxContentHandler createStaxContentHandler(Writer writer) throws XMLStreamException;
 
 
 }

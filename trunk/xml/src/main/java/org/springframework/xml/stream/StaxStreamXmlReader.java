@@ -37,7 +37,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @see #setEntityResolver(org.xml.sax.EntityResolver)
  * @see #setErrorHandler(org.xml.sax.ErrorHandler)
  */
-public class StaxStreamXmlReader extends StaxXmlReader {
+public class StaxStreamXmlReader extends AbstractStaxXmlReader {
 
     private final XMLStreamReader reader;
 
@@ -154,10 +154,8 @@ public class StaxStreamXmlReader extends StaxXmlReader {
             }
 
             QName qName = reader.getName();
-            getContentHandler().startElement(qName.getNamespaceURI(),
-                    qName.getLocalPart(),
-                    QNameUtils.toQualifiedName(qName),
-                    getAttributes());
+            getContentHandler().startElement(qName.getNamespaceURI(), qName.getLocalPart(),
+                    QNameUtils.toQualifiedName(qName), getAttributes());
         }
     }
 
@@ -173,11 +171,8 @@ public class StaxStreamXmlReader extends StaxXmlReader {
             if (type == null) {
                 type = "";
             }
-            attributes.addAttribute(namespace,
-                    reader.getAttributeLocalName(i),
-                    QNameUtils.toQualifiedName(reader.getAttributeName(i)),
-                    type,
-                    reader.getAttributeValue(i));
+            attributes.addAttribute(namespace, reader.getAttributeLocalName(i),
+                    QNameUtils.toQualifiedName(reader.getAttributeName(i)), type, reader.getAttributeValue(i));
         }
 
         return attributes;

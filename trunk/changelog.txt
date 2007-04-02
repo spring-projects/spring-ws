@@ -32,6 +32,9 @@ Package org.springframework.ws.transport.http
 Package org.springframework.ws.wsdl.wsdl11.builder
 * fixed #SWS-101: XsdBasedSoap11Wsdl4jDefinitionBuilder parsing error
 
+Package org.springframework.xml.stream
+* prefixed all abstract classes with Abstract
+
 Changes in version 1.0-M3
 -------------------------
 Package org.springframework.oxm.castor

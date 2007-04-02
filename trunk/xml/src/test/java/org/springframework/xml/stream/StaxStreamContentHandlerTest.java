@@ -17,13 +17,12 @@
 package org.springframework.xml.stream;
 
 import java.io.Writer;
-
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 
 public class StaxStreamContentHandlerTest extends AbstractStaxContentHandlerTestCase {
 
-    protected StaxContentHandler createStaxContentHandler(Writer writer) throws XMLStreamException {
+    protected AbstractStaxContentHandler createStaxContentHandler(Writer writer) throws XMLStreamException {
         XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
         return new StaxStreamContentHandler(outputFactory.createXMLStreamWriter(writer));
     }

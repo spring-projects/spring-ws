@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Arrays;
-
 import javax.xml.stream.XMLStreamException;
 
 import junit.framework.TestCase;
@@ -61,7 +60,7 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
         reader.setContentHandler(mock);
         reader.parse(new InputSource(new StringReader(XML_CONTENT_HANDLER)));
         control.replay();
-        StaxXmlReader staxXmlReader = createStaxXmlReader(new StringReader(XML_CONTENT_HANDLER));
+        AbstractStaxXmlReader staxXmlReader = createStaxXmlReader(new StringReader(XML_CONTENT_HANDLER));
         staxXmlReader.setContentHandler(mock);
         staxXmlReader.parse(new InputSource());
         control.verify();
@@ -74,7 +73,7 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
         reader.setContentHandler(mock);
         reader.parse(new InputSource(new StringReader(XML_CONTENT_HANDLER_ATTS)));
         control.replay();
-        StaxXmlReader staxXmlReader = createStaxXmlReader(new StringReader(XML_CONTENT_HANDLER_ATTS));
+        AbstractStaxXmlReader staxXmlReader = createStaxXmlReader(new StringReader(XML_CONTENT_HANDLER_ATTS));
         staxXmlReader.setContentHandler(mock);
         staxXmlReader.parse(new InputSource());
         control.verify();
@@ -88,17 +87,15 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
         reader.setDTDHandler(mock);
         reader.parse(new InputSource(new StringReader(XML_DTD_HANDLER)));
         control.replay();
-        StaxXmlReader staxXmlReader = createStaxXmlReader(new StringReader(XML_DTD_HANDLER));
+        AbstractStaxXmlReader staxXmlReader = createStaxXmlReader(new StringReader(XML_DTD_HANDLER));
         staxXmlReader.setDTDHandler(mock);
         staxXmlReader.parse(new InputSource());
         control.verify();
     }
 
-    protected abstract StaxXmlReader createStaxXmlReader(Reader reader) throws XMLStreamException;
+    protected abstract AbstractStaxXmlReader createStaxXmlReader(Reader reader) throws XMLStreamException;
 
-    /**
-     * Easymock <code>ArgumentMatcher</code> implementation that matches SAX arguments.
-     */
+    /** Easymock <code>ArgumentMatcher</code> implementation that matches SAX arguments. */
     private static class SaxArgumentMatcher extends AbstractMatcher {
 
         public boolean matches(Object[] expected, Object[] actual) {

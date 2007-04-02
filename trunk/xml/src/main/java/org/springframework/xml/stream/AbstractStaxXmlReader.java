@@ -35,7 +35,7 @@ import org.xml.sax.SAXParseException;
  * @see #setEntityResolver(org.xml.sax.EntityResolver)
  * @see #setErrorHandler(org.xml.sax.ErrorHandler)
  */
-public abstract class StaxXmlReader extends AbstractXmlReader {
+public abstract class AbstractStaxXmlReader extends AbstractXmlReader {
 
     /**
      * Parses the StAX XML reader passed at construction-time.
