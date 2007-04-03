@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.server.endpoint;
+package org.springframework.ws.server.endpoint.adapter;
 
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -30,6 +30,7 @@ import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.server.endpoint.PayloadEndpoint;
 
 public class PayloadEndpointAdapterTest extends XMLTestCase {
 

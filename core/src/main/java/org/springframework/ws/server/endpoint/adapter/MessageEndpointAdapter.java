@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.server.endpoint;
+package org.springframework.ws.server.endpoint.adapter;
 
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointAdapter;
+import org.springframework.ws.server.endpoint.MessageEndpoint;
 
 /**
  * Adapter to use a <code>MessageEndpoint</code> as the endpoint for a <code>EndpointInvocationChain</code>.

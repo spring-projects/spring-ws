@@ -26,7 +26,7 @@ import org.springframework.ws.NoEndpointFoundException;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.server.endpoint.PayloadEndpointAdapter;
+import org.springframework.ws.server.endpoint.adapter.PayloadEndpointAdapter;
 import org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping;
 import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
 
