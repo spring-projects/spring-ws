@@ -65,6 +65,10 @@ public class XmlBeansMarshaller extends AbstractMarshaller {
         this.xmlOptions = xmlOptions;
     }
 
+    public boolean supports(Class clazz) {
+        return XmlObject.class.isAssignableFrom(clazz);
+    }
+
     /**
      * Converts the given XMLBeans exception to an appropriate exception from the <code>org.springframework.oxm</code>
      * hierarchy.
@@ -78,7 +82,7 @@ public class XmlBeansMarshaller extends AbstractMarshaller {
      * @param marshalling indicates whether the exception occurs during marshalling (<code>true</code>), or
      *                    unmarshalling (<code>false</code>)
      * @return the corresponding <code>XmlMappingException</code>
-     * @see XmlBeansUtils#convertXmlBeansException(Exception, boolean)
+     * @see XmlBeansUtils#convertXmlBeansException(Exception,boolean)
      */
     public XmlMappingException convertXmlBeansException(Exception ex, boolean marshalling) {
         return XmlBeansUtils.convertXmlBeansException(ex, marshalling);
@@ -165,8 +169,10 @@ public class XmlBeansMarshaller extends AbstractMarshaller {
             xmlReader.setProperty("http://xml.org/sax/properties/lexical-handler", saxHandler.getLexicalHandler());
         }
         catch (SAXNotRecognizedException e) {
+            // ignore
         }
         catch (SAXNotSupportedException e) {
+            // ignore
         }
         try {
             xmlReader.parse(inputSource);

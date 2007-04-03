@@ -16,9 +16,9 @@
 package org.springframework.oxm.xmlbeans;
 
 import java.io.ByteArrayOutputStream;
-
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.xmlbeans.XmlObject;
 import org.springframework.oxm.AbstractMarshallerTestCase;
 import org.springframework.oxm.Marshaller;
 import org.springframework.samples.flight.FlightType;
@@ -33,7 +33,7 @@ public class XmlBeansMarshallerTest extends AbstractMarshallerTestCase {
 
     public void testMarshalNonXmlObject() throws Exception {
         try {
-            this.marshaller.marshal(new Object(), new StreamResult(new ByteArrayOutputStream()));
+            marshaller.marshal(new Object(), new StreamResult(new ByteArrayOutputStream()));
             fail("XmlBeansMarshaller did not throw ClassCastException for non-XmlObject");
         }
         catch (ClassCastException e) {
@@ -49,8 +49,11 @@ public class XmlBeansMarshallerTest extends AbstractMarshallerTestCase {
         return flightsDocument;
     }
 
-    public void testMarshalStaxResultXMLStreamWriter() throws Exception {
-        // Unfortu
+    public void testSupports() throws Exception {
+        assertTrue("XmlBeansMarshaller does not support XmlObject", marshaller.supports(XmlObject.class));
+        assertFalse("XmlBeansMarshaller supports other objects", marshaller.supports(Object.class));
+        assertTrue("XmlBeansMarshaller does not support FlightsDocument", marshaller.supports(FlightsDocument.class));
+        assertTrue("XmlBeansMarshaller does not support Flights", marshaller.supports(Flights.class));
+        assertTrue("XmlBeansMarshaller does not support FlightType", marshaller.supports(FlightType.class));
     }
-
 }

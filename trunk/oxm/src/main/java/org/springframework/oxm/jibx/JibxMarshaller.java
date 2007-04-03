@@ -137,6 +137,10 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
         transfomerFactory = TransformerFactory.newInstance();
     }
 
+    public boolean supports(Class clazz) {
+        return targetClass.isAssignableFrom(clazz);
+    }
+
     /**
      * Convert the given <code>JiBXException</code> to an appropriate exception from the
      * <code>org.springframework.oxm</code> hierarchy.

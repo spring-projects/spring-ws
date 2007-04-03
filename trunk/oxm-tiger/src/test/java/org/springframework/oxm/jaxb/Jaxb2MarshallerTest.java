@@ -19,7 +19,7 @@ package org.springframework.oxm.jaxb;
 import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
 import java.util.Collections;
-
+import javax.xml.bind.JAXBElement;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLEventWriter;
@@ -32,15 +32,14 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.easymock.MockControl;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Text;
-import org.xml.sax.ContentHandler;
-
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.oxm.jaxb2.FlightType;
 import org.springframework.oxm.jaxb2.Flights;
 import org.springframework.xml.transform.StaxResult;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
+import org.xml.sax.ContentHandler;
 
 public class Jaxb2MarshallerTest extends XMLTestCase {
 
@@ -184,5 +183,10 @@ public class Jaxb2MarshallerTest extends XMLTestCase {
         SAXResult result = new SAXResult(handlerMock);
         marshaller.marshal(flights, result);
         handlerControl.verify();
+    }
+
+    public void testSupports() throws Exception {
+        assertTrue("Jaxb2Marshaller does not support Flights", marshaller.supports(Flights.class));
+        assertTrue("Jaxb2Marshaller does not support JAXBElement", marshaller.supports(JAXBElement.class));
     }
 }

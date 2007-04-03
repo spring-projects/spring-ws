@@ -5,6 +5,9 @@ http://www.springframework.org/spring-ws
 Changes in version 1.0-RC1
 -------------------------
 Package org.springframework.oxm.castor
+* added supports method to Marshaller and Unmarshaller 
+
+Package org.springframework.oxm.castor
 * fixed #SWS-88: Allow CastorMarshaller to accept more than one mapping file
 * fixed #SWS-96: set WhitespacePreserve flag in CastorMarshaller
 

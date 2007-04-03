@@ -160,6 +160,10 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
         }
     }
 
+    public boolean supports(Class clazz) {
+        return true;
+    }
+
     /**
      * Creates the Castor <code>XMLClassDescriptorResolver</code>. Subclasses can override this to create a custom
      * resolver.

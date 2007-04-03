@@ -20,9 +20,11 @@ import java.io.IOException;
 import java.util.Map;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -72,7 +74,7 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller {
 
     private Class[] classesToBeBound;
 
-    private Map jaxbContextProperties;
+    private Map<java.lang.String, ?> jaxbContextProperties;
 
     /**
      * Sets the <code>XmlAdapter</code>s to be registered with the JAXB <code>Marshaller</code> and
@@ -96,22 +98,13 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller {
      * Sets the <code>JAXBContext</code> properties. These implementation-specific properties will be set on the
      * <code>JAXBContext</code>.
      */
-    public void setJaxbContextProperties(Map jaxbContextProperties) {
+    public void setJaxbContextProperties(Map<String, ?> jaxbContextProperties) {
         this.jaxbContextProperties = jaxbContextProperties;
     }
 
-    /**
-     * Sets the <code>Marshaller.Listener</code> to be registered with the JAXB <code>Marshaller</code>.
-     */
+    /** Sets the <code>Marshaller.Listener</code> to be registered with the JAXB <code>Marshaller</code>. */
     public void setMarshallerListener(Marshaller.Listener marshallerListener) {
         this.marshallerListener = marshallerListener;
-    }
-
-    /**
-     * Sets the schema resource to use for validation.
-     */
-    public void setSchema(Resource schemaResource) {
-        schemaResources = new Resource[]{schemaResource};
     }
 
     /**
@@ -124,18 +117,23 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller {
         this.schemaLanguage = schemaLanguage;
     }
 
-    /**
-     * Sets the schema resources to use for validation.
-     */
+    /** Sets the schema resource to use for validation. */
+    public void setSchema(Resource schemaResource) {
+        schemaResources = new Resource[]{schemaResource};
+    }
+
+    /** Sets the schema resources to use for validation. */
     public void setSchemas(Resource[] schemaResources) {
         this.schemaResources = schemaResources;
     }
 
-    /**
-     * Sets the <code>Unmarshaller.Listener</code> to be registered with the JAXB <code>Unmarshaller</code>.
-     */
+    /** Sets the <code>Unmarshaller.Listener</code> to be registered with the JAXB <code>Unmarshaller</code>. */
     public void setUnmarshallerListener(Unmarshaller.Listener unmarshallerListener) {
         this.unmarshallerListener = unmarshallerListener;
+    }
+
+    public boolean supports(Class clazz) {
+        return clazz.getAnnotation(XmlRootElement.class) != null || JAXBElement.class.isAssignableFrom(clazz);
     }
 
     public void marshal(Object graph, Result result) {

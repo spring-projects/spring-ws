@@ -68,4 +68,9 @@ public class JibxMarshallerTest extends AbstractMarshallerTestCase {
                 result.toString().startsWith("<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>"));
     }
 
+    public void testSupports() throws Exception {
+        assertTrue("Jaxb2Marshaller does not support Flights", marshaller.supports(Flights.class));
+    }
+
+
 }

@@ -77,9 +77,7 @@ import org.xml.sax.ext.LexicalHandler;
  */
 public class XStreamMarshaller extends AbstractMarshaller {
 
-    /**
-     * The default encoding used for stream access.
-     */
+    /** The default encoding used for stream access. */
     public static final String DEFAULT_ENCODING = "UTF-8";
 
     private XStream xstream = new XStream();
@@ -167,6 +165,10 @@ public class XStreamMarshaller extends AbstractMarshaller {
      */
     public void addAlias(String name, Class type) {
         xstream.alias(name, type);
+    }
+
+    public boolean supports(Class clazz) {
+        return true;
     }
 
     /**
