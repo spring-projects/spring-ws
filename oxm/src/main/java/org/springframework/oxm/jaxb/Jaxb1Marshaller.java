@@ -15,6 +15,7 @@
  */
 package org.springframework.oxm.jaxb;
 
+import javax.xml.bind.Element;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -40,11 +41,13 @@ public class Jaxb1Marshaller extends AbstractJaxbMarshaller implements Initializ
 
     private boolean validating = false;
 
-    /**
-     * Set if the JAXB <code>Unmarshaller</code> should validate the incoming document. Default is <code>false</code>.
-     */
+    /** Set if the JAXB <code>Unmarshaller</code> should validate the incoming document. Default is <code>false</code>. */
     public void setValidating(boolean validating) {
         this.validating = validating;
+    }
+
+    public boolean supports(Class clazz) {
+        return Element.class.isAssignableFrom(clazz);
     }
 
     protected final JAXBContext createJaxbContext() throws JAXBException {

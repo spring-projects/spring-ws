@@ -21,6 +21,7 @@ import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.oxm.jaxb1.FlightType;
 import org.springframework.oxm.jaxb1.Flights;
+import org.springframework.oxm.jaxb1.FlightsType;
 import org.springframework.oxm.jaxb1.impl.FlightTypeImpl;
 import org.springframework.oxm.jaxb1.impl.FlightsImpl;
 
@@ -71,5 +72,11 @@ public class Jaxb1MarshallerTest extends AbstractJaxbMarshallerTestCase {
         catch (XmlMappingException ex) {
         }
     }
+
+    public void testSupports() throws Exception {
+        assertTrue("Jaxb1Marshaller does not support Flights", marshaller.supports(Flights.class));
+        assertFalse("Jaxb1Marshaller supports FlightsType", marshaller.supports(FlightsType.class));
+    }
+
 
 }
