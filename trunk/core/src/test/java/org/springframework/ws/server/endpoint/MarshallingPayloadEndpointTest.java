@@ -16,6 +16,7 @@
 
 package org.springframework.ws.server.endpoint;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import javax.xml.transform.Result;
@@ -57,7 +58,7 @@ public class MarshallingPayloadEndpointTest extends XMLTestCase {
     }
 
     public void testInvoke() throws Exception {
-        Unmarshaller unmarshaller = new Unmarshaller() {
+        Unmarshaller unmarshaller = new SimpleMarshaller() {
             public Object unmarshal(Source source) throws XmlMappingException {
                 try {
                     StringWriter writer = new StringWriter();
@@ -71,7 +72,7 @@ public class MarshallingPayloadEndpointTest extends XMLTestCase {
                 }
             }
         };
-        Marshaller marshaller = new Marshaller() {
+        Marshaller marshaller = new SimpleMarshaller() {
             public void marshal(Object graph, Result result) throws XmlMappingException {
                 assertEquals("Invalid graph", "result", graph);
                 try {
@@ -104,7 +105,7 @@ public class MarshallingPayloadEndpointTest extends XMLTestCase {
     }
 
     public void testInvokeNullResponse() throws Exception {
-        Unmarshaller unmarshaller = new Unmarshaller() {
+        Unmarshaller unmarshaller = new SimpleMarshaller() {
             public Object unmarshal(Source source) throws XmlMappingException {
                 try {
                     StringWriter writer = new StringWriter();
@@ -118,7 +119,7 @@ public class MarshallingPayloadEndpointTest extends XMLTestCase {
                 }
             }
         };
-        Marshaller marshaller = new Marshaller() {
+        Marshaller marshaller = new SimpleMarshaller() {
             public void marshal(Object graph, Result result) throws XmlMappingException {
                 fail("marshal not expected");
             }
@@ -136,6 +137,22 @@ public class MarshallingPayloadEndpointTest extends XMLTestCase {
         endpoint.invoke(context);
         assertFalse("Response created", context.hasResponse());
         factoryControl.verify();
+    }
+
+    private abstract static class SimpleMarshaller implements Marshaller, Unmarshaller {
+
+        public void marshal(Object graph, Result result) throws XmlMappingException, IOException {
+            fail("Not expected");
+        }
+
+        public Object unmarshal(Source source) throws XmlMappingException, IOException {
+            fail("Not expected");
+            return null;
+        }
+
+        public boolean supports(Class clazz) {
+            return false;
+        }
     }
 
 }
