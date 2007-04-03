@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.server.endpoint;
+package org.springframework.ws.server.endpoint.adapter;
 
 import java.lang.reflect.Method;
 
@@ -25,6 +25,7 @@ import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointMapping;
+import org.springframework.ws.server.endpoint.MethodEndpoint;
 
 /**
  * Adapter that supports endpoint methods that use marshalling. Supports methods with the following signature:

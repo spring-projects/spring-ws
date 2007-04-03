@@ -1,4 +1,4 @@
-package org.springframework.ws.server.endpoint;
+package org.springframework.ws.server.endpoint.adapter;
 
 import java.lang.reflect.Method;
 
@@ -9,6 +9,7 @@ import org.springframework.oxm.Unmarshaller;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.server.endpoint.MethodEndpoint;
 
 public class MarshallingMethodEndpointAdapterTest extends TestCase {
 
