@@ -18,7 +18,7 @@ import org.springframework.mock.web.MockServletConfig;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.support.StaticWebApplicationContext;
 import org.springframework.ws.server.MessageDispatcher;
-import org.springframework.ws.server.endpoint.PayloadEndpointAdapter;
+import org.springframework.ws.server.endpoint.adapter.PayloadEndpointAdapter;
 import org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping;
 import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
 import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
