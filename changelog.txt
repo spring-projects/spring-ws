@@ -22,6 +22,9 @@ Package org.springframework.ws.client.core
   could be closed before returned. 
 
 Package org.springframework.ws.server.endpoint
+* added MarshallingMethodEndpointAdapter
+
+Package org.springframework.ws.server.endpoint.mapping
 * added XPathPayloadEndpointMapping (#SWS-85).
 
 Package org.springframework.ws.soap.saaj
