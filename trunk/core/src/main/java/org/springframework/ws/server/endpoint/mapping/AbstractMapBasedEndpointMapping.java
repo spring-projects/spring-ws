@@ -85,9 +85,7 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
         temporaryEndpointMap.putAll(mappings);
     }
 
-    /**
-     * Validates the given endpoint key. Should return <code>true</code> is the given string is valid.
-     */
+    /** Validates the given endpoint key. Should return <code>true</code> is the given string is valid. */
     protected abstract boolean validateLookupKey(String key);
 
     /**
@@ -103,7 +101,7 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
      *
      * @return the looked up endpoint, or <code>null</code>
      */
-    protected Object getEndpointInternal(MessageContext messageContext) throws Exception {
+    protected final Object getEndpointInternal(MessageContext messageContext) throws Exception {
         String key = getLookupKeyForMessage(messageContext);
         if (!StringUtils.hasLength(key)) {
             return null;

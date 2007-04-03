@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.server.endpoint;
+package org.springframework.ws.server.endpoint.adapter;
 
 import junit.framework.TestCase;
 import org.easymock.MockControl;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.server.endpoint.MessageEndpoint;
 
 public class MessageEndpointAdapterTest extends TestCase {
 

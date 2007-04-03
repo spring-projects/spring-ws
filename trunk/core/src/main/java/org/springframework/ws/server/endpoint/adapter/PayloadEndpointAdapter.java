@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.server.endpoint;
+package org.springframework.ws.server.endpoint.adapter;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -22,13 +22,14 @@ import javax.xml.transform.Transformer;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointAdapter;
+import org.springframework.ws.server.endpoint.PayloadEndpoint;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
  * Adapter to use a <code>PayloadEndpoint</code> as the endpoint for a <code>EndpointInvocationChain</code>.
  *
  * @author Arjen Poutsma
- * @see PayloadEndpoint
+ * @see org.springframework.ws.server.endpoint.PayloadEndpoint
  * @see org.springframework.ws.server.EndpointInvocationChain
  */
 public class PayloadEndpointAdapter extends TransformerObjectSupport implements EndpointAdapter {
