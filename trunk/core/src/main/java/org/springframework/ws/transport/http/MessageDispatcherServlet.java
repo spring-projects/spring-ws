@@ -35,8 +35,9 @@ import org.springframework.ws.wsdl.WsdlDefinition;
  * This servlet also automatically detects any {@link WsdlDefinition} in its application context. This WSDL is exposed
  * under the bean name (e.g. a {@link WsdlDefinition} bean named '<code>echo</code>' will be exposed as
  * <code>echo.wsdl</code> in this servlet's context: http://localhost:8080/spring-ws/echo.wsdl).  When the
- * <code>transformWsdlLocations</code> property is set to <code>true</code> in the web.xml, all <code>location</code>
- * attributes in the WSDL definitions will reflect the URL of the incoming request.
+ * <code>transformWsdlLocations</code> init-param is set to <code>true</code> in this servlet's configuration in
+ * <code>web.xml</code>, all <code>location</code> attributes in the WSDL definitions will reflect the URL of the
+ * incoming request.
  *
  * @author Arjen Poutsma
  * @see org.springframework.web.servlet.DispatcherServlet
