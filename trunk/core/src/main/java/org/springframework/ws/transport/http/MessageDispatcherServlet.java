@@ -97,7 +97,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
     }
 
     protected void initFrameworkServlet() throws ServletException, BeansException {
-        initWebServiceMessageFactory();
+        initHandlerAdapters();
         initMessageReceiver();
         initWsdlDefinitions();
     }
@@ -142,7 +142,23 @@ public class MessageDispatcherServlet extends FrameworkServlet {
         }
     }
 
-    private void initWebServiceMessageFactory() throws BeansException {
+    private void initHandlerAdapters() throws BeansException {
+        try {
+            // setup the receiver adapter
+            messageReceiverHandlerAdapter = new WebServiceMessageReceiverHandlerAdapter();
+            initWebServiceMessageFactory();
+            messageReceiverHandlerAdapter.afterPropertiesSet();
+            // setup the wsdl adapter
+            wsdlDefinitionHandlerAdapter = new WsdlDefinitionHandlerAdapter();
+            wsdlDefinitionHandlerAdapter.setTransformLocations(transformWsdlLocations);
+            wsdlDefinitionHandlerAdapter.afterPropertiesSet();
+        }
+        catch (Exception ex) {
+            throw new BeanInitializationException("Could not initialize handler adapters", ex);
+        }
+    }
+
+    private void initWebServiceMessageFactory() throws Exception {
         WebServiceMessageFactory messageFactory;
         try {
             messageFactory = (WebServiceMessageFactory) getWebApplicationContext()
@@ -156,13 +172,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
                         WEB_SERVICE_MESSAGE_FACTORY_BEAN_NAME + "': using default [" + messageFactory + "]");
             }
             if (messageFactory instanceof InitializingBean) {
-                try {
-                    ((InitializingBean) messageFactory).afterPropertiesSet();
-                }
-                catch (Exception ex) {
-                    throw new BeanInitializationException("Could not invoke afterPropertiesSet() on message factory",
-                            ex);
-                }
+                ((InitializingBean) messageFactory).afterPropertiesSet();
             }
         }
         messageReceiverHandlerAdapter.setMessageFactory(messageFactory);
@@ -187,7 +197,6 @@ public class MessageDispatcherServlet extends FrameworkServlet {
     }
 
     private void initWsdlDefinitions() {
-        wsdlDefinitionHandlerAdapter.setTransformLocations(transformWsdlLocations);
         // Find all WsdlDefinitions in the ApplicationContext, incuding ancestor contexts.
         wsdlDefinitions = BeanFactoryUtils
                 .beansOfTypeIncludingAncestors(getWebApplicationContext(), WsdlDefinition.class, true, false);
