@@ -32,7 +32,7 @@
 
 	<xi:include href="preface.xml" />
 	<xi:include href="overview.xml" />
-	<!--<xi:include href="contract-first.xml" />-->
+    <xi:include href="why-contract-first.xml" />
 	<chapter id="server">
 		<title>Document-driven Web services with Spring-WS</title>
 		<para>This chapter will contain the reference for server-side Spring-WS usage.</para>
