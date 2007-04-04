@@ -14,6 +14,11 @@
     <servlet>
         <servlet-name>spring-ws</servlet-name>
         <servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
+        <init-param>
+            <!-- Transform the location attributes in WSDLs -->
+            <param-name>transformWsdlLocations</param-name>
+            <param-value>true</param-value>
+        </init-param>
     </servlet>
 
     <!-- Map all requests to this servlet -->
@@ -21,22 +26,6 @@
         <servlet-name>spring-ws</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
-
-    <!-- Indicates that we want to transform the location attributes in WSDLs-->
-    <context-param>
-        <param-name>transformWsdlLocations</param-name>
-        <param-value>true</param-value>
-    </context-param>
-
-    <mime-mapping>
-        <extension>wsdl</extension>
-        <mime-type>text/xml</mime-type>
-    </mime-mapping>
-
-    <mime-mapping>
-        <extension>xsd</extension>
-        <mime-type>text/xml</mime-type>
-    </mime-mapping>
 
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
