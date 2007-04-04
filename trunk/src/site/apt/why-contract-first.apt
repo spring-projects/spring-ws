@@ -1,0 +1,183 @@
+                                                  -------------------
+                                                  Why Contract-First?
+                                                  -------------------
+
+Why Contract-First?                                             
+    
+    When creating Web services, there are two development styles: <contract-last> and <contract-first>. When using a
+contract-last approach, you start with the Java code, and let the Web service contract (WSDL, see sidebar) be generated 
+from that. When using contract-first, you start with the WSDL contract, and use Java to implement said contract.
+
+    Spring-WS only supports the contract-first development style. This page explains why.
+
+* Object/XML Impedance Mismatch
+
+    Similar to the field of ORM, where we have an 
+{{{http://en.wikipedia.org/wiki/Object-Relational_impedance_mismatch}Object/Relational impedance mismatch}}, there is a 
+similar problem when converting Java objects to XML. At first glance, the O/X mapping problem appears simple: create an 
+XML element for each Java object, converting all Java properties and fields to sub-elements or attributes. However, 
+things are not so simple as they appear: there is a fundamental difference between hierarchical languages such as XML 
+(especially XSD) and the graph model of Java. Note that most of the contents in this section was inspired by 
+{{{http://www.hpl.hp.com/techreports/2005/HPL-2005-83.pdf}Rethinking the Java SOAP Stack}} and 
+{{{http://safari.awprofessional.com/0321130006}Effective Enterprise Java}}.
+
+** XSD extensions
+
+    In Java, the only way to change the behavior of a class is to subclass it, adding the new behavior to that subclass. 
+In XSD, you can extend a data type by restricting it: i.e. constraining the valid values for the elements and
+attributes. For instance, consider the following example:
+
++--------------------------------------
+<simpleType name="AirportCode">
+  <restriction base="string">
+      <pattern value="[A-Z][A-Z][A-Z]"/>
+  </restriction>
+</simpleType>
++--------------------------------------
+
+    This type restricts a XSD string by ways of a regular expression, allowing only three upper case letters. If this 
+type is converted to Java, we will end up with an ordinary <<<java.lang.String>>>; the regular expression is lost in the
+conversion process, because Java does not allow for these sorts of extensions.
+
+** Unportable types
+
+    One of the most important goals of a Web service is to be interoperable: to support multiple platforms such as Java,
+.NET, Python, etc. Because all of these languages have different class libraries, you must use some common, interlingual
+format to communicate between them. That format is XML, which is supported by all of these languages.
+
+    Because of this conversion, you must make sure that you use portable types in your service implementation. Consider, 
+for example, a service that returns a <<<java.util.TreeMap>>>, like so:
+
++--------------------------------------
+public Map getFlights() {
+  // use a tree map, to make sure it's sorted
+  TreeMap map = new TreeMap();
+  map.put("KL1117", "Stockholm");
+  ...
+  return map;
+}
++--------------------------------------
+
+    Undoubtedly, the contents of this map can be converted into some sort of XML, but since there is no <standard> way
+to describe a map in XML, it will be proprietary. Also, even if it can be converted to XML, many platforms do not have a
+data structure similar to the <<<TreeMap>>>. So when a .NET client accesses your Web service, it will
+probably end up with a <<<System.Collections.Hashtable>>>, which has different semantics.
+
+    This problem is also present when working on the client side. Consider the following XSD snippet, which describes a
+service contract:
+
++--------------------------------------
+<element name="GetFlightsRequest">
+  <complexType>
+    <all>
+      <element name="departureDate" type="date"/>
+      <element name="from" type="string"/>
+      <element name="to" type="string"/>
+    </all>
+  </complexType>
+</element>
++--------------------------------------
+
+    This contract defines a request that takes an <<<date>>>, which is a XSD datatype representing a year, month, and
+day. If we call this service from Java, we will probably use a <<<java.util.Data>>> or 
+<<<java.util.Calendar>>>. However, both of these classes actually describe times, rather than dates. So, we will 
+actually send data that represents the fourth of April 2007 at midnight (<<<2007-04-04T00:00:00>>>), which is not
+the same as the fourth of April 2007 (<<<2007-04-04>>>).
+
+** Cyclic graphs
+
+    Imagine we have the following simple class structure:
+
++--------------------------------------
+public class Flight {
+  private String number;
+  private List<Passenger> passengers;
+    
+  // getters and setters omitted
+}
+
+public class Passenger {
+  private String name;
+  private Flight flight;
+    
+  // getters and setters omitted
+}
++--------------------------------------
+
+    This is a cyclic graph: the <<<Flight>>> refers to the <<<Passenger>>>, which refers to the <<<Flight>>> again. 
+Cyclic graphs like these are quite common in Java. If we took a naive approach to converting this to XML, we will end up
+with something like:
+
++--------------------------------------
+<flight number="KL1117">
+  <passengers>
+    <passenger>
+      <name>Arjen Poutsma</name>
+      <flight number="KL1117">
+        <passengers>
+          <passenger>
+            <name>Arjen Poutsma</name>
+            <flight number="KL1117">
+              <passengers>
+                <passenger>
+                   <name>Arjen Poutsma</name>
+                   ...
++--------------------------------------
+                   
+    which will take a pretty long time to finish, because there is no stop condition for this loop.
+
+    One way to solve this problem is to use references to objects that were already marshalled, like so:
+
++--------------------------------------
+<flight number="KL1117">
+  <passengers>
+    <passenger>
+      <name>Arjen Poutsma</name>
+      <flight href="KL1117" />
+    </passenger>
+    ...
+  </passengers>
+</flight>
++--------------------------------------
+
+    This solves the recursiveness problem, but introduces new ones. For one, you cannot use an XML validator to validate 
+this structure. Another issue is that the standard way to use these references in the SOAP (RPC/encoded) has been 
+deprecated in favor of document/literal.                
+
+    These are just a few of the problems when dealing with O/X mapping. It is important to respect these issues when 
+writing Web services. The best way to respect them is to focus on the XML completely, while using Java as an
+implementation language. This is what contract-first is all about.
+
+* Contract-first versus Contract-last
+
+    Besides the Object/XML Mapping issues mentioned in the previous section, there are other reasons for preferring a 
+contract-first development style.
+
+** Fragility
+
+    If you use a contract-last development style, you will have no guarantee that the contract stays constant over time. 
+Each redeployment of the service can possibly result in a different contract. Additionally, an upgrade of the SOAP stack
+used, or a migration to a different SOAP stack can also change said contract.
+
+    In order for a contract to be useful, it must remain constant for as long as possible. If a contract changes, you 
+will have to contact all of the users of your service, and instruct them to get the new version of the contract.
+
+** Performance
+
+    When Java is automatically transformed into XML, there is no way to be sure as to what is sent across the wire. 
+An object might reference another object, which refers to another, etc. In the end, half of your virtual machine 
+might be converted into XML, which will result in a slow service. 
+
+    When using contract-first, you explicitly describe what XML is sent where, thus making sure that it is exactly what 
+you want.
+
+** Versioning
+
+    Even though a contract must remain constant for as long as possible, they <do> need to be changed sometimes. 
+In Java, this typically result in a new Java interface, such as <<<AirlineService2>>>, and a (new) implementation of 
+that interface. Of course, the old service must be kept around, because there might be clients who have not migrated 
+yet.
+
+    If using contract-first, we can have a looser coupling between contract and implementation. Such a looser coupling
+allows us to implement both versions of the contract in one class. We could, for instance, use an XSLT to convert any 
+"old-style" messages to the "new-style" messages.

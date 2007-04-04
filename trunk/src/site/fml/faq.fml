@@ -36,8 +36,7 @@
                     <tt>
                         /System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/.compatibility/14compatibility.jar
                     </tt>
-                    .
-                    You can safely remove or rename it, and the tests will run again.
+                    . You can safely remove or rename it, and the tests will run again.
                 </p>
             </answer>
         </faq>
@@ -47,14 +46,23 @@
         <faq id="whats-saaj">
             <question>What is SAAJ?</question>
             <answer>
-                SAAJ is the SOAP with Attachments API for Java. Previously, it has been part of JAXM, but it has been
-                released as a seperate API as part of the
-                <a href="http://java.sun.com/webservices/jwsdp/index.jsp">Java Web Service
-                    Developer Pack
-                </a>
-                , and also as part of J2EE 1.4. SAAJ is generally known as the package
-                <tt>javax.xml.soap</tt>
-                .
+                <p>
+                    SAAJ is the SOAP with Attachments API for Java. Previously, it has been part of JAXM, but it has
+                    been
+                    released as a seperate API as part of the
+                    <a href="http://java.sun.com/webservices/jwsdp/index.jsp">Java Web Service
+                        Developer Pack
+                    </a>
+                    , and also as part of J2EE 1.4. SAAJ is generally known as the package
+                    <tt>javax.xml.soap</tt>
+                    .
+                </p>
+                <p>
+                    Spring-WS uses this standard SAAJ library to create representations of SOAP messages. Alternatively,
+                    it can use
+                    <a href="http://ws.apache.org/commons/axiom/index.html">Apache AXIOM</a>
+                    .
+                </p>
             </answer>
         </faq>
         <faq id="saaj-versions">
@@ -94,16 +102,17 @@
             </question>
             <answer>
                 <p>If you get the following stack trace:</p>
-<pre>
-org.springframework.beans.factory.BeanCreationException:
-  Error creating bean with name 'org.springframework.ws.soap.saaj.SaajSoapMessageContextFactory'
-  defined in ServletContext resource [/WEB-INF/springws-servlet.xml]:
-  Invocation of init method failed;
-nested exception is java.lang.NoSuchMethodError: 
-  javax.xml.soap.MessageFactory.newInstance(Ljava/lang/String;)Ljavax/xml/soap/MessageFactory;
-Caused by:
-  java.lang.NoSuchMethodError: javax.xml.soap.MessageFactory.newInstance(Ljava/lang/String;)Ljavax/xml/soap/MessageFactory;
-</pre>
+                <pre>
+                    org.springframework.beans.factory.BeanCreationException:
+                    Error creating bean with name 'org.springframework.ws.soap.saaj.SaajSoapMessageContextFactory'
+                    defined in ServletContext resource [/WEB-INF/springws-servlet.xml]:
+                    Invocation of init method failed;
+                    nested exception is java.lang.NoSuchMethodError:
+                    javax.xml.soap.MessageFactory.newInstance(Ljava/lang/String;)Ljavax/xml/soap/MessageFactory;
+                    Caused by:
+                    java.lang.NoSuchMethodError:
+                    javax.xml.soap.MessageFactory.newInstance(Ljava/lang/String;)Ljavax/xml/soap/MessageFactory;
+                </pre>
                 <p>
                     Like most J2EE libraries, SAAJ consists of two parts: the API that consists of interfaces (
                     <tt>saaj-api.jar</tt>
@@ -124,6 +133,22 @@ Caused by:
     </part>
     <part id="wsdl">
         <title>WSDL</title>
+        <faq id="why-contract-first">
+            <question>Why does Spring-WS only support contract-first?</question>
+            <answer>
+                <p>
+                    You can find the answer to this question on
+                    <a href="http://static.springframework.org/spring-ws/site/why-contract-first.html">a separate page
+                    </a>
+                    .
+                </p>
+                <p>
+                    Note that Spring-WS only requires you to write the XSD; the WSDL can be generated from that.
+                    <a href="http://static.springframework.org/spring-ws/site/tutorial/tutorial2.html">The tutorial</a>
+                    illustrates how.
+                </p>
+            </answer>
+        </faq>
         <faq id="wsdl-retrieve">
             <question>How do I retrieve the WSDL from a Service? The &amp;WSDL query parameter does not work.</question>
             <answer>

@@ -28,6 +28,7 @@
             <item name="Reference"
                 href="http://static.springframework.org/spring-ws/docs/1.0-m3/reference/html/index.html"/>
             <item name="FAQ" href="faq.html"/>
+            <item name="Why Contract-First?" href="why-contract-first.html"/>
             <item name="Upgrading" href="upgrading.html"/>
             <item name="Tutorial" href="tutorial/tutorial1.html"/>
             <item name="Resources &amp; Tools" href="resources.html"/>
