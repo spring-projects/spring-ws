@@ -10,17 +10,23 @@
     </display-name>
     <description>Returns a given string(only A-Z and a-z chars allowed). See echo.xsd file.</description>
 
-    <!-- Starts the web service servlet. -->
+    <!-- Defines the Spring-WS MessageDispatcherServlet -->
     <servlet>
         <servlet-name>spring-ws</servlet-name>
         <servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
     </servlet>
 
-    <!-- We map all service request to the springws servlet. -->
+    <!-- Map all requests to this servlet -->
     <servlet-mapping>
         <servlet-name>spring-ws</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
+
+    <!-- Indicates that we want to transform the location attributes in WSDLs-->
+    <context-param>
+        <param-name>transformWsdlLocations</param-name>
+        <param-value>true</param-value>
+    </context-param>
 
     <mime-mapping>
         <extension>wsdl</extension>
