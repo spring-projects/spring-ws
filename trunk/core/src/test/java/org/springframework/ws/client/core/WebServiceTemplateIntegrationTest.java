@@ -41,7 +41,7 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
         jettyServer.start();
         template = new WebServiceTemplate();
         HttpUrlConnectionMessageSender messageSender = new HttpUrlConnectionMessageSender();
-        messageSender.setUrl(new URL("http://localhost:8085/"));
+        messageSender.setUrl(new URL("http://localhost:8888/"));
         template.setMessageSender(messageSender);
     }
 
