@@ -62,6 +62,7 @@ public abstract class AbstractHttpWebServiceMessageSenderTestCase extends XMLTes
         jettyServer = new Server(8888);
         jettyContext = new Context(jettyServer, "/");
         messageSender = createMessageSender();
+        messageSender.setUrl(new URL("http://localhost:8888/"));
         XMLUnit.setIgnoreWhitespace(true);
     }
 
@@ -85,7 +86,6 @@ public abstract class AbstractHttpWebServiceMessageSenderTestCase extends XMLTes
         jettyContext
                 .addServlet(new ServletHolder(new MyServlet(true, HttpServletResponse.SC_INTERNAL_SERVER_ERROR)), "/");
         jettyServer.start();
-        messageSender.setUrl(new URL("http://localhost:8085/"));
         FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) messageSender.createConnection();
         try {
             TransportOutputStream tos = connection.getTransportOutputStream();
@@ -103,7 +103,6 @@ public abstract class AbstractHttpWebServiceMessageSenderTestCase extends XMLTes
     private void validateResponse(Servlet servlet) throws Exception {
         jettyContext.addServlet(new ServletHolder(servlet), "/");
         jettyServer.start();
-        messageSender.setUrl(new URL("http://localhost:8085/"));
         FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) messageSender.createConnection();
         try {
             TransportOutputStream tos = connection.getTransportOutputStream();
@@ -148,7 +147,6 @@ public abstract class AbstractHttpWebServiceMessageSenderTestCase extends XMLTes
         jettyContext.addServlet(new ServletHolder(servlet), "/");
         jettyServer.start();
 
-        messageSender.setUrl(new URL("http://localhost:8085/"));
         WebServiceConnection connection = messageSender.createConnection();
         try {
             TransportOutputStream tos = connection.getTransportOutputStream();
