@@ -35,12 +35,21 @@ import org.springframework.ws.transport.WebServiceConnection;
  */
 public class HttpUrlConnectionMessageSender extends AbstractHttpWebServiceMessageSender {
 
+    private static final String HTTP_METHOD_POST = "POST";
+
     public WebServiceConnection createConnection() throws IOException {
-        URLConnection con = getUrl().openConnection();
-        if (!(con instanceof HttpURLConnection)) {
+        URLConnection connection = getUrl().openConnection();
+        if (!(connection instanceof HttpURLConnection)) {
             throw new HttpTransportException("URL [" + getUrl() + "] is not an HTTP URL");
         }
-        return new HttpUrlConnectionWebServiceConnection((HttpURLConnection) con);
+        else {
+            HttpURLConnection httpURLConnection = (HttpURLConnection) connection;
+            httpURLConnection.setRequestMethod(HTTP_METHOD_POST);
+            httpURLConnection.setUseCaches(false);
+            httpURLConnection.setDoInput(true);
+            httpURLConnection.setDoOutput(true);
+            return new HttpUrlConnection(httpURLConnection);
+        }
     }
 
 }

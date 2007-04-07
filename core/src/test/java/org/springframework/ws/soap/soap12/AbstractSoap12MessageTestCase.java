@@ -25,7 +25,7 @@ import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.Resource;
 import org.springframework.ws.soap.AbstractSoapMessageTestCase;
 import org.springframework.ws.soap.SoapVersion;
-import org.springframework.ws.transport.StubTransportOutputStream;
+import org.springframework.ws.transport.MockTransportOutputStream;
 
 public abstract class AbstractSoap12MessageTestCase extends AbstractSoapMessageTestCase {
 
@@ -47,7 +47,7 @@ public abstract class AbstractSoap12MessageTestCase extends AbstractSoapMessageT
 
     public void testWriteToTransportResponse() throws Exception {
         final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        StubTransportOutputStream tos = new StubTransportOutputStream(bos);
+        MockTransportOutputStream tos = new MockTransportOutputStream(bos);
         soapMessage.writeTo(tos);
         String result = bos.toString("UTF-8");
 
@@ -60,7 +60,7 @@ public abstract class AbstractSoap12MessageTestCase extends AbstractSoapMessageT
         InputStreamSource inputStreamSource = new ByteArrayResource("contents".getBytes("UTF-8"));
         soapMessage.addAttachment(inputStreamSource, "text/plain");
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        StubTransportOutputStream tos = new StubTransportOutputStream(bos);
+        MockTransportOutputStream tos = new MockTransportOutputStream(bos);
         soapMessage.writeTo(tos);
         String contentType = (String) tos.getHeaders().get("Content-Type");
         assertTrue("Invalid Content-Type set", contentType.indexOf(SoapVersion.SOAP_12.getContentType()) != -1);

@@ -24,7 +24,7 @@ import org.springframework.ws.soap.AbstractSoapMessageFactoryTestCase;
 import org.springframework.ws.soap.Attachment;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
-import org.springframework.ws.transport.StubTransportInputStream;
+import org.springframework.ws.transport.MockTransportInputStream;
 import org.springframework.ws.transport.TransportInputStream;
 
 public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapMessageFactoryTestCase {
@@ -42,7 +42,7 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
         headers.setProperty("Content-Type", "text/xml");
         String soapAction = "http://springframework.org/spring-ws/Action";
         headers.setProperty("SOAPAction", soapAction);
-        TransportInputStream tis = new StubTransportInputStream(is, headers);
+        TransportInputStream tis = new MockTransportInputStream(is, headers);
 
         WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
         assertTrue("Not a SoapMessage", message instanceof SoapMessage);
@@ -56,7 +56,7 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
         Properties headers = new Properties();
         headers.setProperty("Content-Type",
                 "multipart/related; type=\"text/xml\"; boundary=\"----=_Part_0_11416420.1149699787554\"");
-        TransportInputStream tis = new StubTransportInputStream(is, headers);
+        TransportInputStream tis = new MockTransportInputStream(is, headers);
 
         WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
         assertTrue("Not a SoapMessage", message instanceof SoapMessage);

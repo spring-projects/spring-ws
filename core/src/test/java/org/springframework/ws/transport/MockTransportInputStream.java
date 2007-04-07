@@ -24,13 +24,13 @@ import java.util.Map;
 
 import org.springframework.util.Assert;
 
-public class StubTransportInputStream extends TransportInputStream {
+public class MockTransportInputStream extends TransportInputStream {
 
     private Map headers;
 
     private InputStream inputStream;
 
-    public StubTransportInputStream(InputStream inputStream, Map headers) {
+    public MockTransportInputStream(InputStream inputStream, Map headers) {
         Assert.notNull(inputStream, "inputStream must not be null");
         Assert.notNull(headers, "headers must not be null");
         this.inputStream = inputStream;

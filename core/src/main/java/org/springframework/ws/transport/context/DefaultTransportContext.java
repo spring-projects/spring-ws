@@ -16,8 +16,7 @@
 
 package org.springframework.ws.transport.context;
 
-import org.springframework.ws.transport.TransportInputStream;
-import org.springframework.ws.transport.TransportOutputStream;
+import org.springframework.ws.transport.WebServiceConnection;
 
 /**
  * Default implementation of the <code>TransportContext</code> interface.
@@ -26,24 +25,15 @@ import org.springframework.ws.transport.TransportOutputStream;
  */
 public class DefaultTransportContext implements TransportContext {
 
-    private final TransportInputStream transportInputStream;
+    private final WebServiceConnection connection;
 
-    private final TransportOutputStream transportOutputStream;
-
-    /**
-     * Creates a new <code>DefaultTransportContext</code> that exposes the given streams.
-     */
-    public DefaultTransportContext(TransportInputStream transportInputStream,
-                                   TransportOutputStream transportOutputStream) {
-        this.transportInputStream = transportInputStream;
-        this.transportOutputStream = transportOutputStream;
+    /** Creates a new <code>DefaultTransportContext</code> that exposes the given connection. */
+    public DefaultTransportContext(WebServiceConnection connection) {
+        this.connection = connection;
     }
 
-    public TransportInputStream getTransportInputStream() {
-        return transportInputStream;
+    public WebServiceConnection getConnection() {
+        return connection;
     }
 
-    public TransportOutputStream getTransportOutputStream() {
-        return transportOutputStream;
-    }
 }

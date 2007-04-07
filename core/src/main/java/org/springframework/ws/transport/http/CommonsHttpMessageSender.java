@@ -19,8 +19,10 @@ package org.springframework.ws.transport.http;
 import java.io.IOException;
 
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpConnectionManager;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.transport.WebServiceConnection;
 
@@ -34,7 +36,7 @@ import org.springframework.ws.transport.WebServiceConnection;
  * @author Arjen Poutsma
  * @see org.springframework.ws.transport.http.HttpUrlConnectionMessageSender
  */
-public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSender {
+public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSender implements DisposableBean {
 
     private HttpClient httpClient;
 
@@ -60,23 +62,26 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
         this.httpClient = httpClient;
     }
 
-    /**
-     * Returns the <code>HttpClient</code> used by this message sender.
-     */
+    public void destroy() throws Exception {
+        HttpConnectionManager connectionManager = httpClient.getHttpConnectionManager();
+        if (connectionManager instanceof MultiThreadedHttpConnectionManager) {
+            ((MultiThreadedHttpConnectionManager) connectionManager).shutdown();
+        }
+    }
+
+    /** Returns the <code>HttpClient</code> used by this message sender. */
     public HttpClient getHttpClient() {
         return httpClient;
     }
 
-    /**
-     * Set the <code>HttpClient</code> used by this message sender.
-     */
+    /** Set the <code>HttpClient</code> used by this message sender. */
     public void setHttpClient(HttpClient httpClient) {
         this.httpClient = httpClient;
     }
 
     public WebServiceConnection createConnection() throws IOException {
         PostMethod method = new PostMethod(getUrl().toString());
-        return new CommonsHttpWebServiceConnection(getHttpClient(), method);
+        return new CommonsHttpConnection(getHttpClient(), method);
     }
 
 }

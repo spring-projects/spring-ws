@@ -16,6 +16,8 @@
 
 package org.springframework.ws.transport.support;
 
+import java.io.IOException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -27,6 +29,7 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.ws.transport.TransportOutputStream;
+import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
 import org.springframework.ws.transport.context.DefaultTransportContext;
 import org.springframework.ws.transport.context.TransportContext;
@@ -34,30 +37,24 @@ import org.springframework.ws.transport.context.TransportContextHolder;
 
 /**
  * Convenience base class for server-side transport objects. Contains a {@link WebServiceMessageFactory}, and has
- * methods for handling incoming <code>WebServiceMessage</code> requests.
+ * methods for handling incoming {@link WebServiceConnection}s.
  *
  * @author Arjen Poutsma
- * @see #handle(org.springframework.ws.transport.TransportInputStream,org.springframework.ws.transport.TransportOutputStream,org.springframework.ws.transport.WebServiceMessageReceiver)
+ * @see #handleConnection
  */
 public abstract class WebServiceMessageReceiverObjectSupport implements InitializingBean {
 
-    /**
-     * Logger available to subclasses.
-     */
+    /** Logger available to subclasses. */
     protected final Log logger = LogFactory.getLog(getClass());
 
     private WebServiceMessageFactory messageFactory;
 
-    /**
-     * Returns the <code>WebServiceMessageFactory</code>.
-     */
+    /** Returns the <code>WebServiceMessageFactory</code>. */
     public WebServiceMessageFactory getMessageFactory() {
         return messageFactory;
     }
 
-    /**
-     * Sets the <code>WebServiceMessageFactory</code>.
-     */
+    /** Sets the <code>WebServiceMessageFactory</code>. */
     public void setMessageFactory(WebServiceMessageFactory messageFactory) {
         this.messageFactory = messageFactory;
     }
@@ -67,66 +64,92 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
         logger.info("Using message factory [" + messageFactory + "]");
     }
 
-    protected final void handle(TransportInputStream tis, TransportOutputStream tos, WebServiceMessageReceiver receiver)
+    /**
+     * Handles an incoming connection by reading a message from the connection input stream, passing it to the receiver,
+     * and writing the response (if any) to the output stream.
+     * <p/>
+     * Stores the given connection in the transport context.
+     *
+     * @param connection the incoming connection
+     * @param receiver   the handler of the message, typically a {@link org.springframework.ws.server.MessageDispatcher}
+     * @see org.springframework.ws.transport.context.TransportContext
+     */
+    protected final void handleConnection(WebServiceConnection connection, WebServiceMessageReceiver receiver)
             throws Exception {
         TransportContext previousTransportContext = TransportContextHolder.getTransportContext();
-        TransportContextHolder.setTransportContext(new DefaultTransportContext(tis, tos));
+        TransportContextHolder.setTransportContext(new DefaultTransportContext(connection));
 
         try {
-            WebServiceMessage messageRequest = getMessageFactory().createWebServiceMessage(tis);
-            MessageContext messageContext = new DefaultMessageContext(messageRequest, getMessageFactory());
+            MessageContext messageContext = handleRequest(connection);
             receiver.receive(messageContext);
             if (!messageContext.hasResponse()) {
-                handleNoResponse(tis, tos);
+                handleNoResponse(connection);
             }
             else {
-                handleResponse(tis, tos, messageContext.getResponse());
+                handleResponse(connection, messageContext.getResponse());
             }
         }
         catch (NoEndpointFoundException ex) {
-            handleNoEndpointFound(tis, tos);
+            handleNoEndpointFound(connection);
         }
         finally {
+            try {
+                connection.close();
+            }
+            catch (IOException ex) {
+                logger.debug("Could not close connection", ex);
+            }
             TransportContextHolder.setTransportContext(previousTransportContext);
         }
     }
 
-    /**
-     * Invoked from {@link #handle(org.springframework.ws.transport.TransportInputStream,org.springframework.ws.transport.TransportOutputStream,org.springframework.ws.transport.WebServiceMessageReceiver)}
-     * when no response is given. Default implementation does nothing. Can be overriden to set certain
-     * transport-specific response headers.
-     *
-     * @param tis the transport input stream
-     * @param tos the transport output stream
-     */
-    protected void handleNoResponse(TransportInputStream tis, TransportOutputStream tos) {
+    private MessageContext handleRequest(WebServiceConnection connection) throws IOException {
+        TransportInputStream tis = connection.getTransportInputStream();
+        try {
+            WebServiceMessage messageRequest = getMessageFactory().createWebServiceMessage(tis);
+            return new DefaultMessageContext(messageRequest, getMessageFactory());
+        }
+        finally {
+            tis.close();
+        }
     }
 
     /**
-     * Handles the sending of the response. Invoked from {@link #handle(org.springframework.ws.transport.TransportInputStream,org.springframework.ws.transport.TransportOutputStream,org.springframework.ws.transport.WebServiceMessageReceiver)}.
-     * Default implementation writes the given response to the given <code>TransportOutputStream</code>. Can be
-     * overriden to set certain transport-specific headers.
+     * Invoked from {@link #handleConnection} when no response is given. Default implementation does nothing. Can be
+     * overriden to set certain transport-specific response headers.
      *
-     * @param tis      the transport input stream
-     * @param tos      the transport output stream
-     * @param response the response message
+     * @param connection the incoming connection
+     */
+    protected void handleNoResponse(WebServiceConnection connection) {
+    }
+
+    /**
+     * Handles the sending of the response. Invoked from {@link #handleConnection}. Default implementation writes the
+     * given response to the given <code>TransportOutputStream</code>. Can be overriden to set certain
+     * transport-specific headers.
+     *
+     * @param connection the incoming connection
+     * @param response   the response message
      * @see WebServiceMessage#writeTo(java.io.OutputStream)
      */
-    protected void handleResponse(TransportInputStream tis, TransportOutputStream tos, WebServiceMessage response)
-            throws Exception {
-        response.writeTo(tos);
-        tos.flush();
+    protected void handleResponse(WebServiceConnection connection, WebServiceMessage response) throws Exception {
+        TransportOutputStream tos = connection.getTransportOutputStream();
+        try {
+            response.writeTo(tos);
+            tos.flush();
+        }
+        finally {
+            tos.close();
+        }
     }
 
     /**
-     * Invoked from {@link #handle(org.springframework.ws.transport.TransportInputStream,org.springframework.ws.transport.TransportOutputStream,org.springframework.ws.transport.WebServiceMessageReceiver)}
-     * when no suitable endpoint is found. Default implementation does nothing. Can be overriden to set certain
-     * transport-specific response headers.
+     * Invoked from {@link #handleConnection} when no suitable endpoint is found. Default implementation does nothing.
+     * Can be overriden to set certain transport-specific response headers.
      *
-     * @param tis the transport input stream
-     * @param tos the transport output stream
+     * @param connection the incoming connection
      */
-    protected void handleNoEndpointFound(TransportInputStream tis, TransportOutputStream tos) {
+    protected void handleNoEndpointFound(WebServiceConnection connection) {
     }
 
 }

@@ -16,7 +16,6 @@
 
 package org.springframework.ws.transport.http;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.TestCase;
@@ -53,10 +52,13 @@ public class WebServiceMessageReceiverHandlerAdapterTest extends TestCase {
 
     private WebServiceMessage requestMock;
 
+    private HttpServletConnection connection;
+
     protected void setUp() throws Exception {
         adapter = new WebServiceMessageReceiverHandlerAdapter();
         httpRequest = new MockHttpServletRequest();
         httpResponse = new MockHttpServletResponse();
+        connection = new HttpServletConnection(httpRequest, httpResponse);
         factoryControl = MockControl.createControl(WebServiceMessageFactory.class);
         factoryMock = (WebServiceMessageFactory) factoryControl.getMock();
         adapter.setMessageFactory(factoryMock);
@@ -73,13 +75,9 @@ public class WebServiceMessageReceiverHandlerAdapterTest extends TestCase {
             public void receive(MessageContext messageContext) throws Exception {
             }
         };
-        try {
-            adapter.handle(httpRequest, httpResponse, endpoint);
-            fail("ServletException expected");
-        }
-        catch (ServletException ex) {
-            // expected
-        }
+        adapter.handle(httpRequest, httpResponse, endpoint);
+        assertEquals("METHOD_NOT_ALLOWED expected", HttpServletResponse.SC_METHOD_NOT_ALLOWED,
+                httpResponse.getStatus());
         verifyMockControls();
     }
 
@@ -88,7 +86,7 @@ public class WebServiceMessageReceiverHandlerAdapterTest extends TestCase {
         httpRequest.setContent(REQUEST.getBytes("UTF-8"));
         httpRequest.setContentType("text/xml; charset=\"utf-8\"");
         httpRequest.setCharacterEncoding("UTF-8");
-        factoryMock.createWebServiceMessage(new HttpServletTransportInputStream(httpRequest));
+        factoryMock.createWebServiceMessage(connection.getTransportInputStream());
         factoryControl.setMatcher(MockControl.ALWAYS_MATCHER);
         factoryControl.setReturnValue(responseMock);
 
@@ -101,7 +99,7 @@ public class WebServiceMessageReceiverHandlerAdapterTest extends TestCase {
 
         adapter.handle(httpRequest, httpResponse, endpoint);
 
-        assertEquals("Invalid status code on response", HttpServletResponse.SC_NO_CONTENT, httpResponse.getStatus());
+        assertEquals("Invalid status code on response", HttpServletResponse.SC_ACCEPTED, httpResponse.getStatus());
         assertEquals("Response written", 0, httpResponse.getContentAsString().length());
         verifyMockControls();
     }
@@ -111,12 +109,12 @@ public class WebServiceMessageReceiverHandlerAdapterTest extends TestCase {
         httpRequest.setContent(REQUEST.getBytes("UTF-8"));
         httpRequest.setContentType("text/xml; charset=\"utf-8\"");
         httpRequest.setCharacterEncoding("UTF-8");
-        factoryMock.createWebServiceMessage(new HttpServletTransportInputStream(httpRequest));
+        factoryMock.createWebServiceMessage(connection.getTransportInputStream());
         factoryControl.setMatcher(MockControl.ALWAYS_MATCHER);
         factoryControl.setReturnValue(requestMock);
         factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), responseMock);
         messageControl.expectAndReturn(responseMock.hasFault(), false);
-        responseMock.writeTo(new HttpServletTransportOutputStream(httpResponse));
+        responseMock.writeTo(connection.getTransportOutputStream());
         messageControl.setMatcher(MockControl.ALWAYS_MATCHER);
 
         replayMockControls();
@@ -138,12 +136,12 @@ public class WebServiceMessageReceiverHandlerAdapterTest extends TestCase {
         httpRequest.setContent(REQUEST.getBytes("UTF-8"));
         httpRequest.setContentType("text/xml; charset=\"utf-8\"");
         httpRequest.setCharacterEncoding("UTF-8");
-        factoryMock.createWebServiceMessage(new HttpServletTransportInputStream(httpRequest));
+        factoryMock.createWebServiceMessage(connection.getTransportInputStream());
         factoryControl.setMatcher(MockControl.ALWAYS_MATCHER);
         factoryControl.setReturnValue(requestMock);
         factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), responseMock);
         messageControl.expectAndReturn(responseMock.hasFault(), true);
-        responseMock.writeTo(new HttpServletTransportOutputStream(httpResponse));
+        responseMock.writeTo(connection.getTransportOutputStream());
         messageControl.setMatcher(MockControl.ALWAYS_MATCHER);
 
         replayMockControls();
@@ -166,7 +164,7 @@ public class WebServiceMessageReceiverHandlerAdapterTest extends TestCase {
         httpRequest.setContent(REQUEST.getBytes("UTF-8"));
         httpRequest.setContentType("text/xml; charset=\"utf-8\"");
         httpRequest.setCharacterEncoding("UTF-8");
-        factoryMock.createWebServiceMessage(new HttpServletTransportInputStream(httpRequest));
+        factoryMock.createWebServiceMessage(connection.getTransportInputStream());
         factoryControl.setMatcher(MockControl.ALWAYS_MATCHER);
         factoryControl.setReturnValue(requestMock);
 

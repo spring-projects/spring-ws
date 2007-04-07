@@ -16,17 +16,20 @@
 
 package org.springframework.ws.client.core;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
+import java.util.Collections;
 
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.easymock.MockControl;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
+import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.WebServiceMessageFactory;
-import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.transport.FaultAwareWebServiceConnection;
+import org.springframework.ws.transport.MockTransportInputStream;
+import org.springframework.ws.transport.MockTransportOutputStream;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.xml.transform.StringResult;
@@ -34,38 +37,29 @@ import org.springframework.xml.transform.StringSource;
 
 public class WebServiceTemplateTest extends XMLTestCase {
 
-    private static final WebServiceMessageExtractor SIMPLE_EXTRACTOR = new WebServiceMessageExtractor() {
-
-        public Object extractData(WebServiceMessage message) throws IOException {
-            return message;
-        }
-    };
-
     private WebServiceTemplate template;
 
-    private MockControl factoryControl;
+    private MockControl connectionControl;
 
-    private WebServiceMessageFactory factoryMock;
-
-    private MockControl messageControl;
-
-    private WebServiceMessage requestMock;
-
-    private WebServiceMessage responseMock;
+    private FaultAwareWebServiceConnection connectionMock;
 
     protected void setUp() throws Exception {
         template = new WebServiceTemplate();
-        factoryControl = MockControl.createControl(WebServiceMessageFactory.class);
-        factoryMock = (WebServiceMessageFactory) factoryControl.getMock();
-        template.setMessageFactory(factoryMock);
-        messageControl = MockControl.createControl(WebServiceMessage.class);
-        requestMock = (WebServiceMessage) messageControl.getMock();
-        responseMock = (WebServiceMessage) messageControl.getMock();
+        MockWebServiceMessageFactory messageFactory = new MockWebServiceMessageFactory();
+        template.setMessageFactory(messageFactory);
+        connectionControl = MockControl.createStrictControl(FaultAwareWebServiceConnection.class);
+        connectionMock = (FaultAwareWebServiceConnection) connectionControl.getMock();
+        template.setMessageSender(new WebServiceMessageSender() {
+
+            public WebServiceConnection createConnection() throws IOException {
+                return connectionMock;
+            }
+        });
+
     }
 
     public void testMarshalAndSendNoMarshallerSet() throws Exception {
         template.setMarshaller(null);
-        replayMockControls();
         try {
             template.marshalSendAndReceive(new Object());
             fail("IllegalStateException expected");
@@ -73,12 +67,10 @@ public class WebServiceTemplateTest extends XMLTestCase {
         catch (IllegalStateException ex) {
             // expected behavior
         }
-        verifyMockControls();
     }
 
     public void testMarshalAndSendNoUnmarshallerSet() throws Exception {
         template.setUnmarshaller(null);
-        replayMockControls();
         try {
             template.marshalSendAndReceive(new Object());
             fail("IllegalStateException expected");
@@ -86,209 +78,213 @@ public class WebServiceTemplateTest extends XMLTestCase {
         catch (IllegalStateException ex) {
             // expected behavior
         }
-        verifyMockControls();
     }
 
     public void testSendAndReceiveMessageResponse() throws Exception {
-        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), requestMock);
-        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), responseMock);
-        messageControl.expectAndReturn(responseMock.hasFault(), false);
-        template.setMessageSender(new ResponseMessageSender());
-        replayMockControls();
-        WebServiceMessage response = (WebServiceMessage) template.sendAndReceive(new WebServiceMessageCallback() {
-            public void doInMessage(WebServiceMessage message) throws IOException {
-                assertEquals("Invalid request message", requestMock, message);
-            }
-        }, SIMPLE_EXTRACTOR);
-        assertEquals("Invalid response", responseMock, response);
-        verifyMockControls();
+        MockControl callbackControl = MockControl.createControl(WebServiceMessageCallback.class);
+        WebServiceMessageCallback requestCallback = (WebServiceMessageCallback) callbackControl.getMock();
+        requestCallback.doInMessage(null);
+        callbackControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        callbackControl.replay();
+
+        MockControl extractorControl = MockControl.createControl(WebServiceMessageExtractor.class);
+        WebServiceMessageExtractor extractorMock = (WebServiceMessageExtractor) extractorControl.getMock();
+        extractorMock.extractData(null);
+        extractorControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        Object extracted = new Object();
+        extractorControl.setReturnValue(extracted);
+        extractorControl.replay();
+
+        connectionControl.expectAndReturn(connectionMock.getTransportOutputStream(),
+                new MockTransportOutputStream(new ByteArrayOutputStream()));
+        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(), new MockTransportInputStream(
+                new ByteArrayInputStream("<response/>".getBytes("UTF-8")), Collections.EMPTY_MAP));
+        connectionControl.expectAndReturn(connectionMock.hasFault(), false);
+        connectionMock.close();
+        connectionControl.replay();
+
+        Object result = template.sendAndReceive(requestCallback, extractorMock);
+        assertEquals("Invalid response", extracted, result);
+
+        callbackControl.verify();
+        extractorControl.verify();
+        connectionControl.verify();
+
     }
 
     public void testSendAndReceiveMessageNoResponse() throws Exception {
-        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), requestMock);
-        template.setMessageSender(new NoResponseMessageSender());
-        replayMockControls();
-        WebServiceMessage response = (WebServiceMessage) template.sendAndReceive(new WebServiceMessageCallback() {
-            public void doInMessage(WebServiceMessage message) throws IOException {
-                assertEquals("Invalid request message", requestMock, message);
-            }
-        }, SIMPLE_EXTRACTOR);
-        assertNull("No response", response);
-        verifyMockControls();
+        MockControl callbackControl = MockControl.createControl(WebServiceMessageCallback.class);
+        WebServiceMessageCallback requestCallback = (WebServiceMessageCallback) callbackControl.getMock();
+        requestCallback.doInMessage(null);
+        callbackControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        callbackControl.replay();
+
+        MockControl extractorControl = MockControl.createControl(WebServiceMessageExtractor.class);
+        WebServiceMessageExtractor extractorMock = (WebServiceMessageExtractor) extractorControl.getMock();
+        extractorControl.replay();
+
+        connectionControl.expectAndReturn(connectionMock.getTransportOutputStream(),
+                new MockTransportOutputStream(new ByteArrayOutputStream()));
+        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(), null);
+        connectionMock.close();
+        connectionControl.replay();
+
+        Object result = (WebServiceMessage) template.sendAndReceive(requestCallback, extractorMock);
+        assertNull("Invalid response", result);
+        callbackControl.verify();
+        extractorControl.verify();
+        connectionControl.verify();
     }
 
-    public void testSendAndReceiveMessageFaultResponse() throws Exception {
-        MockControl resolverControl = MockControl.createControl(FaultResolver.class);
-        FaultResolver resolverMock = (FaultResolver) resolverControl.getMock();
-        template.setFaultResolver(resolverMock);
-        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), requestMock);
-        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), responseMock);
-        messageControl.expectAndReturn(responseMock.hasFault(), true);
-        resolverMock.resolveFault(responseMock);
-        template.setMessageSender(new ResponseMessageSender());
-        replayMockControls();
-        resolverControl.replay();
-        WebServiceMessage response = (WebServiceMessage) template.sendAndReceive(new WebServiceMessageCallback() {
-            public void doInMessage(WebServiceMessage message) throws IOException {
-                assertEquals("Invalid request message", requestMock, message);
-            }
-        }, SIMPLE_EXTRACTOR);
-        assertNull("Invalid response", response);
-        verifyMockControls();
-        resolverControl.verify();
+    public void testSendAndReceiveMessageFault() throws Exception {
+        MockControl callbackControl = MockControl.createControl(WebServiceMessageCallback.class);
+        WebServiceMessageCallback requestCallback = (WebServiceMessageCallback) callbackControl.getMock();
+        requestCallback.doInMessage(null);
+        callbackControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        callbackControl.replay();
+
+        MockControl extractorControl = MockControl.createControl(WebServiceMessageExtractor.class);
+        WebServiceMessageExtractor extractorMock = (WebServiceMessageExtractor) extractorControl.getMock();
+        extractorControl.replay();
+
+        MockControl faultResolverControl = MockControl.createControl(FaultResolver.class);
+        FaultResolver faultResolverMock = (FaultResolver) faultResolverControl.getMock();
+        template.setFaultResolver(faultResolverMock);
+        faultResolverMock.resolveFault(null);
+        faultResolverControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        faultResolverControl.replay();
+
+        connectionControl.expectAndReturn(connectionMock.getTransportOutputStream(),
+                new MockTransportOutputStream(new ByteArrayOutputStream()));
+        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(), new MockTransportInputStream(
+                new ByteArrayInputStream("<response/>".getBytes("UTF-8")), Collections.EMPTY_MAP));
+        connectionControl.expectAndReturn(connectionMock.hasFault(), true);
+        connectionMock.close();
+        connectionControl.replay();
+
+        Object result = template.sendAndReceive(requestCallback, extractorMock);
+        assertNull("Invalid response", result);
+
+        callbackControl.verify();
+        extractorControl.verify();
+        connectionControl.verify();
     }
 
-    public void testSendAndReceiveSourceExtractor() throws Exception {
-        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), requestMock);
-        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), responseMock);
-        messageControl.expectAndReturn(responseMock.hasFault(), false);
-        messageControl.expectAndReturn(requestMock.getPayloadResult(), new StringResult());
-        final Source expected = new StringSource("<response/>");
-        messageControl.expectAndReturn(responseMock.getPayloadSource(), expected);
-        template.setMessageSender(new ResponseMessageSender());
-        replayMockControls();
-        Object result = template.sendAndReceive(new StringSource("<request />"), new SourceExtractor() {
+    public void testSendAndReceiveSourceResponse() throws Exception {
+        MockControl extractorControl = MockControl.createControl(SourceExtractor.class);
+        SourceExtractor extractorMock = (SourceExtractor) extractorControl.getMock();
+        extractorMock.extractData(null);
+        extractorControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        Object extracted = new Object();
+        extractorControl.setReturnValue(extracted);
+        extractorControl.replay();
 
-            public Object extractData(Source source) throws IOException {
-                assertEquals("Invalid response", expected, source);
-                return null;
-            }
-        });
-        assertNull("Invalid result", result);
+        connectionControl.expectAndReturn(connectionMock.getTransportOutputStream(),
+                new MockTransportOutputStream(new ByteArrayOutputStream()));
+        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(), new MockTransportInputStream(
+                new ByteArrayInputStream("<response/>".getBytes("UTF-8")), Collections.EMPTY_MAP));
+        connectionControl.expectAndReturn(connectionMock.hasFault(), false);
+        connectionMock.close();
+        connectionControl.replay();
+
+        Object result = template.sendAndReceive(new StringSource("<request />"), extractorMock);
+        assertEquals("Invalid response", extracted, result);
+
+        extractorControl.verify();
+        connectionControl.verify();
     }
 
     public void testSendAndReceiveSourceNoResponse() throws Exception {
-        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), requestMock);
-        messageControl.expectAndReturn(requestMock.getPayloadResult(), new StringResult());
-        template.setMessageSender(new NoResponseMessageSender());
-        replayMockControls();
-        Object result = template.sendAndReceive(new StringSource("<request />"), new SourceExtractor() {
+        MockControl extractorControl = MockControl.createControl(SourceExtractor.class);
+        SourceExtractor extractorMock = (SourceExtractor) extractorControl.getMock();
+        extractorControl.replay();
 
-            public Object extractData(Source source) throws IOException {
-                assertNull("Invalid response", source);
-                return null;
-            }
-        });
-        assertNull("Invalid result", result);
+        connectionControl.expectAndReturn(connectionMock.getTransportOutputStream(),
+                new MockTransportOutputStream(new ByteArrayOutputStream()));
+        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(), null);
+        connectionMock.close();
+        connectionControl.replay();
+
+        Object result = template.sendAndReceive(new StringSource("<request />"), extractorMock);
+        assertNull("Invalid response", result);
+
+        extractorControl.verify();
+        connectionControl.verify();
     }
 
     public void testSendAndReceiveResultResponse() throws Exception {
-        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), requestMock);
-        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), responseMock);
-        messageControl.expectAndReturn(responseMock.hasFault(), false);
-        messageControl.expectAndReturn(requestMock.getPayloadResult(), new StringResult());
-        Source expected = new StringSource("<response/>");
-        messageControl.expectAndReturn(responseMock.getPayloadSource(), expected);
-        template.setMessageSender(new ResponseMessageSender());
-        replayMockControls();
-        Result result = new StringResult();
+        connectionControl.expectAndReturn(connectionMock.getTransportOutputStream(),
+                new MockTransportOutputStream(new ByteArrayOutputStream()));
+        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(), new MockTransportInputStream(
+                new ByteArrayInputStream("<response/>".getBytes("UTF-8")), Collections.EMPTY_MAP));
+        connectionControl.expectAndReturn(connectionMock.hasFault(), false);
+        connectionMock.close();
+        connectionControl.replay();
+
+        StringResult result = new StringResult();
         template.sendAndReceive(new StringSource("<request />"), result);
-        assertXMLEqual("Invalid response", "<response/>", result.toString());
+
+        connectionControl.verify();
     }
 
-    public void testSendAndReceiveMarshallResponse() throws Exception {
-        template.setMessageSender(new ResponseMessageSender());
+    public void testSendAndReceiveMarshalResponse() throws Exception {
         MockControl marshallerControl = MockControl.createControl(Marshaller.class);
         Marshaller marshallerMock = (Marshaller) marshallerControl.getMock();
         template.setMarshaller(marshallerMock);
+        marshallerMock.marshal(null, null);
+        marshallerControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        marshallerControl.replay();
+
         MockControl unmarshallerControl = MockControl.createControl(Unmarshaller.class);
         Unmarshaller unmarshallerMock = (Unmarshaller) unmarshallerControl.getMock();
         template.setUnmarshaller(unmarshallerMock);
-        Object request = new Object();
-        Object expected = new Object();
-        Result requestResult = new StringResult();
-        Source responseSource = new StringSource("");
-
-        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), requestMock);
-        messageControl.expectAndReturn(requestMock.getPayloadResult(), requestResult);
-        marshallerMock.marshal(request, requestResult);
-        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), responseMock);
-        messageControl.expectAndReturn(responseMock.hasFault(), false);
-        messageControl.expectAndReturn(responseMock.getPayloadSource(), responseSource);
-        unmarshallerControl.expectAndReturn(unmarshallerMock.unmarshal(responseSource), expected);
-
-        replayMockControls();
-        marshallerControl.replay();
+        unmarshallerMock.unmarshal(null);
+        unmarshallerControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        Object unmarshalled = new Object();
+        unmarshallerControl.setReturnValue(unmarshalled);
         unmarshallerControl.replay();
 
-        Object response = template.marshalSendAndReceive(request);
+        connectionControl.expectAndReturn(connectionMock.getTransportOutputStream(),
+                new MockTransportOutputStream(new ByteArrayOutputStream()));
+        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(), new MockTransportInputStream(
+                new ByteArrayInputStream("<response/>".getBytes("UTF-8")), Collections.EMPTY_MAP));
+        connectionControl.expectAndReturn(connectionMock.hasFault(), false);
+        connectionMock.close();
+        connectionControl.replay();
 
-        assertEquals("Invalid response", expected, response);
+        Object result = template.marshalSendAndReceive(new Object());
+        assertEquals("Invalid result", unmarshalled, result);
 
-        verifyMockControls();
+        connectionControl.verify();
         marshallerControl.verify();
         unmarshallerControl.verify();
     }
 
-    public void testSendAndReceiveMarshallNoResponse() throws Exception {
-        template.setMessageSender(new NoResponseMessageSender());
+    public void testSendAndReceiveMarshalNoResponse() throws Exception {
         MockControl marshallerControl = MockControl.createControl(Marshaller.class);
         Marshaller marshallerMock = (Marshaller) marshallerControl.getMock();
         template.setMarshaller(marshallerMock);
+        marshallerMock.marshal(null, null);
+        marshallerControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        marshallerControl.replay();
+
         MockControl unmarshallerControl = MockControl.createControl(Unmarshaller.class);
         Unmarshaller unmarshallerMock = (Unmarshaller) unmarshallerControl.getMock();
         template.setUnmarshaller(unmarshallerMock);
-        Object request = new Object();
-        Result requestResult = new StringResult();
+        unmarshallerControl.replay();
 
-        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), requestMock);
-        messageControl.expectAndReturn(requestMock.getPayloadResult(), requestResult);
-        marshallerMock.marshal(request, requestResult);
+        connectionControl.expectAndReturn(connectionMock.getTransportOutputStream(),
+                new MockTransportOutputStream(new ByteArrayOutputStream()));
+        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(), null);
+        connectionMock.close();
+        connectionControl.replay();
 
-        replayMockControls();
-        marshallerControl.replay();
+        Object result = template.marshalSendAndReceive(new Object());
+        assertNull("Invalid result", result);
 
-        Object response = template.marshalSendAndReceive(request);
-
-        assertNull("Invalid response", response);
-
-        verifyMockControls();
+        connectionControl.verify();
         marshallerControl.verify();
-    }
-
-    private void replayMockControls() {
-        factoryControl.replay();
-        messageControl.replay();
-    }
-
-    private void verifyMockControls() {
-        factoryControl.verify();
-        messageControl.verify();
-    }
-
-    private class NoResponseMessageSender implements WebServiceMessageSender {
-
-        public WebServiceConnection createConnection() throws IOException {
-            return new NoResponseConnection();
-        }
-    }
-
-    private class NoResponseConnection implements WebServiceConnection {
-
-        public void sendAndReceive(MessageContext messageContext) throws IOException {
-            assertEquals("Invalid request message", requestMock, messageContext.getRequest());
-        }
-
-        public void close() throws IOException {
-        }
-    }
-
-    private class ResponseMessageSender implements WebServiceMessageSender {
-
-        public WebServiceConnection createConnection() throws IOException {
-            return new ResponseConnection();
-        }
-    }
-
-    private class ResponseConnection implements WebServiceConnection {
-
-        public void sendAndReceive(MessageContext messageContext) throws IOException {
-            assertEquals("Invalid request message", requestMock, messageContext.getRequest());
-            messageContext.getResponse();
-        }
-
-        public void close() throws IOException {
-        }
+        unmarshallerControl.verify();
     }
 
 }
