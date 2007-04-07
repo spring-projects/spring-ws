@@ -59,7 +59,7 @@ public abstract class AbstractHttpWebServiceMessageSenderTestCase extends XMLTes
     private Context jettyContext;
 
     protected final void setUp() throws Exception {
-        jettyServer = new Server(8085);
+        jettyServer = new Server(9080);
         jettyContext = new Context(jettyServer, "/");
         messageSender = createMessageSender();
         XMLUnit.setIgnoreWhitespace(true);
