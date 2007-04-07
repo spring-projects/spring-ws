@@ -5,7 +5,6 @@
             <includes>
                 <include>readme.txt</include>
                 <include>license.txt</include>
-                <include>changelog.txt</include>
             </includes>
         </fileSet>
         <lineEnding>dos</lineEnding>
