@@ -31,6 +31,9 @@ import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.support.WebServiceAccessor;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.transport.FaultAwareWebServiceConnection;
+import org.springframework.ws.transport.TransportInputStream;
+import org.springframework.ws.transport.TransportOutputStream;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
 
@@ -76,44 +79,32 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
         setMessageSender(messageSender);
     }
 
-    /**
-     * Returns the marshaller for this template.
-     */
+    /** Returns the marshaller for this template. */
     public Marshaller getMarshaller() {
         return marshaller;
     }
 
-    /**
-     * Sets the marshaller for this template.
-     */
+    /** Sets the marshaller for this template. */
     public void setMarshaller(Marshaller marshaller) {
         this.marshaller = marshaller;
     }
 
-    /**
-     * Returns the unmarshaller for this template.
-     */
+    /** Returns the unmarshaller for this template. */
     public Unmarshaller getUnmarshaller() {
         return unmarshaller;
     }
 
-    /**
-     * Sets the unmarshaller for this template.
-     */
+    /** Sets the unmarshaller for this template. */
     public void setUnmarshaller(Unmarshaller unmarshaller) {
         this.unmarshaller = unmarshaller;
     }
 
-    /**
-     * Returns the fault resolver for this template.
-     */
+    /** Returns the fault resolver for this template. */
     public FaultResolver getFaultResolver() {
         return faultResolver;
     }
 
-    /**
-     * Sets the fault resolver for this template.
-     */
+    /** Sets the fault resolver for this template. */
     public void setFaultResolver(FaultResolver faultResolver) {
         Assert.notNull(faultResolver, "faultResolver must not be null");
         this.faultResolver = faultResolver;
@@ -185,36 +176,6 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     /*
      * Source-handling methods
      */
-/*
-    public Source sendAndReceive(final Source requestPayload) throws IOException {
-        return sendAndReceive(requestPayload, (WebServiceMessageCallback) null);
-    }
-*/
-
-    /*
-        public Source sendAndReceive(final Source requestPayload, final WebServiceMessageCallback requestCallback)
-                throws IOException {
-            return (Source) sendAndReceive(new WebServiceMessageCallback() {
-                public void doInMessage(WebServiceMessage message) throws IOException {
-                    try {
-                        Transformer transformer = createTransformer();
-                        transformer.transform(requestPayload, message.getPayloadResult());
-                        if (requestCallback != null) {
-                            requestCallback.doInMessage(message);
-                        }
-                    }
-                    catch (TransformerException ex) {
-                        throw new WebServiceClientException("Could not transform payload to request message", ex);
-                    }
-                }
-            }, new WebServiceMessageExtractor() {
-
-                public Object extractData(WebServiceMessage message) throws IOException {
-                    return message.getPayloadSource();
-                }
-            });
-        }
-    */
 
     public Object sendAndReceive(final Source requestPayload, final SourceExtractor responseExtractor)
             throws IOException {
@@ -254,8 +215,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     }
 
     /*
-    * WebServiceMessage-handling methods
-    */
+     * WebServiceMessage-handling methods
+     */
 
     public void sendAndReceive(WebServiceMessageCallback requestCallback, WebServiceMessageCallback responseCallback)
             throws IOException {
@@ -266,33 +227,64 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     public Object sendAndReceive(WebServiceMessageCallback requestCallback,
                                  WebServiceMessageExtractor responseExtractor) throws IOException {
         Assert.notNull(responseExtractor, "response extractor must not be null");
-        WebServiceConnection connection = getMessageSender().createConnection();
         MessageContext messageContext = createMessageContext();
+        WebServiceConnection connection = getMessageSender().createConnection();
         try {
+            WebServiceMessage request = messageContext.getRequest();
             if (requestCallback != null) {
-                requestCallback.doInMessage(messageContext.getRequest());
+                requestCallback.doInMessage(request);
             }
-            connection.sendAndReceive(messageContext);
-            if (!messageContext.hasResponse()) {
-                return null;
+            sendRequest(connection, messageContext);
+            TransportInputStream tis = connection.getTransportInputStream();
+            if (tis != null) {
+                try {
+                    messageContext.readResponse(tis);
+                    if (messageContext.hasResponse()) {
+                        WebServiceMessage response = messageContext.getResponse();
+                        if (!hasFault(connection, messageContext)) {
+                            // normal response
+                            return responseExtractor.extractData(response);
+                        }
+                        else {
+                            // fault response
+                            getFaultResolver().resolveFault(response);
+                        }
+                    }
+                }
+                finally {
+                    tis.close();
+                }
             }
-            WebServiceMessage response = messageContext.getResponse();
-            if (response.hasFault()) {
-                getFaultResolver().resolveFault(response);
-                return null;
-            }
-            else {
-                return responseExtractor.extractData(response);
-            }
+            return null;
         }
         finally {
             connection.close();
         }
     }
 
-    /**
-     * Adapter to enable use of a WebServiceMessageCallback inside a WebServiceMessageExtractor.
-     */
+    /** Sends the request in the given message context over the connection. */
+    private void sendRequest(WebServiceConnection connection, MessageContext messageContext) throws IOException {
+        TransportOutputStream tos = connection.getTransportOutputStream();
+        try {
+            messageContext.getRequest().writeTo(tos);
+            tos.flush();
+        }
+        finally {
+            tos.close();
+        }
+    }
+
+    /** Determines whether the given connection or message context has a fault. */
+    private boolean hasFault(WebServiceConnection connection, MessageContext messageContext) throws IOException {
+        if (connection instanceof FaultAwareWebServiceConnection) {
+            return ((FaultAwareWebServiceConnection) connection).hasFault();
+        }
+        else {
+            return messageContext.getResponse().hasFault();
+        }
+    }
+
+    /** Adapter to enable use of a WebServiceMessageCallback inside a WebServiceMessageExtractor. */
     private static class WebServiceMessageCallbackMessageExtractor implements WebServiceMessageExtractor {
 
         private final WebServiceMessageCallback callback;
@@ -307,9 +299,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
         }
     }
 
-    /**
-     * Adapter to enable use of a SourceExtractor inside a WebServiceMessageExtractor.
-     */
+    /** Adapter to enable use of a SourceExtractor inside a WebServiceMessageExtractor. */
     private static class SourceExtractorMessageExtractor implements WebServiceMessageExtractor {
 
         private final SourceExtractor sourceExtractor;

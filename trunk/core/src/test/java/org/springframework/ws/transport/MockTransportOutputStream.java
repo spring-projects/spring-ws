@@ -23,13 +23,13 @@ import java.util.Map;
 
 import org.springframework.util.Assert;
 
-public class StubTransportOutputStream extends TransportOutputStream {
+public class MockTransportOutputStream extends TransportOutputStream {
 
     private Map headers = new HashMap();
 
     private OutputStream outputStream;
 
-    public StubTransportOutputStream(OutputStream outputStream) {
+    public MockTransportOutputStream(OutputStream outputStream) {
         Assert.notNull(outputStream, "outputStream must not be null");
         this.outputStream = outputStream;
     }

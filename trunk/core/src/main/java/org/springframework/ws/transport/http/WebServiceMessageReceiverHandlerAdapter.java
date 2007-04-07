@@ -16,15 +16,13 @@
 
 package org.springframework.ws.transport.http;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.transport.TransportInputStream;
-import org.springframework.ws.transport.TransportOutputStream;
+import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
 import org.springframework.ws.transport.support.WebServiceMessageReceiverObjectSupport;
 
@@ -55,13 +53,13 @@ public class WebServiceMessageReceiverHandlerAdapter extends WebServiceMessageRe
                                HttpServletResponse httpServletResponse,
                                Object handler) throws Exception {
         if ("POST".equals(httpServletRequest.getMethod())) {
-            TransportInputStream tis = new HttpServletTransportInputStream(httpServletRequest);
-            TransportOutputStream tos = new HttpServletTransportOutputStream(httpServletResponse);
-            handle(tis, tos, (WebServiceMessageReceiver) handler);
+            WebServiceConnection connection = new HttpServletConnection(httpServletRequest, httpServletResponse);
+            handleConnection(connection, (WebServiceMessageReceiver) handler);
             return null;
         }
         else {
-            throw new ServletException("Request method '" + httpServletRequest.getMethod() + "' not supported");
+            httpServletResponse.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+            return null;
         }
     }
 
@@ -69,35 +67,30 @@ public class WebServiceMessageReceiverHandlerAdapter extends WebServiceMessageRe
         return handler instanceof WebServiceMessageReceiver;
     }
 
-    /**
-     * Sets the response code to 204, No Content.
-     */
-    protected void handleNoResponse(TransportInputStream tis, TransportOutputStream tos) {
-        HttpServletResponse httpServletResponse = ((HttpServletTransportOutputStream) tos).getHttpServletResponse();
-        httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
+    /** Sets the response code to 204, Accepted. */
+    protected void handleNoResponse(WebServiceConnection connection) {
+        HttpServletResponse httpServletResponse = ((HttpServletConnection) connection).getHttpServletResponse();
+        httpServletResponse.setStatus(HttpServletResponse.SC_ACCEPTED);
     }
 
     /**
      * Sets the response code to 200, OK, for normal responses. Set the code to 500, Internal Server Error, in case of a
      * SOAP Fault,
      */
-    protected void handleResponse(TransportInputStream tis, TransportOutputStream tos, WebServiceMessage response)
-            throws Exception {
-        HttpServletResponse httpServletResponse = ((HttpServletTransportOutputStream) tos).getHttpServletResponse();
+    protected void handleResponse(WebServiceConnection connection, WebServiceMessage response) throws Exception {
+        HttpServletResponse httpServletResponse = ((HttpServletConnection) connection).getHttpServletResponse();
         if (response.hasFault()) {
             httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
         else {
             httpServletResponse.setStatus(HttpServletResponse.SC_OK);
         }
-        response.writeTo(tos);
+        super.handleResponse(connection, response);
     }
 
-    /**
-     * Sets the response code to 404, Not Found.
-     */
-    protected void handleNoEndpointFound(TransportInputStream tis, TransportOutputStream tos) {
-        HttpServletResponse httpServletResponse = ((HttpServletTransportOutputStream) tos).getHttpServletResponse();
+    /** Sets the response code to 404, Not Found. */
+    protected void handleNoEndpointFound(WebServiceConnection connection) {
+        HttpServletResponse httpServletResponse = ((HttpServletConnection) connection).getHttpServletResponse();
         httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
 }

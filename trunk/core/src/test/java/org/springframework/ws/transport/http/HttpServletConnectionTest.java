@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2007 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,34 +17,41 @@
 package org.springframework.ws.transport.http;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 
 import junit.framework.TestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.ws.transport.TransportInputStream;
 
-public class HttpServletTransportInputStreamTest extends TestCase {
+public class HttpServletConnectionTest extends TestCase {
 
-    private HttpServletTransportInputStream tis;
+    private HttpServletConnection connection;
 
     private MockHttpServletRequest request;
 
+    private MockHttpServletResponse response;
+
     protected void setUp() throws Exception {
         request = new MockHttpServletRequest();
-        tis = new HttpServletTransportInputStream(request);
+        response = new MockHttpServletResponse();
+        connection = new HttpServletConnection(request, response);
     }
 
     public void testReadInputStream() throws Exception {
         byte[] content = "content".getBytes("UTF-8");
         request.setContent(content);
-        byte[] result = FileCopyUtils.copyToByteArray(tis);
+        byte[] result = FileCopyUtils.copyToByteArray(connection.getTransportInputStream());
         assertTrue("Invalid contents", Arrays.equals(content, result));
     }
 
-    public void testHeaders() throws Exception {
+    public void testGetHeaders() throws Exception {
         String headerName = "Header";
         String headerValue = "Value";
         request.addHeader(headerName, headerValue);
+        TransportInputStream tis = connection.getTransportInputStream();
         Iterator iterator = tis.getHeaderNames();
         assertTrue("No headers found", iterator.hasNext());
         assertEquals("Invalid header", headerName, iterator.next());
@@ -53,4 +60,18 @@ public class HttpServletTransportInputStreamTest extends TestCase {
         assertEquals("Invalid header value", headerValue, iterator.next());
     }
 
+    public void testWriteOutputStream() throws Exception {
+        byte[] content = "content".getBytes("UTF-8");
+        FileCopyUtils.copy(content, connection.getTransportOutputStream());
+        assertTrue("Invalid contents", Arrays.equals(content, response.getContentAsByteArray()));
+    }
+
+    public void testAddHeaders() throws Exception {
+        String headerName = "Header";
+        String headerValue = "Value";
+        connection.getTransportOutputStream().addHeader(headerName, headerValue);
+        assertTrue("No header set", response.getHeaderNames().contains(headerName));
+        assertEquals("Invalid header value set", Collections.singletonList(headerValue),
+                response.getHeaders(headerName));
+    }
 }

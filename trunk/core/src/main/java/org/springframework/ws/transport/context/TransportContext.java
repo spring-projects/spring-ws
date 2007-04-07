@@ -1,11 +1,9 @@
 package org.springframework.ws.transport.context;
 
-import org.springframework.ws.transport.TransportInputStream;
-import org.springframework.ws.transport.TransportOutputStream;
+import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * Strategy interface for determining the current {@link org.springframework.ws.transport.TransportInputStream} and
- * {@link org.springframework.ws.transport.TransportOutputStream}.
+ * Strategy interface for determining the current {@link org.springframework.ws.transport.WebServiceConnection}.
  * <p/>
  * An instance of this class can be associated with a thread via the {@link TransportContextHolder} class.
  *
@@ -13,13 +11,6 @@ import org.springframework.ws.transport.TransportOutputStream;
  */
 public interface TransportContext {
 
-    /**
-     * Returns the current <code>TransportInputStream</code>.
-     */
-    TransportInputStream getTransportInputStream();
-
-    /**
-     * Returns the current <code>TransportOutputStream</code>.
-     */
-    TransportOutputStream getTransportOutputStream();
+    /** Returns the current <code>WebServiceConnection</code>. */
+    WebServiceConnection getConnection();
 }
