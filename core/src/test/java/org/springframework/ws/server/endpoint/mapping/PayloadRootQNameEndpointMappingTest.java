@@ -30,7 +30,6 @@ public class PayloadRootQNameEndpointMappingTest extends TestCase {
 
     protected void setUp() throws Exception {
         mapping = new PayloadRootQNameEndpointMapping();
-        mapping.afterPropertiesSet();
     }
 
     public void testResolveQNames() throws Exception {

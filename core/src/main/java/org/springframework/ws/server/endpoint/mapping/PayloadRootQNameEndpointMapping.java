@@ -22,7 +22,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.xml.namespace.QNameUtils;
@@ -48,9 +47,13 @@ import org.w3c.dom.Element;
  * @author Arjen Poutsma
  * @see org.springframework.xml.namespace.QNameEditor
  */
-public class PayloadRootQNameEndpointMapping extends AbstractQNameEndpointMapping implements InitializingBean {
+public class PayloadRootQNameEndpointMapping extends AbstractQNameEndpointMapping {
 
     private static TransformerFactory transformerFactory;
+
+    static {
+        transformerFactory = TransformerFactory.newInstance();
+    }
 
     protected QName resolveQName(MessageContext messageContext) throws TransformerException {
         Element payloadElement = getMessagePayloadElement(messageContext.getRequest());
@@ -64,7 +67,4 @@ public class PayloadRootQNameEndpointMapping extends AbstractQNameEndpointMappin
         return (Element) domResult.getNode().getFirstChild();
     }
 
-    public final void afterPropertiesSet() throws Exception {
-        transformerFactory = TransformerFactory.newInstance();
-    }
 }
