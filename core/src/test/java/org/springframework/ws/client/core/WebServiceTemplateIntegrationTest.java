@@ -35,7 +35,7 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
     private Server jettyServer;
 
     protected void setUp() throws Exception {
-        jettyServer = new Server(9080);
+        jettyServer = new Server(8888);
         Context jettyContext = new Context(jettyServer, "/");
         jettyContext.addServlet(SimpleSaajServlet.class, "/");
         jettyServer.start();
