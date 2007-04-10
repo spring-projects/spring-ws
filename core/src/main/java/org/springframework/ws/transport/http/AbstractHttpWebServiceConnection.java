@@ -16,14 +16,12 @@
 
 package org.springframework.ws.transport.http;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.zip.GZIPInputStream;
 
-import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.transport.AbstractWebServiceConnection;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.TransportInputStream;
@@ -44,21 +42,12 @@ public abstract class AbstractHttpWebServiceConnection extends AbstractWebServic
 
     protected static final int HTTP_STATUS_INTERNAL_ERROR = 500;
 
-    private byte[] bufferedInput;
-
     protected final TransportOutputStream createTransportOutputStream() throws IOException {
         return new HttpClientTransportOutputStream();
     }
 
     protected final boolean hasResponse() throws IOException {
-        long contentLength = getResponseContentLength();
-        if (contentLength == -1) {
-            if (bufferedInput == null) {
-                bufferedInput = FileCopyUtils.copyToByteArray(getResponseInputStream());
-            }
-            contentLength = bufferedInput.length;
-        }
-        return contentLength > 0;
+        return getResponseContentLength() > 0;
     }
 
     protected final TransportInputStream createTransportInputStream() throws IOException {
@@ -70,14 +59,7 @@ public abstract class AbstractHttpWebServiceConnection extends AbstractWebServic
     }
 
     private InputStream getUncompressedResponseInputStream() throws IOException {
-        InputStream rawInputStream;
-        if (bufferedInput != null) {
-            rawInputStream = new ByteArrayInputStream(bufferedInput);
-        }
-        else {
-            rawInputStream = getResponseInputStream();
-        }
-        return isGzipResponse() ? new GZIPInputStream(rawInputStream) : rawInputStream;
+        return isGzipResponse() ? new GZIPInputStream(getResponseInputStream()) : getResponseInputStream();
     }
 
     /** Determine whether the given response is a GZIP response. */
