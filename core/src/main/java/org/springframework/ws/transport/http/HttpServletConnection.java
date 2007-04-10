@@ -23,92 +23,66 @@ import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.ws.transport.TransportInputStream;
-import org.springframework.ws.transport.TransportOutputStream;
+import org.springframework.ws.transport.AbstractReceivingWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.support.EnumerationIterator;
 
 /**
- * Implementation of {@link WebServiceConnection} that is based on the Servlet API. Exposes a {@link HttpServletRequest}
- * and {@link HttpServletResponse}.
+ * Implementation of {@link WebServiceConnection} that is based on the Servlet API.
  *
  * @author Arjen Poutsma
- * @author Arjen Poutsma
- * @see #getHttpServletRequest()
- * @see #getHttpServletResponse()
  */
-public class HttpServletConnection implements WebServiceConnection {
+public class HttpServletConnection extends AbstractReceivingWebServiceConnection {
 
-    private final HttpServletRequest httpServletRequest;
+    private final HttpServletRequest request;
 
-    private final HttpServletResponse httpServletResponse;
+    private final HttpServletResponse response;
 
     /**
      * Constructs a new servlet connection with the given <code>HttpServletRequest</code> and
      * <code>HttpServletResponse</code>.
      */
     public HttpServletConnection(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        this.httpServletRequest = httpServletRequest;
-        this.httpServletResponse = httpServletResponse;
+        request = httpServletRequest;
+        response = httpServletResponse;
     }
 
     /** Returns the <code>HttpServletRequest</code> for this connection. */
     public HttpServletRequest getHttpServletRequest() {
-        return httpServletRequest;
+        return request;
     }
 
     /** Returns the <code>HttpServletResponse</code> for this connection. */
     public HttpServletResponse getHttpServletResponse() {
-        return httpServletResponse;
+        return response;
     }
 
-    public TransportInputStream getTransportInputStream() {
-        return new HttpServletTransportInputStream();
+    protected Iterator getRequestHeaderNames() throws IOException {
+        return new EnumerationIterator(request.getHeaderNames());
     }
 
-    public TransportOutputStream getTransportOutputStream() {
-        return new HttpServletTransportOutputStream();
+    protected Iterator getRequestHeaders(String name) throws IOException {
+        return new EnumerationIterator(request.getHeaders(name));
+    }
+
+    protected InputStream getRequestInputStream() throws IOException {
+        return request.getInputStream();
+    }
+
+    protected void addResponseHeader(String name, String value) throws IOException {
+        response.addHeader(name, value);
+    }
+
+    protected OutputStream getResponseOutputStream() throws IOException {
+        return response.getOutputStream();
+    }
+
+    protected void sendResponse() throws IOException {
+        // no op
     }
 
     public void close() throws IOException {
         // no op
     }
-
-    /**
-     * Implementation of {@link TransportInputStream} based on the {@link HttpServletRequest} field.
-     *
-     * @see HttpServletConnection#httpServletRequest
-     */
-    private class HttpServletTransportInputStream extends TransportInputStream {
-
-        protected InputStream createInputStream() throws IOException {
-            return httpServletRequest.getInputStream();
-        }
-
-        public Iterator getHeaderNames() {
-            return new EnumerationIterator(httpServletRequest.getHeaderNames());
-        }
-
-        public Iterator getHeaders(String name) {
-            return new EnumerationIterator(httpServletRequest.getHeaders(name));
-        }
-    }
-
-    /**
-     * Implementation of {@link TransportOutputStream} based on the {@link HttpServletResponse} field.
-     *
-     * @see HttpServletConnection#httpServletResponse
-     */
-    private class HttpServletTransportOutputStream extends TransportOutputStream {
-
-        protected OutputStream createOutputStream() throws IOException {
-            return httpServletResponse.getOutputStream();
-        }
-
-        public void addHeader(String name, String value) {
-            httpServletResponse.addHeader(name, value);
-        }
-    }
-
 
 }

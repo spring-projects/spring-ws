@@ -91,20 +91,18 @@ public abstract class TransportInputStream extends InputStream {
         return getInputStream().read();
     }
 
-    /**
-     * Returns the input stream to read from.
-     */
+    /** Returns the input stream to read from. */
     protected abstract InputStream createInputStream() throws IOException;
 
     /**
-     * Returns an iteration over all the header names this request contains. Returns an empty <code>Iterator</code> if
-     * the request has no headers.
+     * Returns an iteration over all the header names this stream contains. Returns an empty <code>Iterator</code> if
+     * there are no headers.
      */
     public abstract Iterator getHeaderNames() throws IOException;
 
     /**
-     * Returns an iteration over all the string values of the specified request header. Returns an empty
-     * <code>Iterator</code> if the request did not include any headers of the specified name.
+     * Returns an iteration over all the string values of the specified header. Returns an empty <code>Iterator</code>
+     * if there are no headers of the specified name.
      */
     public abstract Iterator getHeaders(String name) throws IOException;
 }

@@ -64,16 +64,14 @@ public abstract class TransportOutputStream extends OutputStream {
     }
 
     /**
-     * Adds a response header with the given name and value. This method can be called multiple times, to allow for
-     * headers with multiple values.
+     * Adds a header with the given name and value. This method can be called multiple times, to allow for headers with
+     * multiple values.
      *
      * @param name  the name of the header
      * @param value the value of the header
      */
     public abstract void addHeader(String name, String value) throws IOException;
 
-    /**
-     * Returns the output stream to write to.
-     */
+    /** Returns the output stream to write to. */
     protected abstract OutputStream createOutputStream() throws IOException;
 }
