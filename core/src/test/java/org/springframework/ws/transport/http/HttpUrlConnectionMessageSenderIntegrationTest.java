@@ -16,10 +16,10 @@
 
 package org.springframework.ws.transport.http;
 
-public class CommonsHttpMessageSenderTest extends AbstractHttpWebServiceMessageSenderTestCase {
+public class HttpUrlConnectionMessageSenderIntegrationTest
+        extends AbstractHttpWebServiceMessageSenderIntegrationTestCase {
 
     protected AbstractHttpWebServiceMessageSender createMessageSender() {
-        return new CommonsHttpMessageSender();
+        return new HttpUrlConnectionMessageSender();
     }
-
 }

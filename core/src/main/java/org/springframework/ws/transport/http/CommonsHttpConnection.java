@@ -16,7 +16,6 @@
 
 package org.springframework.ws.transport.http;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,15 +25,10 @@ import java.util.Iterator;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.springframework.util.Assert;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.ws.transport.FaultAwareWebServiceConnection;
-import org.springframework.ws.transport.TransportInputStream;
-import org.springframework.ws.transport.TransportOutputStream;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
@@ -43,13 +37,13 @@ import org.springframework.ws.transport.WebServiceConnection;
  *
  * @author Arjen Poutsma
  */
-public class CommonsHttpConnection implements FaultAwareWebServiceConnection {
+public class CommonsHttpConnection extends AbstractHttpWebServiceConnection {
 
     private final HttpClient httpClient;
 
     private final PostMethod postMethod;
 
-    private byte[] bufferedInput;
+    private ByteArrayOutputStream bufferedOutput = new ByteArrayOutputStream();
 
     public CommonsHttpConnection(HttpClient httpClient, PostMethod postMethod) {
         Assert.notNull(httpClient, "httpClient must not be null");
@@ -58,41 +52,33 @@ public class CommonsHttpConnection implements FaultAwareWebServiceConnection {
         this.postMethod = postMethod;
     }
 
-    /** Returns the wrapped <code>PostMethod</code>. */
-    public HttpMethod getPostMethod() {
-        return postMethod;
-    }
-
     public void close() throws IOException {
         postMethod.releaseConnection();
     }
 
-    public TransportOutputStream getTransportOutputStream() {
-        return new CommonsHttpTransportOutputStream();
+    protected void addRequestHeader(String name, String value) throws IOException {
+        postMethod.addRequestHeader(name, value);
     }
 
-    public TransportInputStream getTransportInputStream() throws IOException {
-        return getContentLength() > 0 ? new CommonsHttpTransportInputStream() : null;
+    protected OutputStream getRequestOutputStream() throws IOException {
+        return bufferedOutput;
     }
 
-    public boolean hasFault() throws IOException {
-        return postMethod.getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR;
+    protected void open() throws IOException {
+        postMethod.setRequestEntity(new ByteArrayRequestEntity(bufferedOutput.toByteArray()));
+        bufferedOutput = null;
+        httpClient.executeMethod(postMethod);
     }
 
-    private long getContentLength() throws IOException {
-        if (postMethod.getResponseContentLength() != -1) {
-            return postMethod.getResponseContentLength();
-        }
-        else if (bufferedInput != null) {
-            return bufferedInput.length;
-        }
-        else {
-            bufferedInput = FileCopyUtils.copyToByteArray(getInputStream());
-            return bufferedInput.length;
-        }
+    protected int getResponseCode() throws IOException {
+        return postMethod.getStatusCode();
     }
 
-    private InputStream getInputStream() throws IOException {
+    protected long getResponseContentLength() throws IOException {
+        return postMethod.getResponseContentLength();
+    }
+
+    protected InputStream getResponseInputStream() throws IOException {
         if (postMethod.getStatusCode() != HttpStatus.SC_INTERNAL_SERVER_ERROR &&
                 postMethod.getStatusCode() / 100 != 2) {
             throw new HttpTransportException("Did not receive successful HTTP response: status code = " +
@@ -101,65 +87,22 @@ public class CommonsHttpConnection implements FaultAwareWebServiceConnection {
         return postMethod.getResponseBodyAsStream();
     }
 
-    /**
-     * Implementation of {@link TransportInputStream} based on the {@link PostMethod} field.
-     *
-     * @see CommonsHttpConnection#postMethod
-     */
-    class CommonsHttpTransportInputStream extends TransportInputStream {
-
-        protected InputStream createInputStream() throws IOException {
-            if (bufferedInput != null) {
-                return new ByteArrayInputStream(bufferedInput);
-            }
-            else {
-                return getInputStream();
-            }
+    protected Iterator getResponseHeaderNames() throws IOException {
+        Header[] headers = postMethod.getResponseHeaders();
+        String[] names = new String[headers.length];
+        for (int i = 0; i < headers.length; i++) {
+            names[i] = headers[i].getName();
         }
-
-        public Iterator getHeaderNames() throws IOException {
-            Header[] headers = postMethod.getResponseHeaders();
-            String[] names = new String[headers.length];
-            for (int i = 0; i < headers.length; i++) {
-                names[i] = headers[i].getName();
-            }
-            return Arrays.asList(names).iterator();
-        }
-
-        public Iterator getHeaders(String name) throws IOException {
-            Header[] headers = postMethod.getResponseHeaders(name);
-            String[] values = new String[headers.length];
-            for (int i = 0; i < headers.length; i++) {
-                values[i] = headers[i].getValue();
-            }
-            return Arrays.asList(values).iterator();
-        }
+        return Arrays.asList(names).iterator();
     }
 
-    /**
-     * Implementation of {@link TransportOutputStream} based on the {@link PostMethod} field.
-     *
-     * @see CommonsHttpConnection#postMethod
-     */
-    class CommonsHttpTransportOutputStream extends TransportOutputStream {
-
-        private final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
-        public void addHeader(String name, String value) throws IOException {
-            postMethod.addRequestHeader(name, value);
+    protected Iterator getResponseHeaders(String name) throws IOException {
+        Header[] headers = postMethod.getResponseHeaders(name);
+        String[] values = new String[headers.length];
+        for (int i = 0; i < headers.length; i++) {
+            values[i] = headers[i].getValue();
         }
-
-        protected OutputStream createOutputStream() throws IOException {
-            return bos;
-        }
-
-        public void close() throws IOException {
-            super.close();
-            postMethod.setRequestEntity(new ByteArrayRequestEntity(bos.toByteArray()));
-            httpClient.executeMethod(postMethod);
-        }
-
+        return Arrays.asList(values).iterator();
     }
-
 
 }
