@@ -16,6 +16,8 @@
 
 package org.springframework.ws.client.core;
 
+import java.io.IOException;
+
 import org.springframework.ws.WebServiceMessage;
 
 /**
@@ -30,6 +32,6 @@ public interface FaultResolver {
      *
      * @param message the fault message
      */
-    void resolveFault(WebServiceMessage message);
+    void resolveFault(WebServiceMessage message) throws IOException;
 
 }
