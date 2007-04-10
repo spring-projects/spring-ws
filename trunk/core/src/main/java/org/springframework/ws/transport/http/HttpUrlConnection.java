@@ -35,7 +35,7 @@ import org.springframework.ws.transport.WebServiceConnection;
  *
  * @author Arjen Poutsma
  */
-public class HttpUrlConnection extends AbstractHttpWebServiceConnection {
+public class HttpUrlConnection extends AbstractHttpSendingWebServiceConnection {
 
     private final HttpURLConnection connection;
 
@@ -61,7 +61,7 @@ public class HttpUrlConnection extends AbstractHttpWebServiceConnection {
         return connection.getOutputStream();
     }
 
-    protected void open() throws IOException {
+    protected void sendRequest() throws IOException {
         connection.connect();
     }
 
@@ -99,7 +99,7 @@ public class HttpUrlConnection extends AbstractHttpWebServiceConnection {
         return connection.getResponseCode();
     }
 
-    protected InputStream getResponseInputStream() throws IOException {
+    protected InputStream getRawResponseInputStream() throws IOException {
         if (connection.getResponseCode() == HttpURLConnection.HTTP_INTERNAL_ERROR) {
             return connection.getErrorStream();
         }

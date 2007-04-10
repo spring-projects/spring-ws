@@ -37,7 +37,7 @@ import org.springframework.ws.transport.WebServiceConnection;
  *
  * @author Arjen Poutsma
  */
-public class CommonsHttpConnection extends AbstractHttpWebServiceConnection {
+public class CommonsHttpConnection extends AbstractHttpSendingWebServiceConnection {
 
     private final HttpClient httpClient;
 
@@ -64,7 +64,7 @@ public class CommonsHttpConnection extends AbstractHttpWebServiceConnection {
         return bufferedOutput;
     }
 
-    protected void open() throws IOException {
+    protected void sendRequest() throws IOException {
         postMethod.setRequestEntity(new ByteArrayRequestEntity(bufferedOutput.toByteArray()));
         bufferedOutput = null;
         httpClient.executeMethod(postMethod);
@@ -78,7 +78,7 @@ public class CommonsHttpConnection extends AbstractHttpWebServiceConnection {
         return postMethod.getResponseContentLength();
     }
 
-    protected InputStream getResponseInputStream() throws IOException {
+    protected InputStream getRawResponseInputStream() throws IOException {
         if (postMethod.getStatusCode() != HttpStatus.SC_INTERNAL_SERVER_ERROR &&
                 postMethod.getStatusCode() / 100 != 2) {
             throw new HttpTransportException("Did not receive successful HTTP response: status code = " +
