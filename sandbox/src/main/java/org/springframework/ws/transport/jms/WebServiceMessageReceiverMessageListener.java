@@ -22,27 +22,26 @@ import javax.jms.Message;
 import javax.jms.Session;
 
 import org.springframework.jms.listener.SessionAwareMessageListener;
-import org.springframework.ws.transport.jms.support.JmsWebServiceMessageReceiverObjectSupport;
+import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.WebServiceMessageFactory;
+import org.springframework.ws.transport.WebServiceMessageReceiver;
 
 /**
- * Spring-2.0 <code>SessionAwareMessageListener</code> that can be used to handle incoming JMS messages. Requires a
- * <code>WebServiceMessageFactory</code> which is used to convert the incoming JMS <code>TextMessage</code> into a
- * <code>WebServiceMessage</code>, and passes that context to the required <code>MessageEndpoint</code>. If a response
- * is created, it is sent using a response JMS message.
- * <p/>
- * Note that the <code>MessageDispatcher</code> implements the <code>MessageEndpoint</code> interface, enabling this
- * adapter to function as a gateway to further message handling logic.
+ * Spring-2.0 {@link SessionAwareMessageListener} that can be used to handleMessage incoming JMS messages. Requires a
+ * {@link WebServiceMessageFactory} which is used to convert the incoming JMS {@link BytesMessage}s into a {@link
+ * WebServiceMessage}, and passes that context to the {@link WebServiceMessageReceiver} set with the property
+ * <code>messageReceiver</code>. If a response is created, it is sent using a response JMS message.
  *
  * @author Arjen Poutsma
  * @see #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
  * @see #setMessageReceiver(org.springframework.ws.transport.WebServiceMessageReceiver)
  */
-public class MessageEndpointMessageListener extends JmsWebServiceMessageReceiverObjectSupport
+public class WebServiceMessageReceiverMessageListener extends JmsWebServiceMessageReceiverObjectSupport
         implements SessionAwareMessageListener {
 
     public void onMessage(Message message, Session session) throws JMSException {
         try {
-            handle((BytesMessage) message, session);
+            handleMessage(message, session);
         }
         catch (Exception ex) {
             JMSException jmsException = new JMSException(ex.getMessage());

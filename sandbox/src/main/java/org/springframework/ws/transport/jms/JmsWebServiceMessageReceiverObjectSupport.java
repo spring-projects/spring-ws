@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.transport.jms.support;
+package org.springframework.ws.transport.jms;
 
 import javax.jms.BytesMessage;
 import javax.jms.Message;
-import javax.jms.MessageProducer;
 import javax.jms.Session;
 
-import org.springframework.jms.support.JmsUtils;
-import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.transport.TransportInputStream;
-import org.springframework.ws.transport.TransportOutputStream;
+import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
-import org.springframework.ws.transport.jms.JmsTransportInputStream;
-import org.springframework.ws.transport.jms.JmsTransportOutputStream;
 import org.springframework.ws.transport.support.SimpleWebServiceMessageReceiverObjectSupport;
 
 /**
@@ -37,7 +31,7 @@ import org.springframework.ws.transport.support.SimpleWebServiceMessageReceiverO
  * This class can be used as a base for a EJB MessageDrivenBean, or using Spring-2.0's MessageDriven POJO's.
  *
  * @author Arjen Poutsma
- * @see #handle(javax.jms.Message,javax.jms.Session)
+ * @see #handleMessage(javax.jms.Message,javax.jms.Session)
  */
 public abstract class JmsWebServiceMessageReceiverObjectSupport extends SimpleWebServiceMessageReceiverObjectSupport {
 
@@ -48,35 +42,15 @@ public abstract class JmsWebServiceMessageReceiverObjectSupport extends SimpleWe
      * @param session the JMS session used to create a response
      * @throws IllegalArgumentException when request is not a <code>BytesMessage</code>
      */
-    protected final void handle(Message request, Session session) throws Exception {
+    protected final void handleMessage(Message request, Session session) throws Exception {
         if (request instanceof BytesMessage) {
-            TransportInputStream tis = new JmsTransportInputStream((BytesMessage) request);
-            TransportOutputStream tos = new JmsTransportOutputStream(session, request.getJMSCorrelationID());
-            handle(tis, tos);
+            WebServiceConnection connection = new JmsReceivingWebServiceConnection((BytesMessage) request, session);
+            handleConnection(connection, getMessageReceiver());
         }
         else {
             throw new IllegalArgumentException(
-                    "Wrong message type: [" + request.getClass() + "]. Only BytesMessages can be handled");
+                    "Wrong message type: [" + request.getClass() + "]. Only BytesMessages can be handled.");
         }
 
-    }
-
-    protected final void handleResponse(TransportInputStream tis, TransportOutputStream tos, WebServiceMessage response)
-            throws Exception {
-        Message requestMessage = ((JmsTransportInputStream) tis).getMessage();
-        if (requestMessage.getJMSReplyTo() == null) {
-            logger.warn("Incoming message has no ReplyTo set, not sending response");
-            return;
-        }
-        response.writeTo(tos);
-        Session session = ((JmsTransportOutputStream) tos).getSession();
-        MessageProducer producer = session.createProducer(requestMessage.getJMSReplyTo());
-        Message responseMessage = ((JmsTransportOutputStream) tos).getMessage();
-        try {
-            producer.send(responseMessage);
-        }
-        finally {
-            JmsUtils.closeMessageProducer(producer);
-        }
     }
 }
