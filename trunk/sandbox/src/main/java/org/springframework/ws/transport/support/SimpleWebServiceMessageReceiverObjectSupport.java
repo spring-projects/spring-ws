@@ -18,28 +18,21 @@ package org.springframework.ws.transport.support;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
-import org.springframework.ws.transport.TransportInputStream;
-import org.springframework.ws.transport.TransportOutputStream;
+import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
 
-/**
- * @author Arjen Poutsma
- */
+/** @author Arjen Poutsma */
 public class SimpleWebServiceMessageReceiverObjectSupport extends WebServiceMessageReceiverObjectSupport
         implements InitializingBean {
 
     private WebServiceMessageReceiver messageReceiver;
 
-    /**
-     * Returns the <code>WebServiceMessageReceiver</code> used by this listener.
-     */
+    /** Returns the <code>WebServiceMessageReceiver</code> used by this listener. */
     public WebServiceMessageReceiver getMessageReceiver() {
         return messageReceiver;
     }
 
-    /**
-     * Sets the <code>WebServiceMessageReceiver</code> used by this listener.
-     */
+    /** Sets the <code>WebServiceMessageReceiver</code> used by this listener. */
     public void setMessageReceiver(WebServiceMessageReceiver messageReceiver) {
         this.messageReceiver = messageReceiver;
     }
@@ -49,8 +42,8 @@ public class SimpleWebServiceMessageReceiverObjectSupport extends WebServiceMess
         Assert.notNull(getMessageReceiver(), "messageReceiver must not be null");
     }
 
-    protected final void handle(TransportInputStream tis, TransportOutputStream tos) throws Exception {
-        handle(tis, tos, getMessageReceiver());
+    protected final void handleConnection(WebServiceConnection connection) throws Exception {
+        handleConnection(connection, getMessageReceiver());
     }
 
 }
