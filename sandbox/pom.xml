@@ -38,6 +38,10 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
         </dependency>
         <dependency>
@@ -101,9 +105,15 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>activemq</groupId>
-            <artifactId>activemq</artifactId>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-core</artifactId>
+            <version>4.1.1</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>10.1.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.mortbay.jetty</groupId>
