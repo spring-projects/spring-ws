@@ -77,12 +77,6 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
         validateResponse(new ResponseServlet());
     }
 
-    public void testSendAndReceiveResponseInvalidContentLength() throws Exception {
-        ResponseServlet servlet = new ResponseServlet();
-        servlet.setInvalidContentLength(true);
-        validateResponse(servlet);
-    }
-
     public void testSendAndReceiveNoResponse() throws Exception {
         validateNonResponse(new NoResponseServlet());
     }
@@ -90,12 +84,6 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
     public void testSendAndReceiveNoResponseAccepted() throws Exception {
         NoResponseServlet servlet = new NoResponseServlet();
         servlet.setResponseStatus(HttpServletResponse.SC_ACCEPTED);
-        validateNonResponse(servlet);
-    }
-
-    public void testSendAndReceiveNoResponseInvalidContentLength() throws Exception {
-        NoResponseServlet servlet = new NoResponseServlet();
-        servlet.setInvalidContentLength(true);
         validateNonResponse(servlet);
     }
 
@@ -174,14 +162,8 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
 
         protected int responseStatus = HttpServletResponse.SC_OK;
 
-        protected boolean invalidContentLength = false;
-
         public void setResponseStatus(int responseStatus) {
             this.responseStatus = responseStatus;
-        }
-
-        public void setInvalidContentLength(boolean invalidContentLength) {
-            this.invalidContentLength = invalidContentLength;
         }
 
         protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -192,9 +174,6 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
             assertEquals("Invalid request received", REQUEST, receivedRequest);
 
             response.setStatus(responseStatus);
-            if (invalidContentLength) {
-                response.setContentLength(-1);
-            }
             createResponse(request, response);
         }
 
