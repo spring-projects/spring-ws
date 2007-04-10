@@ -48,6 +48,9 @@ public class HttpUrlConnectionMessageSender extends AbstractHttpWebServiceMessag
             httpURLConnection.setUseCaches(false);
             httpURLConnection.setDoInput(true);
             httpURLConnection.setDoOutput(true);
+            if (isAcceptGzipEncoding()) {
+                httpURLConnection.setRequestProperty(HTTP_HEADER_ACCEPT_ENCODING, ENCODING_GZIP);
+            }
             return new HttpUrlConnection(httpURLConnection);
         }
     }

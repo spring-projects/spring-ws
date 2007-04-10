@@ -32,18 +32,39 @@ public abstract class AbstractHttpWebServiceMessageSender implements WebServiceM
 
     private URL url;
 
-    /**
-     * Returns the url used by this message sender.
-     */
+    private boolean acceptGzipEncoding = true;
+
+    protected static final String HTTP_HEADER_ACCEPT_ENCODING = "Accept-Encoding";
+
+    protected static final String ENCODING_GZIP = "gzip";
+
+    /** Returns the url used by this message sender. */
     public URL getUrl() {
         return url;
     }
 
-    /**
-     * Sets the url used by this message sender.
-     */
+    /** Sets the url used by this message sender. */
     public void setUrl(URL url) {
         this.url = url;
+    }
+
+    /**
+     * Return whether to accept GZIP encoding, that is, whether to send the HTTP <code>Accept-Encoding</code> header
+     * with <code>gzip</code> as value.
+     */
+    public boolean isAcceptGzipEncoding() {
+        return acceptGzipEncoding;
+    }
+
+    /**
+     * Set whether to accept GZIP encoding, that is, whether to send the HTTP <code>Accept-Encoding</code> header with
+     * <code>gzip</code> as value.
+     * <p/>
+     * Default is <code>true</code>. Turn this flag off if you do not want GZIP response compression even if enabled on
+     * the HTTP server.
+     */
+    public void setAcceptGzipEncoding(boolean acceptGzipEncoding) {
+        this.acceptGzipEncoding = acceptGzipEncoding;
     }
 
     public void afterPropertiesSet() throws Exception {

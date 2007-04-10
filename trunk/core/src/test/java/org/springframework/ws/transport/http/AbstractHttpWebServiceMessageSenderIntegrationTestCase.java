@@ -19,11 +19,10 @@ package org.springframework.ws.transport.http;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
-import javax.servlet.GenericServlet;
+import java.util.zip.GZIPOutputStream;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -38,7 +37,7 @@ import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.ws.transport.TransportOutputStream;
 import org.springframework.ws.transport.WebServiceConnection;
 
-public abstract class AbstractHttpWebServiceMessageSenderTestCase extends XMLTestCase {
+public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase extends XMLTestCase {
 
     protected Server jettyServer;
 
@@ -75,16 +74,40 @@ public abstract class AbstractHttpWebServiceMessageSenderTestCase extends XMLTes
     }
 
     public void testSendAndReceiveResponse() throws Exception {
-        validateResponse(new MyServlet(true));
+        validateResponse(new ResponseServlet());
     }
 
     public void testSendAndReceiveResponseInvalidContentLength() throws Exception {
-        validateResponse(new MyServlet(true, HttpServletResponse.SC_OK, false));
+        ResponseServlet servlet = new ResponseServlet();
+        servlet.setInvalidContentLength(true);
+        validateResponse(servlet);
+    }
+
+    public void testSendAndReceiveNoResponse() throws Exception {
+        validateNonResponse(new NoResponseServlet());
+    }
+
+    public void testSendAndReceiveNoResponseAccepted() throws Exception {
+        NoResponseServlet servlet = new NoResponseServlet();
+        servlet.setResponseStatus(HttpServletResponse.SC_ACCEPTED);
+        validateNonResponse(servlet);
+    }
+
+    public void testSendAndReceiveNoResponseInvalidContentLength() throws Exception {
+        NoResponseServlet servlet = new NoResponseServlet();
+        servlet.setInvalidContentLength(true);
+        validateNonResponse(servlet);
+    }
+
+    public void testSendAndReceiveCompressed() throws Exception {
+        validateResponse(new CompressedResponseServlet());
+
     }
 
     public void testSendAndReceiveFault() throws Exception {
-        jettyContext
-                .addServlet(new ServletHolder(new MyServlet(true, HttpServletResponse.SC_INTERNAL_SERVER_ERROR)), "/");
+        ResponseServlet servlet = new ResponseServlet();
+        servlet.setResponseStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        jettyContext.addServlet(new ServletHolder(servlet), "/");
         jettyServer.start();
         FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) messageSender.createConnection();
         try {
@@ -131,18 +154,6 @@ public abstract class AbstractHttpWebServiceMessageSenderTestCase extends XMLTes
         }
     }
 
-    public void testSendAndReceiveNoResponse() throws Exception {
-        validateNonResponse(new MyServlet(false));
-    }
-
-    public void testSendAndReceiveNoResponseAccepted() throws Exception {
-        validateNonResponse(new MyServlet(false, HttpServletResponse.SC_ACCEPTED));
-    }
-
-    public void testSendAndReceiveNoResponseInvalidContentLength() throws Exception {
-        validateNonResponse(new MyServlet(false, HttpServletResponse.SC_OK, false));
-    }
-
     private void validateNonResponse(Servlet servlet) throws Exception {
         jettyContext.addServlet(new ServletHolder(servlet), "/");
         jettyServer.start();
@@ -159,45 +170,60 @@ public abstract class AbstractHttpWebServiceMessageSenderTestCase extends XMLTes
         }
     }
 
-    private static class MyServlet extends GenericServlet {
+    private static class NoResponseServlet extends HttpServlet {
 
-        private boolean response;
+        protected int responseStatus = HttpServletResponse.SC_OK;
 
-        private int responseStatus;
+        protected boolean invalidContentLength = false;
 
-        private boolean validContentLength;
-
-        public MyServlet(boolean response) {
-            this(response, HttpServletResponse.SC_OK, true);
-        }
-
-        public MyServlet(boolean response, int responseStatus) {
-            this(response, responseStatus, true);
-        }
-
-        public MyServlet(boolean response, int responseStatus, boolean validContentLength) {
-            this.response = response;
+        public void setResponseStatus(int responseStatus) {
             this.responseStatus = responseStatus;
-            this.validContentLength = validContentLength;
         }
 
-        public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
-            HttpServletRequest httpServletRequest = (HttpServletRequest) req;
-            HttpServletResponse httpServletResponse = (HttpServletResponse) res;
+        public void setInvalidContentLength(boolean invalidContentLength) {
+            this.invalidContentLength = invalidContentLength;
+        }
+
+        protected void doPost(HttpServletRequest request, HttpServletResponse response)
+                throws ServletException, IOException {
             assertEquals("Invalid header value received on server side", REQUEST_HEADER_VALUE,
-                    httpServletRequest.getHeader(REQUEST_HEADER_NAME));
-            String receivedRequest = new String(FileCopyUtils.copyToByteArray(req.getInputStream()), "UTF-8");
+                    request.getHeader(REQUEST_HEADER_NAME));
+            String receivedRequest = new String(FileCopyUtils.copyToByteArray(request.getInputStream()), "UTF-8");
             assertEquals("Invalid request received", REQUEST, receivedRequest);
 
-            httpServletResponse.setStatus(responseStatus);
-            if (!validContentLength) {
-                httpServletResponse.setContentLength(-1);
+            response.setStatus(responseStatus);
+            if (invalidContentLength) {
+                response.setContentLength(-1);
             }
-            if (response) {
-                httpServletResponse.addHeader(RESPONSE_HEADER_NAME, RESPONSE_HEADER_VALUE);
-                httpServletResponse.setContentType("text/xml");
-                FileCopyUtils.copy(RESPONSE.getBytes("UTF-8"), res.getOutputStream());
-            }
+            createResponse(request, response);
+        }
+
+        protected void createResponse(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        }
+    }
+
+    private static class ResponseServlet extends NoResponseServlet {
+
+        protected void createResponse(HttpServletRequest request, HttpServletResponse response) throws IOException {
+            response.setContentType("text/xml");
+            response.addHeader(RESPONSE_HEADER_NAME, RESPONSE_HEADER_VALUE);
+            byte[] buffer = RESPONSE.getBytes("UTF-8");
+            response.setContentLength(buffer.length);
+            FileCopyUtils.copy(buffer, response.getOutputStream());
+        }
+    }
+
+    private static class CompressedResponseServlet extends NoResponseServlet {
+
+        protected void createResponse(HttpServletRequest request, HttpServletResponse response) throws IOException {
+            assertEquals("Invalid Accept-Encoding header value received on server side", "gzip",
+                    request.getHeader("Accept-Encoding"));
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType("text/xml");
+            response.addHeader(RESPONSE_HEADER_NAME, RESPONSE_HEADER_VALUE);
+            response.addHeader("Content-Encoding", "gzip");
+            byte[] buffer = RESPONSE.getBytes("UTF-8");
+            FileCopyUtils.copy(buffer, new GZIPOutputStream(response.getOutputStream()));
         }
     }
 }
