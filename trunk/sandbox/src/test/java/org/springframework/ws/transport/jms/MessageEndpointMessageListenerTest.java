@@ -41,7 +41,7 @@ public class MessageEndpointMessageListenerTest extends TestCase {
             "       <m:GetLastTradePrice xmlns:m=\"Some-URI\">\n" + "           <symbol>DIS</symbol>\n" +
             "       </m:GetLastTradePrice>\n" + "   </SOAP-ENV:Body>\n" + "</SOAP-ENV:Envelope>";
 
-    private MessageEndpointMessageListener messageListener;
+    private WebServiceMessageReceiverMessageListener messageListener;
 
     private BytesMessage request;
 
@@ -50,7 +50,7 @@ public class MessageEndpointMessageListenerTest extends TestCase {
     private Session sessionMock;
 
     protected void setUp() throws Exception {
-        messageListener = new MessageEndpointMessageListener();
+        messageListener = new WebServiceMessageReceiverMessageListener();
         request = new ActiveMQBytesMessage();
         request.writeBytes(REQUEST.getBytes("UTF-8"));
         messageListener.setMessageFactory(new MockWebServiceMessageFactory());
