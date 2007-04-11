@@ -17,6 +17,7 @@
 package org.springframework.ws.transport.jms;
 
 import java.io.IOException;
+import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Queue;
 import javax.jms.QueueConnection;
@@ -30,7 +31,15 @@ import org.springframework.util.Assert;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
 
-/** @author Arjen Poutsma */
+/**
+ * <code>WebServiceMessageSender</code> implementation that uses JMS {@link Queue}.
+ * <p/>
+ * This message sender sends the request message of the queue configured with either the <code>queue</code> or
+ * <code>queueName</code> property. It creates a temporary queue for the response message. For both request and response
+ * {@link BytesMessage}s are used.
+ *
+ * @author Arjen Poutsma
+ */
 public class JmsMessageSender implements WebServiceMessageSender {
 
     /** Default timeout for receive operations. */

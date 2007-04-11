@@ -28,7 +28,7 @@
         <property name="messageReceiver" ref="messageReceiver"/>
     </bean>
 
-    <bean id="messageReceiver" class="org.springframework.ws.transport.jms.SimpleTestingMessageReceiver"/>
+    <bean id="messageReceiver" class="org.springframework.ws.transport.SimpleTestingMessageReceiver"/>
 
 
 </beans>

@@ -23,9 +23,7 @@ import javax.mail.MessagingException;
 
 import org.springframework.ws.transport.TransportOutputStream;
 
-/**
- * @author Arjen Poutsma
- */
+/** @author Arjen Poutsma */
 public class MailTransportOutputStream extends TransportOutputStream {
 
     private final Message message;
@@ -51,4 +49,5 @@ public class MailTransportOutputStream extends TransportOutputStream {
             throw new IOException(ex.getMessage());
         }
     }
+
 }
