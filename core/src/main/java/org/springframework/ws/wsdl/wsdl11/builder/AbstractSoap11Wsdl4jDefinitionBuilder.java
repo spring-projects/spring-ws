@@ -33,6 +33,7 @@ import javax.wsdl.extensions.ExtensibilityElement;
 import javax.wsdl.extensions.soap.SOAPAddress;
 import javax.wsdl.extensions.soap.SOAPBinding;
 import javax.wsdl.extensions.soap.SOAPBody;
+import javax.wsdl.extensions.soap.SOAPFault;
 import javax.wsdl.extensions.soap.SOAPOperation;
 import javax.xml.namespace.QName;
 
@@ -180,9 +181,9 @@ public abstract class AbstractSoap11Wsdl4jDefinitionBuilder extends AbstractBind
      */
     protected void populateBindingFault(BindingFault bindingFault, Fault fault) throws WSDLException {
         super.populateBindingFault(bindingFault, fault);
-        SOAPBody soapBody = (SOAPBody) createSoapExtension(BindingOutput.class, "body");
-        populateSoapBody(soapBody);
-        bindingFault.addExtensibilityElement(soapBody);
+        SOAPFault soapFault = (SOAPFault) createSoapExtension(BindingFault.class, "fault");
+        populateSoapFault(bindingFault, soapFault);
+        bindingFault.addExtensibilityElement(soapFault);
     }
 
     /**
@@ -195,6 +196,20 @@ public abstract class AbstractSoap11Wsdl4jDefinitionBuilder extends AbstractBind
      */
     protected void populateSoapBody(SOAPBody soapBody) throws WSDLException {
         soapBody.setUse("literal");
+    }
+
+    /**
+     * Called after the <code>SOAPFault</code> has been created. Default implementation sets the use style to
+     * <code>"literal"</code>, and sets the name equal to the binding fault. Subclasses can override this behavior.
+     *
+     * @param bindingFault the WSDL4J <code>BindingFault</code>
+     * @param soapFault    the WSDL4J <code>SOAPFault</code>
+     * @throws WSDLException in case of errors
+     * @see javax.wsdl.extensions.soap.SOAPBody#setUse(String)
+     */
+    protected void populateSoapFault(BindingFault bindingFault, SOAPFault soapFault) throws WSDLException {
+        soapFault.setName(bindingFault.getName());
+        soapFault.setUse("literal");
     }
 
     /**

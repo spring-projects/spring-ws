@@ -29,6 +29,14 @@
                 </complexType>
             </element>
 
+            <element name="GetFlightsFault">
+                <complexType>
+                    <sequence>
+                        <element name="errorCode" type="string"/>
+                    </sequence>
+                </complexType>
+            </element>
+
             <element name="BookFlightRequest">
                 <complexType>
                     <all>
@@ -123,47 +131,39 @@
         </schema>
     </wsdl:types>
     <wsdl:message name="GetFrequentFlyerMileageResponse">
-        <wsdl:part element="schema:GetFrequentFlyerMileageResponse" name="GetFrequentFlyerMileageResponse">
-        </wsdl:part>
+        <wsdl:part element="schema:GetFrequentFlyerMileageResponse" name="GetFrequentFlyerMileageResponse"/>
     </wsdl:message>
     <wsdl:message name="BookFlightResponse">
-        <wsdl:part element="schema:BookFlightResponse" name="BookFlightResponse">
-        </wsdl:part>
+        <wsdl:part element="schema:BookFlightResponse" name="BookFlightResponse"/>
     </wsdl:message>
     <wsdl:message name="GetFlightsRequest">
-        <wsdl:part element="schema:GetFlightsRequest" name="GetFlightsRequest">
-        </wsdl:part>
+        <wsdl:part element="schema:GetFlightsRequest" name="GetFlightsRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetFlightsFault">
+        <wsdl:part element="schema:GetFlightsFault" name="GetFlightsFault"/>
     </wsdl:message>
     <wsdl:message name="GetFrequentFlyerMileageRequest">
-        <wsdl:part element="schema:GetFrequentFlyerMileageRequest" name="GetFrequentFlyerMileageRequest">
-        </wsdl:part>
+        <wsdl:part element="schema:GetFrequentFlyerMileageRequest" name="GetFrequentFlyerMileageRequest"/>
     </wsdl:message>
     <wsdl:message name="GetFlightsResponse">
-        <wsdl:part element="schema:GetFlightsResponse" name="GetFlightsResponse">
-        </wsdl:part>
+        <wsdl:part element="schema:GetFlightsResponse" name="GetFlightsResponse"/>
     </wsdl:message>
     <wsdl:message name="BookFlightRequest">
-        <wsdl:part element="schema:BookFlightRequest" name="BookFlightRequest">
-        </wsdl:part>
+        <wsdl:part element="schema:BookFlightRequest" name="BookFlightRequest"/>
     </wsdl:message>
     <wsdl:portType name="Airline">
         <wsdl:operation name="GetFlights">
-            <wsdl:input message="tns:GetFlightsRequest" name="GetFlightsRequest">
-            </wsdl:input>
-            <wsdl:output message="tns:GetFlightsResponse" name="GetFlightsResponse">
-            </wsdl:output>
+            <wsdl:input message="tns:GetFlightsRequest" name="GetFlightsRequest"/>
+            <wsdl:output message="tns:GetFlightsResponse" name="GetFlightsResponse"/>
+            <wsdl:fault message="tns:GetFlightsFault" name="GetFlightsFault"/>
         </wsdl:operation>
         <wsdl:operation name="GetFrequentFlyerMileage">
-            <wsdl:input message="tns:GetFrequentFlyerMileageRequest" name="GetFrequentFlyerMileageRequest">
-            </wsdl:input>
-            <wsdl:output message="tns:GetFrequentFlyerMileageResponse" name="GetFrequentFlyerMileageResponse">
-            </wsdl:output>
+            <wsdl:input message="tns:GetFrequentFlyerMileageRequest" name="GetFrequentFlyerMileageRequest"/>
+            <wsdl:output message="tns:GetFrequentFlyerMileageResponse" name="GetFrequentFlyerMileageResponse"/>
         </wsdl:operation>
         <wsdl:operation name="BookFlight">
-            <wsdl:input message="tns:BookFlightRequest" name="BookFlightRequest">
-            </wsdl:input>
-            <wsdl:output message="tns:BookFlightResponse" name="BookFlightResponse">
-            </wsdl:output>
+            <wsdl:input message="tns:BookFlightRequest" name="BookFlightRequest"/>
+            <wsdl:output message="tns:BookFlightResponse" name="BookFlightResponse"/>
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="AirlineBinding" type="tns:Airline">
@@ -176,6 +176,9 @@
             <wsdl:output name="GetFlightsResponse">
                 <soap:body use="literal"/>
             </wsdl:output>
+            <wsdl:fault name="GetFlightsFault">
+                <soap:fault name="GetFlightsFault" use="literal"/>
+            </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="GetFrequentFlyerMileage">
             <soap:operation soapAction=""/>

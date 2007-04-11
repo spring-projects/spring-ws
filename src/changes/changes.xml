@@ -6,6 +6,7 @@
     </properties>
     <body>
         <release version="1.0-RC1">
+            <action dev="poutsma" type="add" issue="SWS-79">Add faults into dynamically created WSDL</action>
             <action dev="poutsma" type="add" issue="SWS-20">Added MethodEndpoint functionality, invoking methods for
                 incoming requests
             </action>

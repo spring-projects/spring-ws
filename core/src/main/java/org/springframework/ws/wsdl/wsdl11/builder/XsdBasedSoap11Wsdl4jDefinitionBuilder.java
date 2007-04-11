@@ -19,9 +19,11 @@ package org.springframework.ws.wsdl.wsdl11.builder;
 import java.io.IOException;
 import java.util.Iterator;
 import javax.wsdl.Definition;
+import javax.wsdl.Fault;
 import javax.wsdl.Input;
 import javax.wsdl.Message;
 import javax.wsdl.Operation;
+import javax.wsdl.OperationType;
 import javax.wsdl.Output;
 import javax.wsdl.Part;
 import javax.wsdl.PortType;
@@ -71,6 +73,9 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
     /** The default suffix used to detect response elements in the schema. */
     public static final String DEFAULT_RESPONSE_SUFFIX = "Response";
 
+    /** The default suffix used to detect fault elements in the schema. */
+    public static final String DEFAULT_FAULT_SUFFIX = "Fault";
+
     /** The default prefix used to register the schema namespace in the WSDL. */
     public static final String DEFAULT_SCHEMA_PREFIX = "schema";
 
@@ -96,6 +101,8 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
 
     private String responseSuffix = DEFAULT_RESPONSE_SUFFIX;
 
+    private String faultSuffix = DEFAULT_FAULT_SUFFIX;
+
     /**
      * Sets the suffix used to detect request elements in the schema.
      *
@@ -112,6 +119,15 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
      */
     public void setResponseSuffix(String responseSuffix) {
         this.responseSuffix = responseSuffix;
+    }
+
+    /**
+     * Sets the suffix used to detect fault elements in the schema.
+     *
+     * @see #DEFAULT_FAULT_SUFFIX
+     */
+    public void setFaultSuffix(String faultSuffix) {
+        this.faultSuffix = faultSuffix;
     }
 
     /** Sets the port type name used for this definition. Required. */
@@ -207,20 +223,22 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
     }
 
     /**
-     * Creates messages for each element found in the schema for which <code>isRequestMessage()</code> or
-     * <code>isResponseMessage()</code> is <code>true</code>.
+     * Creates messages for each element found in the schema for which <code>isRequestMessage()</code>,
+     * <code>isResponseMessage()</code>, or <code>isFaultMessage()</code> is <code>true</code>.
      *
      * @param definition the WSDL4J <code>Definition</code>
      * @throws WSDLException in case of errors
      * @see #isRequestMessage(javax.xml.namespace.QName)
      * @see #isResponseMessage(javax.xml.namespace.QName)
+     * @see #isFaultMessage(javax.xml.namespace.QName)
      */
     protected void buildMessages(Definition definition) throws WSDLException {
         NodeList elements = schemaElement.getElementsByTagNameNS(SCHEMA_NAMESPACE_URI, "element");
         for (int i = 0; i < elements.getLength(); i++) {
             Element element = (Element) elements.item(i);
             QName elementName = getSchemaElementName(element);
-            if (elementName != null && (isRequestMessage(elementName) || isResponseMessage(elementName))) {
+            if (elementName != null &&
+                    (isRequestMessage(elementName) || isResponseMessage(elementName) || isFaultMessage(elementName))) {
                 Message message = definition.createMessage();
                 populateMessage(message, element);
                 Part part = definition.createPart();
@@ -254,6 +272,18 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
      */
     protected boolean isResponseMessage(QName name) {
         return name.getLocalPart().endsWith(responseSuffix);
+    }
+
+    /**
+     * Indicates whether the given name should be included as <code>Message</code> in the definition. Default
+     * implementation checks whether the local part ends with the fault suffix.
+     *
+     * @param name the name of the element elligable for being a message
+     * @return <code>true</code> if to be included as message; <code>false</code> otherwise
+     * @see #setFaultSuffix(String)
+     */
+    protected boolean isFaultMessage(QName name) {
+        return name.getLocalPart().endsWith(faultSuffix);
     }
 
     /**
@@ -305,19 +335,22 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
         portType.setQName(new QName(targetNamespace, portTypeName));
     }
 
+    /** @noinspection UnnecessaryLocalVariable */
     private void createOperations(Definition definition, PortType portType) throws WSDLException {
         for (Iterator messageIterator = definition.getMessages().values().iterator(); messageIterator.hasNext();) {
             Message message = (Message) messageIterator.next();
             for (Iterator partIterator = message.getParts().values().iterator(); partIterator.hasNext();) {
                 Part part = (Part) partIterator.next();
                 if (isRequestMessage(part.getElementName())) {
-                    Message responseMessage = definition.getMessage(getResponseMessageName(message.getQName()));
+                    Message requestMessage = message;
+                    Message responseMessage = definition.getMessage(getResponseMessageName(requestMessage.getQName()));
+                    Message faultMessage = definition.getMessage(getFaultMessageName(requestMessage.getQName()));
                     Operation operation = definition.createOperation();
-                    populateOperation(operation, message, responseMessage);
-                    if (message != null) {
+                    populateOperation(operation, requestMessage, responseMessage);
+                    if (requestMessage != null) {
                         Input input = definition.createInput();
-                        input.setMessage(message);
-                        input.setName(message.getQName().getLocalPart());
+                        input.setMessage(requestMessage);
+                        input.setName(requestMessage.getQName().getLocalPart());
                         operation.setInput(input);
                     }
                     if (responseMessage != null) {
@@ -325,6 +358,21 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
                         output.setMessage(responseMessage);
                         output.setName(responseMessage.getQName().getLocalPart());
                         operation.setOutput(output);
+                    }
+                    if (faultMessage != null) {
+                        Fault fault = definition.createFault();
+                        fault.setMessage(faultMessage);
+                        fault.setName(faultMessage.getQName().getLocalPart());
+                        operation.addFault(fault);
+                    }
+                    if (requestMessage != null && responseMessage != null) {
+                        operation.setStyle(OperationType.REQUEST_RESPONSE);
+                    }
+                    else if (requestMessage != null && responseMessage == null) {
+                        operation.setStyle(OperationType.ONE_WAY);
+                    }
+                    else if (requestMessage == null && responseMessage != null) {
+                        operation.setStyle(OperationType.NOTIFICATION);
                     }
                     operation.setUndefined(false);
                     portType.addOperation(operation);
@@ -346,6 +394,25 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
         if (localPart.endsWith(requestSuffix)) {
             String prefix = localPart.substring(0, localPart.length() - requestSuffix.length());
             return new QName(requestMessageName.getNamespaceURI(), prefix + responseSuffix);
+        }
+        else {
+            return null;
+        }
+    }
+
+    /**
+     * Given an request message name, return the corresponding fault message name.
+     * <p/>
+     * Default implementation removes the request suffix, and appends the fault suffix.
+     *
+     * @param requestMessageName the name of the request message
+     * @return the name of the corresponding response message, or null
+     */
+    protected QName getFaultMessageName(QName requestMessageName) {
+        String localPart = requestMessageName.getLocalPart();
+        if (localPart.endsWith(requestSuffix)) {
+            String prefix = localPart.substring(0, localPart.length() - requestSuffix.length());
+            return new QName(requestMessageName.getNamespaceURI(), prefix + faultSuffix);
         }
         else {
             return null;
