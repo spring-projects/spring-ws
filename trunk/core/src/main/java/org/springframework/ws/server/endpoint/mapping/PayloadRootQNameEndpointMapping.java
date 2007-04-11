@@ -17,13 +17,11 @@
 package org.springframework.ws.server.endpoint.mapping;
 
 import javax.xml.namespace.QName;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMResult;
 
-import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.xml.dom.DomUtils;
 import org.springframework.xml.namespace.QNameUtils;
 import org.w3c.dom.Element;
 
@@ -56,15 +54,10 @@ public class PayloadRootQNameEndpointMapping extends AbstractQNameEndpointMappin
     }
 
     protected QName resolveQName(MessageContext messageContext) throws TransformerException {
-        Element payloadElement = getMessagePayloadElement(messageContext.getRequest());
+        Element payloadElement =
+                DomUtils.getRootElement(messageContext.getRequest().getPayloadSource(), transformerFactory);
         return QNameUtils.getQNameForNode(payloadElement);
     }
 
-    private Element getMessagePayloadElement(WebServiceMessage message) throws TransformerException {
-        Transformer transformer = transformerFactory.newTransformer();
-        DOMResult domResult = new DOMResult();
-        transformer.transform(message.getPayloadSource(), domResult);
-        return (Element) domResult.getNode().getFirstChild();
-    }
 
 }

@@ -19,6 +19,7 @@ package org.springframework.xml.dom;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
@@ -36,11 +37,12 @@ public abstract class DomUtils {
     /**
      * Returns the root element of the given source, transforming it if necessary.
      *
-     * @param source      the source to get the root element from
-     * @param transformer a transformer
+     * @param source             the source to get the root element from
+     * @param transformerFactory a transformer factory, necessary if the given source is not a <code>DOMSource</code>
      * @return the root element
      */
-    public static Element getRootElement(Source source, Transformer transformer) throws TransformerException {
+    public static Element getRootElement(Source source, TransformerFactory transformerFactory)
+            throws TransformerException {
         if (source instanceof DOMSource) {
             DOMSource domSource = (DOMSource) source;
             Node node = domSource.getNode();
@@ -55,6 +57,7 @@ public abstract class DomUtils {
                 return document.getDocumentElement();
             }
         }
+        Transformer transformer = transformerFactory.newTransformer();
         DOMResult domResult = new DOMResult();
         transformer.transform(source, domResult);
         Document document = (Document) domResult.getNode();
