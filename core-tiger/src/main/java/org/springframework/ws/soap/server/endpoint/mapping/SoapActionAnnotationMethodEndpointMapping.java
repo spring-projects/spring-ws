@@ -18,7 +18,6 @@ package org.springframework.ws.soap.server.endpoint.mapping;
 
 import java.lang.reflect.Method;
 
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
@@ -96,7 +95,7 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
     }
 
     protected String getLookupKeyForMethod(Method method) {
-        SoapAction soapAction = AnnotationUtils.getAnnotation(method, SoapAction.class);
+        SoapAction soapAction = method.getAnnotation(SoapAction.class);
         return soapAction != null ? soapAction.value() : null;
     }
 }

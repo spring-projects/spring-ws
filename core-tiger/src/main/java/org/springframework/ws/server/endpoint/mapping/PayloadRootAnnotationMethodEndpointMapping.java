@@ -20,7 +20,6 @@ import java.lang.reflect.Method;
 import javax.xml.namespace.QName;
 import javax.xml.transform.TransformerFactory;
 
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointMapping;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
@@ -61,7 +60,7 @@ public class PayloadRootAnnotationMethodEndpointMapping extends AbstractAnnotati
     }
 
     protected String getLookupKeyForMethod(Method method) {
-        PayloadRoot annotation = AnnotationUtils.getAnnotation(method, PayloadRoot.class);
+        PayloadRoot annotation = method.getAnnotation(PayloadRoot.class);
         return annotation != null ? annotation.value() : null;
     }
 
