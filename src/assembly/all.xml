@@ -12,6 +12,7 @@
                 <include>org.springframework.ws:spring-oxm</include>
                 <include>org.springframework.ws:spring-oxm-tiger</include>
                 <include>org.springframework.ws:spring-ws-core</include>
+                <include>org.springframework.ws:spring-ws-core-tiger</include>
                 <include>org.springframework.ws:spring-ws-security</include>
             </includes>
             <binaries>
