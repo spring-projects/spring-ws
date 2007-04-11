@@ -23,6 +23,14 @@
         </complexType>
     </element>
 
+    <element name="GetFlightsFault">
+        <complexType>
+            <sequence>
+                <element name="errorCode" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+
     <element name="BookFlightRequest">
         <complexType>
             <all>
