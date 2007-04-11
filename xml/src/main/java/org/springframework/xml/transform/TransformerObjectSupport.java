@@ -34,15 +34,18 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class TransformerObjectSupport {
 
-    /**
-     * Logger available to subclasses.
-     */
+    /** Logger available to subclasses. */
     protected final Log logger = LogFactory.getLog(getClass());
 
     private static TransformerFactory transformerFactory;
 
     static {
         transformerFactory = TransformerFactory.newInstance();
+    }
+
+    /** Returns the <code>TransformerFactory</code>. */
+    protected TransformerFactory getTransformerFactory() {
+        return transformerFactory;
     }
 
     /**

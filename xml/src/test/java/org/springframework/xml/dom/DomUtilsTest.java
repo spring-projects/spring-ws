@@ -20,7 +20,6 @@ import java.io.StringReader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -34,16 +33,16 @@ import org.xml.sax.InputSource;
 
 public class DomUtilsTest extends TestCase {
 
-    private Transformer transformer;
-
     private static final String NAMESPACE = "http://springframework.org/spring-ws";
 
     private static final String LOCAL_NAME = "Root";
 
     private static final String XML = "<" + LOCAL_NAME + " xmlns='" + NAMESPACE + "'/>";
 
+    private TransformerFactory transformerFactory;
+
     protected void setUp() throws Exception {
-        transformer = TransformerFactory.newInstance().newTransformer();
+        transformerFactory = TransformerFactory.newInstance();
     }
 
     public void testGetRootElementDomSource() throws Exception {
@@ -67,7 +66,7 @@ public class DomUtilsTest extends TestCase {
     }
 
     private void testSource(Source source) throws TransformerException {
-        Element result = DomUtils.getRootElement(source, transformer);
+        Element result = DomUtils.getRootElement(source, transformerFactory);
         assertNotNull("No result", result);
         assertEquals("Invalid namespace", NAMESPACE, result.getNamespaceURI());
         assertEquals("Invalid local name", LOCAL_NAME, result.getLocalName());

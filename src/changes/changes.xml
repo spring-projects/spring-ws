@@ -6,6 +6,9 @@
     </properties>
     <body>
         <release version="1.0-RC1">
+            <action dev="poutsma" type="add" issue="SWS-20">Added MethodEndpoint functionality, invoking methods for
+                incoming requests
+            </action>
             <action dev="poutsma" type="fix" issue="SWS-105">GZip compression is not enabled</action>
             <action dev="poutsma" type="update">WebServiceConnection is now container for TransportInputStream and
                 TransportOutputStream, used on both client- and server-side

@@ -104,6 +104,7 @@
             </activation>
             <modules>
                 <module>oxm-tiger</module>
+                <module>core-tiger</module>
             </modules>
         </profile>
         <profile>

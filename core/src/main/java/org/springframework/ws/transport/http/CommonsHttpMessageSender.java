@@ -31,7 +31,6 @@ import org.springframework.ws.transport.WebServiceConnection;
  * Commons HttpClient</a> to execute POST requests.
  * <p/>
  * Allows to use a preconfigured HttpClient instance, potentially with authentication, HTTP connection pooling, etc.
- * Also designed for easy subclassing, customizing specific template methods.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.transport.http.HttpUrlConnectionMessageSender
