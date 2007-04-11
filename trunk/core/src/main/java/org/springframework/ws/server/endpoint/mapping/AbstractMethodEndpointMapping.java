@@ -109,7 +109,7 @@ public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapp
     protected void registerMethods(Object endpoint) {
         Method[] methods = getEndpointClass(endpoint).getMethods();
         for (int i = 0; i < methods.length; i++) {
-            if (JdkVersion.isAtLeastJava15() && methods[i].isSynthetic() ||
+            if (JdkVersion.getMajorJavaVersion() >= JdkVersion.JAVA_15 && methods[i].isSynthetic() ||
                     methods[i].getDeclaringClass().equals(Object.class)) {
                 continue;
             }
