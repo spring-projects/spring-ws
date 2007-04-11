@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.transport.jms;
+package org.springframework.ws.transport;
 
 import javax.xml.transform.Transformer;
 
 import junit.framework.Assert;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.transport.WebServiceMessageReceiver;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
 public class SimpleTestingMessageReceiver extends TransformerObjectSupport implements WebServiceMessageReceiver {
 
     public void receive(MessageContext messageContext) throws Exception {
         Assert.assertNotNull("MessageContext is null", messageContext);
+        logger.info("Received message");
         Transformer transformer = createTransformer();
         transformer.transform(messageContext.getRequest().getPayloadSource(),
                 messageContext.getResponse().getPayloadResult());

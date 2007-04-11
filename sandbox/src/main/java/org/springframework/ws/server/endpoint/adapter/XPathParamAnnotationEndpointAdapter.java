@@ -17,6 +17,7 @@
 package org.springframework.ws.server.endpoint.adapter;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Properties;
 import javax.xml.namespace.QName;
@@ -104,14 +105,24 @@ public class XPathParamAnnotationEndpointAdapter extends AbstractMethodEndpointA
     }
 
     protected void invokeInternal(MessageContext messageContext, MethodEndpoint methodEndpoint) throws Exception {
-        Element payloadElement = getMessagePayloadElement(messageContext.getRequest());
-        Object[] args = getMethodArguments(payloadElement, methodEndpoint.getMethod());
-        Object result = methodEndpoint.invoke(args);
-        if (result != null && result instanceof Source) {
-            Source responseSource = (Source) result;
-            WebServiceMessage response = messageContext.getResponse();
-            Transformer transformer = createTransformer();
-            transformer.transform(responseSource, response.getPayloadResult());
+        try {
+            Element payloadElement = getMessagePayloadElement(messageContext.getRequest());
+            Object[] args = getMethodArguments(payloadElement, methodEndpoint.getMethod());
+            Object result = methodEndpoint.invoke(args);
+            if (result != null && result instanceof Source) {
+                Source responseSource = (Source) result;
+                WebServiceMessage response = messageContext.getResponse();
+                Transformer transformer = createTransformer();
+                transformer.transform(responseSource, response.getPayloadResult());
+            }
+        }
+        catch (InvocationTargetException ex) {
+            if (ex.getTargetException() instanceof Exception) {
+                throw (Exception) ex.getTargetException();
+            }
+            else {
+                throw ex;
+            }
         }
     }
 
