@@ -22,6 +22,8 @@ import org.springframework.core.io.Resource;
 import org.xml.sax.InputSource;
 
 /**
+ * Convenient utility methods for dealing with SAX.
+ *
  * @author Arjen Poutsma
  */
 public abstract class SaxUtils {
@@ -42,9 +44,7 @@ public abstract class SaxUtils {
         return inputSource;
     }
 
-    /**
-     * Retrieves the URL from the given resource as System ID. Returns <code>null</code> if it cannot be openened.
-     */
+    /** Retrieves the URL from the given resource as System ID. Returns <code>null</code> if it cannot be openened. */
     public static String getSystemId(Resource resource) {
         try {
             return resource.getURL().toString();
