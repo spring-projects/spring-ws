@@ -3,24 +3,20 @@
     <skin>
         <groupId>org.springframework.maven.skins</groupId>
         <artifactId>maven-spring-skin</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.3</version>
     </skin>
     <publishDate position="left" format="yyyy-MM-dd"/>
     <bannerLeft>
-        <src>http://www.springframework.org/files/xdev-spring_logo.jpg</src>
+        <src>images/spring-ws.png</src>
         <href>http://www.springframework.org/spring-ws</href>
     </bannerLeft>
-    <bannerRight>
-        <src>http://www.springframework.org/files/banners/i21-banner-stamped.jpg</src>
-        <href>http://www.springframework.com/</href>
-    </bannerRight>
     <body>
         <links>
             <item name="Spring Framework" href="http://www.springframework.org/"/>
             <item name="Spring Web Services" href="http://www.springframework.org/spring-ws/"/>
         </links>
         <menu name="Overview">
-            <item name="Home" href="/"/>
+            <item name="Home" href="index.html"/>
             <item name="Downloads" href="downloads/releases.html"/>
         </menu>
         <menu name="Documentation">
@@ -41,10 +37,11 @@
     </body>
     <poweredBy>
         <logo name="Powered by Spring" href="http://www.springframework.org" img="images/logos/powered-by-spring_small.png"/>
-        <logo name="Hosted on SourceForge.net" href="http://sourceforge.net" img="http://sourceforge.net/sflogo.php?group_id=73357&amp;type=1"/>
         <logo name="Powered by Structure 101" href="http://www.headwaysoftware.com/products/structure101/" img="images/logos/s101d.png"/>
         <logo name="Powered by JIRA" href="http://www.atlassian.com/software/jira/" img="images/logos/jira.png"/>
         <logo name="Built by Bamboo" href="http://www.atlassian.com/software/bamboo/" img="images/logos/bamboo.png"/>
         <logo name="Build with Maven 2" href="http://maven.apache.org" img="images/logos/maven-feather.png"/>
+        <logo name="Hosted on SourceForge.net" href="http://sourceforge.net" img="http://sourceforge.net/sflogo.php?group_id=73357&amp;type=1"/>
+        <logo name="Hosted by Contegix" href="http://www.contegix.com/" img="images/logos/contegix.png"/>
     </poweredBy>
 </project>
