@@ -4,7 +4,7 @@
     <parent>
         <artifactId>spring-ws</artifactId>
         <groupId>org.springframework.ws</groupId>
-        <version>1.0-m4-SNAPSHOT</version>
+        <version>1.0-rc1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>spring-oxm</artifactId>
@@ -64,16 +64,25 @@
             <groupId>org.springframework.ws</groupId>
             <artifactId>spring-xml</artifactId>
         </dependency>
+        <!--Spring dependencies-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+        </dependency>
         <!-- XML handling dependencies -->
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>stax</groupId>
             <artifactId>stax-api</artifactId>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>wstx-asl</artifactId>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>xpp3</groupId>
@@ -83,7 +92,7 @@
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
         <!-- O/X Mapping dependencies -->
         <!-- Castor -->
