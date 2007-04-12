@@ -18,8 +18,10 @@ package org.springframework.ws.client.core.support;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.BeanInitializationException;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.ws.WebServiceMessageFactory;
@@ -45,67 +47,65 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  * @see org.springframework.ws.client.core.WebServiceTemplate
  * @see #setMarshaller(org.springframework.oxm.Marshaller)
  */
-public abstract class WebServiceGatewaySupport implements InitializingBean {
+public abstract class WebServiceGatewaySupport implements InitializingBean, ApplicationContextAware {
 
+    /** Logger available to subclasses. */
     protected final Log logger = LogFactory.getLog(getClass());
-
-    private WebServiceMessageFactory messageFactory;
-
-    private WebServiceMessageSender messageSender;
 
     private WebServiceTemplate webServiceTemplate;
 
-    private Marshaller marshaller;
-
-    private Unmarshaller unmarshaller;
+    /**
+     * Creates a new instance of the <code>WebServiceGatewaySupport</code> class, with a default
+     * <code>WebServiceTemplate</code>.
+     */
+    protected WebServiceGatewaySupport() {
+        webServiceTemplate = new WebServiceTemplate();
+    }
 
     /**
-     * Returns the <code>WebServiceMessageFactory</code> used by the gateway.
+     * Creates a new <code>WebServiceGatewaySupport</code> instance based on the given message factory and message
+     * sender.
+     *
+     * @param messageFactory the message factory to use
+     * @param messageSender  the message sender to use
      */
+    protected WebServiceGatewaySupport(WebServiceMessageFactory messageFactory, WebServiceMessageSender messageSender) {
+        webServiceTemplate = new WebServiceTemplate(messageFactory, messageSender);
+    }
+
+    /** Returns the <code>WebServiceMessageFactory</code> used by the gateway. */
     public final WebServiceMessageFactory getMessageFactory() {
-        return messageFactory;
+        return webServiceTemplate.getMessageFactory();
     }
 
-    /**
-     * Set the <code>WebServiceMessageFactory</code> to be used by the gateway.
-     */
+    /** Set the <code>WebServiceMessageFactory</code> to be used by the gateway. */
     public final void setMessageFactory(WebServiceMessageFactory messageFactory) {
-        this.messageFactory = messageFactory;
+        webServiceTemplate.setMessageFactory(messageFactory);
     }
 
-    /**
-     * Returns the <code>WebServiceMessageSender</code> used by the gateway.
-     */
+    /** Returns the <code>WebServiceMessageSender</code> used by the gateway. */
     public final WebServiceMessageSender getMessageSender() {
-        return messageSender;
+        return webServiceTemplate.getMessageSender();
     }
 
-    /**
-     * Sets the <code>WebServiceMessageSender</code> to be used by the gateway.
-     */
+    /** Sets the <code>WebServiceMessageSender</code> to be used by the gateway. */
     public final void setMessageSender(WebServiceMessageSender messageSender) {
-        this.messageSender = messageSender;
+        webServiceTemplate.setMessageSender(messageSender);
     }
 
-    /**
-     * Returns the <code>WebServiceTemplate</code> for the gateway.
-     */
+    /** Returns the <code>WebServiceTemplate</code> for the gateway. */
     public final WebServiceTemplate getWebServiceTemplate() {
         return webServiceTemplate;
     }
 
-    /**
-     * Sets the <code>WebServiceTemplate</code> to be used by the gateway.
-     */
+    /** Sets the <code>WebServiceTemplate</code> to be used by the gateway. */
     public final void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
         this.webServiceTemplate = webServiceTemplate;
     }
 
-    /**
-     * Returns the <code>Marshaller</code> used by the gateway.
-     */
+    /** Returns the <code>Marshaller</code> used by the gateway. */
     public final Marshaller getMarshaller() {
-        return marshaller;
+        return webServiceTemplate.getMarshaller();
     }
 
     /**
@@ -115,14 +115,12 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
      * @see org.springframework.ws.client.core.WebServiceTemplate#marshalSendAndReceive
      */
     public void setMarshaller(Marshaller marshaller) {
-        this.marshaller = marshaller;
+        webServiceTemplate.setMarshaller(marshaller);
     }
 
-    /**
-     * Returns the <code>Unmarshaller</code> used by the gateway.
-     */
+    /** Returns the <code>Unmarshaller</code> used by the gateway. */
     public final Unmarshaller getUnmarshaller() {
-        return unmarshaller;
+        return webServiceTemplate.getUnmarshaller();
     }
 
     /**
@@ -132,29 +130,16 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
      * @see org.springframework.ws.client.core.WebServiceTemplate#marshalSendAndReceive
      */
     public final void setUnmarshaller(Unmarshaller unmarshaller) {
-        this.unmarshaller = unmarshaller;
+        webServiceTemplate.setUnmarshaller(unmarshaller);
     }
 
-    public final void afterPropertiesSet() throws IllegalArgumentException, BeanInitializationException {
-        if (webServiceTemplate == null && messageFactory != null && messageSender != null) {
-            webServiceTemplate = new WebServiceTemplate(messageFactory, messageSender);
-            if (marshaller != null) {
-                webServiceTemplate.setMarshaller(marshaller);
-            }
-            if (unmarshaller != null) {
-                webServiceTemplate.setUnmarshaller(unmarshaller);
-            }
-        }
-        if (webServiceTemplate == null) {
-            throw new IllegalArgumentException("messageFactory and messageSender or webServiceTemplate is required");
-        }
-        try {
-            initGateway();
-        }
-        catch (Exception ex) {
-            throw new BeanInitializationException("Initialization of Web service gateway failed: " + ex.getMessage(),
-                    ex);
-        }
+    public final void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        webServiceTemplate.setApplicationContext(applicationContext);
+    }
+
+    public final void afterPropertiesSet() throws Exception {
+        webServiceTemplate.afterPropertiesSet();
+        initGateway();
     }
 
     /**

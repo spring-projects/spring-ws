@@ -41,23 +41,17 @@ import org.springframework.util.StringUtils;
  */
 public class DefaultStrategiesHelper {
 
-    /**
-     * Keys are strategy interface names, values are implementation class names.
-     */
+    /** Keys are strategy interface names, values are implementation class names. */
     private Properties defaultStrategies = new Properties();
 
-    /**
-     * Initializes a new instance of the <code>DefaultStrategiesHelper</code> based on the given set of properties.
-     */
+    /** Initializes a new instance of the <code>DefaultStrategiesHelper</code> based on the given set of properties. */
     public DefaultStrategiesHelper(Properties defaultStrategies) {
         Assert.notNull(defaultStrategies, "defaultStrategies must not be null");
         this.defaultStrategies = defaultStrategies;
     }
 
-    /**
-     * Initializes a new instance of the <code>DefaultStrategiesHelper</code> based on the given resource.
-     */
-    public DefaultStrategiesHelper(Resource resource) {
+    /** Initializes a new instance of the <code>DefaultStrategiesHelper</code> based on the given resource. */
+    public DefaultStrategiesHelper(Resource resource) throws IllegalStateException {
         try {
             InputStream is = resource.getInputStream();
             defaultStrategies = new Properties();
@@ -127,7 +121,7 @@ public class DefaultStrategiesHelper {
         List result = getDefaultStrategies(strategyInterface, applicationContext);
         if (result.size() != 1) {
             throw new BeanInitializationException(
-                    "DispatcherServlet needs exactly 1 strategy for interface [" + strategyInterface.getName() + "]");
+                    "Could not find exactly 1 strategy for interface [" + strategyInterface.getName() + "]");
         }
         return result.get(0);
     }
