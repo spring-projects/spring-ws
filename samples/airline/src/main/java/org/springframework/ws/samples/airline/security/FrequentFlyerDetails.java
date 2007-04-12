@@ -19,7 +19,6 @@ package org.springframework.ws.samples.airline.security;
 import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.GrantedAuthorityImpl;
 import org.acegisecurity.userdetails.UserDetails;
-
 import org.springframework.ws.samples.airline.domain.FrequentFlyer;
 
 /**
@@ -69,5 +68,9 @@ public class FrequentFlyerDetails implements UserDetails {
 
     public FrequentFlyer getFrequentFlyer() {
         return frequentFlyer;
+    }
+
+    public String toString() {
+        return frequentFlyer.toString();
     }
 }
