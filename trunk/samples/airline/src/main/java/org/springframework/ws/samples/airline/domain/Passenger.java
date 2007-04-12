@@ -54,8 +54,7 @@ public class Passenger extends Entity {
     }
 
     public int hashCode() {
-        int result;
-        result = getFirstName().hashCode();
+        int result = getFirstName().hashCode();
         result = 29 * result + getLastName().hashCode();
         return result;
     }
@@ -74,5 +73,9 @@ public class Passenger extends Entity {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String toString() {
+        return firstName + " " + lastName;
     }
 }
