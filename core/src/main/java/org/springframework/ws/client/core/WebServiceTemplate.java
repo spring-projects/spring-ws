@@ -23,9 +23,17 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanInitializationException;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.client.WebServiceClientException;
@@ -36,6 +44,7 @@ import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.ws.transport.TransportOutputStream;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
+import org.springframework.ws.transport.support.DefaultStrategiesHelper;
 
 /**
  * <strong>The central class for client-side Web services.</strong> It provides a message-driven approach to sending and
@@ -48,7 +57,7 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  *
  * @author Arjen Poutsma
  */
-public class WebServiceTemplate extends WebServiceAccessor implements WebServiceOperations {
+public class WebServiceTemplate extends WebServiceAccessor implements WebServiceOperations, ApplicationContextAware {
 
     private Marshaller marshaller;
 
@@ -56,16 +65,12 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
     private FaultResolver faultResolver = new SimpleFaultResolver();
 
-    /**
-     * Creates a new <code>WebServiceTemplate</code>.
-     * <p/>
-     * <b>Note</b> that the message factory and message sender properties have to be set before this template can be
-     * used.
-     *
-     * @see #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
-     * @see #setMessageSender(org.springframework.ws.transport.WebServiceMessageSender)
-     */
+    private DefaultStrategiesHelper defaultStrategiesHelper;
+
+    /** Creates a new <code>WebServiceTemplate</code> using default settings. */
     public WebServiceTemplate() {
+        Resource resource = new ClassPathResource(ClassUtils.getShortName(getClass()) + ".properties", getClass());
+        defaultStrategiesHelper = new DefaultStrategiesHelper(resource);
     }
 
     /**
@@ -75,6 +80,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      * @param messageSender  the message sender to use
      */
     public WebServiceTemplate(WebServiceMessageFactory messageFactory, WebServiceMessageSender messageSender) {
+        this();
         setMessageFactory(messageFactory);
         setMessageSender(messageSender);
     }
@@ -110,9 +116,33 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
         this.faultResolver = faultResolver;
     }
 
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        if (getMessageFactory() == null) {
+            initWebServiceMessageFactory(applicationContext);
+        }
+    }
+
+    private void initWebServiceMessageFactory(ApplicationContext applicationContext)
+            throws BeanInitializationException {
+        WebServiceMessageFactory messageFactory = (WebServiceMessageFactory) defaultStrategiesHelper
+                .getDefaultStrategy(WebServiceMessageFactory.class, applicationContext);
+        if (logger.isInfoEnabled()) {
+            logger.info("Using default message factory [" + messageFactory + "]");
+        }
+        if (messageFactory instanceof InitializingBean) {
+            try {
+                ((InitializingBean) messageFactory).afterPropertiesSet();
+            }
+            catch (Exception ex) {
+                throw new BeanInitializationException("Could not initialize message factory", ex);
+            }
+        }
+        setMessageFactory(messageFactory);
+    }
+
     /*
-     * Marshalling methods
-     */
+    * Marshalling methods
+    */
 
     public Object marshalSendAndReceive(final Object requestPayload) throws IOException {
         return marshalSendAndReceive(requestPayload, null);
@@ -143,8 +173,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     }
 
     /*
-     * Result-handling methods
-     */
+    * Result-handling methods
+    */
 
     public void sendAndReceive(Source requestPayload, Result responseResult) throws IOException {
         sendAndReceive(requestPayload, null, responseResult);
@@ -174,8 +204,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     }
 
     /*
-     * Source-handling methods
-     */
+    * Source-handling methods
+    */
 
     public Object sendAndReceive(final Source requestPayload, final SourceExtractor responseExtractor)
             throws IOException {
@@ -215,8 +245,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     }
 
     /*
-     * WebServiceMessage-handling methods
-     */
+    * WebServiceMessage-handling methods
+    */
 
     public void sendAndReceive(WebServiceMessageCallback requestCallback, WebServiceMessageCallback responseCallback)
             throws IOException {
