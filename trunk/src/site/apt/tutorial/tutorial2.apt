@@ -20,7 +20,7 @@ template):
 +-------------------------------------
 > mvn archetype:create -DarchetypeGroupId=org.springframework.ws \
   -DarchetypeArtifactId=spring-ws-archetype \
-  -DarchetypeVersion=1.0-m4-SNAPSHOT \
+  -DarchetypeVersion=1.0-rc1-SNAPSHOT \
   -DgroupId=com.mycompany.hr \
   -DartifactId=holidayService 
 +-------------------------------------

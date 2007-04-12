@@ -3,7 +3,7 @@
     <parent>
         <artifactId>spring-ws</artifactId>
         <groupId>org.springframework.ws</groupId>
-        <version>1.0-m4-SNAPSHOT</version>
+        <version>1.0-rc1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>spring-oxm-tiger</artifactId>
@@ -44,6 +44,10 @@
         <!-- Spring-WS dependencies -->
         <dependency>
             <groupId>org.springframework.ws</groupId>
+            <artifactId>spring-xml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ws</groupId>
             <artifactId>spring-oxm</artifactId>
             <exclusions>
                 <exclusion>
@@ -66,9 +70,13 @@
         </dependency>
         <!-- XML handling dependencies -->
         <dependency>
+            <groupId>stax</groupId>
+            <artifactId>stax-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>wstx-asl</artifactId>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
         <!-- O/X Mapping dependencies -->
         <dependency>
