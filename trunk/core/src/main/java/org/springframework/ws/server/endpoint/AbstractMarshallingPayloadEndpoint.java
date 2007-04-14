@@ -49,14 +49,14 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
     private Unmarshaller unmarshaller;
 
     /**
-     * Returns the marshalling used for transforming objects into XML.
+     * Returns the marshaller used for transforming objects into XML.
      */
     public final Marshaller getMarshaller() {
         return marshaller;
     }
 
     /**
-     * Sets the marshalling used for transforming objects into XML.
+     * Sets the marshaller used for transforming objects into XML.
      */
     public final void setMarshaller(Marshaller marshaller) {
         this.marshaller = marshaller;
@@ -100,13 +100,17 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
 
     /**
      * Template method that gets called after the marshaller and unmarshaller have been set.
+     *
+     * <p>The default implementation does nothing.
      */
     public void afterMarshallerSet() throws Exception {
     }
 
     /**
-     * Template method. Subclasses must implement this. The unmarshaled request object is passed as a parameter, and an
-     * the returned object is marshalled  to a response. If no response is required, return <code>null</code>.
+     * Template method that subclasses must implement to process a request.
+     *
+     * <p>The unmarshaled request object is passed as a parameter, and an the returned object is marshalled to a
+     * response. If no response is required, return <code>null</code>.
      *
      * @param requestObject the unnmarshalled message payload as object
      * @return the object to be marshalled as response, or <code>null</code> if a response is not required
