@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <artifactId>spring-ws</artifactId>
         <groupId>org.springframework.ws</groupId>
@@ -26,7 +27,7 @@
                             <goal>generate-html</goal>
                             <goal>generate-pdf</goal>
                         </goals>
-                        <phase>generate-sources</phase>
+                        <phase>pre-site</phase>
                     </execution>
                 </executions>
                 <dependencies>
@@ -40,13 +41,31 @@
                 <configuration>
                     <includes>index.xml</includes>
                     <chunkedOutput>true</chunkedOutput>
-                    <xincludeSupported>true</xincludeSupported>                    
+                    <htmlStylesheet>html.css</htmlStylesheet>
+                    <xincludeSupported>true</xincludeSupported>
+                    <htmlCustomization>src/docbkx/styles/html_chunk.xsl</htmlCustomization>
+                    <foCustomization>src/docbkx/styles/fopdf.xsl</foCustomization>
                     <entities>
                         <entity>
                             <name>version</name>
                             <value>${version}</value>
                         </entity>
                     </entities>
+                    <preProcess>
+                        <copy todir="target/docbkx/html">
+                            <fileset dir="src/docbkx/styles/" includes="*.css" />
+                            <fileset dir="src/docbkx/">
+                                <include name="**/*.png" />
+                                <include name="**/*.gif" />
+                                <include name="**/*.jpg" />
+                            </fileset>
+                        </copy>
+                    </preProcess>
+                    <postProcess>
+                        <delete file="target/docbkx/pdf/index.fo" failonerror="false"/>
+                        <move file="target/docbkx/pdf/index.pdf" tofile="target/docbkx/pdf/spring-ws-reference.pdf"
+                            failonerror="false" />
+                    </postProcess>
                 </configuration>
             </plugin>
         </plugins>
