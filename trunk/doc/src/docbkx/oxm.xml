@@ -242,7 +242,7 @@ public interface Unmarshaller {
                 The O/X Mapping exception hierarchy is shown in the following figure:
                 <mediaobject>
                     <imageobject role="fo">
-                        <imagedata fileref="images/oxm-exceptions.svg"
+                        <imagedata fileref="src/docbkx/images/oxm-exceptions.svg"
                                    format="SVG" align="center"/>
                     </imageobject>
                     <imageobject role="html">
