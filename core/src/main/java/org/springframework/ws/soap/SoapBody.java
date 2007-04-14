@@ -45,7 +45,7 @@ public interface SoapBody extends SoapElement {
     /**
      * Returns a <code>Result</code> that represents the contents of the body.
      *
-     * @return the messaage contents
+     * @return the message contents
      */
     Result getPayloadResult();
 

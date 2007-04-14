@@ -40,7 +40,7 @@ public interface SoapMessage extends WebServiceMessage {
     SoapEnvelope getEnvelope() throws SoapEnvelopeException;
 
     /**
-     * Get the SOAP Action for this messaage, or <code>null</code> if not present.
+     * Get the SOAP Action for this message, or <code>null</code> if not present.
      *
      * @return the SOAP Action.
      */
