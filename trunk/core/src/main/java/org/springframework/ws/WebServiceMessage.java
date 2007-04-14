@@ -22,7 +22,9 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
 /**
- * Represents a protocol agnostic XML message. Contains methods that provide access to the payload of the message.
+ * Represents a protocol-agnostic XML message.
+ *
+ * <p>Contains methods that provide access to the payload of the message.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.soap.SoapMessage
@@ -31,18 +33,20 @@ import javax.xml.transform.Source;
 public interface WebServiceMessage {
 
     /**
-     * Returns the contents of the message as a <code>java.xml.transform.Source</code>. Depending on the implementation,
-     * this can be retrieved multiple times, or just a single time.
+     * Returns the contents of the message as a {@link java.xml.transform.Source}.
+     *
+     * <p>Depending on the implementation, this can be retrieved multiple times, or just a single time.
      *
      * @return the message contents
      */
     Source getPayloadSource();
 
     /**
-     * Returns the contents of the message as a <code>java.xml.transform.Result</code>. Some implementations are
-     * read-only, and may throws an <code>UnsupportedOperationException</code>.
+     * Returns the contents of the message as a {@link java.xml.transform.Result}.
      *
-     * @return the messaage contents
+     * <p>Implementations that are read-only will throw an {@link UnsupportedOperationException}.
+     *
+     * @return the message contents
      * @throws UnsupportedOperationException if the message is read-only
      */
     Result getPayloadResult();
@@ -57,14 +61,16 @@ public interface WebServiceMessage {
     void writeTo(OutputStream outputStream) throws IOException;
 
     /**
-     * Indicates whether this message contains a fault.
+     * Does this message have a fault?
      *
      * @return <code>true</code> if the message has a fault; <code>false</code> otherwise
+     * @see #getFaultReason() 
      */
     boolean hasFault();
 
     /**
      * Returns the fault reason message, if any. Returns <code>null</code> when no fault is present.
+     * @see #hasFault()
      */
     String getFaultReason();
 
