@@ -10,12 +10,15 @@
 			Version
 			&version;
 		</releaseinfo>
-		<pubdate>(Work in progress)</pubdate>
 
 		<authorgroup>
 			<author>
 				<firstname>Arjen</firstname>
 				<surname>Poutsma</surname>
+			</author>
+			<author>
+				<firstname>Rick</firstname>
+				<surname>Evans</surname>
 			</author>
 		</authorgroup>
 
