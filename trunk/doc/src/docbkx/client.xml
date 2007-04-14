@@ -77,7 +77,7 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 
 public class WebServiceClient {
 
-    private static final String MESSAGE = "<message xmlns=\"http://tempuri.org\">Helo World</message>";
+    private static final String MESSAGE = "<message xmlns=\"http://tempuri.org\">Hello World</message>";
     private WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
 
     public void setMessageFactory(WebServiceMessageFactory messageFactory) {
