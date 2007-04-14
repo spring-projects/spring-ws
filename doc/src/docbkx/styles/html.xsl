@@ -48,7 +48,6 @@
 
     <!-- Use images for callouts instead of (1) (2) (3) -->
     <xsl:param name="callout.graphics">0</xsl:param>
-    <!--<xsl:param name="callout.graphics.path">&callout_gfx_path;</xsl:param>-->
     
     <!-- Place callout marks at this column in annotated areas -->
     <xsl:param name="callout.defaultcolumn">90</xsl:param>
@@ -59,7 +58,6 @@
 
     <!-- Use nice graphics for admonitions -->
     <xsl:param name="admon.graphics">0</xsl:param>
-    <!-- <xsl:param name="admon.graphics.path">&admon_gfx_path;</xsl:param>-->
 
 	<!--###################################################
                           Misc
