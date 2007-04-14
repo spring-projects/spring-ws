@@ -4,10 +4,8 @@
 <book xmlns:xi="http://www.w3.org/2001/XInclude">
 
 	<bookinfo>
-		<title>Spring Web Services</title>
-		<subtitle>Reference Documentation</subtitle>
+		<title>Spring Web Services - Reference Documentation</title>
 		<releaseinfo>
-			Version
 			&version;
 		</releaseinfo>
 
