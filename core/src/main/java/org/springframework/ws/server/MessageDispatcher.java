@@ -41,12 +41,12 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
 import org.springframework.ws.transport.support.DefaultStrategiesHelper;
 
 /**
- * Central dispatcher for use withing Spring-WS. Dispatches Web service messages to registered endoints.
+ * Central dispatcher for use within Spring-WS. Dispatches Web service messages to registered endoints.
  * <p/>
  * This dispatcher is quite similar to Spring MVCs <code>DispatcherServlet</code>. Just like it's counterpart, this
  * dispatcher is very flexible. <ul> <li>It can use any <code>EndpointMapping</code> implementation - whether standard,
  * or provided as part of an application - to control the routing of request messages to endpoint objects. Endpoint
- * mappings can be registerd using the <code>endpointMappings</code> property.</li> <li>It can use any
+ * mappings can be registered using the <code>endpointMappings</code> property.</li> <li>It can use any
  * <code>EndpointAdapter</code>; this allows to use any endpoint interface or form. Default are
  * <code>MessageEndpointAdapter</code> and <code>PayloadEndpointAdapter</code>, for <code>MessageEndpoint</code> and
  * <code>PayloadEndpoint</code>, respectively. Additional endpoint adapters can be added through the
