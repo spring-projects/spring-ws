@@ -19,22 +19,23 @@ package org.springframework.ws.server.endpoint;
 import org.springframework.ws.context.MessageContext;
 
 /**
- * Defines the basic contract for Web Services interested in the entire mesage payload.
- * <p/>
- * The main entrypoint is <code>invoke</code>, which gets invoked with the a message context. This context contains the
- * request, and can be used to create a response.
+ * Defines the basic contract for Web Services interested in the entire message payload.
+ *
+ * <p>The main entrypoint is {@link #invoke(MessageContext)}, which gets invoked with the message context. This context
+ * contains the {@link MessageContext#getRequest() request}, and can be used to create a response.
  *
  * @author Arjen Poutsma
- * @see #invoke(org.springframework.ws.context.MessageContext)
+ * @see org.springframework.ws.server.endpoint.PayloadEndpoint
  */
 public interface MessageEndpoint {
 
     /**
-     * Invokes an operation. The given message context can be used to create a response.
+     * Invokes an operation.
+     *
+     * <p>The given <code>messageContext</code> can be used to create a response.
      *
      * @param messageContext the message context
      * @throws Exception if an exception occurs
      */
     void invoke(MessageContext messageContext) throws Exception;
-
 }
