@@ -19,7 +19,7 @@
     <target name="generate-test-jaxb" depends="generate-test-init">
         <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask"
                  classpathref="maven.test.classpath"/>
-        <xjc target="${generate.target.directory}"
+        <xjc destdir="${generate.target.directory}"
              package="org.springframework.oxm.jaxb2"
              schema="${schema}">
             <produces dir="${generate.target.directory}" includes="**/*.java"/>
