@@ -606,7 +606,5 @@
             <artifactId>log4j</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
-
 </project>

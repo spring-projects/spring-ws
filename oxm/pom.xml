@@ -16,7 +16,11 @@
             <id>jibx</id>
             <name>JiBX Maven Repository</name>
             <url>http://jibx.sourceforge.net/maven2/</url>
-            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>maven2-repository.dev.java.net</id>
+            <name>Java.net Repository for Maven2</name>
+            <url>https://maven2-repository.dev.java.net/nonav/repository</url>
         </repository>
     </repositories>
     <build>
@@ -162,20 +166,8 @@
         </dependency>
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-libs</artifactId>
-            <version>1.0.6</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-xjc</artifactId>
-            <version>1.0.6</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.msv.datatype.xsd</groupId>
-            <artifactId>xsdlib</artifactId>
-            <version>20060615</version>
+            <version>1.0.7</version>
             <scope>test</scope>
         </dependency>
         <!-- XMLBeans -->

@@ -22,7 +22,6 @@ import javax.xml.validation.Schema;
 import junit.framework.TestCase;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 
 public class SchemaLoaderUtilsTest extends TestCase {
 
@@ -55,8 +54,8 @@ public class SchemaLoaderUtilsTest extends TestCase {
     }
 
     public void testLoadMultipleSchemas() throws Exception {
-        Resource envelope = new UrlResource("http://schemas.xmlsoap.org/soap/envelope/");
-        Resource encoding = new UrlResource("http://schemas.xmlsoap.org/soap/encoding/");
+        Resource envelope = new ClassPathResource("envelope.xsd", getClass());
+        Resource encoding = new ClassPathResource("encoding.xsd", getClass());
         Schema schema =
                 SchemaLoaderUtils.loadSchema(new Resource[]{envelope, encoding}, XMLConstants.W3C_XML_SCHEMA_NS_URI);
         assertNotNull("No schema returned", schema);
