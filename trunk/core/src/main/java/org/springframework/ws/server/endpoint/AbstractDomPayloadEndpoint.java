@@ -29,11 +29,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Abstract base class for endpoints that handle the message payload as DOM elements. Offers the message payload as a
- * DOM <code>Element</code>, and allows subclasses to create a response by returning an <code>Element</code>.
- * <p/>
- * An <code>AbstractDomPayloadEndpoint</code> only accept one payload element. Multiple payload elements are not in
- * accordance with WS-I.
+ * Abstract base class for endpoints that handle the message payload as DOM elements.
+ *
+ * <p>Offers the message payload as a DOM <code>Element</code>, and allows subclasses to create a response by returning
+ * an <code>Element</code>.
+ *
+ * <p>An <code>AbstractDomPayloadEndpoint</code> only accept <i>one</i> payload element. Multiple payload elements are
+ * not in accordance with WS-I.
  *
  * @author Arjen Poutsma
  * @author Alef Arendsen
@@ -110,10 +112,12 @@ public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSuppor
     }
 
     /**
-     * Template method. Subclasses must implement this. Offers the request payload as a DOM <code>Element</code>, and
-     * allows subclasses to return a response <code>Element</code>.
-     * <p/>
-     * The given DOM <code>Document</code> is to be used for constructing <code>Node</code>s, by using the various
+     * Template method that subclasses must implement to process the request.
+     *
+     * <p>Offers the request payload as a DOM <code>Element</code>, and allows subclasses to return a response
+     * <code>Element</code>.
+     *
+     * <p>The given DOM <code>Document</code> is to be used for constructing <code>Node</code>s, by using the various
      * <code>create</code> methods.
      *
      * @param requestElement   the contents of the SOAP message as DOM elements

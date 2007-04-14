@@ -76,7 +76,7 @@ public abstract class AbstractWebServiceMessageTestCase extends XMLTestCase {
     }
 
     public void testHasFault() throws Exception {
-        assertFalse("Mesage has fault", webServiceMessage.hasFault());
+        assertFalse("Message has fault", webServiceMessage.hasFault());
     }
 
     public void testDomPayload() throws Exception {

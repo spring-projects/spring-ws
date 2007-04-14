@@ -25,14 +25,15 @@ import org.jdom.transform.JDOMSource;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
- * Abstract base class for endpoints that handle the message payload as JDOM elements. Offers the message payload as a
- * JDOM <code>Element</code>, and allows subclasses to create a response by returning an <code>Element</code>.
- * <p/>
- * An <code>AbstractJDomPayloadEndpoint</code> only accept one payload element. Multiple payload elements are not in
- * accordance with WS-I.
+ * Abstract base class for endpoints that handle the message payload as JDOM elements.
+ *
+ * <p>Offers the message payload as a JDOM {@link Element}, and allows subclasses to create a response by returning an
+ * <code>Element</code>.
+ *
+ * <pAn <code>AbstractJDomPayloadEndpoint</code> can accept only <i>one</i> payload element. Multiple payload elements
+ * are not in accordance with WS-I.
  *
  * @author Arjen Poutsma
- * @see Element
  */
 public abstract class AbstractJDomPayloadEndpoint extends TransformerObjectSupport implements PayloadEndpoint {
 
@@ -53,6 +54,4 @@ public abstract class AbstractJDomPayloadEndpoint extends TransformerObjectSuppo
      * @return the response element. Can be <code>null</code> to specify no response.
      */
     protected abstract Element invokeInternal(Element requestElement) throws Exception;
-
-
 }

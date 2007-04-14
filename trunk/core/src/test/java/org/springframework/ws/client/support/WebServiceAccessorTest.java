@@ -47,7 +47,7 @@ public class WebServiceAccessorTest extends TestCase {
         factoryControl.replay();
         messageControl.replay();
         MessageContext messageContext = accessor.createMessageContext();
-        assertNotNull("No MesageContext created", messageContext);
+        assertNotNull("No MessageContext created", messageContext);
         factoryControl.verify();
         messageControl.verify();
     }

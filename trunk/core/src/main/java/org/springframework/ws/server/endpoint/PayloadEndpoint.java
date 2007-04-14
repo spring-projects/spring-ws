@@ -19,12 +19,11 @@ package org.springframework.ws.server.endpoint;
 import javax.xml.transform.Source;
 
 /**
- * Defines the basic contract for Web Services interested in the mesage payload.
- * <p/>
- * The main entrypoint is <code>invoke</code>, which gets invoked with the contents of the requesting message.
+ * Defines the basic contract for Web Services interested in just the message payload.
+ *
+ * <p>The main entrypoint is {@link #invoke(Source)}, which gets invoked with the contents of the requesting message.
  *
  * @author Arjen Poutsma
- * @see #invoke(javax.xml.transform.Source)
  */
 public interface PayloadEndpoint {
 
