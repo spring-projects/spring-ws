@@ -73,7 +73,7 @@
     <!-- let's have a Spring and I21 banner across the top of each page -->
     <xsl:template name="user.header.navigation">
         <div style="background-color:white;border:none;height:73px;border:1px solid black;">
-            <a style="border:none;" href="http://www.springframework.org/" title="The Spring Framework">
+            <a style="border:none;" href="http://static.springframework.org/spring-ws/site/" title="The Spring Framework - Spring Web Services">
                 <img style="border:none;" src="images/xdev-spring_logo.jpg" />
             </a>
             <a style="border:none;" href="http://www.interface21.com/" title="Interface21 - Spring from the Source">
