@@ -19,6 +19,7 @@ package org.springframework.ws.soap.axiom;
 import java.util.Locale;
 import javax.xml.namespace.QName;
 
+import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAP11Constants;
 import org.apache.axiom.soap.SOAPBody;
@@ -26,8 +27,6 @@ import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPFault;
 import org.apache.axiom.soap.SOAPFaultCode;
 import org.apache.axiom.soap.SOAPFaultReason;
-import org.apache.axiom.soap.SOAPFaultText;
-import org.apache.axiom.soap.SOAPFaultValue;
 import org.apache.axiom.soap.SOAPProcessingException;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -79,14 +78,12 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
             detachAllBodyChildren();
             SOAPFault fault = axiomFactory.createSOAPFault(axiomBody);
             SOAPFaultCode faultCode = axiomFactory.createSOAPFaultCode(fault);
-            SOAPFaultValue faultCodeValue = axiomFactory.createSOAPFaultValue(faultCode);
-            setValueText(code, fault, faultCodeValue);
+            setValueText(code, fault, faultCode);
             SOAPFaultReason faultReason = axiomFactory.createSOAPFaultReason(fault);
-            SOAPFaultText faultText = axiomFactory.createSOAPFaultText(faultReason);
             if (locale != null) {
-                faultText.setLang(AxiomUtils.toLanguage(locale));
+                addLangAttribute(locale, faultReason);
             }
-            faultText.setText(faultString);
+            faultReason.setText(faultString);
             return new AxiomSoap11Fault(fault, axiomFactory);
 
         }
@@ -96,7 +93,7 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
 
     }
 
-    private void setValueText(QName code, SOAPFault fault, SOAPFaultValue faultValue) {
+    private void setValueText(QName code, SOAPFault fault, SOAPFaultCode faultCode) {
         String prefix = QNameUtils.getPrefix(code);
         if (StringUtils.hasLength(code.getNamespaceURI()) && StringUtils.hasLength(prefix)) {
             OMNamespace namespace = fault.findNamespaceURI(prefix);
@@ -111,7 +108,34 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
             }
             code = QNameUtils.createQName(code.getNamespaceURI(), code.getLocalPart(), namespace.getPrefix());
         }
-        faultValue.setText(prefix + ":" + code.getLocalPart());
+        faultCode.setText(code);
     }
+
+    private SOAPFault addStandardFault(String localName, String faultString, Locale locale) {
+        Assert.notNull(faultString, "No faultString given");
+        try {
+            detachAllBodyChildren();
+            SOAPFault fault = axiomFactory.createSOAPFault(axiomBody);
+            SOAPFaultCode faultCode = axiomFactory.createSOAPFaultCode(fault);
+            faultCode.setText(
+                    new QName(fault.getNamespace().getNamespaceURI(), localName, fault.getNamespace().getPrefix()));
+            SOAPFaultReason faultReason = axiomFactory.createSOAPFaultReason(fault);
+            if (locale != null) {
+                addLangAttribute(locale, faultReason);
+            }
+            faultReason.setText(faultString);
+            return fault;
+        }
+        catch (SOAPProcessingException ex) {
+            throw new AxiomSoapFaultException(ex);
+        }
+    }
+
+    private void addLangAttribute(Locale locale, SOAPFaultReason faultReason) {
+        OMNamespace xmlNamespace = axiomFactory.createOMNamespace("http://www.w3.org/XML/1998/namespace", "xml");
+        OMAttribute langAttribute = axiomFactory.createOMAttribute("lang", xmlNamespace, AxiomUtils.toLanguage(locale));
+        faultReason.addAttribute(langAttribute);
+    }
+
 
 }

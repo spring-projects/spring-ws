@@ -36,6 +36,7 @@ public class SaajSoap11MessageTest extends AbstractSoap11MessageTestCase {
     protected final SoapMessage createSoapMessage() throws Exception {
         MessageFactory messageFactory = MessageFactory.newInstance();
         saajMessage = messageFactory.createMessage();
+        saajMessage.getSOAPHeader().detachNode();
         return new SaajSoapMessage(saajMessage);
     }
 

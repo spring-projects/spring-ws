@@ -17,10 +17,11 @@
 package org.springframework.ws.soap.axiom;
 
 import java.util.Locale;
+import javax.xml.namespace.QName;
 
+import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPFault;
-import org.apache.axiom.soap.SOAPFaultText;
 import org.springframework.ws.soap.axiom.support.AxiomUtils;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 
@@ -35,21 +36,23 @@ class AxiomSoap11Fault extends AxiomSoapFault implements Soap11Fault {
         super(axiomFault, axiomFactory);
     }
 
+    public QName getFaultCode() {
+        return axiomFault.getCode().getTextAsQName();
+    }
+
     public String getFaultStringOrReason() {
         if (axiomFault.getReason() != null) {
-            SOAPFaultText soapText = axiomFault.getReason().getFirstSOAPText();
-            if (soapText != null) {
-                return soapText.getText();
-            }
+            return axiomFault.getReason().getText();
         }
         return null;
     }
 
     public Locale getFaultStringLocale() {
         if (axiomFault.getReason() != null) {
-            SOAPFaultText soapText = axiomFault.getReason().getFirstSOAPText();
-            if (soapText != null) {
-                String xmlLangString = soapText.getLang();
+            OMAttribute langAttribute =
+                    axiomFault.getReason().getAttribute(new QName("http://www.w3.org/XML/1998/namespace", "lang"));
+            if (langAttribute != null) {
+                String xmlLangString = langAttribute.getAttributeValue();
                 if (xmlLangString != null) {
                     return AxiomUtils.toLocale(xmlLangString);
                 }
