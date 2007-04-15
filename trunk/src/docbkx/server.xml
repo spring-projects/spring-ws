@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<chapter id="ws">
+    <title>Creating a Web service with Spring-WS</title>
+    <section id="web-service-messages">
+    	<title>Web service messages</title>
+    	<section>
+	    	<title>
+	    		<interfacename>WebServiceMessage</interfacename> and <interfacename>SoapMessage</interfacename>
+	   		</title>
+	   		<para>
+	    		One of the core interfaces within Spring Web Services is the 
+	    		<interfacename>WebServiceMessage</interfacename>. This interface represents a protocol agnostic XML
+	    		message. The interface contains methods that provide access to the payload of the message, in the form
+	    		of a <interfacename>javax.xml.transform.Source</interfacename> or a 
+	    		<interfacename>javax.xml.transform.Result</interfacename>. <interfacename>Source</interfacename> and
+	    		<interfacename>Result</interfacename> are tagging interfaces that represent an abstraction over XML
+	    		input and output. Concrete implementations wrap various XML representations, as indicated in the table
+	    		below.
+                <informaltable>
+                    <tgroup cols="2">
+                        <thead>
+                            <row>
+                            	<entry>Source/Result implementation</entry>
+                                <entry>Wraps XML representation</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry>
+                                    <classname>javax.xml.transform.dom.DOMSource</classname>
+                                </entry>
+                                <entry>
+                                    <interfacename>org.w3c.dom.Node</interfacename>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <classname>javax.xml.transform.dom.DOMResult</classname>
+                                </entry>
+                                <entry>
+                                    <interfacename>org.w3c.dom.Node</interfacename>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <classname>javax.xml.transform.sax.SAXSource</classname>
+                                </entry>
+                                <entry>
+                                    <classname>org.xml.sax.InputSource</classname>
+                                    and
+                                    <interfacename>org.xml.sax.XMLReader</interfacename>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <classname>javax.xml.transform.sax.SAXResult</classname>
+                                </entry>
+                                <entry>
+                                    <interfacename>org.xml.sax.ContentHandler</interfacename>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <classname>javax.xml.transform.stream.StreamSource</classname>
+                                </entry>
+                                <entry>
+                                    <classname>java.io.File</classname>, <classname>java.io.InputStream</classname>, or
+                                    <classname>java.io.Reader</classname>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <classname>javax.xml.transform.stream.StreamResult</classname>
+                                </entry>
+                                <entry>
+                                    <classname>java.io.File</classname>, <classname>java.io.OutputStream</classname>, or
+                                    <classname>java.io.Writer</classname>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </informaltable>
+                In addition to reading from and writing to the payload, a Web service message can write itself to an
+                output stream.
+    		</para>
+    		<para>
+    			The <interfacename>SoapMessage</interfacename> is an extension of 
+    			<interfacename>WebServiceMessage</interfacename>. It contains SOAP-specific methods, such as getting
+    			SOAP Headers, SOAP Faults, etc. Generally, your code should only not be dependent on 
+    			<interfacename>SoapMessage</interfacename>, because the content of the SOAP Body can be obtained via
+    			<methodname>getPayloadSource()</methodname> and <methodname>getPayloadResult()</methodname> in the 
+    			<interfacename>WebServiceMessage</interfacename>. Only when it is necessary to perform SOAP-specific 
+    			actions, such as adding a header, get an attachment, etc., should you need to cast 
+    			<interfacename>WebServiceMessage</interfacename> to <interfacename>SoapMessage</interfacename>.
+   			</para>
+    	</section>
+    	<section id="message-factories">
+    		<title>Message Factories</title>
+    		<para>
+    			Concrete message implementation are created by a 
+    			<interfacename>WebServiceMessageFactory</interfacename>. This factory can create an empty message, or
+    			read a message based on an input stream.
+   				There are two concrete implementations of <interfacename>WebServiceMessageFactory</interfacename>.
+   				One is based on SAAJ, the SOAP with Attachments API for Java, the other based on Axis 2's AXIOM, the 
+   				AXis Object Model.
+			</para>
+			<section>
+				<title><classname>SaajSoapMessageFactory</classname></title>
+				<para>
+					The <classname>SaajSoapMessageFactory</classname> uses the SOAP with Attachments API for Java to 
+					create <classname>SoapMessage</classname> implementations. SAAJ is part of J2EE 1.4, so it should be 
+					supported under most modern application servers. You wire up a 
+					<classname>SaajSoapMessageFactory</classname> like so:
+					<programlisting><![CDATA[
+<bean id="messageFactory"
+	class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory" />
+					]]></programlisting>
+				</para>
+				<note>
+					<para>
+						SAAJ is based on DOM, the Document Object Model. This means that all SOAP messages are 
+						stored in memory as a whole. For larger SOAP messages, this may not be very performant.
+						In that case, the <classname>AxiomSoapMessageFactory</classname> might be more applicable.
+					</para>
+				</note>
+			</section>
+			<section>
+				<title><classname>AxiomSoapMessageFactory</classname></title>
+				<para>
+					The <classname>AxiomSoapMessageFactory</classname> uses the AXis 2 Object Model to create 
+					<interfacename>SoapMessage</interfacename> implementations. AXIOM uses StAX, the Streaming API for 
+					XML. StAX provides a pull-based mechanism for reading XML messages, which can be more efficient
+					for larger messages.
+				</para>
+				<para>
+					To increase reading performance on the <classname>AxiomSoapMessageFactory</classname>, 
+					you can set the <property>payloadCaching</property> property to false (default is true).
+					This this will read the contents of the SOAP body directly from the stream. 
+					When this setting is enabled, the payload can only be read once.
+					This means that you have to make sure that any preprocessing of the message does not consume it.
+				</para>
+				<para>
+					You use the <classname>AxiomSoapMessageFactory</classname> as follows:
+					<programlisting><![CDATA[
+<bean id="messageFactory"
+	class="org.springframework.ws.soap.axiom.AxiomSoapMessageFactory">
+	<property name="payloadCaching" value="true"/>
+</bean>]]></programlisting>
+				</para>					
+			</section>
+    	</section>
+    </section>
+<!--
+    <section id="ws-introduction">
+        <title>Introduction</title>
+        <para>
+            Spring's Web service framework is designed around
+        </para>
+    </section>
+    <section>
+        <title>MessageDispatcher</title>
+        <para>
+            Spring-WS is designed around a central dispatching mechanism, which received and forwards incoming
+        </para>
+    </section>
+    <section>
+        <title>Endpoints</title>
+    </section>
+    <section id="ws-endpoint-mapping">
+        <title>Endpoint mappings</title>
+        <para>
+            The endpoint mapping is responsible for mapping incoming messages to appropriate endpoints. It does this by
+            delivering a <classname>EndpointInterceptorChain</classname>, which consists of the endpoint that matches
+            the incoming request, and an optional list of endpoint interceptors. When a message is received by the
+            <classname>MessageDispatcher</classname>, it will ask the registered endpoint mappings to come up with a
+            appropriate <classname>HandlerExecutionChain</classname>. After that, the
+            <classname>MessageDispatcher</classname> will invoke the endpoint and interceptors in the chain.
+        </para>
+        <para>
+            Most endpoint mappings inherit from the <classname>AbstractEndpointMapping</classname>, which offers the
+            following properties:
+            <informaltable>
+                <tgroup cols="2">
+                    <tbody>
+                        <row>
+                            <entry>
+                                <methodname>interceptors</methodname>
+                            </entry>
+                            <entry>
+                                the list of interceptors use. <interfacename>EndpointInterceptor</interfacename>s are
+                                discussed in <xref linkend="ws-endpoint-interceptor"/>.
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <methodname>defaultHandler</methodname>
+                            </entry>
+                            <entry>
+                                the default handler to use. This endpoint will be returned if no specific mapping was
+                                found.
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                
+                            </entry>
+                        </row>
+
+                    </tbody>
+        </tgroup>
+        </informaltable>
+        </para>
+        <section>
+            <title>SoapActionEndpointMapping</title>
+        </section>
+        <section>
+            <title>PayloadRootQNameEndpointMapping</title>
+        </section>
+        <section id="ws-endpoint-interceptor">
+            <title>Adding <interfacename>EndpointInterceptors</interfacename></title>
+        </section>
+        <section>
+            <title>Handling Exceptions</title>
+            <para>
+                Spring-WS provides
+                <classname>EndpointExceptionResolvers</classname>
+                to ease the pain of unexpected
+                exceptions occurring while your message is being processed by an endpoint which matched the request.
+                <classname>EndpointExceptionResolver</classname>
+                s somewhat resemble the exception mappings that can be
+                defined in the web application descriptor
+                <filename>web.xml</filename>
+                .
+                Rather than expose the innards of your application by giving a client a full stack trace, you can handle
+                the exception any way you want, e.g. return a SOAP fault with a specific fault code and string.
+                Furthermore, a programmatic way of handling exceptions gives you many more options for how to respond
+                appropriately.
+            </para>
+            <para>
+                Besides implementing the
+                <classname>HandlerExceptionResolver</classname>
+                interface, which is only a
+                matter of implementing the
+                <methodname>resolveException(MessageContext, endpoint, Exception)</methodname>
+                method and returning a
+                boolean, you may also use the
+                <classname>SoapFaultMappingExceptionResolver</classname>
+                .
+                This resolver enables you to take the class name of any exception that might be thrown and map it to a
+                SOAP Fault, like so:
+                <programlisting><![CDATA[
+<bean id="exceptionResolver"
+    class="org.springframework.ws.soap.endpoint.SoapFaultMappingExceptionResolver">
+    <property name="defaultFault" value="RECEIVER,Server error">
+    </property>
+    <property name="exceptionMappings">
+        <props>
+            <prop key="org.springframework.oxm.ValidationFailureException">
+                SENDER,Invalid request
+            </prop>
+        </props>
+    </property>
+</bean>
+]]></programlisting>
+                This configuration will map exceptions of type
+                <classname>ValidationFailureException</classname>
+                to a
+                sender side SOAP Fault with a fault string "Invalid request".
+                If any other exception occurs, it will return the default fault: a server side fault with fault string
+                "Server error".
+                Refer to the Javadoc of
+                <classname>SoapFaultDefinitionEditor</classname>
+                to read more about the exact
+                notation of the faults.
+            </para>
+        </section>
+        </section>
+
+    <section>
+        <title>Similarities between Spring-MVC and Spring-WS</title>
+        <para>
+            Spring-WS has the same basic architecture as Spring's Web MVC framework.
+            The table below shows some of the core concepts of Spring Web MVC, and the corresponding class in Spring-WS.
+            <informaltable>
+                <tgroup cols="2">
+                    <thead>
+                        <row>
+                            <entry>Spring Web MVC</entry>
+                            <entry>Spring Web Services</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <classname>DispatcherServlet</classname>
+                            </entry>
+                            <entry>
+                                <classname>MessageDispatcher</classname>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>handler</entry>
+                            <entry>endpoint</entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <classname>HandlerAdapter</classname>
+                            </entry>
+                            <entry>
+                                <classname>EndpointAdapter</classname>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <classname>HandlerMapping</classname>
+                            </entry>
+                            <entry>
+                                <classname>EndpointMapping</classname>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <classname>HandlerInterceptor</classname>
+                            </entry>
+                            <entry>
+                                <classname>EndpointInterceptor</classname>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <classname>HandlerExceptionResolver</classname>
+                            </entry>
+                            <entry>
+                                <classname>EndpointExceptionResolver</classname>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </informaltable>
+        </para>
+    </section>
+-->
+</chapter>
