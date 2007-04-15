@@ -54,7 +54,7 @@
         <developer>
             <id>poutsma</id>
             <name>Arjen Poutsma</name>
-            <email>apoutsma at interface21.com</email>
+            <email>apoutsma@interface21.com</email>
             <organization>Interface21</organization>
             <organizationUrl>http://www.interface21.com</organizationUrl>
             <roles>
@@ -62,6 +62,17 @@
                 <role>Developer</role>
             </roles>
             <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <id>springboy</id>
+            <name>Rick Evans</name>
+            <email>revans@interface21.com</email>
+            <organization>Interface21</organization>
+            <organizationUrl>http://www.interface21.com</organizationUrl>
+            <roles>
+                <role>Developer</role>
+                <role>Documentalist</role>
+            </roles>
         </developer>
     </developers>
     <contributors>
