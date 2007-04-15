@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd"> 
+<chapter id="introduction">
+    <title>Introduction</title>
+
+    <section>
+        <title>Overview</title>
+        <para>
+            Spring-WS consists of three separate modules. This chapter discusses each of the modules in turn.
+        </para>
+        <para>
+            The <link linkend="ws">Core</link> package is the central part of the Web services functionality. It
+            provides the central <classname>WebServiceMessage</classname> and <classname>SoapMessage</classname>
+            interfaces, the powerful message dispatching, and the various support classes for implementing Web service
+            endpoints.
+        </para>
+        <para>
+            The <link linkend="security">Security</link> package provides a WS-Security implementation that integrates
+            with the core Web service package. It allows you to add principal tokens, sign, and decrypt and encrypt SOAP
+            messages. Addtionally, it allows you to leverage your existing Acegi security implementation for
+            authentication and authorization.
+        </para>
+        <para>
+            The <link linkend="oxm">OXM</link> package provides integration for popular XML marshalling APIs, including
+            JAXB 1 and 2. Using the OXM package means that you benefit from a unified exception hierarchy, and can wire
+            up your favorite XML marshalling technology easily.
+        </para>
+    </section>
+
+
+    <section>
+        <title>Why Spring Web Services?</title>
+        <para>
+            There are various other SOAP stacks available, why and where should you use Spring-WS? This section answers
+            that question by showing what the focus of Spring-WS is.
+        </para>
+        <section>
+            <title>Spring-WS is meant for Public Web Services</title>
+            <para>
+                One can distinguish between two different sorts of Web services. Private Web services are not used
+                outside your application domain. They might form a part of your Enterprise Service Bus, or used as a
+                means to communicate between a fat .NET client and a J2EE server. When the two sides of the spectrum
+                (client and server) are under your control, you can easily expose (existing) methods, since you can
+                (re)generate client code easily.
+            </para>
+            <para>
+                Public Web services provide a separate interface to your application. They are often used by clients
+                that are outside of your reach. When developing a public Web service, you should really think about the
+                interface you are providing: it is probably going to be around for a while, and you cannot change it
+                that often. As such, it is a good idea to place the Web service in a separate layer, thus hiding the
+                inner workings of the application. As a result, you can change the Web service and the rest of the
+                appliciation seperately.
+            </para>
+        </section>
+        <section>
+            <title>Spring-WS makes Web Services First Class Citizens of the Architecture</title>
+            <para>
+                Web Services deserve a proper place in an application architecture. Often, they exist as an afterthought
+                in the application architecture, mostly because existing Java business interfaces are exposed as SOAP
+                services. One could say that they are "SOAPified". Spring-WS provides a MVC-like framework for
+                developing a Web service application layer, just like you would develop a layer especially for a Web
+                user interface using Spring-MVC. Spring-WS also provides useful integration points with you existing
+                Spring application architecture, such as the Acegi integration.
+            </para>
+        </section>
+        <section>
+            <title>Spring-WS is Data-Driven</title>
+            <para>
+                When Web Services started making their way into the Enterprise Computing world, developers considered
+                Web Services just another, XML-based remoting protocol. Such remoting frameworks can be used with
+                relative ease: on the server-side, one simply implements a specific interface such as
+                <classname>java.rmi.Remote</classname>, and on the client side, a dynamic proxy is used.
+                Unfortunately, because of this simplicity, remoting architectures have some issues:
+                <itemizedlist>
+                    <listitem>
+                        <para>
+                            They pretend there is no <emphasis>latency</emphasis> between the client and the server,
+                            while in fact there is both network and application latency,
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            They pretend that client and server have <emphasis>shared memory access</emphasis>, while in
+                            fact data must be both marshalled and unmarshalled,
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            They ignore the possibility of a <emphasis>request or response not reaching its
+                            destination</emphasis>,
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            They enforce a <emphasis>non-concurrent</emphasis> programming model, while in fact a
+                            concurrent approach seems more in place,
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            They enforce a <emphasis>tightly coupled architecture</emphasis>, where changes on the
+                            server-side result in changes on the client-side.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                It is not without reason that Gregor Hohpe calls a distributed architecture a <quote>fairy tale
+                architecture</quote>: one is made to believe things that simply are not true. To quote <xref
+                linkend="waldo-94"/>:
+                <blockquote>
+                    <para>
+                        Objects that interact in a distributed system need to be dealt with in ways that are
+                        intrinsically different from objects that interact in a single address space.
+                    </para>
+                </blockquote>
+            </para>
+            <para>
+                Instead of being behavior-driven, Spring-WS is data-driven: it focusses on the data being sent, not on a
+                particular method being invoked.
+            </para>
+        </section>
+        <section>
+            <title>Spring-WS Focusses on Contract-first Development</title>
+            <para>
+                SOAP services are defined in two contracts: the data contract (the XSD schema), and the service contract
+                (the WSDL). Generating these contracts from Java-code is called <emphasis>contract-last
+                development</emphasis> <xref linkend="alpine"/> identifies some problems with this approach, most
+                importantly:
+                <blockquote>
+                    <para>
+                        There is no way to ensure that a service’s published interface remains constant over time.
+                        Every redeployment of the service may change the classes, and hence the contract.
+                    </para>
+                </blockquote>
+        		The alternative of contract-last development is <emphasis>contract-first development</emphasis>.
+        		Using this approach, the service and data contract are leading. Spring-WS focusses on contract-first Web
+        		service development, because is considered to be a best practice. After all, the actual XML that is sent
+        		across the wire is more important than the Java code that is used to implement it.
+            </para>
+        </section>
+    </section>
+</chapter>

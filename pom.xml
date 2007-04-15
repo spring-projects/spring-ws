@@ -124,12 +124,6 @@
                 <module>samples</module>
             </modules>
         </profile>
-        <profile>
-            <id>doc</id>
-            <modules>
-                <module>doc</module>
-            </modules>
-        </profile>
     </profiles>
     <properties>
         <spring.version>2.0.4</spring.version>
@@ -140,7 +134,19 @@
             <name>Spring External Dependencies Repository</name>
             <url>https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/</url>
         </repository>
+        <repository>
+            <id>maven2-repository.dev.java.net</id>
+            <name>Java.net Repository for Maven2</name>
+            <url>https://maven-repository.dev.java.net/nonav/repository</url>
+            <layout>legacy</layout>
+        </repository>
     </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>agilejava</id>
+            <url>http://agilejava.com/maven/</url>
+        </pluginRepository>
+    </pluginRepositories>
     <build>
         <plugins>
             <!-- Building -->
@@ -179,6 +185,60 @@
                 <configuration>
                     <downloadSources>true</downloadSources>
                     <downloadJavadocs>true</downloadJavadocs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.agilejava.docbkx</groupId>
+                <artifactId>docbkx-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate-html</goal>
+                            <goal>generate-pdf</goal>
+                        </goals>
+                        <phase>pre-site</phase>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.docbook</groupId>
+                        <artifactId>docbook-xml</artifactId>
+                        <version>4.4</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <includes>index.xml</includes>
+                    <chunkedOutput>true</chunkedOutput>
+                    <htmlStylesheet>css/html.css</htmlStylesheet>
+                    <xincludeSupported>true</xincludeSupported>
+                    <htmlCustomization>src/docbkx/resources/xsl/html_chunk.xsl</htmlCustomization>
+                    <foCustomization>src/docbkx/resources/xsl/fopdf.xsl</foCustomization>
+                    <entities>
+                        <entity>
+                            <name>version</name>
+                            <value>${version}</value>
+                        </entity>
+                    </entities>
+                    <postProcess>
+                        <copy todir="target/site/reference">
+                            <fileset dir="target/docbkx">
+                                <include name="**/*.html"/>
+                                <include name="**/*.pdf"/>
+                            </fileset>
+                        </copy>
+                        <copy todir="target/site/reference/html">
+                            <fileset dir="src/docbkx/resources">
+                                <include name="**/*.css"/>
+                                <include name="**/*.png"/>
+                                <include name="**/*.gif"/>
+                                <include name="**/*.jpg"/>
+                            </fileset>
+                        </copy>
+                        <move file="target/site/reference/pdf/index.pdf"
+                              tofile="target/site/reference/pdf/spring-ws-reference.pdf"
+                              failonerror="false"/>
+                    </postProcess>
                 </configuration>
             </plugin>
         </plugins>
