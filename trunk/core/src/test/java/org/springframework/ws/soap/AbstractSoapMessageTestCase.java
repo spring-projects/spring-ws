@@ -26,7 +26,6 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.AbstractWebServiceMessageTestCase;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.xml.sax.SAXParseException;
@@ -59,14 +58,6 @@ public abstract class AbstractSoapMessageTestCase extends AbstractWebServiceMess
         assertFalse("Attachment iterator has too many elements", iterator.hasNext());
     }
 
-    public void testWriteTo() throws Exception {
-        StringResult stringResult = new StringResult();
-        transformer.transform(soapMessage.getEnvelope().getSource(), stringResult);
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        soapMessage.writeTo(os);
-        assertXMLEqual(stringResult.toString(), os.toString("UTF-8"));
-    }
-
     public void testValidate() throws Exception {
         XmlValidator validator =
                 XmlValidatorFactory.createValidator(getSoapSchemas(), XmlValidatorFactory.SCHEMA_W3C_XML);
@@ -84,5 +75,9 @@ public abstract class AbstractSoapMessageTestCase extends AbstractWebServiceMess
 
     protected abstract Resource[] getSoapSchemas();
 
+    public abstract void testGetVersion() throws Exception;
 
+    public abstract void testWriteToTransportOutputStream() throws Exception;
+
+    public abstract void testWriteToTransportResponseAttachment() throws Exception;
 }

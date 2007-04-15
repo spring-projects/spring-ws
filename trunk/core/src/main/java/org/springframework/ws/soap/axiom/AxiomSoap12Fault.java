@@ -37,20 +37,22 @@ import org.springframework.ws.soap.axiom.support.AxiomUtils;
 import org.springframework.ws.soap.soap12.Soap12Fault;
 import org.springframework.xml.namespace.QNameUtils;
 
-/**
- * Axiom-specific version of <code>org.springframework.ws.soap.Soap12Fault</code>.
- */
+/** Axiom-specific version of <code>org.springframework.ws.soap.Soap12Fault</code>. */
 class AxiomSoap12Fault extends AxiomSoapFault implements Soap12Fault {
 
     AxiomSoap12Fault(SOAPFault axiomFault, SOAPFactory axiomFactory) {
         super(axiomFault, axiomFactory);
     }
 
+    public QName getFaultCode() {
+        return axiomFault.getCode().getValue().getTextAsQName();
+    }
+
     public Iterator getFaultSubcodes() {
         List subcodes = new ArrayList();
         SOAPFaultSubCode subcode = axiomFault.getCode().getSubCode();
         while (subcode != null) {
-            subcodes.add(getFaultCode(subcode.getValue()));
+            subcodes.add(subcode.getValue().getTextAsQName());
             subcode = subcode.getSubCode();
         }
         return subcodes.iterator();

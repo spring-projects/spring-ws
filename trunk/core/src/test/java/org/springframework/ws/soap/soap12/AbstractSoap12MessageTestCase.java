@@ -33,25 +33,18 @@ public abstract class AbstractSoap12MessageTestCase extends AbstractSoapMessageT
         Assert.assertEquals("Invalid SOAP version", SoapVersion.SOAP_12, soapMessage.getVersion());
     }
 
-    public void testWriteTo() throws Exception {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        soapMessage.writeTo(outputStream);
-        assertXMLEqual("<Envelope xmlns='http://www.w3.org/2003/05/soap-envelope'><Header/><Body/></Envelope>",
-                new String(outputStream.toByteArray(), "UTF-8"));
-    }
-
     protected final Resource[] getSoapSchemas() {
         return new Resource[]{new ClassPathResource("xml.xsd", AbstractSoap12MessageTestCase.class),
                 new ClassPathResource("soap12.xsd", AbstractSoap12MessageTestCase.class)};
     }
 
-    public void testWriteToTransportResponse() throws Exception {
+    public void testWriteToTransportOutputStream() throws Exception {
         final ByteArrayOutputStream bos = new ByteArrayOutputStream();
         MockTransportOutputStream tos = new MockTransportOutputStream(bos);
         soapMessage.writeTo(tos);
         String result = bos.toString("UTF-8");
 
-        assertXMLEqual("<Envelope xmlns='http://www.w3.org/2003/05/soap-envelope'><Header/><Body/></Envelope>", result);
+        assertXMLEqual("<Envelope xmlns='http://www.w3.org/2003/05/soap-envelope'><Body/></Envelope>", result);
         String contentType = (String) tos.getHeaders().get("Content-Type");
         assertTrue("Invalid Content-Type set", contentType.indexOf(SoapVersion.SOAP_12.getContentType()) != -1);
     }

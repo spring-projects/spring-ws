@@ -276,8 +276,8 @@ public class PayloadValidatingInterceptorTest extends XMLTestCase {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         messageContext.getResponse().writeTo(os);
         assertXMLEqual("<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
-                "<soapenv:Header />" + "<soapenv:Body>" + "<soapenv:Fault>" + "<faultcode>soapenv:Client</faultcode>" +
-                "<faultstring>Validation error</faultstring>" + "<detail>" +
+                "<soapenv:Body>" + "<soapenv:Fault>" + "<faultcode>soapenv:Client</faultcode>" +
+                "<faultstring xml:lang='en'>Validation error</faultstring>" + "<detail>" +
                 "<spring-ws:ValidationError xmlns:spring-ws=\"http://springframework.org/spring-ws\">Message 1</spring-ws:ValidationError>" +
                 "<spring-ws:ValidationError xmlns:spring-ws=\"http://springframework.org/spring-ws\">Message 2</spring-ws:ValidationError>" +
                 "</detail>" + "</soapenv:Fault>" + "</soapenv:Body>" + "</soapenv:Envelope>", os.toString());

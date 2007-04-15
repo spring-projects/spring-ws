@@ -23,8 +23,14 @@ import org.apache.axiom.soap.SOAP12Constants;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPFault;
+import org.apache.axiom.soap.SOAPFaultCode;
+import org.apache.axiom.soap.SOAPFaultReason;
+import org.apache.axiom.soap.SOAPFaultText;
+import org.apache.axiom.soap.SOAPFaultValue;
+import org.apache.axiom.soap.SOAPProcessingException;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapFault;
+import org.springframework.ws.soap.axiom.support.AxiomUtils;
 import org.springframework.ws.soap.soap12.Soap12Body;
 import org.springframework.ws.soap.soap12.Soap12Fault;
 
@@ -68,5 +74,27 @@ class AxiomSoap12Body extends AxiomSoapBody implements Soap12Body {
         SOAPFault fault = addStandardFault(SOAP12Constants.FAULT_CODE_DATA_ENCODING_UNKNOWN, reason, locale);
         return new AxiomSoap12Fault(fault, axiomFactory);
     }
+
+    private SOAPFault addStandardFault(String localName, String faultStringOrReason, Locale locale) {
+        Assert.notNull(faultStringOrReason, "No faultStringOrReason given");
+        try {
+            detachAllBodyChildren();
+            SOAPFault fault = axiomFactory.createSOAPFault(axiomBody);
+            SOAPFaultCode code = axiomFactory.createSOAPFaultCode(fault);
+            SOAPFaultValue value = axiomFactory.createSOAPFaultValue(code);
+            value.setText(fault.getNamespace().getPrefix() + ":" + localName);
+            SOAPFaultReason reason = axiomFactory.createSOAPFaultReason(fault);
+            SOAPFaultText text = axiomFactory.createSOAPFaultText(reason);
+            if (locale != null) {
+                text.setLang(AxiomUtils.toLanguage(locale));
+            }
+            text.setText(faultStringOrReason);
+            return fault;
+        }
+        catch (SOAPProcessingException ex) {
+            throw new AxiomSoapFaultException(ex);
+        }
+    }
+
 
 }
