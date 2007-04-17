@@ -17,17 +17,15 @@
 package org.springframework.xml.xpath;
 
 import java.util.Map;
-
 import javax.xml.namespace.QName;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.springframework.xml.namespace.SimpleNamespaceContext;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import org.springframework.xml.namespace.SimpleNamespaceContext;
 
 /**
  * JAXP 1.3-specific factory creating <code>XPathExpression</code>s.
@@ -85,9 +83,7 @@ abstract class Jaxp13XPathExpressionFactory {
         }
     }
 
-    /**
-     * JAXP 1.3 implementation of the <code>XPathExpression</code> interface.
-     */
+    /** JAXP 1.3 implementation of the <code>XPathExpression</code> interface. */
     private static class Jaxp13XPathExpression implements XPathExpression {
 
         javax.xml.xpath.XPathExpression xpathExpression;
@@ -107,7 +103,10 @@ abstract class Jaxp13XPathExpressionFactory {
 
         private Object evaluate(Node node, QName returnType) {
             try {
-                return xpathExpression.evaluate(node, returnType);
+                // XPathExpression is not thread-safe
+                synchronized (xpathExpression) {
+                    return xpathExpression.evaluate(node, returnType);
+                }
             }
             catch (XPathExpressionException ex) {
                 throw new XPathException("Could not evaluate XPath expression:" + ex.getMessage(), ex);

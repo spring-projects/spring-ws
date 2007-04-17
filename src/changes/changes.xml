@@ -6,6 +6,8 @@
     </properties>
     <body>
         <release version="1.0-RC1">
+            <action dev="poutsma" type="add">Added XPathExpressionFactoryBean, for injection of XPath expressions
+            </action>
             <action dev="poutsma" type="fix" issue="SWS-106">Default message factory for WebServiceTemplate</action>
             <action dev="poutsma" type="fix" issue="SWS-79">Add faults into dynamically created WSDL</action>
             <action dev="poutsma" type="add" issue="SWS-20">Added MethodEndpoint functionality, invoking methods for
