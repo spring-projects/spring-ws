@@ -16,6 +16,8 @@
 
 package org.springframework.xml;
 
+import org.springframework.util.ClassUtils;
+
 /**
  * Helper class used to find the current version of JAXP. We cannot depend on the Java version, since JAXP can be
  * upgraded idenpendantly of the Java version.
@@ -45,17 +47,17 @@ public abstract class JaxpVersion {
 
     static {
         try {
-            Class.forName(JAXP_14_CLASS_NAME);
+            ClassUtils.forName(JAXP_14_CLASS_NAME);
             jaxpVersion = JAXP_14;
         }
         catch (ClassNotFoundException ex1) {
             try {
-                Class.forName(JAXP_13_CLASS_NAME);
+                ClassUtils.forName(JAXP_13_CLASS_NAME);
                 jaxpVersion = JAXP_13;
             }
             catch (ClassNotFoundException ex2) {
                 try {
-                    Class.forName(JAXP_11_CLASS_NAME);
+                    ClassUtils.forName(JAXP_11_CLASS_NAME);
                     jaxpVersion = JAXP_11;
                 }
                 catch (ClassNotFoundException ex3) {
@@ -66,7 +68,7 @@ public abstract class JaxpVersion {
     }
 
     /**
-     * Gets the major JAXP version. This means we can do things like if <code>(getJaxpVersion() < JAXP_13)</code>.
+     * Gets the JAXP version. This means we can do things like if <code>(getJaxpVersion() < JAXP_13)</code>.
      *
      * @return a code comparable to the JAXP_XX codes in this class
      * @see #JAXP_10

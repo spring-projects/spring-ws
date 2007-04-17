@@ -21,6 +21,7 @@ import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.ValidationException;
 
 import org.springframework.oxm.XmlMappingException;
+import org.springframework.util.ClassUtils;
 
 /**
  * Generic utility methods for working with JAXB. Mainly for internal use within the framework.
@@ -39,7 +40,7 @@ public abstract class JaxbUtils {
 
     static {
         try {
-            Class.forName(JAXB_2_CLASS_NAME);
+            ClassUtils.forName(JAXB_2_CLASS_NAME);
             jaxbVersion = JAXB_2;
         }
         catch (ClassNotFoundException ex1) {
