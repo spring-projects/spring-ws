@@ -63,11 +63,6 @@
             <groupId>org.springframework.ws</groupId>
             <artifactId>spring-xml</artifactId>
         </dependency>
-        <!--Spring dependencies-->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-        </dependency>
         <!-- XML handling dependencies -->
         <dependency>
             <groupId>xml-apis</groupId>
