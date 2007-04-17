@@ -30,6 +30,7 @@ import javax.xml.soap.SOAPMessage;
 
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.namespace.QNameUtils;
 import org.w3c.dom.Element;
@@ -56,7 +57,7 @@ public abstract class SaajUtils {
 
     static {
         try {
-            Class.forName(SAAJ_13_CLASS_NAME);
+            ClassUtils.forName(SAAJ_13_CLASS_NAME);
             saajVersion = SAAJ_13;
         }
         catch (ClassNotFoundException ex) {

@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 import org.springframework.xml.JaxpVersion;
 
 /**
@@ -52,7 +53,7 @@ public abstract class XPathExpressionFactory {
             logger.info("JAXP 1.3 available");
         }
         try {
-            Class.forName(JAXEN_CLASS_NAME);
+            ClassUtils.forName(JAXEN_CLASS_NAME);
             jaxenAvailable = true;
             logger.info("Jaxen available");
         }
@@ -60,7 +61,7 @@ public abstract class XPathExpressionFactory {
             jaxenAvailable = false;
         }
         try {
-            Class.forName(XALAN_XPATH_CLASS_NAME);
+            ClassUtils.forName(XALAN_XPATH_CLASS_NAME);
             xalanXPathAvailable = true;
             logger.info("Xalan available");
         }
