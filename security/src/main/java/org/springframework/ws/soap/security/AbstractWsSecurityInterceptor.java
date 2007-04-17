@@ -41,25 +41,19 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
     private static final QName WS_SECURITY_NAME =
             new QName("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security");
 
-    /**
-     * Logger available to subclasses.
-     */
+    /** Logger available to subclasses. */
     protected final Log logger = LogFactory.getLog(getClass());
 
     private boolean secureResponse = true;
 
     private boolean validateRequest = true;
 
-    /**
-     * Indicates whether outgoing responsed are to be secured. Defaults to <code>true</code>.
-     */
+    /** Indicates whether outgoing responsed are to be secured. Defaults to <code>true</code>. */
     public void setSecureResponse(boolean secureResponse) {
         this.secureResponse = secureResponse;
     }
 
-    /**
-     * Indicates whether incoming request are to be validated. Defaults to <code>true</code>.
-     */
+    /** Indicates whether incoming request are to be validated. Defaults to <code>true</code>. */
     public void setValidateRequest(boolean validateRequest) {
         this.validateRequest = validateRequest;
     }
@@ -98,9 +92,7 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
         }
     }
 
-    /**
-     * Returns <code>true</code>, i.e. faults are not secured.
-     */
+    /** Returns <code>true</code>, i.e. faults are not secured. */
     public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
         return true;
     }
@@ -142,8 +134,8 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
     }
 
     /**
-     * Abstract template method. Subclasses are required to validate the request contained in the given
-     * <code>SoapMessageContext</code>, and replace the original request with the validated version.
+     * Abstract template method. Subclasses are required to validate the request contained in the given {@link
+     * SoapMessage}, and replace the original request with the validated version.
      *
      * @param soapMessage the soap message to validate
      * @throws WsSecurityValidationException in case of validation errors
@@ -151,8 +143,8 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
     protected abstract void validateMessage(SoapMessage soapMessage) throws WsSecurityValidationException;
 
     /**
-     * Abstract template method. Subclasses are required to secure the response contained in the given
-     * <code>SoapMessageContext</code>, and replace the original response with the secured version.
+     * Abstract template method. Subclasses are required to secure the response contained in the given {@link
+     * SoapMessage}, and replace the original response with the secured version.
      *
      * @param soapMessage the soap message to secure
      * @throws WsSecuritySecurementException in case of securement errors

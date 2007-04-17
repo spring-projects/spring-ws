@@ -28,6 +28,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
+import org.springframework.ws.soap.SoapFault;
+import org.springframework.ws.soap.SoapMessage;
 import org.springframework.xml.transform.TransformerObjectSupport;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
@@ -73,9 +75,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
         this.schemaLanguage = schemaLanguage;
     }
 
-    /**
-     * Returns the schema resources to use for validation.
-     */
+    /** Returns the schema resources to use for validation. */
     public Resource[] getSchemas() {
         return schemas;
     }
@@ -101,16 +101,12 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
         setSchemas(new Resource[]{schema});
     }
 
-    /**
-     * Indicates whether the request should be validated against the schema. Default is <code>true</code>.
-     */
+    /** Indicates whether the request should be validated against the schema. Default is <code>true</code>. */
     public void setValidateRequest(boolean validateRequest) {
         this.validateRequest = validateRequest;
     }
 
-    /**
-     * Indicates whether the response should be validated against the schema. Default is <code>false</code>.
-     */
+    /** Indicates whether the response should be validated against the schema. Default is <code>false</code>. */
     public void setValidateResponse(boolean validateResponse) {
         this.validateResponse = validateResponse;
     }
@@ -120,7 +116,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
      * <code>validateRequest</code> is set to <code>true</code>, which is the default.
      * <p/>
      * Returns <code>true</code> if the request is valid, or <code>false</code> if it isn't. Additionally, when the
-     * <code>messageContext</code> is a <code>SoapMessageContext</code>, a SOAP Fault is added as response.
+     * request message is a {@link SoapMessage}, a {@link SoapFault} is added as response.
      *
      * @param messageContext the message context
      * @return <code>true</code> if the message is valid; <code>false</code> otherwise
