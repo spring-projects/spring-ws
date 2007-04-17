@@ -24,6 +24,7 @@ import org.springframework.ws.server.EndpointInvocationChain;
 import org.springframework.ws.server.endpoint.mapping.AbstractMapBasedEndpointMapping;
 import org.springframework.ws.soap.SoapEndpointMapping;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.ws.soap.server.SoapEndpointInvocationChain;
 
 /**
@@ -42,8 +43,8 @@ import org.springframework.ws.soap.server.SoapEndpointInvocationChain;
  * </pre>
  * The syntax is SOAP_ACTION=ENDPOINT_BEAN_NAME.
  * <p/>
- * This endpoint mapping does not read from the request message, and therefore is more suitable for message contexts
- * which directly read from the transport request (such as the <code>AxiomSoapMessageContextFactory</code> with the
+ * This endpoint mapping does not read from the request message, and therefore is more suitable for message factories
+ * which directly read from the transport request (such as the {@link AxiomSoapMessageFactory} with the
  * <code>payloadCaching</code> disabled).
  *
  * @author Arjen Poutsma
