@@ -36,18 +36,20 @@ import org.springframework.ws.soap.AbstractSoapMessage;
 import org.springframework.ws.soap.Attachment;
 import org.springframework.ws.soap.AttachmentException;
 import org.springframework.ws.soap.SoapEnvelope;
+import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 
 /**
- * SAAJ-specific implementation of the <code>SoapMessage</code> interface. Accessed via the
- * <code>SaajSoapMessageContext</code>.
+ * SAAJ-specific implementation of the {@link SoapMessage} interface. Created via the {@link SaajSoapMessageFactory}.
  *
  * @author Arjen Poutsma
  * @see javax.xml.soap.SOAPMessage
  */
 public class SaajSoapMessage extends AbstractSoapMessage {
 
-    private static final String SOAP_ACTION_HEADER = "SOAPAction";
+    private static final String MIME_HEADER_SOAP_ACTION = "SOAPAction";
+
+    private static final String MIME_HEADER_CONTENT_ID = "Content-Id";
 
     private SOAPMessage saajMessage;
 
@@ -63,16 +65,12 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         saajMessage = soapMessage;
     }
 
-    /**
-     * Return the SAAJ <code>SOAPMessage</code> that this <code>SaajSoapMessage</code> is based on.
-     */
+    /** Return the SAAJ <code>SOAPMessage</code> that this <code>SaajSoapMessage</code> is based on. */
     public SOAPMessage getSaajMessage() {
         return saajMessage;
     }
 
-    /**
-     * Sets the SAAJ <code>SOAPMessage</code> that this <code>SaajSoapMessage</code> is based on.
-     */
+    /** Sets the SAAJ <code>SOAPMessage</code> that this <code>SaajSoapMessage</code> is based on. */
     public void setSaajMessage(SOAPMessage soapMessage) {
         Assert.notNull(soapMessage, "soapMessage must not be null");
         saajMessage = soapMessage;
@@ -93,13 +91,13 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 
     public String getSoapAction() {
         MimeHeaders mimeHeaders = getImplementation().getMimeHeaders(getSaajMessage());
-        String[] values = mimeHeaders.getHeader(SOAP_ACTION_HEADER);
+        String[] values = mimeHeaders.getHeader(MIME_HEADER_SOAP_ACTION);
         return ObjectUtils.isEmpty(values) ? null : values[0];
     }
 
     public void setSoapAction(String soapAction) {
         MimeHeaders mimeHeaders = getImplementation().getMimeHeaders(getSaajMessage());
-        mimeHeaders.setHeader(SOAP_ACTION_HEADER, soapAction);
+        mimeHeaders.setHeader(MIME_HEADER_SOAP_ACTION, soapAction);
     }
 
     public void writeTo(OutputStream outputStream) throws IOException {
@@ -118,16 +116,20 @@ public class SaajSoapMessage extends AbstractSoapMessage {
     }
 
     public Attachment getAttachment(String contentId) {
+        Assert.hasLength(contentId, "contentId must not be empty");
         MimeHeaders mimeHeaders = new MimeHeaders();
-        mimeHeaders.addHeader("Content-Id", contentId);
+        mimeHeaders.setHeader(MIME_HEADER_CONTENT_ID, contentId);
         Iterator iterator = getImplementation().getAttachment(getSaajMessage(), mimeHeaders);
+        if (!iterator.hasNext()) {
+            // try to prefix it with an MTOM-specific < and >
+            mimeHeaders.setHeader(MIME_HEADER_CONTENT_ID, "<" + contentId + ">");
+            iterator = getImplementation().getAttachment(getSaajMessage(), mimeHeaders);
+        }
         if (!iterator.hasNext()) {
             return null;
         }
-        else {
-            AttachmentPart saajAttachment = (AttachmentPart) iterator.next();
-            return new SaajAttachment(saajAttachment);
-        }
+        AttachmentPart saajAttachment = (AttachmentPart) iterator.next();
+        return new SaajAttachment(saajAttachment);
     }
 
     public Attachment addAttachment(File file) throws AttachmentException {
