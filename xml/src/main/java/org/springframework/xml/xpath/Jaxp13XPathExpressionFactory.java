@@ -16,6 +16,8 @@
 
 package org.springframework.xml.xpath;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.xpath.XPath;
@@ -24,6 +26,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.springframework.xml.namespace.SimpleNamespaceContext;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -96,9 +99,9 @@ abstract class Jaxp13XPathExpressionFactory {
             return (String) evaluate(node, XPathConstants.STRING);
         }
 
-        public Node[] evaluateAsNodes(Node node) {
+        public List evaluateAsNodeList(Node node) {
             NodeList nodeList = (NodeList) evaluate(node, XPathConstants.NODESET);
-            return toNodeArray(nodeList);
+            return toNodeList(nodeList);
         }
 
         private Object evaluate(Node node, QName returnType) {
@@ -113,10 +116,10 @@ abstract class Jaxp13XPathExpressionFactory {
             }
         }
 
-        private Node[] toNodeArray(NodeList nodeList) {
-            Node[] result = new Node[nodeList.getLength()];
+        private List toNodeList(NodeList nodeList) {
+            List result = new ArrayList(nodeList.getLength());
             for (int i = 0; i < nodeList.getLength(); i++) {
-                result[i] = nodeList.item(i);
+                result.add(nodeList.item(i));
             }
             return result;
         }
@@ -133,6 +136,35 @@ abstract class Jaxp13XPathExpressionFactory {
 
         public Node evaluateAsNode(Node node) {
             return (Node) evaluate(node, XPathConstants.NODE);
+        }
+
+        public Object evaluateAsObject(Node node, NodeMapper nodeMapper) throws XPathException {
+            Node result = (Node) evaluate(node, XPathConstants.NODE);
+            if (result != null) {
+                try {
+                    return nodeMapper.mapNode(result, 0);
+                }
+                catch (DOMException ex) {
+                    throw new XPathException("Mapping resulted in DOMException", ex);
+                }
+            }
+            else {
+                return null;
+            }
+        }
+
+        public List evaluate(Node node, NodeMapper nodeMapper) throws XPathException {
+            NodeList nodes = (NodeList) evaluate(node, XPathConstants.NODESET);
+            List results = new ArrayList(nodes.getLength());
+            for (int i = 0; i < nodes.getLength(); i++) {
+                try {
+                    results.add(nodeMapper.mapNode(nodes.item(i), i));
+                }
+                catch (DOMException ex) {
+                    throw new XPathException("Mapping resulted in DOMException", ex);
+                }
+            }
+            return results;
         }
     }
 

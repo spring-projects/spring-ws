@@ -16,6 +16,8 @@
 
 package org.springframework.xml.xpath;
 
+import java.util.List;
+
 import org.w3c.dom.Node;
 
 /**
@@ -35,48 +37,74 @@ public interface XPathExpression {
      *
      * @param node the starting point
      * @return the result of the evaluation
+     * @throws XPathException in case of XPath errors
      * @see <a href="http://www.w3.org/TR/xpath#booleans">XPath specification</a>
      */
-    boolean evaluateAsBoolean(Node node);
+    boolean evaluateAsBoolean(Node node) throws XPathException;
 
     /**
-     * Evaluates the given expression as a <code>Node</code>. Returns the evaluation of the expression, or
-     * <code>null</code> if it is invalid.
+     * Evaluates the given expression as a {@link Node}. Returns the evaluation of the expression, or <code>null</code>
+     * if it is invalid.
      *
      * @param node the starting point
      * @return the result of the evaluation
+     * @throws XPathException in case of XPath errors
      * @see <a href="http://www.w3.org/TR/xpath#node-sets">XPath specification</a>
      */
-    Node evaluateAsNode(Node node);
+    Node evaluateAsNode(Node node) throws XPathException;
 
     /**
-     * Evaluates the given expression, and returns all <code>Node</code>s that conform to it. Returns and empty array if
+     * Evaluates the given expression, and returns all {@link Node} objects that conform to it. Returns an empty list if
      * no result could be found.
      *
      * @param node the starting point
-     * @return the <code>Node</code>s that are selected by the expression
+     * @return a list of <code>Node</code>s that are selected by the expression
+     * @throws XPathException in case of XPath errors
      * @see <a href="http://www.w3.org/TR/xpath#node-sets">XPath specification</a>
      */
-    Node[] evaluateAsNodes(Node node);
+    List evaluateAsNodeList(Node node) throws XPathException;
 
     /**
      * Evaluates the given expression as a number (<code>double</code>). Returns the numeric evaluation of the
-     * expression, or <code>Double.NaN</code> if it is invalid.
+     * expression, or {@link Double#NaN} if it is invalid.
      *
      * @param node the starting point
      * @return the result of the evaluation
-     * @see Double#NaN
+     * @throws XPathException in case of XPath errors
      * @see <a href="http://www.w3.org/TR/xpath#numbers">XPath specification</a>
      */
-    double evaluateAsNumber(Node node);
+    double evaluateAsNumber(Node node) throws XPathException;
 
     /**
-     * Evaluates the given expression, and returns the first <code>Node</code> that conforms to it. Returns
-     * <code>null</code> if no result could be found.
+     * Evaluates the given expression as a String. Returns <code>null</code> if no result could be found.
      *
      * @param node the starting point
-     * @return the first <code>Node</code> that is selected by the expression
+     * @return the result of the evaluation
+     * @throws XPathException in case of XPath errors
      * @see <a href="http://www.w3.org/TR/xpath#strings">XPath specification</a>
      */
-    String evaluateAsString(Node node);
+    String evaluateAsString(Node node) throws XPathException;
+
+    /**
+     * Evaluates the given expression, mapping a single {@link Node} result to a Java object via a {@link NodeMapper}.
+     *
+     * @param node       the  starting point
+     * @param nodeMapper object that will map one object per node
+     * @return the single mapped object
+     * @throws XPathException in case of XPath errors
+     * @see <a href="http://www.w3.org/TR/xpath#node-sets">XPath specification</a>
+     */
+    Object evaluateAsObject(Node node, NodeMapper nodeMapper) throws XPathException;
+
+    /**
+     * Evaluates the given expression, mapping each result {@link Node} objects to a Java object via a {@link
+     * NodeMapper}.
+     *
+     * @param node       the  starting point
+     * @param nodeMapper object that will map one object per node
+     * @return the result list, containing mapped objects
+     * @throws XPathException in case of XPath errors
+     * @see <a href="http://www.w3.org/TR/xpath#node-sets">XPath specification</a>
+     */
+    List evaluate(Node node, NodeMapper nodeMapper) throws XPathException;
 }

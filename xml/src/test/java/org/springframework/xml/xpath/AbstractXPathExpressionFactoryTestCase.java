@@ -19,17 +19,17 @@ package org.springframework.xml.xpath;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import junit.framework.TestCase;
+import org.springframework.util.StringUtils;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
-
-import org.springframework.util.StringUtils;
 
 public abstract class AbstractXPathExpressionFactoryTestCase extends TestCase {
 
@@ -137,18 +137,18 @@ public abstract class AbstractXPathExpressionFactoryTestCase extends TestCase {
         assertEquals("Invalid localname", "child", result.getLocalName());
     }
 
-    public void testEvaluateAsNodesNamespaces() throws IOException, SAXException {
+    public void testEvaluateAsNodeListNamespaces() throws IOException, SAXException {
         XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child/*", namespaces);
-        Node[] results = expression.evaluateAsNodes(namespacesDocument);
+        List results = expression.evaluateAsNodeList(namespacesDocument);
         assertNotNull("Invalid result", results);
-        assertEquals("Invalid amount of results", 3, results.length);
+        assertEquals("Invalid amount of results", 3, results.size());
     }
 
-    public void testEvaluateAsNodesNoNamespaces() throws IOException, SAXException {
+    public void testEvaluateAsNodeListNoNamespaces() throws IOException, SAXException {
         XPathExpression expression = createXPathExpression("/root/child/*");
-        Node[] results = expression.evaluateAsNodes(noNamespacesDocument);
+        List results = expression.evaluateAsNodeList(noNamespacesDocument);
         assertNotNull("Invalid result", results);
-        assertEquals("Invalid amount of results", 3, results.length);
+        assertEquals("Invalid amount of results", 3, results.size());
     }
 
     public void testEvaluateAsStringInvalidNamespaces() throws IOException, SAXException {
@@ -174,6 +174,31 @@ public abstract class AbstractXPathExpressionFactoryTestCase extends TestCase {
         XPathExpression expression = createXPathExpression("/root/child/text/text()");
         String result = expression.evaluateAsString(noNamespacesDocument);
         assertEquals("Invalid result", "text", result);
+    }
+
+    public void testEvaluateAsObject() throws Exception {
+        XPathExpression expression = createXPathExpression("/root/child");
+        String result = (String) expression.evaluateAsObject(noNamespacesDocument, new NodeMapper() {
+            public Object mapNode(Node node, int nodeNum) throws DOMException {
+                return node.getLocalName();
+            }
+        });
+        assertNotNull("Invalid result", result);
+        assertEquals("Invalid localname", "child", result);
+    }
+
+    public void testEvaluate() throws Exception {
+        XPathExpression expression = createXPathExpression("/root/child/*");
+        List results = expression.evaluate(noNamespacesDocument, new NodeMapper() {
+            public Object mapNode(Node node, int nodeNum) throws DOMException {
+                return node.getLocalName();
+            }
+        });
+        assertNotNull("Invalid result", results);
+        assertEquals("Invalid amount of results", 3, results.size());
+        assertEquals("Invalid first result", "text", results.get(0));
+        assertEquals("Invalid first result", "number", results.get(1));
+        assertEquals("Invalid first result", "boolean", results.get(2));
     }
 
     public void testInvalidExpression() {

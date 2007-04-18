@@ -26,7 +26,7 @@ import org.springframework.util.Assert;
  * Spring {@link FactoryBean} for {@link XPathExpression} object. Facilitates injection of XPath expressions into
  * endpoint beans.
  * <p/>
- * Uses {@link XPathExpressionFactory} underneath, so support is provided for JAXP 1.3, Jaxen, and Xalan XPaths.
+ * Uses {@link XPathExpressionFactory} underneath, so support is provided for JAXP 1.3, and Jaxen XPaths.
  *
  * @author Arjen Poutsma
  * @see #setExpression(String)

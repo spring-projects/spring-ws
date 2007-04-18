@@ -27,6 +27,8 @@ import org.w3c.dom.Node;
  * @author Arjen Poutsma
  * @see XPathOperations#evaluate(String,javax.xml.transform.Source,NodeMapper)
  * @see XPathOperations#evaluateAsObject(String,javax.xml.transform.Source,NodeMapper)
+ * @see XPathExpression#evaluate(org.w3c.dom.Node,NodeMapper)
+ * @see XPathExpression#evaluateAsObject(org.w3c.dom.Node,NodeMapper)
  */
 public interface NodeMapper {
 

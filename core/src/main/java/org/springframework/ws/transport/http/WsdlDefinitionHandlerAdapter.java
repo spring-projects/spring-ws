@@ -18,6 +18,8 @@ package org.springframework.ws.transport.http;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +42,6 @@ import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
 /**
  * Adapter to use the <code>WsdlDefinition</code> interface with the generic <code>DispatcherServlet</code>. Reads the
@@ -73,9 +74,7 @@ import org.w3c.dom.Node;
  */
 public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport implements HandlerAdapter, InitializingBean {
 
-    /**
-     * Default XPath expression used for extracting all <code>location</code> attributes from the WSDL definition.
-     */
+    /** Default XPath expression used for extracting all <code>location</code> attributes from the WSDL definition. */
     public static final String DEFAULT_LOCATION_EXPRESSION = "//@location";
 
     private static final String CONTENT_TYPE = "text/xml";
@@ -191,9 +190,9 @@ public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport imple
      * @see #transformLocation(String,javax.servlet.http.HttpServletRequest)
      */
     protected void transformLocations(Document definitionDocument, HttpServletRequest request) throws Exception {
-        Node[] locationNodes = locationXPathExpression.evaluateAsNodes(definitionDocument);
-        for (int i = 0; i < locationNodes.length; i++) {
-            Attr location = (Attr) locationNodes[i];
+        List locationNodes = locationXPathExpression.evaluateAsNodeList(definitionDocument);
+        for (Iterator iterator = locationNodes.iterator(); iterator.hasNext();) {
+            Attr location = (Attr) iterator.next();
             if (location != null && StringUtils.hasLength(location.getValue())) {
                 String newLocation = transformLocation(location.getValue(), request);
                 logger.debug("Transforming [" + location.getValue() + "] to [" + newLocation + "]");

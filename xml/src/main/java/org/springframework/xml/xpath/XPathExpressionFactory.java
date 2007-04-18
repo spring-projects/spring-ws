@@ -26,11 +26,11 @@ import org.springframework.util.ClassUtils;
 import org.springframework.xml.JaxpVersion;
 
 /**
- * Factory for compiled <code>XPathExpression</code>s, being aware of JAXP 1.3+ XPath functionality, Jaxen, and Xalan.
- * Mainly for internal use of the framework.
+ * Factory for compiled <code>XPathExpression</code>s, being aware of JAXP 1.3+ XPath functionality, and Jaxen. Mainly
+ * for internal use of the framework.
  * <p/>
  * The goal of this class is to avoid runtime dependencies a specific XPath engine, simply using the best XPath
- * implementation that is available. Prefers JAXP 1.3+ XPath implementations to Jaxen, and falls back to Xalan.
+ * implementation that is available. Prefers JAXP 1.3+ XPath implementations to Jaxen.
  *
  * @author Arjen Poutsma
  * @see XPathExpression
@@ -39,16 +39,12 @@ public abstract class XPathExpressionFactory {
 
     private static final Log logger = LogFactory.getLog(XPathExpressionFactory.class);
 
-    private static final String XALAN_XPATH_CLASS_NAME = "org.apache.xpath.XPath";
-
-    private static boolean xalanXPathAvailable;
-
     private static final String JAXEN_CLASS_NAME = "org.jaxen.XPath";
 
     private static boolean jaxenAvailable;
 
     static {
-        // Check whether JAXP 1.3, Resin, Jaxen, or Xalan are available
+        // Check whether JAXP 1.3, or Jaxen are available
         if (JaxpVersion.getJaxpVersion() >= JaxpVersion.JAXP_13) {
             logger.info("JAXP 1.3 available");
         }
@@ -60,14 +56,6 @@ public abstract class XPathExpressionFactory {
         catch (ClassNotFoundException ex) {
             jaxenAvailable = false;
         }
-        try {
-            ClassUtils.forName(XALAN_XPATH_CLASS_NAME);
-            xalanXPathAvailable = true;
-            logger.info("Xalan available");
-        }
-        catch (ClassNotFoundException ex) {
-            xalanXPathAvailable = false;
-        }
     }
 
     /**
@@ -75,7 +63,7 @@ public abstract class XPathExpressionFactory {
      *
      * @param expression the XPath expression
      * @return the compiled XPath expression
-     * @throws IllegalStateException if neither JAXP 1.3+, Jaxen, or Xalan are available
+     * @throws IllegalStateException if neither JAXP 1.3+, or Jaxen are available
      * @throws XPathParseException   if the given expression cannot be parsed
      */
     public static XPathExpression createXPathExpression(String expression)
@@ -90,7 +78,7 @@ public abstract class XPathExpressionFactory {
      * @param expression the XPath expression
      * @param namespaces a map that binds string prefixes to string namespaces
      * @return the compiled XPath expression
-     * @throws IllegalStateException if neither JAXP 1.3+, Jaxen, or Xalan are available
+     * @throws IllegalStateException if neither JAXP 1.3+, or Jaxen are available
      * @throws XPathParseException   if the given expression cannot be parsed
      */
     public static XPathExpression createXPathExpression(String expression, Map namespaces)
@@ -104,13 +92,9 @@ public abstract class XPathExpressionFactory {
             logger.debug("Creating [org.jaxen.XPath]");
             return JaxenXPathExpressionFactory.createXPathExpression(expression, namespaces);
         }
-        else if (xalanXPathAvailable) {
-            logger.debug("Creating [org.apache.xpath.XPath]");
-            return XalanXPathExpressionFactory.createXPathExpression(expression, namespaces);
-        }
         else {
             throw new IllegalStateException(
-                    "Could not create XPathExpression: could not locate JAXP 1.3, Resin, Xalan on the class path");
+                    "Could not create XPathExpression: could not locate JAXP 1.3, or Jaxen on the class path");
         }
     }
 
