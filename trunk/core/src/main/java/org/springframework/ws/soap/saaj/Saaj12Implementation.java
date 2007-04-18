@@ -235,7 +235,7 @@ public class Saaj12Implementation implements SaajImplementation {
     }
 
     //
-    // SOAP 1.2
+    // Unsupported
     //
 
     public String getFaultRole(SOAPFault fault) {
@@ -277,4 +277,5 @@ public class Saaj12Implementation implements SaajImplementation {
     public void setFaultReasonText(SOAPFault fault, Locale locale, String text) {
         throw new UnsupportedOperationException("SAAJ 1.2 does not support SOAP 1.2");
     }
+
 }

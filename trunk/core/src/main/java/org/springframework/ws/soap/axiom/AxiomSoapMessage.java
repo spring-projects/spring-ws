@@ -36,12 +36,12 @@ import org.springframework.util.Assert;
 import org.springframework.ws.soap.AbstractSoapMessage;
 import org.springframework.ws.soap.Attachment;
 import org.springframework.ws.soap.SoapEnvelope;
+import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.transport.TransportOutputStream;
 
 /**
- * AXIOM-specific implementation of the <code>SoapMessage</code> interface. Accessed via the
- * <code>AxiomSoapMessageContext</code>.
+ * AXIOM-specific implementation of the {@link SoapMessage} interface. Created via the {@link AxiomSoapMessageFactory}.
  * <p/>
  * Note that Axiom does support reading SOAP with Attachments (SwA) messages, but does not support creating them
  * manually. Hence, the <code>addAttachment</code> methods throw an <code>UnsupportedOperationException</code>.
@@ -111,9 +111,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         this.payloadCaching = payloadCaching;
     }
 
-    /**
-     * Return the AXIOM <code>SOAPMessage</code> that this <code>AxiomSoapMessage</code> is based on.
-     */
+    /** Return the AXIOM <code>SOAPMessage</code> that this <code>AxiomSoapMessage</code> is based on. */
     public final SOAPMessage getAxiomMessage() {
         return axiomMessage;
     }
@@ -196,9 +194,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         }
     }
 
-    /**
-     * Axiom-specific implementation of <code>org.springframework.ws.soap.Attachment</code>
-     */
+    /** Axiom-specific implementation of <code>org.springframework.ws.soap.Attachment</code> */
     private static class AxiomAttachment implements Attachment {
 
         private final DataHandler dataHandler;

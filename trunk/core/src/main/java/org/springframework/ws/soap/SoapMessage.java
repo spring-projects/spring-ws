@@ -34,9 +34,7 @@ import org.springframework.ws.WebServiceMessage;
  */
 public interface SoapMessage extends WebServiceMessage {
 
-    /**
-     * Returns the <code>SoapEnvelope</code> associated with this <code>SoapMessage</code>.
-     */
+    /** Returns the <code>SoapEnvelope</code> associated with this <code>SoapMessage</code>. */
     SoapEnvelope getEnvelope() throws SoapEnvelopeException;
 
     /**
@@ -45,6 +43,13 @@ public interface SoapMessage extends WebServiceMessage {
      * @return the SOAP Action.
      */
     String getSoapAction();
+
+    /**
+     * Sets the SOAP Action for this message.
+     *
+     * @param soapAction the SOAP Action.
+     */
+    void setSoapAction(String soapAction);
 
     /**
      * Returns the <code>SoapBody</code> associated with this <code>SoapMessage</code>. This is a convenience method for
@@ -118,6 +123,4 @@ public interface SoapMessage extends WebServiceMessage {
      * @see org.springframework.core.io.Resource
      */
     Attachment addAttachment(InputStreamSource inputStreamSource, String contentType);
-
-    void setSoapAction(String soapAction);
 }

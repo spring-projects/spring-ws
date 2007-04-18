@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.soap12;
 
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.Properties;
 
 import org.springframework.ws.WebServiceMessage;
@@ -60,6 +61,25 @@ public abstract class AbstractSoap12MessageFactoryTestCase extends AbstractSoapM
         SoapMessage soapMessage = (SoapMessage) message;
         assertEquals("Invalid soap version", SoapVersion.SOAP_12, soapMessage.getVersion());
         Attachment attachment = soapMessage.getAttachment("interface21");
+        assertNotNull("No attachment read", attachment);
+    }
+
+    public void testCreateSoapMessageMtom() throws Exception {
+        InputStream is = AbstractSoap12MessageFactoryTestCase.class.getResourceAsStream("soap12-mtom.bin");
+        Properties headers = new Properties();
+        headers.setProperty("Content-Type", "multipart/related;" + "start-info=\"application/soap+xml\";" +
+                "type=\"application/xop+xml\";" + "start=\"<0.urn:uuid:40864869929B855F971176851454456@apache.org>\";" +
+                "boundary=\"MIMEBoundaryurn_uuid_40864869929B855F971176851454455\"");
+        TransportInputStream tis = new MockTransportInputStream(is, headers);
+
+        WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
+        assertTrue("Not a SoapMessage", message instanceof SoapMessage);
+        SoapMessage soapMessage = (SoapMessage) message;
+        assertEquals("Invalid soap version", SoapVersion.SOAP_12, soapMessage.getVersion());
+        Iterator iter = soapMessage.getAttachments();
+        assertTrue("No attachments read", iter.hasNext());
+
+        Attachment attachment = soapMessage.getAttachment("1.urn:uuid:40864869929B855F971176851454452@apache.org");
         assertNotNull("No attachment read", attachment);
     }
 

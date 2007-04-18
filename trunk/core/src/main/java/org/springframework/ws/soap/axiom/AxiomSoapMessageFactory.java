@@ -145,21 +145,18 @@ public class AxiomSoapMessageFactory implements WebServiceMessageFactory, Initia
         return contentType.indexOf(MULTI_PART_RELATED_CONTENT_TYPE) != -1;
     }
 
-    /**
-     * Creates an AxiomSoapMessage without attachments.
-     */
+    /** Creates an AxiomSoapMessage without attachments. */
     private WebServiceMessage createAxiomSoapMessage(InputStream inputStream, String contentType, String soapAction)
             throws XMLStreamException {
         XMLStreamReader reader = inputFactory.createXMLStreamReader(inputStream, getCharSetEncoding(contentType));
         SOAPFactory soapFactory = getSoapFactory(contentType);
-        StAXSOAPModelBuilder builder = new StAXSOAPModelBuilder(reader, soapFactory, soapFactory.getSoapVersionURI());
+        String envelopeNamespace = getSoapEnvelopeNamespace(contentType);
+        StAXSOAPModelBuilder builder = new StAXSOAPModelBuilder(reader, soapFactory, envelopeNamespace);
         SOAPMessage soapMessage = builder.getSoapMessage();
         return new AxiomSoapMessage(soapMessage, soapAction, payloadCaching);
     }
 
-    /**
-     * Creates an AxiomSoapMessage with attachments.
-     */
+    /** Creates an AxiomSoapMessage with attachments. */
     private AxiomSoapMessage createMultiPartAxiomSoapMessage(InputStream inputStream,
                                                              String contentType,
                                                              String soapAction) throws XMLStreamException {
@@ -171,13 +168,14 @@ public class AxiomSoapMessageFactory implements WebServiceMessageFactory, Initia
         }
         XMLStreamReader reader = inputFactory.createXMLStreamReader(attachments.getSOAPPartInputStream(),
                 getCharSetEncoding(attachments.getSOAPPartContentType()));
-        SOAPFactory soapFactory = getSoapFactory(attachments.getSOAPPartContentType());
         StAXSOAPModelBuilder builder = null;
+        String envelopeNamespace = getSoapEnvelopeNamespace(contentType);
         if (attachments.getAttachmentSpecType().equals(MTOMConstants.SWA_TYPE)) {
-            builder = new StAXSOAPModelBuilder(reader, soapFactory, soapFactory.getSoapVersionURI());
+            SOAPFactory soapFactory = getSoapFactory(attachments.getSOAPPartContentType());
+            builder = new StAXSOAPModelBuilder(reader, soapFactory, envelopeNamespace);
         }
         else if (attachments.getAttachmentSpecType().equals(MTOMConstants.MTOM_TYPE)) {
-            builder = new MTOMStAXSOAPModelBuilder(reader, attachments, soapFactory.getSoapVersionURI());
+            builder = new MTOMStAXSOAPModelBuilder(reader, attachments, envelopeNamespace);
         }
         return new AxiomSoapMessage(builder.getSoapMessage(), attachments, soapAction, payloadCaching);
     }
@@ -192,6 +190,19 @@ public class AxiomSoapMessageFactory implements WebServiceMessageFactory, Initia
         else {
             throw new AxiomSoapMessageCreationException("Unknown content type '" + contentType + "'");
         }
+    }
+
+    private String getSoapEnvelopeNamespace(String contentType) {
+        if (contentType.indexOf(SOAP11Constants.SOAP_11_CONTENT_TYPE) != -1) {
+            return SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI;
+        }
+        else if (contentType.indexOf(SOAP12Constants.SOAP_12_CONTENT_TYPE) != -1) {
+            return SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI;
+        }
+        else {
+            throw new AxiomSoapMessageCreationException("Unknown content type '" + contentType + "'");
+        }
+
     }
 
     /**

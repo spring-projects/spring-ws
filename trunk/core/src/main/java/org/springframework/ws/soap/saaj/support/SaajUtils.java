@@ -105,7 +105,7 @@ public abstract class SaajUtils {
 
     /**
      * Converts a <code>javax.xml.namespace.QName</code> to a <code>javax.xml.soap.Name</code>. A
-     * <code>SOAPEnvelope</code> is required to create the name.
+     * <code>SOAPElement</code> is required to create the name.
      *
      * @param qName          the <code>QName</code> to convert
      * @param resolveElement a <code>SOAPElement</code> used to resolve namespaces to prefixes

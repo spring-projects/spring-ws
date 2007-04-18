@@ -34,4 +34,5 @@ public class AxiomSoap12MessageFactoryTest extends AbstractSoap12MessageFactoryT
         // Axiom does not support SwA with SOAP 1.2
     }
 
+
 }

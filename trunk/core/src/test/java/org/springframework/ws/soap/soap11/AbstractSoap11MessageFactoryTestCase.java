@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.soap11;
 
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.Properties;
 
 import org.springframework.ws.WebServiceMessage;
@@ -51,7 +52,7 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
         assertEquals("Invalid soap action", soapAction, soapMessage.getSoapAction());
     }
 
-    public void testCreateSoapMessageAttachment() throws Exception {
+    public void testCreateSoapMessageSwA() throws Exception {
         InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-attachment.bin");
         Properties headers = new Properties();
         headers.setProperty("Content-Type",
@@ -62,7 +63,29 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
         assertTrue("Not a SoapMessage", message instanceof SoapMessage);
         SoapMessage soapMessage = (SoapMessage) message;
         assertEquals("Invalid soap version", SoapVersion.SOAP_11, soapMessage.getVersion());
+        Iterator iter = soapMessage.getAttachments();
+        assertTrue("No attachments read", iter.hasNext());
         Attachment attachment = soapMessage.getAttachment("interface21");
+        assertNotNull("No attachment read", attachment);
+        assertEquals("Invalid content id", "interface21", attachment.getId());
+    }
+
+    public void testCreateSoapMessageMtom() throws Exception {
+        InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-mtom.bin");
+        Properties headers = new Properties();
+        headers.setProperty("Content-Type", "multipart/related;" + "start-info=\"text/xml\";" +
+                "type=\"application/xop+xml\";" + "start=\"<0.urn:uuid:492264AB42E57108E01176731445508@apache.org>\";" +
+                "boundary=\"MIMEBoundaryurn_uuid_492264AB42E57108E01176731445507\"");
+        TransportInputStream tis = new MockTransportInputStream(is, headers);
+
+        WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
+        assertTrue("Not a SoapMessage", message instanceof SoapMessage);
+        SoapMessage soapMessage = (SoapMessage) message;
+        assertEquals("Invalid soap version", SoapVersion.SOAP_11, soapMessage.getVersion());
+        Iterator iter = soapMessage.getAttachments();
+        assertTrue("No attachments read", iter.hasNext());
+
+        Attachment attachment = soapMessage.getAttachment("1.urn:uuid:492264AB42E57108E01176731445504@apache.org");
         assertNotNull("No attachment read", attachment);
     }
 
