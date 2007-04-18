@@ -62,6 +62,7 @@ public class XPathParamAnnotationEndpointAdapter extends AbstractMethodEndpointA
 
     private Properties namespaces;
 
+    /** Sets namespaces used in the XPath expression. Maps prefixes to namespaces. */
     public void setNamespaces(Properties namespaces) {
         this.namespaces = namespaces;
     }

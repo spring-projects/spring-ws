@@ -6,6 +6,8 @@
     </properties>
     <body>
         <release version="1.0-RC1">
+            <action dev="poutsma" type="add">Added XPath template, for evaluating XPaths in a template-like fashion
+            </action>
             <action dev="poutsma" type="add" issue="SWS-62">MTOM support</action>
             <action dev="poutsma" type="add">Added XPathExpressionFactoryBean, for injection of XPath expressions
             </action>
