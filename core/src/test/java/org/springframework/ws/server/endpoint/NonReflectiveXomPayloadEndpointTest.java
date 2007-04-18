@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2007 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,10 @@ package org.springframework.ws.server.endpoint;
 
 import nu.xom.Element;
 
-public class XomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
+public class NonReflectiveXomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 
     protected PayloadEndpoint createNoResponseEndpoint() throws Exception {
-        return new AbstractXomPayloadEndpoint() {
+        return new AbstractXomPayloadEndpoint(false) {
 
             protected Element invokeInternal(Element requestElement) throws Exception {
                 return null;
@@ -30,7 +30,7 @@ public class XomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
     }
 
     protected PayloadEndpoint createResponseEndpoint() throws Exception {
-        return new AbstractXomPayloadEndpoint() {
+        return new AbstractXomPayloadEndpoint(false) {
 
             protected Element invokeInternal(Element requestElement) throws Exception {
                 assertNotNull("No requestElement passed", requestElement);
@@ -42,10 +42,10 @@ public class XomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
     }
 
     public void testStaxSourceEventReader() throws Exception {
-        // Unfortutately, XOM does not support these, hence the override here
+        // overriden, because XOM doesn not support it
     }
 
     public void testStaxSourceStreamReader() throws Exception {
-        // Unfortutately, XOM does not support these, hence the override here
+        // overriden, because XOM doesn not support it
     }
 }
