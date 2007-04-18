@@ -16,6 +16,7 @@
 
 package org.springframework.xml.xpath;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,7 @@ import org.jaxen.JaxenException;
 import org.jaxen.SimpleNamespaceContext;
 import org.jaxen.XPath;
 import org.jaxen.dom.DOMXPath;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
 
 /**
@@ -71,9 +73,7 @@ abstract class JaxenXPathExpressionFactory {
         }
     }
 
-    /**
-     * Jaxen implementation of the <code>XPathExpression</code> interface.
-     */
+    /** Jaxen implementation of the <code>XPathExpression</code> interface. */
     private static class JaxenXpathExpression implements XPathExpression {
 
         private XPath xpath;
@@ -118,10 +118,49 @@ abstract class JaxenXPathExpressionFactory {
             }
         }
 
-        public Node[] evaluateAsNodes(Node node) {
+        public List evaluateAsNodeList(Node node) {
             try {
-                List result = xpath.selectNodes(node);
-                return (Node[]) result.toArray(new Node[result.size()]);
+                return xpath.selectNodes(node);
+            }
+            catch (JaxenException ex) {
+                throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
+            }
+        }
+
+        public Object evaluateAsObject(Node context, NodeMapper nodeMapper) throws XPathException {
+            try {
+                Node result = (Node) xpath.selectSingleNode(context);
+                if (result != null) {
+                    try {
+                        return nodeMapper.mapNode(result, 0);
+                    }
+                    catch (DOMException ex) {
+                        throw new XPathException("Mapping resulted in DOMException", ex);
+                    }
+                }
+                else {
+                    return null;
+                }
+            }
+            catch (JaxenException ex) {
+                throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
+            }
+        }
+
+        public List evaluate(Node context, NodeMapper nodeMapper) throws XPathException {
+            try {
+                List nodes = xpath.selectNodes(context);
+                List results = new ArrayList(nodes.size());
+                for (int i = 0; i < nodes.size(); i++) {
+                    Node node = (Node) nodes.get(i);
+                    try {
+                        results.add(nodeMapper.mapNode(node, i));
+                    }
+                    catch (DOMException ex) {
+                        throw new XPathException("Mapping resulted in DOMException", ex);
+                    }
+                }
+                return results;
             }
             catch (JaxenException ex) {
                 throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
