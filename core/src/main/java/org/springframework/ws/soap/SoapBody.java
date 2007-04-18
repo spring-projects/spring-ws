@@ -74,7 +74,7 @@ public interface SoapBody extends SoapElement {
     SoapFault addClientOrSenderFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
 
     /**
-     * Adds a <code>Server</code>/<code>Receiver</code> fault to the body.For SOAP 1.1, this adds a fault with a
+     * Adds a <code>Server</code>/<code>Receiver</code> fault to the body. For SOAP 1.1, this adds a fault with a
      * <code>Server</code> fault code. For SOAP 1.2, this adds a fault with a <code>Receiver</code> code.
      * <p/>
      * Adding a fault removes the current content of the body.
