@@ -28,7 +28,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * JAXP 1.3-specific factory creating <code>XPathExpression</code>s.
+ * JAXP 1.3-specific factory creating {@link XPathExpression} objects.
  *
  * @author Arjen Poutsma
  * @see #createXPathExpression(String)
