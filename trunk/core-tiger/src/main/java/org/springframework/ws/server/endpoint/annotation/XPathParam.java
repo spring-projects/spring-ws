@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * org.w3c.dom.Node}</li> <li>{@link org.w3c.dom.NodeList}</li> </ul>
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.server.endpoint.adapter.XPathParamMethodAnnotationEndpointAdapter
+ * @see org.springframework.ws.server.endpoint.adapter.XPathParamAnnotationMethodEndpointAdapter
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)

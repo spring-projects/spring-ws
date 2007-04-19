@@ -56,7 +56,7 @@ import org.w3c.dom.NodeList;
  *
  * @author Arjen Poutsma
  */
-public class XPathParamMethodAnnotationEndpointAdapter extends AbstractMethodEndpointAdapter
+public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEndpointAdapter
         implements InitializingBean {
 
     private XPathFactory xpathFactory;
