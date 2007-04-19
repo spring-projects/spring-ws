@@ -31,18 +31,18 @@ import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class XPathParamMethodAnnotationEndpointAdapterTest extends TestCase {
+public class XPathParamAnnotationMethodEndpointAdapterTest extends TestCase {
 
     private static final String CONTENTS = "<root><child><text>text</text><number>42.0</number></child></root>";
 
-    private XPathParamMethodAnnotationEndpointAdapter adapter;
+    private XPathParamAnnotationMethodEndpointAdapter adapter;
 
     private boolean supportedTypesInvoked = false;
 
     private boolean supportedSourceInvoked;
 
     protected void setUp() throws Exception {
-        adapter = new XPathParamMethodAnnotationEndpointAdapter();
+        adapter = new XPathParamAnnotationMethodEndpointAdapter();
         adapter.afterPropertiesSet();
     }
 
