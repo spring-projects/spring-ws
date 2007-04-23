@@ -152,7 +152,9 @@ public class Passenger {
 </flight>]]></programlisting>
                 This solves the recursiveness problem, but introduces new ones. For one, you cannot use an XML validator
                 to validate this structure. Another issue is that the standard way to use these references in the SOAP 
-                (RPC/encoded) has been deprecated in favor of document/literal.                
+                (RPC/encoded) has been deprecated in favor of document/literal (see WS-I
+                <ulink url="http://www.ws-i.org/Profiles/BasicProfile-1.1.html#SOAP_encodingStyle_Attribute">Basic
+                Profile</ulink>).
             </para>
         </section>
         <para>
