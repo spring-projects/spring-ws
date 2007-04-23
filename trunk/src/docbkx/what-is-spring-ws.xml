@@ -123,7 +123,7 @@
         </itemizedlist>
         <para>
             The following figure illustrates the modules, and the dependencies between them. Arrows indicate 
-            dependencies, i.e. Spring-WS Core depends on Spring-XML and Spring-X
+            dependencies, i.e. Spring-WS Core depends on Spring-XML and Spring-OXM.
             <mediaobject>
                     <imageobject role="fo">
                         <imagedata fileref="src/docbkx/resources/images/spring-deps.png"
