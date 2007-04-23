@@ -4,15 +4,25 @@
 <preface id="preface">
 	<title>Preface</title>
 	<para>
-	    Web services development is a complicated affair. There is SOAP, there is REST. There is SOAP 1.1, and there is
-        SOAP 1.2. There is rpc/encoded, and there is document/literal. There is WS-Addressing, WS-Security, WS-Policy,
-        and various other Web service specifications. Implementing Web services using abstractions that magically turn
-        Java into XML, but turn out to be leaky abstractions makes it even harder. Spring Web Services provides a
-        solution for building interoperable Web services, while making it clear what XML is received and sent across the
-        wire. Spring-WS provides a powerful <link linkend="ws">message dispatching framework</link>, various <link
-        linkend="oxm">XML marshalling</link> techniques that can be used outside a Web service environment, and a <link
+        In the current age of Service Oriented Architectures, more and more people are using Web Services to
+        connect previously unconnected systems. Initially, Web services where considered to be just another way to do
+        a Remote Procedure Call (RPC). Over time, however, people found out that there is a big difference
+        between RPC and Web services. Especially when interoperability with other platforms is important, it is often
+        better to send encapsulated XML documents, containing all the data necessary to process the request.
+        Conceptually, XML-based Web services are better off being compared to message queues rather than remoting
+        solutions.
+        Overall, XML should be considered the platform-neutral representation of data, the 
+        <foreignphrase>interlingua</foreignphrase> of SOA. When developing or using Web services, the focus should be 
+        on this XML, and not on Java.
+    </para>
+    <para>
+        Spring Web Services focusses on creating these document-driven Web services.
+        Spring Web Services facilitates contract-first SOAP service development, allowing for the creation of
+        flexible web services using one of the many ways to manipulate XML payloads. 
+        Spring-WS provides a powerful <link linkend="server">message dispatching framework</link>, various <link
+        linkend="oxm">XML marshalling</link> techniques that can be used outside a Web service environment, a <link
         linkend="security">WS-Security</link> solution that integrates with your existing application security
-        solution.
+        solution, and a <link linkend="client">Client-side API</link> that follows the familiar Spring template pattern.
     </para>
 	<para>
         This document provides a reference guide to Spring-WS's features. Since this document is still a
