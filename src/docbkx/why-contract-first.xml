@@ -186,7 +186,8 @@ public class Passenger {
             <para>
                 When Java is automatically transformed into XML, there is no way to be sure as to what is sent across 
                 the wire. An object might reference another object, which refers to another, etc. In the end, half of 
-                your virtual machine might be converted into XML, which will result in a slow service. 
+                the objects on the heap in your virtual machine might be converted into XML,
+                which will result in a slow service. 
             </para>
             <para>
                 When using contract-first, you explicitly describe what XML is sent where, thus making sure that it is 
