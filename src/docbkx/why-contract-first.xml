@@ -172,10 +172,20 @@ public class Passenger {
         <section>
             <title>Fragility</title>
             <para>
-                If you use a contract-last development style, you will have no guarantee that the contract stays 
-                constant over time. Each redeployment of the service can possibly result in a different contract. 
-                Additionally, an upgrade of the SOAP stack used, or a migration to a different SOAP stack can also 
-                change said contract.
+                As mentioned earlier, the contract-last development style results in your web service contract 
+                (WSDL and your XSD) being generated from your Java contract (usually an interface). If you are using 
+                this approach, you will have no guarantee that the contract stays constant over time. Each time you 
+                change your Java contract and redeploy it, there might be subsequent changes to the web service
+                contract.
+            </para>
+            <para>
+                Aditionally, not all SOAP stacks generate the same web service contract from a Java contract. This 
+                means changing your current SOAP stack for a different one (for whatever reason), might also change
+                your web service contract.
+            </para>
+            <para>
+                When a web service contract changes, users of the contract will have to be instructed to obtain 
+                the new contract and potentially change their code to accommodate for any changes in the contract.
             </para>
             <para>
                 In order for a contract to be useful, it must remain constant for as long as possible. If a contract 
