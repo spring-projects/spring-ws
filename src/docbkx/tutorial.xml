@@ -32,7 +32,7 @@
         <section>
             <title>Holiday</title>
             <para>
-                In the scenario, we have to deal with holiday request, so it makes sense to determine what a holiday
+                In the scenario, we have to deal with holiday requests, so it makes sense to determine what a holiday
                 looks like:
             </para>
             <programlisting><![CDATA[
