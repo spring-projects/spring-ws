@@ -53,7 +53,8 @@
 					In addition to a message sender, the <classname>WebServiceTemplate</classname> requires a Web service 
 					message factory. As explained in <xref linkend="message-factories"/>, there are two message factories 
 					for SOAP: <classname>SaajSoapMessageFactory</classname> and 
-					<classname>AxiomSoapMessageFactory</classname>.
+					<classname>AxiomSoapMessageFactory</classname>. If no message factory is specified, Spring-WS will
+                    use the <classname>SaajSoapMessageFactory</classname> by default.
 				</para>
 			</section>
 		</section>
@@ -102,9 +103,6 @@ public class WebServiceClient {
 <beans xmlns="http://www.springframework.org/schema/beans">
 
     <bean id="webServiceClient" class="WebServiceClient">
-        <property name="messageFactory">
-            <bean class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
-        </property>
         <property name="messageSender">
             <bean class="org.springframework.ws.transport.http.HttpUrlConnectionMessageSender">
                 <property name="url" value="http://localhost:8080/WebService"/>
@@ -116,7 +114,7 @@ public class WebServiceClient {
 			<para>
 				This example uses the template to send a hello world message to the web service located at 
 				<uri>http://localhost:8080/WebService</uri>, and writes the result to the console.
-				The <classname>WebServiceTemplate</classname> is injected with the message factory and sender.
+				The <classname>WebServiceTemplate</classname> is injected with the message sender.
 				A zero argument constructor and <property>messageFactory</property> / 
 				<property>messageSender</property> bean properties are provided and can be used for constructing 
 				the instance (using a BeanFactory or plain Java code). Alternatively, consider deriving from 
