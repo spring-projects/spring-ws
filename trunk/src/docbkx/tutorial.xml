@@ -269,15 +269,17 @@
     <section id="tutorial-service-contract">
         <title>Service contract</title>
         <para>
-            A service contract is generally expressed as a <literal>WSDL</literal> file. Note that in Spring-WS, 
-            <emphasis>writing the WSDL by hand is not required</emphasis>. Based on the XSD and some conventions, 
-            Spring-WS can create the WSDL for you, as explained below.
-             This sectionwill show you how to write your own WSDL, if you choose not to use this functionality.
+            A service contract is generally expressed as a <ulink url="http://www.w3.org/TR/wsdl">WSDL</ulink> file.
+            Note that in Spring-WS, <emphasis>writing the WSDL by hand is not required</emphasis>. Based on the XSD and
+            some conventions, Spring-WS can create the WSDL for you, as explained in 
+            <xref linkend="tutorial.implementing.endpoint"/>.
+            You can skip to that section if you want to; the remainder of this section will show you how to write your 
+            own WSDL by hand.
          </para>
          <para>
             We start our WSDL with the standard preamble, and by importing our existing XSD. To
             separate the schema from the definition, we will use a separate namespace for the WSDL definitions:
-            <literal>http://mycompany.com/hr/definitions</literal>.
+            <uri>http://mycompany.com/hr/definitions</uri>.
         </para>
         <programlisting>
 &lt;wsdl:definitions name=&quot;HumanResources&quot;
@@ -483,8 +485,7 @@
             The following command creates a Maven2 web application project for us, using the Spring-WS archetype 
             (i.e. project template)
         </para>
-<screen>        
-> mvn archetype:create -DarchetypeGroupId=org.springframework.ws \
+<screen>mvn archetype:create -DarchetypeGroupId=org.springframework.ws \
   -DarchetypeArtifactId=spring-ws-archetype \
   -DarchetypeVersion=1.0-rc1-SNAPSHOT \
   -DgroupId=com.mycompany.hr \
@@ -518,11 +519,15 @@
 &lt;/web-app&gt;
 </programlisting>
         <para>
+            We could have made the servlet more restrictive by using the url pattern <literal>/holidayService</literal>,
+            but this will suffice for now.
+        </para>
+        <para>
             Additionally, there is <filename>WEB-INF/spring-ws-servlet.xml</filename>, which is a Spring application 
             context that will contain the Spring-WS bean definitions.
         </para>
     </section>
-    <section>
+    <section id="tutorial.implementing.endpoint">
         <title>Implementing the Endpoint</title>
         <para>
            In Spring-WS, you will implement <emphasis>Endpoints</emphasis> to handle incoming XML messages. There 
@@ -631,7 +636,10 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
             <para>
                  Using JDOM is just one of the options to handle the XML, other options include DOM, dom4j, XOM, 
                  SAX, and StAX, but also <link linkend="oxm">marshalling techniques</link> like JAXB, Castor, XMLBeans,
-                 JiBX, and XStream.
+                 JiBX, and XStream. We chose JDOM because it gives us access to the raw XML, and because it 
+                 is based on classes (not interfaces and factory methods as with W3C DOM and dom4j), which makes the 
+                 code less verbose. We use XPath because it is less fragile than marshalling technologies: we don't 
+                 care for strict schema conformance, as long as we can find the dates and the name.
              </para>
              <para>
                 Here's how we would wire up these classes in our <filename>spring-ws-servlet.xml</filename>
@@ -687,6 +695,7 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
         </para>
         <programlistingco>
             <areaspec>
+                <area id="tutorial.wsdl.gen.bean" coords="2"/>
                 <area id="tutorial.wsdl.gen.schema" coords="5"/>
                 <area id="tutorial.wsdl.gen.portType" coords="6"/>
                 <area id="tutorial.wsdl.gen.locationUri" coords="7"/>
@@ -702,6 +711,14 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
     </property>
 </bean>]]></programlisting>
             <calloutlist>
+                <callout arearefs="tutorial.wsdl.gen.bean">
+                    <para>
+                        The bean id determines the URL where the WSDL can be retrieved. In this case, the bean id is
+                        <varname>holiday</varname>, which means that the WSDL can be retrieved as 
+                        <filename>holiday.wsdl</filename> in the servlet context. The full URL will typically be
+                        <uri>http://localhost:8080/holidayService/holiday.wsdl</uri>.
+                    </para>
+                </callout>
                 <callout arearefs="tutorial.wsdl.gen.schema">
                     <para>
                         The <varname>schema</varname> property is set to the human resource schema we defined in 
@@ -723,6 +740,7 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
             </calloutlist>
         </programlistingco>
         <para>
+            You can create a WAR file using <command>mvn install</command>.
             If you deploy the application, and point your browser at 
             <ulink url="http://localhost:8080/holidayService/holiday.wsdl">this location</ulink>, you will
             see the generated WSDL.
