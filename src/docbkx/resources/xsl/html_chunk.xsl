@@ -12,7 +12,6 @@
     ################################################### -->
     <xsl:param name="chunk.section.depth">'5'</xsl:param>
     <xsl:param name="use.id.as.filename">'1'</xsl:param>
-    <xsl:param name="html.stylesheet">html.css</xsl:param>
     <!-- These extensions are required for table printing and other stuff -->
     <xsl:param name="use.extensions">1</xsl:param>
     <xsl:param name="tablecolumns.extension">0</xsl:param>
@@ -38,6 +37,7 @@
                          Callouts
     ################################################### -->
     <!-- Place callout marks at this column in annotated areas -->
+    <xsl:param name="callout.graphics">1</xsl:param>
     <xsl:param name="callout.defaultcolumn">90</xsl:param>
     <!--###################################################
                           Misc
