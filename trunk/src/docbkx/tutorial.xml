@@ -519,7 +519,7 @@
 &lt;/web-app&gt;
 </programlisting>
         <para>
-            We could have made the servlet more restrictive by using the url pattern <literal>/holidayService</literal>,
+            We could have made the servlet more restrictive by using the url pattern <literal>/humanresources</literal>,
             but this will suffice for now.
         </para>
         <para>
