@@ -18,7 +18,8 @@
         <url>http://opensource2.atlassian.com/projects/spring/browse/SWS</url>
     </issueManagement>
     <ciManagement>
-        <system>continuum</system>
+        <system>bamboo</system>
+        <url>http://build.springframework.org:8085/bamboo/</url>
         <notifiers>
             <notifier>
                 <type>mail</type>
@@ -130,14 +131,9 @@
     </properties>
     <repositories>
         <repository>
-            <id>spring-ext</id>
-            <name>Spring External Dependencies Repository</name>
-            <url>https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/</url>
-        </repository>
-        <repository>
-            <id>maven2-repository.dev.java.net</id>
+            <id>java.net</id>
             <name>Java.net Repository for Maven2</name>
-            <url>https://maven-repository.dev.java.net/nonav/repository</url>
+            <url>http://download.java.net/maven/1/</url>
             <layout>legacy</layout>
         </repository>
     </repositories>

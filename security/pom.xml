@@ -10,6 +10,13 @@
     <packaging>jar</packaging>
     <name>Spring WS Security</name>
     <description>Spring-WS WS-Security implementation</description>
+    <repositories>
+        <repository>
+            <id>spring-ext</id>
+            <name>Spring External Dependencies Repository</name>
+            <url>https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/</url>
+        </repository>
+    </repositories>
     <dependencies>
         <!-- Spring-WS dependencies -->
         <dependency>
