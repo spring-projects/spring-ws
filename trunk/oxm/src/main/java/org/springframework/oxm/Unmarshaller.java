@@ -27,7 +27,7 @@ import javax.xml.transform.Source;
 public interface Unmarshaller {
 
     /**
-     * Unmarshals the given provided <code>javax.xml.transform.Source</code> into an object graph.
+     * Unmarshals the given provided {@link Source} into an object graph.
      *
      * @param source the source to marshal from
      * @return the object graph
