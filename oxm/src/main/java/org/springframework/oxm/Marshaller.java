@@ -31,7 +31,7 @@ import javax.xml.transform.Result;
 public interface Marshaller {
 
     /**
-     * Marshals the object graph with the given root into the provided <code>javax.xml.transform.Result</code>.
+     * Marshals the object graph with the given root into the provided {@link Result}.
      *
      * @param graph  the root of the object graph to marshal
      * @param result the result to marshal to
