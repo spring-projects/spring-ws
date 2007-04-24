@@ -8,14 +8,6 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>spring-oxm-tiger</artifactId>
     <name>Spring O/X Mapping - Java 5</name>
-    <repositories>
-        <repository>
-            <id>maven-repository.dev.java.net</id>
-            <name>Java.net Repository for Maven</name>
-            <url>https://maven-repository.dev.java.net/nonav/repository</url>
-            <layout>legacy</layout>
-        </repository>
-    </repositories>
     <build>
         <plugins>
             <plugin>
