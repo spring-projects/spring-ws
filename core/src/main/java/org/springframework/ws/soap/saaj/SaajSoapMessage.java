@@ -24,6 +24,8 @@ import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.MimeHeaders;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
@@ -163,6 +165,27 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         else {
             throw new IllegalStateException("Could not find SAAJ on the classpath");
         }
+    }
+
+    public String toString() {
+        StringBuffer buffer = new StringBuffer("SaajSoapMessage");
+        try {
+            SOAPEnvelope envelope = getImplementation().getEnvelope(saajMessage);
+            if (envelope != null) {
+                SOAPBody body = getImplementation().getBody(envelope);
+                if (body != null) {
+                    SOAPElement bodyElement = getImplementation().getFirstBodyElement(body);
+                    if (bodyElement != null) {
+                        buffer.append(' ');
+                        buffer.append(getImplementation().getName(bodyElement));
+                    }
+                }
+            }
+        }
+        catch (SOAPException ex) {
+            // ignore
+        }
+        return buffer.toString();
     }
 
     private static class SaajAttachmentIterator implements Iterator {
