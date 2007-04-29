@@ -23,9 +23,8 @@
             <item name="API" href="apidocs/index.html"/>
             <item name="Reference" href="reference.html"/>
             <item name="FAQ" href="faq.html"/>
-            <item name="Why Contract-First?" href="why-contract-first.html"/>
             <item name="Upgrading" href="upgrading.html"/>
-            <item name="Tutorial" href="tutorial/tutorial1.html"/>
+            <item name="Tutorial" href="reference/html/tutorial.html"/>
             <item name="Resources &amp; Tools" href="resources.html"/>
         </menu>
         <menu name="Support">
