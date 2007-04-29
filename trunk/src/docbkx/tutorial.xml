@@ -483,7 +483,20 @@
         </para>
         <para>
             The following command creates a Maven2 web application project for us, using the Spring-WS archetype 
-            (i.e. project template)
+            (i.e. project template)<footnote>
+            <para>
+                Until version RC1 of Spring-WS is released, the following has to be added to to 
+                <filename>~/.m2/settings.xml</filename> in order to find the archetype:
+                <programlisting><![CDATA[
+<repository>
+    <id>springframework.org</id>
+    <name>Springframework Maven SNAPSHOT Repository</name>
+    <url>http://static.springframework.org/maven2-snapshots/</url>
+    <snapshots>
+        <enabled>true</enabled>
+    </snapshots>
+</repository>]]></programlisting>
+            </para></footnote>            
         </para>
 <screen>mvn archetype:create -DarchetypeGroupId=org.springframework.ws \
   -DarchetypeArtifactId=spring-ws-archetype \
