@@ -655,6 +655,38 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
                  care for strict schema conformance, as long as we can find the dates and the name.
              </para>
              <para>
+                 Because we use JDOM, we must add some dependencies to the <filename>pom.xml</filename>, which is in the
+                 root of our project directory. Here is the relevant section of the POM:
+             </para>
+             <programlisting><![CDATA[
+<dependency>
+    <groupId>org.springframework.ws</groupId>
+    <artifactId>spring-ws-core</artifactId>
+    <version>1.0-m3</version>
+</dependency>
+<dependency>
+    <groupId>jdom</groupId>
+    <artifactId>jdom</artifactId>
+    <version>1.0</version>
+</dependency>
+<dependency>
+    <groupId>jaxen</groupId>
+    <artifactId>jaxen</artifactId>
+    <version>1.1</version>
+</dependency>
+<dependency>
+    <groupId>javax.xml.soap</groupId>
+    <artifactId>saaj-api</artifactId>
+    <version>1.3</version>
+    <scope>runtime</scope>
+</dependency>
+<dependency>
+    <groupId>com.sun.xml.messaging.saaj</groupId>
+    <artifactId>saaj-impl</artifactId>
+    <version>1.3</version>
+    <scope>runtime</scope>
+</dependency>]]></programlisting>
+             <para>
                 Here's how we would wire up these classes in our <filename>spring-ws-servlet.xml</filename>
                 application context:
             </para>
