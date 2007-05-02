@@ -207,6 +207,23 @@ public class Passenger {
             </para>
         </section>
         <section>
+            <title>Reusability</title>
+            <para>
+                Defining your schema in a separate file allows you to reuse that file in different scenario's. If you 
+                define an <type>AirportCode</type> in a file called <filename>airline.xsd</filename>, like so:                
+            </para>
+            <programlisting><![CDATA[
+<simpleType name="AirportCode">
+    <restriction base="string">
+        <pattern value="[A-Z][A-Z][A-Z]"/>
+    </restriction>
+</simpleType>]]></programlisting>
+            <para>
+                You can reuse this definition in other schema's, or even WSDL files, using an
+                <literal>import</literal> statement.
+            </para>
+        </section>
+        <section>
             <title>Versioning</title>
             <para>
                 Even though a contract must remain constant for as long as possible, they <emphasis>do</emphasis> need 
