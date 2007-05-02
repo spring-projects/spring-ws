@@ -38,10 +38,9 @@
             </url>
         </repository>
         <snapshotRepository>
-            <id>static.springframework.org</id>
-            <url>
-                scp://static.springframework.org/var/www/domains/springframework.org/static/htdocs/maven2-snapshots
-            </url>
+            <id>aws-s3</id>
+            <name>Amazon S3</name>
+            <url>s3://maven.springframework.org</url>
         </snapshotRepository>
         <site>
             <id>static.springframework.org</id>
@@ -144,6 +143,13 @@
         </pluginRepository>
     </pluginRepositories>
     <build>
+        <extensions>
+            <extension>
+                <groupId>org.springframework.aws</groupId>
+                <artifactId>spring-aws-maven</artifactId>
+                <version>1.0</version>
+            </extension>
+        </extensions>
         <plugins>
             <!-- Building -->
             <plugin>
