@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 the original author or authors.
+ * Copyright 2007 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,25 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.saaj;
+package org.springframework.ws.soap;
 
-import org.springframework.ws.soap.SoapBodyException;
+/**
+ * Exception thrown when a SOAP element could not be accessed.
+ *
+ * @author Arjen Poutsma
+ */
+public class SoapElementException extends SoapMessageException {
 
-/** @author Arjen Poutsma */
-public class SaajSoapBodyException extends SoapBodyException {
-
-    public SaajSoapBodyException(String msg) {
+    public SoapElementException(String msg) {
         super(msg);
     }
 
-    public SaajSoapBodyException(String msg, Throwable ex) {
+    public SoapElementException(String msg, Throwable ex) {
         super(msg, ex);
     }
 
-    public SaajSoapBodyException(Throwable ex) {
-        super(ex);
+    public SoapElementException(Throwable ex) {
+        super("Could not access element: " + ex.getMessage(), ex);
     }
+
 }

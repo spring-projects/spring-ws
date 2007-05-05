@@ -16,8 +16,10 @@
 
 package org.springframework.ws.soap.saaj;
 
+import java.util.Iterator;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPException;
 import javax.xml.transform.Source;
 
 import org.springframework.util.Assert;
@@ -46,11 +48,33 @@ class SaajSoapElement implements SoapElement {
         return getImplementation().getName(element);
     }
 
-    protected SOAPElement getSaajElement() {
+    public void addAttribute(QName name, String value) {
+        try {
+            getImplementation().addAttribute(element, name, value);
+        }
+        catch (SOAPException ex) {
+            throw new SaajSoapElementException(ex);
+        }
+    }
+
+    public String getAttributeValue(QName name) {
+        try {
+            return getImplementation().getAttributeValue(element, name);
+        }
+        catch (SOAPException ex) {
+            throw new SaajSoapElementException(ex);
+        }
+    }
+
+    public Iterator getAllAttibutes() {
+        return getImplementation().getAllAttibutes(element);
+    }
+
+    protected final SOAPElement getSaajElement() {
         return element;
     }
 
-    protected SaajImplementation getImplementation() {
+    protected final SaajImplementation getImplementation() {
         if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_13) {
             return Saaj13Implementation.getInstance();
         }

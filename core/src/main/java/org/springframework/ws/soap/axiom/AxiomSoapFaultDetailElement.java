@@ -16,32 +16,28 @@
 
 package org.springframework.ws.soap.axiom;
 
-import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
-import javax.xml.transform.Source;
 import javax.xml.transform.sax.SAXResult;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
+import org.apache.axiom.soap.SOAPFactory;
 import org.springframework.ws.soap.SoapFaultDetailElement;
-import org.springframework.xml.transform.StaxSource;
 
 /**
  * Axiom-specific version of <code>org.springframework.ws.soap.SoapFaultDetailElement</code>.
  *
  * @author Arjen Poutsma
  */
-class AxiomSoapFaultDetailElement implements SoapFaultDetailElement {
+class AxiomSoapFaultDetailElement extends AxiomSoapElement implements SoapFaultDetailElement {
 
-    private final OMElement axiomElement;
-
-    public AxiomSoapFaultDetailElement(OMElement axiomElement) {
-        this.axiomElement = axiomElement;
+    public AxiomSoapFaultDetailElement(OMElement axiomElement, SOAPFactory soapFactory) {
+        super(axiomElement, soapFactory);
     }
 
     public Result getResult() {
         try {
-            return new SAXResult(new AxiomContentHandler(axiomElement));
+            return new SAXResult(new AxiomContentHandler(getAxiomElement()));
         }
         catch (OMException ex) {
             throw new AxiomSoapFaultException(ex);
@@ -51,24 +47,11 @@ class AxiomSoapFaultDetailElement implements SoapFaultDetailElement {
 
     public void addText(String text) {
         try {
-            axiomElement.setText(text);
+            getAxiomElement().setText(text);
         }
         catch (OMException ex) {
             throw new AxiomSoapFaultException(ex);
         }
     }
 
-    public QName getName() {
-        return axiomElement.getQName();
-    }
-
-    public Source getSource() {
-        try {
-            return new StaxSource(axiomElement.getXMLStreamReader());
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapFaultException(ex);
-        }
-
-    }
 }

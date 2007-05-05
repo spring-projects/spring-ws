@@ -19,40 +19,30 @@ package org.springframework.ws.soap.axiom;
 import java.util.Iterator;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
-import javax.xml.transform.Source;
 import javax.xml.transform.sax.SAXResult;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPFaultDetail;
-import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapFaultDetail;
 import org.springframework.ws.soap.SoapFaultDetailElement;
-import org.springframework.xml.transform.StaxSource;
 
 /**
  * Axiom-specific version of <code>org.springframework.ws.soap.SoapFaultDetail</code>.
  *
  * @author Arjen Poutsma
  */
-class AxiomSoapFaultDetail implements SoapFaultDetail {
-
-    private final SOAPFaultDetail axiomFaultDetail;
-
-    private final SOAPFactory axiomFactory;
+class AxiomSoapFaultDetail extends AxiomSoapElement implements SoapFaultDetail {
 
     public AxiomSoapFaultDetail(SOAPFaultDetail axiomFaultDetail, SOAPFactory axiomFactory) {
-        Assert.notNull(axiomFaultDetail, "No axiomFaultDetail given");
-        Assert.notNull(axiomFactory, "No axiomFactory given");
-        this.axiomFaultDetail = axiomFaultDetail;
-        this.axiomFactory = axiomFactory;
+        super(axiomFaultDetail, axiomFactory);
     }
 
     public SoapFaultDetailElement addFaultDetailElement(QName name) {
         try {
-            OMElement element = axiomFactory.createOMElement(name, axiomFaultDetail);
-            return new AxiomSoapFaultDetailElement(element);
+            OMElement element = getAxiomFactory().createOMElement(name, getAxiomFaultDetail());
+            return new AxiomSoapFaultDetailElement(element, getAxiomFactory());
         }
         catch (OMException ex) {
             throw new AxiomSoapFaultException(ex);
@@ -61,24 +51,15 @@ class AxiomSoapFaultDetail implements SoapFaultDetail {
     }
 
     public Iterator getDetailEntries() {
-        return new AxiomSoapFaultDetailElementIterator(axiomFaultDetail.getAllDetailEntries());
-    }
-
-    public QName getName() {
-        return axiomFaultDetail.getQName();
-    }
-
-    public Source getSource() {
-        try {
-            return new StaxSource(axiomFaultDetail.getXMLStreamReader());
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapFaultException(ex);
-        }
+        return new AxiomSoapFaultDetailElementIterator(getAxiomFaultDetail().getAllDetailEntries());
     }
 
     public Result getResult() {
-        return new SAXResult(new AxiomContentHandler(axiomFaultDetail));
+        return new SAXResult(new AxiomContentHandler(getAxiomFaultDetail()));
+    }
+
+    protected SOAPFaultDetail getAxiomFaultDetail() {
+        return (SOAPFaultDetail) getAxiomElement();
     }
 
     private class AxiomSoapFaultDetailElementIterator implements Iterator {
@@ -96,7 +77,7 @@ class AxiomSoapFaultDetail implements SoapFaultDetail {
         public Object next() {
             try {
                 OMElement axiomElement = (OMElement) axiomIterator.next();
-                return new AxiomSoapFaultDetailElement(axiomElement);
+                return new AxiomSoapFaultDetailElement(axiomElement, getAxiomFactory());
             }
             catch (OMException ex) {
                 throw new AxiomSoapFaultException(ex);

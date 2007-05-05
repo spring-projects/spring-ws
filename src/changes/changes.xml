@@ -6,6 +6,7 @@
     </properties>
     <body>
         <release version="1.0-RC1">
+            <action dev="poutsma" type="add">Add methods to access attributes on SoapElement</action>
             <action dev="poutsma" type="add">Added XPath template, for evaluating XPaths in a template-like fashion
             </action>
             <action dev="poutsma" type="add" issue="SWS-62">MTOM support</action>

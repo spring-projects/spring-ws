@@ -18,23 +18,17 @@ package org.springframework.ws.soap;
 
 import java.util.Iterator;
 import javax.xml.namespace.QName;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 
-import org.custommonkey.xmlunit.XMLTestCase;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-public abstract class AbstractSoapHeaderTestCase extends XMLTestCase {
+public abstract class AbstractSoapHeaderTestCase extends AbstractSoapElementTestCase {
 
     protected SoapHeader soapHeader;
 
-    protected Transformer transformer;
-
-    protected final void setUp() throws Exception {
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        transformer = transformerFactory.newTransformer();
+    protected final SoapElement createSoapElement() throws Exception {
         soapHeader = createSoapHeader();
+        return soapHeader;
     }
 
     protected abstract SoapHeader createSoapHeader() throws Exception;

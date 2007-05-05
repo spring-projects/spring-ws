@@ -16,71 +16,40 @@
 
 package org.springframework.ws.soap.axiom;
 
-import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
-import javax.xml.transform.Source;
 import javax.xml.transform.sax.SAXResult;
 
-import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMException;
-import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPHeaderBlock;
-import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapHeaderElement;
-import org.springframework.ws.soap.SoapHeaderException;
-import org.springframework.xml.namespace.QNameUtils;
-import org.springframework.xml.transform.StaxSource;
 
-/**
- * Axiom-specific version of <code>org.springframework.ws.soap.SoapHeaderHeaderElement</code>.
- */
-class AxiomSoapHeaderElement implements SoapHeaderElement {
-
-    private final SOAPHeaderBlock axiomHeaderBlock;
-
-    private final SOAPFactory axiomFactory;
+/** Axiom-specific version of <code>org.springframework.ws.soap.SoapHeaderHeaderElement</code>. */
+class AxiomSoapHeaderElement extends AxiomSoapElement implements SoapHeaderElement {
 
     public AxiomSoapHeaderElement(SOAPHeaderBlock axiomHeaderBlock, SOAPFactory axiomFactory) {
-        Assert.notNull(axiomHeaderBlock, "No axiomHeaderBlock given");
-        Assert.notNull(axiomFactory, "No axiomFactory given");
-        this.axiomHeaderBlock = axiomHeaderBlock;
-        this.axiomFactory = axiomFactory;
-    }
-
-    public QName getName() {
-        return axiomHeaderBlock.getQName();
-    }
-
-    public Source getSource() {
-        try {
-            return new StaxSource(axiomHeaderBlock.getXMLStreamReader());
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapHeaderException(ex);
-        }
-
+        super(axiomHeaderBlock, axiomFactory);
     }
 
     public String getActorOrRole() {
-        return axiomHeaderBlock.getRole();
+        return getAxiomHeaderBlock().getRole();
     }
 
     public void setActorOrRole(String role) {
-        axiomHeaderBlock.setRole(role);
+        getAxiomHeaderBlock().setRole(role);
     }
 
     public boolean getMustUnderstand() {
-        return axiomHeaderBlock.getMustUnderstand();
+        return getAxiomHeaderBlock().getMustUnderstand();
     }
 
     public void setMustUnderstand(boolean mustUnderstand) {
-        axiomHeaderBlock.setMustUnderstand(mustUnderstand);
+        getAxiomHeaderBlock().setMustUnderstand(mustUnderstand);
     }
 
     public Result getResult() {
         try {
-            return new SAXResult(new AxiomContentHandler(axiomHeaderBlock));
+            return new SAXResult(new AxiomContentHandler(getAxiomHeaderBlock()));
         }
         catch (OMException ex) {
             throw new AxiomSoapHeaderException(ex);
@@ -88,14 +57,8 @@ class AxiomSoapHeaderElement implements SoapHeaderElement {
 
     }
 
-    public void addAttribute(QName name, String value) throws SoapHeaderException {
-        try {
-            OMNamespace namespace = axiomFactory.createOMNamespace(name.getNamespaceURI(), QNameUtils.getPrefix(name));
-            OMAttribute attribute = axiomFactory.createOMAttribute(name.getLocalPart(), namespace, value);
-            axiomHeaderBlock.addAttribute(attribute);
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapHeaderException(ex);
-        }
+    protected SOAPHeaderBlock getAxiomHeaderBlock() {
+        return (SOAPHeaderBlock) getAxiomElement();
     }
+
 }

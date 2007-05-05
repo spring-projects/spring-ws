@@ -48,43 +48,43 @@ class AxiomSoap12Body extends AxiomSoapBody implements Soap12Body {
     public SoapFault addMustUnderstandFault(String reason, Locale locale) {
         Assert.notNull(locale, "No locale given");
         SOAPFault fault = addStandardFault(SOAP12Constants.FAULT_CODE_MUST_UNDERSTAND, reason, locale);
-        return new AxiomSoap12Fault(fault, axiomFactory);
+        return new AxiomSoap12Fault(fault, getAxiomFactory());
     }
 
     public SoapFault addClientOrSenderFault(String reason, Locale locale) {
         Assert.notNull(locale, "No locale given");
         SOAPFault fault = addStandardFault(SOAP12Constants.FAULT_CODE_SENDER, reason, locale);
-        return new AxiomSoap12Fault(fault, axiomFactory);
+        return new AxiomSoap12Fault(fault, getAxiomFactory());
     }
 
     public SoapFault addServerOrReceiverFault(String reason, Locale locale) {
         Assert.notNull(locale, "No locale given");
         SOAPFault fault = addStandardFault(SOAP12Constants.FAULT_CODE_RECEIVER, reason, locale);
-        return new AxiomSoap12Fault(fault, axiomFactory);
+        return new AxiomSoap12Fault(fault, getAxiomFactory());
     }
 
     public SoapFault addVersionMismatchFault(String reason, Locale locale) {
         Assert.notNull(locale, "No locale given");
         SOAPFault fault = addStandardFault(SOAP12Constants.FAULT_CODE_VERSION_MISMATCH, reason, locale);
-        return new AxiomSoap12Fault(fault, axiomFactory);
+        return new AxiomSoap12Fault(fault, getAxiomFactory());
     }
 
     public Soap12Fault addDataEncodingUnknownFault(QName[] subcodes, String reason, Locale locale) {
         Assert.notNull(locale, "No locale given");
         SOAPFault fault = addStandardFault(SOAP12Constants.FAULT_CODE_DATA_ENCODING_UNKNOWN, reason, locale);
-        return new AxiomSoap12Fault(fault, axiomFactory);
+        return new AxiomSoap12Fault(fault, getAxiomFactory());
     }
 
     private SOAPFault addStandardFault(String localName, String faultStringOrReason, Locale locale) {
         Assert.notNull(faultStringOrReason, "No faultStringOrReason given");
         try {
             detachAllBodyChildren();
-            SOAPFault fault = axiomFactory.createSOAPFault(axiomBody);
-            SOAPFaultCode code = axiomFactory.createSOAPFaultCode(fault);
-            SOAPFaultValue value = axiomFactory.createSOAPFaultValue(code);
+            SOAPFault fault = getAxiomFactory().createSOAPFault(getAxiomBody());
+            SOAPFaultCode code = getAxiomFactory().createSOAPFaultCode(fault);
+            SOAPFaultValue value = getAxiomFactory().createSOAPFaultValue(code);
             value.setText(fault.getNamespace().getPrefix() + ":" + localName);
-            SOAPFaultReason reason = axiomFactory.createSOAPFaultReason(fault);
-            SOAPFaultText text = axiomFactory.createSOAPFaultText(reason);
+            SOAPFaultReason reason = getAxiomFactory().createSOAPFaultReason(fault);
+            SOAPFaultText text = getAxiomFactory().createSOAPFaultText(reason);
             if (locale != null) {
                 text.setLang(AxiomUtils.toLanguage(locale));
             }

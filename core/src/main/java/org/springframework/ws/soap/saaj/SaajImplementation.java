@@ -53,6 +53,15 @@ public interface SaajImplementation {
     /** Returns the writable <code>Result</code> of the given element. */
     Result getResult(SOAPElement element);
 
+    /** Adds an attribute to the specified element. */
+    void addAttribute(SOAPElement element, QName name, String value) throws SOAPException;
+
+    /** Returns the attribute value * */
+    String getAttributeValue(SOAPElement element, QName name) throws SOAPException;
+
+    /** Returns all attributes as an iterator of QNames. * */
+    Iterator getAllAttibutes(SOAPElement element);
+
     /** Returns the envelope of the given message. */
     SOAPEnvelope getEnvelope(SOAPMessage message) throws SOAPException;
 

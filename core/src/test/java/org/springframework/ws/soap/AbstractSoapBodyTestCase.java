@@ -17,23 +17,17 @@
 package org.springframework.ws.soap;
 
 import java.util.Locale;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 
-import org.custommonkey.xmlunit.XMLTestCase;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-public abstract class AbstractSoapBodyTestCase extends XMLTestCase {
+public abstract class AbstractSoapBodyTestCase extends AbstractSoapElementTestCase {
 
     protected SoapBody soapBody;
 
-    protected Transformer transformer;
-
-    protected final void setUp() throws Exception {
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        transformer = transformerFactory.newTransformer();
+    protected final SoapElement createSoapElement() throws Exception {
         soapBody = createSoapBody();
+        return soapBody;
     }
 
     protected abstract SoapBody createSoapBody() throws Exception;
