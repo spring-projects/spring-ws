@@ -42,11 +42,12 @@ class AxiomSoap12Header extends AxiomSoapHeader implements Soap12Header {
 
     public SoapHeaderElement addNotUnderstoodHeaderElement(QName headerName) {
         try {
-            SOAPHeaderBlock notUnderstood = axiomHeader.addHeaderBlock("NotUnderstood", axiomHeader.getNamespace());
+            SOAPHeaderBlock notUnderstood =
+                    getAxiomHeader().addHeaderBlock("NotUnderstood", getAxiomHeader().getNamespace());
             OMNamespace headerNamespace =
                     notUnderstood.declareNamespace(headerName.getNamespaceURI(), QNameUtils.getPrefix(headerName));
             notUnderstood.addAttribute("qname", headerNamespace.getPrefix() + ":" + headerName.getLocalPart(), null);
-            return new AxiomSoapHeaderElement(notUnderstood, axiomFactory);
+            return new AxiomSoapHeaderElement(notUnderstood, getAxiomFactory());
         }
         catch (SOAPProcessingException ex) {
             throw new AxiomSoapHeaderException(ex);
@@ -55,14 +56,14 @@ class AxiomSoap12Header extends AxiomSoapHeader implements Soap12Header {
 
     public SoapHeaderElement addUpgradeHeaderElement(String[] supportedSoapUris) {
         try {
-            SOAPHeaderBlock upgrade = axiomHeader.addHeaderBlock("Upgrade", axiomHeader.getNamespace());
+            SOAPHeaderBlock upgrade = getAxiomHeader().addHeaderBlock("Upgrade", getAxiomHeader().getNamespace());
             for (int i = 0; i < supportedSoapUris.length; i++) {
-                OMElement supportedEnvelope =
-                        axiomFactory.createOMElement("SupportedEnvelope", axiomHeader.getNamespace(), upgrade);
+                OMElement supportedEnvelope = getAxiomFactory()
+                        .createOMElement("SupportedEnvelope", getAxiomHeader().getNamespace(), upgrade);
                 OMNamespace namespace = supportedEnvelope.declareNamespace(supportedSoapUris[i], "");
                 supportedEnvelope.addAttribute("qname", namespace.getPrefix() + ":Envelope", null);
             }
-            return new AxiomSoapHeaderElement(upgrade, axiomFactory);
+            return new AxiomSoapHeaderElement(upgrade, getAxiomFactory());
         }
         catch (OMException ex) {
             throw new AxiomSoapHeaderException(ex);

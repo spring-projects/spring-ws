@@ -17,7 +17,6 @@
 package org.springframework.ws.soap.axiom;
 
 import java.util.Iterator;
-import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.sax.SAXResult;
@@ -27,7 +26,6 @@ import org.apache.axiom.om.OMException;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPFault;
-import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.xml.transform.StaxSource;
@@ -37,19 +35,12 @@ import org.springframework.xml.transform.StaxSource;
  *
  * @author Arjen Poutsma
  */
-abstract class AxiomSoapBody implements SoapBody {
-
-    protected final SOAPBody axiomBody;
-
-    protected final SOAPFactory axiomFactory;
+abstract class AxiomSoapBody extends AxiomSoapElement implements SoapBody {
 
     private boolean payloadCaching;
 
     protected AxiomSoapBody(SOAPBody axiomBody, SOAPFactory axiomFactory, boolean payloadCaching) {
-        Assert.notNull(axiomBody, "No axiomBody given");
-        Assert.notNull(axiomFactory, "No axiomFactory given");
-        this.axiomBody = axiomBody;
-        this.axiomFactory = axiomFactory;
+        super(axiomBody, axiomFactory);
         this.payloadCaching = payloadCaching;
     }
 
@@ -72,33 +63,25 @@ abstract class AxiomSoapBody implements SoapBody {
     }
 
     public Result getPayloadResult() {
-        return new SAXResult(new AxiomContentHandler(axiomBody));
+        return new SAXResult(new AxiomContentHandler(getAxiomBody()));
     }
 
     public boolean hasFault() {
-        return axiomBody.hasFault();
+        return getAxiomBody().hasFault();
     }
 
     public SoapFault getFault() {
-        SOAPFault axiomFault = axiomBody.getFault();
-        return axiomFault != null ? new AxiomSoap11Fault(axiomFault, axiomFactory) : null;
-    }
-
-    public QName getName() {
-        return axiomBody.getQName();
-    }
-
-    public Source getSource() {
-        return new StaxSource(axiomBody.getXMLStreamReader());
+        SOAPFault axiomFault = getAxiomBody().getFault();
+        return axiomFault != null ? new AxiomSoap11Fault(axiomFault, getAxiomFactory()) : null;
     }
 
     private OMElement getPayloadElement() throws OMException {
-        return axiomBody.getFirstElement();
+        return getAxiomBody().getFirstElement();
     }
 
     protected void detachAllBodyChildren() {
         try {
-            for (Iterator iterator = axiomBody.getChildElements(); iterator.hasNext();) {
+            for (Iterator iterator = getAxiomBody().getChildElements(); iterator.hasNext();) {
                 OMElement child = (OMElement) iterator.next();
                 child.detach();
             }
@@ -109,4 +92,7 @@ abstract class AxiomSoapBody implements SoapBody {
 
     }
 
+    protected final SOAPBody getAxiomBody() {
+        return (SOAPBody) getAxiomElement();
+    }
 }

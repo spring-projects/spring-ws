@@ -16,50 +16,30 @@
 
 package org.springframework.ws.soap.axiom;
 
-import javax.xml.namespace.QName;
-import javax.xml.transform.Source;
-
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPFault;
 import org.apache.axiom.soap.SOAPFaultDetail;
 import org.apache.axiom.soap.SOAPFaultRole;
 import org.apache.axiom.soap.SOAPProcessingException;
-import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapFaultDetail;
-import org.springframework.xml.transform.StaxSource;
 
 /** @author Arjen Poutsma */
-abstract class AxiomSoapFault implements SoapFault {
-
-    protected final SOAPFault axiomFault;
-
-    protected final SOAPFactory axiomFactory;
+abstract class AxiomSoapFault extends AxiomSoapElement implements SoapFault {
 
     protected AxiomSoapFault(SOAPFault axiomFault, SOAPFactory axiomFactory) {
-        Assert.notNull(axiomFault, "No axiomFault given");
-        Assert.notNull(axiomFactory, "No axiomFactory given");
-        this.axiomFault = axiomFault;
-        this.axiomFactory = axiomFactory;
-    }
-
-    public QName getName() {
-        return axiomFault.getQName();
-    }
-
-    public Source getSource() {
-        return new StaxSource(axiomFault.getXMLStreamReader());
+        super(axiomFault, axiomFactory);
     }
 
     public String getFaultActorOrRole() {
-        SOAPFaultRole faultRole = axiomFault.getRole();
+        SOAPFaultRole faultRole = getAxiomFault().getRole();
         return faultRole != null ? faultRole.getRoleValue() : null;
     }
 
     public void setFaultActorOrRole(String actor) {
         try {
-            SOAPFaultRole axiomFaultRole = axiomFactory.createSOAPFaultRole(axiomFault);
+            SOAPFaultRole axiomFaultRole = getAxiomFactory().createSOAPFaultRole(getAxiomFault());
             axiomFaultRole.setRoleValue(actor);
         }
         catch (SOAPProcessingException ex) {
@@ -70,8 +50,8 @@ abstract class AxiomSoapFault implements SoapFault {
 
     public SoapFaultDetail getFaultDetail() {
         try {
-            SOAPFaultDetail axiomFaultDetail = axiomFault.getDetail();
-            return axiomFaultDetail != null ? new AxiomSoapFaultDetail(axiomFaultDetail, axiomFactory) : null;
+            SOAPFaultDetail axiomFaultDetail = getAxiomFault().getDetail();
+            return axiomFaultDetail != null ? new AxiomSoapFaultDetail(axiomFaultDetail, getAxiomFactory()) : null;
         }
         catch (OMException ex) {
             throw new AxiomSoapFaultException(ex);
@@ -81,12 +61,17 @@ abstract class AxiomSoapFault implements SoapFault {
 
     public SoapFaultDetail addFaultDetail() {
         try {
-            SOAPFaultDetail axiomFaultDetail = axiomFactory.createSOAPFaultDetail(axiomFault);
-            return new AxiomSoapFaultDetail(axiomFaultDetail, axiomFactory);
+            SOAPFaultDetail axiomFaultDetail = getAxiomFactory().createSOAPFaultDetail(getAxiomFault());
+            return new AxiomSoapFaultDetail(axiomFaultDetail, getAxiomFactory());
         }
         catch (OMException ex) {
             throw new AxiomSoapFaultException(ex);
         }
 
     }
+
+    protected SOAPFault getAxiomFault() {
+        return (SOAPFault) getAxiomElement();
+    }
+
 }

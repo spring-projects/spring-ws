@@ -37,20 +37,20 @@ class AxiomSoap11Fault extends AxiomSoapFault implements Soap11Fault {
     }
 
     public QName getFaultCode() {
-        return axiomFault.getCode().getTextAsQName();
+        return getAxiomFault().getCode().getTextAsQName();
     }
 
     public String getFaultStringOrReason() {
-        if (axiomFault.getReason() != null) {
-            return axiomFault.getReason().getText();
+        if (getAxiomFault().getReason() != null) {
+            return getAxiomFault().getReason().getText();
         }
         return null;
     }
 
     public Locale getFaultStringLocale() {
-        if (axiomFault.getReason() != null) {
+        if (getAxiomFault().getReason() != null) {
             OMAttribute langAttribute =
-                    axiomFault.getReason().getAttribute(new QName("http://www.w3.org/XML/1998/namespace", "lang"));
+                    getAxiomFault().getReason().getAttribute(new QName("http://www.w3.org/XML/1998/namespace", "lang"));
             if (langAttribute != null) {
                 String xmlLangString = langAttribute.getAttributeValue();
                 if (xmlLangString != null) {

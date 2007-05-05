@@ -19,7 +19,6 @@ package org.springframework.ws.soap.axiom;
 import java.util.Iterator;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
-import javax.xml.transform.Source;
 import javax.xml.transform.sax.SAXResult;
 
 import org.apache.axiom.om.OMException;
@@ -27,47 +26,31 @@ import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axiom.soap.SOAPHeaderBlock;
-import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.xml.namespace.QNameUtils;
-import org.springframework.xml.transform.StaxSource;
 
 /**
  * Axiom-specific version of <code>org.springframework.ws.soap.SoapHeader</code>.
  *
  * @author Arjen Poutsma
  */
-class AxiomSoapHeader implements SoapHeader {
-
-    protected final SOAPHeader axiomHeader;
-
-    protected final SOAPFactory axiomFactory;
+class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
 
     AxiomSoapHeader(SOAPHeader axiomHeader, SOAPFactory axiomFactory) {
-        Assert.notNull(axiomHeader, "No axiomHeader given");
-        Assert.notNull(axiomFactory, "No axiomFactory given");
-        this.axiomHeader = axiomHeader;
-        this.axiomFactory = axiomFactory;
-    }
-
-    public QName getName() {
-        return axiomHeader.getQName();
-    }
-
-    public Source getSource() {
-        return new StaxSource(axiomHeader.getXMLStreamReader());
+        super(axiomHeader, axiomFactory);
     }
 
     public Result getResult() {
-        return new SAXResult(new AxiomContentHandler(axiomHeader));
+        return new SAXResult(new AxiomContentHandler(getAxiomHeader()));
     }
 
     public SoapHeaderElement addHeaderElement(QName name) {
         try {
-            OMNamespace namespace = axiomFactory.createOMNamespace(name.getNamespaceURI(), QNameUtils.getPrefix(name));
-            SOAPHeaderBlock axiomHeaderBlock = axiomHeader.addHeaderBlock(name.getLocalPart(), namespace);
-            return new AxiomSoapHeaderElement(axiomHeaderBlock, axiomFactory);
+            OMNamespace namespace =
+                    getAxiomFactory().createOMNamespace(name.getNamespaceURI(), QNameUtils.getPrefix(name));
+            SOAPHeaderBlock axiomHeaderBlock = getAxiomHeader().addHeaderBlock(name.getLocalPart(), namespace);
+            return new AxiomSoapHeaderElement(axiomHeaderBlock, getAxiomFactory());
         }
         catch (OMException ex) {
             throw new AxiomSoapHeaderException(ex);
@@ -76,7 +59,7 @@ class AxiomSoapHeader implements SoapHeader {
 
     public Iterator examineMustUnderstandHeaderElements(String role) {
         try {
-            return new AxiomSoapHeaderElementIterator(axiomHeader.examineMustUnderstandHeaderBlocks(role));
+            return new AxiomSoapHeaderElementIterator(getAxiomHeader().examineMustUnderstandHeaderBlocks(role));
         }
         catch (OMException ex) {
             throw new AxiomSoapHeaderException(ex);
@@ -85,12 +68,16 @@ class AxiomSoapHeader implements SoapHeader {
 
     public Iterator examineAllHeaderElements() {
         try {
-            return new AxiomSoapHeaderElementIterator(axiomHeader.examineAllHeaderBlocks());
+            return new AxiomSoapHeaderElementIterator(getAxiomHeader().examineAllHeaderBlocks());
         }
         catch (OMException ex) {
             throw new AxiomSoapHeaderException(ex);
         }
 
+    }
+
+    protected SOAPHeader getAxiomHeader() {
+        return (SOAPHeader) getAxiomElement();
     }
 
     private class AxiomSoapHeaderElementIterator implements Iterator {
@@ -108,7 +95,7 @@ class AxiomSoapHeader implements SoapHeader {
         public Object next() {
             try {
                 SOAPHeaderBlock axiomHeaderBlock = (SOAPHeaderBlock) axiomIterator.next();
-                return new AxiomSoapHeaderElement(axiomHeaderBlock, axiomFactory);
+                return new AxiomSoapHeaderElement(axiomHeaderBlock, getAxiomFactory());
             }
             catch (OMException ex) {
                 throw new AxiomSoapHeaderException(ex);

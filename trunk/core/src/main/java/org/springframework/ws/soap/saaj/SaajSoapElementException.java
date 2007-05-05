@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 the original author or authors.
+ * Copyright 2007 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,20 @@
 
 package org.springframework.ws.soap.saaj;
 
-import org.springframework.ws.soap.SoapBodyException;
+import org.springframework.ws.soap.SoapElementException;
 
 /** @author Arjen Poutsma */
-public class SaajSoapBodyException extends SoapBodyException {
+public class SaajSoapElementException extends SoapElementException {
 
-    public SaajSoapBodyException(String msg) {
+    public SaajSoapElementException(String msg) {
         super(msg);
     }
 
-    public SaajSoapBodyException(String msg, Throwable ex) {
+    public SaajSoapElementException(String msg, Throwable ex) {
         super(msg, ex);
     }
 
-    public SaajSoapBodyException(Throwable ex) {
+    public SaajSoapElementException(Throwable ex) {
         super(ex);
     }
 }

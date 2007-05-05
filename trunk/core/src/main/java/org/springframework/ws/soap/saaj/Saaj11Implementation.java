@@ -82,6 +82,25 @@ public class Saaj11Implementation implements SaajImplementation {
         return new SAXResult(new SaajContentHandler(element));
     }
 
+    public void addAttribute(SOAPElement element, QName name, String value) throws SOAPException {
+        Name attributeName = SaajUtils.toName(name, element);
+        element.addAttribute(attributeName, value);
+    }
+
+    public String getAttributeValue(SOAPElement element, QName name) throws SOAPException {
+        Name attributeName = SaajUtils.toName(name, element);
+        return element.getAttributeValue(attributeName);
+    }
+
+    public Iterator getAllAttibutes(SOAPElement element) {
+        List results = new ArrayList();
+        for (Iterator iterator = element.getAllAttributes(); iterator.hasNext();) {
+            Name attributeName = (Name) iterator.next();
+            results.add(SaajUtils.toQName(attributeName));
+        }
+        return results.iterator();
+    }
+
     public QName getFaultCode(SOAPFault fault) {
         String code = fault.getFaultCode();
         int idx = code.indexOf(':');

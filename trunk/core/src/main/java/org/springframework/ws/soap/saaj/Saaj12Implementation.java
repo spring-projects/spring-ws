@@ -18,7 +18,9 @@ package org.springframework.ws.soap.saaj;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -101,6 +103,25 @@ public class Saaj12Implementation implements SaajImplementation {
 
     public Result getResult(SOAPElement element) {
         return new DOMResult(element);
+    }
+
+    public void addAttribute(SOAPElement element, QName name, String value) throws SOAPException {
+        Name attributeName = SaajUtils.toName(name, element);
+        element.addAttribute(attributeName, value);
+    }
+
+    public String getAttributeValue(SOAPElement element, QName name) throws SOAPException {
+        Name attributeName = SaajUtils.toName(name, element);
+        return element.getAttributeValue(attributeName);
+    }
+
+    public Iterator getAllAttibutes(SOAPElement element) {
+        List results = new ArrayList();
+        for (Iterator iterator = element.getAllAttributes(); iterator.hasNext();) {
+            Name attributeName = (Name) iterator.next();
+            results.add(SaajUtils.toQName(attributeName));
+        }
+        return results.iterator();
     }
 
     public SOAPEnvelope getEnvelope(SOAPMessage message) throws SOAPException {

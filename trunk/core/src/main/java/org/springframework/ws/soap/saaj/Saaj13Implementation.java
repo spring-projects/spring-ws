@@ -140,6 +140,18 @@ public class Saaj13Implementation implements SaajImplementation {
         return new DOMResult(element);
     }
 
+    public void addAttribute(SOAPElement element, QName name, String value) throws SOAPException {
+        element.addAttribute(name, value);
+    }
+
+    public String getAttributeValue(SOAPElement element, QName name) throws SOAPException {
+        return element.getAttributeValue(name);
+    }
+
+    public Iterator getAllAttibutes(SOAPElement element) {
+        return element.getAllAttributesAsQNames();
+    }
+
     public SOAPEnvelope getEnvelope(SOAPMessage message) throws SOAPException {
         return message.getSOAPPart().getEnvelope();
     }

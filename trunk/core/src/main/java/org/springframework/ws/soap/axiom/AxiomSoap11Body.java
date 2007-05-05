@@ -49,22 +49,22 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
 
     public SoapFault addMustUnderstandFault(String faultString, Locale locale) {
         SOAPFault fault = addStandardFault(SOAP11Constants.FAULT_CODE_MUST_UNDERSTAND, faultString, locale);
-        return new AxiomSoap11Fault(fault, axiomFactory);
+        return new AxiomSoap11Fault(fault, getAxiomFactory());
     }
 
     public SoapFault addClientOrSenderFault(String faultString, Locale locale) {
         SOAPFault fault = addStandardFault(SOAP11Constants.FAULT_CODE_SENDER, faultString, locale);
-        return new AxiomSoap11Fault(fault, axiomFactory);
+        return new AxiomSoap11Fault(fault, getAxiomFactory());
     }
 
     public SoapFault addServerOrReceiverFault(String faultString, Locale locale) {
         SOAPFault fault = addStandardFault(SOAP11Constants.FAULT_CODE_RECEIVER, faultString, locale);
-        return new AxiomSoap11Fault(fault, axiomFactory);
+        return new AxiomSoap11Fault(fault, getAxiomFactory());
     }
 
     public SoapFault addVersionMismatchFault(String faultString, Locale locale) {
         SOAPFault fault = addStandardFault(SOAP11Constants.FAULT_CODE_VERSION_MISMATCH, faultString, locale);
-        return new AxiomSoap11Fault(fault, axiomFactory);
+        return new AxiomSoap11Fault(fault, getAxiomFactory());
     }
 
     public Soap11Fault addFault(QName code, String faultString, Locale locale) {
@@ -76,15 +76,15 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
         }
         try {
             detachAllBodyChildren();
-            SOAPFault fault = axiomFactory.createSOAPFault(axiomBody);
-            SOAPFaultCode faultCode = axiomFactory.createSOAPFaultCode(fault);
+            SOAPFault fault = getAxiomFactory().createSOAPFault(getAxiomBody());
+            SOAPFaultCode faultCode = getAxiomFactory().createSOAPFaultCode(fault);
             setValueText(code, fault, faultCode);
-            SOAPFaultReason faultReason = axiomFactory.createSOAPFaultReason(fault);
+            SOAPFaultReason faultReason = getAxiomFactory().createSOAPFaultReason(fault);
             if (locale != null) {
                 addLangAttribute(locale, faultReason);
             }
             faultReason.setText(faultString);
-            return new AxiomSoap11Fault(fault, axiomFactory);
+            return new AxiomSoap11Fault(fault, getAxiomFactory());
 
         }
         catch (SOAPProcessingException ex) {
@@ -115,11 +115,11 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
         Assert.notNull(faultString, "No faultString given");
         try {
             detachAllBodyChildren();
-            SOAPFault fault = axiomFactory.createSOAPFault(axiomBody);
-            SOAPFaultCode faultCode = axiomFactory.createSOAPFaultCode(fault);
+            SOAPFault fault = getAxiomFactory().createSOAPFault(getAxiomBody());
+            SOAPFaultCode faultCode = getAxiomFactory().createSOAPFaultCode(fault);
             faultCode.setText(
                     new QName(fault.getNamespace().getNamespaceURI(), localName, fault.getNamespace().getPrefix()));
-            SOAPFaultReason faultReason = axiomFactory.createSOAPFaultReason(fault);
+            SOAPFaultReason faultReason = getAxiomFactory().createSOAPFaultReason(fault);
             if (locale != null) {
                 addLangAttribute(locale, faultReason);
             }
@@ -132,8 +132,9 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
     }
 
     private void addLangAttribute(Locale locale, SOAPFaultReason faultReason) {
-        OMNamespace xmlNamespace = axiomFactory.createOMNamespace("http://www.w3.org/XML/1998/namespace", "xml");
-        OMAttribute langAttribute = axiomFactory.createOMAttribute("lang", xmlNamespace, AxiomUtils.toLanguage(locale));
+        OMNamespace xmlNamespace = getAxiomFactory().createOMNamespace("http://www.w3.org/XML/1998/namespace", "xml");
+        OMAttribute langAttribute =
+                getAxiomFactory().createOMAttribute("lang", xmlNamespace, AxiomUtils.toLanguage(locale));
         faultReason.addAttribute(langAttribute);
     }
 

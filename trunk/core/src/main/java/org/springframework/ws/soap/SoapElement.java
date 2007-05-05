@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap;
 
+import java.util.Iterator;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
@@ -41,5 +42,29 @@ public interface SoapElement {
      * @return the <code>Source</code> of this element
      */
     Source getSource();
+
+    /**
+     * Adds an attribute with the specified qualified name and value to this element.
+     *
+     * @param name  the qualified name of the attribute
+     * @param value the value of the attribute
+     */
+    void addAttribute(QName name, String value);
+
+    /**
+     * Returns the value of the attribute with the specified qualified name.
+     *
+     * @param name the qualified name
+     * @return the value, or <code>null</code> if there is no such attribute
+     */
+    String getAttributeValue(QName name);
+
+    /**
+     * Returns an <code>Iterator</code> over all of the attributes in element as {@link QName qualified names}.
+     *
+     * @return an iterator over all the attribute names
+     */
+    Iterator getAllAttibutes();
+
 
 }

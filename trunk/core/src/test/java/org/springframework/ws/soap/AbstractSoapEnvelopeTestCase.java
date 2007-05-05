@@ -16,21 +16,13 @@
 
 package org.springframework.ws.soap;
 
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-
-import org.custommonkey.xmlunit.XMLTestCase;
-
-public abstract class AbstractSoapEnvelopeTestCase extends XMLTestCase {
+public abstract class AbstractSoapEnvelopeTestCase extends AbstractSoapElementTestCase {
 
     protected SoapEnvelope soapEnvelope;
 
-    protected Transformer transformer;
-
-    protected final void setUp() throws Exception {
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        transformer = transformerFactory.newTransformer();
+    protected final SoapElement createSoapElement() throws Exception {
         soapEnvelope = createSoapEnvelope();
+        return soapEnvelope;
     }
 
     protected abstract SoapEnvelope createSoapEnvelope() throws Exception;
