@@ -89,7 +89,10 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
 
     public void testSendAndReceiveCompressed() throws Exception {
         validateResponse(new CompressedResponseServlet());
+    }
 
+    public void testSendAndReceiveInvalidContentSize() throws Exception {
+        validateResponse(new InvalidContentSizeServlet());
     }
 
     public void testSendAndReceiveFault() throws Exception {
@@ -188,6 +191,17 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
             response.addHeader(RESPONSE_HEADER_NAME, RESPONSE_HEADER_VALUE);
             byte[] buffer = RESPONSE.getBytes("UTF-8");
             response.setContentLength(buffer.length);
+            FileCopyUtils.copy(buffer, response.getOutputStream());
+        }
+    }
+
+    private static class InvalidContentSizeServlet extends NoResponseServlet {
+
+        protected void createResponse(HttpServletRequest request, HttpServletResponse response) throws IOException {
+            response.setContentType("text/xml");
+            response.addHeader(RESPONSE_HEADER_NAME, RESPONSE_HEADER_VALUE);
+            response.setContentLength(-1);
+            byte[] buffer = RESPONSE.getBytes("UTF-8");
             FileCopyUtils.copy(buffer, response.getOutputStream());
         }
     }
