@@ -13,7 +13,7 @@ Snapshot Builds
 <repository>
     <id>springframework.org</id>
     <name>Springframework Maven SNAPSHOT Repository</name>
-    <url>http://static.springframework.org/maven2-snapshots/</url>
+    <url>http://s3.amazonaws.com/maven.springframework.org/</url>
 </repository>
 +---------------
 
