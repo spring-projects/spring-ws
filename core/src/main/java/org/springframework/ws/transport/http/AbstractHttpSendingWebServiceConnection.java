@@ -16,11 +16,13 @@
 
 package org.springframework.ws.transport.http;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.zip.GZIPInputStream;
 
+import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.transport.AbstractSendingWebServiceConnection;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
@@ -39,8 +41,18 @@ public abstract class AbstractHttpSendingWebServiceConnection extends AbstractSe
 
     protected static final int HTTP_STATUS_INTERNAL_ERROR = 500;
 
+    /** Buffer used for reading the response, when the content length is invalid. */
+    private byte[] responseBuffer;
+
     protected final boolean hasResponse() throws IOException {
-        return getResponseContentLength() > 0;
+        long contentLength = getResponseContentLength();
+        if (contentLength < 0) {
+            if (responseBuffer == null) {
+                responseBuffer = FileCopyUtils.copyToByteArray(getResponseInputStream());
+            }
+            contentLength = responseBuffer.length;
+        }
+        return contentLength > 0;
     }
 
     public final boolean hasFault() throws IOException {
@@ -48,7 +60,14 @@ public abstract class AbstractHttpSendingWebServiceConnection extends AbstractSe
     }
 
     protected final InputStream getResponseInputStream() throws IOException {
-        return isGzipResponse() ? new GZIPInputStream(getRawResponseInputStream()) : getRawResponseInputStream();
+        InputStream inputStream;
+        if (responseBuffer != null) {
+            inputStream = new ByteArrayInputStream(responseBuffer);
+        }
+        else {
+            inputStream = getRawResponseInputStream();
+        }
+        return isGzipResponse() ? new GZIPInputStream(inputStream) : inputStream;
     }
 
     /** Determine whether the given response is a GZIP response. */
