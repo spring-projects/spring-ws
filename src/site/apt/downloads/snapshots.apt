@@ -27,4 +27,4 @@ Snapshot Builds
 </dependency>
 +---------------
 
-	Additionally, there are {{{http://static.springframework.org/maven2-snapshots/org/springframework/ws/spring-ws/1.0-rc1-SNAPSHOT/}zips}} available which contain all jars.
+	Additionally, there are {{{http://s3browse.com/explore/maven.springframework.org/org/springframework/ws/spring-ws/1.0-rc1-SNAPSHOT/}zips}} available which contain all jars.
