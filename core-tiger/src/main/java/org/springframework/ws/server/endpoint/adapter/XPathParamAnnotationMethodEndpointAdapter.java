@@ -17,12 +17,13 @@
 package org.springframework.ws.server.endpoint.adapter;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Properties;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.dom.DOMResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
@@ -33,8 +34,8 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.annotation.XPathParam;
-import org.springframework.xml.dom.DomUtils;
 import org.springframework.xml.namespace.SimpleNamespaceContext;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -105,25 +106,14 @@ public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEnd
     }
 
     protected void invokeInternal(MessageContext messageContext, MethodEndpoint methodEndpoint) throws Exception {
-        try {
-            Element payloadElement =
-                    DomUtils.getRootElement(messageContext.getRequest().getPayloadSource(), getTransformerFactory());
-            Object[] args = getMethodArguments(payloadElement, methodEndpoint.getMethod());
-            Object result = methodEndpoint.invoke(args);
-            if (result != null && result instanceof Source) {
-                Source responseSource = (Source) result;
-                WebServiceMessage response = messageContext.getResponse();
-                Transformer transformer = createTransformer();
-                transformer.transform(responseSource, response.getPayloadResult());
-            }
-        }
-        catch (InvocationTargetException ex) {
-            if (ex.getTargetException() instanceof Exception) {
-                throw (Exception) ex.getTargetException();
-            }
-            else {
-                throw ex;
-            }
+        Element payloadElement = getRootElement(messageContext.getRequest().getPayloadSource());
+        Object[] args = getMethodArguments(payloadElement, methodEndpoint.getMethod());
+        Object result = methodEndpoint.invoke(args);
+        if (result != null && result instanceof Source) {
+            Source responseSource = (Source) result;
+            WebServiceMessage response = messageContext.getResponse();
+            Transformer transformer = createTransformer();
+            transformer.transform(responseSource, response.getPayloadResult());
         }
     }
 
@@ -168,5 +158,20 @@ public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEnd
         }
         return xpath;
     }
+
+    /**
+     * Returns the root element of the given source.
+     *
+     * @param source the source to get the root element from
+     * @return the root element
+     */
+    private Element getRootElement(Source source) throws TransformerException {
+        Transformer transformer = createTransformer();
+        DOMResult domResult = new DOMResult();
+        transformer.transform(source, domResult);
+        Document document = (Document) domResult.getNode();
+        return document.getDocumentElement();
+    }
+
 
 }

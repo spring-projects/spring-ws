@@ -126,7 +126,7 @@
         </profile>
     </profiles>
     <properties>
-        <spring.version>2.0.4</spring.version>
+        <spring.version>2.0.5</spring.version>
     </properties>
     <repositories>
         <repository>
@@ -431,6 +431,11 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
+                <artifactId>spring-jpa</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
                 <artifactId>spring-dao</artifactId>
                 <version>${spring.version}</version>
             </dependency>
@@ -636,12 +641,6 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>easymock</groupId>
-                <artifactId>easymock</artifactId>
-                <version>1.2_Java1.3</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
                 <groupId>xmlunit</groupId>
                 <artifactId>xmlunit</artifactId>
                 <version>1.0</version>
@@ -679,11 +678,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>easymock</groupId>
-            <artifactId>easymock</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

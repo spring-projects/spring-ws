@@ -41,5 +41,12 @@
             <groupId>stax</groupId>
             <artifactId>stax-api</artifactId>
         </dependency>
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <scope>test</scope>
+            <version>2.2</version>
+        </dependency>
     </dependencies>
 </project>

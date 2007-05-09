@@ -29,7 +29,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import javax.xml.xpath.XPathFactoryConfigurationException;
 
-import org.springframework.xml.dom.DomUtils;
 import org.springframework.xml.namespace.SimpleNamespaceContext;
 import org.springframework.xml.transform.StaxSource;
 import org.w3c.dom.DOMException;
@@ -128,7 +127,8 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
         }
         try {
             if (context instanceof StaxSource) {
-                Element element = DomUtils.getRootElement(context, getTransformerFactory());
+                // StaxSource is a subclass of SAXSource, but it has no InputSource, therefore we handle it differently
+                Element element = getRootElement(context);
                 return xpath.evaluate(expression, element, returnType);
             }
             else if (context instanceof SAXSource) {

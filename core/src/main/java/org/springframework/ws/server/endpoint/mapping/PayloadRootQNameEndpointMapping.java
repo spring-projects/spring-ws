@@ -21,9 +21,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 
 import org.springframework.ws.context.MessageContext;
-import org.springframework.xml.dom.DomUtils;
 import org.springframework.xml.namespace.QNameUtils;
-import org.w3c.dom.Element;
 
 /**
  * Implementation of the <code>EndpointMapping</code> interface to map from the qualified name of the request payload
@@ -54,9 +52,7 @@ public class PayloadRootQNameEndpointMapping extends AbstractQNameEndpointMappin
     }
 
     protected QName resolveQName(MessageContext messageContext) throws TransformerException {
-        Element payloadElement =
-                DomUtils.getRootElement(messageContext.getRequest().getPayloadSource(), transformerFactory);
-        return QNameUtils.getQNameForNode(payloadElement);
+        return QNameUtils.getQNameForSource(messageContext.getRequest().getPayloadSource(), transformerFactory);
     }
 
 
