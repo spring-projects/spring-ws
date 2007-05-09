@@ -50,7 +50,7 @@ public class PayloadRootAnnotationMethodEndpointMappingTest extends TestCase {
     @Endpoint
     private static class MyEndpoint {
 
-        @PayloadRoot("{http://springframework.org/spring-ws}Request")
+        @PayloadRoot(localPart = "Request", namespace = "http://springframework.org/spring-ws")
         public void doIt() {
 
         }
@@ -59,7 +59,7 @@ public class PayloadRootAnnotationMethodEndpointMappingTest extends TestCase {
 
     private static class OtherBean {
 
-        @PayloadRoot("{http://springframework.org/spring-ws}Request2")
+        @PayloadRoot(localPart = "Request2", namespace = "http://springframework.org/spring-ws")
         public void doIt() {
 
         }

@@ -18,9 +18,14 @@ package org.springframework.xml.xpath;
 
 import java.util.Properties;
 import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.dom.DOMResult;
 
 import org.springframework.xml.transform.TransformerObjectSupport;
 import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
@@ -61,4 +66,19 @@ public abstract class AbstractXPathTemplate extends TransformerObjectSupport imp
             return null;
         }
     }
+
+    /**
+     * Returns the root element of the given source.
+     *
+     * @param source the source to get the root element from
+     * @return the root element
+     */
+    protected Element getRootElement(Source source) throws TransformerException {
+        Transformer transformer = createTransformer();
+        DOMResult domResult = new DOMResult();
+        transformer.transform(source, domResult);
+        Document document = (Document) domResult.getNode();
+        return document.getDocumentElement();
+    }
+
 }

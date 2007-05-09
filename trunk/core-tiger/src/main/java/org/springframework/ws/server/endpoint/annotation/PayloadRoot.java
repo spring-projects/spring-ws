@@ -23,8 +23,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks an endpoint method as the handler for an incoming request. The annotation value signifies the value for the
- * request payload root element that is handled by the method.
+ * Marks an endpoint method as the handler for an incoming request. The annotation values signify the the request
+ * payload root element that is handled by the method.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping
@@ -34,6 +34,18 @@ import java.lang.annotation.Target;
 @Documented
 public @interface PayloadRoot {
 
-    String value();
+    /**
+     * Signifies the local part of the payload root element handled by the annotated method.
+     *
+     * @see #namespace()
+     */
+    String localPart();
+
+    /**
+     * Signifies the namespace of the payload root element handled by the annotated method.
+     *
+     * @see #localPart()
+     */
+    String namespace() default "";
 
 }

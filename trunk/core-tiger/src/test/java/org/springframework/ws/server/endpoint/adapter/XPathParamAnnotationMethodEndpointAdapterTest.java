@@ -16,10 +16,14 @@
 
 package org.springframework.ws.server.endpoint.adapter;
 
+import java.util.Properties;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
 
 import junit.framework.TestCase;
-import org.easymock.MockControl;
+import static org.easymock.EasyMock.*;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
@@ -28,8 +32,11 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.annotation.XPathParam;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 public class XPathParamAnnotationMethodEndpointAdapterTest extends TestCase {
 
@@ -40,6 +47,8 @@ public class XPathParamAnnotationMethodEndpointAdapterTest extends TestCase {
     private boolean supportedTypesInvoked = false;
 
     private boolean supportedSourceInvoked;
+
+    private boolean namespacesInvoked;
 
     protected void setUp() throws Exception {
         adapter = new XPathParamAnnotationMethodEndpointAdapter();
@@ -84,13 +93,10 @@ public class XPathParamAnnotationMethodEndpointAdapterTest extends TestCase {
     }
 
     public void testInvokeTypes() throws Exception {
-        MockControl messageControl = MockControl.createControl(WebServiceMessage.class);
-        WebServiceMessage messageMock = (WebServiceMessage) messageControl.getMock();
-        messageControl.expectAndReturn(messageMock.getPayloadSource(), new StringSource(CONTENTS));
-        messageControl.replay();
-        MockControl factoryControl = MockControl.createControl(WebServiceMessageFactory.class);
-        WebServiceMessageFactory factoryMock = (WebServiceMessageFactory) factoryControl.getMock();
-        factoryControl.replay();
+        WebServiceMessage messageMock = createMock(WebServiceMessage.class);
+        expect(messageMock.getPayloadSource()).andReturn(new StringSource(CONTENTS));
+        WebServiceMessageFactory factoryMock = createMock(WebServiceMessageFactory.class);
+        replay(messageMock, factoryMock);
 
         MessageContext messageContext = new DefaultMessageContext(messageMock, factoryMock);
         MethodEndpoint endpoint = new MethodEndpoint(this, "supportedTypes",
@@ -98,30 +104,58 @@ public class XPathParamAnnotationMethodEndpointAdapterTest extends TestCase {
         adapter.invoke(messageContext, endpoint);
         assertTrue("Method not invoked", supportedTypesInvoked);
 
-        messageControl.verify();
-        factoryControl.verify();
-
+        verify(messageMock, factoryMock);
     }
 
     public void testInvokeSource() throws Exception {
-        MockControl messageControl = MockControl.createControl(WebServiceMessage.class);
-        WebServiceMessage requestMock = (WebServiceMessage) messageControl.getMock();
-        WebServiceMessage responseMock = (WebServiceMessage) messageControl.getMock();
-        messageControl.expectAndReturn(requestMock.getPayloadSource(), new StringSource(CONTENTS));
-        messageControl.expectAndReturn(responseMock.getPayloadResult(), new StringResult());
-        messageControl.replay();
-        MockControl factoryControl = MockControl.createControl(WebServiceMessageFactory.class);
-        WebServiceMessageFactory factoryMock = (WebServiceMessageFactory) factoryControl.getMock();
-        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), responseMock);
-        factoryControl.replay();
+        WebServiceMessage requestMock = createMock(WebServiceMessage.class);
+        WebServiceMessage responseMock = createMock(WebServiceMessage.class);
+        expect(requestMock.getPayloadSource()).andReturn(new StringSource(CONTENTS));
+        expect(responseMock.getPayloadResult()).andReturn(new StringResult());
+        WebServiceMessageFactory factoryMock = createMock(WebServiceMessageFactory.class);
+        expect(factoryMock.createWebServiceMessage()).andReturn(responseMock);
+        replay(requestMock, responseMock, factoryMock);
 
         MessageContext messageContext = new DefaultMessageContext(requestMock, factoryMock);
         MethodEndpoint endpoint = new MethodEndpoint(this, "supportedSource", new Class[]{String.class});
         adapter.invoke(messageContext, endpoint);
         assertTrue("Method not invoked", supportedSourceInvoked);
 
-        messageControl.verify();
-        factoryControl.verify();
+        verify(requestMock, responseMock, factoryMock);
+    }
+
+    public void testInvokeVoidDom() throws Exception {
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        Document document = documentBuilder.newDocument();
+        String rootNamespace = "http://rootnamespace";
+        Element rootElement = document.createElementNS(rootNamespace, "root");
+        document.appendChild(rootElement);
+        String childNamespace = "http://childnamespace";
+        Element first = document.createElementNS(childNamespace, "child");
+        rootElement.appendChild(first);
+        Text text = document.createTextNode("value");
+        first.appendChild(text);
+        Element second = document.createElementNS(rootNamespace, "other-child");
+        rootElement.appendChild(second);
+        text = document.createTextNode("other-value");
+        second.appendChild(text);
+
+        WebServiceMessage requestMock = createMock(WebServiceMessage.class);
+        expect(requestMock.getPayloadSource()).andReturn(new DOMSource(first));
+        WebServiceMessageFactory factoryMock = createMock(WebServiceMessageFactory.class);
+
+        replay(requestMock, factoryMock);
+
+        Properties namespaces = new Properties();
+        namespaces.setProperty("root", rootNamespace);
+        namespaces.setProperty("child", childNamespace);
+        adapter.setNamespaces(namespaces);
+
+        MessageContext messageContext = new DefaultMessageContext(requestMock, factoryMock);
+        MethodEndpoint endpoint = new MethodEndpoint(this, "namespaces", new Class[]{Node.class});
+        adapter.invoke(messageContext, endpoint);
+        assertTrue("Method not invoked", namespacesInvoked);
     }
 
     public void supportedVoid(@XPathParam("/")String param1) {
@@ -159,5 +193,10 @@ public class XPathParamAnnotationMethodEndpointAdapterTest extends TestCase {
     }
 
     public void unsupportedInvalidParamType(@XPathParam("/")int param1) {
+    }
+
+    public void namespaces(@XPathParam(".")Node param) {
+        namespacesInvoked = true;
+        assertEquals("Invalid parameter", "child", param.getLocalName());
     }
 }

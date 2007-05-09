@@ -25,7 +25,6 @@ import org.jaxen.JaxenException;
 import org.jaxen.SimpleNamespaceContext;
 import org.jaxen.XPath;
 import org.jaxen.dom.DOMXPath;
-import org.springframework.xml.dom.DomUtils;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -43,7 +42,7 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
     public boolean evaluateAsBoolean(String expression, Source context) throws XPathException {
         try {
             XPath xpath = createXPath(expression);
-            Element element = DomUtils.getRootElement(context, getTransformerFactory());
+            Element element = getRootElement(context);
             return xpath.booleanValueOf(element);
         }
         catch (JaxenException ex) {
@@ -57,7 +56,7 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
     public Node evaluateAsNode(String expression, Source context) throws XPathException {
         try {
             XPath xpath = createXPath(expression);
-            Element element = DomUtils.getRootElement(context, getTransformerFactory());
+            Element element = getRootElement(context);
             return (Node) xpath.selectSingleNode(element);
         }
         catch (JaxenException ex) {
@@ -71,7 +70,7 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
     public List evaluateAsNodeList(String expression, Source context) throws XPathException {
         try {
             XPath xpath = createXPath(expression);
-            Element element = DomUtils.getRootElement(context, getTransformerFactory());
+            Element element = getRootElement(context);
             return xpath.selectNodes(element);
         }
         catch (JaxenException ex) {
@@ -85,7 +84,7 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
     public double evaluateAsDouble(String expression, Source context) throws XPathException {
         try {
             XPath xpath = createXPath(expression);
-            Element element = DomUtils.getRootElement(context, getTransformerFactory());
+            Element element = getRootElement(context);
             return xpath.numberValueOf(element).doubleValue();
         }
         catch (JaxenException ex) {
@@ -99,7 +98,7 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
     public String evaluateAsString(String expression, Source context) throws XPathException {
         try {
             XPath xpath = createXPath(expression);
-            Element element = DomUtils.getRootElement(context, getTransformerFactory());
+            Element element = getRootElement(context);
             return xpath.stringValueOf(element);
         }
         catch (JaxenException ex) {
@@ -113,7 +112,7 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
     public Object evaluateAsObject(String expression, Source context, NodeMapper nodeMapper) throws XPathException {
         try {
             XPath xpath = createXPath(expression);
-            Element element = DomUtils.getRootElement(context, getTransformerFactory());
+            Element element = getRootElement(context);
             Node node = (Node) xpath.selectSingleNode(element);
             if (node != null) {
                 try {
@@ -139,7 +138,7 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
     public List evaluate(String expression, Source context, NodeMapper nodeMapper) throws XPathException {
         try {
             XPath xpath = createXPath(expression);
-            Element element = DomUtils.getRootElement(context, getTransformerFactory());
+            Element element = getRootElement(context);
             List nodes = (List) xpath.selectNodes(element);
             List results = new ArrayList(nodes.size());
             for (int i = 0; i < nodes.size(); i++) {

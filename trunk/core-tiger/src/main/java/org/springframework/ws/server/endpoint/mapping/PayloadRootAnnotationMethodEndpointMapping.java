@@ -20,12 +20,11 @@ import java.lang.reflect.Method;
 import javax.xml.namespace.QName;
 import javax.xml.transform.TransformerFactory;
 
+import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointMapping;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
-import org.springframework.xml.dom.DomUtils;
 import org.springframework.xml.namespace.QNameUtils;
-import org.w3c.dom.Element;
 
 /**
  * Implementation of the {@link EndpointMapping} interface that uses the {@link PayloadRoot} annotation to map methods
@@ -35,7 +34,8 @@ import org.w3c.dom.Element;
  * <pre>
  * &#64;Endpoint
  * public class MyEndpoint{
- *    &#64;Payload("{http://springframework.org/spring-ws}Request")
+ *    &#64;Payload(localPart = "Request",
+ *                 namespace = "http://springframework.org/spring-ws")
  *    public Source doSomethingWithRequest() {
  *       ...
  *    }
@@ -53,15 +53,25 @@ public class PayloadRootAnnotationMethodEndpointMapping extends AbstractAnnotati
     }
 
     protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
-        Element payloadElement =
-                DomUtils.getRootElement(messageContext.getRequest().getPayloadSource(), transformerFactory);
-        QName qName = QNameUtils.getQNameForNode(payloadElement);
+        QName qName = QNameUtils.getQNameForSource(messageContext.getRequest().getPayloadSource(), transformerFactory);
         return qName != null ? qName.toString() : null;
     }
 
     protected String getLookupKeyForMethod(Method method) {
         PayloadRoot annotation = method.getAnnotation(PayloadRoot.class);
-        return annotation != null ? annotation.value() : null;
+        if (annotation != null) {
+            QName qname;
+            if (StringUtils.hasLength(annotation.localPart()) && StringUtils.hasLength(annotation.namespace())) {
+                qname = new QName(annotation.namespace(), annotation.localPart());
+            }
+            else {
+                qname = new QName(annotation.localPart());
+            }
+            return qname.toString();
+        }
+        else {
+            return null;
+        }
     }
 
 }
