@@ -200,5 +200,19 @@
             <artifactId>xstream</artifactId>
             <optional>true</optional>
         </dependency>
+        <!-- JEE dependencies -->
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1</version>
+            <optional>true</optional>
+        </dependency>
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>1.2_Java1.3</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
