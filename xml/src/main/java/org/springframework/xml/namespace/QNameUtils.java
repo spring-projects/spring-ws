@@ -17,19 +17,9 @@
 package org.springframework.xml.namespace;
 
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.dom.DOMSource;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import org.springframework.xml.transform.StaxSource;
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 /**
@@ -126,44 +116,6 @@ public abstract class QNameUtils {
             // as a last resort, use the node name
             return new QName(node.getNodeName());
         }
-    }
-
-    /**
-     * Returns the root qualified name of the given source, transforming it if necessary.
-     *
-     * @param source             the source to get the root element from
-     * @param transformerFactory a transformer factory, necessary if the given source is not a <code>DOMSource</code>
-     * @return the root element
-     */
-    public static QName getQNameForSource(Source source, TransformerFactory transformerFactory)
-            throws TransformerException {
-        if (source instanceof DOMSource) {
-            DOMSource domSource = (DOMSource) source;
-            Node node = domSource.getNode();
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                return getQNameForNode(node);
-            }
-            else if (node.getNodeType() == Node.DOCUMENT_NODE) {
-                Document document = (Document) node;
-                return getQNameForNode(document.getDocumentElement());
-            }
-        }
-        else if (source instanceof StaxSource) {
-            StaxSource staxSource = (StaxSource) source;
-            if (staxSource.getXMLStreamReader() != null) {
-                XMLStreamReader streamReader = staxSource.getXMLStreamReader();
-                if (streamReader.getEventType() == XMLStreamConstants.START_ELEMENT ||
-                        streamReader.getEventType() == XMLStreamConstants.END_ELEMENT) {
-                    return streamReader.getName();
-                }
-            }
-        }
-        // we have no other option than to transform
-        Transformer transformer = transformerFactory.newTransformer();
-        DOMResult domResult = new DOMResult();
-        transformer.transform(source, domResult);
-        Document document = (Document) domResult.getNode();
-        return getQNameForNode(document.getDocumentElement());
     }
 
     /**

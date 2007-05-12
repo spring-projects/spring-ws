@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.springframework.util.Assert;
+import org.springframework.util.ReflectionUtils;
 
 /**
  * Represents a bean method that will be invoked as part of an incoming Web service message.
@@ -80,7 +81,7 @@ public final class MethodEndpoint {
      * @throws InvocationTargetException when the method invocation results in an exception
      */
     public Object invoke(Object[] args) throws IllegalAccessException, InvocationTargetException {
-        return method.invoke(bean, args);
+        return ReflectionUtils.invokeMethod(method, bean, args);
     }
 
     public boolean equals(Object o) {

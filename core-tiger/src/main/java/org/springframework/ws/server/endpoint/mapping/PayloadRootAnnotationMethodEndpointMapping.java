@@ -24,7 +24,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointMapping;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
-import org.springframework.xml.namespace.QNameUtils;
+import org.springframework.ws.server.endpoint.mapping.support.PayloadRootUtils;
 
 /**
  * Implementation of the {@link EndpointMapping} interface that uses the {@link PayloadRoot} annotation to map methods
@@ -53,7 +53,8 @@ public class PayloadRootAnnotationMethodEndpointMapping extends AbstractAnnotati
     }
 
     protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
-        QName qName = QNameUtils.getQNameForSource(messageContext.getRequest().getPayloadSource(), transformerFactory);
+        QName qName = PayloadRootUtils
+                .getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerFactory);
         return qName != null ? qName.toString() : null;
     }
 
