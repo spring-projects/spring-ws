@@ -17,7 +17,7 @@
 package org.springframework.ws.soap.server.endpoint.mapping;
 
 import junit.framework.TestCase;
-import org.easymock.MockControl;
+import static org.easymock.EasyMock.*;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
@@ -43,21 +43,18 @@ public class SoapActionAnnotationMethodEndpointMappingTest extends TestCase {
     }
 
     public void testRegistration() throws Exception {
-        MockControl messageControl = MockControl.createControl(SoapMessage.class);
-        SoapMessage requestMock = (SoapMessage) messageControl.getMock();
-        messageControl.expectAndReturn(requestMock.getSoapAction(), "http://springframework.org/spring-ws/SoapAction");
-        messageControl.replay();
-        MockControl factoryControl = MockControl.createControl(WebServiceMessageFactory.class);
-        WebServiceMessageFactory factoryMock = (WebServiceMessageFactory) factoryControl.getMock();
-        factoryControl.replay();
-        MessageContext context = new DefaultMessageContext(requestMock, factoryMock);
+    	SoapMessage requestMock = createMock(SoapMessage.class);
+    	expect(requestMock.getSoapAction()).andReturn("http://springframework.org/spring-ws/SoapAction");
+    	WebServiceMessageFactory factoryMock = createMock(WebServiceMessageFactory.class);
+    	replay(requestMock, factoryMock);
 
+    	MessageContext context = new DefaultMessageContext(requestMock, factoryMock);
         EndpointInvocationChain chain = mapping.getEndpoint(context);
         assertNotNull("MethodEndpoint not registered", chain);
         MethodEndpoint expected = new MethodEndpoint(applicationContext.getBean("endpoint"), "doIt", new Class[0]);
         assertEquals("Invalid endpoint registered", expected, chain.getEndpoint());
-        messageControl.verify();
-        factoryControl.verify();
+        
+        verify(requestMock,factoryMock);
     }
 
     @Endpoint
