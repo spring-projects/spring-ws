@@ -42,7 +42,7 @@ import org.springframework.util.StringUtils;
 public class DefaultStrategiesHelper {
 
     /** Keys are strategy interface names, values are implementation class names. */
-    private Properties defaultStrategies = new Properties();
+    private Properties defaultStrategies;
 
     /** Initializes a new instance of the <code>DefaultStrategiesHelper</code> based on the given set of properties. */
     public DefaultStrategiesHelper(Properties defaultStrategies) {
