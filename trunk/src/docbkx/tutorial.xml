@@ -515,8 +515,7 @@
             <programlistingco>
                 <areaspec>
                     <area id="tutorial.endpoint.constr" coords="24"/>
-                    <area id="tutorial.endpoint.init" coords="28"/>
-                    <area id="tutorial.endpoint.invokeInternal" coords="38"/>
+                    <area id="tutorial.endpoint.invokeInternal" coords="35"/>
                 </areaspec>
                 <programlisting>
 package com.mycompany.hr.ws;
@@ -543,9 +542,6 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
 
     public HolidayEndpoint(HumanResourceService humanResourceService) {
         this.humanResourceService = humanResourceService;
-    }
-
-    public void init() throws JDOMException {
         Namespace namespace = Namespace.getNamespace("hr", "http://mycompany.com/hr/schemas");
         startDateExpression = XPath.newInstance("//hr:StartDate");
         startDateExpression.addNamespace(namespace);
@@ -571,11 +567,7 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
                             The <classname>HolidayEndpoint</classname> requires the
                             <interfacename>HumanResourceService</interfacename> business service to operate, so we
                             use the constructor to inject it.
-                        </para>
-                    </callout>
-                    <callout arearefs="tutorial.endpoint.init">
-                        <para>
-                            The initialization method <methodname>init</methodname>, which sets up XPath expressions
+                            Next, we set up XPath expressions
                             using the JDOM API. There are three expressions: <literal>//hr:StartDate</literal> for
                             extracting the <literal>&gt;StartDate&lt;</literal> text value,
                             <literal>//hr:EndDate</literal> for
@@ -649,7 +641,7 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
             <programlisting><![CDATA[
 <beans xmlns="http://www.springframework.org/schema/beans">
 
-    <bean id="holidayEndpoint" class="com.mycompany.hr.ws.HolidayEndpoint" init-method="init">
+    <bean id="holidayEndpoint" class="com.mycompany.hr.ws.HolidayEndpoint">
         <constructor-arg ref="hrService"/>
     </bean>
 
