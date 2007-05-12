@@ -11,6 +11,7 @@
     <name>Spring WS Samples</name>
     <modules>
         <module>echo</module>
+        <module>tutorial</module>
         <module>airline</module>
     </modules>
     <build>
@@ -19,7 +20,7 @@
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>maven-jetty-plugin</artifactId>
                 <configuration>
-                    <scanIntervalSeconds>3</scanIntervalSeconds>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
                 </configuration>
             </plugin>
             <plugin>
