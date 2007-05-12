@@ -273,74 +273,42 @@
             Note that in Spring-WS, <emphasis>writing the WSDL by hand is not required</emphasis>. Based on the XSD and
             some conventions, Spring-WS can create the WSDL for you, as explained in 
             <xref linkend="tutorial.implementing.endpoint"/>.
-            You can skip to that section if you want to; the remainder of this section will show you how to write your 
-            own WSDL by hand.
+            You can skip to <link linkend="tutorial-creating-project">the next section</link> if you want to; the
+            remainder of this section will show you how to write your own WSDL by hand.
          </para>
          <para>
             We start our WSDL with the standard preamble, and by importing our existing XSD. To
             separate the schema from the definition, we will use a separate namespace for the WSDL definitions:
             <uri>http://mycompany.com/hr/definitions</uri>.
         </para>
-        <programlisting>
-&lt;wsdl:definitions name=&quot;HumanResources&quot;
-        targetNamespace=&quot;http://mycompany.com/hr/definitions&quot;
-        xmlns:tns=&quot;http://mycompany.com/hr/definitions&quot;
-        xmlns:types=&quot;http://mycompany.com/hr/schemas&quot;&gt;
-        xmlns:soap=&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot;
-        xmlns:wsdl=&quot;http://schemas.xmlsoap.org/wsdl/&quot;&gt;
-    &lt;wsdl:types&gt;
-        &lt;xsd:schema xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
-            <emphasis>&lt;xsd:import namespace=&quot;http://mycompany.com/hr/schemas&quot; schemaLocation=&quot;hr.xsd&quot;/&gt;</emphasis>
-        &lt;/xsd:schema&gt;
-    &lt;/wsdl:types&gt;
-&lt;/wsdl:definitions&gt;
-</programlisting>
+        <programlisting><![CDATA[
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:schema="http://mycompany.com/hr/schemas"
+                  xmlns:tns="http://mycompany.com/hr/definitions"
+                  targetNamespace="http://mycompany.com/hr/definitions">
+    <wsdl:types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:import namespace="http://mycompany.com/hr/schemas" schemaLocation="hr.xsd"/>
+        </xsd:schema>
+    </wsdl:types>]]></programlisting>
         <para>
-            Next, we define our messages based on the written schema. We only have one message: one with the
+            Next, we add our messages based on the written schema types. We only have one message: one with the
             <literal>HolidayRequest</literal> we put in the schema:
         </para>
-        <programlisting>
-&lt;wsdl:definitions name=&quot;HumanResources&quot;
-        targetNamespace=&quot;http://mycompany.com/hr/definitions&quot;
-        xmlns:tns=&quot;http://mycompany.com/hr/definitions&quot;
-        xmlns:types=&quot;http://mycompany.com/hr/schemas&quot;
-        xmlns:soap=&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot;
-        xmlns:wsdl=&quot;http://schemas.xmlsoap.org/wsdl/&quot;&gt;
-    &lt;wsdl:types&gt;
-        &lt;xsd:schema xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
-            &lt;xsd:import namespace=&quot;http://mycompany.com/hr/schemas&quot; 
-                schemaLocation=&quot;hr.xsd&quot;/&gt;
-        &lt;/xsd:schema&gt;
-    &lt;/wsdl:types&gt;
-    <emphasis>&lt;wsdl:message name=&quot;RequestHolidayInput&quot;&gt;&gt;
-        &lt;wsdl:part name=&quot;body&quot; element=&quot;types:HolidayRequest&quot; /&gt;
-    &lt;/wsdl:message&gt;</emphasis>
-&lt;/wsdl:definitions&gt;</programlisting>
+        <programlisting><![CDATA[
+    <wsdl:message name="HolidayRequest">
+        <wsdl:part element="schema:HolidayRequest" name="HolidayRequest"/>
+    </wsdl:message>]]></programlisting>
         <para>
             We add the message to a port type as operation:
         </para>
-        <programlisting>
-&lt;wsdl:definitions name=&quot;HumanResources&quot;
-        targetNamespace=&quot;http://mycompany.com/hr/definitions&quot;
-        xmlns:tns=&quot;http://mycompany.com/hr/definitions&quot;
-        xmlns:types=&quot;http://mycompany.com/hr/schemas&quot;
-        xmlns:soap=&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot;
-        xmlns:wsdl=&quot;http://schemas.xmlsoap.org/wsdl/&quot;&gt;
-    &lt;wsdl:types&gt;
-        &lt;xsd:schema xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
-            &lt;xsd:import namespace=&quot;http://mycompany.com/hr/schemas&quot; 
-                schemaLocation=&quot;hr.xsd&quot;/&gt;
-        &lt;/xsd:schema&gt;
-    &lt;/wsdl:types&gt;
-    &lt;wsdl:message name=&quot;RequestHolidayInput&quot;&gt;
-        &lt;wsdl:part name=&quot;body&quot; element=&quot;types:HolidayRequest&quot; /&gt;
-    &lt;/wsdl:message&gt;
-    <emphasis>&lt;wsdl:portType name=&quot;HumanResourcesPortType&quot;&gt;
-        &lt;wsdl:operation name=&quot;RequestHoliday&quot;&gt;
-            &lt;wsdl:input message=&quot;tns:RequestHolidayInput&quot; /&gt;
-        &lt;/wsdl:operation&gt;
-    &lt;/wsdl:portType&gt;</emphasis>
-&lt;/wsdl:definitions&gt;</programlisting>
+        <programlisting><![CDATA[
+    <wsdl:portType name="HumanResource">
+        <wsdl:operation name="Holiday">
+            <wsdl:input message="tns:HolidayRequest" name="HolidayRequest"/>
+        </wsdl:operation>
+    </wsdl:portType>]]></programlisting>
         <para>
             That finished the abstract part of the WSDL (the interface, as it were), and leaves the concrete part.
             The concrete part consists of a <literal>binding</literal>, which tells the client <emphasis>how</emphasis>
@@ -351,68 +319,67 @@
             Adding a concrete part is pretty standard: just refer to the abstract part you defined previously, make sure
             you use <emphasis>document/literal</emphasis> for the <literal>soap:binding</literal> elements 
             (<literal>rpc/encoded</literal> is deprecated), pick a <literal>soapAction</literal> for the operation
-            (in this case <uri>http://example.com/RequestHoliday</uri>, but any URI will do), and determine the
+            (in this case <uri>http://mycompany.com/RequestHoliday</uri>, but any URI will do), and determine the
             <literal>location</literal> URL where you want request to come in (in this case 
             <uri>http://mycompany.com/humanresources</uri>):
         </para>
         <programlistingco>
             <areaspec>
-                <area id="tutorial.wsdl.import" coords="10"/>
+                <area id="tutorial.wsdl.import" coords="9"/>
                 <areaset id="tutorial.wsdl.message" coords="">
-                    <area id="tutorial.wsdl.message.def" coords="14"/>
-                    <area id="tutorial.wsdl.message.ref" coords="19"/>
+                    <area id="tutorial.wsdl.message.def" coords="13"/>
+                    <area id="tutorial.wsdl.message.ref" coords="18"/>
                 </areaset>
-                <area id="tutorial.wsdl.message.part" coords="15"/>
+                <area id="tutorial.wsdl.message.part" coords="14"/>
                 <areaset id="tutorial.wsdl.portType" coords="">
-                    <area id="tutorial.wsdl.portType.def" coords="17"/>
-                    <area id="tutorial.wsdl.portType.ref" coords="22"/>
+                    <area id="tutorial.wsdl.portType.def" coords="16"/>
+                    <area id="tutorial.wsdl.portType.ref" coords="21"/>
                 </areaset>
                 <areaset id="tutorial.wsdl.binding" coords="">
-                    <area id="tutorial.wsdl.binding.def" coords="22"/>
-                    <area id="tutorial.wsdl.binding.ref" coords="33"/>
+                    <area id="tutorial.wsdl.binding.def" coords="21"/>
+                    <area id="tutorial.wsdl.binding.ref" coords="32"/>
                 </areaset>
                 <areaset id="tutorial.wsdl.doclit" coords="">
-                    <area id="tutorial.wsdl.doclit.doc" coords="23"/>
-                    <area id="tutorial.wsdl.doclit.lit" coords="28"/>
+                    <area id="tutorial.wsdl.doclit.doc" coords="22"/>
+                    <area id="tutorial.wsdl.doclit.lit" coords="27"/>
                 </areaset>
-                <area id="tutorial.wsdl.transport" coords="24"/>
-                <area id="tutorial.wsdl.soapAction" coords="26"/>
-                <area id="tutorial.wsdl.address" coords="34"/>
+                <area id="tutorial.wsdl.transport" coords="23"/>
+                <area id="tutorial.wsdl.soapAction" coords="25"/>
+                <area id="tutorial.wsdl.address" coords="33"/>
             </areaspec>
             <programlisting><![CDATA[
-<wsdl:definitions name="HumanResources"
-        targetNamespace="http://mycompany.com/hr/definitions"
-        xmlns:tns="http://mycompany.com/hr/definitions"
-        xmlns:types="http://mycompany.com/hr/schemas"
-        xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-        xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:schema="http://mycompany.com/hr/schemas"
+                  xmlns:tns="http://mycompany.com/hr/definitions"
+                  targetNamespace="http://mycompany.com/hr/definitions">
     <wsdl:types>
         <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
             <xsd:import namespace="http://mycompany.com/hr/schemas"
                 schemaLocation="hr.xsd"/>
         </xsd:schema>
     </wsdl:types>
-    <wsdl:message name="RequestHolidayInput">
-        <wsdl:part name="body" element="types:HolidayRequest" />
+    <wsdl:message name="HolidayRequest">
+        <wsdl:part element="schema:HolidayRequest" name="HolidayRequest"/>
     </wsdl:message>
-    <wsdl:portType name="HumanResourcesPortType">
-        <wsdl:operation name="RequestHoliday">
-            <wsdl:input message="tns:RequestHolidayInput" />
+    <wsdl:portType name="HumanResource">
+        <wsdl:operation name="Holiday">
+            <wsdl:input message="tns:HolidayRequest" name="HolidayRequest"/>
         </wsdl:operation>
     </wsdl:portType>
-    <wsdl:binding name="HumanResourcesBinding" type="tns:HumanResourcesPortType">
+    <wsdl:binding name="HumanResourceBinding" type="tns:HumanResource">
         <soap:binding style="document"
-            transport="http://schemas.xmlsoap.org/soap/http" />
-        <wsdl:operation name="RequestHoliday">
-            <soap:operation soapAction="http://example.com/RequestHoliday" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>                
+            transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="Holiday">
+            <soap:operation soapAction="http://mycompany.com/RequestHoliday"/>
+            <wsdl:input name="HolidayRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
         </wsdl:operation>
     </wsdl:binding>
-    <wsdl:service name="HumanResourcesService">
-        <wsdl:port name="HumanResourcesPort" binding="tns:HumanResourcesBinding">
-            <soap:address location="http://mycompany.com/humanresources" />
+    <wsdl:service name="HumanResourceService">
+        <wsdl:port binding="tns:HumanResourceBinding" name="HumanResourcePort">
+            <soap:address location="http://mycompany.com/humanresources"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>]]></programlisting>
@@ -424,7 +391,7 @@
                 </callout>
                 <callout arearefs="tutorial.wsdl.message">
                     <para>
-                        We define the <literal>RequestHolidayInput</literal> message, which gets used in the 
+                        We define the <literal>HolidayRequest</literal> message, which gets used in the 
                         <literal>portType</literal>.
                     </para>
                 </callout>
@@ -435,13 +402,13 @@
                 </callout>
                 <callout arearefs="tutorial.wsdl.portType">
                     <para>
-                        We define the <literal>HumanResourcesPortType</literal> port type, which gets used in the 
+                        We define the <literal>HumanResource</literal> port type, which gets used in the 
                         <literal>binding</literal>.
                     </para>
                 </callout>
                 <callout arearefs="tutorial.wsdl.binding">
                     <para>
-                        We define the <literal>HumanResourcesBinding</literal> binding, which gets used in the 
+                        We define the <literal>HumanResourceBinding</literal> binding, which gets used in the 
                         <literal>port</literal>.
                     </para>
                 </callout>
@@ -474,7 +441,7 @@
             This is the final WSDL. We will describe how to implement the resulting schema and WSDL in the next section.
         </para>
     </section>
-    <section>
+    <section id="tutorial-creating-project">
         <title>Creating the project</title>
         <para>
             In this section, we will be using <ulink url="http://maven.apache.org/">Maven2</ulink> to create the 
@@ -489,9 +456,9 @@
                 <filename>~/.m2/settings.xml</filename> in order to find the archetype:
                 <programlisting><![CDATA[
 <repository>
-    <id>springframework.org</id>
-    <name>Springframework Maven SNAPSHOT Repository</name>
-    <url>http://static.springframework.org/maven2-snapshots/</url>
+    <id>spring-s3</id>
+    <name>Spring S3 Maven SNAPSHOT Repository</name>
+    <url>http://s3.amazonaws.com/maven.springframework.org</url>
     <snapshots>
         <enabled>true</enabled>
     </snapshots>
@@ -511,26 +478,24 @@
             which defines a Spring-WS <classname>MessageDispatcherServlet</classname>, and maps all incoming requests
             to this servlet:
         </para>
-        <programlisting>
-&lt;web-app xmlns=&quot;http://java.sun.com/xml/ns/j2ee&quot;
-         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-         xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd&quot;
-         version=&quot;2.4&quot;&gt;
+        <programlisting><![CDATA[
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+         version="2.4">
 
-    &lt;display-name&gt;MyCompany HR Holiday Service&lt;/display-name&gt;
+    <display-name>MyCompany HR Holiday Service</display-name>
 
-    &lt;servlet&gt;
-        &lt;servlet-name&gt;spring-ws&lt;/servlet-name&gt;
-        &lt;servlet-class&gt;<emphasis>org.springframework.ws.transport.http.MessageDispatcherServlet</emphasis>&lt;/servlet-class&gt;
-    &lt;/servlet&gt;
+    <servlet>
+        <servlet-name>spring-ws</servlet-name>
+        <servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
+    </servlet>
 
-    &lt;servlet-mapping&gt;
-        &lt;servlet-name&gt;spring-ws&lt;/servlet-name&gt;
-        &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
-    &lt;/servlet-mapping&gt;
+    <servlet-mapping>
+        <servlet-name>spring-ws</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
 
-&lt;/web-app&gt;
-</programlisting>
+</web-app>]]></programlisting>
         <para>
             We could have made the servlet more restrictive by using the url pattern <literal>/humanresources</literal>,
             but this will suffice for now.
@@ -553,10 +518,10 @@
         <section>
             <title>Handling the XML Message</title>
             <para>    
-                In this sample application, we are going to use <ulink url="http://www.jdom.org">JDom</ulink> to handle the 
-                XML message. We are also using <ulink url="http://www.w3schools.com/xpath/">XPath</ulink>, because it 
-                allows us to select particular parts of the XML JDOM tree, without requiring strict schema conformance. 
-                We extend our endpoint from <classname>AbstractJDomPayloadEndpoint</classname>, 
+                In this sample application, we are going to use <ulink url="http://www.jdom.org">JDom</ulink> to handle
+                the XML message. We are also using <ulink url="http://www.w3schools.com/xpath/">XPath</ulink>, because
+                it allows us to select particular parts of the XML JDOM tree, without requiring strict schema
+                conformance. We extend our endpoint from <classname>AbstractJDomPayloadEndpoint</classname>,
                 because that will give us a JDOM element to execute the XPath queries on.
             </para>
             <programlistingco>
@@ -598,7 +563,7 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
         startDateExpression.addNamespace(namespace);
         endDateExpression = XPath.newInstance("//hr:EndDate");
         endDateExpression.addNamespace(namespace);
-        nameExpression = XPath.newInstance("//hr:FirstName|//hr:LastName");
+        nameExpression = XPath.newInstance("concat(//hr:FirstName,' ',//hr:LastName)");
         nameExpression.addNamespace(namespace);
     }
 
@@ -626,8 +591,8 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
                             using the JDOM API. There are three expressions: <literal>//hr:StartDate</literal> for 
                             extracting the <literal>&gt;StartDate&lt;</literal> text value, 
                             <literal>//hr:EndDate</literal> for 
-                            extracting the end date and <literal>//hr:FirstName|//hr:LastName</literal> 
-                            for extracting the name of the employee.
+                            extracting the end date and <literal>concat(//hr:FirstName,' ',//hr:LastName)</literal>
+                            for extracting and concatenating the names of the employee.
                         </para>
                     </callout>
                     <callout arearefs="tutorial.endpoint.invokeInternal">
@@ -659,33 +624,36 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
                  root of our project directory. Here is the relevant section of the POM:
              </para>
              <programlisting><![CDATA[
-<dependency>
-    <groupId>org.springframework.ws</groupId>
-    <artifactId>spring-ws-core</artifactId>
-    <version>1.0-m3</version>
-</dependency>
-<dependency>
-    <groupId>jdom</groupId>
-    <artifactId>jdom</artifactId>
-    <version>1.0</version>
-</dependency>
-<dependency>
-    <groupId>jaxen</groupId>
-    <artifactId>jaxen</artifactId>
-    <version>1.1</version>
-</dependency>
-<dependency>
-    <groupId>javax.xml.soap</groupId>
-    <artifactId>saaj-api</artifactId>
-    <version>1.3</version>
-    <scope>runtime</scope>
-</dependency>
-<dependency>
-    <groupId>com.sun.xml.messaging.saaj</groupId>
-    <artifactId>saaj-impl</artifactId>
-    <version>1.3</version>
-    <scope>runtime</scope>
-</dependency>]]></programlisting>
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.ws</groupId>
+        <artifactId>spring-ws-core</artifactId>
+        <version>1.0-m3</version>
+    </dependency>
+    <dependency>
+        <groupId>jdom</groupId>
+        <artifactId>jdom</artifactId>
+        <version>1.0</version>
+    </dependency>
+    <dependency>
+        <groupId>jaxen</groupId>
+        <artifactId>jaxen</artifactId>
+        <version>1.1</version>
+    </dependency>
+    <dependency>
+        <groupId>javax.xml.soap</groupId>
+        <artifactId>saaj-api</artifactId>
+        <version>1.3</version>
+        <scope>runtime</scope>
+    </dependency>
+    <dependency>
+        <groupId>com.sun.xml.messaging.saaj</groupId>
+        <artifactId>saaj-impl</artifactId>
+        <version>1.3</version>
+        <scope>runtime</scope>
+    </dependency>
+<dependencies>
+]]></programlisting>
              <para>
                 Here's how we would wire up these classes in our <filename>spring-ws-servlet.xml</filename>
                 application context:
@@ -744,16 +712,18 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
                 <area id="tutorial.wsdl.gen.schema" coords="5"/>
                 <area id="tutorial.wsdl.gen.portType" coords="6"/>
                 <area id="tutorial.wsdl.gen.locationUri" coords="7"/>
+                <area id="tutorial.wsdl.gen.tns" coords="8"/>
             </areaspec>
-            <programlisting>
-<![CDATA[<bean id="holiday" class="org.springframework.ws.wsdl.wsdl11.DynamicWsdl11Definition">
-    <property name="builder">
-        <bean class="org.springframework.ws.wsdl.wsdl11.builder.XsdBasedSoap11Wsdl4jDefinitionBuilder">
-            <property name="schema" value="/WEB-INF/hr.xsd"/>
-            <property name="portTypeName" value="HumanResource"/>
-            <property name="locationUri" value="http://localhost:8080/holidayService/"/>
-        </bean>
-    </property>
+            <programlisting><![CDATA[
+<bean id="holiday" class="org.springframework.ws.wsdl.wsdl11.DynamicWsdl11Definition">
+  <property name="builder">
+    <bean class="org.springframework.ws.wsdl.wsdl11.builder.XsdBasedSoap11Wsdl4jDefinitionBuilder">
+      <property name="schema" value="/WEB-INF/hr.xsd"/>
+      <property name="portTypeName" value="HumanResource"/>
+      <property name="locationUri" value="http://localhost:8080/holidayService/"/>
+      <property name="targetNamespace" value="http://mycompany.com/hr/definitions"/>
+    </bean>
+  </property>
 </bean>]]></programlisting>
             <calloutlist>
                 <callout arearefs="tutorial.wsdl.gen.bean">
@@ -778,8 +748,17 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
                 </callout>
                 <callout arearefs="tutorial.wsdl.gen.locationUri">
                     <para>
-                        Finally, we set the location where the service can be reached: 
-                        <uri>http://localhost:8080/holidayService</uri>.
+                        We set the location where the service can be reached:
+                        <uri>http://localhost:8080/holidayService</uri>. For development, this will suffice, but
+                        obviously we need to change this to <uri>http://mycompany.com/humanresources</uri> when going
+                        live. One way to keep this to accomplish this would be to use Spring
+                        <classname>PropertyPlaceholderConfigurer</classname>.
+                    </para>
+                </callout>
+                <callout arearefs="tutorial.wsdl.gen.tns">
+                    <para>
+                        Finally, we define the target namespace and prefix for the WSDL definition itself. Setting these
+                        is not required. If not set, we give the WSDL the same namespace as the schema.
                     </para>
                 </callout>
             </calloutlist>
@@ -794,7 +773,8 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
         </para>
     </section>
     <para>
-        That concludes this tutorial. The next step would be to look at the echo sample application, that is part 
+        That concludes this tutorial. The tutorial code can be found in the full distribution of Spring-WS.
+        The next step would be to look at the echo sample application, that is part 
         of the distribution. After that, look at the airline sample, which is a bit more complicated, because it 
         uses JAXB, WS-Security, Hibernate, and a transactional service layer. 
         Finally, you can read the rest of the reference documentation.
