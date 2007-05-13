@@ -100,6 +100,11 @@ public class Saaj11Implementation implements SaajImplementation {
         return results.iterator();
     }
 
+    public Iterator getChildElements(SOAPElement element, QName name) throws SOAPException {
+        Name childName = SaajUtils.toName(name, element);
+        return element.getChildElements(childName);
+    }
+
     public QName getFaultCode(SOAPFault fault) {
         String code = fault.getFaultCode();
         int idx = code.indexOf(':');

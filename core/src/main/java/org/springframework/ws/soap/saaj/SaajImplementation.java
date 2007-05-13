@@ -62,6 +62,9 @@ public interface SaajImplementation {
     /** Returns all attributes as an iterator of QNames. * */
     Iterator getAllAttibutes(SOAPElement element);
 
+    /** Returns an iterator over the child elements with the given name. */
+    Iterator getChildElements(SOAPElement element, QName name) throws SOAPException;
+
     /** Returns the envelope of the given message. */
     SOAPEnvelope getEnvelope(SOAPMessage message) throws SOAPException;
 
