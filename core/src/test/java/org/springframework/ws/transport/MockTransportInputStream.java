@@ -18,23 +18,30 @@ package org.springframework.ws.transport;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.Properties;
 
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 public class MockTransportInputStream extends TransportInputStream {
 
-    private Map headers;
+    private Properties headers;
 
     private InputStream inputStream;
 
-    public MockTransportInputStream(InputStream inputStream, Map headers) {
+    public MockTransportInputStream(InputStream inputStream, Properties headers) {
         Assert.notNull(inputStream, "inputStream must not be null");
         Assert.notNull(headers, "headers must not be null");
         this.inputStream = inputStream;
         this.headers = headers;
+    }
+
+    public MockTransportInputStream(InputStream inputStream) {
+        Assert.notNull(inputStream, "inputStream must not be null");
+        this.inputStream = inputStream;
+        headers = new Properties();
     }
 
     protected InputStream createInputStream() throws IOException {
@@ -46,6 +53,7 @@ public class MockTransportInputStream extends TransportInputStream {
     }
 
     public Iterator getHeaders(String name) throws IOException {
-        return Collections.singleton(headers.get(name)).iterator();
+        String[] values = StringUtils.delimitedListToStringArray(headers.getProperty(name), ", ");
+        return Arrays.asList(values).iterator();
     }
 }

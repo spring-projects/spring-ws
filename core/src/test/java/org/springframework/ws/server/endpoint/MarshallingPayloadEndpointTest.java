@@ -32,10 +32,15 @@ import org.easymock.MockControl;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
+import org.springframework.oxm.mime.MimeMarshaller;
+import org.springframework.oxm.mime.MimeUnmarshaller;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.mime.MimeMessage;
+import org.springframework.xml.transform.StringResult;
+import org.springframework.xml.transform.StringSource;
 
 public class MarshallingPayloadEndpointTest extends XMLTestCase {
 
@@ -54,7 +59,6 @@ public class MarshallingPayloadEndpointTest extends XMLTestCase {
         factoryMock = (WebServiceMessageFactory) factoryControl.getMock();
 
         context = new DefaultMessageContext(request, factoryMock);
-
     }
 
     public void testInvoke() throws Exception {
@@ -137,6 +141,50 @@ public class MarshallingPayloadEndpointTest extends XMLTestCase {
         endpoint.invoke(context);
         assertFalse("Response created", context.hasResponse());
         factoryControl.verify();
+    }
+
+    public void testInvokeMimeMarshaller() throws Exception {
+        MockControl unmarshallerControl = MockControl.createControl(MimeUnmarshaller.class);
+        MimeUnmarshaller unmarshaller = (MimeUnmarshaller) unmarshallerControl.getMock();
+        MockControl marshallerControl = MockControl.createControl(MimeMarshaller.class);
+        MimeMarshaller marshaller = (MimeMarshaller) marshallerControl.getMock();
+        MockControl messageControl = MockControl.createControl(MimeMessage.class);
+        MimeMessage request = (MimeMessage) messageControl.getMock();
+        MimeMessage response = (MimeMessage) messageControl.getMock();
+        Source requestSource = new StringSource("<request/>");
+        messageControl.expectAndReturn(request.getPayloadSource(), requestSource);
+        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), response);
+        unmarshaller.unmarshal(requestSource, null);
+        unmarshallerControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        unmarshallerControl.setReturnValue(new Long(42));
+        Result responseResult = new StringResult();
+        messageControl.expectAndReturn(response.getPayloadResult(), responseResult);
+        marshaller.marshal("result", responseResult, null);
+        marshallerControl.setMatcher(MockControl.ALWAYS_MATCHER);
+
+        factoryControl.replay();
+        unmarshallerControl.replay();
+        marshallerControl.replay();
+        messageControl.replay();
+
+        AbstractMarshallingPayloadEndpoint endpoint = new AbstractMarshallingPayloadEndpoint() {
+            protected Object invokeInternal(Object requestObject) throws Exception {
+                assertEquals("Invalid request object", new Long(42), requestObject);
+                return "result";
+            }
+        };
+        endpoint.setMarshaller(marshaller);
+        endpoint.setUnmarshaller(unmarshaller);
+        endpoint.afterPropertiesSet();
+
+        context = new DefaultMessageContext(request, factoryMock);
+        endpoint.invoke(context);
+        assertNotNull("Invalid result", response);
+
+        factoryControl.verify();
+        unmarshallerControl.verify();
+        marshallerControl.verify();
+        messageControl.verify();
     }
 
     private abstract static class SimpleMarshaller implements Marshaller, Unmarshaller {

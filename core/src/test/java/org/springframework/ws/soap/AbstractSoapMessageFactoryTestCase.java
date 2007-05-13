@@ -26,4 +26,9 @@ public abstract class AbstractSoapMessageFactoryTestCase extends AbstractWebServ
         assertTrue("Not a SoapMessage", message instanceof SoapMessage);
     }
 
+    public abstract void testCreateSoapMessageNoAttachment() throws Exception;
+
+    public abstract void testCreateSoapMessageSwA() throws Exception;
+
+    public abstract void testCreateSoapMessageMtom() throws Exception;
 }

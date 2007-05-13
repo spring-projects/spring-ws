@@ -14,20 +14,28 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.saaj;
+package org.springframework.ws.mime;
 
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPConstants;
-import javax.xml.soap.SOAPMessage;
+import org.springframework.ws.WebServiceMessageException;
 
-import org.springframework.ws.soap.AbstractAttachmentTestCase;
-import org.springframework.ws.soap.SoapMessage;
+/**
+ * Exception thrown when a MIME attachment could not be accessed.
+ *
+ * @author Arjen Poutsma
+ * @see Attachment
+ */
+public class AttachmentException extends WebServiceMessageException {
 
-public class SaajAttachmentTest extends AbstractAttachmentTestCase {
-
-    protected SoapMessage createMessage() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
-        SOAPMessage saajMessage = messageFactory.createMessage();
-        return new SaajSoapMessage(saajMessage);
+    public AttachmentException(String msg) {
+        super(msg);
     }
+
+    public AttachmentException(String msg, Throwable ex) {
+        super(msg, ex);
+    }
+
+    public AttachmentException(Throwable ex) {
+        super("Could not access body: " + ex.getMessage(), ex);
+    }
+
 }

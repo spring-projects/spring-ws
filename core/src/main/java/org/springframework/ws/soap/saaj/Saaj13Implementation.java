@@ -21,7 +21,6 @@ import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.Locale;
 import javax.activation.DataHandler;
-import javax.activation.DataSource;
 import javax.xml.namespace.QName;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.Detail;
@@ -284,8 +283,8 @@ public class Saaj13Implementation implements SaajImplementation {
         return message.getAttachments(mimeHeaders);
     }
 
-    public AttachmentPart addAttachmentPart(SOAPMessage message, DataSource dataSource) {
-        AttachmentPart attachmentPart = message.createAttachmentPart(new DataHandler(dataSource));
+    public AttachmentPart addAttachmentPart(SOAPMessage message, DataHandler dataHandler) {
+        AttachmentPart attachmentPart = message.createAttachmentPart(dataHandler);
         message.addAttachmentPart(attachmentPart);
         return attachmentPart;
     }

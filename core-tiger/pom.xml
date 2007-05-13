@@ -41,6 +41,11 @@
             <groupId>stax</groupId>
             <artifactId>stax-api</artifactId>
         </dependency>
+        <!-- JEE dependencies -->
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+        </dependency>
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.easymock</groupId>

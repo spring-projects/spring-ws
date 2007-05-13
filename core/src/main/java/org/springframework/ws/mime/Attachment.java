@@ -14,36 +14,27 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap;
+package org.springframework.ws.mime;
 
 import java.io.IOException;
 import java.io.InputStream;
+import javax.activation.DataHandler;
 
 /**
- * Represents an attachment to a <code>SoapMessage</code>.
+ * Represents an attachment to a {@link org.springframework.ws.mime.MimeMessage}
  *
  * @author Arjen Poutsma
- * @see SoapMessage#getAttachments()
- * @see SoapMessage#addAttachment(java.io.File)
- * @see SoapMessage#addAttachment(org.springframework.core.io.InputStreamSource, String)
+ * @see MimeMessage#getAttachments()
+ * @see MimeMessage#addAttachment
  */
 public interface Attachment {
 
     /**
-     * Returns the identifier of the attachment. Depending on the implementation used, this may be a MIME
-     * <code>Content-Id</code> header, a DIME ID, etc.
+     * Returns the content identifier of the attachment.
      *
-     * @return the attachment identifier, or <code>null</code> if empty or not defined
+     * @return the content id, or <code>null</code> if empty or not defined
      */
-    String getId();
-
-    /**
-     * Sets the identifier of the attachment. Depending on the implementation used, this may be a MIME
-     * <code>Content-Id</code> header, a DIME ID, etc.
-     *
-     * @param id the new attachment identifier, or <code>null</code> if empty or not defined
-     */
-    void setId(String id);
+    String getContentId();
 
     /**
      * Returns the content type of the attachment.
@@ -62,9 +53,16 @@ public interface Attachment {
     InputStream getInputStream() throws IOException;
 
     /**
-     * Returns the size of the attachment in bytes.
+     * Returns the size of the attachment in bytes. Returns <code>-1</code> if the size cannot be determined.
      *
-     * @return the size of the attachment, or <code>0</code> if empty
+     * @return the size of the attachment, <code>0</code> if empty, or <code>-1</code> if the size cannot be determined
      */
     long getSize();
+
+    /**
+     * Returns the data handler of the attachment.
+     *
+     * @return the data handler of the attachment
+     */
+    DataHandler getDataHandler();
 }

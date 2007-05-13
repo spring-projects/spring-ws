@@ -16,47 +16,24 @@
 
 package org.springframework.ws.soap;
 
-import java.io.ByteArrayOutputStream;
-import java.util.Iterator;
-
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.Resource;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.ws.AbstractWebServiceMessageTestCase;
-import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.mime.AbstractMimeMessageTestCase;
+import org.springframework.ws.mime.MimeMessage;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.xml.sax.SAXParseException;
 
-public abstract class AbstractSoapMessageTestCase extends AbstractWebServiceMessageTestCase {
+public abstract class AbstractSoapMessageTestCase extends AbstractMimeMessageTestCase {
 
     protected SoapMessage soapMessage;
 
-    protected final WebServiceMessage createWebServiceMessage() throws Exception {
+    protected MimeMessage createMimeMessage() throws Exception {
         soapMessage = createSoapMessage();
         return soapMessage;
     }
 
     protected abstract SoapMessage createSoapMessage() throws Exception;
-
-    public void testAttachments() throws Exception {
-        String contents = "contents";
-        String contentType = "text/plain";
-        InputStreamSource inputStreamSource = new ByteArrayResource(contents.getBytes("UTF-8"));
-        soapMessage.addAttachment(inputStreamSource, contentType);
-        Iterator iterator = soapMessage.getAttachments();
-        assertNotNull("Attachment iterator is null", iterator);
-        assertTrue("Attachment iterator has no elements", iterator.hasNext());
-        Attachment attachment = (Attachment) iterator.next();
-        assertEquals("Invalid content-id", contentType, attachment.getContentType());
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        FileCopyUtils.copy(attachment.getInputStream(), os);
-        String result = new String(os.toByteArray(), "UTF-8");
-        assertEquals("Invalid contents", contents, result);
-        assertFalse("Attachment iterator has too many elements", iterator.hasNext());
-    }
 
     public void testValidate() throws Exception {
         XmlValidator validator =

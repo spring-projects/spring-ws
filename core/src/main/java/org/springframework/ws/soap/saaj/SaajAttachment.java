@@ -16,14 +16,14 @@
 
 package org.springframework.ws.soap.saaj;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import javax.activation.DataHandler;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.SOAPException;
 
 import org.springframework.util.Assert;
-import org.springframework.ws.soap.Attachment;
+import org.springframework.ws.mime.Attachment;
 
 /**
  * SAAJ-specific implementation of the <code>Attachment</code> interface. Wraps a {@link
@@ -40,12 +40,8 @@ class SaajAttachment implements Attachment {
         this.saajAttachment = saajAttachment;
     }
 
-    public String getId() {
+    public String getContentId() {
         return saajAttachment.getContentId();
-    }
-
-    public void setId(String id) {
-        saajAttachment.setContentId(id);
     }
 
     public String getContentType() {
@@ -56,20 +52,26 @@ class SaajAttachment implements Attachment {
         try {
             return saajAttachment.getDataHandler().getInputStream();
         }
-        catch (SOAPException e) {
-            return new ByteArrayInputStream(new byte[0]);
+        catch (SOAPException ex) {
+            throw new SaajAttachmentException(ex);
         }
     }
 
     public long getSize() {
         try {
-            int result = saajAttachment.getSize();
-            // SAAJ returns -1 when the size cannot be determined
-            return result != -1 ? result : 0;
+            return saajAttachment.getSize();
         }
         catch (SOAPException ex) {
             throw new SaajAttachmentException(ex);
         }
     }
 
+    public DataHandler getDataHandler() {
+        try {
+            return saajAttachment.getDataHandler();
+        }
+        catch (SOAPException ex) {
+            throw new SaajAttachmentException(ex);
+        }
+    }
 }

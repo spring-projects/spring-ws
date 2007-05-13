@@ -21,8 +21,8 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.AbstractSoapMessageFactoryTestCase;
-import org.springframework.ws.soap.Attachment;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.transport.MockTransportInputStream;
@@ -30,7 +30,7 @@ import org.springframework.ws.transport.TransportInputStream;
 
 public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapMessageFactoryTestCase {
 
-    public void testCreateEmptyMessage() throws Exception {
+    public void testCreateEmptySoap11Message() throws Exception {
         WebServiceMessage message = messageFactory.createWebServiceMessage();
         assertTrue("Not a SoapMessage", message instanceof SoapMessage);
         SoapMessage soapMessage = (SoapMessage) message;
@@ -50,24 +50,26 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
         SoapMessage soapMessage = (SoapMessage) message;
         assertEquals("Invalid soap version", SoapVersion.SOAP_11, soapMessage.getVersion());
         assertEquals("Invalid soap action", soapAction, soapMessage.getSoapAction());
+        assertFalse("Message a XOP pacakge", soapMessage.isXopPackage());
     }
 
     public void testCreateSoapMessageSwA() throws Exception {
         InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-attachment.bin");
         Properties headers = new Properties();
         headers.setProperty("Content-Type",
-                "multipart/related; type=\"text/xml\"; boundary=\"----=_Part_0_11416420.1149699787554\"");
+                "multipart/related;" + "type=\"text/xml\";" + "boundary=\"----=_Part_0_11416420.1149699787554\"");
         TransportInputStream tis = new MockTransportInputStream(is, headers);
 
         WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
         assertTrue("Not a SoapMessage", message instanceof SoapMessage);
         SoapMessage soapMessage = (SoapMessage) message;
         assertEquals("Invalid soap version", SoapVersion.SOAP_11, soapMessage.getVersion());
+        assertFalse("Message a XOP pacakge", soapMessage.isXopPackage());
         Iterator iter = soapMessage.getAttachments();
         assertTrue("No attachments read", iter.hasNext());
         Attachment attachment = soapMessage.getAttachment("interface21");
         assertNotNull("No attachment read", attachment);
-        assertEquals("Invalid content id", "interface21", attachment.getId());
+        assertEquals("Invalid content id", "interface21", attachment.getContentId());
     }
 
     public void testCreateSoapMessageMtom() throws Exception {
@@ -82,6 +84,7 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
         assertTrue("Not a SoapMessage", message instanceof SoapMessage);
         SoapMessage soapMessage = (SoapMessage) message;
         assertEquals("Invalid soap version", SoapVersion.SOAP_11, soapMessage.getVersion());
+        assertTrue("Message not a XOP pacakge", soapMessage.isXopPackage());
         Iterator iter = soapMessage.getAttachments();
         assertTrue("No attachments read", iter.hasNext());
 

@@ -19,7 +19,7 @@ package org.springframework.ws.soap.saaj;
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
 import java.util.Locale;
-import javax.activation.DataSource;
+import javax.activation.DataHandler;
 import javax.mail.util.ByteArrayDataSource;
 import javax.xml.namespace.QName;
 import javax.xml.soap.AttachmentPart;
@@ -273,8 +273,8 @@ public abstract class AbstractSaajImplementationTestCase extends XMLTestCase {
     }
 
     public void testAddAttachmentPart() throws Exception {
-        DataSource dataSource = new ByteArrayDataSource("data", "text");
-        AttachmentPart attachmentPart = implementation.addAttachmentPart(message, dataSource);
+        DataHandler dataHandler = new DataHandler(new ByteArrayDataSource("data", "text"));
+        AttachmentPart attachmentPart = implementation.addAttachmentPart(message, dataHandler);
         assertNotNull("No attachment part", attachmentPart);
     }
 

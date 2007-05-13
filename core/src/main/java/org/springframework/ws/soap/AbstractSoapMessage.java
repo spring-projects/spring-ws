@@ -19,54 +19,44 @@ package org.springframework.ws.soap;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import org.springframework.ws.mime.AbstractMimeMessage;
+
 /**
- * Abstract implementation of the <code>SoapMessage</code> interface.
+ * Abstract implementation of the {@link SoapMessage} interface. Contains convenient default implementations.
  *
  * @author Arjen Poutsma
  */
-public abstract class AbstractSoapMessage implements SoapMessage {
+public abstract class AbstractSoapMessage extends AbstractMimeMessage implements SoapMessage {
 
     private SoapVersion version;
 
-    /**
-     * Returns <code>getEnvelope().getBody()</code>.
-     */
-    public SoapBody getSoapBody() {
+    /** Returns <code>getEnvelope().getBody()</code>. */
+    public final SoapBody getSoapBody() {
         return getEnvelope().getBody();
     }
 
-    /**
-     * Returns <code>getEnvelope().getHeader()</code>.
-     */
-    public SoapHeader getSoapHeader() {
+    /** Returns <code>getEnvelope().getHeader()</code>. */
+    public final SoapHeader getSoapHeader() {
         return getEnvelope().getHeader();
     }
 
-    /**
-     * Returns <code>getSoapBody().getPayloadSource()</code>.
-     */
-    public Source getPayloadSource() {
+    /** Returns <code>getSoapBody().getPayloadSource()</code>. */
+    public final Source getPayloadSource() {
         return getSoapBody().getPayloadSource();
     }
 
-    /**
-     * Returns <code>getSoapBody().getPayloadResult()</code>.
-     */
-    public Result getPayloadResult() {
+    /** Returns <code>getSoapBody().getPayloadResult()</code>. */
+    public final Result getPayloadResult() {
         return getSoapBody().getPayloadResult();
     }
 
-    /**
-     * Returns <code>getSoapBody().hasFault()</code>.
-     */
-    public boolean hasFault() {
+    /** Returns <code>getSoapBody().hasFault()</code>. */
+    public final boolean hasFault() {
         return getSoapBody().hasFault();
     }
 
-    /**
-     * Returns <code>getSoapBody().getFault().getFaultStringOrReason()</code>.
-     */
-    public String getFaultReason() {
+    /** Returns <code>getSoapBody().getFault().getFaultStringOrReason()</code>. */
+    public final String getFaultReason() {
         if (hasFault()) {
             return getSoapBody().getFault().getFaultStringOrReason();
         }

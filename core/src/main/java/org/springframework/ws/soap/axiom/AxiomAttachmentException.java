@@ -16,11 +16,9 @@
 
 package org.springframework.ws.soap.axiom;
 
-import org.springframework.ws.soap.AttachmentException;
+import org.springframework.ws.mime.AttachmentException;
 
-/**
- * @author Arjen Poutsma
- */
+/** @author Arjen Poutsma */
 public class AxiomAttachmentException extends AttachmentException {
 
     public AxiomAttachmentException(String msg) {

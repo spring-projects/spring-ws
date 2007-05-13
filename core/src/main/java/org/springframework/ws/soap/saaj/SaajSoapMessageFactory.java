@@ -30,19 +30,25 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.soap.SoapMessageCreationException;
+import org.springframework.ws.soap.SoapMessageFactory;
+import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 import org.springframework.ws.transport.TransportInputStream;
 
 /**
  * SAAJ-specific implementation of the {@link org.springframework.ws.WebServiceMessageFactory WebServiceMessageFactory}.
- * This factory will use SAAJ 1.3 when found, or fall back to SAAJ 1.2 or 1.1.
+ * Wraps a SAAJ {@link MessageFactory}. This factory will use SAAJ 1.3 when found, or fall back to SAAJ 1.2 or even
+ * 1.1.
+ * <p/>
+ * A SAAJ {@link MessageFactory} can be injected to the {@link #SaajSoapMessageFactory(javax.xml.soap.MessageFactory)
+ * constructor}, or by the {@link #setMessageFactory(javax.xml.soap.MessageFactory)} property. When a SAAJ message
+ * factory is injected, the {@link #setSoapVersion(org.springframework.ws.soap.SoapVersion)} property is ignored.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.soap.saaj.SaajSoapMessage
  */
-public class SaajSoapMessageFactory implements WebServiceMessageFactory, InitializingBean {
+public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingBean {
 
     private static final Log logger = LogFactory.getLog(SaajSoapMessageFactory.class);
 
@@ -50,31 +56,41 @@ public class SaajSoapMessageFactory implements WebServiceMessageFactory, Initial
 
     private String messageFactoryProtocol;
 
-    /**
-     * Default, empty constructor.
-     */
+    /** Default, empty constructor. */
     public SaajSoapMessageFactory() {
     }
 
-    /**
-     * Constructor that takes a message factory as an argument.
-     */
+    /** Constructor that takes a message factory as an argument. */
     public SaajSoapMessageFactory(MessageFactory messageFactory) {
         this.messageFactory = messageFactory;
     }
 
-    /**
-     * Sets the SAAJ <code>MessageFactory</code>.
-     */
+    /** Sets the SAAJ <code>MessageFactory</code>. */
     public void setMessageFactory(MessageFactory messageFactory) {
         this.messageFactory = messageFactory;
     }
 
-    /**
-     * Returns the SAAJ <code>MessageFactory</code> used.
-     */
-    public MessageFactory getSaajMessageFactory() {
+    /** Returns the SAAJ <code>MessageFactory</code> used. */
+    public MessageFactory getMessageFactory() {
         return messageFactory;
+    }
+
+    public void setSoapVersion(SoapVersion version) {
+        if (SaajUtils.getSaajVersion() >= SaajUtils.SAAJ_13) {
+            if (SoapVersion.SOAP_11 == version) {
+                messageFactoryProtocol = SOAPConstants.SOAP_1_1_PROTOCOL;
+            }
+            else if (SoapVersion.SOAP_12 == version) {
+                messageFactoryProtocol = SOAPConstants.SOAP_1_2_PROTOCOL;
+            }
+            else {
+                throw new IllegalArgumentException(
+                        "Invalid version [" + version + "]. " + "Expected the SOAP_11 or SOAP_12 constant");
+            }
+        }
+        else if (SoapVersion.SOAP_11 != version) {
+            throw new IllegalArgumentException("SAAJ 1.1 and 1.2 only support SOAP 1.1");
+        }
     }
 
     public void afterPropertiesSet() throws Exception {
@@ -82,7 +98,7 @@ public class SaajSoapMessageFactory implements WebServiceMessageFactory, Initial
             try {
                 if (SaajUtils.getSaajVersion() >= SaajUtils.SAAJ_13) {
                     if (!StringUtils.hasLength(messageFactoryProtocol)) {
-                        messageFactoryProtocol = SOAPConstants.DEFAULT_SOAP_PROTOCOL;
+                        messageFactoryProtocol = SOAPConstants.SOAP_1_1_PROTOCOL;
                     }
                     if (logger.isInfoEnabled()) {
                         logger.info("Creating SAAJ 1.3 MessageFactory with " + messageFactoryProtocol);
@@ -90,20 +106,16 @@ public class SaajSoapMessageFactory implements WebServiceMessageFactory, Initial
                     messageFactory = MessageFactory.newInstance(messageFactoryProtocol);
                 }
                 else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_12) {
-                    if (logger.isInfoEnabled()) {
-                        logger.info("Creating SAAJ 1.2 MessageFactory");
-                    }
+                    logger.info("Creating SAAJ 1.2 MessageFactory");
                     messageFactory = MessageFactory.newInstance();
                 }
                 else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_11) {
-                    if (logger.isInfoEnabled()) {
-                        logger.info("Creating SAAJ 1.1 MessageFactory");
-                    }
+                    logger.info("Creating SAAJ 1.1 MessageFactory");
                     messageFactory = MessageFactory.newInstance();
                 }
                 else {
                     throw new IllegalStateException(
-                            "SaajSoapMessageFactory requires SAAJ 1.2, which was not" + "found on the classpath");
+                            "SaajSoapMessageFactory requires SAAJ 1.1, which was not" + "found on the classpath");
                 }
             }
             catch (SOAPException ex) {
@@ -145,19 +157,5 @@ public class SaajSoapMessageFactory implements WebServiceMessageFactory, Initial
         catch (SOAPException ex) {
             throw new SoapMessageCreationException("Could not create message from InputStream: " + ex.getMessage(), ex);
         }
-    }
-
-    /**
-     * Sets the protocol for the <code>MessageFactory</code>. Only used for SAAJ 1.3+, defaults to
-     * <code>SOAPConstants.DEFAULT_SOAP_PROTOCOL</code> (i.e. SOAP 1.1).
-     *
-     * @see MessageFactory#newInstance(String)
-     * @see javax.xml.soap.SOAPConstants#DEFAULT_SOAP_PROTOCOL
-     * @see javax.xml.soap.SOAPConstants#SOAP_1_1_PROTOCOL
-     * @see javax.xml.soap.SOAPConstants#SOAP_1_2_PROTOCOL
-     * @see javax.xml.soap.SOAPConstants#DYNAMIC_SOAP_PROTOCOL
-     */
-    public void setSoapProtocol(String messageFactoryProtocol) {
-        this.messageFactoryProtocol = messageFactoryProtocol;
     }
 }

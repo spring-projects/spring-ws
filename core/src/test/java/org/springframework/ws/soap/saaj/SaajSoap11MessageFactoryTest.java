@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.saaj;
 
 import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPConstants;
 
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.soap.soap11.AbstractSoap11MessageFactoryTestCase;
@@ -24,11 +25,8 @@ import org.springframework.ws.soap.soap11.AbstractSoap11MessageFactoryTestCase;
 public class SaajSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryTestCase {
 
     protected WebServiceMessageFactory createMessageFactory() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance();
-        SaajSoapMessageFactory factory = new SaajSoapMessageFactory();
-        factory.setMessageFactory(messageFactory);
-        factory.afterPropertiesSet();
-        return factory;
+        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+        return new SaajSoapMessageFactory(messageFactory);
     }
 
 
