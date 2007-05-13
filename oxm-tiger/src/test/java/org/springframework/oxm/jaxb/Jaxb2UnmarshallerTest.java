@@ -16,30 +16,34 @@
 
 package org.springframework.oxm.jaxb;
 
-import java.io.StringReader;
 import java.io.ByteArrayInputStream;
-
+import java.io.StringReader;
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.transform.sax.SAXSource;
+import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLEventReader;
+import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.TestCase;
-
+import static org.easymock.EasyMock.*;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.oxm.jaxb2.FlightType;
 import org.springframework.oxm.jaxb2.Flights;
+import org.springframework.oxm.mime.MimeContainer;
 import org.springframework.xml.transform.StaxSource;
-
+import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
-import org.xml.sax.XMLReader;
 import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 public class Jaxb2UnmarshallerTest extends TestCase {
@@ -105,6 +109,43 @@ public class Jaxb2UnmarshallerTest extends TestCase {
         StaxSource source = new StaxSource(eventReader);
         Object flights = unmarshaller.unmarshal(source);
         testFlights(flights);
+    }
+
+    public void testMarshalAttachments() throws Exception {
+        unmarshaller = new Jaxb2Marshaller();
+        unmarshaller.setClassesToBeBound(new Class[]{BinaryObject.class});
+        unmarshaller.afterPropertiesSet();
+        MimeContainer mimeContainer = createMock(MimeContainer.class);
+
+        Resource logo = new ClassPathResource("spring-ws.png", getClass());
+        DataHandler dataHandler = new DataHandler(new FileDataSource(logo.getFile()));
+
+        expect(mimeContainer.isXopPackage()).andReturn(true);
+        expect(mimeContainer.getAttachment(
+                "cid:6b76528d-7a9c-4def-8e13-095ab89e9bb7@http://springframework.org/spring-ws"))
+                .andReturn(dataHandler);
+        expect(mimeContainer.getAttachment(
+                "cid:99bd1592-0521-41a2-9688-a8bfb40192fb@http://springframework.org/spring-ws"))
+                .andReturn(dataHandler);
+        expect(mimeContainer.getAttachment("696cfb9a-4d2d-402f-bb5c-59fa69e7f0b3@spring-ws.png"))
+                .andReturn(dataHandler);
+        replay(mimeContainer);
+        String content = "<binaryObject xmlns='http://springframework.org/spring-ws'>" + "<bytes>" +
+                "<xop:Include href='cid:6b76528d-7a9c-4def-8e13-095ab89e9bb7@http://springframework.org/spring-ws' xmlns:xop='http://www.w3.org/2004/08/xop/include'/>" +
+                "</bytes>" + "<dataHandler>" +
+                "<xop:Include href='cid:99bd1592-0521-41a2-9688-a8bfb40192fb@http://springframework.org/spring-ws' xmlns:xop='http://www.w3.org/2004/08/xop/include'/>" +
+                "</dataHandler>" +
+                "<swaDataHandler>696cfb9a-4d2d-402f-bb5c-59fa69e7f0b3@spring-ws.png</swaDataHandler>" +
+                "</binaryObject>";
+
+        Source source = new StringSource(content);
+        Object result = unmarshaller.unmarshal(source, mimeContainer);
+        assertTrue("Result is not a BinaryObject", result instanceof BinaryObject);
+        verify(mimeContainer);
+        BinaryObject object = (BinaryObject) result;
+        assertNotNull("bytes property not set", object.getBytes());
+        assertTrue("bytes property not set", object.getBytes().length > 0);
+        assertNotNull("datahandler property not set", object.getSwaDataHandler());
     }
 
     private void testFlights(Object o) {
