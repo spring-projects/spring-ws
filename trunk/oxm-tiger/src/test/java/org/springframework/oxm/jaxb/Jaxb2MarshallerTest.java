@@ -19,6 +19,8 @@ package org.springframework.oxm.jaxb;
 import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
 import java.util.Collections;
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.xml.bind.JAXBElement;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -31,15 +33,22 @@ import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamResult;
 
 import org.custommonkey.xmlunit.XMLTestCase;
-import org.easymock.MockControl;
+import static org.easymock.EasyMock.*;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.oxm.jaxb2.FlightType;
 import org.springframework.oxm.jaxb2.Flights;
+import org.springframework.oxm.mime.MimeContainer;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.xml.transform.StaxResult;
+import org.springframework.xml.transform.StringResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
+import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
+import org.xml.sax.Locator;
 
 public class Jaxb2MarshallerTest extends XMLTestCase {
 
@@ -159,34 +168,53 @@ public class Jaxb2MarshallerTest extends XMLTestCase {
     }
 
     public void testMarshalSaxResult() throws Exception {
-        MockControl handlerControl = MockControl.createStrictControl(ContentHandler.class);
-        ContentHandler handlerMock = (ContentHandler) handlerControl.getMock();
-        handlerMock.setDocumentLocator(null);
-        handlerControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        ContentHandler handlerMock = createStrictMock(ContentHandler.class);
+        handlerMock.setDocumentLocator(isA(Locator.class));
         handlerMock.startDocument();
         handlerMock.startPrefixMapping("", "http://samples.springframework.org/flight");
-        handlerMock.startElement("http://samples.springframework.org/flight", "flights", "flights", null);
-        handlerControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        handlerMock.startElement("http://samples.springframework.org/flight", "flight", "flight", null);
-        handlerControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        handlerMock.startElement("http://samples.springframework.org/flight", "number", "number", null);
-        handlerControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        handlerMock.characters(new char[]{'4', '2'}, 0, 2);
-        handlerControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        handlerMock.startElement(eq("http://samples.springframework.org/flight"), eq("flights"), eq("flights"),
+                isA(Attributes.class));
+        handlerMock.startElement(eq("http://samples.springframework.org/flight"), eq("flight"), eq("flight"),
+                isA(Attributes.class));
+        handlerMock.startElement(eq("http://samples.springframework.org/flight"), eq("number"), eq("number"),
+                isA(Attributes.class));
+        handlerMock.characters(isA(char[].class), eq(0), eq(2));
         handlerMock.endElement("http://samples.springframework.org/flight", "number", "number");
         handlerMock.endElement("http://samples.springframework.org/flight", "flight", "flight");
         handlerMock.endElement("http://samples.springframework.org/flight", "flights", "flights");
         handlerMock.endPrefixMapping("");
         handlerMock.endDocument();
+        replay(handlerMock);
 
-        handlerControl.replay();
         SAXResult result = new SAXResult(handlerMock);
         marshaller.marshal(flights, result);
-        handlerControl.verify();
+        verify(handlerMock);
     }
 
     public void testSupports() throws Exception {
         assertTrue("Jaxb2Marshaller does not support Flights", marshaller.supports(Flights.class));
         assertTrue("Jaxb2Marshaller does not support JAXBElement", marshaller.supports(JAXBElement.class));
+    }
+
+    public void testMarshalAttachments() throws Exception {
+        marshaller = new Jaxb2Marshaller();
+        marshaller.setClassesToBeBound(new Class[]{BinaryObject.class});
+        marshaller.afterPropertiesSet();
+        MimeContainer mimeContainer = createMock(MimeContainer.class);
+
+        Resource logo = new ClassPathResource("spring-ws.png", getClass());
+        DataHandler dataHandler = new DataHandler(new FileDataSource(logo.getFile()));
+
+        expect(mimeContainer.isXopPackage()).andReturn(true);
+        mimeContainer.addAttachment(isA(String.class), isA(DataHandler.class));
+        expectLastCall().times(3);
+
+        replay(mimeContainer);
+        byte[] bytes = FileCopyUtils.copyToByteArray(logo.getInputStream());
+        BinaryObject object = new BinaryObject(bytes, dataHandler);
+        Result result = new StringResult();
+        marshaller.marshal(object, result, mimeContainer);
+        verify(mimeContainer);
+        assertTrue("No XML written", result.toString().length() > 0);
     }
 }
