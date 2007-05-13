@@ -19,6 +19,7 @@ package org.springframework.ws.client.core;
 import junit.framework.TestCase;
 import org.easymock.MockControl;
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.client.WebServiceFaultException;
 
 public class SimpleFaultResolverTest extends TestCase {
 

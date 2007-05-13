@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.client.core;
+package org.springframework.ws.client;
 
-import org.springframework.ws.client.WebServiceClientException;
+import javax.xml.transform.TransformerException;
 
 /**
- * Thrown by <code>SimpleFaultResolver</code> when the response message has a fault.
+ * Exception thrown whenever an transformation error occurs on the client-side.
  *
  * @author Arjen Poutsma
  */
-public class WebServiceFaultException extends WebServiceClientException {
+public class WebServiceTransformerException extends WebServiceClientException {
 
-    public WebServiceFaultException(String msg) {
+    public WebServiceTransformerException(String msg) {
         super(msg);
     }
 
-    public WebServiceFaultException(String msg, Throwable ex) {
+    public WebServiceTransformerException(String msg, TransformerException ex) {
         super(msg, ex);
     }
 }

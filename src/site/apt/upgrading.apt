@@ -15,6 +15,11 @@ Upgrading from version 1.0-M3 to 1.0-RC1
     * Methods for getting and adding attachments were taken from <<<SoapMessage>> and extraced into a new interface:
     <<<MimeMessage>>>. Adding a method requires a content id now.
 
+* WebServiceTemplate
+
+    The <<<WebServiceTemplate>> no longer declares an IOException for each method. Rather, an runtime exception
+    hierarchy has been created in <<<org.springframework.ws.client>>>.
+     
 Upgrading from version 1.0-M2 to 1.0-M3
 
 	Several changes were made between version 1.0 Milestone 2 and Milestone 3 of the project. These changes increased 

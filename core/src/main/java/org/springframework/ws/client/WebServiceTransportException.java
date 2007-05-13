@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.client.core;
+package org.springframework.ws.client;
 
-import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.client.WebServiceFaultException;
+import org.springframework.ws.transport.TransportException;
 
 /**
- * Simple fault resolver that simply throws a {@link org.springframework.ws.client.WebServiceFaultException} when a
- * fault occurs.
+ * Exception thrown whenever an transport error occurs on the client-side.
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.client.WebServiceFaultException
  */
-public class SimpleFaultResolver implements FaultResolver {
+public class WebServiceTransportException extends WebServiceIOException {
 
-    /** Throws a new <code>WebServiceFaultException</code>. */
-    public void resolveFault(WebServiceMessage message) {
-        throw new WebServiceFaultException(message.getFaultReason());
+    public WebServiceTransportException(String msg) {
+        super(msg);
+    }
+
+    public WebServiceTransportException(String msg, TransportException ex) {
+        super(msg, ex);
     }
 }

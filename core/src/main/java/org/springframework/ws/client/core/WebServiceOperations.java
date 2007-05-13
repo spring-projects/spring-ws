@@ -16,9 +16,11 @@
 
 package org.springframework.ws.client.core;
 
-import java.io.IOException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
+
+import org.springframework.oxm.GenericMarshallingFailureException;
+import org.springframework.ws.client.WebServiceClientException;
 
 /**
  * Specifies a basic set of Web service operations. Implemented by {@link WebServiceTemplate}. Not often used directly,
@@ -35,11 +37,14 @@ public interface WebServiceOperations {
      *
      * @param requestPayload the object to marshal into the request message payload
      * @return the unmarshalled payload of the response message, or <code>null</code> if no response is given
-     * @throws IOException in case of I/O errors
+     * @throws GenericMarshallingFailureException
+     *                                   if there is a problem marshalling or unmarshalling
+     * @throws WebServiceClientException if there is a problem sending or receiving the message
      * @see WebServiceTemplate#setMarshaller(org.springframework.oxm.Marshaller)
      * @see WebServiceTemplate#setUnmarshaller(org.springframework.oxm.Unmarshaller)
      */
-    Object marshalSendAndReceive(Object requestPayload) throws IOException;
+    Object marshalSendAndReceive(Object requestPayload)
+            throws GenericMarshallingFailureException, WebServiceClientException;
 
     /**
      * Sends a web service message that contains the given payload, marshalled by the configured
@@ -49,11 +54,14 @@ public interface WebServiceOperations {
      * @param requestPayload  the object to marshal into the request message payload
      * @param requestCallback callback to change message, can be <code>null</code>
      * @return the unmarshalled payload of the response message, or <code>null</code> if no response is given
-     * @throws IOException in case of I/O errors
+     * @throws GenericMarshallingFailureException
+     *                                   if there is a problem marshalling or unmarshalling
+     * @throws WebServiceClientException if there is a problem sending or receiving the message
      * @see WebServiceTemplate#setMarshaller(org.springframework.oxm.Marshaller)
      * @see WebServiceTemplate#setUnmarshaller(org.springframework.oxm.Unmarshaller)
      */
-    Object marshalSendAndReceive(Object requestPayload, WebServiceMessageCallback requestCallback) throws IOException;
+    Object marshalSendAndReceive(Object requestPayload, WebServiceMessageCallback requestCallback)
+            throws GenericMarshallingFailureException, WebServiceClientException;
 
     /**
      * Sends a web service message that contains the given payload, reading the result with a
@@ -62,8 +70,9 @@ public interface WebServiceOperations {
      * @param requestPayload    the payload of the request message
      * @param responseExtractor object that will extract results
      * @return an arbitrary result object, as returned by the <code>SourceExtractor</code>
+     * @throws WebServiceClientException if there is a problem sending or receiving the message
      */
-    Object sendAndReceive(Source requestPayload, SourceExtractor responseExtractor) throws IOException;
+    Object sendAndReceive(Source requestPayload, SourceExtractor responseExtractor) throws WebServiceClientException;
 
     /**
      * Sends a web service message that contains the given payload, reading the result with a
@@ -75,10 +84,11 @@ public interface WebServiceOperations {
      * @param requestCallback   callback to change message, can be <code>null</code>
      * @param responseExtractor object that will extract results
      * @return an arbitrary result object, as returned by the <code>SourceExtractor</code>
+     * @throws WebServiceClientException if there is a problem sending or receiving the message
      */
     Object sendAndReceive(Source requestPayload,
                           WebServiceMessageCallback requestCallback,
-                          SourceExtractor responseExtractor) throws IOException;
+                          SourceExtractor responseExtractor) throws WebServiceClientException;
 
     /**
      * Sends a web service message that contains the given payload. Writes the response, if any, to the given
@@ -86,9 +96,9 @@ public interface WebServiceOperations {
      *
      * @param requestPayload the payload of the request message
      * @param responseResult the result to write the response payload to
-     * @throws IOException in case of I/O errors
+     * @throws WebServiceClientException if there is a problem sending or receiving the message
      */
-    void sendAndReceive(Source requestPayload, Result responseResult) throws IOException;
+    void sendAndReceive(Source requestPayload, Result responseResult) throws WebServiceClientException;
 
     /**
      * Sends a web service message that contains the given payload. Writes the response, if any, to the given
@@ -99,10 +109,10 @@ public interface WebServiceOperations {
      * @param requestPayload  the payload of the request message
      * @param requestCallback callback to change message, can be <code>null</code>
      * @param responseResult  the result to write the response payload to
-     * @throws IOException in case of I/O errors
+     * @throws WebServiceClientException if there is a problem sending or receiving the message
      */
     void sendAndReceive(Source requestPayload, WebServiceMessageCallback requestCallback, Result responseResult)
-            throws IOException;
+            throws WebServiceClientException;
 
     /**
      * Sends a web service message that can be manipulated with the given callback, reading the result with a
@@ -111,10 +121,10 @@ public interface WebServiceOperations {
      * @param requestCallback   the requestCallback to be used for manipulating the request message
      * @param responseExtractor object that will extract results
      * @return an arbitrary result object, as returned by the <code>WebServiceMessageExtractor</code>
-     * @throws IOException in case of I/O errors
+     * @throws WebServiceClientException if there is a problem sending or receiving the message
      */
     Object sendAndReceive(WebServiceMessageCallback requestCallback, WebServiceMessageExtractor responseExtractor)
-            throws IOException;
+            throws WebServiceClientException;
 
     /**
      * Sends a web service message that can be manipulated with the given callback, reading the result with a
@@ -122,8 +132,8 @@ public interface WebServiceOperations {
      *
      * @param requestCallback  the callback to be used for manipulating the request message
      * @param responseCallback the callback to be used for manipulating the response message
-     * @throws IOException in case of I/O errors
+     * @throws WebServiceClientException if there is a problem sending or receiving the message
      */
     void sendAndReceive(WebServiceMessageCallback requestCallback, WebServiceMessageCallback responseCallback)
-            throws IOException;
+            throws WebServiceClientException;
 }
