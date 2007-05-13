@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.Locale;
-import javax.activation.DataSource;
+import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.Detail;
@@ -149,7 +149,7 @@ public interface SaajImplementation {
     Iterator getAttachment(SOAPMessage message, MimeHeaders mimeHeaders);
 
     /** Adds an attachment to the given message. */
-    AttachmentPart addAttachmentPart(SOAPMessage message, DataSource dataSource);
+    AttachmentPart addAttachmentPart(SOAPMessage message, DataHandler dataHandler);
 
     /** Adds a not understood header element to the given header. */
     SOAPHeaderElement addNotUnderstoodHeaderElement(SOAPHeader header, QName name) throws SOAPException;

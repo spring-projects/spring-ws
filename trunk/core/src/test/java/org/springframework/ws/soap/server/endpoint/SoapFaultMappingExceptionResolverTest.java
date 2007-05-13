@@ -27,6 +27,7 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapMessageException;
+import org.springframework.ws.soap.SoapMessageFactory;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
@@ -37,12 +38,8 @@ public class SoapFaultMappingExceptionResolverTest extends XMLTestCase {
 
     private SoapFaultMappingExceptionResolver resolver;
 
-    private SaajSoapMessageFactory factory;
-
     protected void setUp() throws Exception {
         resolver = new SoapFaultMappingExceptionResolver();
-        factory = new SaajSoapMessageFactory();
-
     }
 
     public void testGetDepth() throws Exception {
@@ -61,8 +58,7 @@ public class SoapFaultMappingExceptionResolverTest extends XMLTestCase {
 
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
         SOAPMessage message = messageFactory.createMessage();
-        factory.setSoapProtocol(SOAPConstants.SOAP_1_1_PROTOCOL);
-        factory.afterPropertiesSet();
+        SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
         MessageContext context = new DefaultMessageContext(new SaajSoapMessage(message), factory);
 
         boolean result = resolver.resolveException(context, null, new IllegalArgumentException("bla"));
@@ -85,8 +81,7 @@ public class SoapFaultMappingExceptionResolverTest extends XMLTestCase {
 
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
         SOAPMessage message = messageFactory.createMessage();
-        factory.setSoapProtocol(SOAPConstants.SOAP_1_2_PROTOCOL);
-        factory.afterPropertiesSet();
+        SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
         MessageContext context = new DefaultMessageContext(new SaajSoapMessage(message), factory);
 
         boolean result = resolver.resolveException(context, null, new IllegalArgumentException("bla"));
@@ -109,8 +104,7 @@ public class SoapFaultMappingExceptionResolverTest extends XMLTestCase {
 
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
         SOAPMessage message = messageFactory.createMessage();
-        factory.setSoapProtocol(SOAPConstants.SOAP_1_1_PROTOCOL);
-        factory.afterPropertiesSet();
+        SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
         MessageContext context = new DefaultMessageContext(new SaajSoapMessage(message), factory);
 
         boolean result = resolver.resolveException(context, null, new IllegalArgumentException("bla"));
@@ -133,8 +127,7 @@ public class SoapFaultMappingExceptionResolverTest extends XMLTestCase {
 
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
         SOAPMessage message = messageFactory.createMessage();
-        factory.setSoapProtocol(SOAPConstants.SOAP_1_2_PROTOCOL);
-        factory.afterPropertiesSet();
+        SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
         MessageContext context = new DefaultMessageContext(new SaajSoapMessage(message), factory);
 
         boolean result = resolver.resolveException(context, null, new IllegalArgumentException("bla"));
@@ -159,8 +152,7 @@ public class SoapFaultMappingExceptionResolverTest extends XMLTestCase {
         resolver.setDefaultFault(defaultFault);
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
         SOAPMessage message = messageFactory.createMessage();
-        factory.setSoapProtocol(SOAPConstants.SOAP_1_1_PROTOCOL);
-        factory.afterPropertiesSet();
+        SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
         MessageContext context = new DefaultMessageContext(new SaajSoapMessage(message), factory);
 
         boolean result = resolver.resolveException(context, null, new IllegalArgumentException("bla"));

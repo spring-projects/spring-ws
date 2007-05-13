@@ -28,11 +28,4 @@ public class AxiomSoap12MessageTest extends AbstractSoap12MessageTestCase {
         return new AxiomSoapMessage(axiomFactory);
     }
 
-    public void testAttachments() throws Exception {
-        // Attachments not supported
-    }
-
-    public void testWriteToTransportResponseAttachment() throws Exception {
-        // Attachments not supported
-    }
 }

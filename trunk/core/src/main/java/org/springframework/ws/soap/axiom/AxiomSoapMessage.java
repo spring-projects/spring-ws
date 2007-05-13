@@ -16,9 +16,7 @@
 
 package org.springframework.ws.soap.axiom;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
 import javax.activation.DataHandler;
@@ -27,24 +25,22 @@ import javax.xml.stream.XMLStreamException;
 import org.apache.axiom.attachments.Attachments;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMOutputFormat;
+import org.apache.axiom.om.impl.MTOMConstants;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPMessage;
 import org.apache.axiom.soap.SOAPProcessingException;
-import org.springframework.core.io.InputStreamSource;
 import org.springframework.util.Assert;
+import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.AbstractSoapMessage;
-import org.springframework.ws.soap.Attachment;
 import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.transport.TransportOutputStream;
 
 /**
- * AXIOM-specific implementation of the {@link SoapMessage} interface. Created via the {@link AxiomSoapMessageFactory}.
- * <p/>
- * Note that Axiom does support reading SOAP with Attachments (SwA) messages, but does not support creating them
- * manually. Hence, the <code>addAttachment</code> methods throw an <code>UnsupportedOperationException</code>.
+ * AXIOM-specific implementation of the {@link SoapMessage} interface. Created via the {@link AxiomSoapMessageFactory},
+ * wraps a {@link SOAPMessage}.
  *
  * @author Arjen Poutsma
  * @see SOAPMessage
@@ -72,7 +68,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         SOAPEnvelope soapEnvelope = soapFactory.getDefaultEnvelope();
         axiomFactory = soapFactory;
         axiomMessage = axiomFactory.createSOAPMessage(soapEnvelope, soapEnvelope.getBuilder());
-        attachments = null;
+        attachments = new Attachments();
         payloadCaching = true;
         soapAction = "";
     }
@@ -87,7 +83,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
     public AxiomSoapMessage(SOAPMessage soapMessage, String soapAction, boolean payloadCaching) {
         axiomMessage = soapMessage;
         axiomFactory = (SOAPFactory) soapMessage.getSOAPEnvelope().getOMFactory();
-        attachments = null;
+        this.attachments = new Attachments();
         this.soapAction = soapAction;
         this.payloadCaching = payloadCaching;
     }
@@ -141,6 +137,16 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         }
     }
 
+    public boolean isXopPackage() {
+        try {
+            return MTOMConstants.MTOM_TYPE.equals(attachments.getAttachmentSpecType());
+        }
+        catch (NullPointerException ex) {
+            // gotta love Axis2
+            return false;
+        }
+    }
+
     public Attachment getAttachment(String contentId) {
         DataHandler dataHandler = attachments.getDataHandler(contentId);
         return dataHandler != null ? new AxiomAttachment(contentId, dataHandler) : null;
@@ -150,23 +156,11 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         return new AxiomAttachmentIterator();
     }
 
-    /**
-     * Axiom does not support adding attachments manually.
-     *
-     * @throws UnsupportedOperationException always
-     */
-    public Attachment addAttachment(File file) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("Axiom does not support adding SwA attachments.");
-    }
-
-    /**
-     * Axiom does not support adding attachments manually.
-     *
-     * @throws UnsupportedOperationException always
-     */
-    public Attachment addAttachment(InputStreamSource inputStreamSource, String contentType)
-            throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("Axiom does not support adding SwA attachments.");
+    public Attachment addAttachment(String contentId, DataHandler dataHandler) {
+        Assert.hasLength(contentId, "contentId must not be empty");
+        Assert.notNull(dataHandler, "dataHandler must not be null");
+        attachments.addDataHandler(contentId, dataHandler);
+        return new AxiomAttachment(contentId, dataHandler);
     }
 
     public void writeTo(OutputStream outputStream) throws IOException {
@@ -176,6 +170,9 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
             OMOutputFormat format = new OMOutputFormat();
             format.setCharSetEncoding(charsetEncoding);
             format.setSOAP11(getVersion() == SoapVersion.SOAP_11);
+            if (!attachments.getContentIDSet().isEmpty()) {
+                format.setDoingSWA(true);
+            }
             if (outputStream instanceof TransportOutputStream) {
                 TransportOutputStream transportOutputStream = (TransportOutputStream) outputStream;
                 String contentType = format.getContentType();
@@ -191,41 +188,6 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         }
         catch (OMException ex) {
             throw new AxiomSoapMessageException("Could not write message to OutputStream: " + ex.getMessage(), ex);
-        }
-    }
-
-    /** Axiom-specific implementation of <code>org.springframework.ws.soap.Attachment</code> */
-    private static class AxiomAttachment implements Attachment {
-
-        private final DataHandler dataHandler;
-
-        private final String contentId;
-
-        public AxiomAttachment(String contentId, DataHandler dataHandler) {
-            Assert.notNull(contentId, "contentId must not be null");
-            Assert.notNull(dataHandler, "dataHandler must not be null");
-            this.contentId = contentId;
-            this.dataHandler = dataHandler;
-        }
-
-        public String getId() {
-            return contentId;
-        }
-
-        public void setId(String id) {
-            throw new UnsupportedOperationException("Axiom does not support setting the Content-ID of attachments.");
-        }
-
-        public String getContentType() {
-            return dataHandler.getContentType();
-        }
-
-        public InputStream getInputStream() throws IOException {
-            return dataHandler.getInputStream();
-        }
-
-        public long getSize() {
-            throw new UnsupportedOperationException("Axiom does not support getting the size of attachments.");
         }
     }
 

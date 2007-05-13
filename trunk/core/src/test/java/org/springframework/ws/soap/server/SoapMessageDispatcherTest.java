@@ -33,6 +33,7 @@ import org.springframework.ws.soap.SoapEndpointInterceptor;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.SoapMessageFactory;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.soap11.Soap11Fault;
@@ -46,13 +47,10 @@ public class SoapMessageDispatcherTest extends TestCase {
 
     private SoapEndpointInterceptor interceptorMock;
 
-    private SaajSoapMessageFactory factory;
-
     protected void setUp() throws Exception {
         interceptorControl = MockControl.createControl(SoapEndpointInterceptor.class);
         interceptorMock = (SoapEndpointInterceptor) interceptorControl.getMock();
         dispatcher = new SoapMessageDispatcher();
-        factory = new SaajSoapMessageFactory();
     }
 
     public void testProcessMustUnderstandHeadersUnderstoodSoap11() throws Exception {
@@ -62,8 +60,7 @@ public class SoapMessageDispatcherTest extends TestCase {
                 request.getSOAPHeader().addHeaderElement(new QName("http://www.springframework.org", "Header"));
         header.setActor(SOAPConstants.URI_SOAP_ACTOR_NEXT);
         header.setMustUnderstand(true);
-        factory.setSoapProtocol(SOAPConstants.SOAP_1_1_PROTOCOL);
-        factory.afterPropertiesSet();
+        SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
         MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
         interceptorMock.understands(null);
         interceptorControl.setMatcher(MockControl.ALWAYS_MATCHER);
@@ -85,8 +82,7 @@ public class SoapMessageDispatcherTest extends TestCase {
                 request.getSOAPHeader().addHeaderElement(new QName("http://www.springframework.org", "Header"));
         header.setMustUnderstand(true);
         header.setRole(SOAPConstants.URI_SOAP_1_2_ROLE_NEXT);
-        factory.setSoapProtocol(SOAPConstants.SOAP_1_2_PROTOCOL);
-        factory.afterPropertiesSet();
+        SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
         MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
         interceptorMock.understands(null);
         interceptorControl.setMatcher(MockControl.ALWAYS_MATCHER);
@@ -108,8 +104,7 @@ public class SoapMessageDispatcherTest extends TestCase {
                 .addHeaderElement(new QName("http://www.springframework.org", "Header", "spring-ws"));
         header.setActor(SOAPConstants.URI_SOAP_ACTOR_NEXT);
         header.setMustUnderstand(true);
-        factory.setSoapProtocol(SOAPConstants.SOAP_1_1_PROTOCOL);
-        factory.afterPropertiesSet();
+        SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
         MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
         interceptorMock.understands(null);
         interceptorControl.setMatcher(MockControl.ALWAYS_MATCHER);
@@ -141,8 +136,7 @@ public class SoapMessageDispatcherTest extends TestCase {
                 .addHeaderElement(new QName("http://www.springframework.org", "Header", "spring-ws"));
         header.setMustUnderstand(true);
         header.setRole(SOAPConstants.URI_SOAP_1_2_ROLE_NEXT);
-        factory.setSoapProtocol(SOAPConstants.SOAP_1_2_PROTOCOL);
-        factory.afterPropertiesSet();
+        SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
         MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
         interceptorMock.understands(null);
         interceptorControl.setMatcher(MockControl.ALWAYS_MATCHER);
@@ -181,8 +175,7 @@ public class SoapMessageDispatcherTest extends TestCase {
         String headerActor = "http://www/springframework.org/role";
         header.setActor(headerActor);
         header.setMustUnderstand(true);
-        factory.setSoapProtocol(SOAPConstants.SOAP_1_1_PROTOCOL);
-        factory.afterPropertiesSet();
+        SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
         MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
         interceptorMock.understands(null);
         interceptorControl.setMatcher(MockControl.ALWAYS_MATCHER);
@@ -205,8 +198,7 @@ public class SoapMessageDispatcherTest extends TestCase {
         String headerRole = "http://www/springframework.org/role";
         header.setRole(headerRole);
         header.setMustUnderstand(true);
-        factory.setSoapProtocol(SOAPConstants.SOAP_1_2_PROTOCOL);
-        factory.afterPropertiesSet();
+        SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
         MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
         interceptorMock.understands(null);
         interceptorControl.setMatcher(MockControl.ALWAYS_MATCHER);
@@ -225,8 +217,7 @@ public class SoapMessageDispatcherTest extends TestCase {
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
         SOAPMessage request = messageFactory.createMessage();
         request.getSOAPHeader().detachNode();
-        factory.setSoapProtocol(SOAPConstants.SOAP_1_1_PROTOCOL);
-        factory.afterPropertiesSet();
+        SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
         MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
         interceptorControl.replay();
 

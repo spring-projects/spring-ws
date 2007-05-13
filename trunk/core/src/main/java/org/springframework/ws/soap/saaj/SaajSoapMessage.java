@@ -16,12 +16,10 @@
 
 package org.springframework.ws.soap.saaj;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
+import javax.activation.DataHandler;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPBody;
@@ -29,29 +27,31 @@ import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.soap.SOAPPart;
 
-import org.springframework.core.io.InputStreamSource;
-import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
+import org.springframework.ws.mime.Attachment;
+import org.springframework.ws.mime.AttachmentException;
 import org.springframework.ws.soap.AbstractSoapMessage;
-import org.springframework.ws.soap.Attachment;
-import org.springframework.ws.soap.AttachmentException;
 import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 
 /**
- * SAAJ-specific implementation of the {@link SoapMessage} interface. Created via the {@link SaajSoapMessageFactory}.
+ * SAAJ-specific implementation of the {@link SoapMessage} interface. Created via the {@link SaajSoapMessageFactory},
+ * wraps a {@link SOAPMessage}.
  *
  * @author Arjen Poutsma
- * @see javax.xml.soap.SOAPMessage
+ * @see SOAPMessage
  */
 public class SaajSoapMessage extends AbstractSoapMessage {
 
     private static final String MIME_HEADER_SOAP_ACTION = "SOAPAction";
 
     private static final String MIME_HEADER_CONTENT_ID = "Content-Id";
+
+    private static final String MIME_HEADER_CONTENT_TYPE = "Content-Type";
 
     private SOAPMessage saajMessage;
 
@@ -112,6 +112,17 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         }
     }
 
+    public boolean isXopPackage() {
+        SOAPPart saajPart = saajMessage.getSOAPPart();
+        String[] contentTypes = saajPart.getMimeHeader(MIME_HEADER_CONTENT_TYPE);
+        for (int i = 0; i < contentTypes.length; i++) {
+            if (contentTypes[i].indexOf("application/xop+xml") != -1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Iterator getAttachments() throws AttachmentException {
         Iterator iterator = getImplementation().getAttachments(getSaajMessage());
         return new SaajAttachmentIterator(iterator);
@@ -134,21 +145,11 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         return new SaajAttachment(saajAttachment);
     }
 
-    public Attachment addAttachment(File file) throws AttachmentException {
-        Assert.notNull(file, "File must not be null");
-        DataSource dataSource = new FileDataSource(file);
-        AttachmentPart attachmentPart = getImplementation().addAttachmentPart(getSaajMessage(), dataSource);
-        return new SaajAttachment(attachmentPart);
-    }
-
-    public Attachment addAttachment(InputStreamSource inputStreamSource, String contentType) {
-        Assert.notNull(inputStreamSource, "InputStreamSource must not be null");
-        if (inputStreamSource instanceof Resource && ((Resource) inputStreamSource).isOpen()) {
-            throw new IllegalArgumentException("Passed-in Resource contains an open stream: invalid argument. " +
-                    "SAAJ requires an InputStreamSource that creates a fresh stream for every call.");
-        }
-        DataSource dataSource = new InputStreamSourceDataSource(inputStreamSource, contentType);
-        AttachmentPart saajAttachment = getImplementation().addAttachmentPart(getSaajMessage(), dataSource);
+    public Attachment addAttachment(String contentId, DataHandler dataHandler) {
+        Assert.hasLength(contentId, "contentId must not be empty");
+        Assert.notNull(dataHandler, "dataHandler must not be null");
+        AttachmentPart saajAttachment = getImplementation().addAttachmentPart(getSaajMessage(), dataHandler);
+        saajAttachment.setContentId(contentId);
         return new SaajAttachment(saajAttachment);
     }
 

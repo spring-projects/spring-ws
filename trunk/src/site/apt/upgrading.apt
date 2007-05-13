@@ -1,14 +1,27 @@
                                                        ---------
                                                        Upgrading
                                                        ---------
-                                             
+Upgrading from version 1.0-M3 to 1.0-RC1
+
+	Some minor changes were made between version 1.0 Milestone 3 and Release Candidate 1 of the project. The following
+	should help most users the project update their applications:
+
+* Attachments
+
+    * The <<<Attachment>>> interface was moved from <<org.springframework.ws.soap>> to <<org.springframework.ws.mime>>.
+
+    * The <<<id>>> property on <<<Attachment>> was renamed to <<contentId>>>.
+
+    * Methods for getting and adding attachments were taken from <<<SoapMessage>> and extraced into a new interface:
+    <<<MimeMessage>>>. Adding a method requires a content id now.
+
 Upgrading from version 1.0-M2 to 1.0-M3
 
 	Several changes were made between version 1.0 Milestone 2 and Milestone 3 of the project. These changes increased 
 modularity of the code, enhanced unit testing, made package roles clearer, and added compelling alternatives to
 adapters and using web.xml security constraints to protect HTTP resources.
 
-	Unfortunately, changes to the API and package locations were required. The following should help most casual users 
+	Unfortunately, changes to the API and package locations were required. The following should help most users
 the project update their applications:
 
 

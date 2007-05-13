@@ -19,7 +19,6 @@ package org.springframework.ws.client.core;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Collections;
 
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.easymock.MockControl;
@@ -97,8 +96,8 @@ public class WebServiceTemplateTest extends XMLTestCase {
 
         connectionControl.expectAndReturn(connectionMock.getTransportOutputStream(),
                 new MockTransportOutputStream(new ByteArrayOutputStream()));
-        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(), new MockTransportInputStream(
-                new ByteArrayInputStream("<response/>".getBytes("UTF-8")), Collections.EMPTY_MAP));
+        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(),
+                new MockTransportInputStream(new ByteArrayInputStream("<response/>".getBytes("UTF-8"))));
         connectionControl.expectAndReturn(connectionMock.hasFault(), false);
         connectionMock.close();
         connectionControl.replay();
@@ -156,8 +155,8 @@ public class WebServiceTemplateTest extends XMLTestCase {
 
         connectionControl.expectAndReturn(connectionMock.getTransportOutputStream(),
                 new MockTransportOutputStream(new ByteArrayOutputStream()));
-        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(), new MockTransportInputStream(
-                new ByteArrayInputStream("<response/>".getBytes("UTF-8")), Collections.EMPTY_MAP));
+        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(),
+                new MockTransportInputStream(new ByteArrayInputStream("<response/>".getBytes("UTF-8"))));
         connectionControl.expectAndReturn(connectionMock.hasFault(), true);
         connectionMock.close();
         connectionControl.replay();
@@ -181,8 +180,8 @@ public class WebServiceTemplateTest extends XMLTestCase {
 
         connectionControl.expectAndReturn(connectionMock.getTransportOutputStream(),
                 new MockTransportOutputStream(new ByteArrayOutputStream()));
-        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(), new MockTransportInputStream(
-                new ByteArrayInputStream("<response/>".getBytes("UTF-8")), Collections.EMPTY_MAP));
+        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(),
+                new MockTransportInputStream(new ByteArrayInputStream("<response/>".getBytes("UTF-8"))));
         connectionControl.expectAndReturn(connectionMock.hasFault(), false);
         connectionMock.close();
         connectionControl.replay();
@@ -215,8 +214,8 @@ public class WebServiceTemplateTest extends XMLTestCase {
     public void testSendAndReceiveResultResponse() throws Exception {
         connectionControl.expectAndReturn(connectionMock.getTransportOutputStream(),
                 new MockTransportOutputStream(new ByteArrayOutputStream()));
-        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(), new MockTransportInputStream(
-                new ByteArrayInputStream("<response/>".getBytes("UTF-8")), Collections.EMPTY_MAP));
+        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(),
+                new MockTransportInputStream(new ByteArrayInputStream("<response/>".getBytes("UTF-8"))));
         connectionControl.expectAndReturn(connectionMock.hasFault(), false);
         connectionMock.close();
         connectionControl.replay();
@@ -246,8 +245,8 @@ public class WebServiceTemplateTest extends XMLTestCase {
 
         connectionControl.expectAndReturn(connectionMock.getTransportOutputStream(),
                 new MockTransportOutputStream(new ByteArrayOutputStream()));
-        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(), new MockTransportInputStream(
-                new ByteArrayInputStream("<response/>".getBytes("UTF-8")), Collections.EMPTY_MAP));
+        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(),
+                new MockTransportInputStream(new ByteArrayInputStream("<response/>".getBytes("UTF-8"))));
         connectionControl.expectAndReturn(connectionMock.hasFault(), false);
         connectionMock.close();
         connectionControl.replay();

@@ -51,12 +51,15 @@ public abstract class AbstractSoap12MessageTestCase extends AbstractSoapMessageT
 
     public void testWriteToTransportResponseAttachment() throws Exception {
         InputStreamSource inputStreamSource = new ByteArrayResource("contents".getBytes("UTF-8"));
-        soapMessage.addAttachment(inputStreamSource, "text/plain");
+        soapMessage.addAttachment("contentId", inputStreamSource, "text/plain");
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         MockTransportOutputStream tos = new MockTransportOutputStream(bos);
         soapMessage.writeTo(tos);
         String contentType = (String) tos.getHeaders().get("Content-Type");
-        assertTrue("Invalid Content-Type set", contentType.indexOf(SoapVersion.SOAP_12.getContentType()) != -1);
+        assertTrue("Content-Type for attachment message does not contains multipart/related",
+                contentType.indexOf("multipart/related") != -1);
+        assertTrue("Content-Type for attachment message does not contains type=\"application/soap+xml\"",
+                contentType.indexOf("type=\"application/soap+xml\"") != -1);
     }
 
 

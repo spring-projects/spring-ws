@@ -20,6 +20,7 @@ import java.util.Iterator;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPBodyElement;
+import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -34,7 +35,7 @@ public class SaajSoap11MessageTest extends AbstractSoap11MessageTestCase {
     private SOAPMessage saajMessage;
 
     protected final SoapMessage createSoapMessage() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance();
+        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
         saajMessage = messageFactory.createMessage();
         saajMessage.getSOAPHeader().detachNode();
         return new SaajSoapMessage(saajMessage);

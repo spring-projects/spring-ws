@@ -53,13 +53,5 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
         envelope.serialize(os, format);
         } finally {
             os.close();
-        }
-
-
-
-
-    }
-*/
-
-
+            */
 }
