@@ -151,6 +151,10 @@ public class Saaj13Implementation implements SaajImplementation {
         return element.getAllAttributesAsQNames();
     }
 
+    public Iterator getChildElements(SOAPElement element, QName name) throws SOAPException {
+        return element.getChildElements(name);
+    }
+
     public SOAPEnvelope getEnvelope(SOAPMessage message) throws SOAPException {
         return message.getSOAPPart().getEnvelope();
     }

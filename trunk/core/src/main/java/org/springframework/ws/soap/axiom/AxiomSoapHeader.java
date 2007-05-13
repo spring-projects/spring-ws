@@ -28,6 +28,7 @@ import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axiom.soap.SOAPHeaderBlock;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
+import org.springframework.ws.soap.SoapHeaderException;
 import org.springframework.xml.namespace.QNameUtils;
 
 /**
@@ -73,7 +74,15 @@ class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
         catch (OMException ex) {
             throw new AxiomSoapHeaderException(ex);
         }
+    }
 
+    public Iterator examineHeaderElements(QName name) throws SoapHeaderException {
+        try {
+            return new AxiomSoapHeaderElementIterator(getAxiomHeader().getChildrenWithName(name));
+        }
+        catch (OMException ex) {
+            throw new AxiomSoapHeaderException(ex);
+        }
     }
 
     protected SOAPHeader getAxiomHeader() {
