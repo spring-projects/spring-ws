@@ -6,6 +6,9 @@
     </properties>
     <body>
         <release version="1.0-RC1">
+            <action dev="poutsma" type="fix" issue="SWS-116">Support JAXB's MTOM/XOP/MIME support. As a result, all
+                Mime-related code in SoapMessage has been moved to the org.springframework.ws.mime package
+            </action>
             <action dev="poutsma" type="fix" issue="SWS-115">Client is not able to read long response</action>
             <action dev="poutsma" type="add">Add methods to access attributes on SoapElement</action>
             <action dev="poutsma" type="add">Added XPath template, for evaluating XPaths in a template-like fashion
