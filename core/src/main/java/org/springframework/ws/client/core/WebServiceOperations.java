@@ -19,7 +19,7 @@ package org.springframework.ws.client.core;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
-import org.springframework.oxm.GenericMarshallingFailureException;
+import org.springframework.oxm.XmlMappingException;
 import org.springframework.ws.client.WebServiceClientException;
 
 /**
@@ -37,14 +37,12 @@ public interface WebServiceOperations {
      *
      * @param requestPayload the object to marshal into the request message payload
      * @return the unmarshalled payload of the response message, or <code>null</code> if no response is given
-     * @throws GenericMarshallingFailureException
-     *                                   if there is a problem marshalling or unmarshalling
+     * @throws XmlMappingException       if there is a problem marshalling or unmarshalling
      * @throws WebServiceClientException if there is a problem sending or receiving the message
      * @see WebServiceTemplate#setMarshaller(org.springframework.oxm.Marshaller)
      * @see WebServiceTemplate#setUnmarshaller(org.springframework.oxm.Unmarshaller)
      */
-    Object marshalSendAndReceive(Object requestPayload)
-            throws GenericMarshallingFailureException, WebServiceClientException;
+    Object marshalSendAndReceive(Object requestPayload) throws XmlMappingException, WebServiceClientException;
 
     /**
      * Sends a web service message that contains the given payload, marshalled by the configured
@@ -54,14 +52,13 @@ public interface WebServiceOperations {
      * @param requestPayload  the object to marshal into the request message payload
      * @param requestCallback callback to change message, can be <code>null</code>
      * @return the unmarshalled payload of the response message, or <code>null</code> if no response is given
-     * @throws GenericMarshallingFailureException
-     *                                   if there is a problem marshalling or unmarshalling
+     * @throws XmlMappingException       if there is a problem marshalling or unmarshalling
      * @throws WebServiceClientException if there is a problem sending or receiving the message
      * @see WebServiceTemplate#setMarshaller(org.springframework.oxm.Marshaller)
      * @see WebServiceTemplate#setUnmarshaller(org.springframework.oxm.Unmarshaller)
      */
     Object marshalSendAndReceive(Object requestPayload, WebServiceMessageCallback requestCallback)
-            throws GenericMarshallingFailureException, WebServiceClientException;
+            throws XmlMappingException, WebServiceClientException;
 
     /**
      * Sends a web service message that contains the given payload, reading the result with a
