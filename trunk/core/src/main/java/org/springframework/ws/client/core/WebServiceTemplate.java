@@ -36,10 +36,13 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
-import org.springframework.ws.client.WebServiceClientException;
+import org.springframework.ws.client.WebServiceIOException;
+import org.springframework.ws.client.WebServiceTransformerException;
+import org.springframework.ws.client.WebServiceTransportException;
 import org.springframework.ws.client.support.WebServiceAccessor;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
+import org.springframework.ws.transport.TransportException;
 import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.ws.transport.TransportOutputStream;
 import org.springframework.ws.transport.WebServiceConnection;
@@ -144,12 +147,11 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     * Marshalling methods
     */
 
-    public Object marshalSendAndReceive(final Object requestPayload) throws IOException {
+    public Object marshalSendAndReceive(final Object requestPayload) {
         return marshalSendAndReceive(requestPayload, null);
     }
 
-    public Object marshalSendAndReceive(final Object requestPayload, final WebServiceMessageCallback requestCallback)
-            throws IOException {
+    public Object marshalSendAndReceive(final Object requestPayload, final WebServiceMessageCallback requestCallback) {
         if (getMarshaller() == null) {
             throw new IllegalStateException("No marshaller registered. Check configuration of WebServiceTemplate.");
         }
@@ -176,13 +178,13 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     * Result-handling methods
     */
 
-    public void sendAndReceive(Source requestPayload, Result responseResult) throws IOException {
+    public void sendAndReceive(Source requestPayload, Result responseResult) {
         sendAndReceive(requestPayload, null, responseResult);
     }
 
     public void sendAndReceive(Source requestPayload,
                                WebServiceMessageCallback requestCallback,
-                               final Result responseResult) throws IOException {
+                               final Result responseResult) {
         try {
             final Transformer transformer = createTransformer();
             doSendAndReceive(transformer, requestPayload, requestCallback, new SourceExtractor() {
@@ -192,14 +194,14 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                         transformer.transform(source, responseResult);
                     }
                     catch (TransformerException ex) {
-                        throw new WebServiceClientException("Could not transform payload", ex);
+                        throw new WebServiceTransformerException("Could not transform payload", ex);
                     }
                     return null;
                 }
             });
         }
-        catch (TransformerException ex) {
-            throw new WebServiceClientException("Could not create transformer", ex);
+        catch (TransformerConfigurationException ex) {
+            throw new WebServiceTransformerException("Could not create transformer", ex);
         }
     }
 
@@ -207,27 +209,26 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     * Source-handling methods
     */
 
-    public Object sendAndReceive(final Source requestPayload, final SourceExtractor responseExtractor)
-            throws IOException {
+    public Object sendAndReceive(final Source requestPayload, final SourceExtractor responseExtractor) {
         return sendAndReceive(requestPayload, null, responseExtractor);
     }
 
     public Object sendAndReceive(final Source requestPayload,
                                  final WebServiceMessageCallback requestCallback,
-                                 final SourceExtractor responseExtractor) throws IOException {
+                                 final SourceExtractor responseExtractor) {
 
         try {
             return doSendAndReceive(createTransformer(), requestPayload, requestCallback, responseExtractor);
         }
         catch (TransformerConfigurationException ex) {
-            throw new WebServiceClientException("Could not create transformer", ex);
+            throw new WebServiceTransformerException("Could not create transformer", ex);
         }
     }
 
     private Object doSendAndReceive(final Transformer transformer,
                                     final Source requestPayload,
                                     final WebServiceMessageCallback requestCallback,
-                                    final SourceExtractor responseExtractor) throws IOException {
+                                    final SourceExtractor responseExtractor) {
         Assert.notNull(responseExtractor, "responseExtractor must not be null");
         return sendAndReceive(new WebServiceMessageCallback() {
             public void doInMessage(WebServiceMessage message) throws IOException {
@@ -238,7 +239,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                     }
                 }
                 catch (TransformerException ex) {
-                    throw new WebServiceClientException("Could not transform payload to request message", ex);
+                    throw new WebServiceTransformerException("Could not transform payload to request message", ex);
                 }
             }
         }, new SourceExtractorMessageExtractor(responseExtractor));
@@ -248,18 +249,18 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     * WebServiceMessage-handling methods
     */
 
-    public void sendAndReceive(WebServiceMessageCallback requestCallback, WebServiceMessageCallback responseCallback)
-            throws IOException {
+    public void sendAndReceive(WebServiceMessageCallback requestCallback, WebServiceMessageCallback responseCallback) {
         Assert.notNull(responseCallback, "responseCallback must not be null");
         sendAndReceive(requestCallback, new WebServiceMessageCallbackMessageExtractor(responseCallback));
     }
 
     public Object sendAndReceive(WebServiceMessageCallback requestCallback,
-                                 WebServiceMessageExtractor responseExtractor) throws IOException {
+                                 WebServiceMessageExtractor responseExtractor) {
         Assert.notNull(responseExtractor, "response extractor must not be null");
         MessageContext messageContext = createMessageContext();
-        WebServiceConnection connection = getMessageSender().createConnection();
+        WebServiceConnection connection = null;
         try {
+            connection = getMessageSender().createConnection();
             WebServiceMessage request = messageContext.getRequest();
             if (requestCallback != null) {
                 requestCallback.doInMessage(request);
@@ -287,8 +288,21 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
             }
             return null;
         }
+        catch (TransportException ex) {
+            throw new WebServiceTransportException("Could not use transport: " + ex.getMessage(), ex);
+        }
+        catch (IOException ex) {
+            throw new WebServiceIOException("I/O error: " + ex.getMessage(), ex);
+        }
         finally {
-            connection.close();
+            if (connection != null) {
+                try {
+                    connection.close();
+                }
+                catch (IOException ex) {
+                    logger.debug("Could not close WebServiceConnection", ex);
+                }
+            }
         }
     }
 

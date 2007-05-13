@@ -14,22 +14,20 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.client.core;
-
-import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.client.WebServiceFaultException;
+package org.springframework.ws.client;
 
 /**
- * Simple fault resolver that simply throws a {@link org.springframework.ws.client.WebServiceFaultException} when a
- * fault occurs.
+ * Thrown by <code>SimpleFaultResolver</code> when the response message has a fault.
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.client.WebServiceFaultException
  */
-public class SimpleFaultResolver implements FaultResolver {
+public class WebServiceFaultException extends WebServiceClientException {
 
-    /** Throws a new <code>WebServiceFaultException</code>. */
-    public void resolveFault(WebServiceMessage message) {
-        throw new WebServiceFaultException(message.getFaultReason());
+    public WebServiceFaultException(String msg) {
+        super(msg);
+    }
+
+    public WebServiceFaultException(String msg, Throwable ex) {
+        super(msg, ex);
     }
 }

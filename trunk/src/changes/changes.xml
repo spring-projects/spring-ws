@@ -6,6 +6,9 @@
     </properties>
     <body>
         <release version="1.0-RC1">
+            <action dev="poutsma" type="fix" issue="SWS-119">Remove IOExceptions from WebServiceTemplate. A runtime
+                exception hierarchy has been created in org.springframework.ws.client.
+            </action>
             <action dev="poutsma" type="fix" issue="SWS-116">Support JAXB's MTOM/XOP/MIME support. As a result, all
                 Mime-related code in SoapMessage has been moved to the org.springframework.ws.mime package
             </action>

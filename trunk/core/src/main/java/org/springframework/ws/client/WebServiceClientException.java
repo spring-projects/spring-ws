@@ -19,9 +19,11 @@ package org.springframework.ws.client;
 import org.springframework.ws.WebServiceException;
 
 /**
+ * Exception thrown whenever an error occurs on the client-side.
+ *
  * @author Arjen Poutsma
  */
-public class WebServiceClientException extends WebServiceException {
+public abstract class WebServiceClientException extends WebServiceException {
 
     public WebServiceClientException(String msg) {
         super(msg);
