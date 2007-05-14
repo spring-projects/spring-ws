@@ -69,13 +69,4 @@ public interface SoapHeader extends SoapElement {
      */
     Iterator examineAllHeaderElements() throws SoapHeaderException;
 
-    /**
-     * Returns an <code>Iterator</code> over all the <code>SoapHeaderElement</code>s with the specified header.
-     *
-     * @param name the qualified name of header elements to look for
-     * @return an iterator over all the header elements
-     * @throws SoapHeaderException if the header cannot be returned
-     * @see SoapHeaderElement
-     */
-    Iterator examineHeaderElements(QName name) throws SoapHeaderException;
 }

@@ -111,6 +111,18 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
         this.validateResponse = validateResponse;
     }
 
+    public void afterPropertiesSet() throws Exception {
+        Assert.notEmpty(schemas, "setting either the schema or schemas property is required");
+        Assert.hasLength(schemaLanguage, "schemaLanguage is required");
+        for (int i = 0; i < schemas.length; i++) {
+            Assert.isTrue(schemas[i].exists(), "schema [" + schemas[i] + "] does not exist");
+        }
+        if (logger.isInfoEnabled()) {
+            logger.info("Validating using " + StringUtils.arrayToCommaDelimitedString(schemas));
+        }
+        validator = XmlValidatorFactory.createValidator(schemas, schemaLanguage);
+    }
+
     /**
      * Validates the request message in the given message context. Validation only occurs if
      * <code>validateRequest</code> is set to <code>true</code>, which is the default.
@@ -196,16 +208,9 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
         return false;
     }
 
-    public void afterPropertiesSet() throws Exception {
-        Assert.notEmpty(schemas, "setting either the schema or schemas property is required");
-        Assert.hasLength(schemaLanguage, "schemaLanguage is required");
-        for (int i = 0; i < schemas.length; i++) {
-            Assert.isTrue(schemas[i].exists(), "schema [" + schemas[i] + "] does not exist");
-        }
-        if (logger.isInfoEnabled()) {
-            logger.info("Validating using " + StringUtils.arrayToCommaDelimitedString(schemas));
-        }
-        validator = XmlValidatorFactory.createValidator(schemas, schemaLanguage);
+    /** Does nothing by default. Faults are not validated. */
+    public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
+        return true;
     }
 
     /**

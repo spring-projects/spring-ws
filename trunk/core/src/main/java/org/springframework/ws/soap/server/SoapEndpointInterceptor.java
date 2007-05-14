@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap;
+package org.springframework.ws.soap.server;
 
-import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
+import org.springframework.ws.soap.SoapHeaderElement;
 
 /**
  * SOAP-specific extension of the <code>EndpointInterceptor</code> interface. Allows for handling of SOAP faults, which
@@ -26,17 +26,6 @@ import org.springframework.ws.server.EndpointInterceptor;
  * @author Arjen Poutsma
  */
 public interface SoapEndpointInterceptor extends EndpointInterceptor {
-
-    /**
-     * Processes the fault. Both request and response of the message context should be filled; the body of the response
-     * message contains the fault.
-     *
-     * @param messageContext contains both request and response messages, the response should contains a SOAP Fault
-     * @param endpoint       chosen endpoint to invoke
-     * @return <code>true</code> to continue processing of the reponse interceptor chain; <code>false</code> to indicate
-     *         blocking of the response handler chain.
-     */
-    boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception;
 
     /**
      * Given a <code>SoapHeaderElement</code>, return whether or not this <code>SoapEndpointInterceptor</code>

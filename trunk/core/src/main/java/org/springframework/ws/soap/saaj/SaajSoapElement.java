@@ -57,6 +57,15 @@ class SaajSoapElement implements SoapElement {
         }
     }
 
+    public void removeAttribute(QName name) {
+        try {
+            getImplementation().removeAttribute(element, name);
+        }
+        catch (SOAPException ex) {
+            throw new SaajSoapElementException(ex);
+        }
+    }
+
     public String getAttributeValue(QName name) {
         try {
             return getImplementation().getAttributeValue(element, name);

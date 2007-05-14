@@ -57,6 +57,14 @@ class AxiomSoapHeaderElement extends AxiomSoapElement implements SoapHeaderEleme
 
     }
 
+    public String getText() {
+        return getAxiomHeaderBlock().getText();
+    }
+
+    public void setText(String content) {
+        getAxiomHeaderBlock().setText(content);
+    }
+
     protected SOAPHeaderBlock getAxiomHeaderBlock() {
         return (SOAPHeaderBlock) getAxiomElement();
     }

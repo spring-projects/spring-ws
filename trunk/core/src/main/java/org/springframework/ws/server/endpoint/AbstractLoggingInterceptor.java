@@ -42,16 +42,12 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
 
     private boolean logResponse = true;
 
-    /**
-     * Indicates whether the request should be logged. Default is <code>true</code>.
-     */
+    /** Indicates whether the request should be logged. Default is <code>true</code>. */
     public final void setLogRequest(boolean logRequest) {
         this.logRequest = logRequest;
     }
 
-    /**
-     * Indicates whether the response should be logged. Default is <code>true</code>.
-     */
+    /** Indicates whether the response should be logged. Default is <code>true</code>. */
     public final void setLogResponse(boolean logResponse) {
         this.logResponse = logResponse;
     }
@@ -83,6 +79,11 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
         if (logResponse && logger.isDebugEnabled()) {
             logMessageSource("Response: ", getSource(messageContext.getResponse()));
         }
+        return true;
+    }
+
+    /** Does nothing by default. Faults are not logged. */
+    public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
         return true;
     }
 

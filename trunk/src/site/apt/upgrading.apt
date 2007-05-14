@@ -19,6 +19,16 @@ Upgrading from version 1.0-M3 to 1.0-RC1
 
     The <<<WebServiceTemplate>> no longer declares an IOException for each method. Rather, an runtime exception
     hierarchy has been created in <<<org.springframework.ws.client>>>.
+
+* EndpointInterceptor
+
+    The <<<EndpointInterceptor>>> has a <<<handleFault>>> method now, which gets invoked
+    (rather than <<<handleResponse>>>) when <<<WebServiceMessage.hasFault()>>> is true for the response.
+
+* SoapMessageDispatcher
+
+    * All of SoapMessageDispatcher's  strategy interfaces (<<<SoapEndpointInterceptor>>>, <<<SoapEndpointMapping>>>)
+    have been moved from <<<org.springframework.ws.soap>>> to <<<org.springframework.ws.soap.server>>>.
      
 Upgrading from version 1.0-M2 to 1.0-M3
 
@@ -42,9 +52,9 @@ the project update their applications:
 
 	To make a clear distinction between server-side and client-side code, we had to move the various server-side classes.
 
-	* The <<<MessageDispatcher>>> has been moved to the <<<EndpointInvocationChain>>> to <<<org.springframework.ws.server>>> package.
+	* The <<<MessageDispatcher>>> has been moved to the <<<org.springframework.ws.server>>> package.
 	
-	* The <<<SoapMessageDispatcher>>> has been moved to the EndpointInvocationChain to <<<org.springframework.ws.soap.server>>> package.
+	* The <<<SoapMessageDispatcher>>> has been moved to the <<<org.springframework.ws.soap.server>>> package.
 	
 	* All of MessageDispatcher's  strategy interfaces (<<<EndpointAdapter>>>, <<<EndpointInterceptor>>>, <<<EndpointMapping>>>, <<<EndpointExceptionResolver>>>) have been moved from <<<org.springframework.ws>>> to <<<org.springframework.ws.server>>>.
 

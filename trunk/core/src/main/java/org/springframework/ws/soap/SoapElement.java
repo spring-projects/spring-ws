@@ -52,6 +52,13 @@ public interface SoapElement {
     void addAttribute(QName name, String value);
 
     /**
+     * Removes the attribute with the specified name.
+     *
+     * @param name the qualified name of the attribute to remove
+     */
+    void removeAttribute(QName name);
+
+    /**
      * Returns the value of the attribute with the specified qualified name.
      *
      * @param name the qualified name
@@ -65,6 +72,5 @@ public interface SoapElement {
      * @return an iterator over all the attribute names
      */
     Iterator getAllAttibutes();
-
 
 }

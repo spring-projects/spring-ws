@@ -21,8 +21,8 @@ import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInvocationChain;
 import org.springframework.ws.server.EndpointMapping;
-import org.springframework.ws.soap.SoapEndpointMapping;
 import org.springframework.ws.soap.server.SoapEndpointInvocationChain;
+import org.springframework.ws.soap.server.SoapEndpointMapping;
 
 /**
  * <code>EndpointMapping</code> implement that adds SOAP actors or roles to a delegate endpoint. Delegates to another
@@ -46,9 +46,7 @@ public class DelegatingSoapEndpointMapping implements InitializingBean, SoapEndp
 
     private String[] actorsOrRoles;
 
-    /**
-     * Sets the delegate <code>EndpointMapping</code> to resolve the endpoint with.
-     */
+    /** Sets the delegate <code>EndpointMapping</code> to resolve the endpoint with. */
     public void setDelegate(EndpointMapping delegate) {
         this.delegate = delegate;
     }

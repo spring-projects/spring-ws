@@ -44,16 +44,6 @@ class SaajSoapHeader extends SaajSoapElement implements SoapHeader {
         return new SaajSoapHeaderElementIterator(iterator);
     }
 
-    public Iterator examineHeaderElements(QName name) throws SoapHeaderException {
-        try {
-            Iterator iterator = getImplementation().getChildElements(getSaajHeader(), name);
-            return new SaajSoapHeaderElementIterator(iterator);
-        }
-        catch (SOAPException ex) {
-            throw new SaajSoapHeaderException(ex);
-        }
-    }
-
     public Iterator examineMustUnderstandHeaderElements(String actorOrRole) throws SoapHeaderException {
         Iterator iterator = getImplementation().examineMustUnderstandHeaderElements(getSaajHeader(), actorOrRole);
         return new SaajSoapHeaderElementIterator(iterator);

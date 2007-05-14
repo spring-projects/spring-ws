@@ -109,6 +109,11 @@ public class Saaj12Implementation implements SaajImplementation {
         element.addAttribute(attributeName, value);
     }
 
+    public void removeAttribute(SOAPElement element, QName name) throws SOAPException {
+        Name attributeName = SaajUtils.toName(name, element);
+        element.removeAttribute(attributeName);
+    }
+
     public String getAttributeValue(SOAPElement element, QName name) throws SOAPException {
         Name attributeName = SaajUtils.toName(name, element);
         return element.getAttributeValue(attributeName);
@@ -123,9 +128,12 @@ public class Saaj12Implementation implements SaajImplementation {
         return results.iterator();
     }
 
-    public Iterator getChildElements(SOAPElement element, QName name) throws SOAPException {
-        Name childName = SaajUtils.toName(name, element);
-        return element.getChildElements(childName);
+    public String getText(SOAPElement element) {
+        return element.getValue();
+    }
+
+    public void setText(SOAPElement element, String content) {
+        element.setValue(content);
     }
 
     public SOAPEnvelope getEnvelope(SOAPMessage message) throws SOAPException {

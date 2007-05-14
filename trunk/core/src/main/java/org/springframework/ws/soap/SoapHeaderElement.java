@@ -59,9 +59,20 @@ public interface SoapHeaderElement extends SoapElement {
      */
     void setMustUnderstand(boolean mustUnderstand) throws SoapHeaderException;
 
-    /**
-     * Returns a <code>Result</code> that allows for writing to the <strong>contents</strong> of the header element.
-     */
+    /** Returns a <code>Result</code> that allows for writing to the <strong>contents</strong> of the header element. */
     Result getResult() throws SoapHeaderException;
 
+    /**
+     * Returns the text content of this header element, if any.
+     *
+     * @return the text content of this header element
+     */
+    String getText();
+
+    /**
+     * Sets the text content of this header element.
+     *
+     * @param content the new text content of this header element
+     */
+    void setText(String content);
 }
