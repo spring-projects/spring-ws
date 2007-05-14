@@ -21,9 +21,9 @@ import javax.xml.transform.Source;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.AbstractLoggingInterceptor;
-import org.springframework.ws.soap.SoapEndpointInterceptor;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.server.SoapEndpointInterceptor;
 
 /**
  * SOAP-specific <code>EndpointInterceptor</code> that logs the complete request and response envelope of
@@ -39,9 +39,7 @@ public class SoapEnvelopeLoggingInterceptor extends AbstractLoggingInterceptor i
 
     private boolean logFault = true;
 
-    /**
-     * Indicates whether a SOAP Fault should be logged. Default is <code>true</code>.
-     */
+    /** Indicates whether a SOAP Fault should be logged. Default is <code>true</code>. */
     public void setLogFault(boolean logFault) {
         this.logFault = logFault;
     }

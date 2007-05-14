@@ -139,8 +139,20 @@ public class Saaj13Implementation implements SaajImplementation {
         return new DOMResult(element);
     }
 
+    public String getText(SOAPElement element) {
+        return element.getValue();
+    }
+
+    public void setText(SOAPElement element, String content) {
+        element.setValue(content);
+    }
+
     public void addAttribute(SOAPElement element, QName name, String value) throws SOAPException {
         element.addAttribute(name, value);
+    }
+
+    public void removeAttribute(SOAPElement element, QName name) throws SOAPException {
+        element.removeAttribute(name);
     }
 
     public String getAttributeValue(SOAPElement element, QName name) throws SOAPException {
@@ -149,10 +161,6 @@ public class Saaj13Implementation implements SaajImplementation {
 
     public Iterator getAllAttibutes(SOAPElement element) {
         return element.getAllAttributesAsQNames();
-    }
-
-    public Iterator getChildElements(SOAPElement element, QName name) throws SOAPException {
-        return element.getChildElements(name);
     }
 
     public SOAPEnvelope getEnvelope(SOAPMessage message) throws SOAPException {

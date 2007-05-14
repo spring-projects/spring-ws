@@ -79,6 +79,18 @@ class AxiomSoapElement implements SoapElement {
         }
     }
 
+    public void removeAttribute(QName name) {
+        try {
+            OMAttribute attribute = getAxiomElement().getAttribute(name);
+            if (attribute != null) {
+                getAxiomElement().removeAttribute(attribute);
+            }
+        }
+        catch (OMException ex) {
+            throw new AxiomSoapElementException(ex);
+        }
+    }
+
     public final String getAttributeValue(QName name) {
         try {
             return getAxiomElement().getAttributeValue(name);

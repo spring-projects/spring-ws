@@ -22,14 +22,12 @@ import java.util.List;
 import java.util.Locale;
 import javax.xml.namespace.QName;
 
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.EndpointInvocationChain;
 import org.springframework.ws.server.MessageDispatcher;
 import org.springframework.ws.soap.SoapBody;
-import org.springframework.ws.soap.SoapEndpointInterceptor;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
@@ -43,13 +41,11 @@ import org.springframework.ws.soap.soap12.Soap12Header;
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.soap.SoapMessage
- * @see org.springframework.ws.soap.SoapEndpointInterceptor
+ * @see SoapEndpointInterceptor
  */
 public class SoapMessageDispatcher extends MessageDispatcher {
 
-    /**
-     * Default message used when creating a SOAP MustUnderstand fault.
-     */
+    /** Default message used when creating a SOAP MustUnderstand fault. */
     public static final String DEFAULT_MUST_UNDERSTAND_FAULT =
             "One or more mandatory SOAP header blocks not understood";
 
@@ -130,7 +126,7 @@ public class SoapMessageDispatcher extends MessageDispatcher {
      * <code>SoapEndpointInterceptor</code>. If they are, returns <code>true</code>. If they are not, a SOAP fault is
      * created, and false is returned.
      *
-     * @see org.springframework.ws.soap.SoapEndpointInterceptor#understands(org.springframework.ws.soap.SoapHeaderElement)
+     * @see SoapEndpointInterceptor#understands(org.springframework.ws.soap.SoapHeaderElement)
      */
     private boolean handleRequestForRole(EndpointInvocationChain mappedEndpoint,
                                          MessageContext messageContext,
@@ -178,43 +174,6 @@ public class SoapMessageDispatcher extends MessageDispatcher {
                 }
             }
             return false;
-        }
-    }
-
-    /**
-     * Trigger handleResponse or handleFault on the mapped EndpointInterceptors. Will just invoke said method on all
-     * interceptors whose handleRequest invocation returned <code>true</code>, in addition to the last interceptor who
-     * returned <code>false</code>.
-     *
-     * @param mappedEndpoint   the mapped EndpointInvocationChain
-     * @param interceptorIndex index of last interceptor that was called
-     * @param messageContext   the message context, whose request and response are filled
-     * @see org.springframework.ws.server.EndpointInterceptor#handleResponse(org.springframework.ws.context.MessageContext,
-     *Object)
-     */
-    protected void triggerHandleResponse(EndpointInvocationChain mappedEndpoint,
-                                         int interceptorIndex,
-                                         MessageContext messageContext) throws Exception {
-        if (mappedEndpoint != null && messageContext.hasResponse() &&
-                !ObjectUtils.isEmpty(mappedEndpoint.getInterceptors())) {
-            boolean hasFault = false;
-            if (messageContext.getResponse() instanceof SoapMessage) {
-                SoapMessage soapResponse = (SoapMessage) messageContext.getResponse();
-                hasFault = soapResponse.getSoapBody().hasFault();
-            }
-            boolean resume = true;
-            for (int i = interceptorIndex; resume && i >= 0; i--) {
-                EndpointInterceptor interceptor = mappedEndpoint.getInterceptors()[i];
-                if (hasFault) {
-                    if (interceptor instanceof SoapEndpointInterceptor) {
-                        SoapEndpointInterceptor soapEndpointInterceptor = (SoapEndpointInterceptor) interceptor;
-                        resume = soapEndpointInterceptor.handleFault(messageContext, mappedEndpoint.getEndpoint());
-                    }
-                }
-                else {
-                    resume = interceptor.handleResponse(messageContext, mappedEndpoint.getEndpoint());
-                }
-            }
         }
     }
 }

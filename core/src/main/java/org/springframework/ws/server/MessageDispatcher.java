@@ -179,7 +179,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
                 return;
             }
             // Apply handleRequest of registered interceptors
-            if (!ObjectUtils.isEmpty(mappedEndpoint.getInterceptors())) {
+            if (mappedEndpoint.getInterceptors() != null) {
                 for (int i = 0; i < mappedEndpoint.getInterceptors().length; i++) {
                     EndpointInterceptor interceptor = mappedEndpoint.getInterceptors()[i];
                     interceptorIndex = i;
@@ -303,15 +303,21 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
      * @param messageContext   the message context, whose request and response are filled
      * @see EndpointInterceptor#handleResponse(MessageContext,Object)
      */
-    protected void triggerHandleResponse(EndpointInvocationChain mappedEndpoint,
-                                         int interceptorIndex,
-                                         MessageContext messageContext) throws Exception {
+    private void triggerHandleResponse(EndpointInvocationChain mappedEndpoint,
+                                       int interceptorIndex,
+                                       MessageContext messageContext) throws Exception {
         if (mappedEndpoint != null && messageContext.hasResponse() &&
                 !ObjectUtils.isEmpty(mappedEndpoint.getInterceptors())) {
             boolean resume = true;
+            boolean hasFault = messageContext.getResponse().hasFault();
             for (int i = interceptorIndex; resume && i >= 0; i--) {
                 EndpointInterceptor interceptor = mappedEndpoint.getInterceptors()[i];
-                resume = interceptor.handleResponse(messageContext, mappedEndpoint.getEndpoint());
+                if (!hasFault) {
+                    resume = interceptor.handleResponse(messageContext, mappedEndpoint.getEndpoint());
+                }
+                else {
+                    resume = interceptor.handleFault(messageContext, mappedEndpoint.getEndpoint());
+                }
             }
         }
     }

@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap.saaj;
 
+import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.transform.Result;
 
@@ -52,6 +53,19 @@ class SaajSoapHeaderElement extends SaajSoapElement implements SoapHeaderElement
 
     public void setMustUnderstand(boolean mustUnderstand) throws SoapHeaderException {
         getImplementation().setMustUnderstand(getSaajHeaderElement(), mustUnderstand);
+    }
+
+    public String getText() {
+        return getImplementation().getText(getSaajHeaderElement());
+    }
+
+    public void setText(String content) {
+        try {
+            getImplementation().setText(getSaajHeaderElement(), content);
+        }
+        catch (SOAPException ex) {
+            throw new SaajSoapHeaderException(ex);
+        }
     }
 
     protected SOAPHeaderElement getSaajHeaderElement() {

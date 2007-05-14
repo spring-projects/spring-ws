@@ -307,6 +307,47 @@ public class MessageDispatcherTest extends TestCase {
         factoryControl.verify();
     }
 
+    public void testFaultFlow() throws Exception {
+        MockControl adapterControl = MockControl.createControl(EndpointAdapter.class);
+        EndpointAdapter adapterMock = (EndpointAdapter) adapterControl.getMock();
+        dispatcher.setEndpointAdapters(Collections.singletonList(adapterMock));
+
+        Object endpoint = new Object();
+        adapterControl.expectAndReturn(adapterMock.supports(endpoint), true);
+
+        MockControl mappingControl = MockControl.createControl(EndpointMapping.class);
+        EndpointMapping mappingMock = (EndpointMapping) mappingControl.getMock();
+        dispatcher.setEndpointMappings(Collections.singletonList(mappingMock));
+
+        MockControl interceptorControl = MockControl.createStrictControl(EndpointInterceptor.class);
+        EndpointInterceptor interceptorMock = (EndpointInterceptor) interceptorControl.getMock();
+
+        interceptorControl.expectAndReturn(interceptorMock.handleRequest(messageContext, endpoint), true);
+        adapterMock.invoke(messageContext, endpoint);
+        interceptorControl.expectAndReturn(interceptorMock.handleFault(messageContext, endpoint), true);
+
+        EndpointInvocationChain chain =
+                new EndpointInvocationChain(endpoint, new EndpointInterceptor[]{interceptorMock});
+
+        mappingControl.expectAndReturn(mappingMock.getEndpoint(messageContext), chain);
+        MockWebServiceMessage response = new MockWebServiceMessage();
+        response.setFault(true);
+        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), response);
+
+        mappingControl.replay();
+        interceptorControl.replay();
+        adapterControl.replay();
+        factoryControl.replay();
+        //  response required for interceptor invocation
+        messageContext.getResponse();
+        dispatcher.dispatch(messageContext);
+
+        mappingControl.verify();
+        interceptorControl.verify();
+        adapterControl.verify();
+        factoryControl.verify();
+    }
+
     public void testNoEndpointFound() throws Exception {
         dispatcher.setEndpointMappings(Collections.EMPTY_LIST);
         try {

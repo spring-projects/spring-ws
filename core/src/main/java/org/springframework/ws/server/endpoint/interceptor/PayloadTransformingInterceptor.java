@@ -56,16 +56,12 @@ public class PayloadTransformingInterceptor implements EndpointInterceptor, Init
 
     private Templates responseTemplates;
 
-    /**
-     * Sets the XSLT stylesheet to use for transforming incoming request.
-     */
+    /** Sets the XSLT stylesheet to use for transforming incoming request. */
     public void setRequestXslt(Resource requestXslt) {
         this.requestXslt = requestXslt;
     }
 
-    /**
-     * Sets the XSLT stylesheet to use for transforming outgoing responses.
-     */
+    /** Sets the XSLT stylesheet to use for transforming outgoing responses. */
     public void setResponseXslt(Resource responseXslt) {
         this.responseXslt = responseXslt;
     }
@@ -103,6 +99,11 @@ public class PayloadTransformingInterceptor implements EndpointInterceptor, Init
             transformer.transform(response.getPayloadSource(), response.getPayloadResult());
             logger.debug("Response message transformed");
         }
+        return true;
+    }
+
+    /** Does nothing by default. Faults are not transformed. */
+    public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
         return true;
     }
 

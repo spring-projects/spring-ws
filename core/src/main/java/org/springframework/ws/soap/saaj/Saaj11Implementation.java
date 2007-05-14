@@ -81,9 +81,22 @@ public class Saaj11Implementation implements SaajImplementation {
         return new SAXResult(new SaajContentHandler(element));
     }
 
+    public String getText(SOAPElement element) {
+        return element.getValue();
+    }
+
+    public void setText(SOAPElement element, String content) throws SOAPException {
+        element.addTextNode(content);
+    }
+
     public void addAttribute(SOAPElement element, QName name, String value) throws SOAPException {
         Name attributeName = SaajUtils.toName(name, element);
         element.addAttribute(attributeName, value);
+    }
+
+    public void removeAttribute(SOAPElement element, QName name) throws SOAPException {
+        Name attributeName = SaajUtils.toName(name, element);
+        element.removeAttribute(attributeName);
     }
 
     public String getAttributeValue(SOAPElement element, QName name) throws SOAPException {
@@ -98,11 +111,6 @@ public class Saaj11Implementation implements SaajImplementation {
             results.add(SaajUtils.toQName(attributeName));
         }
         return results.iterator();
-    }
-
-    public Iterator getChildElements(SOAPElement element, QName name) throws SOAPException {
-        Name childName = SaajUtils.toName(name, element);
-        return element.getChildElements(childName);
     }
 
     public QName getFaultCode(SOAPFault fault) {

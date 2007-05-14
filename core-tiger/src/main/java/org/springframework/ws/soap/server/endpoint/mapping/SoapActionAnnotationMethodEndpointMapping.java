@@ -24,9 +24,9 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.EndpointInvocationChain;
 import org.springframework.ws.server.endpoint.mapping.AbstractAnnotationMethodEndpointMapping;
-import org.springframework.ws.soap.SoapEndpointMapping;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.server.SoapEndpointInvocationChain;
+import org.springframework.ws.soap.server.SoapEndpointMapping;
 import org.springframework.ws.soap.server.endpoint.annotation.SoapAction;
 
 /**

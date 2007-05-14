@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap;
+package org.springframework.ws.soap.server;
 
 import org.springframework.ws.server.EndpointMapping;
 
@@ -30,14 +30,10 @@ import org.springframework.ws.server.EndpointMapping;
  */
 public interface SoapEndpointMapping extends EndpointMapping {
 
-    /**
-     * Sets a single SOAP actor/actorOrRole to apply to all endpoints mapped by the delegate endpoint mapping.
-     */
+    /** Sets a single SOAP actor/actorOrRole to apply to all endpoints mapped by the delegate endpoint mapping. */
     void setActorOrRole(String actorOrRole);
 
-    /**
-     * Sets the array of SOAP actors/actorsOrRoles to apply to all endpoints mapped by the delegate endpoint mapping.
-     */
+    /** Sets the array of SOAP actors/actorsOrRoles to apply to all endpoints mapped by the delegate endpoint mapping. */
     void setActorsOrRoles(String[] actorsOrRoles);
 
 }

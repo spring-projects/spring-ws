@@ -46,12 +46,12 @@ public abstract class XPathExpressionFactory {
     static {
         // Check whether JAXP 1.3, or Jaxen are available
         if (JaxpVersion.getJaxpVersion() >= JaxpVersion.JAXP_13) {
-            logger.info("JAXP 1.3 available");
+            logger.debug("JAXP 1.3 available");
         }
         try {
             ClassUtils.forName(JAXEN_CLASS_NAME);
             jaxenAvailable = true;
-            logger.info("Jaxen available");
+            logger.debug("Jaxen available");
         }
         catch (ClassNotFoundException ex) {
             jaxenAvailable = false;
