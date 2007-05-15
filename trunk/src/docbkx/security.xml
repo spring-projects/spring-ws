@@ -60,7 +60,7 @@
 			is an
 			<classname>EndpointInterceptor</classname>
 			(see
-			<xref linkend="ws-endpoint-interceptor" />
+			<xref linkend="server-endpoint-interceptor" />
 			) that is based on SUN's XML and Web Services Security package (XWSS). This WS-Security implementation is
 			part of the Java Web Services Developer Pack (
 			<ulink url="http://java.sun.com/webservices/">
@@ -70,7 +70,7 @@
 		</para>
 		<para>
 			Like any other endpoint interceptor, it is defined in the endpoint mapping (see
-			<xref linkend="ws-endpoint-mapping" />
+			<xref linkend="server-endpoint-mapping" />
 			). This means that you can be selective about adding WS-Security support: some endpoint mappings require it,
 			while others do not.
 		</para>
