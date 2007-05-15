@@ -65,6 +65,30 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
     }
 
     /**
+     * Creates a new <code>AbstractMarshallingPayloadEndpoint</code> with the given marshaller. If the given {@link
+     * Marshaller} also implements the {@link Unmarshaller} interface, it is used for both marshalling and
+     * unmarshalling. Otherwise, an exception is thrown.
+     * <p/>
+     * Note that all {@link Marshaller} implementations in Spring-WS also implement the {@link Unmarshaller} interface,
+     * so that you can safely use this constructor.
+     *
+     * @param marshaller object used as marshaller and unmarshaller
+     * @throws IllegalArgumentException when <code>marshaller</code> does not implement the {@link Unmarshaller}
+     *                                  interface
+     */
+    protected AbstractMarshallingPayloadEndpoint(Marshaller marshaller) {
+        if (!(marshaller instanceof Unmarshaller)) {
+            throw new IllegalArgumentException("Marshaller [" + marshaller + "] does not implement the Unmarshaller " +
+                    "interface. Please set an Unmarshaller explicitely by using the " +
+                    "AbstractMarshallingPayloadEndpoint(Marshaller, Unmarshaller) constructor.");
+        }
+        else {
+            this.marshaller = marshaller;
+            this.unmarshaller = (Unmarshaller) marshaller;
+        }
+    }
+
+    /**
      * Creates a new <code>AbstractMarshallingPayloadEndpoint</code> with the given marshaller and unmarshaller.
      *
      * @param marshaller   the marshaller to use
