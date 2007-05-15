@@ -346,7 +346,7 @@ public class Application {
 
 </beans>]]></programlisting>
         </section>
-        <section>
+        <section id="oxm-jaxb2">
             <title>Jaxb2Marshaller</title>
             <para>
                 The <classname>Jaxb2Marshaller</classname> can be configured using the same 
