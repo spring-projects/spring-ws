@@ -21,7 +21,7 @@
     </section>
     <section>
         <title>Using the client-side API</title>
-        <section id="client-webservicetemplate">
+        <section id="client-web-service-template">
             <title><classname>WebServiceTemplate</classname></title>
             <para>
                 The <classname>WebServiceTemplate</classname> is the core class for client-side Web service access in
