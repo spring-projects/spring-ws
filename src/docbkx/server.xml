@@ -3,23 +3,114 @@
                  "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
 <chapter id="server">
     <title>Creating a Web service with Spring-WS</title>    
-<!--
     <section id="ws-introduction">
         <title>Introduction</title>
         <para>
-            Spring's Web service framework is designed around
+        	Spring Web Services's server-side support in designed around a <classname>MessageDispatcher</classname>
+        	that dispatches incoming messages to endpoints, with configurable endpoint mappings, response generation,
+        	and endpoint interception.
+        	The simplest endpoint is a <interfacename>PayloadEndpoint</interfacename>, just offering a 
+        	<literal>Source invoke(Source request)</literal> method. This interface can be implemented for creating an
+        	endpoint, but you will prefer the included implementation hierarchy, consisting of, for example
+        	<classname>AbstractDomPayloadEndpoint</classname>, <classname>AbstractSaxPayloadEndpoint</classname>, and
+        	of course <classname>AbstractMarshallingPayloadEndpoint</classname>. Application endpoints will typically 
+        	be subclasses of those.
+        	Alternatively, there is a endpoint development that uses Java 5 annotations, such as 
+        	<literal>@Endpoint</literal> for marking a POJO as endpoint, and marking a method with 
+        	<literal>@PayloadRoot</literal> or <literal>@SoapAction</literal>.
+       	</para>
+       	<para>
+       		Spring-WS's XML handling is extremely flexible. An endpoint can choose from
+       		a large amount of XML handling libraries supported by Spring-WS, including the DOM family (W3C DOM, JDOM,
+       		dom4j, and XOM), SAX or StAX for faster performance, XPath to extract information from the message, or even
+       		marshalling to convert the XML to objects and vice-versa.
         </para>
     </section>
     <section>
-        <title>MessageDispatcher</title>
-        <para>
-            Spring-WS is designed around a central dispatching mechanism, which received and forwards incoming
-        </para>
-    </section>
+    	<title>The <classname>MessageDispatcher</classname></title>
+    	<para>
+    		The server-side of Spring-WS is designed around a central class that dispatches incoming XML messages to 
+    		endpoints. Spring-WS's <classname>MessageDispatcher</classname> is extremely flexible, allowing you to 
+    		use any sort of class as an endpoint, as long as it can be configured in the Spring IoC container.
+    		In a way, the message dispatcher resembles Spring's<classname>DispatcherServlet</classname>, the
+    		<quote>Front Controller</quote> used in Spring Web MVC.
+    	</para>
+    	<para>
+    		The processing and dispatching flow of the <classname>MessageDispatcher</classname> is illustrated in the 
+    		following sequence diagram. Whenever a message comes in, a suitable endpoint is retrieved via the
+    		<interfacename>EndpointMapping</interfacename>. After the endpoint has been determined, the 
+    		<classname>MessageDispatcher</classname> delegates to an <interfacename>EndpointAdapter</interfacename>
+    		to adapt to the specific method signature of the endpoint class. After the endpoint has been invoked, the 
+    		result value of the endpoint, if any, is converted back by the adapter after the invocation, and the 
+    		response is sent on its way.
+			<mediaobject>
+				<imageobject role="fo">
+					<imagedata fileref="src/docbkx/resources/images/sequence.png" format="PNG" align="center" />
+				</imageobject>
+				<imageobject role="html">
+					<imagedata fileref="images/sequence.png" format="PNG" align="center" />
+				</imageobject>
+				<caption>
+					<para>The request processing workflow in Spring Web Services</para>
+				</caption>
+			</mediaobject>
+    	</para>
+    	<para>
+    		The <classname>MessageDispatcher</classname> has several properties, for setting endpoint adapters, 
+    		<link linkend="server-endpoint-mapping">mappings</link>,  
+    		<link linkend="server-endpoint-exception-resolver">exception resolvers</link>.
+    		However, setting these properties is not required, since the dispatcher will automatically detect all of 
+    		these types that are registered in the application context. Only when detection needs to be overriden, 
+    		should these properties be set.
+   		</para>
+   		<para>
+   			The message dispatcher operates on a <link linkend="message-context">message context</link>, and not 
+   			transport-specific input stream and output stream. As a result, transport specific requests need to read 
+   			into a <interfacename>MessageContext</interfacename>. For HTTP, this is done with a 
+   			<classname>WebServiceMessageReceiverHandlerAdapter</classname>, which is a Spring Web 
+   			<interfacename>HandlerInterceptor</interfacename>, so that the <classname>MessageDispatcher</classname>
+   			can be wired in a standard <classname>DispatcherServlet</classname>. There is a more convenient way to do
+   			this, however, which is shown in the next section.
+   		</para>
+		<section>
+			<title><classname>MessageDispatcherServlet</classname></title>
+			<para>
+				The <classname>MessageDispatcherServlet</classname> is a standard <interface>Servlet</interface> which 
+				conveniently extends from the standard Spring Web <classname>DispatcherServlet</classname>, and wraps
+				a <classname>MessageDispatcher</classname>.  As a servlet, the 
+				<classname>MessageDispatcherServlet</classname> is configured in the <filename>web.xml</filename> of 
+				your web application. Requests that you want the <classname>MessageDispatcherServlet</classname> to 
+				handle will have to be mapped using a URL mapping in the same <literal>web.xml</literal> file. This is 
+				standard Java EE servlet configuration; an example of such a 
+				<classname>MessageDispatcherServlet</classname> declaration and mapping can be found below.
+			</para>
+		    <programlisting><![CDATA[<web-app>
+
+    <servlet>
+        <servlet-name>spring-ws</servlet-name>
+        <servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>spring-ws</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+
+</web-app>]]></programlisting>
+    		<para>
+    			In the example above, all requests will be handled by the <literal>'spring-ws'</literal>
+			    <classname>MessageDispatcherServlet</classname>. This is only the first step in setting up Spring Web 
+			    Services; the various endpoint and other beans used by the Spring Web Services framework also need to be
+			    configured.
+		    </para>
+		</section>
+   	</section>
     <section>
         <title>Endpoints</title>
+        <para/>
     </section>
-    <section id="ws-endpoint-mapping">
+    <section id="server-endpoint-mapping">
         <title>Endpoint mappings</title>
         <para>
             The endpoint mapping is responsible for mapping incoming messages to appropriate endpoints. It does this by
@@ -65,14 +156,17 @@
         </para>
         <section>
             <title>SoapActionEndpointMapping</title>
+            <para/>
         </section>
         <section>
             <title>PayloadRootQNameEndpointMapping</title>
+            <para/>
         </section>
-        <section id="ws-endpoint-interceptor">
+        <section id="server-endpoint-interceptor">
             <title>Adding <interfacename>EndpointInterceptors</interfacename></title>
+            <para/>
         </section>
-        <section>
+        <section id="server-endpoint-exception-resolver">
             <title>Handling Exceptions</title>
             <para>
                 Spring-WS provides
@@ -192,5 +286,4 @@
             </informaltable>
         </para>
     </section>
--->
 </chapter>

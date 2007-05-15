@@ -31,43 +31,25 @@
                         </thead>
                         <tbody>
                             <row>
-                                <entry>
-                                    <classname>javax.xml.transform.dom.DOMSource</classname>
-                                </entry>
-                                <entry>
-                                    <interfacename>org.w3c.dom.Node</interfacename>
-                                </entry>
+                                <entry><classname>javax.xml.transform.dom.DOMSource</classname></entry>
+                                <entry><interfacename>org.w3c.dom.Node</interfacename></entry>
                             </row>
                             <row>
-                                <entry>
-                                    <classname>javax.xml.transform.dom.DOMResult</classname>
-                                </entry>
-                                <entry>
-                                    <interfacename>org.w3c.dom.Node</interfacename>
-                                </entry>
+                                <entry><classname>javax.xml.transform.dom.DOMResult</classname></entry>
+                                <entry><interfacename>org.w3c.dom.Node</interfacename></entry>
                             </row>
                             <row>
-                                <entry>
-                                    <classname>javax.xml.transform.sax.SAXSource</classname>
-                                </entry>
-                                <entry>
-                                    <classname>org.xml.sax.InputSource</classname>
-                                    and
+                                <entry><classname>javax.xml.transform.sax.SAXSource</classname></entry>
+                                <entry><classname>org.xml.sax.InputSource</classname> and
                                     <interfacename>org.xml.sax.XMLReader</interfacename>
                                 </entry>
                             </row>
                             <row>
-                                <entry>
-                                    <classname>javax.xml.transform.sax.SAXResult</classname>
-                                </entry>
-                                <entry>
-                                    <interfacename>org.xml.sax.ContentHandler</interfacename>
-                                </entry>
+                                <entry><classname>javax.xml.transform.sax.SAXResult</classname></entry>
+                                <entry><interfacename>org.xml.sax.ContentHandler</interfacename></entry>
                             </row>
                             <row>
-                                <entry>
-                                    <classname>javax.xml.transform.stream.StreamSource</classname>
-                                </entry>
+                                <entry><classname>javax.xml.transform.stream.StreamSource</classname></entry>
                                 <entry>
                                     <classname>java.io.File</classname>, <classname>java.io.InputStream</classname>, or
                                     <classname>java.io.Reader</classname>
@@ -153,6 +135,24 @@
 </bean>]]></programlisting>
                 </para>                 
             </section>
+        </section>
+        <section id="message-context">
+        	<title><interfacename>MessageContext</interfacename></title>
+        	<para>
+        		Typically, messages come in pairs: a request and a response. A request is created on the client-side,
+        		which is sent over some transport to the server-side, where a response is generated. This response gets
+        		sent back to the client, where it is read.
+        	</para>
+        	<para>
+        		In Spring Web Services, such a conversation is contained in a 
+        		<interfacename>MessageContext</interfacename>, which has properties to get request and response
+        		messages.
+        		On the client-side, the message context is created by the <link linkend="client-webservicetemplate">
+        		<classname>WebServiceTemplate</classname></link>.
+        		On the server-side, the message context is read from the transport-specific input stream. In HTTP,
+        		it is read from the <interfacename>HttpServletRequest</interfacename> and the response is written back
+        		to the <interfacename>HttpServletResponse</interfacename>.
+       		</para>
         </section>
     </section>
 </chapter>
