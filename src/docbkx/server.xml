@@ -195,7 +195,8 @@
 	    		method, implement your logic, and return an <interfacename>Element</interfacename>. Here is a short
 	    		example consisting of a class and a declaration in the application context.
 	    	</para>
-	    	<programlisting><![CDATA[
+	    	<programlisting><![CDATA[package samples;
+            
 public class SampleEndpoint extends AbstractDomPayloadEndpoint {
 
     private String responseText;
@@ -216,7 +217,7 @@ public class SampleEndpoint extends AbstractDomPayloadEndpoint {
     }
 }]]></programlisting>
    			<programlisting><![CDATA[<bean id="sampleEndpoint" class="samples.SampleEndpoint">
-  	<constructor-arg value="Hello World!"/>
+	<constructor-arg value="Hello World!"/>
 </bean>]]></programlisting>
 			<para>
 				The above class and the declaration in the application context is all you need besides setting up a 
@@ -230,11 +231,19 @@ public class SampleEndpoint extends AbstractDomPayloadEndpoint {
 				<classname>AbstractJDomPayloadEndpoint</classname> allows you to use JDOM, and the 
 				<classname>AbstractXomPayloadEndpoint</classname> uses XOM to handle the XML. All endpoints have an 
 				<methodname>invokeInternal</methodname> method similar to above.
-			</para>
+			</para>            
 	    </section>
 	    <section>
 	    	<title><classname>AbstractMarshallingPayloadEndpoint</classname></title>
-	    	<para/>
+	    	<para>
+                Rather than handling XML directly using DOM, you can use marshalling to convert the payload of the XML
+                message into a Java Object. Spring Web Services offers the 
+                <classname>AbstractMarshallingPayloadEndpoint</classname> for this purpose, which is built on the 
+                marshalling abstraction described in <xref linkend="oxm"/>. The 
+                <classname>AbstractMarshallingPayloadEndpoint</classname> has two properties: 
+                <property>marshaller</property> and <property>unmarshaller</property>, in which you can inject
+                
+            </para>
 	    </section>
 	    <section>
 	    	<title><literal>@Endpoint</literal></title>
