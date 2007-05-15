@@ -54,6 +54,27 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
 
     private Unmarshaller unmarshaller;
 
+    /**
+     * Creates a new <code>AbstractMarshallingPayloadEndpoint</code>. The {@link Marshaller} and {@link Unmarshaller}
+     * must be injected using properties.
+     *
+     * @see #setMarshaller(org.springframework.oxm.Marshaller)
+     * @see #setUnmarshaller(org.springframework.oxm.Unmarshaller)
+     */
+    protected AbstractMarshallingPayloadEndpoint() {
+    }
+
+    /**
+     * Creates a new <code>AbstractMarshallingPayloadEndpoint</code> with the given marshaller and unmarshaller.
+     *
+     * @param marshaller   the marshaller to use
+     * @param unmarshaller the unmarshaller to use
+     */
+    protected AbstractMarshallingPayloadEndpoint(Marshaller marshaller, Unmarshaller unmarshaller) {
+        this.marshaller = marshaller;
+        this.unmarshaller = unmarshaller;
+    }
+
     /** Returns the marshaller used for transforming objects into XML. */
     public final Marshaller getMarshaller() {
         return marshaller;
