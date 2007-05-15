@@ -147,7 +147,7 @@
         		In Spring Web Services, such a conversation is contained in a 
         		<interfacename>MessageContext</interfacename>, which has properties to get request and response
         		messages.
-        		On the client-side, the message context is created by the <link linkend="client-webservicetemplate">
+        		On the client-side, the message context is created by the <link linkend="client-web-service-template">
         		<classname>WebServiceTemplate</classname></link>.
         		On the server-side, the message context is read from the transport-specific input stream. In HTTP,
         		it is read from the <interfacename>HttpServletRequest</interfacename> and the response is written back
