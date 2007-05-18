@@ -77,6 +77,7 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
      *                                  interface
      */
     protected AbstractMarshallingPayloadEndpoint(Marshaller marshaller) {
+        Assert.notNull(marshaller, "marshaller must not be null");
         if (!(marshaller instanceof Unmarshaller)) {
             throw new IllegalArgumentException("Marshaller [" + marshaller + "] does not implement the Unmarshaller " +
                     "interface. Please set an Unmarshaller explicitely by using the " +
@@ -95,6 +96,8 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
      * @param unmarshaller the unmarshaller to use
      */
     protected AbstractMarshallingPayloadEndpoint(Marshaller marshaller, Unmarshaller unmarshaller) {
+        Assert.notNull(marshaller, "marshaller must not be null");
+        Assert.notNull(unmarshaller, "unmarshaller must not be null");
         this.marshaller = marshaller;
         this.unmarshaller = unmarshaller;
     }
