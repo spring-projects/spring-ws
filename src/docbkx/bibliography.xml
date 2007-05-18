@@ -49,7 +49,28 @@
                 <surname>Neward</surname>
             </author>
         </authorgroup>
+        <editor>
+            <firstname>Scott</firstname>
+            <surname>Meyers</surname>
+        </editor>
         <title>Effective Enterprise Java</title>
+        <publisher>
+            <publishername>Addison-Wesley</publishername>
+        </publisher>
+        <date>2004</date>
+    </biblioentry>
+    <biblioentry id="effective-xml">
+        <authorgroup>
+            <author>
+                <firstname>Elliotte Rusty</firstname>
+                <surname>Harold</surname>
+            </author>
+        </authorgroup>
+        <editor>
+            <firstname>Scott</firstname>
+            <surname>Meyers</surname>
+        </editor>
+        <title>Effective XML</title>
         <publisher>
             <publishername>Addison-Wesley</publishername>
         </publisher>
