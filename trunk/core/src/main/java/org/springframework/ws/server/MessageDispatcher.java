@@ -132,25 +132,29 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
     }
 
     public void receive(MessageContext messageContext) throws Exception {
-        if (logger.isDebugEnabled()) {
-            logger.debug("MessageDispatcher with name '" + beanName + "' received request [" +
-                    messageContext.getRequest() + "]");
-        }
         if (logger.isTraceEnabled()) {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             messageContext.getRequest().writeTo(os);
-            logger.trace("Request contents: " + os.toString("UTF-8"));
+            logger.trace(
+                    "MessageDispatcher with name '" + beanName + "' received request [" + os.toString("UTF-8") + "]");
+        }
+        else if (logger.isDebugEnabled()) {
+            logger.debug("MessageDispatcher with name '" + beanName + "' received request [" +
+                    messageContext.getRequest() + "]");
         }
         dispatch(messageContext);
         if (messageContext.hasResponse()) {
-            if (logger.isDebugEnabled()) {
+            if (logger.isTraceEnabled()) {
+                ByteArrayOutputStream requestStream = new ByteArrayOutputStream();
+                messageContext.getRequest().writeTo(requestStream);
+                ByteArrayOutputStream responseStream = new ByteArrayOutputStream();
+                messageContext.getResponse().writeTo(responseStream);
+                logger.trace("MessageDispatcher with name '" + beanName + "' sends response [" +
+                        responseStream.toString("UTF-8") + "] for request [" + requestStream.toString("UTF-8") + "]");
+            }
+            else if (logger.isDebugEnabled()) {
                 logger.debug("MessageDispatcher with name '" + beanName + "' sends response [" +
                         messageContext.getResponse() + "] for request [" + messageContext.getRequest() + "]");
-            }
-            if (logger.isTraceEnabled()) {
-                ByteArrayOutputStream os = new ByteArrayOutputStream();
-                messageContext.getResponse().writeTo(os);
-                logger.trace("Response contents: " + os.toString("UTF-8"));
             }
         }
         else if (logger.isDebugEnabled()) {

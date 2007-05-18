@@ -16,6 +16,7 @@
 
 package org.springframework.ws.client.core;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -270,6 +271,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
             if (tis != null) {
                 try {
                     messageContext.readResponse(tis);
+                    logResponse(messageContext);
                     if (messageContext.hasResponse()) {
                         WebServiceMessage response = messageContext.getResponse();
                         if (!hasFault(connection, messageContext)) {
@@ -308,6 +310,14 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
     /** Sends the request in the given message context over the connection. */
     private void sendRequest(WebServiceConnection connection, MessageContext messageContext) throws IOException {
+        if (logger.isTraceEnabled()) {
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            messageContext.getRequest().writeTo(os);
+            logger.trace("WebServiceTemplate sends request [" + os.toString("UTF-8") + "]");
+        }
+        else if (logger.isDebugEnabled()) {
+            logger.debug("WebServiceTemplate sends request [" + messageContext.getRequest() + "]");
+        }
         TransportOutputStream tos = connection.getTransportOutputStream();
         try {
             messageContext.getRequest().writeTo(tos);
@@ -325,6 +335,22 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
         }
         else {
             return messageContext.getResponse().hasFault();
+        }
+    }
+
+    private void logResponse(MessageContext messageContext) throws IOException {
+        if (messageContext.hasResponse()) {
+            if (logger.isTraceEnabled()) {
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                messageContext.getResponse().writeTo(os);
+                logger.trace("WebServiceTemplate receives response [" + os.toString("UTF-8") + "]");
+            }
+            else if (logger.isDebugEnabled()) {
+                logger.debug("WebServiceTemplate receives response [" + messageContext.getRequest() + "]");
+            }
+        }
+        else if (logger.isDebugEnabled()) {
+            logger.debug("WebServiceTemplate receives no response for request [" + messageContext.getRequest() + "]");
         }
     }
 
