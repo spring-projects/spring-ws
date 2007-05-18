@@ -5,9 +5,9 @@
 
 	<bookinfo>
 		<title>Spring Web Services - Reference Documentation</title>
-		<releaseinfo>
-			&version;
-		</releaseinfo>
+      <!-- <releaseinfo> -->
+      <!--  &version; -->
+      <!-- </releaseinfo> -->
 
 		<authorgroup>
 			<author>
@@ -57,12 +57,7 @@
             </para>
         </partintro>
         <xi:include href="common.xml" />
-    
-    	<chapter id="server">
-    		<title>Document-driven Web services with Spring-WS</title>
-    		<para>This chapter will contain the reference for server-side Spring-WS usage.</para>
-    	</chapter>
-    	<!--<xi:include href="server.xml" />-->
+        <xi:include href="server.xml" />
     	<xi:include href="client.xml" />
     	<xi:include href="security.xml" />
     	<xi:include href="oxm.xml" />
