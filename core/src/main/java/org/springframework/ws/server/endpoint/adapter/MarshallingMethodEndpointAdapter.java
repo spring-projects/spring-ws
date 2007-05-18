@@ -61,6 +61,54 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
         this.unmarshaller = unmarshaller;
     }
 
+    /**
+     * Creates a new <code>MarshallingMethodEndpointAdapter</code>. The {@link Marshaller} and {@link Unmarshaller}
+     * must be injected using properties.
+     *
+     * @see #setMarshaller(org.springframework.oxm.Marshaller)
+     * @see #setUnmarshaller(org.springframework.oxm.Unmarshaller)
+     */
+    public MarshallingMethodEndpointAdapter() {
+    }
+
+    /**
+     * Creates a new <code>MarshallingMethodEndpointAdapter</code> with the given marshaller. If the given {@link
+     * Marshaller} also implements the {@link Unmarshaller} interface, it is used for both marshalling and
+     * unmarshalling. Otherwise, an exception is thrown.
+     * <p/>
+     * Note that all {@link Marshaller} implementations in Spring-WS also implement the {@link Unmarshaller} interface,
+     * so that you can safely use this constructor.
+     *
+     * @param marshaller object used as marshaller and unmarshaller
+     * @throws IllegalArgumentException when <code>marshaller</code> does not implement the {@link Unmarshaller}
+     *                                  interface
+     */
+    public MarshallingMethodEndpointAdapter(Marshaller marshaller) {
+        Assert.notNull(marshaller, "marshaller must not be null");
+        if (!(marshaller instanceof Unmarshaller)) {
+            throw new IllegalArgumentException("Marshaller [" + marshaller + "] does not implement the Unmarshaller " +
+                    "interface. Please set an Unmarshaller explicitely by using the " +
+                    "MarshallingMethodEndpointAdapter(Marshaller, Unmarshaller) constructor.");
+        }
+        else {
+            this.marshaller = marshaller;
+            this.unmarshaller = (Unmarshaller) marshaller;
+        }
+    }
+
+    /**
+     * Creates a new <code>MarshallingMethodEndpointAdapter</code> with the given marshaller and unmarshaller.
+     *
+     * @param marshaller   the marshaller to use
+     * @param unmarshaller the unmarshaller to use
+     */
+    public MarshallingMethodEndpointAdapter(Marshaller marshaller, Unmarshaller unmarshaller) {
+        Assert.notNull(marshaller, "marshaller must not be null");
+        Assert.notNull(unmarshaller, "unmarshaller must not be null");
+        this.marshaller = marshaller;
+        this.unmarshaller = unmarshaller;
+    }
+
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(marshaller, "marshaller is required");
         Assert.notNull(unmarshaller, "unmarshaller is required");
