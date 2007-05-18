@@ -155,4 +155,129 @@
        		</para>
         </section>
     </section>
+    <section id="xpath">
+        <title>Handling XML With XPath</title>
+        <para>
+            One of the best ways to handle XML is to use XPath. Quoting <xref linkend="effective-xml"/>, item 35:
+            <blockquote>
+                <para>
+                    XPath is a fourth generation declarative language that allows you to specify which nodes you want to
+                    process without specifying exactly how the processor is supposed to navigate to those nodes. XPath's
+                    data model is very well designed to support exactly what almost all developers want from XML. For
+                    instance, it merges all adjacent text including that in CDATA sections, allows values to be
+                    calculated that skip over comments and processing instructions` and include text from child and
+                    descendant elements, and requires all external entity references to be resolved. In practice, XPath
+                    expressions tend to be much more robust against unexpected but perhaps insignificant changes in the
+                    input document.
+                </para>
+                <attribution>Elliotte Rusty Harold</attribution>
+            </blockquote>
+        </para>
+        <para>
+            Spring Web Services has two ways to use XPath within your application: the faster
+            <interfacename>XPathExpression</interfacename> or the more flexible <classname>XPathTemplate</classname>.
+        </para>
+        <section id="xpath-expression">
+            <title><interfacename>XPathExpression</interfacename></title>
+            <para>
+                The <interfacename>XPathExpression</interfacename> is an abstraction over a compiled XPath expressions,
+                such as the Java 5 <interfacename>javax.xml.xpath.XPathExpression</interfacename>, or the Jaxen
+                <classname>XPath</classname> class.
+                To construct an expression in an application context, there is the
+                <classname>XPathExpressionFactoryBean</classname>. Here is an example which uses this factory bean:
+            </para>
+            <programlisting><![CDATA[<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="nameExpression" class="org.springframework.xml.xpath.XPathExpressionFactoryBean">
+        <property name="expression" value="/Contacts/Contact/Name"/>
+    </bean>
+
+    <bean id="myEndpoint" class="sample.MyXPathClass">
+        <constructor-arg ref="nameExpression"/>
+    </bean>
+
+</beans>]]></programlisting>
+            <para>
+                The expression above does not use namespaces, but we could set those using the
+                <property>namespaces</property> property of the factory bean. The expression can be used in the code
+                as follows:
+            </para>
+            <programlisting><![CDATA[package sample;
+
+public class MyXPathClass {
+
+    private XPathExpression nameExpression;
+
+    public MyXPathClass(XPathExpression nameExpression) {
+        this.nameExpression = nameExpression;
+    }
+
+    public void doXPath(Document document) {
+        String name = nameExpression.evaluateAsString(document.getDocumentElement());
+        System.out.println("Name: " + name);
+    }
+
+}]]></programlisting>
+            <para>
+                For a more flexible approach, you can use a <interfacename>NodeMapper</interfacename>, which is similar
+                to the <interfacename>RowMapper</interfacename> in Spring's JDBC support. The following
+                example shows how we can use it:
+            </para>
+            <programlisting><![CDATA[package sample;
+
+public class MyXPathClass  {
+
+    private XPathExpression contactExpression;
+
+    public MyXPathClass(XPathExpression contactExpression) {
+        this.contactExpression = contactExpression;
+    }
+
+    public void doXPath(Document document) {
+        List contacts = nameExpression.evaluate(requestElement,
+                new NodeMapper() {
+                    public Object mapNode(Node node, int nodeNum) throws DOMException {
+                        Element contactElement = (Element) node;
+                        Element nameElement = (Element) contactElement.getElementsByTagName("Name").item(0);
+                        Element phoneElement = (Element) contactElement.getElementsByTagName("Phone").item(0);
+                        return new Contact(nameElement.getTextContent(), phoneElement.getTextContent());
+                    }
+                } );
+        // do something with list of Contact objects
+    }
+}]]></programlisting>
+            <para>
+                Similar to mapping rows in Spring JDBC's <interfacename>RowMapper</interfacename>, each result node is
+                mapped using an anonymous inner class. In this case, we create a <classname>Contact</classname> object,
+                which we use later on.
+            </para>
+        </section>
+        <section id="xpath-template">
+            <title><classname>XPathTemplate</classname></title>
+            <para>
+                The <interfacename>XPathExpression</interfacename> only allows you to evaluate a single, pre-compiled
+                expression. A more flexible, though slower, alternative is the <classname>XpathTemplate</classname>.
+                This class follows the common template pattern used throughout Spring (JdbcTemplate, JmsTemplate, etc.).
+                Here is an example:
+            </para>
+            <programlisting><![CDATA[package sample;
+
+public class MyXPathClass {
+
+    private XPathOperations template = new Jaxp13XPathTemplate();
+
+    public void doXPath(Source source) {
+        String name = template.evaluateAsString("/Contacts/Contact/Name", request);
+        // do something with name
+    }
+
+}]]></programlisting>
+            <para>
+                Of course, the template could have been injected with a constructor argument or a setter.
+            </para>
+        </section>
+    </section>
 </chapter>
