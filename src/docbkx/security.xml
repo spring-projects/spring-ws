@@ -53,7 +53,7 @@
 		</note>
 	</section>
 	<section id="security-xws-security-interceptor">
-		<title>XwsSecurityInterceptor</title>
+		<title><classname>XwsSecurityInterceptor</classname></title>
 		<para>
 			The
 			<classname>XwsSecurityInterceptor</classname>

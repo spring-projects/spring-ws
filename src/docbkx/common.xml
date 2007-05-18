@@ -76,7 +76,7 @@
             <para>
                 The <interfacename>SoapMessage</interfacename> is an extension of
                 <interfacename>WebServiceMessage</interfacename>. It contains SOAP-specific methods, such as getting
-                SOAP Headers, SOAP Faults, etc. Generally, your code should only not be dependent on
+                SOAP Headers, SOAP Faults, etc. Generally, your code should not be dependent on
                 <interfacename>SoapMessage</interfacename>, because the content of the SOAP Body can be obtained via
                 <methodname>getPayloadSource()</methodname> and <methodname>getPayloadResult()</methodname> in the
                 <interfacename>WebServiceMessage</interfacename>. Only when it is necessary to perform SOAP-specific
@@ -157,15 +157,6 @@
     </section>
     <section id="xpath">
         <title>Handling XML With XPath</title>
-        <sidebar>
-            <title>What is XPath?</title>
-            <para>
-                XPath is a language for addressing parts of an XML document.
-                For more information about XPath, refer to the
-                <ulink url="http://www.w3.org/TR/xpath">XPath specification</ulink>, or read the
-                <ulink url="http://www.w3schools.com/xpath/">XPath tutorial</ulink>
-            </para>
-        </sidebar>
         <para>
             One of the best ways to handle XML is to use XPath. Quoting <xref linkend="effective-xml"/>, item 35:
         </para>
