@@ -759,120 +759,41 @@ public class AnnotationOrderEndpoint {
     <section id="server-endpoint-exception-resolver">
         <title>Handling Exceptions</title>
         <para>
-            Spring-WS provides
-            <classname>EndpointExceptionResolvers</classname>
-            to ease the pain of unexpected
+            Spring-WS provides <classname>EndpointExceptionResolvers</classname> to ease the pain of unexpected
             exceptions occurring while your message is being processed by an endpoint which matched the request.
-            <classname>EndpointExceptionResolver</classname>
-            s somewhat resemble the exception mappings that can be
-            defined in the web application descriptor
-            <filename>web.xml</filename>
-            .
-            Rather than expose the innards of your application by giving a client a full stack trace, you can handle
-            the exception any way you want, e.g. return a SOAP fault with a specific fault code and string.
+            Endpoint exception resolvers somewhat resemble the exception mappings that can be
+            defined in the web application descriptor <filename>web.xml</filename>.
+            However, they provide a more flexible way to handle exceptions. They provide information about what
+            endpoint was invoked when the exception was thrown.
             Furthermore, a programmatic way of handling exceptions gives you many more options for how to respond
             appropriately.
+            Finally, rather than expose the innards of your application by giving an exception and stack trace, you
+            can handle the exception any way you want, e.g. return a SOAP fault with a specific fault code and string.
         </para>
         <para>
-            Besides implementing the
-            <classname>HandlerExceptionResolver</classname>
-            interface, which is only a
-            matter of implementing the
-            <methodname>resolveException(MessageContext, endpoint, Exception)</methodname>
-            method and returning a
-            boolean, you may also use the
-            <classname>SoapFaultMappingExceptionResolver</classname>
-            .
+            Besides implementing the <classname>EndpointExceptionResolver</classname> interface, which is only a
+            matter of implementing the <methodname>resolveException(MessageContext, endpoint, Exception)</methodname>
+            method, you may also use the <classname>SoapFaultMappingExceptionResolver</classname>.
             This resolver enables you to take the class name of any exception that might be thrown and map it to a
             SOAP Fault, like so:
-            <programlisting><![CDATA[
-<bean id="exceptionResolver"
-class="org.springframework.ws.soap.endpoint.SoapFaultMappingExceptionResolver">
-<property name="defaultFault" value="RECEIVER,Server error">
-</property>
-<property name="exceptionMappings">
-    <props>
-        <prop key="org.springframework.oxm.ValidationFailureException">
-            SENDER,Invalid request
-        </prop>
-    </props>
-</property>
-</bean>
-]]></programlisting>
-            This configuration will map exceptions of type
-            <classname>ValidationFailureException</classname>
-            to a
-            sender side SOAP Fault with a fault string "Invalid request".
+            <programlisting><![CDATA[<beans>
+    <bean id="exceptionResolver"
+        class="org.springframework.ws.soap.endpoint.SoapFaultMappingExceptionResolver">
+    <property name="defaultFault" value="RECEIVER,Server error">
+    </property>
+    <property name="exceptionMappings">
+        <props>
+            <prop key="org.springframework.oxm.ValidationFailureException">
+                SENDER,Invalid request
+            </prop>
+        </props>
+    </property>
+    </bean>
+</beans>]]></programlisting>
+            This configuration will map exceptions of type <classname>ValidationFailureException</classname>
+            to a sender side SOAP Fault with a fault string "Invalid request".
             If any other exception occurs, it will return the default fault: a server side fault with fault string
             "Server error".
-            Refer to the Javadoc of
-            <classname>SoapFaultDefinitionEditor</classname>
-            to read more about the exact
-            notation of the faults.
-        </para>
-    </section>
-
-    <section>
-        <title>Similarities between Spring-MVC and Spring-WS</title>
-        <para>
-            Spring-WS has the same basic architecture as Spring's Web MVC framework.
-            The table below shows some of the core concepts of Spring Web MVC, and the corresponding class in Spring-WS.
-            <informaltable>
-                <tgroup cols="2">
-                    <thead>
-                        <row>
-                            <entry>Spring Web MVC</entry>
-                            <entry>Spring Web Services</entry>
-                        </row>
-                    </thead>
-                    <tbody>
-                        <row>
-                            <entry>
-                                <classname>DispatcherServlet</classname>
-                            </entry>
-                            <entry>
-                                <classname>MessageDispatcher</classname>
-                            </entry>
-                        </row>
-                        <row>
-                            <entry>handler</entry>
-                            <entry>endpoint</entry>
-                        </row>
-                        <row>
-                            <entry>
-                                <classname>HandlerAdapter</classname>
-                            </entry>
-                            <entry>
-                                <classname>EndpointAdapter</classname>
-                            </entry>
-                        </row>
-                        <row>
-                            <entry>
-                                <classname>HandlerMapping</classname>
-                            </entry>
-                            <entry>
-                                <classname>EndpointMapping</classname>
-                            </entry>
-                        </row>
-                        <row>
-                            <entry>
-                                <classname>HandlerInterceptor</classname>
-                            </entry>
-                            <entry>
-                                <classname>EndpointInterceptor</classname>
-                            </entry>
-                        </row>
-                        <row>
-                            <entry>
-                                <classname>HandlerExceptionResolver</classname>
-                            </entry>
-                            <entry>
-                                <classname>EndpointExceptionResolver</classname>
-                            </entry>
-                        </row>
-                    </tbody>
-                </tgroup>
-            </informaltable>
         </para>
     </section>
 </chapter>
