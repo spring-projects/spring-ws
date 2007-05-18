@@ -16,8 +16,8 @@
             of course <classname>AbstractMarshallingPayloadEndpoint</classname>. Application endpoints will typically
             be subclasses of those.
             Alternatively, there is a endpoint development that uses Java 5 annotations, such as
-            <literal>@Endpoint</literal> for marking a POJO as endpoint, and marking a method with
-            <literal>@PayloadRoot</literal> or <literal>@SoapAction</literal>.
+            <interfacename>@Endpoint</interfacename> for marking a POJO as endpoint, and marking a method with
+            <interfacename>@PayloadRoot</interfacename> or <interfacename>@SoapAction</interfacename>.
            </para>
            <para>
                Spring-WS's XML handling is extremely flexible. An endpoint can choose from
@@ -253,8 +253,10 @@ public class SampleEndpoint extends AbstractDomPayloadEndpoint {
                 base classes which use alternative DOM APIs. Spring Web Services supports most DOM APIs, so that you
                 can use the one you are familiar with. For instance, the
                 <classname>AbstractJDomPayloadEndpoint</classname> allows you to use JDOM, and the
-                <classname>AbstractXomPayloadEndpoint</classname> uses XOM to handle the XML. All endpoints have an
-                <methodname>invokeInternal</methodname> method similar to above.
+                <classname>AbstractXomPayloadEndpoint</classname> uses XOM to handle the XML. All of these endpoints 
+                have an <methodname>invokeInternal</methodname> method similar to above.
+                Also, consider to use Spring-WS's XPath support to extract the information you need out of the payload,
+                see <xref linkend="xpath"/>.
             </para>
         </section>
         <section>
@@ -295,8 +297,7 @@ public class MarshallingOrderEndpoint extends AbstractMarshallingPayloadEndpoint
         return order;
     }
 }]]></programlisting>
-               <programlisting><![CDATA[
-<beans>
+               <programlisting><![CDATA[<beans>
     <bean id="orderEndpoint" class="samples.MarshallingOrderEndpoint">
         <constructor-arg ref="orderService"/>
         <constructor-arg ref="marshaller"/>
@@ -312,6 +313,8 @@ public class MarshallingOrderEndpoint extends AbstractMarshallingPayloadEndpoint
     </bean>
 
     <bean id="orderService" class="samples.DefaultOrderService"/>
+
+    <!-- Other beans, such as the endpoint mapping -->
 </beans>]]></programlisting>
             <para>
                 In this sample, we configure a <link linkend="oxm-jaxb2">Jaxb2Marshaller</link> for the
@@ -356,7 +359,74 @@ public class MarshallingOrderEndpoint extends AbstractMarshallingPayloadEndpoint
         </section>
         <section>
             <title><literal>@Endpoint</literal></title>
-            <para/>
+            <para>
+                The previous two programming models were based on inheritance, and handled individual XML mesages.
+                Spring Web Services offer another endpoint with which you aggregate multiple handling into one
+                controller, thus grouping functionality together. This model is based on annotations, so you can only
+                use it under Java 5 and higher. Here is an example that uses the same marshalled objects as above:
+            </para>
+            <programlisting><![CDATA[package samples;
+
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+
+@Endpoint
+public class AnnotationOrderEndpoint {
+    private final OrderService orderService;
+
+    public AnnotationOrderEndpoint(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    @PayloadRoot(localPart = "orderRequest", namespace = "http://samples")
+    public Order getOrder(OrderRequest orderRequest) {
+        return orderService.getOrder(orderRequest.getId());
+    }
+
+    @PayloadRoot(localPart = "order", namespace = "http://samples")
+    public void order(Order order) {
+        orderService.createOrder(order);
+    }
+
+}]]></programlisting>
+            <para>
+                By annotating the class with <interfacename>@Endpoint</interfacename>, you mark it as a Spring-WS
+                endpoint. Because the endpoint class can have multiple request handling methods, we need to instruct
+                Spring-WS which method to invoke for which request. This is done using the
+                <interfacename>@PayloadRoot</interfacename> annotation: the <methodname>getOrder</methodname> method
+                will be invoked for requests with a <literal>orderRequest</literal> local name, and a
+                <uri>http://samples</uri> namespace URI; the <methodname>order</methodname> method for requests with
+                a <literal>order</literal> local name. For more information about these annotations, refer to
+                <xref linkend="server-method-endpoint-mapping"/>.
+                Obviously, we also need to configure Spring-WS to support the JAXB objects
+                <classname>OrderRequest</classname> and <classname>Order</classname> by defining a
+                <classname>Jaxb2Marshaller</classname>. This is what the configuration
+                looks like:
+            </para>
+            <programlisting><![CDATA[<beans>
+    <bean id="orderEndpoint" class="samples.AnnotationOrderEndpoint">
+        <constructor-arg ref="orderService"/>
+    </bean>
+
+    <bean id="orderService" class="samples.DefaultOrderService"/>
+
+    <bean class="org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter">
+        <constructor-arg ref="marshaller"/>
+    </bean>
+
+    <bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name="contextPath" value="samples"/>
+    </bean>
+
+    <bean class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping"/>
+
+</beans>]]></programlisting>
+            <para>
+                The <classname>MarshallingMethodEndpointAdapter</classname> converts the incoming
+                XML messages to marshalled objects used as parameters and return value; the
+                <classname>PayloadRootAnnotationMethodEndpointMapping</classname> is the mapping that detects and
+                handles the <interfacename>@PayloadRoot</interfacename> annotations.
+            </para>
         </section>
     </section>
     <section id="server-endpoint-mapping">
@@ -411,66 +481,70 @@ public class MarshallingOrderEndpoint extends AbstractMarshallingPayloadEndpoint
             <title>PayloadRootQNameEndpointMapping</title>
             <para/>
         </section>
+        <section id="server-method-endpoint-mapping">
+            <title><classname>MethodEndpointMapping</classname></title>
+            <para/>
+        </section>
         <section id="server-endpoint-interceptor">
             <title>Adding <interfacename>EndpointInterceptors</interfacename></title>
             <para/>
         </section>
-        <section id="server-endpoint-exception-resolver">
-            <title>Handling Exceptions</title>
-            <para>
-                Spring-WS provides
-                <classname>EndpointExceptionResolvers</classname>
-                to ease the pain of unexpected
-                exceptions occurring while your message is being processed by an endpoint which matched the request.
-                <classname>EndpointExceptionResolver</classname>
-                s somewhat resemble the exception mappings that can be
-                defined in the web application descriptor
-                <filename>web.xml</filename>
-                .
-                Rather than expose the innards of your application by giving a client a full stack trace, you can handle
-                the exception any way you want, e.g. return a SOAP fault with a specific fault code and string.
-                Furthermore, a programmatic way of handling exceptions gives you many more options for how to respond
-                appropriately.
-            </para>
-            <para>
-                Besides implementing the
-                <classname>HandlerExceptionResolver</classname>
-                interface, which is only a
-                matter of implementing the
-                <methodname>resolveException(MessageContext, endpoint, Exception)</methodname>
-                method and returning a
-                boolean, you may also use the
-                <classname>SoapFaultMappingExceptionResolver</classname>
-                .
-                This resolver enables you to take the class name of any exception that might be thrown and map it to a
-                SOAP Fault, like so:
-                <programlisting><![CDATA[
+    </section>
+    <section id="server-endpoint-exception-resolver">
+        <title>Handling Exceptions</title>
+        <para>
+            Spring-WS provides
+            <classname>EndpointExceptionResolvers</classname>
+            to ease the pain of unexpected
+            exceptions occurring while your message is being processed by an endpoint which matched the request.
+            <classname>EndpointExceptionResolver</classname>
+            s somewhat resemble the exception mappings that can be
+            defined in the web application descriptor
+            <filename>web.xml</filename>
+            .
+            Rather than expose the innards of your application by giving a client a full stack trace, you can handle
+            the exception any way you want, e.g. return a SOAP fault with a specific fault code and string.
+            Furthermore, a programmatic way of handling exceptions gives you many more options for how to respond
+            appropriately.
+        </para>
+        <para>
+            Besides implementing the
+            <classname>HandlerExceptionResolver</classname>
+            interface, which is only a
+            matter of implementing the
+            <methodname>resolveException(MessageContext, endpoint, Exception)</methodname>
+            method and returning a
+            boolean, you may also use the
+            <classname>SoapFaultMappingExceptionResolver</classname>
+            .
+            This resolver enables you to take the class name of any exception that might be thrown and map it to a
+            SOAP Fault, like so:
+            <programlisting><![CDATA[
 <bean id="exceptionResolver"
-    class="org.springframework.ws.soap.endpoint.SoapFaultMappingExceptionResolver">
-    <property name="defaultFault" value="RECEIVER,Server error">
-    </property>
-    <property name="exceptionMappings">
-        <props>
-            <prop key="org.springframework.oxm.ValidationFailureException">
-                SENDER,Invalid request
-            </prop>
-        </props>
-    </property>
+class="org.springframework.ws.soap.endpoint.SoapFaultMappingExceptionResolver">
+<property name="defaultFault" value="RECEIVER,Server error">
+</property>
+<property name="exceptionMappings">
+    <props>
+        <prop key="org.springframework.oxm.ValidationFailureException">
+            SENDER,Invalid request
+        </prop>
+    </props>
+</property>
 </bean>
 ]]></programlisting>
-                This configuration will map exceptions of type
-                <classname>ValidationFailureException</classname>
-                to a
-                sender side SOAP Fault with a fault string "Invalid request".
-                If any other exception occurs, it will return the default fault: a server side fault with fault string
-                "Server error".
-                Refer to the Javadoc of
-                <classname>SoapFaultDefinitionEditor</classname>
-                to read more about the exact
-                notation of the faults.
-            </para>
-        </section>
-        </section>
+            This configuration will map exceptions of type
+            <classname>ValidationFailureException</classname>
+            to a
+            sender side SOAP Fault with a fault string "Invalid request".
+            If any other exception occurs, it will return the default fault: a server side fault with fault string
+            "Server error".
+            Refer to the Javadoc of
+            <classname>SoapFaultDefinitionEditor</classname>
+            to read more about the exact
+            notation of the faults.
+        </para>
+    </section>
 
     <section>
         <title>Similarities between Spring-MVC and Spring-WS</title>

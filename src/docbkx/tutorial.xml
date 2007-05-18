@@ -379,7 +379,7 @@
     </wsdl:binding>
     <wsdl:service name="HumanResourceService">
         <wsdl:port binding="tns:HumanResourceBinding" name="HumanResourcePort">
-            <soap:address location="http://mycompany.com/humanresources"/>
+            <soap:address location="http://localhost:8080/holidayService/"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>]]></programlisting>
@@ -431,7 +431,7 @@
                 </callout>
                 <callout arearefs="tutorial.wsdl.address">
                     <para>
-                        The <uri>http://mycompany.com/humanresources</uri> address is the URL where the Web
+                        The <uri>http://localhost:8080/holidayService/</uri> address is the URL where the Web
                         service can be invoked.
                     </para>
                 </callout>
