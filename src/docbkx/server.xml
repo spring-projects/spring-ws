@@ -394,7 +394,7 @@ public class AnnotationOrderEndpoint {
                 endpoint. Because the endpoint class can have multiple request handling methods, we need to instruct
                 Spring-WS which method to invoke for which request. This is done using the
                 <interfacename>@PayloadRoot</interfacename> annotation: the <methodname>getOrder</methodname> method
-                will be invoked for requests with a <literal>orderRequest</literal> local name, and a
+                will be invoked for requests with a <literal>orderRequest</literal> local name and a
                 <uri>http://samples</uri> namespace URI; the <methodname>order</methodname> method for requests with
                 a <literal>order</literal> local name. For more information about these annotations, refer to
                 <xref linkend="server-method-endpoint-mapping"/>.
@@ -415,7 +415,12 @@ public class AnnotationOrderEndpoint {
     </bean>
 
     <bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
-        <property name="contextPath" value="samples"/>
+        <property name="classesToBeBound">
+            <list>
+                <value>samples.OrderRequest</value>
+                <value>samples.Order</value>
+            </list>
+        </property>        
     </bean>
 
     <bean class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping"/>
@@ -432,7 +437,7 @@ public class AnnotationOrderEndpoint {
                 <para>
                     As an alternative to using marshalling, we could have used <link linkend="xpath">XPath</link> to
                     extract the information out of the incoming XML request. Spring-WS offers another annotation for
-                    this purpose: <interfacename>@XPathParam</interfacename>. You simply annotate a method paramters
+                    this purpose: <interfacename>@XPathParam</interfacename>. You simply annotate method parameters
                     with this annotation, and it will be bound with the evaluation of that annotation.
                     Here is an example:
                 </para>
