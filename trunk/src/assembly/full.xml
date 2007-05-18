@@ -33,11 +33,8 @@
              <outputDirectory>docs/api</outputDirectory>
        </fileSet>
         <fileSet>
-             <directory>doc/target/docbkx</directory>
+             <directory>target/site/reference</directory>
              <outputDirectory>docs/reference</outputDirectory>
-             <excludes>
-                 <exclude>**/*.fo</exclude>
-            </excludes>             
        </fileSet>
        <!-- Samples -->
        <fileSet>

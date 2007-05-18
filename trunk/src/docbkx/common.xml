@@ -4,7 +4,7 @@
 <chapter id="common">
     <title>Shared components</title>
     <para>
-        In this chapter, we will explore the the components which are shared between client- and server side 
+        In this chapter, we will explore the the components which are shared between client- and server side
         Spring-WS development. These interfaces and classes represent the building blocks of Spring-WS, so
         it's important to understand what they do, even if you do not use them directly.
     </para>
@@ -13,10 +13,10 @@
         <section id="web-service-message">
             <title><interfacename>WebServiceMessage</interfacename></title>
             <para>
-                One of the core interfaces within Spring Web Services is the 
+                One of the core interfaces within Spring Web Services is the
                 <interfacename>WebServiceMessage</interfacename>. This interface represents a protocol agnostic XML
                 message. The interface contains methods that provide access to the payload of the message, in the form
-                of a <interfacename>javax.xml.transform.Source</interfacename> or a 
+                of a <interfacename>javax.xml.transform.Source</interfacename> or a
                 <interfacename>javax.xml.transform.Result</interfacename>. <interfacename>Source</interfacename> and
                 <interfacename>Result</interfacename> are tagging interfaces that represent an abstraction over XML
                 input and output. Concrete implementations wrap various XML representations, as indicated in the table
@@ -74,39 +74,39 @@
         <section id="soap-message">
             <title><interfacename>SoapMessage</interfacename></title>
             <para>
-                The <interfacename>SoapMessage</interfacename> is an extension of 
+                The <interfacename>SoapMessage</interfacename> is an extension of
                 <interfacename>WebServiceMessage</interfacename>. It contains SOAP-specific methods, such as getting
-                SOAP Headers, SOAP Faults, etc. Generally, your code should only not be dependent on 
+                SOAP Headers, SOAP Faults, etc. Generally, your code should only not be dependent on
                 <interfacename>SoapMessage</interfacename>, because the content of the SOAP Body can be obtained via
-                <methodname>getPayloadSource()</methodname> and <methodname>getPayloadResult()</methodname> in the 
-                <interfacename>WebServiceMessage</interfacename>. Only when it is necessary to perform SOAP-specific 
-                actions, such as adding a header, get an attachment, etc., should you need to cast 
+                <methodname>getPayloadSource()</methodname> and <methodname>getPayloadResult()</methodname> in the
+                <interfacename>WebServiceMessage</interfacename>. Only when it is necessary to perform SOAP-specific
+                actions, such as adding a header, get an attachment, etc., should you need to cast
                 <interfacename>WebServiceMessage</interfacename> to <interfacename>SoapMessage</interfacename>.
             </para>
         </section>
         <section id="message-factories">
             <title>Message Factories</title>
             <para>
-                Concrete message implementation are created by a 
+                Concrete message implementation are created by a
                 <interfacename>WebServiceMessageFactory</interfacename>. This factory can create an empty message, or
                 read a message based on an input stream.
                 There are two concrete implementations of <interfacename>WebServiceMessageFactory</interfacename>.
-                One is based on SAAJ, the SOAP with Attachments API for Java, the other based on Axis 2's AXIOM, the 
+                One is based on SAAJ, the SOAP with Attachments API for Java, the other based on Axis 2's AXIOM, the
                 AXis Object Model.
             </para>
             <section>
                 <title><classname>SaajSoapMessageFactory</classname></title>
                 <para>
-                    The <classname>SaajSoapMessageFactory</classname> uses the SOAP with Attachments API for Java to 
-                    create <classname>SoapMessage</classname> implementations. SAAJ is part of J2EE 1.4, so it should be 
-                    supported under most modern application servers. You wire up a 
+                    The <classname>SaajSoapMessageFactory</classname> uses the SOAP with Attachments API for Java to
+                    create <classname>SoapMessage</classname> implementations. SAAJ is part of J2EE 1.4, so it should be
+                    supported under most modern application servers. You wire up a
                     <classname>SaajSoapMessageFactory</classname> like so:
     <programlisting><![CDATA[
 <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory" />]]></programlisting>
                 </para>
                 <note>
                     <para>
-                        SAAJ is based on DOM, the Document Object Model. This means that all SOAP messages are 
+                        SAAJ is based on DOM, the Document Object Model. This means that all SOAP messages are
                         stored in memory as a whole. For larger SOAP messages, this may not be very performant.
                         In that case, the <classname>AxiomSoapMessageFactory</classname> might be more applicable.
                     </para>
@@ -115,15 +115,15 @@
             <section>
                 <title><classname>AxiomSoapMessageFactory</classname></title>
                 <para>
-                    The <classname>AxiomSoapMessageFactory</classname> uses the AXis 2 Object Model to create 
-                    <interfacename>SoapMessage</interfacename> implementations. AXIOM is based on  StAX, the Streaming 
-                    API for XML. StAX provides a pull-based mechanism for reading XML messages, which can be more 
+                    The <classname>AxiomSoapMessageFactory</classname> uses the AXis 2 Object Model to create
+                    <interfacename>SoapMessage</interfacename> implementations. AXIOM is based on  StAX, the Streaming
+                    API for XML. StAX provides a pull-based mechanism for reading XML messages, which can be more
                     efficient for larger messages.
                 </para>
                 <para>
-                    To increase reading performance on the <classname>AxiomSoapMessageFactory</classname>, 
+                    To increase reading performance on the <classname>AxiomSoapMessageFactory</classname>,
                     you can set the <property>payloadCaching</property> property to false (default is true).
-                    This this will read the contents of the SOAP body directly from the stream. 
+                    This this will read the contents of the SOAP body directly from the stream.
                     When this setting is enabled, the payload can only be read once.
                     This means that you have to make sure that any preprocessing of the message does not consume it.
                 </para>
@@ -133,7 +133,7 @@
 <bean id="messageFactory" class="org.springframework.ws.soap.axiom.AxiomSoapMessageFactory">
     <property name="payloadCaching" value="true"/>
 </bean>]]></programlisting>
-                </para>                 
+                </para>
             </section>
         </section>
         <section id="message-context">
@@ -144,7 +144,7 @@
         		sent back to the client, where it is read.
         	</para>
         	<para>
-        		In Spring Web Services, such a conversation is contained in a 
+        		In Spring Web Services, such a conversation is contained in a
         		<interfacename>MessageContext</interfacename>, which has properties to get request and response
         		messages.
         		On the client-side, the message context is created by the <link linkend="client-web-service-template">
@@ -159,21 +159,30 @@
         <title>Handling XML With XPath</title>
         <para>
             One of the best ways to handle XML is to use XPath. Quoting <xref linkend="effective-xml"/>, item 35:
-            <blockquote>
-                <para>
-                    XPath is a fourth generation declarative language that allows you to specify which nodes you want to
-                    process without specifying exactly how the processor is supposed to navigate to those nodes. XPath's
-                    data model is very well designed to support exactly what almost all developers want from XML. For
-                    instance, it merges all adjacent text including that in CDATA sections, allows values to be
-                    calculated that skip over comments and processing instructions` and include text from child and
-                    descendant elements, and requires all external entity references to be resolved. In practice, XPath
-                    expressions tend to be much more robust against unexpected but perhaps insignificant changes in the
-                    input document.
-                </para>
-                <attribution>Elliotte Rusty Harold</attribution>
-            </blockquote>
         </para>
-        <para>
+        <sidebar>
+            <title>What is XPath?</title>
+            <para>
+                XPath is a language for addressing parts of an XML document.
+                For more information about XPath, refer to the
+                <ulink url="http://www.w3.org/TR/xpath">XPath specification</ulink>, or read the
+                <ulink url="http://www.w3schools.com/xpath/">XPath tutorial</ulink>
+            </para>
+        </sidebar>
+        <blockquote>
+            <para>
+                XPath is a fourth generation declarative language that allows you to specify which nodes you want to
+                process without specifying exactly how the processor is supposed to navigate to those nodes. XPath's
+                data model is very well designed to support exactly what almost all developers want from XML. For
+                instance, it merges all adjacent text including that in CDATA sections, allows values to be
+                calculated that skip over comments and processing instructions` and include text from child and
+                descendant elements, and requires all external entity references to be resolved. In practice, XPath
+                expressions tend to be much more robust against unexpected but perhaps insignificant changes in the
+                input document.
+            </para>
+            <attribution>Elliotte Rusty Harold</attribution>
+        </blockquote>
+    <para>
             Spring Web Services has two ways to use XPath within your application: the faster
             <interfacename>XPathExpression</interfacename> or the more flexible <classname>XPathTemplate</classname>.
         </para>
