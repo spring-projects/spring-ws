@@ -157,9 +157,6 @@
     </section>
     <section id="xpath">
         <title>Handling XML With XPath</title>
-        <para>
-            One of the best ways to handle XML is to use XPath. Quoting <xref linkend="effective-xml"/>, item 35:
-        </para>
         <sidebar>
             <title>What is XPath?</title>
             <para>
@@ -169,6 +166,9 @@
                 <ulink url="http://www.w3schools.com/xpath/">XPath tutorial</ulink>
             </para>
         </sidebar>
+        <para>
+            One of the best ways to handle XML is to use XPath. Quoting <xref linkend="effective-xml"/>, item 35:
+        </para>
         <blockquote>
             <para>
                 XPath is a fourth generation declarative language that allows you to specify which nodes you want to

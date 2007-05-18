@@ -358,7 +358,7 @@ public class MarshallingOrderEndpoint extends AbstractMarshallingPayloadEndpoint
             </para>
         </section>
         <section>
-            <title><literal>@Endpoint</literal></title>
+            <title><interfacename>@Endpoint</interfacename></title>
             <para>
                 The previous two programming models were based on inheritance, and handled individual XML mesages.
                 Spring Web Services offer another endpoint with which you aggregate multiple handling into one
@@ -426,6 +426,59 @@ public class AnnotationOrderEndpoint {
                 XML messages to marshalled objects used as parameters and return value; the
                 <classname>PayloadRootAnnotationMethodEndpointMapping</classname> is the mapping that detects and
                 handles the <interfacename>@PayloadRoot</interfacename> annotations.
+            </para>
+            <para>
+                As an alternative to using marshalling, we could have used <link linkend="xpath">XPath</link> to
+                extract the information out of the incoming XML request. Spring-WS offers another annotation for
+                this purpose: <interfacename>@XPathParam</interfacename>. You simply annotate a method paramters
+                with this annotation, and it will be bound with the evaluation of that annotation.
+                Here is an example:
+            </para>
+            <programlisting><![CDATA[package samples;
+
+import javax.xml.transform.Source;
+
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.server.endpoint.annotation.XPathParam;
+
+@Endpoint
+public class AnnotationOrderEndpoint {
+    private final OrderService orderService;
+
+    public AnnotationOrderEndpoint(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    @PayloadRoot(localPart = "orderRequest", namespace = "http://samples")
+    public Source getOrder(]]><emphasis role="bold"><![CDATA[@XPathParam("/s:orderRequest/@id") double orderId]]></emphasis><![CDATA[) {
+        Order order = orderService.getOrder((int) orderId);
+        // create Source from order and return it
+    }
+
+}]]></programlisting>
+            <programlisting><![CDATA[<beans>
+    <bean id="orderEndpoint" class="samples.AnnotationOrderEndpoint">
+        <constructor-arg ref="orderService"/>
+    </bean>
+
+    <bean id="orderService" class="samples.DefaultOrderService"/>
+
+    <bean class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping"/>
+
+    <bean class="org.springframework.ws.server.endpoint.adapter.XPathParamAnnotationMethodEndpointAdapter" />
+
+</beans>]]></programlisting>
+            <para>
+                Using the <interfacename>@XPathParam</interfacename>, you can bind to all the data types supported by
+                XPath:
+                <itemizedlist>
+                    <listitem><para><type>boolean</type> or <classname>Boolean</classname></para></listitem>
+                    <listitem><para><type>double</type> or <classname>Double</classname></para></listitem>
+                    <listitem><para><classname>String</classname></para></listitem>
+                    <listitem><para><interfacename>Node</interfacename></para></listitem>
+                    <listitem><para><interfacename>NodeList</interfacename></para></listitem>
+                </itemizedlist>
             </para>
         </section>
     </section>
