@@ -16,10 +16,10 @@
 
 package org.springframework.ws.server.endpoint.interceptor;
 
+import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.sax.SAXSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,7 +29,7 @@ import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
-import org.springframework.xml.sax.SaxUtils;
+import org.springframework.xml.transform.ResourceSource;
 
 /**
  * Interceptor that transforms the payload of <code>WebServiceMessage</code>s using XSLT stylesheet. Allows for seperate
@@ -117,7 +117,7 @@ public class PayloadTransformingInterceptor implements EndpointInterceptor, Init
             if (logger.isInfoEnabled()) {
                 logger.info("Transforming request using " + requestXslt);
             }
-            SAXSource requestSource = new SAXSource(SaxUtils.createInputSource(requestXslt));
+            Source requestSource = new ResourceSource(requestXslt);
             requestTemplates = transformerFactory.newTemplates(requestSource);
         }
         if (responseXslt != null) {
@@ -125,7 +125,7 @@ public class PayloadTransformingInterceptor implements EndpointInterceptor, Init
             if (logger.isInfoEnabled()) {
                 logger.info("Transforming response using " + responseXslt);
             }
-            SAXSource responseSource = new SAXSource(SaxUtils.createInputSource(responseXslt));
+            Source responseSource = new ResourceSource(responseXslt);
             responseTemplates = transformerFactory.newTemplates(responseSource);
         }
     }
