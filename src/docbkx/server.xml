@@ -2,7 +2,7 @@
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
                  "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
 <chapter id="server">
-    <title>Creating a Web service with Spring-WS</title>    
+    <title>Creating a Web service with Spring-WS</title>
     <section id="ws-introduction">
         <title>Introduction</title>
         <para>
@@ -253,7 +253,7 @@ public class SampleEndpoint extends AbstractDomPayloadEndpoint {
                 base classes which use alternative DOM APIs. Spring Web Services supports most DOM APIs, so that you
                 can use the one you are familiar with. For instance, the
                 <classname>AbstractJDomPayloadEndpoint</classname> allows you to use JDOM, and the
-                <classname>AbstractXomPayloadEndpoint</classname> uses XOM to handle the XML. All of these endpoints 
+                <classname>AbstractXomPayloadEndpoint</classname> uses XOM to handle the XML. All of these endpoints
                 have an <methodname>invokeInternal</methodname> method similar to above.
                 Also, consider to use Spring-WS's XPath support to extract the information you need out of the payload,
                 see <xref linkend="xpath"/>.
@@ -263,10 +263,10 @@ public class SampleEndpoint extends AbstractDomPayloadEndpoint {
             <title><classname>AbstractMarshallingPayloadEndpoint</classname></title>
             <para>
                 Rather than handling XML directly using DOM, you can use marshalling to convert the payload of the XML
-                message into a Java Object. Spring Web Services offers the 
-                <classname>AbstractMarshallingPayloadEndpoint</classname> for this purpose, which is built on the 
-                marshalling abstraction described in <xref linkend="oxm"/>. The 
-                <classname>AbstractMarshallingPayloadEndpoint</classname> has two properties: 
+                message into a Java Object. Spring Web Services offers the
+                <classname>AbstractMarshallingPayloadEndpoint</classname> for this purpose, which is built on the
+                marshalling abstraction described in <xref linkend="oxm"/>. The
+                <classname>AbstractMarshallingPayloadEndpoint</classname> has two properties:
                 <property>marshaller</property> and <property>unmarshaller</property>, in which you can inject in the
                 constructor or by setters.
             </para>
@@ -771,29 +771,86 @@ public class AnnotationOrderEndpoint {
             can handle the exception any way you want, e.g. return a SOAP fault with a specific fault code and string.
         </para>
         <para>
+            Endpoint exception resolvers are automatically picked up by the <classname>MessageDispatcher</classname>, so
+            you don't have to configure them explicitely.
+        </para>
+        <para>
             Besides implementing the <classname>EndpointExceptionResolver</classname> interface, which is only a
             matter of implementing the <methodname>resolveException(MessageContext, endpoint, Exception)</methodname>
-            method, you may also use the <classname>SoapFaultMappingExceptionResolver</classname>.
+            method, you may also use one of the default implementations.
+            The simples implementation is the <classname>SimpleSoapExceptionResolver</classname>, which simply
+            always creates a SOAP 1.1 Server or SOAP 1.2 Receiver Fault, and uses the exception message as the fault
+            string.
+        </para>
+        <para>
+            A more sophisticated implementation is the <classname>SoapFaultMappingExceptionResolver</classname>.
             This resolver enables you to take the class name of any exception that might be thrown and map it to a
             SOAP Fault, like so:
-            <programlisting><![CDATA[<beans>
+        </para>
+        <programlisting><![CDATA[<beans>
     <bean id="exceptionResolver"
         class="org.springframework.ws.soap.endpoint.SoapFaultMappingExceptionResolver">
-    <property name="defaultFault" value="RECEIVER,Server error">
+    <property name="defaultFault" value="SERVER">
     </property>
     <property name="exceptionMappings">
         <props>
             <prop key="org.springframework.oxm.ValidationFailureException">
-                SENDER,Invalid request
+                CLIENT,Invalid request
             </prop>
         </props>
     </property>
     </bean>
 </beans>]]></programlisting>
-            This configuration will map exceptions of type <classname>ValidationFailureException</classname>
-            to a sender side SOAP Fault with a fault string "Invalid request".
-            If any other exception occurs, it will return the default fault: a server side fault with fault string
-            "Server error".
+        <para>
+            The key values and default endpoint use the format <literal>faultCode,faultString,locale</literal>, where
+            only the fault code is required.
+            If the fault string is not set, it will default to the exception message.
+            If the language is not set, it will default to English.
+            The configuration above will map exceptions of type <classname>ValidationFailureException</classname>
+            to a sender side SOAP Fault with a fault string "Invalid request":
         </para>
+        <programlisting><![CDATA[<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+    <SOAP-ENV:Body>]]><emphasis role="bold"><![CDATA[
+       <SOAP-ENV:Fault>
+           <faultcode>SOAP-ENV:Client</faultcode>
+           <faultstring>Invalid request</faultstring>
+       </SOAP-ENV:Fault>]]></emphasis><![CDATA[
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>]]></programlisting>
+        <para>
+            If any other exception occurs, it will return the default fault: a server side fault with the exception
+            message as fault string.
+        </para>
+        <para>
+            Finally, it is possible to annotate exception classes with the <interfacename>@SoapFault</interfacename>
+            annotation, to indicate the SOAP Fault that should be returned whenever that exception is thrown.
+            The elements of the annotation include a fault code enumeration, fault string or reason, and language. Here
+            is an example exception:
+        </para>
+        <programlisting><![CDATA[package samples;
+
+import org.springframework.ws.soap.server.endpoint.annotation.FaultCode;
+import org.springframework.ws.soap.server.endpoint.annotation.SoapFault;
+
+@SoapFault(faultCode = FaultCode.SERVER)
+public class MyBusinessException extends Exception {
+
+    public MyClientException(String message) {
+        super(message);
+    }
+}]]></programlisting>
+        <para>
+            Whever the <classname>MyBusinessException</classname> is thrown with the constructor string
+            <literal>Oops!</literal> during endpoint invocation, it will result in
+            the following response:
+        </para>
+        <programlisting><![CDATA[<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+<SOAP-ENV:Body>
+   <SOAP-ENV:Fault>
+       <faultcode>SOAP-ENV:Server</faultcode>
+       <faultstring>Oops!</faultstring>
+   </SOAP-ENV:Fault>
+</SOAP-ENV:Body>
+</SOAP-ENV:Envelope>]]></programlisting>
     </section>
 </chapter>
