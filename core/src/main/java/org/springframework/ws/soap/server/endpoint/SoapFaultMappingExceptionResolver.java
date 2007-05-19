@@ -19,12 +19,7 @@ package org.springframework.ws.soap.server.endpoint;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import org.springframework.util.Assert;
-import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.server.endpoint.AbstractEndpointExceptionResolver;
-import org.springframework.ws.soap.SoapBody;
-import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.soap11.Soap11Body;
+import org.springframework.util.CollectionUtils;
 
 /**
  * Exception resolver that allows for mapping exception class names to SOAP Faults. The mappings are set using the
@@ -32,11 +27,9 @@ import org.springframework.ws.soap.soap11.Soap11Body;
  *
  * @author Arjen Poutsma
  */
-public class SoapFaultMappingExceptionResolver extends AbstractEndpointExceptionResolver {
+public class SoapFaultMappingExceptionResolver extends AbstractSoapFaultDefinitionExceptionResolver {
 
     private Properties exceptionMappings;
-
-    private SoapFaultDefinition defaultFault;
 
     /**
      * Set the mappings between exception class names and SOAP Faults. The exception class name can be a substring, with
@@ -45,60 +38,19 @@ public class SoapFaultMappingExceptionResolver extends AbstractEndpointException
      * The values of the given properties object should use the format described in
      * <code>SoapFaultDefinitionEditor</code>.
      * <p/>
-     * Follows the same matching algorithm as <code>RuleBasedTransactionAttribute</code> and
-     * <code>RollbackRuleAttribute</code>.
+     * Follows the same matching algorithm as <code>SimpleMappingExceptionResolver</code>.
      *
      * @param mappings exception patterns (can also be fully qualified class names) as keys, fault definition texts as
      *                 values
      * @see SoapFaultDefinitionEditor
      * @see org.springframework.web.servlet.handler.SimpleMappingExceptionResolver
-     * @see org.springframework.transaction.interceptor.RuleBasedTransactionAttribute
-     * @see org.springframework.transaction.interceptor.RollbackRuleAttribute
      */
     public void setExceptionMappings(Properties mappings) {
         exceptionMappings = mappings;
     }
 
-    /**
-     * Set the default fault. This fault will be returned if no specific mapping was found.
-     */
-    public void setDefaultFault(SoapFaultDefinition defaultFault) {
-        this.defaultFault = defaultFault;
-    }
-
-    protected boolean resolveExceptionInternal(MessageContext messageContext, Object endpoint, Exception ex) {
-        Assert.isTrue(messageContext.getResponse() instanceof SoapMessage,
-                "SimpleSoapExceptionResolver requires a SoapMessage");
-
-        SoapFaultDefinition definition = getFaultDefinition(ex);
-        if (definition == null) {
-            return false;
-        }
-        SoapMessage soapResponse = (SoapMessage) messageContext.getResponse();
-        SoapBody soapBody = soapResponse.getSoapBody();
-
-        if (SoapFaultDefinition.SERVER.equals(definition.getFaultCode()) ||
-                SoapFaultDefinition.RECEIVER.equals(definition.getFaultCode())) {
-            soapBody.addServerOrReceiverFault(definition.getFaultStringOrReason(), definition.getLocale());
-        }
-        else if (SoapFaultDefinition.CLIENT.equals(definition.getFaultCode()) ||
-                SoapFaultDefinition.SENDER.equals(definition.getFaultCode())) {
-            soapBody.addClientOrSenderFault(definition.getFaultStringOrReason(), definition.getLocale());
-        }
-        else {
-            // custom code, only supported for SOAP 1.1
-            if (soapBody instanceof Soap11Body) {
-                Soap11Body soap11Body = (Soap11Body) soapBody;
-                soap11Body.addFault(definition.getFaultCode(), definition.getFaultStringOrReason(),
-                        definition.getLocale());
-            }
-        }
-        return true;
-    }
-
-    private SoapFaultDefinition getFaultDefinition(Exception ex) {
-        SoapFaultDefinition definition = null;
-        if (exceptionMappings != null) {
+    protected SoapFaultDefinition getFaultDefinition(Object endpoint, Exception ex) {
+        if (!CollectionUtils.isEmpty(exceptionMappings)) {
             String definitionText = null;
             int deepest = Integer.MAX_VALUE;
             for (Enumeration names = exceptionMappings.propertyNames(); names.hasMoreElements();) {
@@ -112,14 +64,10 @@ public class SoapFaultMappingExceptionResolver extends AbstractEndpointException
             if (definitionText != null) {
                 SoapFaultDefinitionEditor editor = new SoapFaultDefinitionEditor();
                 editor.setAsText(definitionText);
-                definition = (SoapFaultDefinition) editor.getValue();
+                return (SoapFaultDefinition) editor.getValue();
             }
         }
-        if (definition != null || defaultFault == null) {
-            return definition;
-        }
-        definition = defaultFault;
-        return definition;
+        return null;
     }
 
     /**
@@ -130,7 +78,7 @@ public class SoapFaultMappingExceptionResolver extends AbstractEndpointException
      *
      * @see org.springframework.web.servlet.handler.SimpleMappingExceptionResolver
      */
-    public int getDepth(String exceptionMapping, Exception ex) {
+    protected int getDepth(String exceptionMapping, Exception ex) {
         return getDepth(exceptionMapping, ex.getClass(), 0);
     }
 
