@@ -30,11 +30,12 @@ import org.springframework.xml.namespace.QNameEditor;
  * faultCode,faultString,locale
  * </pre>
  * where <code>faultCode</code> is the string representation of a <code>QName</code>, <code>faultStringOrReason</code>
- * is the fault string, and <code>locale</code> is the optional string representations for the
- * <code>faultStringOrReason</code>language. By default, the language is set to English.
+ * is the optional fault string, and <code>locale</code> is the optional string representations for the
+ * <code>faultStringOrReason</code>language. By default, the language is set to English, and the fault string set to the
+ * exception message.
  * <p/>
  * Instead of supplying a custom fault code, you can use the constants <code>SERVER</code> or <code>RECEIVER</code>
- * indicate a <code>Server</code>/<code>Receiver</code> fault, or or <code>CLIENT</code> or <code>SENDER</code>
+ * indicate a <code>Server</code>/<code>Receiver</code> fault, or <code>CLIENT</code> or <code>SENDER</code>
  * to<code>Client</code>/<code>Sender</code> fault respectivaly.
  * <p/>
  * For example:
@@ -54,7 +55,9 @@ import org.springframework.xml.namespace.QNameEditor;
  * @see javax.xml.namespace.QName#toString()
  * @see org.springframework.xml.namespace.QNameEditor
  * @see SoapFaultDefinition#RECEIVER
+ * @see SoapFaultDefinition#SERVER
  * @see SoapFaultDefinition#SENDER
+ * @see SoapFaultDefinition#CLIENT
  * @see org.springframework.ws.soap.SoapFault#getFaultCode()
  */
 public class SoapFaultDefinitionEditor extends PropertyEditorSupport {
@@ -71,19 +74,21 @@ public class SoapFaultDefinitionEditor extends PropertyEditorSupport {
         }
         else {
             String[] tokens = StringUtils.commaDelimitedListToStringArray(text);
-            if (tokens.length < 2) {
+            if (tokens.length < FAULT_STRING_INDEX) {
                 throw new IllegalArgumentException("Invalid amount of comma delimited values in [" + text +
-                        "]: SoapFaultDefinitionEditor requires at least 2");
+                        "]: SoapFaultDefinitionEditor requires at least 1");
             }
             SoapFaultDefinition definition = new SoapFaultDefinition();
             QNameEditor qNameEditor = new QNameEditor();
             qNameEditor.setAsText(tokens[FAULT_CODE_INDEX].trim());
             definition.setFaultCode((QName) qNameEditor.getValue());
-            definition.setFaultStringOrReason(tokens[FAULT_STRING_INDEX].trim());
-            if (tokens.length > 2) {
-                LocaleEditor localeEditor = new LocaleEditor();
-                localeEditor.setAsText(tokens[FAULT_STRING_LOCALE_INDEX].trim());
-                definition.setLocale((Locale) localeEditor.getValue());
+            if (tokens.length > 1) {
+                definition.setFaultStringOrReason(tokens[FAULT_STRING_INDEX].trim());
+                if (tokens.length > 2) {
+                    LocaleEditor localeEditor = new LocaleEditor();
+                    localeEditor.setAsText(tokens[FAULT_STRING_LOCALE_INDEX].trim());
+                    definition.setLocale((Locale) localeEditor.getValue());
+                }
             }
             setValue(definition);
         }

@@ -63,30 +63,22 @@ public class SoapFaultDefinition {
 
     private Locale locale = Locale.ENGLISH;
 
-    /**
-     * Returns the fault code.
-     */
+    /** Returns the fault code. */
     public QName getFaultCode() {
         return faultCode;
     }
 
-    /**
-     * Sets the fault code.
-     */
+    /** Sets the fault code. */
     public void setFaultCode(QName faultCode) {
         this.faultCode = faultCode;
     }
 
-    /**
-     * Returns the fault string or reason text.
-     */
+    /** Returns the fault string or reason text. By default, it is set to the exception message. */
     public String getFaultStringOrReason() {
         return faultStringOrReason;
     }
 
-    /**
-     * Sets the fault string or reason text.
-     */
+    /** Sets the fault string or reason text. By default, it is set to the exception message. */
     public void setFaultStringOrReason(String faultStringOrReason) {
         this.faultStringOrReason = faultStringOrReason;
     }

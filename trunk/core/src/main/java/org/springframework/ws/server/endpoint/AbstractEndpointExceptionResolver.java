@@ -64,7 +64,7 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
      * Template method for resolving exceptions. Gets called after <code>resolveException</code>.
      *
      * @param messageContext current message context
-     * @param endpoint       the executed endpoint, or null if none chosen at the time of the exception
+     * @param endpoint       the executed endpoint, or <code>null</code>  if none chosen at the time of the exception
      * @param ex             the exception that got thrown during endpoint execution
      * @return <code>true</code> if resolved; <code>false</code> otherwise
      * @see #resolveException(org.springframework.ws.context.MessageContext,Object,Exception)
