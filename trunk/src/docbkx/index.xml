@@ -5,9 +5,9 @@
 
 	<bookinfo>
 		<title>Spring Web Services - Reference Documentation</title>
-      <!-- <releaseinfo> -->
-      <!--  &version; -->
-      <!-- </releaseinfo> -->
+        <releaseinfo> 
+        &version; 
+        </releaseinfo> 
 
 		<authorgroup>
 			<author>
