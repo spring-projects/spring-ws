@@ -44,6 +44,7 @@
                 <include>core/**/*</include>
                 <include>core-tiger/**/*</include>
                 <include>security/**/*</include>
+                <include>archetype/**/*</include>
                 <include>pom.xml</include>
             </includes>
             <excludes>
