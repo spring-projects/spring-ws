@@ -26,24 +26,19 @@ import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.client.core.WebServiceTemplate;
-import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
  * Convenient super class for application classes that need Web service access.
  * <p/>
- * Requires a {@link org.springframework.ws.WebServiceMessageFactory} and {@link org.springframework.ws.transport.WebServiceMessageSender},
- * or a {@link org.springframework.ws.client.core.WebServiceTemplate} instance to be set. It will create its own
- * <code>WebServiceTemplate</code> if <code>WebServiceMessageFactory</code> and <code>WebServiceMessageSender</code> are
- * passed in.
+ * Requires a {@link WebServiceMessageFactory} or a {@link WebServiceTemplate} instance to be set. It will create its
+ * own <code>WebServiceTemplate</code> if <code>WebServiceMessageFactory</code> is passed in.
  * <p/>
- * In addition to the message factory and sender properties, this gateway offers {@link
- * org.springframework.oxm.Marshaller} and {@link org.springframework.oxm.Unmarshaller} properties. Setting these is
- * required when the {@link org.springframework.ws.client.core.WebServiceTemplate#marshalSendAndReceive(Object)
- * marshalling methods} of the template are to be used.
+ * In addition to the message factory property, this gateway offers {@link Marshaller} and {@link Unmarshaller}
+ * properties. Setting these is required when the {@link WebServiceTemplate#marshalSendAndReceive(Object) marshalling
+ * methods} of the template are to be used.
  *
  * @author Arjen Poutsma
  * @see #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
- * @see #setMessageSender(org.springframework.ws.transport.WebServiceMessageSender)
  * @see org.springframework.ws.client.core.WebServiceTemplate
  * @see #setMarshaller(org.springframework.oxm.Marshaller)
  */
@@ -63,14 +58,12 @@ public abstract class WebServiceGatewaySupport implements InitializingBean, Appl
     }
 
     /**
-     * Creates a new <code>WebServiceGatewaySupport</code> instance based on the given message factory and message
-     * sender.
+     * Creates a new <code>WebServiceGatewaySupport</code> instance based on the given message factory.
      *
      * @param messageFactory the message factory to use
-     * @param messageSender  the message sender to use
      */
-    protected WebServiceGatewaySupport(WebServiceMessageFactory messageFactory, WebServiceMessageSender messageSender) {
-        webServiceTemplate = new WebServiceTemplate(messageFactory, messageSender);
+    protected WebServiceGatewaySupport(WebServiceMessageFactory messageFactory) {
+        webServiceTemplate = new WebServiceTemplate(messageFactory);
     }
 
     /** Returns the <code>WebServiceMessageFactory</code> used by the gateway. */
@@ -83,14 +76,14 @@ public abstract class WebServiceGatewaySupport implements InitializingBean, Appl
         webServiceTemplate.setMessageFactory(messageFactory);
     }
 
-    /** Returns the <code>WebServiceMessageSender</code> used by the gateway. */
-    public final WebServiceMessageSender getMessageSender() {
-        return webServiceTemplate.getMessageSender();
+    /** Returns the default URI used by the gateway. */
+    public final String getDefaultUri() {
+        return webServiceTemplate.getDefaultUri();
     }
 
-    /** Sets the <code>WebServiceMessageSender</code> to be used by the gateway. */
-    public final void setMessageSender(WebServiceMessageSender messageSender) {
-        webServiceTemplate.setMessageSender(messageSender);
+    /** Sets the default URI used by the gateway. */
+    public final void setDefaultUri(String uri) {
+        webServiceTemplate.setDefaultUri(uri);
     }
 
     /** Returns the <code>WebServiceTemplate</code> for the gateway. */

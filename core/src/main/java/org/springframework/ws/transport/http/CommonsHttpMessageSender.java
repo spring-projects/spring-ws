@@ -78,8 +78,8 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
         this.httpClient = httpClient;
     }
 
-    public WebServiceConnection createConnection() throws IOException {
-        PostMethod postMethod = new PostMethod(getUrl().toString());
+    public WebServiceConnection createConnection(String uri) throws IOException {
+        PostMethod postMethod = new PostMethod(uri);
         if (isAcceptGzipEncoding()) {
             postMethod.addRequestHeader(HTTP_HEADER_ACCEPT_ENCODING, ENCODING_GZIP);
         }

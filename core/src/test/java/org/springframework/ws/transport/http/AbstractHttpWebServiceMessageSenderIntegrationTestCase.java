@@ -17,14 +17,22 @@
 package org.springframework.ws.transport.http;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.Iterator;
+import java.io.OutputStream;
 import java.util.zip.GZIPOutputStream;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.MimeHeaders;
+import javax.xml.soap.SOAPConstants;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
 
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
@@ -32,14 +40,18 @@ import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.WebServiceMessageFactory;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
+import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
-import org.springframework.ws.transport.TransportInputStream;
-import org.springframework.ws.transport.TransportOutputStream;
 import org.springframework.ws.transport.WebServiceConnection;
+import org.springframework.xml.transform.StringResult;
+import org.springframework.xml.transform.StringSource;
 
 public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase extends XMLTestCase {
 
-    protected Server jettyServer;
+    private Server jettyServer;
 
     private static final String REQUEST_HEADER_NAME = "RequestHeader";
 
@@ -49,20 +61,38 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
 
     private static final String RESPONSE_HEADER_VALUE = "ResponseHeaderValue";
 
-    protected static final String REQUEST = "Request";
+    private static final String REQUEST = "<Request xmlns='http://springframework.org/spring-ws/' />";
 
-    protected static final String RESPONSE = "Response";
+    private static final String SOAP_REQUEST =
+            "<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'><SOAP-ENV:Header/><SOAP-ENV:Body>" +
+                    REQUEST + "</SOAP-ENV:Body></SOAP-ENV:Envelope>";
 
-    protected AbstractHttpWebServiceMessageSender messageSender;
+    private static final String RESPONSE = "<Response  xmlns='http://springframework.org/spring-ws/' />";
+
+    private static final String SOAP_RESPONSE =
+            "<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'><SOAP-ENV:Header/><SOAP-ENV:Body>" +
+                    RESPONSE + "</SOAP-ENV:Body></SOAP-ENV:Envelope>";
+
+    private AbstractHttpWebServiceMessageSender messageSender;
 
     private Context jettyContext;
+
+    private static final String URI = "http://localhost:8888/";
+
+    private MessageFactory saajMessageFactory;
+
+    private TransformerFactory transformerFactory;
+
+    private WebServiceMessageFactory messageFactory;
 
     protected final void setUp() throws Exception {
         jettyServer = new Server(8888);
         jettyContext = new Context(jettyServer, "/");
         messageSender = createMessageSender();
-        messageSender.setUrl(new URL("http://localhost:8888/"));
         XMLUnit.setIgnoreWhitespace(true);
+        saajMessageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+        messageFactory = new SaajSoapMessageFactory(saajMessageFactory);
+        transformerFactory = TransformerFactory.newInstance();
     }
 
     protected abstract AbstractHttpWebServiceMessageSender createMessageSender();
@@ -74,39 +104,46 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
     }
 
     public void testSendAndReceiveResponse() throws Exception {
-        validateResponse(new ResponseServlet());
+        MyServlet servlet = new MyServlet();
+        servlet.setResponse(true);
+        validateResponse(servlet);
     }
 
     public void testSendAndReceiveNoResponse() throws Exception {
-        validateNonResponse(new NoResponseServlet());
+        validateNonResponse(new MyServlet());
     }
 
     public void testSendAndReceiveNoResponseAccepted() throws Exception {
-        NoResponseServlet servlet = new NoResponseServlet();
+        MyServlet servlet = new MyServlet();
         servlet.setResponseStatus(HttpServletResponse.SC_ACCEPTED);
         validateNonResponse(servlet);
     }
 
     public void testSendAndReceiveCompressed() throws Exception {
-        validateResponse(new CompressedResponseServlet());
+        MyServlet servlet = new MyServlet();
+        servlet.setResponse(true);
+        servlet.setGzip(true);
+        validateResponse(servlet);
     }
 
     public void testSendAndReceiveInvalidContentSize() throws Exception {
-        validateResponse(new InvalidContentSizeServlet());
+        MyServlet servlet = new MyServlet();
+        servlet.setResponse(true);
+        servlet.setContentLength(-1);
+        validateResponse(servlet);
     }
 
     public void testSendAndReceiveFault() throws Exception {
-        ResponseServlet servlet = new ResponseServlet();
+        MyServlet servlet = new MyServlet();
         servlet.setResponseStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         jettyContext.addServlet(new ServletHolder(servlet), "/");
         jettyServer.start();
-        FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) messageSender.createConnection();
+        FaultAwareWebServiceConnection connection =
+                (FaultAwareWebServiceConnection) messageSender.createConnection(URI);
+        SOAPMessage request = createRequest();
         try {
-            TransportOutputStream tos = connection.getTransportOutputStream();
-            tos.addHeader("Content-Type", "text/xml");
-            tos.addHeader(REQUEST_HEADER_NAME, REQUEST_HEADER_VALUE);
-            FileCopyUtils.copy(REQUEST.getBytes("UTF-8"), tos);
-            assertNotNull("No response", connection.getTransportInputStream());
+            connection.send(new SaajSoapMessage(request));
+            connection.receive(messageFactory);
             assertTrue("Response has no fault", connection.hasFault());
         }
         finally {
@@ -117,28 +154,23 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
     private void validateResponse(Servlet servlet) throws Exception {
         jettyContext.addServlet(new ServletHolder(servlet), "/");
         jettyServer.start();
-        FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) messageSender.createConnection();
+        FaultAwareWebServiceConnection connection =
+                (FaultAwareWebServiceConnection) messageSender.createConnection(URI);
+        SOAPMessage request = createRequest();
         try {
-            TransportOutputStream tos = connection.getTransportOutputStream();
-            tos.addHeader("Content-Type", "text/xml");
-            tos.addHeader(REQUEST_HEADER_NAME, REQUEST_HEADER_VALUE);
-            FileCopyUtils.copy(REQUEST.getBytes("UTF-8"), tos);
-            assertNotNull("No response", connection.getTransportInputStream());
+            connection.send(new SaajSoapMessage(request));
+            SaajSoapMessage response = (SaajSoapMessage) connection.receive(messageFactory);
+            assertNotNull("No response", response);
             assertFalse("Response has fault", connection.hasFault());
-            TransportInputStream tis = connection.getTransportInputStream();
-            boolean headerFound = false;
-            for (Iterator iterator = tis.getHeaderNames(); iterator.hasNext();) {
-                String headerName = (String) iterator.next();
-                if (RESPONSE_HEADER_NAME.equals(headerName)) {
-                    headerFound = true;
-                }
-            }
-            assertTrue("Response has invalid header", headerFound);
-            Iterator headerValues = tis.getHeaders(RESPONSE_HEADER_NAME);
-            assertTrue("Response has no header values", headerValues.hasNext());
-            assertEquals("Response has invalid header values", RESPONSE_HEADER_VALUE, headerValues.next());
-            String result = new String(FileCopyUtils.copyToByteArray(tis), "UTF-8");
-            assertEquals("Invalid response", RESPONSE, result);
+            SOAPMessage saajResponse = response.getSaajMessage();
+            String[] headerValues = saajResponse.getMimeHeaders().getHeader(RESPONSE_HEADER_NAME);
+            assertNotNull("Response has no header", headerValues);
+            assertEquals("Response has invalid header", 1, headerValues.length);
+            assertEquals("Response has invalid header values", RESPONSE_HEADER_VALUE, headerValues[0]);
+            StringResult result = new StringResult();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.transform(response.getPayloadSource(), result);
+            assertXMLEqual("Invalid response", RESPONSE, result.toString());
         }
         finally {
             connection.close();
@@ -149,74 +181,90 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
         jettyContext.addServlet(new ServletHolder(servlet), "/");
         jettyServer.start();
 
-        WebServiceConnection connection = messageSender.createConnection();
+        WebServiceConnection connection = messageSender.createConnection(URI);
+        SOAPMessage request = createRequest();
         try {
-            TransportOutputStream tos = connection.getTransportOutputStream();
-            tos.addHeader(REQUEST_HEADER_NAME, REQUEST_HEADER_VALUE);
-            FileCopyUtils.copy(REQUEST.getBytes("UTF-8"), tos);
-            assertNull("Response", connection.getTransportInputStream());
+            connection.send(new SaajSoapMessage(request));
+            WebServiceMessage response = connection.receive(messageFactory);
+            assertNull("Response", response);
         }
         finally {
             connection.close();
         }
     }
 
-    private static class NoResponseServlet extends HttpServlet {
+    private SOAPMessage createRequest() throws TransformerException, SOAPException {
+        SOAPMessage request = saajMessageFactory.createMessage();
+        MimeHeaders mimeHeaders = request.getMimeHeaders();
+        mimeHeaders.addHeader(REQUEST_HEADER_NAME, REQUEST_HEADER_VALUE);
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.transform(new StringSource(REQUEST), new DOMResult(request.getSOAPBody()));
+        return request;
+    }
 
-        protected int responseStatus = HttpServletResponse.SC_OK;
+    private class MyServlet extends HttpServlet {
+
+        private int responseStatus = HttpServletResponse.SC_OK;
+
+        private Integer contentLength;
+
+        private boolean response;
+
+        private boolean gzip;
 
         public void setResponseStatus(int responseStatus) {
             this.responseStatus = responseStatus;
         }
 
-        protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        public void setContentLength(int contentLength) {
+            this.contentLength = new Integer(contentLength);
+        }
+
+        public void setResponse(boolean response) {
+            this.response = response;
+        }
+
+        public void setGzip(boolean gzip) {
+            this.gzip = gzip;
+        }
+
+        protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
                 throws ServletException, IOException {
-            assertEquals("Invalid header value received on server side", REQUEST_HEADER_VALUE,
-                    request.getHeader(REQUEST_HEADER_NAME));
-            String receivedRequest = new String(FileCopyUtils.copyToByteArray(request.getInputStream()), "UTF-8");
-            assertEquals("Invalid request received", REQUEST, receivedRequest);
+            try {
+                assertEquals("Invalid header value received on server side", REQUEST_HEADER_VALUE,
+                        httpServletRequest.getHeader(REQUEST_HEADER_NAME));
+                String receivedRequest =
+                        new String(FileCopyUtils.copyToByteArray(httpServletRequest.getInputStream()), "UTF-8");
+                assertXMLEqual("Invalid request received", SOAP_REQUEST, receivedRequest);
+                if (gzip) {
+                    assertEquals("Invalid Accept-Encoding header value received on server side", "gzip",
+                            httpServletRequest.getHeader("Accept-Encoding"));
+                }
 
-            response.setStatus(responseStatus);
-            createResponse(request, response);
-        }
-
-        protected void createResponse(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        }
-    }
-
-    private static class ResponseServlet extends NoResponseServlet {
-
-        protected void createResponse(HttpServletRequest request, HttpServletResponse response) throws IOException {
-            response.setContentType("text/xml");
-            response.addHeader(RESPONSE_HEADER_NAME, RESPONSE_HEADER_VALUE);
-            byte[] buffer = RESPONSE.getBytes("UTF-8");
-            response.setContentLength(buffer.length);
-            FileCopyUtils.copy(buffer, response.getOutputStream());
-        }
-    }
-
-    private static class InvalidContentSizeServlet extends NoResponseServlet {
-
-        protected void createResponse(HttpServletRequest request, HttpServletResponse response) throws IOException {
-            response.setContentType("text/xml");
-            response.addHeader(RESPONSE_HEADER_NAME, RESPONSE_HEADER_VALUE);
-            response.setContentLength(-1);
-            byte[] buffer = RESPONSE.getBytes("UTF-8");
-            FileCopyUtils.copy(buffer, response.getOutputStream());
-        }
-    }
-
-    private static class CompressedResponseServlet extends NoResponseServlet {
-
-        protected void createResponse(HttpServletRequest request, HttpServletResponse response) throws IOException {
-            assertEquals("Invalid Accept-Encoding header value received on server side", "gzip",
-                    request.getHeader("Accept-Encoding"));
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.setContentType("text/xml");
-            response.addHeader(RESPONSE_HEADER_NAME, RESPONSE_HEADER_VALUE);
-            response.addHeader("Content-Encoding", "gzip");
-            byte[] buffer = RESPONSE.getBytes("UTF-8");
-            FileCopyUtils.copy(buffer, new GZIPOutputStream(response.getOutputStream()));
+                httpServletResponse.setStatus(responseStatus);
+                if (response) {
+                    httpServletResponse.setContentType("text/xml");
+                    if (contentLength != null) {
+                        httpServletResponse.setContentLength(contentLength.intValue());
+                    }
+                    if (gzip) {
+                        httpServletResponse.addHeader("Content-Encoding", "gzip");
+                    }
+                    httpServletResponse.setHeader(RESPONSE_HEADER_NAME, RESPONSE_HEADER_VALUE);
+                    OutputStream os;
+                    if (gzip) {
+                        os = new GZIPOutputStream(httpServletResponse.getOutputStream());
+                    }
+                    else {
+                        os = httpServletResponse.getOutputStream();
+                    }
+                    FileCopyUtils.copy(SOAP_RESPONSE.getBytes("UTF-8"), os);
+                }
+            }
+            catch (Exception ex) {
+                throw new ServletException(ex);
+            }
         }
     }
+
 }

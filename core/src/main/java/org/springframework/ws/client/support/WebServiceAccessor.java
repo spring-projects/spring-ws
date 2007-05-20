@@ -16,17 +16,18 @@
 
 package org.springframework.ws.client.support;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessageFactory;
-import org.springframework.ws.context.DefaultMessageContext;
-import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
  * Base class for <code>WebServiceTemplate</code> and other WS-accessing helpers. Defines common properties like the
- * {@link org.springframework.ws.WebServiceMessageFactory} and {@link org.springframework.ws.transport.WebServiceMessageSender}.
+ * {@link WebServiceMessageFactory} and {@link WebServiceMessageSender}.
  * <p/>
  * Not intended to be used directly. See {@link org.springframework.ws.client.core.WebServiceTemplate}.
  *
@@ -37,48 +38,58 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
 
     private WebServiceMessageFactory messageFactory;
 
-    private WebServiceMessageSender messageSender;
+    private WebServiceMessageSender[] messageSenders;
 
-    /**
-     * Returns the message factory used for creating messages.
-     */
+    /** Returns the message factory used for creating messages. */
     public WebServiceMessageFactory getMessageFactory() {
         return messageFactory;
     }
 
-    /**
-     * Sets the message factory used for creating messages.
-     */
+    /** Sets the message factory used for creating messages. */
     public void setMessageFactory(WebServiceMessageFactory messageFactory) {
         this.messageFactory = messageFactory;
     }
 
-    /**
-     * Returns the message sender.
-     */
-    public WebServiceMessageSender getMessageSender() {
-        return messageSender;
+    /** Returns the message senders used for sending messages. */
+    public WebServiceMessageSender[] getMessageSenders() {
+        return messageSenders;
     }
 
-    /**
-     * Sets the message sender.
-     */
     public void setMessageSender(WebServiceMessageSender messageSender) {
-        this.messageSender = messageSender;
+        Assert.notNull(messageSender, "'messageSender' must not be null");
+        this.messageSenders = new WebServiceMessageSender[]{messageSender};
     }
 
-    /**
-     * Returns a <code>MessageContext</code> with an empty message, and the defined
-     * <code>WebServiceMessageFactory</code>.
-     *
-     * @return the created message context
-     */
-    protected MessageContext createMessageContext() {
-        return new DefaultMessageContext(getMessageFactory());
+    public void setMessageSenders(WebServiceMessageSender[] messageSenders) {
+        Assert.notEmpty(messageSenders, "'messageSenders' must not be empty");
+        this.messageSenders = messageSenders;
     }
 
     public void afterPropertiesSet() throws Exception {
-        Assert.notNull(getMessageFactory(), "messageFactory is required");
-        Assert.notNull(getMessageSender(), "messageSender is required");
+        Assert.notNull(getMessageFactory(), "Property 'messageFactory' is required");
+        Assert.notEmpty(getMessageSenders(), "Property 'messageSenders' is required");
     }
+
+    /**
+     * Creates a connection to the given URI, or throws an exception when it cannot be resolved.
+     *
+     * @param uri the URI to open a connection to
+     * @return the created connection
+     * @throws IllegalArgumentException when the uri cannot be resolved
+     * @throws IOException              when an I/O error occurs
+     */
+    protected WebServiceConnection createConnection(String uri) throws IOException {
+        Assert.notEmpty(getMessageSenders(), "Property 'messageSenders' is required");
+        WebServiceMessageSender messageSender = null;
+        WebServiceMessageSender[] messageSenders = getMessageSenders();
+        for (int i = 0; i < messageSenders.length; i++) {
+            if (messageSenders[i].supports(uri)) {
+                messageSender = messageSenders[i];
+                break;
+            }
+        }
+        Assert.notNull(messageSender, "Could not resolve [" + uri + "] to a WebServiceMessageSender");
+        return messageSender.createConnection(uri);
+    }
+
 }

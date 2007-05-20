@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
 import org.springframework.ws.transport.support.WebServiceMessageReceiverObjectSupport;
@@ -67,30 +66,4 @@ public class WebServiceMessageReceiverHandlerAdapter extends WebServiceMessageRe
         return handler instanceof WebServiceMessageReceiver;
     }
 
-    /** Sets the response code to 204, Accepted. */
-    protected void handleNoResponse(WebServiceConnection connection) {
-        HttpServletResponse httpServletResponse = ((HttpServletConnection) connection).getHttpServletResponse();
-        httpServletResponse.setStatus(HttpServletResponse.SC_ACCEPTED);
-    }
-
-    /**
-     * Sets the response code to 200, OK, for normal responses. Set the code to 500, Internal Server Error, in case of a
-     * SOAP Fault,
-     */
-    protected void handleResponse(WebServiceConnection connection, WebServiceMessage response) throws Exception {
-        HttpServletResponse httpServletResponse = ((HttpServletConnection) connection).getHttpServletResponse();
-        if (response.hasFault()) {
-            httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
-        else {
-            httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-        }
-        super.handleResponse(connection, response);
-    }
-
-    /** Sets the response code to 404, Not Found. */
-    protected void handleNoEndpointFound(WebServiceConnection connection) {
-        HttpServletResponse httpServletResponse = ((HttpServletConnection) connection).getHttpServletResponse();
-        httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
-    }
 }

@@ -99,14 +99,17 @@ public class SimpleSaajServlet extends HttpServlet {
             MimeHeaders headers = getHeaders(req);
             SOAPMessage msg = msgFactory.createMessage(headers, req.getInputStream());
             SOAPMessage reply = onMessage(msg);
-            resp.setStatus(HttpServletResponse.SC_OK);
             if (reply != null) {
                 if (reply.saveRequired()) {
                     reply.saveChanges();
                 }
-                resp.setStatus(HttpServletResponse.SC_OK);
+                resp.setStatus(!reply.getSOAPBody().hasFault() ? HttpServletResponse.SC_OK :
+                        HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 putHeaders(reply.getMimeHeaders(), resp);
                 reply.writeTo(resp.getOutputStream());
+            }
+            else {
+                resp.setStatus(HttpServletResponse.SC_ACCEPTED);
             }
         }
         catch (Exception ex) {

@@ -29,6 +29,7 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.springframework.util.Assert;
+import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
@@ -37,7 +38,7 @@ import org.springframework.ws.transport.WebServiceConnection;
  *
  * @author Arjen Poutsma
  */
-public class CommonsHttpConnection extends AbstractHttpSendingWebServiceConnection {
+public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 
     private final HttpClient httpClient;
 
@@ -52,6 +53,10 @@ public class CommonsHttpConnection extends AbstractHttpSendingWebServiceConnecti
         this.postMethod = postMethod;
     }
 
+    public PostMethod getPostMethod() {
+        return postMethod;
+    }
+
     public void close() throws IOException {
         postMethod.releaseConnection();
     }
@@ -64,7 +69,7 @@ public class CommonsHttpConnection extends AbstractHttpSendingWebServiceConnecti
         return bufferedOutput;
     }
 
-    protected void sendRequest() throws IOException {
+    protected void onSend(WebServiceMessage message) throws IOException {
         postMethod.setRequestEntity(new ByteArrayRequestEntity(bufferedOutput.toByteArray()));
         bufferedOutput = null;
         httpClient.executeMethod(postMethod);

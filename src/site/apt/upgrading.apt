@@ -1,24 +1,34 @@
                                                        ---------
                                                        Upgrading
                                                        ---------
+
 Upgrading from version 1.0-M3 to 1.0-RC1
 
 	Some minor changes were made between version 1.0 Milestone 3 and Release Candidate 1 of the project. The following
-	should help most users the project update their applications:
+should help most users the project update their applications:
 
 * Attachments
 
-    * The <<<Attachment>>> interface was moved from <<org.springframework.ws.soap>> to <<org.springframework.ws.mime>>.
+    Attachment support had to be moved and changed to facilitate MTOM.
+
+    * The <<<Attachment>>> interface was moved from <<<org.springframework.ws.soap>>> to <<<org.springframework.ws.mime>>>.
 
     * The <<<id>>> property on <<<Attachment>> was renamed to <<contentId>>>.
 
     * Methods for getting and adding attachments were taken from <<<SoapMessage>> and extraced into a new interface:
-    <<<MimeMessage>>>. Adding a method requires a content id now.
+<<<MimeMessage>>>. Adding a method requires a content id now.
 
 * WebServiceTemplate
 
-    The <<<WebServiceTemplate>> no longer declares an IOException for each method. Rather, an runtime exception
+    The <<<WebServiceTemplate>>> no longer declares an IOException for each method. Rather, an runtime exception
     hierarchy has been created in <<<org.springframework.ws.client>>>.
+
+* HttpUrlConnectionMessageSender and CommonsHttpMessageSender
+
+    The <<<HttpUrlConnectionMessageSender>>> and <<<CommonsHttpMessageSender>>> have lost their <<<url>>> property. URLs
+(or rather: URIs) are now defined on the <<<WebServiceTemplate>>> by specifying a default URI, or by giving the URI as a
+parameter.
+
 
 * EndpointInterceptor
 
@@ -84,7 +94,7 @@ the project update their applications:
 	
 * TransportContext
 
-	* <<<TransportContext>>> and <<<TransportContextHolder>>> to <<<org.springframework.ws.transport.context>>> package.
+	* <<<TransportContext>>> and <<<TransportContextHolder>>> have been moved to <<<org.springframework.ws.transport.context>>> package.
 	
 * MessageEndpointAdapter
 

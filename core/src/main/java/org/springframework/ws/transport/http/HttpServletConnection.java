@@ -23,7 +23,9 @@ import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.ws.transport.AbstractReceivingWebServiceConnection;
+import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.transport.AbstractReceiverConnection;
+import org.springframework.ws.transport.EndpointAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.support.EnumerationIterator;
 
@@ -32,57 +34,73 @@ import org.springframework.ws.transport.support.EnumerationIterator;
  *
  * @author Arjen Poutsma
  */
-public class HttpServletConnection extends AbstractReceivingWebServiceConnection {
+public class HttpServletConnection extends AbstractReceiverConnection implements EndpointAwareWebServiceConnection {
 
-    private final HttpServletRequest request;
+    private final HttpServletRequest httpServletRequest;
 
-    private final HttpServletResponse response;
+    private final HttpServletResponse httpServletResponse;
+
+    private boolean sentResponse = false;
+
+    private boolean endpointFound = true;
 
     /**
      * Constructs a new servlet connection with the given <code>HttpServletRequest</code> and
      * <code>HttpServletResponse</code>.
      */
     public HttpServletConnection(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        request = httpServletRequest;
-        response = httpServletResponse;
+        this.httpServletRequest = httpServletRequest;
+        this.httpServletResponse = httpServletResponse;
+    }
+
+    public void close() throws IOException {
+        if (!sentResponse && endpointFound) {
+            httpServletResponse.setStatus(HttpServletResponse.SC_ACCEPTED);
+        }
     }
 
     /** Returns the <code>HttpServletRequest</code> for this connection. */
     public HttpServletRequest getHttpServletRequest() {
-        return request;
+        return httpServletRequest;
     }
 
     /** Returns the <code>HttpServletResponse</code> for this connection. */
     public HttpServletResponse getHttpServletResponse() {
-        return response;
+        return httpServletResponse;
+    }
+
+    public void endpointNotFound() {
+        endpointFound = false;
+        httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
 
     protected Iterator getRequestHeaderNames() throws IOException {
-        return new EnumerationIterator(request.getHeaderNames());
+        return new EnumerationIterator(httpServletRequest.getHeaderNames());
     }
 
     protected Iterator getRequestHeaders(String name) throws IOException {
-        return new EnumerationIterator(request.getHeaders(name));
+        return new EnumerationIterator(httpServletRequest.getHeaders(name));
     }
 
     protected InputStream getRequestInputStream() throws IOException {
-        return request.getInputStream();
+        return httpServletRequest.getInputStream();
     }
 
     protected void addResponseHeader(String name, String value) throws IOException {
-        response.addHeader(name, value);
+        httpServletResponse.addHeader(name, value);
     }
 
     protected OutputStream getResponseOutputStream() throws IOException {
-        return response.getOutputStream();
+        return httpServletResponse.getOutputStream();
     }
 
-    protected void sendResponse() throws IOException {
-        // no op
+    protected void onSend(WebServiceMessage message) throws IOException {
+        sentResponse = true;
+        if (!message.hasFault()) {
+            httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+        }
+        else {
+            httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
     }
-
-    public void close() throws IOException {
-        // no op
-    }
-
 }

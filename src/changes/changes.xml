@@ -6,6 +6,7 @@
     </properties>
     <body>
         <release version="1.0-RC1">
+            <action dev="poutsma" type="add" issue="SWS-98">Changing URL in CommonsHttpMessageSender</action>
             <action dev="poutsma" type="add" issue="SWS-117">Allow SoapFaultMappingExceptionResolver to use strategy to
                 obtain SoapFaultDefinition
             </action>

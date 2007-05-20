@@ -21,31 +21,25 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * Abstract base class for {@link WebServiceConnection} implementations used for sending requests.
  *
  * @author Arjen Poutsma
  */
-public abstract class AbstractSendingWebServiceConnection implements WebServiceConnection {
-
-    /** Logger available to subclasses. */
-    protected final Log logger = LogFactory.getLog(getClass());
+public abstract class AbstractSenderConnection extends AbstractWebServiceConnection {
 
     private TransportOutputStream requestOutputStream;
 
     private TransportInputStream responseInputStream;
 
-    public final TransportOutputStream getTransportOutputStream() throws IOException {
+    protected final TransportOutputStream createTransportOutputStream() throws IOException {
         if (requestOutputStream == null) {
             requestOutputStream = new RequestTransportOutputStream();
         }
         return requestOutputStream;
     }
 
-    public final TransportInputStream getTransportInputStream() throws IOException {
+    protected final TransportInputStream createTransportInputStream() throws IOException {
         if (hasResponse()) {
             if (responseInputStream == null) {
                 responseInputStream = new ResponseTransportInputStream();
@@ -72,9 +66,6 @@ public abstract class AbstractSendingWebServiceConnection implements WebServiceC
     /** Returns the output stream to write the request to. */
     protected abstract OutputStream getRequestOutputStream() throws IOException;
 
-    /** Sends the request. Called when the {@link RequestTransportOutputStream#close() is closed}. */
-    protected abstract void sendRequest() throws IOException;
-
     /**
      * Returns an iteration over all the header names this request contains. Returns an empty <code>Iterator</code> if
      * there areno headers.
@@ -99,11 +90,6 @@ public abstract class AbstractSendingWebServiceConnection implements WebServiceC
 
         protected OutputStream createOutputStream() throws IOException {
             return getRequestOutputStream();
-        }
-
-        public void close() throws IOException {
-            super.close();
-            sendRequest();
         }
     }
 
