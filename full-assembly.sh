@@ -1,2 +1,2 @@
 #!/bin/sh
-mvn -Psamples -Ddescriptor=src/assembly/full.xml clean install javadoc:javadoc assembly:assembly
+mvn -Ddescriptor=src/assembly/full.xml -Dmaven.test.skip=true clean install javadoc:javadoc docbkx:generate-html docbkx:generate-pdf assembly:assembly
