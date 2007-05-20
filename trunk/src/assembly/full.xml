@@ -22,11 +22,6 @@
                 <includeDependencies>false</includeDependencies>
                 <unpack>false</unpack>
             </binaries>
-            <!--
-                        <sources>
-                            <outputDirectoryMapping>modules/${artifactId}/src</outputDirectoryMapping>
-                        </sources>
-            -->
         </moduleSet>
     </moduleSets>
     <fileSets>
