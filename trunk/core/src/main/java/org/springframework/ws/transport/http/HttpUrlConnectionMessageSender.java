@@ -18,6 +18,7 @@ package org.springframework.ws.transport.http;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLConnection;
 
 import org.springframework.ws.transport.WebServiceConnection;
@@ -27,8 +28,8 @@ import org.springframework.ws.transport.WebServiceConnection;
  * without support for HTTP authentication or advanced configuration options.
  * <p/>
  * Designed for easy subclassing, customizing specific template methods. However, consider {@link
- * org.springframework.ws.transport.http.CommonsHttpMessageSender} for more sophisticated needs: the J2SE
- * <code>HttpURLConnection</code> is rather limited in its capabilities.
+ * CommonsHttpMessageSender} for more sophisticated needs: the J2SE <code>HttpURLConnection</code> is rather limited in
+ * its capabilities.
  *
  * @author Arjen Poutsma
  * @see java.net.HttpURLConnection
@@ -37,10 +38,11 @@ public class HttpUrlConnectionMessageSender extends AbstractHttpWebServiceMessag
 
     private static final String HTTP_METHOD_POST = "POST";
 
-    public WebServiceConnection createConnection() throws IOException {
-        URLConnection connection = getUrl().openConnection();
+    public WebServiceConnection createConnection(String uri) throws IOException {
+        URL url = new URL(uri);
+        URLConnection connection = url.openConnection();
         if (!(connection instanceof HttpURLConnection)) {
-            throw new HttpTransportException("URL [" + getUrl() + "] is not an HTTP URL");
+            throw new HttpTransportException("URI [" + uri + "] is not an HTTP URL");
         }
         else {
             HttpURLConnection httpURLConnection = (HttpURLConnection) connection;

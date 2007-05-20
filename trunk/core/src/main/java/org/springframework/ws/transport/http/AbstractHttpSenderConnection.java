@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.zip.GZIPInputStream;
 
 import org.springframework.util.FileCopyUtils;
-import org.springframework.ws.transport.AbstractSendingWebServiceConnection;
+import org.springframework.ws.transport.AbstractSenderConnection;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 
@@ -32,7 +32,7 @@ import org.springframework.ws.transport.WebServiceConnection;
  *
  * @author Arjen Poutsma
  */
-public abstract class AbstractHttpSendingWebServiceConnection extends AbstractSendingWebServiceConnection
+public abstract class AbstractHttpSenderConnection extends AbstractSenderConnection
         implements FaultAwareWebServiceConnection {
 
     protected static final String HTTP_HEADER_CONTENT_ENCODING = "Content-Encoding";

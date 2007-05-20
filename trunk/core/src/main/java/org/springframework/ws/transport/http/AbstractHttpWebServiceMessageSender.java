@@ -16,10 +16,7 @@
 
 package org.springframework.ws.transport.http;
 
-import java.net.URL;
-
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
@@ -28,9 +25,7 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  *
  * @author Arjen Poutsma
  */
-public abstract class AbstractHttpWebServiceMessageSender implements WebServiceMessageSender, InitializingBean {
-
-    private URL url;
+public abstract class AbstractHttpWebServiceMessageSender implements WebServiceMessageSender {
 
     private boolean acceptGzipEncoding = true;
 
@@ -38,15 +33,9 @@ public abstract class AbstractHttpWebServiceMessageSender implements WebServiceM
 
     protected static final String ENCODING_GZIP = "gzip";
 
-    /** Returns the url used by this message sender. */
-    public URL getUrl() {
-        return url;
-    }
+    protected static final String HTTP_SCHEME = "http://";
 
-    /** Sets the url used by this message sender. */
-    public void setUrl(URL url) {
-        this.url = url;
-    }
+    protected static final String HTTPS_SCHEME = "https://";
 
     /**
      * Return whether to accept GZIP encoding, that is, whether to send the HTTP <code>Accept-Encoding</code> header
@@ -67,8 +56,7 @@ public abstract class AbstractHttpWebServiceMessageSender implements WebServiceM
         this.acceptGzipEncoding = acceptGzipEncoding;
     }
 
-    public void afterPropertiesSet() throws Exception {
-        Assert.notNull(url, "url is required");
+    public boolean supports(String uri) {
+        return StringUtils.hasLength(uri) && (uri.startsWith(HTTP_SCHEME) || uri.startsWith(HTTPS_SCHEME));
     }
-
 }

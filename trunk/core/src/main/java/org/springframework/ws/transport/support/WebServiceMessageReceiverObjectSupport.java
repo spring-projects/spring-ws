@@ -27,8 +27,7 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.transport.TransportInputStream;
-import org.springframework.ws.transport.TransportOutputStream;
+import org.springframework.ws.transport.EndpointAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
 import org.springframework.ws.transport.context.DefaultTransportContext;
@@ -80,17 +79,17 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
         TransportContextHolder.setTransportContext(new DefaultTransportContext(connection));
 
         try {
-            MessageContext messageContext = handleRequest(connection);
+            WebServiceMessage request = connection.receive(getMessageFactory());
+            MessageContext messageContext = new DefaultMessageContext(request, getMessageFactory());
             receiver.receive(messageContext);
-            if (!messageContext.hasResponse()) {
-                handleNoResponse(connection);
-            }
-            else {
-                handleResponse(connection, messageContext.getResponse());
+            if (messageContext.hasResponse()) {
+                connection.send(request);
             }
         }
         catch (NoEndpointFoundException ex) {
-            handleNoEndpointFound(connection);
+            if (connection instanceof EndpointAwareWebServiceConnection) {
+                ((EndpointAwareWebServiceConnection) connection).endpointNotFound();
+            }
         }
         finally {
             try {
@@ -101,55 +100,6 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
             }
             TransportContextHolder.setTransportContext(previousTransportContext);
         }
-    }
-
-    private MessageContext handleRequest(WebServiceConnection connection) throws IOException {
-        TransportInputStream tis = connection.getTransportInputStream();
-        try {
-            WebServiceMessage messageRequest = getMessageFactory().createWebServiceMessage(tis);
-            return new DefaultMessageContext(messageRequest, getMessageFactory());
-        }
-        finally {
-            tis.close();
-        }
-    }
-
-    /**
-     * Invoked from {@link #handleConnection} when no response is given. Default implementation does nothing. Can be
-     * overriden to set certain transport-specific response headers.
-     *
-     * @param connection the incoming connection
-     */
-    protected void handleNoResponse(WebServiceConnection connection) {
-    }
-
-    /**
-     * Handles the sending of the response. Invoked from {@link #handleConnection}. Default implementation writes the
-     * given response to the given <code>TransportOutputStream</code>. Can be overriden to set certain
-     * transport-specific headers.
-     *
-     * @param connection the incoming connection
-     * @param response   the response message
-     * @see WebServiceMessage#writeTo(java.io.OutputStream)
-     */
-    protected void handleResponse(WebServiceConnection connection, WebServiceMessage response) throws Exception {
-        TransportOutputStream tos = connection.getTransportOutputStream();
-        try {
-            response.writeTo(tos);
-            tos.flush();
-        }
-        finally {
-            tos.close();
-        }
-    }
-
-    /**
-     * Invoked from {@link #handleConnection} when no suitable endpoint is found. Default implementation does nothing.
-     * Can be overriden to set certain transport-specific response headers.
-     *
-     * @param connection the incoming connection
-     */
-    protected void handleNoEndpointFound(WebServiceConnection connection) {
     }
 
 }

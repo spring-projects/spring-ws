@@ -21,32 +21,25 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
- * Abstract base class for {@link org.springframework.ws.transport.WebServiceConnection} implementations used for
- * sending requests.
+ * Abstract base class for {@link WebServiceConnection} implementations used for receiving requests.
  *
  * @author Arjen Poutsma
  */
-public abstract class AbstractReceivingWebServiceConnection implements WebServiceConnection {
-
-    /** Logger available to subclasses. */
-    protected final Log logger = LogFactory.getLog(getClass());
+public abstract class AbstractReceiverConnection extends AbstractWebServiceConnection {
 
     private TransportInputStream requestInputStream;
 
     private TransportOutputStream responseOutputStream;
 
-    public final TransportInputStream getTransportInputStream() throws IOException {
+    protected final TransportInputStream createTransportInputStream() throws IOException {
         if (requestInputStream == null) {
             requestInputStream = new RequestTransportInputStream();
         }
         return requestInputStream;
     }
 
-    public final TransportOutputStream getTransportOutputStream() throws IOException {
+    protected final TransportOutputStream createTransportOutputStream() throws IOException {
         if (responseOutputStream == null) {
             responseOutputStream = new ResponseTransportOutputStream();
         }
@@ -80,9 +73,6 @@ public abstract class AbstractReceivingWebServiceConnection implements WebServic
     /** Returns the output stream to write the request to. */
     protected abstract OutputStream getResponseOutputStream() throws IOException;
 
-    /** Sends the response. Called when the {@link ResponseTransportOutputStream#close() is closed}. */
-    protected abstract void sendResponse() throws IOException;
-
     /** Implementation of <code>TransportInputStream</code> for receiving-side connections. */
     private class RequestTransportInputStream extends TransportInputStream {
 
@@ -113,7 +103,6 @@ public abstract class AbstractReceivingWebServiceConnection implements WebServic
 
         public void close() throws IOException {
             super.close();
-            sendResponse();
         }
 
     }

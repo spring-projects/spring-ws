@@ -16,62 +16,83 @@
 
 package org.springframework.ws.transport.http;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.MimeHeaders;
+import javax.xml.soap.SOAPConstants;
+import javax.xml.soap.SOAPMessage;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
 
-import junit.framework.TestCase;
+import org.custommonkey.xmlunit.XMLTestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.ws.transport.TransportInputStream;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
+import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
+import org.springframework.xml.transform.StringResult;
+import org.springframework.xml.transform.StringSource;
 
-public class HttpServletConnectionTest extends TestCase {
+public class HttpServletConnectionTest extends XMLTestCase {
 
     private HttpServletConnection connection;
 
-    private MockHttpServletRequest request;
+    private MockHttpServletRequest httpServletRequest;
 
-    private MockHttpServletResponse response;
+    private MockHttpServletResponse httpServletResponse;
+
+    private static final String HEADER_NAME = "RequestHeader";
+
+    private static final String HEADER_VALUE = "RequestHeaderValue";
+
+    private static final String CONTENT = "<Request xmlns='http://springframework.org/spring-ws/' />";
+
+    private static final String SOAP_CONTENT =
+            "<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'><SOAP-ENV:Header/><SOAP-ENV:Body>" +
+                    CONTENT + "</SOAP-ENV:Body></SOAP-ENV:Envelope>";
+
+    private SaajSoapMessageFactory messageFactory;
+
+    private TransformerFactory transformerFactory;
 
     protected void setUp() throws Exception {
-        request = new MockHttpServletRequest();
-        response = new MockHttpServletResponse();
-        connection = new HttpServletConnection(request, response);
+        httpServletRequest = new MockHttpServletRequest();
+        httpServletResponse = new MockHttpServletResponse();
+        connection = new HttpServletConnection(httpServletRequest, httpServletResponse);
+        MessageFactory saajMessageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+        messageFactory = new SaajSoapMessageFactory(saajMessageFactory);
+        transformerFactory = TransformerFactory.newInstance();
     }
 
-    public void testReadInputStream() throws Exception {
-        byte[] content = "content".getBytes("UTF-8");
-        request.setContent(content);
-        byte[] result = FileCopyUtils.copyToByteArray(connection.getTransportInputStream());
-        assertTrue("Invalid contents", Arrays.equals(content, result));
+    public void testReceive() throws Exception {
+        byte[] bytes = SOAP_CONTENT.getBytes("UTF-8");
+        httpServletRequest.addHeader("Content-Type", "text/xml");
+        httpServletRequest.addHeader("Content-Length", new Integer(bytes.length).toString());
+        httpServletRequest.addHeader(HEADER_NAME, HEADER_VALUE);
+        httpServletRequest.setContent(bytes);
+        SaajSoapMessage message = (SaajSoapMessage) connection.receive(messageFactory);
+        assertNotNull("No message received", message);
+        StringResult result = new StringResult();
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.transform(message.getPayloadSource(), result);
+        assertXMLEqual("Invalid message", CONTENT, result.toString());
+        SOAPMessage saajMessage = message.getSaajMessage();
+        String[] headerValues = saajMessage.getMimeHeaders().getHeader(HEADER_NAME);
+        assertNotNull("Response has no header", headerValues);
+        assertEquals("Response has invalid header", 1, headerValues.length);
+        assertEquals("Response has invalid header values", HEADER_VALUE, headerValues[0]);
     }
 
-    public void testGetHeaders() throws Exception {
-        String headerName = "Header";
-        String headerValue = "Value";
-        request.addHeader(headerName, headerValue);
-        TransportInputStream tis = connection.getTransportInputStream();
-        Iterator iterator = tis.getHeaderNames();
-        assertTrue("No headers found", iterator.hasNext());
-        assertEquals("Invalid header", headerName, iterator.next());
-        iterator = tis.getHeaders(headerName);
-        assertTrue("No header values found", iterator.hasNext());
-        assertEquals("Invalid header value", headerValue, iterator.next());
+    public void testSend() throws Exception {
+        SaajSoapMessage message = (SaajSoapMessage) messageFactory.createWebServiceMessage();
+        SOAPMessage saajMessage = message.getSaajMessage();
+        MimeHeaders mimeHeaders = saajMessage.getMimeHeaders();
+        mimeHeaders.addHeader(HEADER_NAME, HEADER_VALUE);
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.transform(new StringSource(CONTENT), message.getPayloadResult());
+
+        connection.send(message);
+
+        assertEquals("Invalid header", HEADER_VALUE, httpServletResponse.getHeader(HEADER_NAME));
+        assertXMLEqual("Invalid content", SOAP_CONTENT, httpServletResponse.getContentAsString());
     }
 
-    public void testWriteOutputStream() throws Exception {
-        byte[] content = "content".getBytes("UTF-8");
-        FileCopyUtils.copy(content, connection.getTransportOutputStream());
-        assertTrue("Invalid contents", Arrays.equals(content, response.getContentAsByteArray()));
-    }
-
-    public void testAddHeaders() throws Exception {
-        String headerName = "Header";
-        String headerValue = "Value";
-        connection.getTransportOutputStream().addHeader(headerName, headerValue);
-        assertTrue("No header set", response.getHeaderNames().contains(headerName));
-        assertEquals("Invalid header value set", Collections.singletonList(headerValue),
-                response.getHeaders(headerName));
-    }
 }

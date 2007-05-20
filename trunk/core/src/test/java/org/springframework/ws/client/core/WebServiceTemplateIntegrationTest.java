@@ -16,7 +16,6 @@
 
 package org.springframework.ws.client.core;
 
-import java.net.URL;
 import javax.xml.soap.MessageFactory;
 
 import org.custommonkey.xmlunit.XMLTestCase;
@@ -40,9 +39,8 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
         jettyContext.addServlet(SimpleSaajServlet.class, "/");
         jettyServer.start();
         template = new WebServiceTemplate();
-        HttpUrlConnectionMessageSender messageSender = new HttpUrlConnectionMessageSender();
-        messageSender.setUrl(new URL("http://localhost:8888/"));
-        template.setMessageSender(messageSender);
+        template.setDefaultUri("http://localhost:8888/");
+        template.setMessageSender(new HttpUrlConnectionMessageSender());
     }
 
     protected void tearDown() throws Exception {

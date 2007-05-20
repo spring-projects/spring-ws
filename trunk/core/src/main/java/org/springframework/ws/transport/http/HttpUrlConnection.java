@@ -28,6 +28,7 @@ import java.util.Set;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
@@ -35,7 +36,7 @@ import org.springframework.ws.transport.WebServiceConnection;
  *
  * @author Arjen Poutsma
  */
-public class HttpUrlConnection extends AbstractHttpSendingWebServiceConnection {
+public class HttpUrlConnection extends AbstractHttpSenderConnection {
 
     private final HttpURLConnection connection;
 
@@ -47,6 +48,10 @@ public class HttpUrlConnection extends AbstractHttpSendingWebServiceConnection {
     public HttpUrlConnection(HttpURLConnection connection) {
         Assert.notNull(connection, "connection must not be null");
         this.connection = connection;
+    }
+
+    public HttpURLConnection getConnection() {
+        return connection;
     }
 
     public void close() {
@@ -61,7 +66,7 @@ public class HttpUrlConnection extends AbstractHttpSendingWebServiceConnection {
         return connection.getOutputStream();
     }
 
-    protected void sendRequest() throws IOException {
+    protected void onSend(WebServiceMessage message) throws IOException {
         connection.connect();
     }
 
@@ -111,5 +116,4 @@ public class HttpUrlConnection extends AbstractHttpSendingWebServiceConnection {
                     connection.getResponseCode() + ", status message = [" + connection.getResponseMessage() + "]");
         }
     }
-
 }

@@ -16,19 +16,16 @@
 
 package org.springframework.ws.client.core;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.easymock.MockControl;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
+import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
-import org.springframework.ws.transport.MockTransportInputStream;
-import org.springframework.ws.transport.MockTransportOutputStream;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.xml.transform.StringResult;
@@ -42,19 +39,29 @@ public class WebServiceTemplateTest extends XMLTestCase {
 
     private FaultAwareWebServiceConnection connectionMock;
 
+    private MockWebServiceMessageFactory messageFactory;
+
+    private static final String URI = "uri";
+
     protected void setUp() throws Exception {
         template = new WebServiceTemplate();
-        MockWebServiceMessageFactory messageFactory = new MockWebServiceMessageFactory();
+        messageFactory = new MockWebServiceMessageFactory();
         template.setMessageFactory(messageFactory);
         connectionControl = MockControl.createStrictControl(FaultAwareWebServiceConnection.class);
         connectionMock = (FaultAwareWebServiceConnection) connectionControl.getMock();
         template.setMessageSender(new WebServiceMessageSender() {
 
-            public WebServiceConnection createConnection() throws IOException {
+            public WebServiceConnection createConnection(String uri) throws IOException {
                 return connectionMock;
+            }
+
+            public boolean supports(String uri) {
+                assertEquals("Invalid uri", URI, uri);
+                return true;
             }
         });
 
+        template.setDefaultUri(URI);
     }
 
     public void testMarshalAndSendNoMarshallerSet() throws Exception {
@@ -94,10 +101,10 @@ public class WebServiceTemplateTest extends XMLTestCase {
         extractorControl.setReturnValue(extracted);
         extractorControl.replay();
 
-        connectionControl.expectAndReturn(connectionMock.getTransportOutputStream(),
-                new MockTransportOutputStream(new ByteArrayOutputStream()));
-        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(),
-                new MockTransportInputStream(new ByteArrayInputStream("<response/>".getBytes("UTF-8"))));
+        connectionMock.send(null);
+        connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        connectionControl
+                .expectAndReturn(connectionMock.receive(messageFactory), new MockWebServiceMessage("<response/>"));
         connectionControl.expectAndReturn(connectionMock.hasFault(), false);
         connectionMock.close();
         connectionControl.replay();
@@ -122,9 +129,9 @@ public class WebServiceTemplateTest extends XMLTestCase {
         WebServiceMessageExtractor extractorMock = (WebServiceMessageExtractor) extractorControl.getMock();
         extractorControl.replay();
 
-        connectionControl.expectAndReturn(connectionMock.getTransportOutputStream(),
-                new MockTransportOutputStream(new ByteArrayOutputStream()));
-        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(), null);
+        connectionMock.send(null);
+        connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        connectionControl.expectAndReturn(connectionMock.receive(messageFactory), null);
         connectionMock.close();
         connectionControl.replay();
 
@@ -153,10 +160,10 @@ public class WebServiceTemplateTest extends XMLTestCase {
         faultResolverControl.setMatcher(MockControl.ALWAYS_MATCHER);
         faultResolverControl.replay();
 
-        connectionControl.expectAndReturn(connectionMock.getTransportOutputStream(),
-                new MockTransportOutputStream(new ByteArrayOutputStream()));
-        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(),
-                new MockTransportInputStream(new ByteArrayInputStream("<response/>".getBytes("UTF-8"))));
+        connectionMock.send(null);
+        connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        connectionControl
+                .expectAndReturn(connectionMock.receive(messageFactory), new MockWebServiceMessage("<response/>"));
         connectionControl.expectAndReturn(connectionMock.hasFault(), true);
         connectionMock.close();
         connectionControl.replay();
@@ -178,10 +185,10 @@ public class WebServiceTemplateTest extends XMLTestCase {
         extractorControl.setReturnValue(extracted);
         extractorControl.replay();
 
-        connectionControl.expectAndReturn(connectionMock.getTransportOutputStream(),
-                new MockTransportOutputStream(new ByteArrayOutputStream()));
-        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(),
-                new MockTransportInputStream(new ByteArrayInputStream("<response/>".getBytes("UTF-8"))));
+        connectionMock.send(null);
+        connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        connectionControl
+                .expectAndReturn(connectionMock.receive(messageFactory), new MockWebServiceMessage("<response/>"));
         connectionControl.expectAndReturn(connectionMock.hasFault(), false);
         connectionMock.close();
         connectionControl.replay();
@@ -198,9 +205,9 @@ public class WebServiceTemplateTest extends XMLTestCase {
         SourceExtractor extractorMock = (SourceExtractor) extractorControl.getMock();
         extractorControl.replay();
 
-        connectionControl.expectAndReturn(connectionMock.getTransportOutputStream(),
-                new MockTransportOutputStream(new ByteArrayOutputStream()));
-        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(), null);
+        connectionMock.send(null);
+        connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        connectionControl.expectAndReturn(connectionMock.receive(messageFactory), null);
         connectionMock.close();
         connectionControl.replay();
 
@@ -212,10 +219,10 @@ public class WebServiceTemplateTest extends XMLTestCase {
     }
 
     public void testSendAndReceiveResultResponse() throws Exception {
-        connectionControl.expectAndReturn(connectionMock.getTransportOutputStream(),
-                new MockTransportOutputStream(new ByteArrayOutputStream()));
-        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(),
-                new MockTransportInputStream(new ByteArrayInputStream("<response/>".getBytes("UTF-8"))));
+        connectionMock.send(null);
+        connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        connectionControl
+                .expectAndReturn(connectionMock.receive(messageFactory), new MockWebServiceMessage("<response/>"));
         connectionControl.expectAndReturn(connectionMock.hasFault(), false);
         connectionMock.close();
         connectionControl.replay();
@@ -243,10 +250,10 @@ public class WebServiceTemplateTest extends XMLTestCase {
         unmarshallerControl.setReturnValue(unmarshalled);
         unmarshallerControl.replay();
 
-        connectionControl.expectAndReturn(connectionMock.getTransportOutputStream(),
-                new MockTransportOutputStream(new ByteArrayOutputStream()));
-        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(),
-                new MockTransportInputStream(new ByteArrayInputStream("<response/>".getBytes("UTF-8"))));
+        connectionMock.send(null);
+        connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        connectionControl
+                .expectAndReturn(connectionMock.receive(messageFactory), new MockWebServiceMessage("<response/>"));
         connectionControl.expectAndReturn(connectionMock.hasFault(), false);
         connectionMock.close();
         connectionControl.replay();
@@ -272,9 +279,10 @@ public class WebServiceTemplateTest extends XMLTestCase {
         template.setUnmarshaller(unmarshallerMock);
         unmarshallerControl.replay();
 
-        connectionControl.expectAndReturn(connectionMock.getTransportOutputStream(),
-                new MockTransportOutputStream(new ByteArrayOutputStream()));
-        connectionControl.expectAndReturn(connectionMock.getTransportInputStream(), null);
+        connectionMock.send(null);
+        connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        connectionControl
+                .expectAndReturn(connectionMock.receive(messageFactory), null);
         connectionMock.close();
         connectionControl.replay();
 
@@ -285,5 +293,50 @@ public class WebServiceTemplateTest extends XMLTestCase {
         marshallerControl.verify();
         unmarshallerControl.verify();
     }
+
+    public void testSendAndReceiveCustomUri() throws Exception {
+        final String customUri = "customUri";
+        template.setMessageSender(new WebServiceMessageSender() {
+
+            public WebServiceConnection createConnection(String uri) throws IOException {
+                return connectionMock;
+            }
+
+            public boolean supports(String uri) {
+                assertEquals("Invalid uri", customUri, uri);
+                return true;
+            }
+        });
+        MockControl callbackControl = MockControl.createControl(WebServiceMessageCallback.class);
+        WebServiceMessageCallback requestCallback = (WebServiceMessageCallback) callbackControl.getMock();
+        requestCallback.doInMessage(null);
+        callbackControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        callbackControl.replay();
+
+        MockControl extractorControl = MockControl.createControl(WebServiceMessageExtractor.class);
+        WebServiceMessageExtractor extractorMock = (WebServiceMessageExtractor) extractorControl.getMock();
+        extractorMock.extractData(null);
+        extractorControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        Object extracted = new Object();
+        extractorControl.setReturnValue(extracted);
+        extractorControl.replay();
+
+        connectionMock.send(null);
+        connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        connectionControl
+                .expectAndReturn(connectionMock.receive(messageFactory), new MockWebServiceMessage("<response/>"));
+        connectionControl.expectAndReturn(connectionMock.hasFault(), false);
+        connectionMock.close();
+        connectionControl.replay();
+
+        Object result = template.sendAndReceive(customUri, requestCallback, extractorMock);
+        assertEquals("Invalid response", extracted, result);
+
+        callbackControl.verify();
+        extractorControl.verify();
+        connectionControl.verify();
+
+    }
+
 
 }

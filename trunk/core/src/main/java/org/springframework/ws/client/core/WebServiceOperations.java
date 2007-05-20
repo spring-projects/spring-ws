@@ -34,6 +34,8 @@ public interface WebServiceOperations {
     /**
      * Sends a web service message that contains the given payload, marshalled by the configured
      * <code>Marshaller</code>. Returns the unmarshalled payload of the response message, if any.
+     * <p/>
+     * This will only work with a default specified!
      *
      * @param requestPayload the object to marshal into the request message payload
      * @return the unmarshalled payload of the response message, or <code>null</code> if no response is given
@@ -46,8 +48,25 @@ public interface WebServiceOperations {
 
     /**
      * Sends a web service message that contains the given payload, marshalled by the configured
+     * <code>Marshaller</code>. Returns the unmarshalled payload of the response message, if any.
+     *
+     * @param uri            the URI to send the message to
+     * @param requestPayload the object to marshal into the request message payload
+     * @return the unmarshalled payload of the response message, or <code>null</code> if no response is given
+     * @throws XmlMappingException       if there is a problem marshalling or unmarshalling
+     * @throws WebServiceClientException if there is a problem sending or receiving the message
+     * @see WebServiceTemplate#setMarshaller(org.springframework.oxm.Marshaller)
+     * @see WebServiceTemplate#setUnmarshaller(org.springframework.oxm.Unmarshaller)
+     */
+    Object marshalSendAndReceive(String uri, Object requestPayload)
+            throws XmlMappingException, WebServiceClientException;
+
+    /**
+     * Sends a web service message that contains the given payload, marshalled by the configured
      * <code>Marshaller</code>. Returns the unmarshalled payload of the response message, if any. The given callback
      * allows changing of the request message after the payload has been marshalled to it.
+     * <p/>
+     * This will only work with a default specified!
      *
      * @param requestPayload  the object to marshal into the request message payload
      * @param requestCallback callback to change message, can be <code>null</code>
@@ -61,8 +80,27 @@ public interface WebServiceOperations {
             throws XmlMappingException, WebServiceClientException;
 
     /**
+     * Sends a web service message that contains the given payload, marshalled by the configured
+     * <code>Marshaller</code>. Returns the unmarshalled payload of the response message, if any. The given callback
+     * allows changing of the request message after the payload has been marshalled to it.
+     *
+     * @param uri             the URI to send the message to
+     * @param requestPayload  the object to marshal into the request message payload
+     * @param requestCallback callback to change message, can be <code>null</code>
+     * @return the unmarshalled payload of the response message, or <code>null</code> if no response is given
+     * @throws XmlMappingException       if there is a problem marshalling or unmarshalling
+     * @throws WebServiceClientException if there is a problem sending or receiving the message
+     * @see WebServiceTemplate#setMarshaller(org.springframework.oxm.Marshaller)
+     * @see WebServiceTemplate#setUnmarshaller(org.springframework.oxm.Unmarshaller)
+     */
+    Object marshalSendAndReceive(String uri, Object requestPayload, WebServiceMessageCallback requestCallback)
+            throws XmlMappingException, WebServiceClientException;
+
+    /**
      * Sends a web service message that contains the given payload, reading the result with a
      * <code>SourceExtractor</code>.
+     * <p/>
+     * This will only work with a default specified!
      *
      * @param requestPayload    the payload of the request message
      * @param responseExtractor object that will extract results
@@ -74,8 +112,23 @@ public interface WebServiceOperations {
     /**
      * Sends a web service message that contains the given payload, reading the result with a
      * <code>SourceExtractor</code>.
+     *
+     * @param uri               the URI to send the message to
+     * @param requestPayload    the payload of the request message
+     * @param responseExtractor object that will extract results
+     * @return an arbitrary result object, as returned by the <code>SourceExtractor</code>
+     * @throws WebServiceClientException if there is a problem sending or receiving the message
+     */
+    Object sendAndReceive(String uri, Source requestPayload, SourceExtractor responseExtractor)
+            throws WebServiceClientException;
+
+    /**
+     * Sends a web service message that contains the given payload, reading the result with a
+     * <code>SourceExtractor</code>.
      * <p/>
      * The given callback allows changing of the request message after the payload has been written to it.
+     * <p/>
+     * This will only work with a default specified!
      *
      * @param requestPayload    the payload of the request message
      * @param requestCallback   callback to change message, can be <code>null</code>
@@ -88,8 +141,28 @@ public interface WebServiceOperations {
                           SourceExtractor responseExtractor) throws WebServiceClientException;
 
     /**
+     * Sends a web service message that contains the given payload, reading the result with a
+     * <code>SourceExtractor</code>.
+     * <p/>
+     * The given callback allows changing of the request message after the payload has been written to it.
+     *
+     * @param uri               the URI to send the message to
+     * @param requestPayload    the payload of the request message
+     * @param requestCallback   callback to change message, can be <code>null</code>
+     * @param responseExtractor object that will extract results
+     * @return an arbitrary result object, as returned by the <code>SourceExtractor</code>
+     * @throws WebServiceClientException if there is a problem sending or receiving the message
+     */
+    Object sendAndReceive(String uri,
+                          Source requestPayload,
+                          WebServiceMessageCallback requestCallback,
+                          SourceExtractor responseExtractor) throws WebServiceClientException;
+
+    /**
      * Sends a web service message that contains the given payload. Writes the response, if any, to the given
      * <code>Result</code>.
+     * <p/>
+     * This will only work with a default specified!
      *
      * @param requestPayload the payload of the request message
      * @param responseResult the result to write the response payload to
@@ -100,8 +173,21 @@ public interface WebServiceOperations {
     /**
      * Sends a web service message that contains the given payload. Writes the response, if any, to the given
      * <code>Result</code>.
+     *
+     * @param uri            the URI to send the message to
+     * @param requestPayload the payload of the request message
+     * @param responseResult the result to write the response payload to
+     * @throws WebServiceClientException if there is a problem sending or receiving the message
+     */
+    void sendAndReceive(String uri, Source requestPayload, Result responseResult) throws WebServiceClientException;
+
+    /**
+     * Sends a web service message that contains the given payload. Writes the response, if any, to the given
+     * <code>Result</code>.
      * <p/>
      * The given callback allows changing of the request message after the payload has been written to it.
+     * <p/>
+     * This will only work with a default specified!
      *
      * @param requestPayload  the payload of the request message
      * @param requestCallback callback to change message, can be <code>null</code>
@@ -112,8 +198,27 @@ public interface WebServiceOperations {
             throws WebServiceClientException;
 
     /**
+     * Sends a web service message that contains the given payload. Writes the response, if any, to the given
+     * <code>Result</code>.
+     * <p/>
+     * The given callback allows changing of the request message after the payload has been written to it.
+     *
+     * @param uri             the URI to send the message to
+     * @param requestPayload  the payload of the request message
+     * @param requestCallback callback to change message, can be <code>null</code>
+     * @param responseResult  the result to write the response payload to
+     * @throws WebServiceClientException if there is a problem sending or receiving the message
+     */
+    void sendAndReceive(String uri,
+                        Source requestPayload,
+                        WebServiceMessageCallback requestCallback,
+                        Result responseResult) throws WebServiceClientException;
+
+    /**
      * Sends a web service message that can be manipulated with the given callback, reading the result with a
      * <code>WebServiceMessageExtractor</code>.
+     * <p/>
+     * This will only work with a default specified!
      *
      * @param requestCallback   the requestCallback to be used for manipulating the request message
      * @param responseExtractor object that will extract results
@@ -127,10 +232,39 @@ public interface WebServiceOperations {
      * Sends a web service message that can be manipulated with the given callback, reading the result with a
      * <code>WebServiceMessageExtractor</code>.
      *
+     * @param uri               the URI to send the message to
+     * @param requestCallback   the requestCallback to be used for manipulating the request message
+     * @param responseExtractor object that will extract results
+     * @return an arbitrary result object, as returned by the <code>WebServiceMessageExtractor</code>
+     * @throws WebServiceClientException if there is a problem sending or receiving the message
+     */
+    Object sendAndReceive(String uri,
+                          WebServiceMessageCallback requestCallback,
+                          WebServiceMessageExtractor responseExtractor) throws WebServiceClientException;
+
+    /**
+     * Sends a web service message that can be manipulated with the given callback, reading the result with a
+     * <code>WebServiceMessageExtractor</code>.
+     * <p/>
+     * This will only work with a default specified!
+     *
      * @param requestCallback  the callback to be used for manipulating the request message
      * @param responseCallback the callback to be used for manipulating the response message
      * @throws WebServiceClientException if there is a problem sending or receiving the message
      */
     void sendAndReceive(WebServiceMessageCallback requestCallback, WebServiceMessageCallback responseCallback)
             throws WebServiceClientException;
+
+    /**
+     * Sends a web service message that can be manipulated with the given callback, reading the result with a
+     * <code>WebServiceMessageExtractor</code>.
+     *
+     * @param uri              the URI to send the message to
+     * @param requestCallback  the callback to be used for manipulating the request message
+     * @param responseCallback the callback to be used for manipulating the response message
+     * @throws WebServiceClientException if there is a problem sending or receiving the message
+     */
+    void sendAndReceive(String uri,
+                        WebServiceMessageCallback requestCallback,
+                        WebServiceMessageCallback responseCallback) throws WebServiceClientException;
 }
