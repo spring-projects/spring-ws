@@ -31,19 +31,21 @@
                 object again.
             </para>
             <section>
-                <title>Transports</title>
+                <title>URIs and Transports</title>
                 <para>
-                    The <classname>WebServiceTemplate</classname> requires a reference to a 
-                    <interfacename>MessageSender</interfacename>. The message sender is responsible for sending the XML
-                    message across a transport layer.
+                    The <classname>WebServiceTemplate</classname> uses an URI as the message destination. You can either
+                    set a <property>defaultUri</property> property on the template itself, or give an URI when calling
+                    a method on the template. The URI will be resolved into a
+                    a <interfacename>MessageSender</interfacename>. The message sender is responsible for sending the XML
+                    message across a transport layer. You can set one or more message senders using the
+                    <property>messageSender</property> or <property>messageSenders</property>.
                 </para>
                 <para>
                     There are two implementations of the <classname>MessageSender</classname> interface for sending
-                    messages via HTTP. The simplest implementation is the
+                    messages via HTTP. The default implementation is the
                     <classname>HttpUrlConnectionMessageSender</classname>, which uses the facilities provided by Java 
                     SE itself. The alternative is the <classname>CommonsHttpMessageSender</classname>, which uses the 
                     Jakarta Commons HttpClient. Use the latter if you need more advanced and easy-to-use functionality.
-                    Both HTTP message senders require an URL to be set using the <property>url</property> property.
                 </para>
             </section>
             <section>
@@ -79,15 +81,11 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 
 public class WebServiceClient {
 
-    private static final String MESSAGE = "<message xmlns=\"http://tempuri.org\">Hello World</message>";
+    private static final String MESSAGE = "<message xmlns=\"http://tempuri.org\">Hello Web Service World</message>";
     private WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
 
-    public void setMessageFactory(WebServiceMessageFactory messageFactory) {
-        webServiceTemplate.setMessageFactory(messageFactory);
-    }
-
-    public void setMessageSender(WebServiceMessageSender messageSender) {
-        webServiceTemplate.setMessageSender(messageSender);
+    public void setDefaultUri(String defaultUri) {
+        webServiceTemplate.setDefaultUri(defaultUri);
     }
 
     public void simpleSendAndReceive() {
@@ -104,18 +102,14 @@ public class WebServiceClient {
 <beans xmlns="http://www.springframework.org/schema/beans">
 
     <bean id="webServiceClient" class="WebServiceClient">
-        <property name="messageSender">
-            <bean class="org.springframework.ws.transport.http.HttpUrlConnectionMessageSender">
-                <property name="url" value="http://localhost:8080/WebService"/>
-            </bean>
-        </property>
+        <property name="defaultUri" value="http://localhost:8080/WebService"/>
     </bean>
 
 </beans>]]></programlisting>
             <para>
                 This example uses the template to send a hello world message to the web service located at
                 <uri>http://localhost:8080/WebService</uri>, and writes the result to the console. The 
-                <classname>WebServiceTemplate</classname> is injected with the message sender. A zero argument 
+                <classname>WebServiceTemplate</classname> is injected with the default URI. A zero argument 
                 constructor and <property>messageFactory</property>/<property>messageSender</property>
                 bean properties are provided and can be used for constructing
                 the instance (using a BeanFactory or plain Java code). Alternatively, consider deriving from
