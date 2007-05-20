@@ -73,6 +73,7 @@
             <excludes>
                 <exclude>**/target/**</exclude>
                 <exclude>**/target</exclude>
+                <exclude>**/*.class</exclude>
                 <exclude>**/*.iml</exclude>
                 <exclude>**/*.ipr</exclude>
                 <exclude>**/META-INF/*</exclude>
