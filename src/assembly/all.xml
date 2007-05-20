@@ -16,6 +16,8 @@
                 <include>org.springframework.ws:spring-ws-security</include>
             </includes>
             <binaries>
+                <outputDirectory></outputDirectory>
+                <outputFileNameMapping></outputFileNameMapping>
                 <includeDependencies>false</includeDependencies>
                 <unpack>true</unpack>
             </binaries>

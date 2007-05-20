@@ -19,6 +19,7 @@
                 <include>org.springframework.ws:spring-ws-security</include>
             </includes>
             <binaries>
+                <includeDependencies>false</includeDependencies>
                 <unpack>false</unpack>
             </binaries>
         </moduleSet>
