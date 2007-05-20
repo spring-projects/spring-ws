@@ -17,7 +17,6 @@
 package org.springframework.ws.soap.security.xwss.callback.acegi;
 
 import java.io.IOException;
-
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
@@ -30,7 +29,7 @@ import org.acegisecurity.providers.dao.cache.NullUserCache;
 import org.acegisecurity.userdetails.UserDetails;
 import org.acegisecurity.userdetails.UserDetailsService;
 import org.acegisecurity.userdetails.UsernameNotFoundException;
-
+import org.springframework.dao.DataAccessException;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.xwss.callback.AbstractCallbackHandler;
 import org.springframework.ws.soap.security.xwss.callback.DefaultTimestampValidator;
@@ -57,16 +56,12 @@ public class AcegiDigestPasswordValidationCallbackHandler extends AbstractCallba
 
     private UserDetailsService userDetailsService;
 
-    /**
-     * Sets the users cache. Not required, but can benefit performance.
-     */
+    /** Sets the users cache. Not required, but can benefit performance. */
     public void setUserCache(UserCache userCache) {
         this.userCache = userCache;
     }
 
-    /**
-     * Sets the Acegi user details service. Required.
-     */
+    /** Sets the Acegi user details service. Required. */
     public void setUserDetailsService(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
@@ -83,7 +78,7 @@ public class AcegiDigestPasswordValidationCallbackHandler extends AbstractCallba
      */
     protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
         if (callback instanceof PasswordValidationCallback) {
-            PasswordValidationCallback passwordCallback = ((PasswordValidationCallback) callback);
+            PasswordValidationCallback passwordCallback = (PasswordValidationCallback) callback;
             if (passwordCallback.getRequest() instanceof PasswordValidationCallback.DigestPasswordRequest) {
                 PasswordValidationCallback.DigestPasswordRequest request =
                         (PasswordValidationCallback.DigestPasswordRequest) passwordCallback.getRequest();
@@ -105,7 +100,7 @@ public class AcegiDigestPasswordValidationCallbackHandler extends AbstractCallba
         throw new UnsupportedCallbackException(callback);
     }
 
-    private UserDetails loadUserDetails(String username) {
+    private UserDetails loadUserDetails(String username) throws DataAccessException {
         UserDetails user = userCache.getUserFromCache(username);
 
         if (user == null) {
