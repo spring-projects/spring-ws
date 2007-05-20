@@ -25,7 +25,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>tutorial</artifactId>
     <packaging>war</packaging>
-    <name>Spring WS Holdiday Service Tutorial</name>
+    <name>Spring WS Holiday Service Tutorial</name>
     <description>This sample contains the code for the tutorial in the reference documentation.</description>
     <dependencies>
         <!-- Spring-WS dependencies -->
