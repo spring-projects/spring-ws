@@ -1,0 +1,30 @@
+                                                       ---------
+                                                       Snapshots
+                                                       ---------
+
+Snapshot Builds
+
+	These builds are provided for testing and development purposes only. They are built by a Continuum process 
+	automatically using the latest snapshot from Subversion.
+	
+	The snapshots are deloyed to a Maven2 snapshot repository. To use it, just add the following repository to the POM:
+
++---------------
+<repository>
+    <id>spring-s3</id>
+    <name>Springframework Maven SNAPSHOT Repository</name>
+    <url>http://s3.amazonaws.com/maven.springframework.org/</url>
+</repository>
++---------------
+
+	Individual dependencies can then by added like so:
+
++---------------
+<dependency>
+    <groupId>org.springframework.ws</groupId>
+    <artifactId>spring-ws-core</artifactId>
+    <version>1.0-rc1-SNAPSHOT</version>
+</dependency>
++---------------
+
+	Additionally, there are {{{http://s3browse.com/explore/maven.springframework.org/org/springframework/ws/spring-ws/1.0-rc1-SNAPSHOT/}zips}} available which contain all jars.

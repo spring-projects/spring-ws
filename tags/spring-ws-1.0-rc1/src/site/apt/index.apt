@@ -1,0 +1,46 @@
+                                                          ----
+                                                          Home
+                                                          ----
+
+What is Spring Web Services?
+
+	Spring Web Services is a product of the {{{http://www.springframework.org}Spring}} community focused on creating 
+	document-driven Web services.
+	Spring Web Services aims to facilitate contract-first SOAP service development, allowing for the creation of
+	flexible web services using one of the many ways to manipulate XML payloads.
+
+Key Features
+
+	* <<Makes the Best Practice an Easy Practice:>> 
+	Spring Web Services makes enforcing best practices easier. This includes practices such as the WS-I basic profile, 
+	Contract-First development, and having a loose coupling between contract and implementation.
+
+	* <<Powerful mappings:>>
+	You can distribute incoming XML request to any object, depending on message payload, SOAP Action header, or an 
+	XPath expression. 
+	
+	* <<XML API support:>>
+	Incoming XML messages can be handled in standard JAXP APIs such as DOM, SAX, and StAX, but also JDOM, dom4j, XOM, 
+	or even marshalling technologies.
+
+	* <<Flexible XML Marshalling:>>
+	The Object/XML Mapping module in the Spring Web Services distribution supports JAXB 1 and 2, Castor, XMLBeans, 
+	JiBX, and XStream. And because it is a separate module, you can use it in non-Web services code as well.
+
+	* <<Reuses your Spring expertise:>>
+	Spring-WS uses Spring application contexts for all configuration, which should 	
+	help Spring developers get up-to-speed nice and quickly. Also, the architecture of Spring-WS resembles that of 
+	Spring-MVC.
+	
+	* <<Supports WS-Security:>>
+	WS-Security allows you to sign SOAP messages, encrypt and decrypt them, or authenticate against them.
+	
+	* <<Integrates with Acegi Security:>>
+	The WS-Security implementation of Spring Web Services provides integration with 
+	{{{http://acegisecurity.org/}Acegi Security}}. This means you can use your existing Acegi configuration for your
+	SOAP service as well.
+
+	* <<Built by Maven:>> This assists you in effectively reusing the Spring Web Services artifacts in your own
+	Maven-based projects.
+
+	* <<Apache license.>> You can confidently use Spring-WS in your project.

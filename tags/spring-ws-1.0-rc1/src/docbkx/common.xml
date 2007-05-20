@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<chapter id="common">
+    <title>Shared components</title>
+    <para>
+        In this chapter, we will explore the the components which are shared between client- and server side
+        Spring-WS development. These interfaces and classes represent the building blocks of Spring-WS, so
+        it's important to understand what they do, even if you do not use them directly.
+    </para>
+    <section id="web-service-messages">
+        <title>Web service messages</title>
+        <section id="web-service-message">
+            <title><interfacename>WebServiceMessage</interfacename></title>
+            <para>
+                One of the core interfaces within Spring Web Services is the
+                <interfacename>WebServiceMessage</interfacename>. This interface represents a protocol agnostic XML
+                message. The interface contains methods that provide access to the payload of the message, in the form
+                of a <interfacename>javax.xml.transform.Source</interfacename> or a
+                <interfacename>javax.xml.transform.Result</interfacename>. <interfacename>Source</interfacename> and
+                <interfacename>Result</interfacename> are tagging interfaces that represent an abstraction over XML
+                input and output. Concrete implementations wrap various XML representations, as indicated in the table
+                below.
+                <informaltable>
+                    <tgroup cols="2">
+                        <thead>
+                            <row>
+                                <entry>Source/Result implementation</entry>
+                                <entry>Wraps XML representation</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><classname>javax.xml.transform.dom.DOMSource</classname></entry>
+                                <entry><interfacename>org.w3c.dom.Node</interfacename></entry>
+                            </row>
+                            <row>
+                                <entry><classname>javax.xml.transform.dom.DOMResult</classname></entry>
+                                <entry><interfacename>org.w3c.dom.Node</interfacename></entry>
+                            </row>
+                            <row>
+                                <entry><classname>javax.xml.transform.sax.SAXSource</classname></entry>
+                                <entry><classname>org.xml.sax.InputSource</classname> and
+                                    <interfacename>org.xml.sax.XMLReader</interfacename>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><classname>javax.xml.transform.sax.SAXResult</classname></entry>
+                                <entry><interfacename>org.xml.sax.ContentHandler</interfacename></entry>
+                            </row>
+                            <row>
+                                <entry><classname>javax.xml.transform.stream.StreamSource</classname></entry>
+                                <entry>
+                                    <classname>java.io.File</classname>, <classname>java.io.InputStream</classname>, or
+                                    <classname>java.io.Reader</classname>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <classname>javax.xml.transform.stream.StreamResult</classname>
+                                </entry>
+                                <entry>
+                                    <classname>java.io.File</classname>, <classname>java.io.OutputStream</classname>, or
+                                    <classname>java.io.Writer</classname>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </informaltable>
+                In addition to reading from and writing to the payload, a Web service message can write itself to an
+                output stream.
+            </para>
+        </section>
+        <section id="soap-message">
+            <title><interfacename>SoapMessage</interfacename></title>
+            <para>
+                The <interfacename>SoapMessage</interfacename> is an extension of
+                <interfacename>WebServiceMessage</interfacename>. It contains SOAP-specific methods, such as getting
+                SOAP Headers, SOAP Faults, etc. Generally, your code should not be dependent on
+                <interfacename>SoapMessage</interfacename>, because the content of the SOAP Body can be obtained via
+                <methodname>getPayloadSource()</methodname> and <methodname>getPayloadResult()</methodname> in the
+                <interfacename>WebServiceMessage</interfacename>. Only when it is necessary to perform SOAP-specific
+                actions, such as adding a header, get an attachment, etc., should you need to cast
+                <interfacename>WebServiceMessage</interfacename> to <interfacename>SoapMessage</interfacename>.
+            </para>
+        </section>
+        <section id="message-factories">
+            <title>Message Factories</title>
+            <para>
+                Concrete message implementation are created by a
+                <interfacename>WebServiceMessageFactory</interfacename>. This factory can create an empty message, or
+                read a message based on an input stream.
+                There are two concrete implementations of <interfacename>WebServiceMessageFactory</interfacename>.
+                One is based on SAAJ, the SOAP with Attachments API for Java, the other based on Axis 2's AXIOM, the
+                AXis Object Model.
+            </para>
+            <section>
+                <title><classname>SaajSoapMessageFactory</classname></title>
+                <para>
+                    The <classname>SaajSoapMessageFactory</classname> uses the SOAP with Attachments API for Java to
+                    create <classname>SoapMessage</classname> implementations. SAAJ is part of J2EE 1.4, so it should be
+                    supported under most modern application servers. You wire up a
+                    <classname>SaajSoapMessageFactory</classname> like so:
+    <programlisting><![CDATA[
+<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory" />]]></programlisting>
+                </para>
+                <note>
+                    <para>
+                        SAAJ is based on DOM, the Document Object Model. This means that all SOAP messages are
+                        stored in memory as a whole. For larger SOAP messages, this may not be very performant.
+                        In that case, the <classname>AxiomSoapMessageFactory</classname> might be more applicable.
+                    </para>
+                </note>
+            </section>
+            <section>
+                <title><classname>AxiomSoapMessageFactory</classname></title>
+                <para>
+                    The <classname>AxiomSoapMessageFactory</classname> uses the AXis 2 Object Model to create
+                    <interfacename>SoapMessage</interfacename> implementations. AXIOM is based on  StAX, the Streaming
+                    API for XML. StAX provides a pull-based mechanism for reading XML messages, which can be more
+                    efficient for larger messages.
+                </para>
+                <para>
+                    To increase reading performance on the <classname>AxiomSoapMessageFactory</classname>,
+                    you can set the <property>payloadCaching</property> property to false (default is true).
+                    This this will read the contents of the SOAP body directly from the stream.
+                    When this setting is enabled, the payload can only be read once.
+                    This means that you have to make sure that any preprocessing of the message does not consume it.
+                </para>
+                <para>
+                    You use the <classname>AxiomSoapMessageFactory</classname> as follows:
+                    <programlisting><![CDATA[
+<bean id="messageFactory" class="org.springframework.ws.soap.axiom.AxiomSoapMessageFactory">
+    <property name="payloadCaching" value="true"/>
+</bean>]]></programlisting>
+                </para>
+            </section>
+        </section>
+        <section id="message-context">
+        	<title><interfacename>MessageContext</interfacename></title>
+        	<para>
+        		Typically, messages come in pairs: a request and a response. A request is created on the client-side,
+        		which is sent over some transport to the server-side, where a response is generated. This response gets
+        		sent back to the client, where it is read.
+        	</para>
+        	<para>
+        		In Spring Web Services, such a conversation is contained in a
+        		<interfacename>MessageContext</interfacename>, which has properties to get request and response
+        		messages.
+        		On the client-side, the message context is created by the <link linkend="client-web-service-template">
+        		<classname>WebServiceTemplate</classname></link>.
+        		On the server-side, the message context is read from the transport-specific input stream. In HTTP,
+        		it is read from the <interfacename>HttpServletRequest</interfacename> and the response is written back
+        		to the <interfacename>HttpServletResponse</interfacename>.
+       		</para>
+        </section>
+    </section>
+    <section id="xpath">
+        <title>Handling XML With XPath</title>
+        <para>
+            One of the best ways to handle XML is to use XPath. Quoting <xref linkend="effective-xml"/>, item 35:
+        </para>
+        <blockquote>
+            <para>
+                XPath is a fourth generation declarative language that allows you to specify which nodes you want to
+                process without specifying exactly how the processor is supposed to navigate to those nodes. XPath's
+                data model is very well designed to support exactly what almost all developers want from XML. For
+                instance, it merges all adjacent text including that in CDATA sections, allows values to be
+                calculated that skip over comments and processing instructions` and include text from child and
+                descendant elements, and requires all external entity references to be resolved. In practice, XPath
+                expressions tend to be much more robust against unexpected but perhaps insignificant changes in the
+                input document.
+            </para>
+            <attribution>Elliotte Rusty Harold</attribution>
+        </blockquote>
+    <para>
+            Spring Web Services has two ways to use XPath within your application: the faster
+            <interfacename>XPathExpression</interfacename> or the more flexible <classname>XPathTemplate</classname>.
+        </para>
+        <section id="xpath-expression">
+            <title><interfacename>XPathExpression</interfacename></title>
+            <para>
+                The <interfacename>XPathExpression</interfacename> is an abstraction over a compiled XPath expressions,
+                such as the Java 5 <interfacename>javax.xml.xpath.XPathExpression</interfacename>, or the Jaxen
+                <classname>XPath</classname> class.
+                To construct an expression in an application context, there is the
+                <classname>XPathExpressionFactoryBean</classname>. Here is an example which uses this factory bean:
+            </para>
+            <programlisting><![CDATA[<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="nameExpression" class="org.springframework.xml.xpath.XPathExpressionFactoryBean">
+        <property name="expression" value="/Contacts/Contact/Name"/>
+    </bean>
+
+    <bean id="myEndpoint" class="sample.MyXPathClass">
+        <constructor-arg ref="nameExpression"/>
+    </bean>
+
+</beans>]]></programlisting>
+            <para>
+                The expression above does not use namespaces, but we could set those using the
+                <property>namespaces</property> property of the factory bean. The expression can be used in the code
+                as follows:
+            </para>
+            <programlisting><![CDATA[package sample;
+
+public class MyXPathClass {
+
+    private XPathExpression nameExpression;
+
+    public MyXPathClass(XPathExpression nameExpression) {
+        this.nameExpression = nameExpression;
+    }
+
+    public void doXPath(Document document) {
+        String name = nameExpression.evaluateAsString(document.getDocumentElement());
+        System.out.println("Name: " + name);
+    }
+
+}]]></programlisting>
+            <para>
+                For a more flexible approach, you can use a <interfacename>NodeMapper</interfacename>, which is similar
+                to the <interfacename>RowMapper</interfacename> in Spring's JDBC support. The following
+                example shows how we can use it:
+            </para>
+            <programlisting><![CDATA[package sample;
+
+public class MyXPathClass  {
+
+    private XPathExpression contactExpression;
+
+    public MyXPathClass(XPathExpression contactExpression) {
+        this.contactExpression = contactExpression;
+    }
+
+    public void doXPath(Document document) {
+        List contacts = nameExpression.evaluate(requestElement,
+                new NodeMapper() {
+                    public Object mapNode(Node node, int nodeNum) throws DOMException {
+                        Element contactElement = (Element) node;
+                        Element nameElement = (Element) contactElement.getElementsByTagName("Name").item(0);
+                        Element phoneElement = (Element) contactElement.getElementsByTagName("Phone").item(0);
+                        return new Contact(nameElement.getTextContent(), phoneElement.getTextContent());
+                    }
+                } );
+        // do something with list of Contact objects
+    }
+}]]></programlisting>
+            <para>
+                Similar to mapping rows in Spring JDBC's <interfacename>RowMapper</interfacename>, each result node is
+                mapped using an anonymous inner class. In this case, we create a <classname>Contact</classname> object,
+                which we use later on.
+            </para>
+        </section>
+        <section id="xpath-template">
+            <title><classname>XPathTemplate</classname></title>
+            <para>
+                The <interfacename>XPathExpression</interfacename> only allows you to evaluate a single, pre-compiled
+                expression. A more flexible, though slower, alternative is the <classname>XpathTemplate</classname>.
+                This class follows the common template pattern used throughout Spring (JdbcTemplate, JmsTemplate, etc.).
+                Here is an example:
+            </para>
+            <programlisting><![CDATA[package sample;
+
+public class MyXPathClass {
+
+    private XPathOperations template = new Jaxp13XPathTemplate();
+
+    public void doXPath(Source source) {
+        String name = template.evaluateAsString("/Contacts/Contact/Name", request);
+        // do something with name
+    }
+
+}]]></programlisting>
+            <para>
+                Of course, the template could have been injected with a constructor argument or a setter.
+            </para>
+        </section>
+    </section>
+</chapter>

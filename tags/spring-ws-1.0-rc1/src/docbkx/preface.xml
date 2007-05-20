@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE preface PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<preface id="preface">
+	<title>Preface</title>
+	<para>
+        In the current age of Service Oriented Architectures, more and more people are using Web Services to
+        connect previously unconnected systems. Initially, Web services where considered to be just another way to do
+        a Remote Procedure Call (RPC). Over time, however, people found out that there is a big difference
+        between RPC and Web services. Especially when interoperability with other platforms is important, it is often
+        better to send encapsulated XML documents, containing all the data necessary to process the request.
+        Conceptually, XML-based Web services are better off being compared to message queues rather than remoting
+        solutions.
+        Overall, XML should be considered the platform-neutral representation of data, the 
+        <foreignphrase>interlingua</foreignphrase> of SOA. When developing or using Web services, the focus should be 
+        on this XML, and not on Java.
+    </para>
+    <para>
+        Spring Web Services focusses on creating these document-driven Web services.
+        Spring Web Services facilitates contract-first SOAP service development, allowing for the creation of
+        flexible web services using one of the many ways to manipulate XML payloads. 
+        Spring-WS provides a powerful <link linkend="server">message dispatching framework</link>, various <link
+        linkend="oxm">XML marshalling</link> techniques that can be used outside a Web service environment, a <link
+        linkend="security">WS-Security</link> solution that integrates with your existing application security
+        solution, and a <link linkend="client">Client-side API</link> that follows the familiar Spring template pattern.
+    </para>
+	<para>
+        This document provides a reference guide to Spring-WS's features. Since this document is still a
+        work-in-progress, if you have any requests or comments, please post them on the support forums at <ulink
+        url="http://forum.springframework.org/forumdisplay.php?f=39"/>.
+    </para>
+</preface>

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <properties>
+        <title>Spring Web Services Changelog</title>
+        <author email="apoutsma@interface21.com">Arjen Poutsma</author>
+    </properties>
+    <body>
+        <release version="1.0-RC1" date="2007-05-21">
+            <action dev="poutsma" type="add" issue="SWS-98">Changing URL in CommonsHttpMessageSender</action>
+            <action dev="poutsma" type="add" issue="SWS-117">Allow SoapFaultMappingExceptionResolver to use strategy to
+                obtain SoapFaultDefinition
+            </action>
+            <action dev="poutsma" type="add">Pulled handleFault() from SoapEndpointInterceptor up to EndpointInterceptor
+            </action>
+            <action dev="poutsma" type="fix" issue="SWS-119">Remove IOExceptions from WebServiceTemplate. A runtime
+                exception hierarchy has been created in org.springframework.ws.client.
+            </action>
+            <action dev="poutsma" type="fix" issue="SWS-116">Support JAXB's MTOM/XOP/MIME support. As a result, all
+                Mime-related code in SoapMessage has been moved to the org.springframework.ws.mime package
+            </action>
+            <action dev="poutsma" type="fix" issue="SWS-115">Client is not able to read long response</action>
+            <action dev="poutsma" type="add">Add methods to access attributes on SoapElement</action>
+            <action dev="poutsma" type="add">Added XPath template, for evaluating XPaths in a template-like fashion
+            </action>
+            <action dev="poutsma" type="add" issue="SWS-62">MTOM support</action>
+            <action dev="poutsma" type="add">Added XPathExpressionFactoryBean, for injection of XPath expressions
+            </action>
+            <action dev="poutsma" type="fix" issue="SWS-106">Default message factory for WebServiceTemplate</action>
+            <action dev="poutsma" type="fix" issue="SWS-79">Add faults into dynamically created WSDL</action>
+            <action dev="poutsma" type="add" issue="SWS-20">Added MethodEndpoint functionality, invoking methods for
+                incoming requests
+            </action>
+            <action dev="poutsma" type="fix" issue="SWS-105">GZip compression is not enabled</action>
+            <action dev="poutsma" type="update">WebServiceConnection is now container for TransportInputStream and
+                TransportOutputStream, used on both client- and server-side
+            </action>
+            <action dev="poutsma" type="add">Added supports method to Marshaller and Unmarshaller</action>
+            <action dev="poutsma" type="fix" issue="SWS-88">Allow CastorMarshaller to accept more than one mapping file
+            </action>
+            <action dev="poutsma" type="fix" issue="SWS-96">Set WhitespacePreserve flag in CastorMarshaller</action>
+            <action dev="poutsma" type="fix" issue="SWS-97">OXM Marshal encoding definition</action>
+            <action dev="poutsma" type="add" issue="SWS-100">Cannot set DateConverter in
+                XStreamMarshaller.setConverters(Converter[])
+            </action>
+            <action dev="poutsma" type="update">Replaced method which returned a Source from WebServiceTemplate with
+                SourceExtractor methods, because the Source could be closed before returned
+            </action>
+            <action dev="poutsma" type="add" issue="SWS-85">Added XPathPayloadEndpointMapping (#SWS-85)</action>
+            <action dev="poutsma" type="fix" issue="SWS-87">AbstractSoapMessage.getPayloadSource returns null with Axis
+                SAAJ
+            </action>
+            <action dev="poutsma" type="fix" issue="SWS-89">DefaultTimestapValidator now handles timestamps with
+                milliseconds correctly
+            </action>
+            <action dev="poutsma" type="fix" issue="SWS-86">Stream closed before response read with WebServiceTemplate +
+                Axis SAAJ Soap Messages
+            </action>
+            <action dev="poutsma" type="fix">Fixed issue with reading response HTTP headers</action>
+            <action dev="poutsma" type="fix" issue="SWS-101">XsdBasedSoap11Wsdl4jDefinitionBuilder parsing error
+            </action>
+            <action dev="poutsma" type="update">Prefixed abstract classes with Abstract</action>
+            <action dev="poutsma" type="fix" issue="SWS-93">new location for log4j.properties</action>
+        </release>
+
+        <release version="1.0-M3" date="2007-01-24">
+            <action dev="poutsma" type="fix" issue="SWS-70">AbstractMarshallerTestCase.testMarshalDOMResult() builds a
+                DOM object that does not retain namespace
+            </action>
+            <action dev="poutsma" type="fix" issue="SWS-54">CastorMarshaller uses a XMLClassDescriptorResolver instead
+                of a Mapping
+            </action>
+            <action dev="poutsma" type="fix" issue="SWS-59">CastorMarshaller marshals to DOM trees correctly</action>
+            <action dev="poutsma" type="add" issue="SWS-72">Added indent property to pretty print JiBX output (#SWS-72)
+            </action>
+            <action dev="poutsma" type="update">Moved MessageDispatcher, EndpointAdapter, EndpointExceptionResolver,
+                EndpointInterceptor, EndpointMapping, and EndpointInvocationChain to org.springframework.ws.server
+                package
+            </action>
+            <action dev="poutsma" type="add" issue="SWS-58">Added client-side support based on WebServiceTemplate
+            </action>
+            <action dev="poutsma" type="update">Refactored MessageContextFactory, SoapMessageContextFactory and
+                implementations into WebServiceMessageFactory
+            </action>
+            <action dev="poutsma" type="update">Moved TransformerObjectSupport to org.springframework.xml.transform
+            </action>
+            <action dev="poutsma" type="update">Moved all endpoint subclasses to org.springframework.ws.server.endpoint
+            </action>
+            <action dev="poutsma" type="update">Moved PayloadValidatingInterceptor to
+                org.springframework.soap.server.endpoint.interceptor, because it contains SOAP-specific features
+            </action>
+            <action dev="poutsma" type="add" issue="SWS-53">Added setId() method to Attachment, to set the Content-ID of
+                MIME attachments
+            </action>
+            <action dev="poutsma" type="add" issue="SWS-57">Added getResult() to SoapFaultDetail</action>
+            <action dev="poutsma" type="add">Refactored SAAJ from two separate hierarchies (SAAJ 1.2 and SAAJ 1.3) into
+                one, using bridge pattern. Added SAAJ 1.1 support.
+            </action>
+            <action dev="poutsma" type="update">Moved all endpoint subclasses to
+                org.springframework.ws.soap.server.endpoint
+            </action>
+            <action dev="poutsma" type="fix" issue="SWS-55">DefaultTimestampValidator no longer requires Expired in
+                request
+            </action>
+            <action dev="poutsma" type="fix" issue="SWS-56">Digest passwords are handled correctly in the
+                SimplePasswordValidationCallbackHandler
+            </action>
+            <action dev="poutsma" type="update">Moved TransportContext and TransportContextHolder to
+                org.springframework.ws.transport.context package
+            </action>
+            <action dev="poutsma" type="add" issue="SWS-60">Added MessageDispatcherServlet</action>
+            <action dev="poutsma" type="update">Renamed MessageEndpointHandlerAdapter to
+                WebServiceReceiverHandlerAdapter
+            </action>
+            <action dev="poutsma" type="add">Added Wsdl11DefinitionBuilder</action>
+            <action dev="poutsma" type="add" issue="SWS-67">Added XsdBasedSoap11Wsdl4jDefinitionBuilder that generates a
+                WSDL based on a schema
+            </action>
+            <action dev="poutsma" type="fix" issue="SWS-61">Fixed #SWS-61: DomContentHandler throwing NullpointerExption
+                on document
+            </action>
+            <action dev="poutsma" type="fix" issue="SWS-75">Fixed #SWS-75: Java 1.5+ Constructor Used for
+                IllegalStateException
+            </action>
+            <action dev="poutsma" type="add">Added JAX-WS client for Airline sample</action>
+            <action dev="poutsma" type="add">added Spring-WS client for Echo sample</action>
+        </release>
+
+        <release version="1.0-M2" date="2006-09-09">
+            <action dev="poutsma" type="update" issue="SWS-36">All marshallers support StaxSources now</action>
+            <action dev="poutsma" type="add" issue="SWS-34">Added support for registering custom Converters</action>
+            <action dev="poutsma" type="update">Changed contract of MessageContext.getResponse(): now creates a response
+                if none has been created. Required because creating SOAP fault when a response was already set threw an
+                exception.
+            </action>
+            <action dev="poutsma" type="add">Enabling support for direct writing to the TransportResponse</action>
+            <action dev="poutsma" type="update">MessageContext contains TransportRequest, for transport-based routing
+            </action>
+            <action dev="poutsma" type="update">Improved endpoint test suite</action>
+            <action dev="poutsma" type="fix" issue="SWS-38">AbstractStaxPayloadEndpoint now use StaxSource corrently
+            </action>
+            <action dev="poutsma" type="update">Renamed AbstractDom4JPayloadEndpoint to AbstractDom4jPayloadEndpoint
+                (lower case j), to follow Spring naming conventions (e.g. Log4jConfigurer)
+            </action>
+            <action dev="poutsma" type="add">Added getters on AbstractMarshallingPayloadEndpoint</action>
+            <action dev="poutsma" type="update">Moved interceptors to seperate package</action>
+            <action dev="poutsma" type="update" issue="SWS-43">Made PayloadValidatingInterceptor more customizable
+            </action>
+            <action dev="poutsma" type="add" issue="SWS-44">Added schemas property to PayloadValidatingInterceptor
+            </action>
+            <action dev="poutsma" type="update">Refactoring most of PayloadValidatingInterceptor into
+                AbstractValidatingInterceptor
+            </action>
+            <action dev="poutsma" type="update">Moved EndpointMappings to seperate package</action>
+            <action dev="poutsma" type="remove">Removed SOAP-specific roles functionality</action>
+            <action dev="poutsma" type="add" issue="SWS-50">Added Plain Old XML support</action>
+            <action dev="poutsma" type="update" issue="SWS-32">Improved content-type handling</action>
+            <action dev="poutsma" type="update">Moved SOAP 1.1 specfics to separate package and interfaces</action>
+            <action dev="poutsma" type="update">SoapAction has been removed from SoapMessage, SoapActionEndpointMapping
+                uses TransportRequest header
+            </action>
+            <action dev="poutsma" type="add">Added support for SAAJ 1.3</action>
+            <action dev="poutsma" type="add">Added "payloadCaching" property to read the contents of SOAP bodies
+                produced by the AxiomSoapMessageContextFactory in a non-buffering, read-once fashion.
+            </action>
+            <action dev="poutsma" type="fix">Increased performance by keeping object references instead of creating new
+                instances for every call
+            </action>
+            <action dev="poutsma" type="add">Added SoapEnvelopeLoggingInterceptor, which logs the entire SoapEnvelope
+            </action>
+            <action dev="poutsma" type="update">Moved SOAP-specific EndpointMappings to seperate package</action>
+            <action dev="poutsma" type="add">Added Role/Actor functionality to DelegatingSoapEndpointMapping</action>
+            <action dev="poutsma" type="add">Add support for SAAJ 1.3</action>
+            <action dev="poutsma" type="fix">Increased performance by keeping object references instead of creating new
+                instances for every call
+            </action>
+            <action dev="poutsma" type="add">Added SaajUtils.getVersion()</action>
+            <action dev="poutsma" type="update">Moved SOAP 1.1 specifics to separate package and interfaces</action>
+            <action dev="poutsma" type="fix">Added TransportContext, TransportRequest &amp; TransportResponse</action>
+            <action dev="poutsma" type="fix" issue="SWS-31">Removed J2EE 1.4 dependency</action>
+            <action dev="poutsma" type="update">renamed MessageHandlerAdapter to MessageEndpointHandlerAdapter</action>
+            <action dev="poutsma" type="update">Moved package to seperate jar file, since oxm now also depends on it
+            </action>
+            <action dev="poutsma" type="update">Moved QNameEditor from spring-ws-core</action>
+            <action dev="poutsma" type="remove">Removed prefix dependency from QName</action>
+            <action dev="poutsma" type="fix" issue="SWS-46">Improved validation schema loading</action>
+            <action dev="poutsma" type="add">Added Ben Ethridge's Echo sample client</action>
+        </release>
+
+        <release version="1.0-M1" date="2006-06-12">
+            <action dev="poutsma" type="add">Added support for JAXB 2: refactored JaxbMarshaller into
+                AbstractJaxbMarshaller, Jaxb1Marshaller and Jaxb2Marshaller
+            </action>
+            <action dev="poutsma" type="fix">Made JaxbMarshallers thread safe</action>
+            <action dev="poutsma" type="add">Added property for a ValidationEventHandler in Jaxb2Marshaller</action>
+            <action dev="poutsma" type="add">Added AXIOM (AXis Object Model) implementation of SoapMessage hierarchy
+            </action>
+            <action dev="poutsma" type="add">Added AbstractDom4JPayloadEndpoint</action>
+            <action dev="poutsma" type="add">Added AbstractXomPayloadEndpoint</action>
+            <action dev="poutsma" type="update">Renamed AbstractTransformingEndpoint to TransformerObjectSupport
+            </action>
+            <action dev="poutsma" type="add">Added SoapFaultDetail and SoapFaultDetailElement</action>
+            <action dev="poutsma" type="update">Improved SoapMessage test suite</action>
+            <action dev="poutsma" type="fix">Fixed serious bug which resulted in not-understood mustUnderstand headers
+                being silently ignored
+            </action>
+            <action dev="poutsma" type="add">Added SimpleSoapExceptionResolver</action>
+            <action dev="poutsma" type="add">Added WS-Security implementation based on XWS-Security with integration for
+                Acegi and JAAS
+            </action>
+            <action dev="poutsma" type="add">Added StaxSource and StaxResult, which allow for StAX readers/writers to be
+                used as javax.xml.transform.Source and javax.xml.transform.Result
+            </action>
+            <action dev="poutsma" type="add">Added XPath abstraction with support for JAXP 1.3, Jaxen, and Xalan
+            </action>
+            <action dev="poutsma" type="add">Added Ingo Siebert's Echo sample</action>
+            <action dev="poutsma" type="add">Added WS-Security support to Airline sample</action>
+            <action dev="poutsma" type="add">Added SAAJ clients to Airline sample</action>
+        </release>
+
+        <release version="0.9.1" date="2006-04-06">
+            <action dev="poutsma" type="fix">Made overall thread safety fixes</action>
+            <action dev="poutsma" type="add">Added initial reference documentation</action>
+            <action dev="poutsma" type="fix">AbstractMarshallers does proper SAXSource handling</action>
+            <action dev="poutsma" type="update">Exposing JAXB properties on JaxbMarshaller</action>
+            <action dev="poutsma" type="add">Added XmlOptionsFactoryBean for use with XmlBeansMarshaller</action>
+            <action dev="poutsma" type="update">moved JaxbContextFactoryBean functionality into JaxbMarshaller</action>
+            <action dev="poutsma" type="update">moved JibxBindingFactoryBean functionality into JibxMarshaller</action>
+            <action dev="poutsma" type="update">made AbstractSoapEndpointMapping ignorant of SOAP version</action>
+            <action dev="poutsma" type="add">Added initial attachment support</action>
+            <action dev="poutsma" type="add">Added JaxpVersion for easy detection of JAXP version</action>
+            <action dev="poutsma" type="remove">removed JAXP1.3 dependency</action>
+        </release>
+        <release version="0.9" date="2006-02-11">
+            <action dev="poutsma" type="add">First public preview release</action>
+        </release>
+    </body>
+</document>
