@@ -40,12 +40,6 @@
             <name>Amazon S3</name>
             <url>s3://maven.springframework.org</url>
         </snapshotRepository>
-        <site>
-            <id>static.springframework.org</id>
-            <url>
-                scp://static.springframework.org/var/www/domains/springframework.org/static/htdocs/spring-ws/site
-            </url>
-        </site>
     </distributionManagement>
     <inceptionYear>2005</inceptionYear>
     <developers>
