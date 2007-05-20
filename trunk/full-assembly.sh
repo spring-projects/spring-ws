@@ -1,2 +1,2 @@
 #!/bin/sh
-mvn -Pdoc -Ddescriptor=src/assembly/full.xml clean install javadoc:javadoc assembly:assembly
+mvn -Psamples -Ddescriptor=src/assembly/full.xml clean install javadoc:javadoc assembly:assembly
