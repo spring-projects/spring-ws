@@ -83,8 +83,9 @@ public class EchoClient {
 
     private void writeEchoResponse(SOAPMessage message) throws SOAPException {
         SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
+        Name echoResponseName = envelope.createName("echoResponse", PREFIX, NAMESPACE_URI);
         SOAPBodyElement echoResponseElement = (SOAPBodyElement) message
-                .getSOAPBody().getChildElements().next();
+                .getSOAPBody().getChildElements(echoResponseName).next();
         String echoValue = echoResponseElement.getTextContent();
         System.out.println("Echo Response [" + echoValue + "]");
     }
