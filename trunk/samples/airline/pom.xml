@@ -242,11 +242,6 @@
         </dependency>
         <!-- XML handling dependencies -->
         <dependency>
-            <groupId>xml-apis</groupId>
-            <artifactId>xml-apis</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>jdom</groupId>
             <artifactId>jdom</artifactId>
         </dependency>
