@@ -454,10 +454,9 @@
         </para>
 <screen>mvn archetype:create -DarchetypeGroupId=org.springframework.ws \
   -DarchetypeArtifactId=spring-ws-archetype \
-  -DarchetypeVersion=1.0-rc1-SNAPSHOT \
+  -DarchetypeVersion=1.0-rc1\
   -DgroupId=com.mycompany.hr \
-  -DartifactId=holidayService \
-  -DremoteRepositories=http://s3.amazonaws.com/maven.springframework.org
+  -DartifactId=holidayService 
 </screen>
         <para>
             This command will create a new directory called <filename>holidayService</filename>. In this directory,
