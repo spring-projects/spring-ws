@@ -5,7 +5,7 @@
         <author email="apoutsma@interface21.com">Arjen Poutsma</author>
     </properties>
     <body>
-        <release version="1.0-RC1">
+        <release version="1.0-RC1" date="2007-05-21">
             <action dev="poutsma" type="add" issue="SWS-98">Changing URL in CommonsHttpMessageSender</action>
             <action dev="poutsma" type="add" issue="SWS-117">Allow SoapFaultMappingExceptionResolver to use strategy to
                 obtain SoapFaultDefinition
