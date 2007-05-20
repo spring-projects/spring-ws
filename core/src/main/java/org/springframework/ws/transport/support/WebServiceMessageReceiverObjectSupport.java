@@ -83,7 +83,7 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
             MessageContext messageContext = new DefaultMessageContext(request, getMessageFactory());
             receiver.receive(messageContext);
             if (messageContext.hasResponse()) {
-                connection.send(request);
+                connection.send(messageContext.getResponse());
             }
         }
         catch (NoEndpointFoundException ex) {
