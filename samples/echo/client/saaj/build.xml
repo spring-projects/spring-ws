@@ -33,7 +33,7 @@
 
     <target name="build" depends="init">
         <mkdir dir="${bin.dir}"/>
-        <javac srcdir="${src.dir}" destdir="${bin.dir}">
+        <javac srcdir="${src.dir}" destdir="${bin.dir}" debug="true">
             <classpath refid="compile.classpath"/>
         </javac>
     </target>
