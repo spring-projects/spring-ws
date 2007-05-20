@@ -88,8 +88,7 @@
             <artifactId>xercesImpl</artifactId>
             <scope>provided</scope>
         </dependency>
-        <!-- O/X Mapping dependencies -->
-        <!-- Castor -->
+        <!-- O/X Mapping dependencies --><!-- Castor -->
         <dependency>
             <groupId>org.codehaus.castor</groupId>
             <artifactId>castor</artifactId>
@@ -170,6 +169,18 @@
             <groupId>com.sun.msv.datatype.xsd</groupId>
             <artifactId>xsdlib</artifactId>
             <version>20060615</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>isorelax</groupId>
+            <artifactId>isorelax</artifactId>
+            <version>20030108</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>relaxngDatatype</groupId>
+            <artifactId>relaxngDatatype</artifactId>
+            <version>20020414</version>
             <scope>test</scope>
         </dependency>
         <!-- XMLBeans -->
