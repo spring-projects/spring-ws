@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <artifactId>spring-ws</artifactId>
         <groupId>org.springframework.ws</groupId>
-        <version>1.0-rc1-SNAPSHOT</version>
+        <version>1.0-rc1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>spring-oxm</artifactId>
@@ -30,8 +29,8 @@
                         <configuration>
                             <tasks>
                                 <ant antfile="${basedir}/build-maven2.xml" inheritRefs="true">
-                                    <property name="maven.test.skip" value="${maven.test.skip}"/>
-                                    <target name="generate-test-sources"/>
+                                    <property name="maven.test.skip" value="${maven.test.skip}" />
+                                    <target name="generate-test-sources" />
                                 </ant>
                             </tasks>
                             <testSourceRoot>${project.build.directory}/generated-sources/test/java</testSourceRoot>
@@ -46,8 +45,8 @@
                         <configuration>
                             <tasks>
                                 <ant antfile="${basedir}/build-maven2.xml" inheritRefs="true">
-                                    <property name="maven.test.skip" value="${maven.test.skip}"/>
-                                    <target name="test-compile"/>
+                                    <property name="maven.test.skip" value="${maven.test.skip}" />
+                                    <target name="test-compile" />
                                 </ant>
                             </tasks>
                         </configuration>
