@@ -15,17 +15,16 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <artifactId>spring-ws-samples</artifactId>
         <groupId>org.springframework.ws</groupId>
-        <version>1.0-rc1-SNAPSHOT</version>
+        <version>1.0-rc1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>tutorial</artifactId>
     <packaging>war</packaging>
-    <name>Spring WS Holdiday Service Tutorial</name>
+    <name>Spring WS Holiday Service Tutorial</name>
     <description>This sample contains the code for the tutorial in the reference documentation.</description>
     <dependencies>
         <!-- Spring-WS dependencies -->
