@@ -4,7 +4,7 @@
 
 Snapshot Builds
 
-	These builds are provided for testing and development purposes only. They are built by a Continuum process 
+	These builds are provided for testing and development purposes only. They are built by a Bamboo process 
 	automatically using the latest snapshot from Subversion.
 	
 	The snapshots are deloyed to a Maven2 snapshot repository. To use it, just add the following repository to the POM:
@@ -23,8 +23,8 @@ Snapshot Builds
 <dependency>
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws-core</artifactId>
-    <version>1.0-rc1-SNAPSHOT</version>
+    <version>1.0-rc2-SNAPSHOT</version>
 </dependency>
 +---------------
 
-	Additionally, there are {{{http://s3browse.com/explore/maven.springframework.org/org/springframework/ws/spring-ws/1.0-rc1-SNAPSHOT/}zips}} available which contain all jars.
+	Additionally, there are {{{http://s3browse.com/explore/maven.springframework.org/org/springframework/ws/spring-ws/1.0-rc2-SNAPSHOT/}zips}} available which contain all jars.
