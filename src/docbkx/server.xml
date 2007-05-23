@@ -6,25 +6,26 @@
     <section id="ws-introduction">
         <title>Introduction</title>
         <para>
-            Spring Web Services's server-side support in designed around a <classname>MessageDispatcher</classname>
-            that dispatches incoming messages to endpoints, with configurable endpoint mappings, response generation,
-            and endpoint interception.
+            Spring-WS's server-side support is designed around a
+            <classname>MessageDispatcher</classname> that dispatches incoming
+            messages to endpoints, with configurable endpoint mappings, response
+            generation, and endpoint interception.
             The simplest endpoint is a <interfacename>PayloadEndpoint</interfacename>, just offering a
-            <literal>Source invoke(Source request)</literal> method. This interface can be implemented for creating an
-            endpoint, but you will prefer the included implementation hierarchy, consisting of, for example
+            <literal>Source invoke(Source request)</literal> method. You are of course free to
+            implement this interface directly, but you will probably prefer to extend one of
+            the included abstract implementations such as
             <classname>AbstractDomPayloadEndpoint</classname>, <classname>AbstractSaxPayloadEndpoint</classname>, and
-            of course <classname>AbstractMarshallingPayloadEndpoint</classname>. Application endpoints will typically
-            be subclasses of those.
+            <classname>AbstractMarshallingPayloadEndpoint</classname>.
             Alternatively, there is a endpoint development that uses Java 5 annotations, such as
             <interfacename>@Endpoint</interfacename> for marking a POJO as endpoint, and marking a method with
             <interfacename>@PayloadRoot</interfacename> or <interfacename>@SoapAction</interfacename>.
-           </para>
-           <para>
-               Spring-WS's XML handling is extremely flexible. An endpoint can choose from
-               a large amount of XML handling libraries supported by Spring-WS, including the DOM family (W3C DOM, JDOM,
-               dom4j, and XOM), SAX or StAX for faster performance, XPath to extract information from the message, or even
-               <link linkend="oxm">marshalling techniques</link> (JAXB, Castor, XMLBeans, JiBX, or XStream) to convert
-               the XML to objects and vice-versa.
+        </para>
+        <para>
+           Spring-WS's XML handling is extremely flexible. An endpoint can choose from
+           a large amount of XML handling libraries supported by Spring-WS, including the DOM family (W3C DOM, JDOM,
+           dom4j, and XOM), SAX or StAX for faster performance, XPath to extract information from the message, or even
+           <link linkend="oxm">marshalling techniques</link> (JAXB, Castor, XMLBeans, JiBX, or XStream) to convert
+           the XML to objects and vice-versa.
         </para>
     </section>
     <section>
@@ -33,7 +34,7 @@
             The server-side of Spring-WS is designed around a central class that dispatches incoming XML messages to
             endpoints. Spring-WS's <classname>MessageDispatcher</classname> is extremely flexible, allowing you to
             use any sort of class as an endpoint, as long as it can be configured in the Spring IoC container.
-            In a way, the message dispatcher resembles Spring's<classname>DispatcherServlet</classname>, the
+            In a way, the message dispatcher resembles Spring's <classname>DispatcherServlet</classname>, the
             <quote>Front Controller</quote> used in Spring Web MVC.
         </para>
         <para>
@@ -55,20 +56,23 @@
                When a <classname>MessageDispatcher</classname> is set up for use and a request comes in for that
                specific dispatcher, said <classname>MessageDispatcher</classname> starts processing the request. The
                list below describes the complete process a request goes through when handled by a
-            <classname>MessageDispatcher</classname>:
+               <classname>MessageDispatcher</classname>:
         </para>
         <orderedlist>
             <listitem>
                 <para>
-                    An appropriate endpoint is searched for. If an endpoint is found, the invocation chain associated
-                    with the endpoint (preprocessors, postprocessors, and endpoints) will be executed in order to create
+                    An appropriate endpoint is searched for using the configured
+                    <literal>EndpointMapping(s)</literal>. If an endpoint is found,
+                    the invocation chain associated with the endpoint (preprocessors,
+                    postprocessors, and endpoints) will be executed in order to create
                     a response.
                 </para>
             </listitem>
             <listitem>
                 <para>
-                    An appropriate adapter is searched for the endpoint. The <classname>MessageDispatcher</classname>
-                    delegates to this adapter to invoke the endpoint.
+                    An appropriate adapter is searched for the endpoint. The
+                    <classname>MessageDispatcher</classname> delegates to this adapter
+                    to invoke the endpoint.
                 </para>
             </listitem>
             <listitem>
@@ -107,7 +111,7 @@
                 The <classname>MessageDispatcherServlet</classname> is a standard <interface>Servlet</interface> which
                 conveniently extends from the standard Spring Web <classname>DispatcherServlet</classname>, and wraps
                 a <classname>MessageDispatcher</classname>.  As such, it combines the attributes of these into one:
-                as a <classname>MessageDispatcher</classname>, if follows the same request handling flow as described
+                as a <classname>MessageDispatcher</classname>, it follows the same request handling flow as described
                 in the previous section.
                 As a servlet, the
                 <classname>MessageDispatcherServlet</classname> is configured in the <filename>web.xml</filename> of
@@ -129,11 +133,13 @@
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
 
+    ]]><lineannotation>&lt;!-- ... --&gt;</lineannotation><![CDATA[
+
 </web-app>]]></programlisting>
             <para>
                 In the example above, all requests will be handled by the <literal>'spring-ws'</literal>
                 <classname>MessageDispatcherServlet</classname>. This is only the first step in setting up Spring Web
-                Services; the various endpoint and other beans used by the Spring Web Services framework also need to be
+                Services; the various endpoint and other beans used by the Spring-WS framework also need to be
                 configured.
             </para>
             <para>
@@ -149,21 +155,21 @@
         <title>Endpoints</title>
         <para>
             Endpoints are the central concept in Spring-WS's server-side support. Endpoints provide access to the
-            application behavior which is typically defined by a business service interface. Endpoint interpret the XML
-            request message and uses that input to invoke a method on the business service. The result of that service
+            application behavior which is typically defined by a business service interface. An endpoint interprets the XML
+            request message and uses that input to invoke a method on the business service (typically). The result of that service
             invocation is represented as a response message. Spring-WS has a wide variety of endpoints, using various
             ways to handle the XML message, and to create a response.
            </para>
         <para>
-            The basis for most endpoint in Spring Web Services is the
+            The basis for most endpoints in Spring Web Services is the
             <interfacename>org.springframework.ws.server.endpoint.PayloadEndpoint</interfacename> interface, the source
             code of which is listed below.
         </para>
         <programlisting><![CDATA[public interface PayloadEndpoint {
 
-    /**
+    ]]><lineannotation>/**
      * Invokes an operation.
-     */
+     */</lineannotation><![CDATA[
     Source invoke(Source request) throws Exception;
 }]]></programlisting>
         <para>
@@ -176,11 +182,11 @@
             most basic responsibility required of every endpoint; namely handling a request and returning a response.
         </para>
         <para>
-            Alternatively, there is the <interfacename>MessageEndpoint</interfacename>, which operated on a
+            Alternatively, there is the <interfacename>MessageEndpoint</interfacename>, which operates on a
             whole <link linkend="message-context"><interfacename>MessageContext</interfacename></link> rather than just
             the payload. Typically, your code should only not be dependent on messages, because the payload should
-            contain the interesting information. Only when it is necessary to perform actions on the mesage a whole,
-            such as adding a SOAP header, get an attachment, etc., should you need to cast to implement
+            contain the interesting information. Only when it is necessary to perform actions on the mesage as a whole,
+            such as adding a SOAP header, get an attachment, and so forth, should you need to implement
             <interfacename>MessageEndpoint</interfacename>, though these actions are usually performed in a
             <link linkend="server-endpoint-interceptor">endpoint interceptor</link>.
         </para>
@@ -192,7 +198,7 @@
                 <package>org.w3c.dom.Element</package> and related classes to handle the request, and create the
                 response. When using the <classname>AbstractDomPayloadEndpoint</classname> as the baseclass for your
                 endpoints you only have to override the <methodname>invokeInternal(Element, Document)</methodname>
-                method, implement your logic, and return an <interfacename>Element</interfacename> if we want a
+                method, implement your logic, and return an <interfacename>Element</interfacename> if you want a
                 response. Here is a short example consisting of a class and a declaration in the application context.
             </para>
             <programlisting><![CDATA[package samples;
@@ -220,7 +226,7 @@ public class SampleEndpoint extends AbstractDomPayloadEndpoint {
     <constructor-arg value="Hello World!"/>
 </bean>]]></programlisting>
             <para>
-                The above class and the declaration in the application context is all you need besides setting up a
+                The above class and the declaration in the application context is all you need besides setting up an
                 endpoint mapping (see the section entitled <xref linkend="server-endpoint-mapping" />) to get this very
                 simple endpoint working. The SOAP message handled by this endpoint will look something like:
             </para>
@@ -255,8 +261,8 @@ public class SampleEndpoint extends AbstractDomPayloadEndpoint {
                 <classname>AbstractJDomPayloadEndpoint</classname> allows you to use JDOM, and the
                 <classname>AbstractXomPayloadEndpoint</classname> uses XOM to handle the XML. All of these endpoints
                 have an <methodname>invokeInternal</methodname> method similar to above.
-                Also, consider to use Spring-WS's XPath support to extract the information you need out of the payload,
-                see <xref linkend="xpath"/>.
+                Also, consider using Spring-WS's XPath support to extract the information you need out of the payload.
+                (See the section entitled <xref linkend="xpath"/> for details.)
             </para>
         </section>
         <section>
@@ -314,7 +320,7 @@ public class MarshallingOrderEndpoint extends AbstractMarshallingPayloadEndpoint
 
     <bean id="orderService" class="samples.DefaultOrderService"/>
 
-    <!-- Other beans, such as the endpoint mapping -->
+    ]]><lineannotation>&lt;!-- Other beans, such as the endpoint mapping --&gt;</lineannotation><![CDATA[
 </beans>]]></programlisting>
             <para>
                 In this sample, we configure a <link linkend="oxm-jaxb2">Jaxb2Marshaller</link> for the
@@ -516,16 +522,16 @@ public class AnnotationOrderEndpoint {
             interceptors that are applied to the request and response. When a request comes in, the
             <classname>MessageDispatcher</classname> will hand it over to the endpoint mapping to let it inspect the
             request and come up with an appropriate <classname>EndpointInvocationChain</classname>. Then
-            the <classname>MessageDispatcher</classname> will invoce the endpoint and any interceptors in the chain.
+            the <classname>MessageDispatcher</classname> will invoke the endpoint and any interceptors in the chain.
         </para>
         <para>
             The concept of configurable endpoint mappings that can optionally contain interceptors (which can manipulate
             the request or the response, or both) is extremely powerful. A lot of supporting functionality can be built
-            into custom <interfacename>EndpointMapping</interfacename>s. Think of a custom endpoint mapping that
+            into custom <interfacename>EndpointMapping</interfacename>s. For example, there could be a custom endpoint mapping that
             chooses an endpoint not only based on the contents of a message, but also a specific SOAP headers.
         </para>
         <para>
-            Most endpoint mappings inherit from the <classname>AbstractEndpointMapping</classname>, which offers a
+            Most endpoint mappings inherit from the <classname>AbstractEndpointMapping</classname>, which offers an
             <property>interceptors</property> property, which is the list of interceptors to use.
             <interfacename>EndpointInterceptor</interfacename>s are discussed in
             <xref linkend="server-endpoint-interceptor"/>. Additionally, there is the
@@ -565,9 +571,7 @@ public class AnnotationOrderEndpoint {
                 local part. Thus, the endpoint mapping above routes requests for which have a payload root element with
                 namespace <uri>http://samples</uri> and local part <literal>orderRequest</literal> to the
                 <literal>'getOrderEndpoint'</literal>. Requests with a local part <literal>order</literal> will
-                be routed to the <literal>'createController'</literal>. As a result of this mapping, the SOAP message
-                shown <link linkend="server-order-request">above</link> will be mapped to the
-                <literal>getOrderEndpoint</literal>.
+                be routed to the <literal>'createOrderEndpoint'</literal>.
             </para>
         </section>
         <section>
@@ -607,9 +611,9 @@ public class AnnotationOrderEndpoint {
         <section id="server-method-endpoint-mapping">
             <title><classname>MethodEndpointMapping</classname></title>
             <para>
-                As explain in <xref linkend="server-at-endpoint"/>, the <interfacename>@Endpoint</interfacename> model
+                As explained in <xref linkend="server-at-endpoint"/>, the <interfacename>@Endpoint</interfacename> style
                 allows you to handle multiple requests in one endpoint class. This is the responsibility of the
-                <classname>MethodEndpointMapping</classname>. Similar to the endpoint mapping described above, the
+                <classname>MethodEndpointMapping</classname>. Similar to the endpoint mapping described above, this
                 mapping determines which method is to be invoked for an incoming request message.
             </para>
             <para>
@@ -643,17 +647,18 @@ public class AnnotationOrderEndpoint {
                 Interceptors located in the endpoint mapping must implement
                 <interfacename>EndpointInterceptor</interfacename> from the
                 <package>org.springframework.ws.server</package> package. This interface defines three methods, one that
-                can be used for handling the request message has been determined, <emphasis>before</emphasis> the actual
+                can be used for handling the request message has been determined <emphasis>before</emphasis> the actual
                 endpoint will be executed, one that can be used for handling a normal response message, and one that
                 can be used for handling fault messages, both of which will be called <emphasis>after</emphasis> the
                 endpoint is executed. These three methods should provide enough flexibility to do all kinds of
                 pre- and post-processing.
             </para>
             <para>
-                The <methodname>handleRequest(..)</methodname> methods on the interceptor returns a boolean value. You
-                can use this method to break or continue the processing of the invocation chain. When this method
+                The <methodname>handleRequest(..)</methodname> method on the interceptor returns a boolean value. You
+                can use this method to interrupt or continue the processing of the invocation chain. When this method
                 returns <literal>true</literal>, the endpoint execution chain will continue, when it returns
-                <literal>false</literal>, the <classname>MessageDispatcher</classname> assumes the interceptor itself
+                <literal>false</literal>, the <classname>MessageDispatcher</classname> interprets this to mean that
+                the interceptor itself
                 has taken care of things and does not continue executing the other interceptors and the actual endoint
                 in the invocation chain. The <methodname>handleResponse(..)</methodname> and
                 <methodname>handleFault(..)</methodname> methods also have a boolean return value. When these methods
@@ -697,7 +702,7 @@ public class AnnotationOrderEndpoint {
                 <para>
                     Both of these interceptors have two properties: <property>logRequest</property> and
                     <property>logResponse</property>, which can be set to <literal>false</literal> to disable logging
-                    for either request of response messages.
+                    for either request or response messages.
                 </para>
             </section>
             <section>
@@ -737,8 +742,8 @@ public class AnnotationOrderEndpoint {
                 <para>
                     To transform the payload to another XML format, Spring Web Services offers the
                     <classname>PayloadTransformingInterceptor</classname>. This endpoint interceptor is based on XSLT
-                    stylesheets, and is especially useful when supporting with multiple version of a Web service:
-                    you simply can transform the older message format to the new format.
+                    stylesheets, and is especially useful when supporting multiple versions of a Web service:
+                    you simply can transform the older message format to the newer format.
                     Here is an example to use the <classname>PayloadTransformingInterceptor</classname>:
                 </para>
                 <programlisting><![CDATA[<bean id="transformingInterceptor"
@@ -768,17 +773,17 @@ public class AnnotationOrderEndpoint {
             Furthermore, a programmatic way of handling exceptions gives you many more options for how to respond
             appropriately.
             Finally, rather than expose the innards of your application by giving an exception and stack trace, you
-            can handle the exception any way you want, e.g. return a SOAP fault with a specific fault code and string.
+            can handle the exception any way you want, for example return a SOAP fault with a specific fault code and string.
         </para>
         <para>
             Endpoint exception resolvers are automatically picked up by the <classname>MessageDispatcher</classname>, so
-            you don't have to configure them explicitely.
+            you don't have to configure them explicitly.
         </para>
         <para>
             Besides implementing the <classname>EndpointExceptionResolver</classname> interface, which is only a
             matter of implementing the <methodname>resolveException(MessageContext, endpoint, Exception)</methodname>
             method, you may also use one of the default implementations.
-            The simples implementation is the <classname>SimpleSoapExceptionResolver</classname>, which simply
+            The simplest implementation is the <classname>SimpleSoapExceptionResolver</classname>, which simply
             always creates a SOAP 1.1 Server or SOAP 1.2 Receiver Fault, and uses the exception message as the fault
             string.
         </para>

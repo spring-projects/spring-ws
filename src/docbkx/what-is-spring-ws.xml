@@ -23,14 +23,14 @@
         <formalpara>
             <title>Powerful mappings</title>
             <para>
-                You can distribute incoming XML request to any object, depending on message payload, SOAP Action header, 
+                You can distribute incoming XML requests to any object, depending on message payload, SOAP Action header, 
                 or an XPath expression.
             </para>
         </formalpara>
         <formalpara>
             <title>XML API support</title>
             <para>
-                Incoming XML messages can be handled in standard JAXP APIs such as DOM, SAX, and StAX, but also JDOM, 
+                Incoming XML messages can be handled not only with standard JAXP APIs such as DOM, SAX, and StAX, but also JDOM, 
                 dom4j, XOM, or even marshalling technologies.
             </para>
         </formalpara>
@@ -45,7 +45,7 @@
         <formalpara>
             <title>Reuses your Spring expertise</title>
             <para>
-                Spring-WS uses Spring application contexts for all configuration, which should  help Spring developers 
+                Spring-WS uses Spring application contexts for all configuration, which should help Spring developers 
                 get up-to-speed nice and quickly. Also, the architecture of Spring-WS resembles that of Spring-MVC.
             </para>
         </formalpara>
@@ -82,21 +82,23 @@
             Spring Web Services runs within a standard Java 1.3 Runtime Environment. It also supports Java 5.0, 
             although the Java types which are specific to this release are packaged in a separate modules with the 
             suffix "tiger" in their JAR filename.
+        </para>
+        <para>
             Spring-WS consists of a number of modules, which are described in the remainder of this section.
         </para>
         <itemizedlist>
             <listitem>
             <para>
                 The XML module (<filename>spring-xml.jar</filename>) contains various XML support classes for Spring Web 
-                Services. This module is mainly targeted at the Spring-WS framework itself, and not a Web service 
+                Services. This module is mainly intended for the Spring-WS framework itself, and not a Web service 
                 developers.
             </para>
             </listitem>
             <listitem>
                 <para>
                     The Core package (<filename>spring-ws-core.jar</filename> and <filename>spring-ws-core-tiger.jar</filename>)
-                     is the central part of the Web services 
-                    functionality. It provides the central <link linkend="web-service-messages">
+                    is the central part of the Spring's Web services functionality.
+                    It provides the central <link linkend="web-service-messages">
                     <classname>WebServiceMessage</classname></link> and <link linkend="soap-message">
                     <classname>SoapMessage</classname></link> interfaces, the <link linkend="server">server-side</link> 
                     framework, with powerful message dispatching, and the various support classes for implementing Web service
@@ -122,7 +124,7 @@
             </listitem>
         </itemizedlist>
         <para>
-            The following figure illustrates the modules, and the dependencies between them. Arrows indicate 
+            The following figure illustrates the Spring-WS modules and the dependencies between them. Arrows indicate 
             dependencies, i.e. Spring-WS Core depends on Spring-XML and Spring-OXM.
             <mediaobject>
                     <imageobject role="fo">

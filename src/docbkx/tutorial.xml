@@ -82,18 +82,18 @@
     </Employee>
 </HolidayRequest>]]></programlisting>
             <para>
-                The order of the two element does not matter: <literal>Employee</literal> could have been the first
+                The order of the two elements does not matter: <literal>Employee</literal> could have been the first
                 element just as well. As long as all the data is there; that's what is important. In fact, the data
                 is the only thing that is important: we are taking a <emphasis>data-driven</emphasis> approach.
             </para>
         </section>
     </section>
     <section id="tutorial.xsd">
-        <title>Data Constract</title>
+        <title>Data Contract</title>
         <para>
             Now that we have seen some examples of the XML data that we will use, it makes sense to formalize this into
             a schema. This data contract defines the message format we accept.
-            Basically, there are four different ways of defining such a contract for XML:
+            There are four different ways of defining such a contract for XML:
         </para>
         <itemizedlist>
             <listitem><para>DTDs</para></listitem>
@@ -152,7 +152,7 @@
     &lt;xs:element name=&quot;LastName&quot; type=&quot;xs:NCName&quot;/&gt;</emphasis>
 &lt;/xs:schema&gt;</programlisting>
         <para>
-            The generated schema can obviously be improved. The first thing to notice is that every type has a root-level
+            This generated schema obviously can be improved. The first thing to notice is that every type has a root-level
             element declaration. This means that the Web service should be able to accept all of these elements as data. This is not
             desirable: we only want to accept a <literal>HolidayRequest</literal>. By removing the wrapping element tags
             (thus keeping the types), and inlining the results, we can accomplish this.
@@ -263,7 +263,7 @@
             </calloutlist>
         </programlistingco>
         <para>
-                We store this file with as <filename>hr.xsd</filename>.
+            We store this file as <filename>hr.xsd</filename>.
         </para>
     </section>
     <section id="tutorial-service-contract">
@@ -450,7 +450,7 @@
         </para>
         <para>
             The following command creates a Maven2 web application project for us, using the Spring-WS archetype
-            (i.e. project template)
+            (that is, project template)
         </para>
 <screen>mvn archetype:create -DarchetypeGroupId=org.springframework.ws \
   -DarchetypeArtifactId=spring-ws-archetype \
@@ -462,12 +462,14 @@
             This command will create a new directory called <filename>holidayService</filename>. In this directory,
             there is a <filename>src/main/webapp</filename> directory, which will contain the root of the WAR file.
             You will find the standard web application deployment descriptor <filename>WEB-INF/web.xml</filename> here,
-            which defines a Spring-WS <classname>MessageDispatcherServlet</classname>, and maps all incoming requests
+            which defines a Spring-WS <classname>MessageDispatcherServlet</classname> and maps all incoming requests
             to this servlet:
         </para>
         <programlisting><![CDATA[
-<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+             http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
          version="2.4">
 
     <display-name>MyCompany HR Holiday Service</display-name>
@@ -565,10 +567,9 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
                         <para>
                             The <classname>HolidayEndpoint</classname> requires the
                             <interfacename>HumanResourceService</interfacename> business service to operate, so we
-                            use the constructor to inject it.
-                            Next, we set up XPath expressions
+                            use the constructor to inject it. Next, we set up XPath expressions
                             using the JDOM API. There are three expressions: <literal>//hr:StartDate</literal> for
-                            extracting the <literal>&gt;StartDate&lt;</literal> text value,
+                            extracting the <literal>&lt;StartDate&gt;</literal> text value,
                             <literal>//hr:EndDate</literal> for
                             extracting the end date and <literal>concat(//hr:FirstName,' ',//hr:LastName)</literal>
                             for extracting and concatenating the names of the employee.
@@ -634,7 +635,7 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
 <dependencies>
 ]]></programlisting>
              <para>
-                Here's how we would wire up these classes in our <filename>spring-ws-servlet.xml</filename>
+                Here is how we would wire up these classes in our <filename>spring-ws-servlet.xml</filename>
                 application context:
             </para>
             <programlisting><![CDATA[
@@ -673,8 +674,8 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
                     <literal>http://mycompany.com/hr/schemas</literal> and the
                     <literal>HolidayRequest</literal> local name, it will be routed to the
                     <varname>holidayEndpoint</varname>.
-                    It also adds a <classname>PayloadInterceptor</classname>,
-                    which dumps incoming and outgoing messages to the log.
+                    It also adds a <classname>PayloadLoggingInterceptor</classname>,
+                    that dumps incoming and outgoing messages to the log.
                 </para>
         </section>
     </section>
@@ -683,7 +684,7 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
         <para>
             Finally, we need to publish the WSDL. As stated in <xref linkend="tutorial-service-contract"/>, we don't
             need to write a WSDL ourselves; Spring-WS can generate one for us based on some conventions.
-            Here's how we define the generation:
+            Here is how we define the generation:
         </para>
         <programlistingco>
             <areaspec>
@@ -746,9 +747,8 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
             You can create a WAR file using <command>mvn install</command>.
             If you deploy the application, and point your browser at
             <ulink url="http://localhost:8080/holidayService/holiday.wsdl">this location</ulink>, you will
-            see the generated WSDL.
-            This WSDL is ready to be used by clients, such as <ulink url="http://www.soapui.org/">soapUI</ulink>, or
-            other SOAP frameworks.
+            see the generated WSDL. This WSDL is ready to be used by clients, such as
+            <ulink url="http://www.soapui.org/">soapUI</ulink>, or other SOAP frameworks.
         </para>
     </section>
     <para>

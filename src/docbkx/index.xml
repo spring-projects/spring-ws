@@ -37,8 +37,8 @@
         <partintro>
             <para>
                 This first part of the reference documentation gives an overview of Spring Web Services, and the
-                underlying concepts. We will introduce Spring-WS, and explain the concepts behind contract-first 
-                Web service development.
+                underlying concepts. Spring-WS is introduced, and the concepts behind contract-first
+                Web service development are explained.
             </para>
         </partintro>
     	<xi:include href="what-is-spring-ws.xml" />
@@ -49,8 +49,8 @@
         <title>Reference</title>
         <partintro>
             <para>
-                This part of the reference documentation gives an in-depth look into the various pieces that make up
-                Spring Web Services. 
+                This part of the reference documentation gives an in-depth look into the various components that
+                comprise Spring Web Services.
                 It consists of a chapter which discusses the parts common to both client- and server-side, a chapter
                 about writing server-side Web services, about using Web services on the client-side, using WS-Security,
                 and the flexible Object/XML mapping.

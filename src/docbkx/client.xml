@@ -7,14 +7,14 @@
         <title>Introduction</title>
         <para>
             Spring-WS provides a client-side Web service API that allows for consistent, XML-driven access to Web
-            services. It also allows for use of <link linkend="oxm">marshallers and unmarshallers</link>.
+            services. It also allows for the use of <link linkend="oxm">marshallers and unmarshallers</link>.
         </para>
         <para>
             The package <package>org.springframework.ws.client.core</package> provides the core functionality for using
             the client-side access API. It contains template classes that simplifies the use of Web services, much like
             the <classname>JdbcTemplate</classname> does for JDBC. The design principle common to Spring template
             classes is to provide helper methods to perform common operations and for more sophisticated usage, delegate
-            the essence of the processing task to user implemented callback interfaces. The Web service template
+            to user implemented callback interfaces. The Web service template
             follows the same design. The classes offer various convenience methods for the sending and receiving of XML 
             messages, marshalling objects to XML before sending, and allows for multiple transports,
         </para>
@@ -82,6 +82,7 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 public class WebServiceClient {
 
     private static final String MESSAGE = "<message xmlns=\"http://tempuri.org\">Hello Web Service World</message>";
+
     private WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
 
     public void setDefaultUri(String defaultUri) {
@@ -95,9 +96,6 @@ public class WebServiceClient {
     }
 
 }]]></programlisting>
-            <para>
-                Here is the corresponding configuration:
-            </para>
             <programlisting><![CDATA[
 <beans xmlns="http://www.springframework.org/schema/beans">
 
@@ -121,7 +119,7 @@ public class WebServiceClient {
             <title>Marshalling, sending, receiving, and unmarshalling</title>
             <para>
                 In order to facilitate the sending of plain Java objects, the <classname>WebServiceTemplate</classname>
-                has a send methods that take an object as an argument for a message's data content.
+                has a number of send methods that take an object as an argument for a message's data content.
                 The method <methodname>marshalSendAndReceive</methodname> in <classname>WebServiceTemplate</classname>
                 delegates the conversion of the request object to XML to a <interface>Marshaller</interface>, and
                 the conversion of the response XML to an object to an <interface>Unmarshaller</interface>.
@@ -138,7 +136,7 @@ public class WebServiceClient {
                 <interface>WebServiceMessageCallback</interface>
             </title>
             <para>
-                To accommodate the setting of a SOAP headers, and other settings on the message, the
+                To accommodate the setting of SOAP headers, and other settings on the message, the
                 <interfacename>WebServiceMessageCallback</interfacename> interface gives you access to the message
                 after it has been created, but before it is sent. The example below demonstrates how to set the SOAP
                 Action header on a message that is created by marshalling an object.
