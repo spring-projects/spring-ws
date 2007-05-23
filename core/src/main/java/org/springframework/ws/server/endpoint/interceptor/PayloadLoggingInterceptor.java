@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2006-2007 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,12 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.server.endpoint.AbstractLoggingInterceptor;
 
 /**
- * Simple <code>EndpointInterceptor</code> that logs the payload of request and response messages.  By default, both
- * request and response messages are logged, but this behaviour can be changed using the <code>logRequest</code> and
- * <code>logResponse</code> properties.
+ * Simple {@link org.springframework.ws.server.EndpointInterceptor EndpointInterceptor}
+ * that logs the payload of request and response messages.
+ *
+ * <p>By default, both request and response messages are logged, but this behaviour
+ * can be changed using the {@link #logRequest} and {@link #logResponse}
+ * properties.
  *
  * @author Arjen Poutsma
  * @see #setLogRequest(boolean)
@@ -35,4 +38,5 @@ public class PayloadLoggingInterceptor extends AbstractLoggingInterceptor {
     protected Source getSource(WebServiceMessage message) {
         return message.getPayloadSource();
     }
+
 }
