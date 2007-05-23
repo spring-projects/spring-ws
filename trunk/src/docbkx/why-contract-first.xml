@@ -22,7 +22,7 @@
             </para>
         </sidebar>
         <para> 
-            Spring-WS only supports the contract-first development style. This section explains why.
+            Spring-WS only supports the contract-first development style, and this section explains why.
         </para>
     </section>
     <section>
@@ -32,7 +32,7 @@
             <ulink url="http://en.wikipedia.org/wiki/Object-Relational_impedance_mismatch">Object/Relational impedance mismatch</ulink>, 
             there is a similar problem when converting Java objects to XML.
             At first glance, the O/X mapping problem appears simple: create an XML element for each Java object, 
-            converting all Java properties and fields to sub-elements or attributes. However, things are not so 
+            converting all Java properties and fields to sub-elements or attributes. However, things are not as  
             simple as they appear: there is a fundamental difference between hierarchical languages such as XML 
             (and especially XSD) and the graph model of Java<footnote>
             <para>Most of the contents in this section was inspired by <xref linkend="alpine"/> and 
@@ -42,7 +42,7 @@
             <title>XSD extensions</title>
             <para>
                 In Java, the only way to change the behavior of a class is to subclass it, adding the new behavior to 
-                that subclass. In XSD, you can extend a data type by restricting it: i.e. constraning the valid values
+                that subclass. In XSD, you can extend a data type by restricting it: that is, constraining the valid values
                 for the elements and attributes.
                 For instance, consider the following example:<programlisting><![CDATA[
 <simpleType name="AirportCode">
@@ -96,8 +96,8 @@ public Map getFlights() {
 </element>]]></programlisting>
                 This contract defines a request that takes an <type>date</type>, which is a XSD datatype representing
                 a year, month, and day. If we call this service from Java, we will probably use 
-                either a <classname>java.util.Data</classname> or <classname>java.util.Calendar</classname>. However,
-                both of these classes actually describe times, rather than dates. So, we will actually send data that
+                either a <classname>java.util.Date</classname> or <classname>java.util.Calendar</classname>. However,
+                both of these classes actually describe times, rather than dates. So, we will actually end up sending data that
                 represents the fourth of April 2007 at midnight (<literal>2007-04-04T00:00:00</literal>), which is not
                 the same as <literal>2007-04-04</literal>.
             </para>
@@ -151,7 +151,7 @@ public class Passenger {
   </passengers>
 </flight>]]></programlisting>
                 This solves the recursiveness problem, but introduces new ones. For one, you cannot use an XML validator
-                to validate this structure. Another issue is that the standard way to use these references in the SOAP 
+                to validate this structure. Another issue is that the standard way to use these references in SOAP 
                 (RPC/encoded) has been deprecated in favor of document/literal (see WS-I
                 <ulink url="http://www.ws-i.org/Profiles/BasicProfile-1.1.html#SOAP_encodingStyle_Attribute">Basic
                 Profile</ulink>).
@@ -199,7 +199,7 @@ public class Passenger {
                 When Java is automatically transformed into XML, there is no way to be sure as to what is sent across 
                 the wire. An object might reference another object, which refers to another, etc. In the end, half of 
                 the objects on the heap in your virtual machine might be converted into XML,
-                which will result in a slow service. 
+                which will result in slow response times. 
             </para>
             <para>
                 When using contract-first, you explicitly describe what XML is sent where, thus making sure that it is 
@@ -209,7 +209,7 @@ public class Passenger {
         <section>
             <title>Reusability</title>
             <para>
-                Defining your schema in a separate file allows you to reuse that file in different scenario's. If you 
+                Defining your schema in a separate file allows you to reuse that file in different scenarios. If you 
                 define an <type>AirportCode</type> in a file called <filename>airline.xsd</filename>, like so:                
             </para>
             <programlisting><![CDATA[
@@ -219,7 +219,7 @@ public class Passenger {
     </restriction>
 </simpleType>]]></programlisting>
             <para>
-                You can reuse this definition in other schema's, or even WSDL files, using an
+                You can reuse this definition in other schemas, or even WSDL files, using an
                 <literal>import</literal> statement.
             </para>
         </section>
@@ -227,7 +227,7 @@ public class Passenger {
             <title>Versioning</title>
             <para>
                 Even though a contract must remain constant for as long as possible, they <emphasis>do</emphasis> need 
-                to be changed sometimes. In Java, this typically result in a new Java interface, such as 
+                to be changed sometimes. In Java, this typically results in a new Java interface, such as 
                 <interfacename>AirlineService2</interfacename>, and a (new) implementation of that interface. Of 
                 course, the old service must be kept around, because there might be clients who have not migrated 
                 yet.
@@ -235,7 +235,7 @@ public class Passenger {
             <para>
                 If using contract-first, we can have a looser coupling between contract and implementation. Such a 
                 looser coupling allows us to implement both versions of the contract in one class. We could, for 
-                instance, use an XSLT to convert any "old-style" messages to the "new-style" messages.
+                instance, use an XSLT stylesheet to convert any "old-style" messages to the "new-style" messages.
             </para>
         </section>
     </section>

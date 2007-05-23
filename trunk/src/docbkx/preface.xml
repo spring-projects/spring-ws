@@ -5,9 +5,9 @@
 	<title>Preface</title>
 	<para>
         In the current age of Service Oriented Architectures, more and more people are using Web Services to
-        connect previously unconnected systems. Initially, Web services where considered to be just another way to do
-        a Remote Procedure Call (RPC). Over time, however, people found out that there is a big difference
-        between RPC and Web services. Especially when interoperability with other platforms is important, it is often
+        connect previously unconnected systems. Initially, Web services were considered to be just another way to do
+        a Remote Procedure Call (RPC). Over time however, people found out that there is a big difference
+        between RPCs and Web services. Especially when interoperability with other platforms is important, it is often
         better to send encapsulated XML documents, containing all the data necessary to process the request.
         Conceptually, XML-based Web services are better off being compared to message queues rather than remoting
         solutions.

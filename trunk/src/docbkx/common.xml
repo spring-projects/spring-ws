@@ -6,7 +6,7 @@
     <para>
         In this chapter, we will explore the the components which are shared between client- and server side
         Spring-WS development. These interfaces and classes represent the building blocks of Spring-WS, so
-        it's important to understand what they do, even if you do not use them directly.
+        it is important to understand what they do, even if you do not use them directly.
     </para>
     <section id="web-service-messages">
         <title>Web service messages</title>
@@ -123,7 +123,7 @@
                 <para>
                     To increase reading performance on the <classname>AxiomSoapMessageFactory</classname>,
                     you can set the <property>payloadCaching</property> property to false (default is true).
-                    This this will read the contents of the SOAP body directly from the stream.
+                    This will read the contents of the SOAP body directly from the stream.
                     When this setting is enabled, the payload can only be read once.
                     This means that you have to make sure that any preprocessing of the message does not consume it.
                 </para>
@@ -139,8 +139,9 @@
         <section id="message-context">
         	<title><interfacename>MessageContext</interfacename></title>
         	<para>
-        		Typically, messages come in pairs: a request and a response. A request is created on the client-side,
-        		which is sent over some transport to the server-side, where a response is generated. This response gets
+        		Typically, messages come in pairs: a request and a response. A request
+            is created on the client-side, which is sent over some transport to the
+            server-side, where a response is generated. This response gets
         		sent back to the client, where it is read.
         	</para>
         	<para>
@@ -149,8 +150,8 @@
         		messages.
         		On the client-side, the message context is created by the <link linkend="client-web-service-template">
         		<classname>WebServiceTemplate</classname></link>.
-        		On the server-side, the message context is read from the transport-specific input stream. In HTTP,
-        		it is read from the <interfacename>HttpServletRequest</interfacename> and the response is written back
+        		On the server-side, the message context is read from the transport-specific input stream.
+            For example, in HTTP, it is read from the <interfacename>HttpServletRequest</interfacename> and the response is written back
         		to the <interfacename>HttpServletResponse</interfacename>.
        		</para>
         </section>
@@ -158,7 +159,8 @@
     <section id="xpath">
         <title>Handling XML With XPath</title>
         <para>
-            One of the best ways to handle XML is to use XPath. Quoting <xref linkend="effective-xml"/>, item 35:
+            One of the best ways to handle XML is to use XPath.
+            Quoting <xref linkend="effective-xml"/>, item 35:
         </para>
         <blockquote>
             <para>
@@ -173,14 +175,14 @@
             </para>
             <attribution>Elliotte Rusty Harold</attribution>
         </blockquote>
-    <para>
+        <para>
             Spring Web Services has two ways to use XPath within your application: the faster
             <interfacename>XPathExpression</interfacename> or the more flexible <classname>XPathTemplate</classname>.
         </para>
         <section id="xpath-expression">
             <title><interfacename>XPathExpression</interfacename></title>
             <para>
-                The <interfacename>XPathExpression</interfacename> is an abstraction over a compiled XPath expressions,
+                The <interfacename>XPathExpression</interfacename> is an abstraction over a compiled XPath expression,
                 such as the Java 5 <interfacename>javax.xml.xpath.XPathExpression</interfacename>, or the Jaxen
                 <classname>XPath</classname> class.
                 To construct an expression in an application context, there is the
@@ -189,7 +191,7 @@
             <programlisting><![CDATA[<beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+          http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
     <bean id="nameExpression" class="org.springframework.xml.xpath.XPathExpressionFactoryBean">
         <property name="expression" value="/Contacts/Contact/Name"/>
@@ -202,14 +204,14 @@
 </beans>]]></programlisting>
             <para>
                 The expression above does not use namespaces, but we could set those using the
-                <property>namespaces</property> property of the factory bean. The expression can be used in the code
-                as follows:
+                <property>namespaces</property> property of the factory bean. The expression
+                can be used in the code as follows:
             </para>
             <programlisting><![CDATA[package sample;
 
 public class MyXPathClass {
 
-    private XPathExpression nameExpression;
+    private final XPathExpression nameExpression;
 
     public MyXPathClass(XPathExpression nameExpression) {
         this.nameExpression = nameExpression;
@@ -230,24 +232,24 @@ public class MyXPathClass {
 
 public class MyXPathClass  {
 
-    private XPathExpression contactExpression;
+   private final XPathExpression contactExpression;
 
-    public MyXPathClass(XPathExpression contactExpression) {
-        this.contactExpression = contactExpression;
-    }
+   public MyXPathClass(XPathExpression contactExpression) {
+      this.contactExpression = contactExpression;
+   }
 
-    public void doXPath(Document document) {
-        List contacts = nameExpression.evaluate(requestElement,
-                new NodeMapper() {
-                    public Object mapNode(Node node, int nodeNum) throws DOMException {
-                        Element contactElement = (Element) node;
-                        Element nameElement = (Element) contactElement.getElementsByTagName("Name").item(0);
-                        Element phoneElement = (Element) contactElement.getElementsByTagName("Phone").item(0);
-                        return new Contact(nameElement.getTextContent(), phoneElement.getTextContent());
-                    }
-                } );
-        // do something with list of Contact objects
-    }
+   public void doXPath(Document document) {
+      List contacts = nameExpression.evaluate(requestElement,
+        new NodeMapper() {
+           public Object mapNode(Node node, int nodeNum) throws DOMException {
+              Element contactElement = (Element) node;
+              Element nameElement = (Element) contactElement.getElementsByTagName("Name").item(0);
+              Element phoneElement = (Element) contactElement.getElementsByTagName("Phone").item(0);
+              return new Contact(nameElement.getTextContent(), phoneElement.getTextContent());
+           }
+        });
+      ]]><lineannotation>// do something with list of <classname>Contact</classname> objects</lineannotation><![CDATA[
+   }
 }]]></programlisting>
             <para>
                 Similar to mapping rows in Spring JDBC's <interfacename>RowMapper</interfacename>, each result node is
@@ -271,12 +273,13 @@ public class MyXPathClass {
 
     public void doXPath(Source source) {
         String name = template.evaluateAsString("/Contacts/Contact/Name", request);
-        // do something with name
+        ]]><lineannotation>// do something with name</lineannotation><![CDATA[
     }
 
 }]]></programlisting>
             <para>
-                Of course, the template could have been injected with a constructor argument or a setter.
+                Of course, the template could have been injected with a
+                constructor argument or a setter.
             </para>
         </section>
     </section>
