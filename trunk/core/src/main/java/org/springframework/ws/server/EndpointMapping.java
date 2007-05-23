@@ -19,9 +19,9 @@ package org.springframework.ws.server;
 import org.springframework.ws.context.MessageContext;
 
 /**
- * Interface to be implemented by objects that define a mapping between message requests and endpoint objects.
+ * Defines a mapping between message requests and endpoint objects.
  * <p/>
- * This class can be implemented by application developers, although this is not necessary, as
+ * This class can be implemented by application developers, although this is not always necessary, as
  * <code>PayloadRootQNameEndpointMapping</code> and <code>SoapActionEndpointMapping</code> are included.
  * <p/>
  * HandlerMapping implementations can support mapped interceptors but do not have to. An endpoint will always be wrapped
@@ -45,12 +45,12 @@ public interface EndpointMapping {
      * so that endpoints are not constrained in any way. For example, a <code>EndpointAdapter</code> could be written to
      * allow another framework's endpoint objects to be used.
      * <p/>
-     * Returns <code>null</code> if no match was found. This is not an error. The <code>MessageDispatcher</code> will
+     * Returns <code>null</code> if no match was found. This is by design. The <code>MessageDispatcher</code> will
      * query all registered <code>EndpointMapping</code> beans to find a match, and only decide there is an error if
      * none can find an endpoint.
      *
      * @return a HandlerExecutionChain instance containing endpoint object and any interceptors, or <code>null</code> if
-     *         no mapping found
+     *         no mapping is found
      * @throws Exception if there is an internal error
      */
     EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception;
