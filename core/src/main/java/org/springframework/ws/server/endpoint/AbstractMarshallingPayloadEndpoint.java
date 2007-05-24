@@ -179,10 +179,10 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
     /**
      * Template method that subclasses must implement to process a request.
      * <p/>
-     * The unmarshaled request object is passed as a parameter, and an the returned object is marshalled to a response.
+     * The unmarshaled request object is passed as a parameter, and the returned object is marshalled to a response.
      * If no response is required, return <code>null</code>.
      *
-     * @param requestObject the unnmarshalled message payload as object
+     * @param requestObject the unnmarshalled message payload as an object
      * @return the object to be marshalled as response, or <code>null</code> if a response is not required
      */
     protected abstract Object invokeInternal(Object requestObject) throws Exception;

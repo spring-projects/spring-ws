@@ -20,7 +20,7 @@ import javax.xml.transform.Result;
 
 /**
  * Defines the contract for Object XML Mapping Marshallers. Implementations of this interface can serialize a given
- * Object to a XML Stream.
+ * Object to an XML Stream.
  * <p/>
  * Although the <code>marshal</code> method accepts a <code>java.lang.Object</code> as its first parameter, most
  * <code>Marshaller</code> implementations cannot handle arbitrary <code>java.lang.Object</code>. Instead, a object
