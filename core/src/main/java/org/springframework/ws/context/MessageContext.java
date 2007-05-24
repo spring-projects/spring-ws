@@ -22,8 +22,10 @@ import java.io.InputStream;
 import org.springframework.ws.WebServiceMessage;
 
 /**
- * Context holder for message requests. Contains both the message request as well as the response. Response message are
- * usually lazily created.
+ * Context holder for message requests.
+ *
+ * <p>Contains both the message request as well as the response. Response message are
+ * usually lazily created (but do not have to be).
  *
  * @author Arjen Poutsma
  */
@@ -87,7 +89,7 @@ public interface MessageContext {
     /**
      * Check if this message context contains a property with the given name.
      *
-     * @param name the name of the property to look fo
+     * @param name the name of the property to look for
      * @return <code>true</code> if the <code>MessageContext</code> contains the property; <code>false</code> otherwise
      */
     boolean containsProperty(String name);
