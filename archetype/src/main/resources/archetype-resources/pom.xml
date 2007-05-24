@@ -15,7 +15,7 @@
         <dependency>
             <groupId>org.springframework.ws</groupId>
             <artifactId>spring-ws-core</artifactId>
-            <version>1.0-m3</version>
+            <version>1.0-rc1</version>
         </dependency>
     </dependencies>
 </project>
