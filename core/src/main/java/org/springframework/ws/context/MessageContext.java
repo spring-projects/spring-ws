@@ -45,7 +45,7 @@ public interface MessageContext {
     WebServiceMessage getResponse();
 
     /**
-     * Indicates whether this context has a resonse.
+     * Indicates whether this context has a response.
      *
      * @return <code>true</code> if this context has a response; <code>false</code> otherwise
      */
