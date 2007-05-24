@@ -73,8 +73,8 @@ public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSuppor
         DOMResult domResult = new DOMResult(requestDocument);
         transformer.transform(request, domResult);
         Element requestElement = (Element) requestDocument.getFirstChild();
-        Document resonseDocument = documentBuilder.newDocument();
-        Element responseElement = invokeInternal(requestElement, resonseDocument);
+        Document responseDocument = documentBuilder.newDocument();
+        Element responseElement = invokeInternal(requestElement, responseDocument);
         if (responseElement != null) {
             return new DOMSource(responseElement);
         }

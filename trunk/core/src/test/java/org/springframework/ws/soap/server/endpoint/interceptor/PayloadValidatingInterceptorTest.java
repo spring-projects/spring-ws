@@ -93,7 +93,7 @@ public class PayloadValidatingInterceptorTest extends XMLTestCase {
         assertFalse("Invalid response from interceptor", result);
         assertTrue("Context has no response", context.hasResponse());
         SoapMessage response = (SoapMessage) context.getResponse();
-        assertTrue("Resonse has no fault", response.getSoapBody().hasFault());
+        assertTrue("Response has no fault", response.getSoapBody().hasFault());
         Soap11Fault fault = (Soap11Fault) response.getSoapBody().getFault();
         assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getClientOrSenderFaultName(),
                 fault.getFaultCode());
@@ -112,7 +112,7 @@ public class PayloadValidatingInterceptorTest extends XMLTestCase {
         assertFalse("Invalid response from interceptor", result);
         assertTrue("Context has no response", context.hasResponse());
         SoapMessage response = (SoapMessage) context.getResponse();
-        assertTrue("Resonse has no fault", response.getSoapBody().hasFault());
+        assertTrue("Response has no fault", response.getSoapBody().hasFault());
         Soap12Fault fault = (Soap12Fault) response.getSoapBody().getFault();
         assertEquals("Invalid fault code on fault", SoapVersion.SOAP_12.getClientOrSenderFaultName(),
                 fault.getFaultCode());
@@ -137,7 +137,7 @@ public class PayloadValidatingInterceptorTest extends XMLTestCase {
         assertFalse("Invalid response from interceptor", result);
         assertTrue("Context has no response", context.hasResponse());
         SoapMessage response = (SoapMessage) context.getResponse();
-        assertTrue("Resonse has no fault", response.getSoapBody().hasFault());
+        assertTrue("Response has no fault", response.getSoapBody().hasFault());
         Soap11Fault fault = (Soap11Fault) response.getSoapBody().getFault();
         assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getClientOrSenderFaultName(),
                 fault.getFaultCode());
