@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 the original author or authors.
+ * Copyright 2005-2007 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +19,17 @@ import java.io.IOException;
 import javax.xml.transform.Source;
 
 /**
- * Defines the contract for Object XML Mapping unmarshallers. Implementations of this interface can deserialize a given
- * XML Stream to an Object graph.
+ * Defines the contract for Object XML Mapping unmarshallers.
+ *
+ * <p>Implementations of this interface can deserialize a given XML Stream to an
+ * Object graph.
  *
  * @author Arjen Poutsma
  */
 public interface Unmarshaller {
 
     /**
-     * Unmarshals the given provided {@link Source} into an object graph.
+     * Unmarshals the given {@link Source} into an object graph.
      *
      * @param source the source to marshal from
      * @return the object graph
