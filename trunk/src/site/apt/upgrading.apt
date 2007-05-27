@@ -15,7 +15,7 @@ should help most users the project update their applications:
 
     * The <<<id>>> property on <<<Attachment>> was renamed to <<contentId>>>.
 
-    * Methods for getting and adding attachments were taken from <<<SoapMessage>> and extraced into a new interface:
+    * Methods for getting and adding attachments were taken from <<<SoapMessage>>> and extraced into a new interface:
 <<<MimeMessage>>>. Adding a method requires a content id now.
 
 * WebServiceTemplate

@@ -24,8 +24,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
+import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.client.core.WebServiceTemplate;
+import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
  * Convenient super class for application classes that need Web service access.
@@ -86,6 +88,21 @@ public abstract class WebServiceGatewaySupport implements InitializingBean, Appl
         webServiceTemplate.setDefaultUri(uri);
     }
 
+    /** Returns the <code>WebServiceMessageSender</code> used by the gateway. */
+    public final WebServiceMessageSender[] getMessageSender() {
+        return webServiceTemplate.getMessageSenders();
+    }
+
+    /** Sets a single <code>WebServiceMessageSender</code> to be used by the gateway. */
+    public final void setMessageSender(WebServiceMessageSender messageSender) {
+        webServiceTemplate.setMessageSender(messageSender);
+    }
+
+    /** Sets multiple <code>WebServiceMessageSender</code> to be used by the gateway. */
+    public final void setMessageSenders(WebServiceMessageSender[] messageSenders) {
+        webServiceTemplate.setMessageSenders(messageSenders);
+    }
+
     /** Returns the <code>WebServiceTemplate</code> for the gateway. */
     public final WebServiceTemplate getWebServiceTemplate() {
         return webServiceTemplate;
@@ -93,6 +110,7 @@ public abstract class WebServiceGatewaySupport implements InitializingBean, Appl
 
     /** Sets the <code>WebServiceTemplate</code> to be used by the gateway. */
     public final void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
+        Assert.notNull(webServiceTemplate, "'webServiceTemplate' must not be null");
         this.webServiceTemplate = webServiceTemplate;
     }
 
