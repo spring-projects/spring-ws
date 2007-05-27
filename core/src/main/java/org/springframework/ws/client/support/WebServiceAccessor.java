@@ -55,11 +55,25 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
         return messageSenders;
     }
 
+    /**
+     * Sets the single message sender used for sending messages.
+     * <p/>
+     * This message sender will be used to resolve an URI to a {@link WebServiceConnection}.
+     *
+     * @see #createConnection(String)
+     */
     public void setMessageSender(WebServiceMessageSender messageSender) {
         Assert.notNull(messageSender, "'messageSender' must not be null");
         this.messageSenders = new WebServiceMessageSender[]{messageSender};
     }
 
+    /**
+     * Sets the message senders used for sending messages.
+     * <p/>
+     * These message senders will be used to resolve an URI to a {@link WebServiceConnection}.
+     *
+     * @see #createConnection(String)
+     */
     public void setMessageSenders(WebServiceMessageSender[] messageSenders) {
         Assert.notEmpty(messageSenders, "'messageSenders' must not be empty");
         this.messageSenders = messageSenders;
@@ -72,6 +86,10 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
 
     /**
      * Creates a connection to the given URI, or throws an exception when it cannot be resolved.
+     * <p/>
+     * Default implementation iterates over all configured {@link WebServiceMessageSender} objects, and calls {@link
+     * WebServiceMessageSender#supports(String)} for each of them. If the sender supports the parameter URI, it creates
+     * a connection using {@link WebServiceMessageSender#createConnection(String)} .
      *
      * @param uri the URI to open a connection to
      * @return the created connection
@@ -80,16 +98,13 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
      */
     protected WebServiceConnection createConnection(String uri) throws IOException {
         Assert.notEmpty(getMessageSenders(), "Property 'messageSenders' is required");
-        WebServiceMessageSender messageSender = null;
         WebServiceMessageSender[] messageSenders = getMessageSenders();
         for (int i = 0; i < messageSenders.length; i++) {
             if (messageSenders[i].supports(uri)) {
-                messageSender = messageSenders[i];
-                break;
+                return messageSenders[i].createConnection(uri);
             }
         }
-        Assert.notNull(messageSender, "Could not resolve [" + uri + "] to a WebServiceMessageSender");
-        return messageSender.createConnection(uri);
+        throw new IllegalArgumentException("Could not resolve [" + uri + "] to a WebServiceMessageSender");
     }
 
 }
