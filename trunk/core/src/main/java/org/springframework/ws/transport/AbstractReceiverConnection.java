@@ -101,10 +101,6 @@ public abstract class AbstractReceiverConnection extends AbstractWebServiceConne
             return getResponseOutputStream();
         }
 
-        public void close() throws IOException {
-            super.close();
-        }
-
     }
 
 

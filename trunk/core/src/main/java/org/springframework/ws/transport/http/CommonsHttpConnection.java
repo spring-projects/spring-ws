@@ -44,7 +44,7 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 
     private final PostMethod postMethod;
 
-    private ByteArrayOutputStream bufferedOutput = new ByteArrayOutputStream();
+    private ByteArrayOutputStream bufferedOutput;
 
     public CommonsHttpConnection(HttpClient httpClient, PostMethod postMethod) {
         Assert.notNull(httpClient, "httpClient must not be null");
@@ -61,6 +61,14 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
         postMethod.releaseConnection();
     }
 
+    /*
+     * Sending request
+     */
+
+    protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
+        bufferedOutput = new ByteArrayOutputStream();
+    }
+
     protected void addRequestHeader(String name, String value) throws IOException {
         postMethod.addRequestHeader(name, value);
     }
@@ -69,11 +77,15 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
         return bufferedOutput;
     }
 
-    protected void onSend(WebServiceMessage message) throws IOException {
+    protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
         postMethod.setRequestEntity(new ByteArrayRequestEntity(bufferedOutput.toByteArray()));
         bufferedOutput = null;
         httpClient.executeMethod(postMethod);
     }
+
+    /*
+     * Receiving response
+     */
 
     protected int getResponseCode() throws IOException {
         return postMethod.getStatusCode();
