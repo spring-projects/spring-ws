@@ -29,6 +29,7 @@ import org.springframework.ws.WebServiceMessageFactory;
 public abstract class AbstractWebServiceConnection implements WebServiceConnection {
 
     public final void send(WebServiceMessage message) throws IOException {
+        onSendBeforeWrite(message);
         TransportOutputStream tos = createTransportOutputStream();
         try {
             message.writeTo(tos);
@@ -37,10 +38,11 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
         finally {
             tos.close();
         }
-        onSend(message);
+        onSendAfterWrite(message);
     }
 
     public final WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException {
+        onReceiveBeforeRead();
         TransportInputStream tis = createTransportInputStream();
         if (tis == null) {
             return null;
@@ -52,7 +54,7 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
         finally {
             tis.close();
         }
-        onReceive(message);
+        onReceiveAfterRead(message);
         return message;
     }
 
@@ -66,7 +68,7 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
     protected abstract TransportOutputStream createTransportOutputStream() throws IOException;
 
     /**
-     * Called when the given message has been written to the <code>TransportOutputStream</code>. Called from {@link
+     * Called before the given message has been written to the <code>TransportOutputStream</code>. Called from {@link
      * #send(WebServiceMessage)}.
      * <p/>
      * Default implementation does nothing.
@@ -74,8 +76,19 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
      * @param message the message
      * @throws IOException when an I/O exception occurs
      */
-    protected void onSend(WebServiceMessage message) throws IOException {
+    protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
+    }
 
+    /**
+     * Called after the given message has been written to the <code>TransportOutputStream</code>. Called from {@link
+     * #send(WebServiceMessage)}.
+     * <p/>
+     * Default implementation does nothing.
+     *
+     * @param message the message
+     * @throws IOException when an I/O exception occurs
+     */
+    protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
     }
 
     /**
@@ -87,7 +100,18 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
     protected abstract TransportInputStream createTransportInputStream() throws IOException;
 
     /**
-     * Called when the given message has been written to the <code>TransportOutputStream</code>. Called from {@link
+     * Called before a message has been read from the <code>TransportInputStream</code>. Called from {@link
+     * #receive(WebServiceMessageFactory)}.
+     * <p/>
+     * Default implementation does nothing.
+     *
+     * @throws IOException when an I/O exception occurs
+     */
+    protected void onReceiveBeforeRead() throws IOException {
+    }
+
+    /**
+     * Called when the given message has been read from the <code>TransportInputStream</code>. Called from {@link
      * #receive(WebServiceMessageFactory)}.
      * <p/>
      * Default implementation does nothing.
@@ -95,8 +119,7 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
      * @param message the message
      * @throws IOException when an I/O exception occurs
      */
-    protected void onReceive(WebServiceMessage message) throws IOException {
-
+    protected void onReceiveAfterRead(WebServiceMessage message) throws IOException {
     }
 
 }

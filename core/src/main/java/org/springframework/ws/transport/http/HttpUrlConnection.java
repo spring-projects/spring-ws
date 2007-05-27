@@ -58,6 +58,10 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
         connection.disconnect();
     }
 
+    /*
+     * Sending request
+     */
+
     protected void addRequestHeader(String name, String value) throws IOException {
         connection.addRequestProperty(name, value);
     }
@@ -66,9 +70,13 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
         return connection.getOutputStream();
     }
 
-    protected void onSend(WebServiceMessage message) throws IOException {
+    protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
         connection.connect();
     }
+
+    /*
+     * Receiving response
+     */
 
     protected long getResponseContentLength() throws IOException {
         return connection.getContentLength();

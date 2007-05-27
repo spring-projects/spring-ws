@@ -53,12 +53,6 @@ public class HttpServletConnection extends AbstractReceiverConnection implements
         this.httpServletResponse = httpServletResponse;
     }
 
-    public void close() throws IOException {
-        if (!sentResponse && endpointFound) {
-            httpServletResponse.setStatus(HttpServletResponse.SC_ACCEPTED);
-        }
-    }
-
     /** Returns the <code>HttpServletRequest</code> for this connection. */
     public HttpServletRequest getHttpServletRequest() {
         return httpServletRequest;
@@ -74,6 +68,16 @@ public class HttpServletConnection extends AbstractReceiverConnection implements
         httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
 
+    public void close() throws IOException {
+        if (!sentResponse && endpointFound) {
+            httpServletResponse.setStatus(HttpServletResponse.SC_ACCEPTED);
+        }
+    }
+
+    /*
+     * Receiving request
+     */
+
     protected Iterator getRequestHeaderNames() throws IOException {
         return new EnumerationIterator(httpServletRequest.getHeaderNames());
     }
@@ -86,6 +90,10 @@ public class HttpServletConnection extends AbstractReceiverConnection implements
         return httpServletRequest.getInputStream();
     }
 
+    /*
+    * Sending response
+    */
+
     protected void addResponseHeader(String name, String value) throws IOException {
         httpServletResponse.addHeader(name, value);
     }
@@ -94,7 +102,7 @@ public class HttpServletConnection extends AbstractReceiverConnection implements
         return httpServletResponse.getOutputStream();
     }
 
-    protected void onSend(WebServiceMessage message) throws IOException {
+    protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
         sentResponse = true;
         if (!message.hasFault()) {
             httpServletResponse.setStatus(HttpServletResponse.SC_OK);
