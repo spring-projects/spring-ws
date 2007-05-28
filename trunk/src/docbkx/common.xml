@@ -4,7 +4,7 @@
 <chapter id="common">
     <title>Shared components</title>
     <para>
-        In this chapter, we will explore the the components which are shared between client- and server side
+        In this chapter, we will explore the the components which are shared between client- and server-side
         Spring-WS development. These interfaces and classes represent the building blocks of Spring-WS, so
         it is important to understand what they do, even if you do not use them directly.
     </para>
@@ -13,14 +13,14 @@
         <section id="web-service-message">
             <title><interfacename>WebServiceMessage</interfacename></title>
             <para>
-                One of the core interfaces within Spring Web Services is the
-                <interfacename>WebServiceMessage</interfacename>. This interface represents a protocol agnostic XML
-                message. The interface contains methods that provide access to the payload of the message, in the form
-                of a <interfacename>javax.xml.transform.Source</interfacename> or a
+                One of the core interfaces of Spring Web Services is the <interfacename>WebServiceMessage</interfacename>.
+                This interface represents a protocol-agnostic XML message. The interface contains methods that provide
+                access to the payload of the message, in the form of a
+                <interfacename>javax.xml.transform.Source</interfacename> or a
                 <interfacename>javax.xml.transform.Result</interfacename>. <interfacename>Source</interfacename> and
                 <interfacename>Result</interfacename> are tagging interfaces that represent an abstraction over XML
-                input and output. Concrete implementations wrap various XML representations, as indicated in the table
-                below.
+                input and output. Concrete implementations wrap various XML representations, as indicated in the
+                following table.
                 <informaltable>
                     <tgroup cols="2">
                         <thead>
@@ -74,7 +74,7 @@
         <section id="soap-message">
             <title><interfacename>SoapMessage</interfacename></title>
             <para>
-                The <interfacename>SoapMessage</interfacename> is an extension of
+                The <interfacename>SoapMessage</interfacename> is a subclass of
                 <interfacename>WebServiceMessage</interfacename>. It contains SOAP-specific methods, such as getting
                 SOAP Headers, SOAP Faults, etc. Generally, your code should not be dependent on
                 <interfacename>SoapMessage</interfacename>, because the content of the SOAP Body can be obtained via
@@ -87,12 +87,10 @@
         <section id="message-factories">
             <title>Message Factories</title>
             <para>
-                Concrete message implementation are created by a
-                <interfacename>WebServiceMessageFactory</interfacename>. This factory can create an empty message, or
-                read a message based on an input stream.
-                There are two concrete implementations of <interfacename>WebServiceMessageFactory</interfacename>.
-                One is based on SAAJ, the SOAP with Attachments API for Java, the other based on Axis 2's AXIOM, the
-                AXis Object Model.
+                Concrete message implementations are created by a <interfacename>WebServiceMessageFactory</interfacename>.
+                This factory can create an empty message, or read a message based on an input stream. There are two
+                concrete implementations of <interfacename>WebServiceMessageFactory</interfacename>; one is based on
+                SAAJ, the SOAP with Attachments API for Java, the other based on Axis 2's AXIOM, the AXis Object Model.
             </para>
             <section>
                 <title><classname>SaajSoapMessageFactory</classname></title>
@@ -101,13 +99,12 @@
                     create <classname>SoapMessage</classname> implementations. SAAJ is part of J2EE 1.4, so it should be
                     supported under most modern application servers. You wire up a
                     <classname>SaajSoapMessageFactory</classname> like so:
-    <programlisting><![CDATA[
-<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory" />]]></programlisting>
+                <programlisting><![CDATA[<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory" />]]></programlisting>
                 </para>
                 <note>
                     <para>
                         SAAJ is based on DOM, the Document Object Model. This means that all SOAP messages are
-                        stored in memory as a whole. For larger SOAP messages, this may not be very performant.
+                        stored <emphasis>in memory</emphasis>. For larger SOAP messages, this may not be very performant.
                         In that case, the <classname>AxiomSoapMessageFactory</classname> might be more applicable.
                     </para>
                 </note>
@@ -260,7 +257,7 @@ public class MyXPathClass  {
         <section id="xpath-template">
             <title><classname>XPathTemplate</classname></title>
             <para>
-                The <interfacename>XPathExpression</interfacename> only allows you to evaluate a single, pre-compiled
+                The <interfacename>XPathExpression</interfacename> allows you to evaluate only a single, pre-compiled
                 expression. A more flexible, though slower, alternative is the <classname>XpathTemplate</classname>.
                 This class follows the common template pattern used throughout Spring (JdbcTemplate, JmsTemplate, etc.).
                 Here is an example:
@@ -277,10 +274,6 @@ public class MyXPathClass {
     }
 
 }]]></programlisting>
-            <para>
-                Of course, the template could have been injected with a
-                constructor argument or a setter.
-            </para>
         </section>
     </section>
 </chapter>

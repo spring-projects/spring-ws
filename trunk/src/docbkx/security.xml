@@ -7,16 +7,15 @@
 	<section id="security-introduction">
 		<title>Introduction</title>
 		<para>
-			In this chapter, we will show you how to add WS-Security aspects to your Web services. We will focus on the
+			This chapter explains how to add WS-Security aspects to your Web services. We will focus on the
 			three different areas of WS-Security, namely:
 		</para>
 		<formalpara>
 			<title>Authentication</title>
 			<para>
-				This is the process of determining whether a
-				<emphasis>principal</emphasis>
-				is who they claim to be. In this context, a "principal" generally means a user, device or some other
-				system which can perform an action in your application.
+				This is the process of determining whether a <emphasis>principal</emphasis> is who they claim to be.
+             In this context, a "principal" generally means a user, device or some other system which can perform
+             an action in your application.
 			</para>
 		</formalpara>
 		<formalpara>
@@ -47,8 +46,8 @@
 		<note>
 			<para>
 				Note that WS-Security (especially encryption and signing) requires substantial amounts of memory, and
-				will also decrease performance. If performance is important to you, you might want to consider using not
-				using WS-Security.
+				will also decrease performance. If performance is important to you, you might want to consider not using
+				WS-Security.
 			</para>
 		</note>
 	</section>
@@ -132,12 +131,12 @@
     </section>
 
     <section id="keystore">
-        <title>Key stores</title>
+        <title>Keystores</title>
         <para>
             For most cryptographic operations, you will use standard <classname>java.security.KeyStore</classname>
-            objects. This includes certificate verification, message signing, signature verification, encryption, but
+            objects. This includes certificate verification, message signing, signature verification, and encryption, but
             excludes username and time-stamp verification. This section aims to give you some background knowledge on
-            key stores, and the Java tools that you can use to store keys and certificates in a key store file. This
+            keystores, and the Java tools that you can use to store keys and certificates in a keystore file. This
             information is mostly not related to Spring-WS, but to the general cryptographic features of Java.
         </para>
         <para>
@@ -171,31 +170,30 @@
         <section>
             <title>KeyTool</title>
             <para>
-	            Supplied with your Java Virtual Machine is the <command>keytool</command>, a key and certificate
-	            management utility. You can use this tool to create new key stores, add new private keys and 
+	            Supplied with your Java Virtual Machine is the <command>keytool</command> program, a key and certificate
+	            management utility. You can use this tool to create new keystores, add new private keys and 
 	            certificates to them, etc. It is beyond the scope of this document to provide a full reference of 
-	            the <command>keytool</command> command, but you can find a reference <ulink
-	                url="http://java.sun.com/j2se/1.5.0/docs/tooldocs/windows/keytool.html">
-	            <citetitle>here</citetitle></ulink>, or by giving the command <prompt>keytool -help</prompt> on 
-	            the command line.
+	            the <command>keytool</command> command, but you can find a reference
+               <ulink url="http://java.sun.com/j2se/1.5.0/docs/tooldocs/windows/keytool.html"><citetitle>here</citetitle></ulink>,
+               or by giving the command <prompt>keytool -help</prompt> on the command line.
             </para>
         </section>
         <section>
             <title>KeyStoreFactoryBean</title>
             <para>
-                To easily load a key store using Spring configuration, you can use the
+                To easily load a keystore using Spring configuration, you can use the
                 <classname>KeyStoreFactoryBean</classname>. It has a resource location property, which you can set to
-                point to the path of the key store to load. A password may be given to check the integrity of the
-                key store data. If a password is not given, integrity checking is not performed.
+                point to the path of the keystore to load. A password may be given to check the integrity of the
+                keystore data. If a password is not given, integrity checking is not performed.
             </para>
-<programlisting><![CDATA[
+            <programlisting><![CDATA[
 <bean id="keyStore" class="org.springframework.ws.soap.security.support.KeyStoreFactoryBean">
     <property name="password" value="password"/>
     <property name="location" value="classpath:org/springframework/ws/soap/security/xwss/test-keystore.jks"/>
 </bean>]]></programlisting>
             <caution>
                 <para>
-                    If you don't specify the location property, a new, empty key store will be created, which is most
+                    If you don't specify the location property, a new, empty keystore will be created, which is most
                     likely not what you want.
                 </para>
             </caution>
@@ -203,8 +201,8 @@
         <section id="security-key-store-callback-handler">
             <title>KeyStoreCallbackHandler</title>
             <para>
-                To use the key stores within a <classname>XwsSecurityInterceptor</classname>, you will need to define a
-                <classname>KeyStoreCallbackHandler</classname>. This callback has three properties with type key store:
+                To use the keystores within a <classname>XwsSecurityInterceptor</classname>, you will need to define a
+                <classname>KeyStoreCallbackHandler</classname>. This callback has three properties with type keystore:
                 (<methodname>keyStore</methodname>, <methodname>trustStore</methodname>, and
                 <methodname>symmetricStore</methodname>). The exact stores used by the handler depend on the
                 cryptographic operations that are to be performed by this handler. For private key operation, the
@@ -216,7 +214,7 @@
                         <thead>
                             <row>
                                 <entry>Cryptographic operation</entry>
-                                <entry>Key store used</entry>
+                                <entry>Keystore used</entry>
                             </row>
                         </thead>
                         <tbody>
@@ -349,7 +347,7 @@
                 <para>
                     The simplest password validation handler is the
                     <classname>SimplePasswordValidationCallbackHandler</classname>. This handler validates passwords
-                    against a in-memory <classname>Properties</classname> object, which you can specify using the
+                    against an in-memory <classname>Properties</classname> object, which you can specify using the
                     <methodname>users</methodname> property, like so:
                 </para>
 <programlisting><![CDATA[
@@ -412,7 +410,7 @@
                     <citetitle>good tutorial</citetitle></ulink> available.
                 </para>
                 <para>
-                    The <classname>JaasPlainTextPasswordValidationCallbackHandler</classname> only requires a
+                    The <classname>JaasPlainTextPasswordValidationCallbackHandler</classname> requires only a
                     <methodname>loginContextName</methodname> to operate. It creates a new JAAS
                     <classname>LoginContext</classname> using this name, and handles the standard JAAS
                     <classname>NameCallback</classname> and <classname>PasswordCallback</classname> using the username
@@ -440,12 +438,12 @@
         <section>
             <title>Digest Username Authentication</title>
             <para>
-                When using password digests, the SOAP message also contain a <literal>UsernameToken</literal> element,
+                When using password digests, the SOAP message also contains a <literal>UsernameToken</literal> element,
                 which itself contains a <literal>Username</literal> element and a <literal>Password</literal> element.
-                The difference is that the password is not sent as plain text, but as a <emphasis>digest</emphasis>.The
+                The difference is that the password is not sent as plain text, but as a <emphasis>digest</emphasis>. The
                 recipient compares this digest to the digest he calculated from the known password of the user, and if
-                they are the same, the user is authenticated. It can be compared to the Digest
-                Authentication provided by HTTP servers.
+                they are the same, the user is authenticated. It can be compared to the Digest Authentication provided
+                by HTTP servers.
             </para>
            <para>
                 To require that every incoming message contains a <literal>UsernameToken</literal> element with a
@@ -483,7 +481,7 @@
                     The <classname>AcegiPlainTextPasswordValidationCallbackHandler</classname> requires an Acegi
                     <classname>UserDetailService</classname> to operate. It uses this service to retrieve the password
                     of the user specified in the token. The digest of the password contained in this details object is
-                    then compared with the digest in the message. If they are equal, the user has succesfully
+                    then compared with the digest in the message. If they are equal, the user has successfully
                     authenticated, and a <classname>UsernamePasswordAuthenticationToken</classname> is stored in the
                     <classname>SecurityContextHolder</classname>. You can set the service using the
                     <methodname>userDetailsService</methodname>. Additionally, you can set a
@@ -512,12 +510,11 @@
             <para>
                 To make sure that all incoming SOAP messages carry a <literal>BinarySecurityToken</literal>, the
                 security policy file should contain a <literal>RequireSignature</literal> element. This element can
-                carry further other elements, which will be covered in <xref linkend="security-verifying-signatures"/>.
-                You can find a reference of possible child elements <ulink
-                    url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565769">
-                <citetitle>here</citetitle></ulink>.
+                further carry other elements, which will be covered in <xref linkend="security-verifying-signatures"/>.
+                You can find a reference of possible child elements
+                <ulink url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565769"><citetitle>here</citetitle></ulink>.
             </para>
-<programlisting><![CDATA[
+            <programlisting><![CDATA[
 <xwss:SecurityConfiguration xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
     ...
     <xwss:RequireSignature requireTimestamp="false">
@@ -532,7 +529,7 @@
             <note>
                 <para>
                     In most cases, certificate <emphasis>authentication</emphasis> should be preceded by certificate
-                    <emphasis>validation</emphasis>, since you only want authenticate against valid certificates.
+                    <emphasis>validation</emphasis>, since you only want to authenticate against valid certificates.
                     Invalid certificates such as certificates for which the expiration date has passed, or which are not
                     in your store of trusted certificates, should be ignored.
                 </para>
@@ -562,7 +559,7 @@
             <section>
                 <title>KeyStoreCallbackHandler</title>
                 <para>
-                    The <classname>KeyStoreCallbackHandler</classname> uses a standard Java key store to validate
+                    The <classname>KeyStoreCallbackHandler</classname> uses a standard Java keystore to validate
                     certificates. This certificate validation process consists of the following steps:
                     <orderedlist>
                         <listitem>
@@ -573,7 +570,7 @@
                         </listitem>
                         <listitem>
                             <para>
-                                If the certificate is not in the private key store, the handler will check whether the
+                                If the certificate is not in the private keystore, the handler will check whether the
                                 the current date and time are within the validity period given in the certificate.
                                 If they are not, the certificate is invalid; if it is, it will continue with the final
                                 step.
@@ -583,16 +580,16 @@
                             <para>
                                 Finally, a <emphasis>certification path</emphasis> for the certificate is created. This
                                 basically means that the handler will determine whether the certificate has been issued
-                                by any of the certificate authorities in the <methodname>trustStore</methodname>. If it
-                                a certification path can be built succesfully, the certificate is valid. Otherwise, it
-                                is not.
+                                by any of the certificate authorities in the <methodname>trustStore</methodname>. If
+                                a certification path can be built successfully, the certificate is valid. Otherwise,
+                                the certificate is not.
                             </para>
                         </listitem>
                     </orderedlist>
                 </para>
                 <para>
                     To use the <classname>KeyStoreCallbackHandler</classname> for certificate validation purposes, you
-                    will most likely only set the <methodname>trustStore</methodname> property:
+                    will most likely set only the <methodname>trustStore</methodname> property:
 <programlisting><![CDATA[
 <beans>
     <bean id="keyStoreHandler" class="org.springframework.ws.soap.security.xwss.callback.KeyStoreCallbackHandler">
@@ -612,10 +609,10 @@
                 <title>AcegiCertificateValidationCallbackHandler</title>
                 <para>
                     The <classname>AcegiCertificateValidationCallbackHandler</classname> requires an Acegi
-                    <classname>AuthenticationManager</classname> to operate. It uses this manager authenticate against a
+                    <classname>AuthenticationManager</classname> to operate. It uses this manager to authenticate against a
                     <classname>X509AuthenticationToken</classname> that it creates. The configured authentication
                     manager is expected to supply a provider which can handle this token (usually an instance of
-                    <classname>X509AuthenticationProvider</classname>). If authentication is succesfull, the token is
+                    <classname>X509AuthenticationProvider</classname>). If authentication is succesful, the token is
                     stored in the <classname>SecurityContextHolder</classname>. You can set the authentication manager
                     using the <methodname>authenticationManager</methodname> property:
                 </para>
@@ -800,7 +797,7 @@
                 To decrypt incoming SOAP messages, the security policy file should contain a
                 <literal>RequireEncryption</literal> element. This element can further carry a
                 <literal>EncryptionTarget</literal> element which indicates which part of the message should be
-                encrypted, a <literal>SymmetricKey</literal> to indicate that a shared secret instead of the regular
+                encrypted, and a <literal>SymmetricKey</literal> to indicate that a shared secret instead of the regular
                 private key should be used to decrypt the message. You can read a description of the other elements
                 <ulink url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565951">
                 <citetitle>here</citetitle></ulink>.
@@ -846,7 +843,7 @@
             <para>
                 To encrypt outgoing SOAP messages, the security policy file should contain a <literal>Encrypt</literal>
                 element. This element can further carry a <literal>EncryptionTarget</literal> element which indicates
-                which part of the message should be encrypted, a <literal>SymmetricKey</literal> to indicate that a
+                which part of the message should be encrypted, and a <literal>SymmetricKey</literal> to indicate that a
                 shared secret instead of the regular private key should be used to decrypt the message. You can read a
                 description of the other elements <ulink
                     url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565951">

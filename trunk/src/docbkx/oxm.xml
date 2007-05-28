@@ -165,9 +165,8 @@ public interface Unmarshaller {
         <para>
             Even though there are two separate marshalling interfaces (<interfacename>Marshaller</interfacename>
             and <interfacename>Unmarshaller</interfacename>), all implementations found in Spring-WS implement both in
-            one class. This means that you can wire up one marshaller class and refer to it as marshaller and 
-            unmarshaller in your <filename>applicationContext.xml</filename>
-            .
+            one class. This means that you can wire up one marshaller class and refer to it both as a marshaller and an 
+            unmarshaller in your <filename>applicationContext.xml</filename>.
         </para>
         <section>
             <title>XmlMappingException</title>
@@ -317,7 +316,7 @@ public class Application {
             implementation of JAXB. Alternatively, JAXB2 offers a way to generate a schema from annotated Java classes.
         </para>
         <para>
-            Spring supports both the JAXB 1.0 as the JAXB 2.0 API as XML marshalling strategy, following the
+            Spring supports both the JAXB 1.0 and the JAXB 2.0 API as XML marshalling strategies, following the
             <interfacename>Marshaller</interfacename> and <interfacename>Unmarshaller</interfacename>
             interfaces described in <xref linkend="oxm-marshaller-unmarshaller"/>. The corresponding integration 
             classes reside in the <package>org.springframework.oxm.jaxb</package> package.
@@ -330,7 +329,7 @@ public class Application {
                 requires a context path to operate, which you can set using the <property>contextPath</property>
                 property. The context path is a list of colon (:) separated Java package names that contain schema
                 derived classes. The marshaller has an additional <property>validating</property> property which 
-                defines whether to validate invoming XML.
+                defines whether to validate incoming XML.
             </para>
             <para>
                 The next sample bean configuration shows how to configure a <classname>JaxbMarshaller</classname>
@@ -423,26 +422,23 @@ public class Application {
     <section id="oxm-xmlbeans">
         <title>XMLBeans</title>
         <para>
-            XMLBeans is an XML binding tool that has full XML Schema support, and offers full XML Infoset fidelity. It
-            takes a different approach that most other O/X mapping frameworks, in that all classes that are
-            generated from an XML Schema are all derived from <interfacename>XmlObject</interfacename>, and contain 
-            XML binding information in them.
+            XMLBeans is an XML binding tool that has full XML Schema support, and offers full XML Infoset
+            fidelity. It takes a different approach to that of most other O/X mapping frameworks, in that
+            all classes that are generated from an XML Schema are all derived from
+            <interfacename>XmlObject</interfacename>, and contain XML binding information in them.
         </para>
         <para>
             For more information on XMLBeans, refer to the <ulink url="http://xmlbeans.apache.org/">
-			<citetitle>XMLBeans web site </citetitle></ulink>. The Spring-WS integration classes reside in the
-            <package>org.springframework.oxm.xmlbeans</package> package.
+			   <citetitle>XMLBeans web site </citetitle></ulink>. The Spring-WS integration classes reside
+            in the <package>org.springframework.oxm.xmlbeans</package> package.
         </para>
         <section>
             <title>XmlBeansMarshaller</title>
             <para>
-                The
-                <classname>XmlBeansMarshaller</classname>
-                implements both the
-                <interfacename>Marshaller</interfacename>
-                and
-                <interfacename>Unmarshaller</interfacename>
-                interface. It can be wired up as follows:
+                The <classname>XmlBeansMarshaller</classname>
+                implements both the <interfacename>Marshaller</interfacename>
+                and <interfacename>Unmarshaller</interfacename>
+                interfaces. It can be configured as follows:
             </para>
             <programlisting><![CDATA[
 <beans>
@@ -453,13 +449,9 @@ public class Application {
 </beans>]]></programlisting>
             <note>
                 <para>
-                    Note that the
-                    <classname>XmlBeansMarshaller</classname>
-                    can only marshal objects of type
-                    <interfacename>XmlObject</interfacename>
-                    , and not every
-                    <classname>java.lang.Object</classname>
-                    .
+                    Note that the <classname>XmlBeansMarshaller</classname>
+                    can only marshal objects of type <interfacename>XmlObject</interfacename>,
+                    and not every <classname>java.lang.Object</classname>.
                 </para>
             </note>
         </section>
@@ -470,7 +462,7 @@ public class Application {
     <section id="oxm-jibx">
         <title>JiBX</title>
         <para>
-            The JiBX framework offers a solution similar to JDO does for ORM: a binding definition defines the
+            The JiBX framework offers a solution similar to that which JDO provides for ORM: a binding definition defines the
             rules for how your Java objects are converted to or from XML. After preparing the binding and compiling the
             classes, a JiBX binding compiler enhances the class files, and adds code to handle converting instances of
             the classes from or to XML.
