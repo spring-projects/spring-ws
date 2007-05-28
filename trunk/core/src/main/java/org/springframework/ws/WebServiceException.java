@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 the original author or authors.
+ * Copyright 2005-2007 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,28 +16,33 @@
 
 package org.springframework.ws;
 
-import java.io.Serializable;
-
 import org.springframework.core.NestedRuntimeException;
+
+import java.io.Serializable;
 
 /**
  * Root of the hierarchy of Web Service exceptions.
  *
  * @author Arjen Poutsma
  */
-public abstract class WebServiceException extends NestedRuntimeException implements Serializable {
+public abstract class WebServiceException
+        extends NestedRuntimeException implements Serializable {
 
     /**
-     * Constructor for <code>WebServiceException</code>.
+     * Create a new instance of the <code>WebServiceException</code> class.
+     * @param msg the detail message
      */
     public WebServiceException(String msg) {
         super(msg);
     }
 
     /**
-     * Constructor for <code>WebServiceException</code>.
+     * Create a new instance of the <code>WebServiceException</code> class.
+     * @param msg the detail message
+     * @param ex  the root {@link Throwable exception}
      */
     public WebServiceException(String msg, Throwable ex) {
         super(msg, ex);
     }
+
 }
