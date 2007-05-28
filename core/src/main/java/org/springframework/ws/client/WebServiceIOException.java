@@ -25,11 +25,21 @@ import java.io.IOException;
  */
 public class WebServiceIOException extends WebServiceClientException {
 
+    /**
+     * Create a new instance of the <code>WebServiceIOException</code> class.
+     * @param msg the detail message
+     */
     public WebServiceIOException(String msg) {
         super(msg);
     }
 
+    /**
+     * Create a new instance of the <code>WebServiceIOException</code> class.
+     * @param msg the detail message
+     * @param ex  the root {@link IOException}
+     */
     public WebServiceIOException(String msg, IOException ex) {
         super(msg, ex);
     }
+
 }
