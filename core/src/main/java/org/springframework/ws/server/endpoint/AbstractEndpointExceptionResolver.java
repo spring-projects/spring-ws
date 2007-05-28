@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2006-2007 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,32 +24,39 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointExceptionResolver;
 
 /**
- * Abstract base class for <code>ExceptionResolver</code>s. Provides a set of mapped endpoints that the resolver should
- * map.
+ * Abstract base class for {@link EndpointExceptionResolver EndpointExceptionResolvers}.
+ *
+ * <p>Provides a set of mapped endpoints that the resolver should map.
  *
  * @author Arjen Poutsma
  */
 public abstract class AbstractEndpointExceptionResolver implements EndpointExceptionResolver {
 
+    /** Shared {@link Log} for subclasses to use. */
     protected final Log logger = LogFactory.getLog(getClass());
+
 
     private Set mappedEndpoints;
 
+
     /**
-     * Specify the set of endpoints that this exception resolver should map. The exception mappings and the default
-     * fault will only apply to the specified endpoints.
+     * Specify the set of endpoints that this exception resolver should map.
+     * <p>The exception mappings and the default fault will only apply to the
+     * specified endpoints.
      * <p/>
-     * If no endpoints set, both the exception mappings and the default fault will apply to all handlers. This means
-     * that a specified default fault will be used as fallback for all exceptions; any further
+     * If no endpoints are set, both the exception mappings and the default fault
+     * will apply to all handlers. This means that a specified default fault will
+     * be used as fallback for all exceptions; any further
      * <code>EndpointExceptionResolvers</code> in the chain will be ignored in this case.
      */
     public void setMappedEndpoints(Set mappedEndpoints) {
         this.mappedEndpoints = mappedEndpoints;
     }
 
+
     /**
-     * Default implementation. Checks whether the given endpoint is in the set of mapped endpoints. Calls
-     * <code>resolveExceptionInternal</code>.
+     * Default implementation that checks whether the given <code>endpoint</code>
+     * is in the set of {@link #setMappedEndpoints mapped endpoints}.
      *
      * @see #resolveExceptionInternal(org.springframework.ws.context.MessageContext,Object,Exception)
      */
@@ -60,16 +67,17 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
         return resolveExceptionInternal(messageContext, endpoint, ex);
     }
 
+
     /**
-     * Template method for resolving exceptions. Gets called after <code>resolveException</code>.
+     * Template method for resolving exceptions that is called by
+     * {@link #resolveException}.
      *
      * @param messageContext current message context
-     * @param endpoint       the executed endpoint, or <code>null</code>  if none chosen at the time of the exception
+     * @param endpoint       the executed endpoint, or <code>null</code> if none chosen at the time of the exception
      * @param ex             the exception that got thrown during endpoint execution
      * @return <code>true</code> if resolved; <code>false</code> otherwise
      * @see #resolveException(org.springframework.ws.context.MessageContext,Object,Exception)
      */
     protected abstract boolean resolveExceptionInternal(MessageContext messageContext, Object endpoint, Exception ex);
-
 
 }
