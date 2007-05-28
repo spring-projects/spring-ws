@@ -10,7 +10,7 @@
             <classname>MessageDispatcher</classname> that dispatches incoming
             messages to endpoints, with configurable endpoint mappings, response
             generation, and endpoint interception.
-            The simplest endpoint is a <interfacename>PayloadEndpoint</interfacename>, just offering a
+            The simplest endpoint is a <interfacename>PayloadEndpoint</interfacename>, which just offers the
             <literal>Source invoke(Source request)</literal> method. You are of course free to
             implement this interface directly, but you will probably prefer to extend one of
             the included abstract implementations such as
@@ -86,7 +86,7 @@
         <para>
             Exceptions that are thrown during handling of the request get picked up by any of the endpoint exception
             resolvers that are declared in the application context. Using these exception resolvers allows you to define
-            custom behaviors in case such exceptions get thrown, such as return a SOAP Fault.
+            custom behaviors (such as returning a SOAP Fault) in case such exceptions get thrown.
            </para>
         <para>
             The <classname>MessageDispatcher</classname> has several properties, for setting endpoint adapters,
@@ -184,8 +184,8 @@
         <para>
             Alternatively, there is the <interfacename>MessageEndpoint</interfacename>, which operates on a
             whole <link linkend="message-context"><interfacename>MessageContext</interfacename></link> rather than just
-            the payload. Typically, your code should only not be dependent on messages, because the payload should
-            contain the interesting information. Only when it is necessary to perform actions on the mesage as a whole,
+            the payload. Typically, your code should not be dependent on messages, because the payload should
+            contain the information of interest. Only when it is necessary to perform actions on the message as a whole,
             such as adding a SOAP header, get an attachment, and so forth, should you need to implement
             <interfacename>MessageEndpoint</interfacename>, though these actions are usually performed in a
             <link linkend="server-endpoint-interceptor">endpoint interceptor</link>.
@@ -195,11 +195,11 @@
             <para>
                 One of the most basic ways to handle the incoming XML payload is by using a DOM (Document Object Model)
                 API. By extending from <classname>AbstractDomPayloadEndpoint</classname>, you can use the
-                <package>org.w3c.dom.Element</package> and related classes to handle the request, and create the
+                <package>org.w3c.dom.Element</package> and related classes to handle the request and create the
                 response. When using the <classname>AbstractDomPayloadEndpoint</classname> as the baseclass for your
                 endpoints you only have to override the <methodname>invokeInternal(Element, Document)</methodname>
-                method, implement your logic, and return an <interfacename>Element</interfacename> if you want a
-                response. Here is a short example consisting of a class and a declaration in the application context.
+                method, implement your logic, and return an <interfacename>Element</interfacename> if a response is
+                necessary. Here is a short example consisting of a class and a declaration in the application context.
             </para>
             <programlisting><![CDATA[package samples;
             
@@ -226,7 +226,7 @@ public class SampleEndpoint extends AbstractDomPayloadEndpoint {
     <constructor-arg value="Hello World!"/>
 </bean>]]></programlisting>
             <para>
-                The above class and the declaration in the application context is all you need besides setting up an
+                The above class and the declaration in the application context are all you need besides setting up an
                 endpoint mapping (see the section entitled <xref linkend="server-endpoint-mapping" />) to get this very
                 simple endpoint working. The SOAP message handled by this endpoint will look something like:
             </para>
@@ -245,7 +245,7 @@ public class SampleEndpoint extends AbstractDomPayloadEndpoint {
     Hello
 </request>]]></programlisting>
             <para>
-                The SOAP reponse looks like:
+                The SOAP response looks like:
             </para>
             <programlisting><![CDATA[<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
     <SOAP-ENV:Body>]]><emphasis role="bold"><![CDATA[
@@ -330,8 +330,8 @@ public class MarshallingOrderEndpoint extends AbstractMarshallingPayloadEndpoint
                 it is a normal transactional service, probably using DAOs to obtain data from a database.
                 In the <methodname>invokeInternal</methodname> method, we cast the request object to an
                 <classname>OrderRequest</classname> object, which is the JAXB object representing the payload of the
-                request. Using the identifier of that request, we obtain an order from our business service, which we
-                returned. The returned object is marshalled into XML, and used as the payload of the response message.
+                request. Using the identifier of that request, we obtain an order from our business service and return
+                it. The returned object is marshalled into XML, and used as the payload of the response message.
                 The SOAP request handled by this endpoint will look like:
             </para>
             <programlisting id="server-order-request"><![CDATA[<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
@@ -366,10 +366,10 @@ public class MarshallingOrderEndpoint extends AbstractMarshallingPayloadEndpoint
         <section id="server-at-endpoint">
             <title><interfacename>@Endpoint</interfacename></title>
             <para>
-                The previous two programming models were based on inheritance, and handled individual XML mesages.
-                Spring Web Services offer another endpoint with which you aggregate multiple handling into one
-                controller, thus grouping functionality together. This model is based on annotations, so you can only
-                use it under Java 5 and higher. Here is an example that uses the same marshalled objects as above:
+                The previous two programming models were based on inheritance, and handled individual XML messages.
+                Spring Web Services offer another endpoint with which you can aggregate multiple handling into one
+                controller, thus grouping functionality together. This model is based on annotations, so you can use
+                it only with Java 5 and higher. Here is an example that uses the same marshalled objects as above:
             </para>
             <programlisting><![CDATA[package samples;
 
@@ -466,7 +466,7 @@ public class AnnotationOrderEndpoint {
     @PayloadRoot(localPart = "orderRequest", namespace = "http://samples")
     public Source getOrder(]]><emphasis role="bold"><![CDATA[@XPathParam("/s:orderRequest/@id") double orderId]]></emphasis><![CDATA[) {
         Order order = orderService.getOrder((int) orderId);
-        // create Source from order and return it
+        ]]><lineannotation>// create Source from order and return it</lineannotation><![CDATA[
     }
 
 }]]></programlisting>
@@ -517,9 +517,9 @@ public class AnnotationOrderEndpoint {
             <interfacename>EndpointMapping</interfacename>.
         </para>
         <para>
-            A <interfacename>EndpointMapping</interfacename> delivers a <classname>EndpointInvocationChain</classname>,
+            An <interfacename>EndpointMapping</interfacename> delivers a <classname>EndpointInvocationChain</classname>,
             which contains the endpoint that matches the incoming request, and may also contain a list of endpoint
-            interceptors that are applied to the request and response. When a request comes in, the
+            interceptors that will be applied to the request and response. When a request comes in, the
             <classname>MessageDispatcher</classname> will hand it over to the endpoint mapping to let it inspect the
             request and come up with an appropriate <classname>EndpointInvocationChain</classname>. Then
             the <classname>MessageDispatcher</classname> will invoke the endpoint and any interceptors in the chain.
@@ -528,7 +528,8 @@ public class AnnotationOrderEndpoint {
             The concept of configurable endpoint mappings that can optionally contain interceptors (which can manipulate
             the request or the response, or both) is extremely powerful. A lot of supporting functionality can be built
             into custom <interfacename>EndpointMapping</interfacename>s. For example, there could be a custom endpoint mapping that
-            chooses an endpoint not only based on the contents of a message, but also a specific SOAP headers.
+            chooses an endpoint not only based on the contents of a message, but also on a specific SOAP header(or
+            indeed multiple SOAP headers).
         </para>
         <para>
             Most endpoint mappings inherit from the <classname>AbstractEndpointMapping</classname>, which offers an
@@ -581,7 +582,7 @@ public class AnnotationOrderEndpoint {
                 <classname>PayloadRootQNameEndpointMapping</classname>, you can use the <literal>SOAPAction</literal>
                 HTTP header to route messages. Every client sends this header when making a SOAP request, and the
                 header value used for a request is defined in the WSDL. By making the <literal>SOAPAction</literal>
-                unique per operation, you can use it a a discriminator. Here is an example:
+                unique per operation, you can use it as a discriminator. Here is an example:
             </para>
             <programlisting><![CDATA[<beans>
     <bean id="endpointMapping" class="org.springframework.ws.soap.server.endpoint.mapping.SoapActionEndpointMapping">
@@ -602,10 +603,10 @@ public class AnnotationOrderEndpoint {
     </bean>
 </beans>]]></programlisting>
             <para>
-                The mapping above routes requests which have the a <literal>SOAPAction</literal> of
+                The mapping above routes requests which have a <literal>SOAPAction</literal> of
                 <uri>http://samples/RequestOrder</uri> to the <literal>'getOrderEndpoint'</literal>. Requests with
                 <uri>http://samples/CreateOrder</uri> will be routed to the <literal>'createController'</literal>.
-                Note that using SOAP Action headers is SOAP-specific, so it cannot be used when using Plain Old XML.
+                Note that using SOAP Action headers is SOAP-specific, so it cannot be used with Plain Old XML messages.
             </para>
         </section>
         <section id="server-method-endpoint-mapping">
@@ -639,15 +640,15 @@ public class AnnotationOrderEndpoint {
         <section id="server-endpoint-interceptor">
             <title>Intecepting requests - the <interfacename>EndpointInterceptor</interfacename> interface</title>
             <para>
-                The endpoint mapping mechanism has the notion of endpoint interceptors, that can be extremely useful
+                The endpoint mapping mechanism has the notion of endpoint interceptors. These can be extremely useful
                 when you want to apply specific functionality to certain requests, for example, dealing with
-                security-related SOAP headers, or logging the request and response message.
+                security-related SOAP headers, or the logging of request and response message.
             </para>
             <para>
-                Interceptors located in the endpoint mapping must implement
-                <interfacename>EndpointInterceptor</interfacename> from the
+                Interceptors located in the endpoint mapping must implement the
+                <interfacename>EndpointInterceptor</interfacename> interface from the
                 <package>org.springframework.ws.server</package> package. This interface defines three methods, one that
-                can be used for handling the request message has been determined <emphasis>before</emphasis> the actual
+                can be used for handling the request message <emphasis>before</emphasis> the actual
                 endpoint will be executed, one that can be used for handling a normal response message, and one that
                 can be used for handling fault messages, both of which will be called <emphasis>after</emphasis> the
                 endpoint is executed. These three methods should provide enough flexibility to do all kinds of
@@ -659,7 +660,7 @@ public class AnnotationOrderEndpoint {
                 returns <literal>true</literal>, the endpoint execution chain will continue, when it returns
                 <literal>false</literal>, the <classname>MessageDispatcher</classname> interprets this to mean that
                 the interceptor itself
-                has taken care of things and does not continue executing the other interceptors and the actual endoint
+                has taken care of things and does not continue executing the other interceptors and the actual endpoint
                 in the invocation chain. The <methodname>handleResponse(..)</methodname> and
                 <methodname>handleFault(..)</methodname> methods also have a boolean return value. When these methods
                 return <literal>false</literal>, the response will not be sent back to the client.
@@ -676,8 +677,8 @@ public class AnnotationOrderEndpoint {
                     When developing a Web service, it can be useful to log the incoming and outgoing XML messages to
                     the log. Spring Web Services facilitates this with the
                     <classname>PayloadLoggingInterceptor</classname> and the
-                    <classname>SoapEnvelopeLoggingInterceptor</classname>. The former just logs the payload of the
-                    message to the Commons Logging Log; the latter logs the entire SOAP Envelope, including SOAP
+                    <classname>SoapEnvelopeLoggingInterceptor</classname>. The former logs just the payload of the
+                    message to the Commons Logging Log; the latter logs the entire SOAP envelope, including SOAP
                     headers. This example shows you how to define them in an endpoint mapping:
                 </para>
                 <programlisting><![CDATA[<beans>
@@ -756,7 +757,7 @@ public class AnnotationOrderEndpoint {
                     response messages using <filename>/WEB-INF/oldResponses.xslt</filename>. Note that, since
                     endpoint interceptors are registered at the endpoint mapping level, you can simply create a
                     endpoint mapping that applies to the "old style" messages, and add the interceptor to that mapping.
-                    Hence, the transformation will only apply to these "old style" message.
+                    Hence, the transformation will apply only to these "old style" message.
                 </para>
             </section>
         </section>
@@ -769,23 +770,21 @@ public class AnnotationOrderEndpoint {
             Endpoint exception resolvers somewhat resemble the exception mappings that can be
             defined in the web application descriptor <filename>web.xml</filename>.
             However, they provide a more flexible way to handle exceptions. They provide information about what
-            endpoint was invoked when the exception was thrown.
-            Furthermore, a programmatic way of handling exceptions gives you many more options for how to respond
-            appropriately.
-            Finally, rather than expose the innards of your application by giving an exception and stack trace, you
-            can handle the exception any way you want, for example return a SOAP fault with a specific fault code and string.
+            endpoint was invoked when the exception was thrown. Furthermore, a programmatic way of handling exceptions
+            gives you many more options for how to respond appropriately. Rather than expose the innards of your
+            application by giving an exception and stack trace, you can handle the exception any way you want, for
+            example by returning a SOAP fault with a specific fault code and string.
         </para>
         <para>
-            Endpoint exception resolvers are automatically picked up by the <classname>MessageDispatcher</classname>, so
-            you don't have to configure them explicitly.
+            Endpoint exception resolvers are automatically picked up by the <classname>MessageDispatcher</classname>,
+            so no explicit configuration is necessary.
         </para>
         <para>
             Besides implementing the <classname>EndpointExceptionResolver</classname> interface, which is only a
             matter of implementing the <methodname>resolveException(MessageContext, endpoint, Exception)</methodname>
             method, you may also use one of the default implementations.
-            The simplest implementation is the <classname>SimpleSoapExceptionResolver</classname>, which simply
-            always creates a SOAP 1.1 Server or SOAP 1.2 Receiver Fault, and uses the exception message as the fault
-            string.
+            The simplest implementation is the <classname>SimpleSoapExceptionResolver</classname>, which just
+            creates a SOAP 1.1 Server or SOAP 1.2 Receiver Fault, and uses the exception message as the fault string.
         </para>
         <para>
             A more sophisticated implementation is the <classname>SoapFaultMappingExceptionResolver</classname>.
@@ -808,11 +807,10 @@ public class AnnotationOrderEndpoint {
 </beans>]]></programlisting>
         <para>
             The key values and default endpoint use the format <literal>faultCode,faultString,locale</literal>, where
-            only the fault code is required.
-            If the fault string is not set, it will default to the exception message.
-            If the language is not set, it will default to English.
-            The configuration above will map exceptions of type <classname>ValidationFailureException</classname>
-            to a sender side SOAP Fault with a fault string "Invalid request":
+            only the fault code is required. If the fault string is not set, it will default to the exception message.
+            If the language is not set, it will default to English. The above configuration will map exceptions of
+            type <classname>ValidationFailureException</classname> to a client-side SOAP Fault with a fault string
+            <literal>"Invalid request"</literal>, as can be seen in the following response:
         </para>
         <programlisting><![CDATA[<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
     <SOAP-ENV:Body>]]><emphasis role="bold"><![CDATA[
@@ -823,11 +821,9 @@ public class AnnotationOrderEndpoint {
     </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>]]></programlisting>
         <para>
-            If any other exception occurs, it will return the default fault: a server side fault with the exception
+            If any other exception occurs, it will return the default fault: a server-side fault with the exception
             message as fault string.
-        </para>
-        <para>
-            Finally, it is possible to annotate exception classes with the <interfacename>@SoapFault</interfacename>
+            Finally, it is also possible to annotate exception classes with the <interfacename>@SoapFault</interfacename>
             annotation, to indicate the SOAP Fault that should be returned whenever that exception is thrown.
             The elements of the annotation include a fault code enumeration, fault string or reason, and language. Here
             is an example exception:
@@ -845,9 +841,8 @@ public class MyBusinessException extends Exception {
     }
 }]]></programlisting>
         <para>
-            Whever the <classname>MyBusinessException</classname> is thrown with the constructor string
-            <literal>Oops!</literal> during endpoint invocation, it will result in
-            the following response:
+            Whenever the <classname>MyBusinessException</classname> is thrown with the constructor string
+            <literal>"Oops!"</literal> during endpoint invocation, it will result in the following response:
         </para>
         <programlisting><![CDATA[<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
 <SOAP-ENV:Body>
