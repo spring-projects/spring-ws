@@ -5,26 +5,21 @@
 
 	<bookinfo>
 		<title>Spring Web Services - Reference Documentation</title>
-        <releaseinfo> 
-        &version; 
-        </releaseinfo> 
+        <releaseinfo>&version;</releaseinfo> 
 
 		<authorgroup>
 			<author>
 				<firstname>Arjen</firstname>
 				<surname>Poutsma</surname>
 			</author>
-			<author>
-				<firstname>Rick</firstname>
-				<surname>Evans</surname>
-			</author>
 		</authorgroup>
 
 		<legalnotice>
 			<para>
-				Copies of this document may be made for your own use and for distribution to others, provided that you
-				do not charge any fee for such copies and further provided that each copy contains this Copyright
-				Notice, whether distributed in print or electronically.
+				Copies of this document may be made for your own use and for distribution
+            to others, provided that you do not charge any fee for such copies and
+            further provided that each copy contains this Copyright Notice, whether
+            distributed in print or electronically.
 			</para>
 		</legalnotice>
 	</bookinfo>
@@ -36,9 +31,10 @@
         <title>Introduction</title>
         <partintro>
             <para>
-                This first part of the reference documentation gives an overview of Spring Web Services, and the
-                underlying concepts. Spring-WS is introduced, and the concepts behind contract-first
-                Web service development are explained.
+                This first part of the reference documentation gives an overview of
+                Spring Web Services, and the underlying concepts. Spring-WS is
+                introduced, and the concepts behind contract-first Web service
+                development are explained.
             </para>
         </partintro>
     	<xi:include href="what-is-spring-ws.xml" />
@@ -49,29 +45,29 @@
         <title>Reference</title>
         <partintro>
             <para>
-                This part of the reference documentation gives an in-depth look into the various components that
-                comprise Spring Web Services.
-                It consists of a chapter which discusses the parts common to both client- and server-side, a chapter
-                about writing server-side Web services, about using Web services on the client-side, using WS-Security,
-                and the flexible Object/XML mapping.
+                This part of the reference documentation details the various components
+                that comprise Spring Web Services. This includes a chapter that
+                discusses the parts common to both client- and server-side WS, a
+                chapter devoted to the specifics of writing server-side Web services,
+                a chapter about using Web services on the client-side, and chapters
+                on using WS-Security and Object/XML mapping.
             </para>
         </partintro>
         <xi:include href="common.xml" />
         <xi:include href="server.xml" />
-    	<xi:include href="client.xml" />
-    	<xi:include href="security.xml" />
-    	<xi:include href="oxm.xml" />
+    	  <xi:include href="client.xml" />
+    	  <xi:include href="security.xml" />
+    	  <xi:include href="oxm.xml" />
     </part>
     <part id="resources">
         <title>Other Resources</title>
-
         <partintro>
           <para>
-              In addition to this reference documentation, a number of other resources
-              exist to help you learn how to use Spring Web Services. These resources are
-              discussed in this section.
+              In addition to this reference documentation, there exist a number of
+              other resources that may halp you learn how to use Spring Web Services.
+              These additional, third-party resources are enumerated in this section.
           </para>
         </partintro>
-    	<xi:include href="bibliography.xml" />
+    	  <xi:include href="bibliography.xml" />
     </part>
 </book>
