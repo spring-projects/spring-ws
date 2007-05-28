@@ -19,17 +19,27 @@ package org.springframework.ws.client;
 import org.springframework.ws.transport.TransportException;
 
 /**
- * Exception thrown whenever an transport error occurs on the client-side.
+ * Exception thrown whenever a transport error occurs on the client-side.
  *
  * @author Arjen Poutsma
  */
 public class WebServiceTransportException extends WebServiceIOException {
 
+    /**
+     * Create a new instance of the <code>WebServiceTransportException</code> class.
+     * @param msg the detail message
+     */
     public WebServiceTransportException(String msg) {
         super(msg);
     }
 
+    /**
+     * Create a new instance of the <code>WebServiceTransportException</code> class.
+     * @param msg the detail message
+     * @param ex  the root {@link TransportException}
+     */
     public WebServiceTransportException(String msg, TransportException ex) {
         super(msg, ex);
     }
+
 }
