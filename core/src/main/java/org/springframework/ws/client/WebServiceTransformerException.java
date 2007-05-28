@@ -19,17 +19,27 @@ package org.springframework.ws.client;
 import javax.xml.transform.TransformerException;
 
 /**
- * Exception thrown whenever an transformation error occurs on the client-side.
+ * Exception thrown whenever a transformation error occurs <i>on the client-side</i>.
  *
  * @author Arjen Poutsma
  */
 public class WebServiceTransformerException extends WebServiceClientException {
 
+    /**
+     * Create a new instance of the <code>WebServiceTransformerException</code> class.
+     * @param msg the detail message
+     */
     public WebServiceTransformerException(String msg) {
         super(msg);
     }
 
+    /**
+     * Create a new instance of the <code>WebServiceTransformerException</code> class.
+     * @param msg the detail message
+     * @param ex  the root {@link Throwable exception}
+     */
     public WebServiceTransformerException(String msg, TransformerException ex) {
         super(msg, ex);
     }
+
 }
