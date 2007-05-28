@@ -68,7 +68,7 @@ public interface Marshaller {
     void marshal(Object graph, Result result)
         throws XmlMappingException, IOException;
 }]]></programlisting>
-                The <interface>Marshaller</interface> interface has one main method, which marshals the given
+                The <interfacename>Marshaller</interfacename> interface has one main method, which marshals the given
                 object to a given <interfacename>javax.xml.transform.Result</interfacename>. Result is a tagging 
                 interface that basically represents an XML output abstraction: concrete implementations wrap various XML
                 representations, as indicated in the table below.
