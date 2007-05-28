@@ -108,7 +108,7 @@
         <section>
             <title><classname>MessageDispatcherServlet</classname></title>
             <para>
-                The <classname>MessageDispatcherServlet</classname> is a standard <interface>Servlet</interface> which
+                The <classname>MessageDispatcherServlet</classname> is a standard <interfacename>Servlet</interfacename> which
                 conveniently extends from the standard Spring Web <classname>DispatcherServlet</classname>, and wraps
                 a <classname>MessageDispatcher</classname>.  As such, it combines the attributes of these into one:
                 as a <classname>MessageDispatcher</classname>, it follows the same request handling flow as described
@@ -175,7 +175,7 @@
         <para>
             As you can see, the <interfacename>PayloadEndpoint</interfacename> interface defines a single method that
             is invoked with the XML payload of a request (typically the contents of the SOAP Body, see
-            <xref linkend="soap-message"/>). The returned <interface>Source</interface>, if any, is stored in the
+            <xref linkend="soap-message"/>). The returned <interfacename>Source</interfacename>, if any, is stored in the
             response XML message. While the <interfacename>PayloadEndpoint</interfacename> interface is quite abstract,
             Spring-WS offers a lot of endpoint implementations out of the box that already contain a lot of the
             functionality you might need. The <interfacename>PayloadEndpoint</interfacename> interface just defines the

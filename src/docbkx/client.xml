@@ -121,8 +121,8 @@ public class WebServiceClient {
                 In order to facilitate the sending of plain Java objects, the <classname>WebServiceTemplate</classname>
                 has a number of send methods that take an object as an argument for a message's data content.
                 The method <methodname>marshalSendAndReceive</methodname> in <classname>WebServiceTemplate</classname>
-                delegates the conversion of the request object to XML to a <interface>Marshaller</interface>, and
-                the conversion of the response XML to an object to an <interface>Unmarshaller</interface>.
+                delegates the conversion of the request object to XML to a <interfacename>Marshaller</interfacename>, and
+                the conversion of the response XML to an object to an <interfacename>Unmarshaller</interfacename>.
                 For more information about marshalling and unmarshaller, refer to <xref linkend="oxm"/>.
                 By using the marshallers, you and your application code can focus on the business object that is being
                 sent or received and not be concerned with the details of how it is represented as XML.
@@ -133,7 +133,7 @@ public class WebServiceClient {
         </section>
         <section>
             <title>
-                <interface>WebServiceMessageCallback</interface>
+                <interfacename>WebServiceMessageCallback</interfacename>
             </title>
             <para>
                 To accommodate the setting of SOAP headers, and other settings on the message, the
