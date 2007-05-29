@@ -18,11 +18,16 @@ package org.springframework.ws.transport.http;
 
 import java.io.IOException;
 
+import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpConnectionManager;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
+import org.apache.commons.httpclient.NTCredentials;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.transport.WebServiceConnection;
 
@@ -31,41 +36,39 @@ import org.springframework.ws.transport.WebServiceConnection;
  * Commons HttpClient</a> to execute POST requests.
  * <p/>
  * Allows to use a preconfigured HttpClient instance, potentially with authentication, HTTP connection pooling, etc.
+ * Authentication can also be set by injecting a {@link Credentials} instance (such as the {@link
+ * UsernamePasswordCredentials}).
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.transport.http.HttpUrlConnectionMessageSender
+ * @see HttpUrlConnectionMessageSender
+ * @see HttpClient
+ * @see #setCredentials(Credentials)
  */
-public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSender implements DisposableBean {
+public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSender
+        implements InitializingBean, DisposableBean {
 
     private HttpClient httpClient;
 
+    private Credentials credentials;
+
+    private AuthScope authScope;
+
     /**
-     * Create a new instance of the <code>CommonsHttpMessageSender</code> with a default <code>HttpClient</code> that
-     * uses a default <code>MultiThreadedHttpConnectionManager</code>.
-     *
-     * @see org.apache.commons.httpclient.HttpClient
-     * @see org.apache.commons.httpclient.MultiThreadedHttpConnectionManager
+     * Create a new instance of the <code>CommonsHttpMessageSender</code> with a default {@link HttpClient} that uses a
+     * default {@link MultiThreadedHttpConnectionManager}.
      */
     public CommonsHttpMessageSender() {
         httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
     }
 
     /**
-     * Create a new instance of the <code>CommonsHttpMessageSender</code> with the given <code>HttpClient</code>
-     * instance.
+     * Create a new instance of the <code>CommonsHttpMessageSender</code> with the given  {@link HttpClient} instance.
      *
      * @param httpClient the HttpClient instance to use for this sender
      */
     public CommonsHttpMessageSender(HttpClient httpClient) {
         Assert.notNull(httpClient, "httpClient must not be null");
         this.httpClient = httpClient;
-    }
-
-    public void destroy() throws Exception {
-        HttpConnectionManager connectionManager = httpClient.getHttpConnectionManager();
-        if (connectionManager instanceof MultiThreadedHttpConnectionManager) {
-            ((MultiThreadedHttpConnectionManager) connectionManager).shutdown();
-        }
     }
 
     /** Returns the <code>HttpClient</code> used by this message sender. */
@@ -78,6 +81,54 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
         this.httpClient = httpClient;
     }
 
+    /** Returns the credentials to be used. */
+    public Credentials getCredentials() {
+        return credentials;
+    }
+
+    /**
+     * Sets the credentials to be used. If not set, no authentication is done.
+     *
+     * @see UsernamePasswordCredentials
+     * @see NTCredentials
+     */
+    public void setCredentials(Credentials credentials) {
+        this.credentials = credentials;
+    }
+
+    /**
+     * Returns the authentication scope to be used. Only used when the <code>credentials</code> property has been set.
+     * <p/>
+     * By default, the {@link AuthScope#ANY} is returned.
+     */
+    public AuthScope getAuthScope() {
+        return authScope != null ? authScope : AuthScope.ANY;
+    }
+
+    /**
+     * Sets the authentication scope to be used. Only used when the <code>credentials</code> property has been set.
+     * <p/>
+     * By default, the {@link AuthScope#ANY} is used.
+     *
+     * @see #setCredentials(Credentials)
+     */
+    public void setAuthScope(AuthScope authScope) {
+        this.authScope = authScope;
+    }
+
+    public void afterPropertiesSet() throws Exception {
+        if (getCredentials() != null) {
+            getHttpClient().getState().setCredentials(getAuthScope(), getCredentials());
+        }
+    }
+
+    public void destroy() throws Exception {
+        HttpConnectionManager connectionManager = getHttpClient().getHttpConnectionManager();
+        if (connectionManager instanceof MultiThreadedHttpConnectionManager) {
+            ((MultiThreadedHttpConnectionManager) connectionManager).shutdown();
+        }
+    }
+
     public WebServiceConnection createConnection(String uri) throws IOException {
         PostMethod postMethod = new PostMethod(uri);
         if (isAcceptGzipEncoding()) {
@@ -87,3 +138,4 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
     }
 
 }
+
