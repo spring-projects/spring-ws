@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2006-2007 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,45 +27,60 @@ import org.springframework.ws.wsdl.WsdlDefinitionException;
 import org.springframework.xml.sax.SaxUtils;
 
 /**
- * Default implementation of the <code>Wsdl11Definition</code> interface. Allows a WSDL to be set by the
- * <code>wsdl</code> property.
+ * The default {@link Wsdl11Definition} implementation.
+ *
+ * <p>Allows a WSDL to be set by the {@link #setWsdl wsdl} property, or directly
+ * in the {@link #SimpleWsdl11Definition(org.springframework.core.io.Resource) constructor}.
  *
  * @author Arjen Poutsma
- * @see #setWsdl(org.springframework.core.io.Resource)
  */
 public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBean {
 
     private Resource wsdlResource;
 
+
     /**
-     * Constructs a new <code>SimpleWsdl11Definition</code>. Calling <code>setWsdl</code> is required.
-     *
-     * @see #setWsdl(org.springframework.core.io.Resource)
+     * Create a new instance of the <code>SimpleWsdl11Definition</code> class.
+     * <p>A subsequent call to the {@link #setWsdl(org.springframework.core.io.Resource)}
+     * method is required.
      */
     public SimpleWsdl11Definition() {
     }
 
-    /** Constructs a new <code>SimpleWsdl11Definition</code> with the given resource. */
+    /**
+     * Create a new instance of the <code>SimpleWsdl11Definition</code> class.
+     * @param wsdlResource the WSDL resource; must not be <code>null</code>
+     * @throws IllegalArgumentException if the supplied <code>wsdlResource</code> is <code>null</code>
+     */
     public SimpleWsdl11Definition(Resource wsdlResource) {
         Assert.notNull(wsdlResource, "wsdlResource must not be null");
         this.wsdlResource = wsdlResource;
     }
 
+
     public void afterPropertiesSet() throws Exception {
-        Assert.notNull(wsdlResource, "wsdl is required");
-        Assert.isTrue(wsdlResource.exists(), "wsdl \"" + wsdlResource + "\" does not exit");
+        Assert.notNull(this.wsdlResource, "wsdl is required");
+        Assert.isTrue(this.wsdlResource.exists(), "wsdl '" + this.wsdlResource + "' does not exit");
     }
+
 
     public Source getSource() {
         try {
-            return new SAXSource(SaxUtils.createInputSource(wsdlResource));
+            return new SAXSource(SaxUtils.createInputSource(this.wsdlResource));
         }
         catch (IOException ex) {
-            throw new WsdlDefinitionException("Could not create source from " + wsdlResource, ex);
+            throw new WsdlDefinitionException("Could not create source from " + this.wsdlResource, ex);
         }
     }
 
+
+    /**
+     * Set the WSDL resource to be exposed by calls to this instances'
+     * {@link #getSource()} method.
+     * @param wsdlResource the WSDL resource
+     */
     public void setWsdl(Resource wsdlResource) {
         this.wsdlResource = wsdlResource;
     }
+
 }
