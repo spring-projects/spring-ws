@@ -798,7 +798,7 @@ public class AnnotationOrderEndpoint {
         </para>
         <programlisting><![CDATA[<beans>
     <bean id="exceptionResolver"
-        class="org.springframework.ws.soap.endpoint.SoapFaultMappingExceptionResolver">
+        class="org.springframework.ws.soap.server.endpoint.SoapFaultMappingExceptionResolver">
     <property name="defaultFault" value="SERVER">
     </property>
     <property name="exceptionMappings">
