@@ -575,7 +575,7 @@ public class AnnotationOrderEndpoint {
                 be routed to the <literal>'createOrderEndpoint'</literal>.
             </para>
         </section>
-        <section>
+        <section id="server-soap-action-endpoint-mapping">
             <title><classname>SoapActionEndpointMapping</classname></title>
             <para>
                 Rather than base the routing on the contents of the message with the
@@ -606,8 +606,13 @@ public class AnnotationOrderEndpoint {
                 The mapping above routes requests which have a <literal>SOAPAction</literal> of
                 <uri>http://samples/RequestOrder</uri> to the <literal>'getOrderEndpoint'</literal>. Requests with
                 <uri>http://samples/CreateOrder</uri> will be routed to the <literal>'createController'</literal>.
-                Note that using SOAP Action headers is SOAP-specific, so it cannot be used with Plain Old XML messages.
             </para>
+            <caution>
+                <para>
+                    Note that using SOAP Action headers is SOAP 1.1-specific, so it cannot be used when using Plain Old
+                    XML, nor with SOAP 1.2.
+                </para>
+            </caution>
         </section>
         <section id="server-method-endpoint-mapping">
             <title><classname>MethodEndpointMapping</classname></title>

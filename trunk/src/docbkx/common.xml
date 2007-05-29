@@ -96,14 +96,54 @@
                 <title><classname>SaajSoapMessageFactory</classname></title>
                 <para>
                     The <classname>SaajSoapMessageFactory</classname> uses the SOAP with Attachments API for Java to
-                    create <classname>SoapMessage</classname> implementations. SAAJ is part of J2EE 1.4, so it should be
-                    supported under most modern application servers. You wire up a
+                    create <classname>SoapMessage</classname> implementations. <acronym>SAAJ</acronym> is part of
+                    <acronym>J2EE</acronym> 1.4, so it should be supported under most modern application servers.
+                    Here is an overview of the <acronym>SAAJ</acronym> versions supplied
+                    by common application servers:
+                    <informaltable>
+                        <tgroup cols="2">
+                            <thead>
+                                <row>
+                                    <entry>Application Server</entry>
+                                    <entry><acronym>SAAJ</acronym> Version</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>BEA WebLogic 8</entry>
+                                    <entry>1.1</entry>
+                                </row>
+                                <row>
+                                    <entry>BEA WebLogic 9</entry>
+                                    <entry>1.1/1.2<footnote>
+                                        <para>
+                                            Weblogic 9 has a known bug in the <acronym>SAAJ</acronym> 1.2
+                                            implementation: it implement all the 1.2 interfaces, but throws a
+                                            <classname>UnsupportedOperationException</classname> when called.
+                                            Spring Web Services has a workaround: it uses <acronym>SAAJ</acronym> 1.1
+                                            when operating on WebLogic 9.
+                                        </para>
+                                    </footnote></entry>
+                                </row>
+                                <row>
+                                    <entry>IBM WebSphere 6</entry>
+                                    <entry>1.2</entry>
+                                </row>
+                                <row>
+                                    <entry>SUN Glassfish 1</entry>
+                                    <entry>1.3</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </informaltable>
+                    Additionally, Java SE 6 includes <acronym>SAAJ</acronym> 1.3.
+                    You wire up a
                     <classname>SaajSoapMessageFactory</classname> like so:
                 <programlisting><![CDATA[<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory" />]]></programlisting>
                 </para>
                 <note>
                     <para>
-                        SAAJ is based on DOM, the Document Object Model. This means that all SOAP messages are
+                        <acronym>SAAJ</acronym> is based on DOM, the Document Object Model. This means that all SOAP messages are
                         stored <emphasis>in memory</emphasis>. For larger SOAP messages, this may not be very performant.
                         In that case, the <classname>AxiomSoapMessageFactory</classname> might be more applicable.
                     </para>
@@ -113,9 +153,9 @@
                 <title><classname>AxiomSoapMessageFactory</classname></title>
                 <para>
                     The <classname>AxiomSoapMessageFactory</classname> uses the AXis 2 Object Model to create
-                    <interfacename>SoapMessage</interfacename> implementations. AXIOM is based on  StAX, the Streaming
-                    API for XML. StAX provides a pull-based mechanism for reading XML messages, which can be more
-                    efficient for larger messages.
+                    <interfacename>SoapMessage</interfacename> implementations. <acronym>AXIOM</acronym> is based on
+                    <acronym>StAX</acronym>, the Streaming API for XML. StAX provides a pull-based mechanism for
+                    reading XML messages, which can be more efficient for larger messages.
                 </para>
                 <para>
                     To increase reading performance on the <classname>AxiomSoapMessageFactory</classname>,
@@ -131,6 +171,53 @@
     <property name="payloadCaching" value="true"/>
 </bean>]]></programlisting>
                 </para>
+            </section>
+            <section id="soap_11_or_12">
+                <title><acronym>SOAP</acronym> 1.1 or 1.2</title>
+                <para>
+                    Both the <classname>SaajSoapMessageFactory</classname> and the
+                    <classname>AxiomSoapMessageFactory</classname> have a <property>soapVersion</property> property,
+                    where you can inject a <interfacename>SoapVersion</interfacename> constant. By default, the version
+                    is 1.1, but you an set it to 1.2 like so:
+                </para>
+                <programlisting><![CDATA[
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory">
+        <property name="soapVersion">
+            <util:constant static-field="org.springframework.ws.soap.SoapVersion.SOAP_12"/>
+        </property>
+    </bean>
+
+</beans>]]></programlisting>
+                <para>
+                    In the example above, we define a <classname>SaajSoapMessageFactory</classname> that only accepts
+                    <acronym>SOAP</acronym> 1.2 messages.
+                </para>
+                <caution>
+                    <para>
+                        Even though both versions of <acronym>SOAP</acronym> are quite similar in format, the 1.2
+                        version is not backwards compatible with 1.1 because it uses a different XML namespace.
+                        Other major differences between <acronym>SOAP</acronym> 1.1 and 1.2 include the different structure
+                        of a Fault, and the fact that <literal>SOAPAction</literal> HTTP headers are deprecated, which
+                        means that you cannot use the <link linkend="server-soap-action-endpoint-mapping">
+                        <classname>SoapActionEndpointMapping</classname></link> or the
+                        <classname>SoapActionAnnotationMethodEndpointMapping</classname>.
+                    </para>
+                    <para>
+                        One important thing to note with <acronym>SOAP</acronym> version numbers, or WS-* specification
+                        version numbers in general, is that the latest version of a specification is
+                        generally not the most popular version.
+                        For <acronym>SOAP</acronym>, this means that currently, the best version to use is 1.1.
+                        Version 1.2 might become more popular in the future, but currently 1.1 is the safest bet.
+                    </para>
+                </caution>
             </section>
         </section>
         <section id="message-context">
@@ -257,7 +344,7 @@ public class MyXPathClass  {
         <section id="xpath-template">
             <title><classname>XPathTemplate</classname></title>
             <para>
-                The <interfacename>XPathExpression</interfacename> allows you to evaluate only a single, pre-compiled
+                The <interfacename>XPathExpression</interfacename> only allows you to evaluate a single, pre-compiled
                 expression. A more flexible, though slower, alternative is the <classname>XpathTemplate</classname>.
                 This class follows the common template pattern used throughout Spring (JdbcTemplate, JmsTemplate, etc.).
                 Here is an example:
