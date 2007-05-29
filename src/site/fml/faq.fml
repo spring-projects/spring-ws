@@ -139,7 +139,7 @@ javax.xml.soap.MessageFactory.newInstance(Ljava/lang/String;)Ljavax/xml/soap/Mes
                     Weblogic 9 has a known bug in the SAAJ 1.2 implementation: it implement all the 1.2 interfaces,
                     but throws <tt>UnsupportedOperationExceptions</tt> when you call them.
                     Confusingly, the exception message is <tt>This class does not support SAAJ 1.1</tt>, even though
-                    supports SAAJ 1.1 just fine; it just doesn't support SAAJ <strong>1.2</strong>.
+                    it supports SAAJ 1.1 just fine; it just doesn't support SAAJ <strong>1.2</strong>.
                     See also <a href="http://forums.bea.com/bea/thread.jspa?threadID=600007964">this BEA forum post</a>.
                 </p>
                 <p>
