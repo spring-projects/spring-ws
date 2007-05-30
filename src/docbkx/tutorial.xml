@@ -480,10 +480,10 @@
 </screen>
         <para>
             This command will create a new directory called <filename>holidayService</filename>. In this directory,
-            there is a <filename>src/main/webapp</filename> directory, which will contain the root of the WAR file.
-            You will find the standard web application deployment descriptor <filename>WEB-INF/web.xml</filename> here,
-            which defines a Spring-WS <classname>MessageDispatcherServlet</classname> and maps all incoming requests
-            to this servlet:
+            there is a <filename>'src/main/webapp'</filename> directory, which will contain the root of the WAR file.
+            You will find the standard web application deployment descriptor <filename>'WEB-INF/web.xml'</filename>
+            here, which defines a Spring-WS <classname>MessageDispatcherServlet</classname> and maps all incoming
+            requests to this servlet:
         </para>
         <programlisting><![CDATA[
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee"
@@ -494,8 +494,9 @@
 
     <display-name>MyCompany HR Holiday Service</display-name>
 
+    ]]><lineannotation>&lt;!-- take especial notice of the name of this servlet --&gt;</lineannotation><![CDATA[
     <servlet>
-        <servlet-name>spring-ws</servlet-name>
+        <servlet-name>]]><lineannotation><emphasis role="bold">spring-ws</emphasis></lineannotation><![CDATA[</servlet-name>
         <servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
     </servlet>
 
@@ -506,23 +507,29 @@
 
 </web-app>]]></programlisting>
         <para>
-            (We could have made the servlet more restrictive by using the url pattern <literal>/humanresources</literal>,
-            but this will suffice for now.)
+            In addition to the above <filename>'WEB-INF/web.xml'</filename> file, you will also need another,
+            Spring-WS-specific configuration file, named <filename>'WEB-INF/spring-ws-servlet.xml'</filename>.
+            This file contains all of the Spring-WS-specific beans such as <literal>EndPoints</literal>,
+            <literal>WebServiceMessageReceivers</literal>, and suchlike, and is used to create a new Spring container.
+            The name of this file is derived from the name of the attendant servlet (in this case
+            <literal>'spring-ws'</literal>) with <literal>'-servlet.xml'</literal> appended to it. So if you defined a
+            <classname>MessageDispatcherServlet</classname> with the name <literal>'dynamite'</literal>, the name of the
+            Spring-WS-specific configuration file would be <filename>'WEB-INF/dynamite-servlet.xml'</filename>.
         </para>
         <para>
-            Additionally, there is <filename>WEB-INF/spring-ws-servlet.xml</filename>, which is the Spring application
-            context configuration file that will contain the Spring-WS bean definitions.
+            (You can see the contents of the <filename>'WEB-INF/spring-ws-servlet.xml'</filename> file for this
+            example <link linkend="tutorial.example.sws-conf-file">beginning here</link>.)
         </para>
     </section>
     <section id="tutorial.implementing.endpoint">
         <title>Implementing the Endpoint</title>
         <para>
-           In Spring-WS, you will implement <emphasis>Endpoints</emphasis> to handle incoming XML messages. There
-           are two flavors of endpoints: <link linkend="message-endpoint">message endpoints</link> and
-           <link linkend="payload-endpoint">payload endpoints.</link>.
-           <emphasis>Message endpoints</emphasis> give access to the entire XML message, including SOAP headers. Typically, the
-           endpoint will only be interested in the <emphasis>payload</emphasis> of the message, that is the contents
-           of the SOAP body. In that case, creating a <emphasis>payload endpoint</emphasis> makes more sense.
+           In Spring-WS, you will implement <emphasis>Endpoints</emphasis> to handle incoming XML messages.
+           There are two flavors of endpoints: <link linkend="message-endpoint">message endpoints</link> and
+           <link linkend="payload-endpoint">payload endpoints.</link>. <emphasis>Message endpoints</emphasis>
+           give access to the entire XML message, including SOAP headers. Typically, the endpoint will only be
+           interested in the <emphasis>payload</emphasis> of the message, that is the contents of the SOAP body.
+           In that case, creating a <emphasis>payload endpoint</emphasis> makes more sense.
         </para>
         <section>
             <title>Handling the XML Message</title>
@@ -654,9 +661,10 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
 <dependencies>]]></programlisting>
              <para>
                 Here is how we would configure these classes in our <filename>spring-ws-servlet.xml</filename>
-                application context configuration file:
+                Spring XML configuration file:
             </para>
-            <programlisting><![CDATA[<beans xmlns="http://www.springframework.org/schema/beans">
+            <programlisting id="tutorial.example.sws-conf-file"><![CDATA[
+<beans xmlns="http://www.springframework.org/schema/beans">
 
     <bean id="holidayEndpoint" class="com.mycompany.hr.ws.HolidayEndpoint">
         <constructor-arg ref="hrService"/>
