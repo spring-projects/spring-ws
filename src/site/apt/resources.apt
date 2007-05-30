@@ -64,7 +64,9 @@ Tools
 
 	These tools can help you test your Web service applications.
 	
-	* {{{http://www.soapui.org/}soapui}} is a desktop application for inspecting, invoking and testing (functional and load) of web services over HTTP
+	* {{{http://www.soapui.org/}soapui}} is a desktop application for inspecting, invoking and testing (functional and load) of web services over HTTP.
 
 	* {{{http://www.ws-i.org/deliverables/workinggroup.aspx?wg=testingtools}the WS-I testing tools}}, which make sure your Web service is {{{http://www.ws-i.org/Profiles/BasicProfile-1.1-2004-08-24.html}interoperable}}.
+
+	* {{{http://ws.apache.org/axis/java/user-guide.html#AppendixUsingTheAxisTCPMonitorTcpmon}Axis Tcpmon}} is a monitoring tool which allows you to see the XML as it is sent and received across the wire.
 
