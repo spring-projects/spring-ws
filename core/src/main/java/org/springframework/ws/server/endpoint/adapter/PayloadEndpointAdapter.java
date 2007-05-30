@@ -22,11 +22,15 @@ import javax.xml.transform.Transformer;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointAdapter;
+import org.springframework.ws.server.MessageDispatcher;
 import org.springframework.ws.server.endpoint.PayloadEndpoint;
+import org.springframework.ws.soap.server.SoapMessageDispatcher;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
  * Adapter to use a <code>PayloadEndpoint</code> as the endpoint for a <code>EndpointInvocationChain</code>.
+ * <p/>
+ * This adapter is registered by default by the {@link MessageDispatcher} and {@link SoapMessageDispatcher}.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.server.endpoint.PayloadEndpoint

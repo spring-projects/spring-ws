@@ -16,8 +16,6 @@
 
 package org.springframework.ws.server.endpoint.adapter;
 
-import java.lang.reflect.Method;
-
 import junit.framework.TestCase;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
@@ -38,25 +36,22 @@ public class MessageMethodEndpointAdapterTest extends TestCase {
     }
 
     public void testSupported() throws NoSuchMethodException {
-        Method noResponse = getClass().getMethod("supported", new Class[]{MessageContext.class});
-        MethodEndpoint methodEndpoint = new MethodEndpoint(this, noResponse);
+        MethodEndpoint methodEndpoint = new MethodEndpoint(this, "supported", new Class[]{MessageContext.class});
         assertTrue("Method unsupported", adapter.supportsInternal(methodEndpoint));
     }
 
     public void testUnsupportedMethodMultipleParams() throws NoSuchMethodException {
-        Method unsupported = getClass()
-                .getMethod("unsupportedMultipleParams", new Class[]{MessageContext.class, MessageContext.class});
-        assertFalse("Method supported", adapter.supportsInternal(new MethodEndpoint(this, unsupported)));
+        assertFalse("Method supported", adapter.supportsInternal(new MethodEndpoint(this, "unsupportedMultipleParams",
+                new Class[]{MessageContext.class, MessageContext.class})));
     }
 
     public void testUnsupportedMethodWrongParam() throws NoSuchMethodException {
-        Method unsupported = getClass().getMethod("unsupportedWrongParam", new Class[]{String.class});
-        assertFalse("Method supported", adapter.supportsInternal(new MethodEndpoint(this, unsupported)));
+        assertFalse("Method supported",
+                adapter.supportsInternal(new MethodEndpoint(this, "unsupportedWrongParam", new Class[]{String.class})));
     }
 
     public void testInvokeSupported() throws Exception {
-        Method supported = getClass().getMethod("supported", new Class[]{MessageContext.class});
-        MethodEndpoint methodEndpoint = new MethodEndpoint(this, supported);
+        MethodEndpoint methodEndpoint = new MethodEndpoint(this, "supported", new Class[]{MessageContext.class});
         assertFalse("Method invoked", supportedInvoked);
         adapter.invoke(messageContext, methodEndpoint);
         assertTrue("Method not invoked", supportedInvoked);

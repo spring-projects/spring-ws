@@ -17,29 +17,41 @@
 package org.springframework.ws.server.endpoint.mapping;
 
 import java.lang.reflect.Method;
-import javax.xml.transform.Transformer;
+import javax.xml.namespace.QName;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.dom.DOMSource;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import org.springframework.ws.server.endpoint.mapping.support.PayloadRootUtils;
 
 /**
- * Simple subclass of {@link AbstractMethodEndpointMapping} that maps to all methods that start with a prefix, and end
- * with a suffix. Endpoint beans are registered using the <code>endpoints</code> property.
+ * Simple subclass of {@link AbstractMethodEndpointMapping} that maps from the local name of the request payload to
+ * methods.Endpoint beans are registered using the <code>endpoints</code> property; the endpoint methods that start with
+ * <code>methodPrefix</code> and end with <code>methodSuffix</code> will be registered.
+ * <p/>
+ * Endpoints typically have the following form:
+ * <pre>
+ * public class MyEndpoint{
+ * <p/>
+ *    public Source handleMyMessage(Source source) {
+ *       ...
+ *    }
+ * }
+ * </pre>
+ * This method will handle any message that has the <code>MyMessage</code> as a payload root local name.
  *
  * @author Arjen Poutsma
+ * @see #setEndpoints(Object[])
  */
 public class SimpleMethodEndpointMapping extends AbstractMethodEndpointMapping implements InitializingBean {
 
+    /** Default method prefix. */
     public static final String DEFAULT_METHOD_PREFIX = "handle";
 
+    /** Default method suffix. */
     public static final String DEFAULT_METHOD_SUFFIX = "";
 
     private Object[] endpoints;
@@ -50,9 +62,21 @@ public class SimpleMethodEndpointMapping extends AbstractMethodEndpointMapping i
 
     private TransformerFactory transformerFactory;
 
-    /** Sets the endpoints */
+    public Object[] getEndpoints() {
+        return endpoints;
+    }
+
+    /**
+     * Sets the endpoints. The endpoint methods that start with <code>methodPrefix</code> and end with
+     * <code>methodSuffix</code> will be registered.
+     */
     public void setEndpoints(Object[] endpoints) {
         this.endpoints = endpoints;
+    }
+
+    /** Returns the method prefix. */
+    public String getMethodPrefix() {
+        return methodPrefix;
     }
 
     /**
@@ -65,6 +89,11 @@ public class SimpleMethodEndpointMapping extends AbstractMethodEndpointMapping i
         this.methodPrefix = methodPrefix;
     }
 
+    /** Returns the method suffix. */
+    public String getMethodSuffix() {
+        return methodSuffix;
+    }
+
     /**
      * Sets the method suffix. All methods with names ending with this string will be registered. Default is "" (i.e. no
      * suffix).
@@ -75,42 +104,31 @@ public class SimpleMethodEndpointMapping extends AbstractMethodEndpointMapping i
         this.methodSuffix = methodSuffix;
     }
 
-    public void afterPropertiesSet() throws Exception {
-        Assert.notEmpty(endpoints, "endpoints is required");
+    public final void afterPropertiesSet() throws Exception {
+        Assert.notEmpty(getEndpoints(), "'endpoints' is required");
         transformerFactory = TransformerFactory.newInstance();
-        for (int i = 0; i < endpoints.length; i++) {
-            registerMethods(endpoints[i]);
+        for (int i = 0; i < getEndpoints().length; i++) {
+            registerMethods(getEndpoints()[i]);
         }
     }
 
     /** Returns the name of the given method, with the prefix and suffix stripped off. */
     protected String getLookupKeyForMethod(Method method) {
         String methodName = method.getName();
-        if (methodName.startsWith(methodPrefix) && methodName.endsWith(methodSuffix)) {
-            return methodName.substring(methodPrefix.length(), methodName.length() - methodSuffix.length());
+        String prefix = getMethodPrefix();
+        String suffix = getMethodSuffix();
+        if (methodName.startsWith(prefix) && methodName.endsWith(suffix)) {
+            return methodName.substring(prefix.length(), methodName.length() - suffix.length());
         }
         else {
             return null;
         }
     }
 
+    /** Returns the local part of the payload root element of the request. */
     protected String getLookupKeyForMessage(MessageContext messageContext) throws TransformerException {
-        Element payloadElement = getMessagePayloadElement(messageContext.getRequest());
-        return payloadElement.getLocalName();
+        WebServiceMessage request = messageContext.getRequest();
+        QName rootQName = PayloadRootUtils.getPayloadRootQName(request.getPayloadSource(), transformerFactory);
+        return rootQName.getLocalPart();
     }
-
-    private Element getMessagePayloadElement(WebServiceMessage message) throws TransformerException {
-        if (message.getPayloadSource() instanceof DOMSource) {
-            DOMSource domSource = (DOMSource) message.getPayloadSource();
-            if (domSource.getNode().getNodeType() == Node.ELEMENT_NODE) {
-                return (Element) domSource.getNode();
-            }
-        }
-        Transformer transformer = transformerFactory.newTransformer();
-        DOMResult domResult = new DOMResult();
-        transformer.transform(message.getPayloadSource(), domResult);
-        return (Element) domResult.getNode().getFirstChild();
-    }
-
-
 }

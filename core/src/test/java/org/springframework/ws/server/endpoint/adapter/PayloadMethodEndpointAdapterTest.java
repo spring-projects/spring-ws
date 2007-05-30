@@ -16,7 +16,6 @@
 
 package org.springframework.ws.server.endpoint.adapter;
 
-import java.lang.reflect.Method;
 import javax.xml.transform.Source;
 
 import junit.framework.TestCase;
@@ -43,35 +42,32 @@ public class PayloadMethodEndpointAdapterTest extends TestCase {
     }
 
     public void testSupportedNoResponse() throws NoSuchMethodException {
-        Method noResponse = getClass().getMethod("noResponse", new Class[]{Source.class});
-        MethodEndpoint methodEndpoint = new MethodEndpoint(this, noResponse);
+        MethodEndpoint methodEndpoint = new MethodEndpoint(this, "noResponse", new Class[]{Source.class});
         assertTrue("Method unsupported", adapter.supportsInternal(methodEndpoint));
     }
 
     public void testSupportedResponse() throws NoSuchMethodException {
-        Method response = getClass().getMethod("response", new Class[]{Source.class});
-        MethodEndpoint methodEndpoint = new MethodEndpoint(this, response);
+        MethodEndpoint methodEndpoint = new MethodEndpoint(this, "response", new Class[]{Source.class});
         assertTrue("Method unsupported", adapter.supportsInternal(methodEndpoint));
     }
 
     public void testUnsupportedMethodMultipleParams() throws NoSuchMethodException {
-        Method unsupported = getClass().getMethod("unsupportedMultipleParams", new Class[]{Source.class, Source.class});
-        assertFalse("Method supported", adapter.supportsInternal(new MethodEndpoint(this, unsupported)));
+        assertFalse("Method supported", adapter.supportsInternal(
+                new MethodEndpoint(this, "unsupportedMultipleParams", new Class[]{Source.class, Source.class})));
     }
 
     public void testUnsupportedMethodWrongReturnType() throws NoSuchMethodException {
-        Method unsupported = getClass().getMethod("unsupportedWrongReturnType", new Class[]{Source.class});
-        assertFalse("Method supported", adapter.supportsInternal(new MethodEndpoint(this, unsupported)));
+        assertFalse("Method supported", adapter.supportsInternal(
+                new MethodEndpoint(this, "unsupportedWrongReturnType", new Class[]{Source.class})));
     }
 
     public void testUnsupportedMethodWrongParam() throws NoSuchMethodException {
-        Method unsupported = getClass().getMethod("unsupportedWrongParam", new Class[]{String.class});
-        assertFalse("Method supported", adapter.supportsInternal(new MethodEndpoint(this, unsupported)));
+        assertFalse("Method supported",
+                adapter.supportsInternal(new MethodEndpoint(this, "unsupportedWrongParam", new Class[]{String.class})));
     }
 
     public void testNoResponse() throws Exception {
-        Method noResponse = getClass().getMethod("noResponse", new Class[]{Source.class});
-        MethodEndpoint methodEndpoint = new MethodEndpoint(this, noResponse);
+        MethodEndpoint methodEndpoint = new MethodEndpoint(this, "noResponse", new Class[]{Source.class});
         assertFalse("Method invoked", noResponseInvoked);
         adapter.invoke(messageContext, methodEndpoint);
         assertTrue("Method not invoked", noResponseInvoked);
@@ -80,8 +76,7 @@ public class PayloadMethodEndpointAdapterTest extends TestCase {
     public void testResponse() throws Exception {
         WebServiceMessage request = new MockWebServiceMessage("<request/>");
         messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
-        Method response = getClass().getMethod("response", new Class[]{Source.class});
-        MethodEndpoint methodEndpoint = new MethodEndpoint(this, response);
+        MethodEndpoint methodEndpoint = new MethodEndpoint(this, "response", new Class[]{Source.class});
         assertFalse("Method invoked", responseInvoked);
         adapter.invoke(messageContext, methodEndpoint);
         assertTrue("Method not invoked", responseInvoked);
@@ -89,7 +84,6 @@ public class PayloadMethodEndpointAdapterTest extends TestCase {
 
     public void noResponse(Source request) {
         noResponseInvoked = true;
-
     }
 
     public Source response(Source request) {
