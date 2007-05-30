@@ -41,27 +41,20 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
 import org.springframework.ws.transport.support.DefaultStrategiesHelper;
 
 /**
- * Central dispatcher for use within Spring-WS, dispatching Web service messages to
- * registered endpoints.
- *
- * <p>This dispatcher is quite similar to Spring MVCs <code>DispatcherServlet</code>.
- * Just like its counterpart, this dispatcher is very flexible.
- *
- * <ul>
- * <li>It can use any <code>EndpointMapping</code> implementation - whether standard,
- * or provided as part of an application - to control the routing of request messages
- * to endpoint objects. Endpoint mappings can be registered using the
- * <code>endpointMappings</code> property.</li>
- * <li>It can use any <code>EndpointAdapter</code>; this allows one to use any endpoint
- * interface or form. Defaults to the <code>MessageEndpointAdapter</code> and
- * <code>PayloadEndpointAdapter</code>, for <code>MessageEndpoint</code> and
- * <code>PayloadEndpoint</code>, respectively. Additional endpoint adapters can be
- * added through the <code>endpointAdapters</code> property.</li>
- * <li>Its exception resolution strategy can be specified via a
- * <code>EndpointExceptionResolver</code>, for example mapping certain exceptions to
- * SOAP Faults. Default is none. Additional exception resolvers can be added through
- * the <code>endpointExceptionResolvers</code> property.</li>
- * </ul>
+ * Central dispatcher for use within Spring-WS, dispatching Web service messages to registered endpoints.
+ * <p/>
+ * <p>This dispatcher is quite similar to Spring MVCs <code>DispatcherServlet</code>. Just like its counterpart, this
+ * dispatcher is very flexible.
+ * <p/>
+ * <ul> <li>It can use any <code>EndpointMapping</code> implementation - whether standard, or provided as part of an
+ * application - to control the routing of request messages to endpoint objects. Endpoint mappings can be registered
+ * using the <code>endpointMappings</code> property.</li> <li>It can use any <code>EndpointAdapter</code>; this allows
+ * one to use any endpoint interface or form. Defaults to the <code>MessageEndpointAdapter</code> and
+ * <code>PayloadEndpointAdapter</code>, for <code>MessageEndpoint</code> and <code>PayloadEndpoint</code>, respectively.
+ * Additional endpoint adapters can be added through the <code>endpointAdapters</code> property.</li> <li>Its exception
+ * resolution strategy can be specified via a <code>EndpointExceptionResolver</code>, for example mapping certain
+ * exceptions to SOAP Faults. Default is none. Additional exception resolvers can be added through the
+ * <code>endpointExceptionResolvers</code> property.</li> </ul>
  *
  * @author Arjen Poutsma
  * @see EndpointMapping
@@ -75,7 +68,8 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
     public static final String ENDPOINT_NOT_FOUND_LOG_CATEGORY = "org.springframework.ws.EndpointNotFound";
 
     /** Additional logger to use when no mapped endpoint is found for a request. */
-    protected static final Log endpointNotFoundLogger = LogFactory.getLog(ENDPOINT_NOT_FOUND_LOG_CATEGORY);
+    protected static final Log endpointNotFoundLogger =
+            LogFactory.getLog(MessageDispatcher.ENDPOINT_NOT_FOUND_LOG_CATEGORY);
 
     /** Logger available to subclasses. */
     protected final Log logger = LogFactory.getLog(getClass());
@@ -85,13 +79,13 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
     /** The registered bean name for this dispatcher. */
     private String beanName;
 
-    /** List of EndpointAdapters used in this dispatcher */
+    /** List of EndpointAdapters used in this dispatcher. */
     private List endpointAdapters;
 
-    /** List of EndpointExceptionResolvers used in this dispatcher */
+    /** List of EndpointExceptionResolvers used in this dispatcher. */
     private List endpointExceptionResolvers;
 
-    /** List of EndpointMappings used in this dispatcher */
+    /** List of EndpointMappings used in this dispatcher. */
     private List endpointMappings;
 
     /** Initializes a new instance of the <code>MessageDispatcher</code>. */
@@ -130,7 +124,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
         this.endpointMappings = endpointMappings;
     }
 
-    public void setBeanName(String beanName) {
+    public final void setBeanName(String beanName) {
         this.beanName = beanName;
     }
 
