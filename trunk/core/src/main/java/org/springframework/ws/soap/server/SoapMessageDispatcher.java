@@ -36,8 +36,8 @@ import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.soap12.Soap12Header;
 
 /**
- * SOAP-specific subclass of the <code>MessageDispatcher</code>. Adds functionality for adding actor roles to a endpoint
- * invocation chain, and endpoint interception using <code>SoapEndpointInterceptor</code>s.
+ * SOAP-specific subclass of the {@link MessageDispatcher}. Adds functionality for adding actor roles to a endpoint
+ * invocation chain, and endpoint interception using {@link SoapEndpointInterceptor} objects.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.soap.SoapMessage
