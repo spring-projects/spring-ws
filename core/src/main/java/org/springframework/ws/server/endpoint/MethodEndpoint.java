@@ -54,22 +54,23 @@ public final class MethodEndpoint {
      * @param bean           the object bean
      * @param methodName     the method name
      * @param parameterTypes the method parameter types
+     * @throws NoSuchMethodException when the method cannot be found
      */
     public MethodEndpoint(Object bean, String methodName, Class[] parameterTypes) throws NoSuchMethodException {
         Assert.notNull(bean, "bean must not be null");
         Assert.notNull(methodName, "method must not be null");
         this.bean = bean;
-        method = bean.getClass().getMethod(methodName, parameterTypes);
+        this.method = bean.getClass().getMethod(methodName, parameterTypes);
     }
 
     /** Returns the object bean for this method endpoint. */
     public Object getBean() {
-        return bean;
+        return this.bean;
     }
 
     /** Returns the method for this method endpoint. */
     public Method getMethod() {
-        return method;
+        return this.method;
     }
 
     /**
@@ -81,7 +82,7 @@ public final class MethodEndpoint {
      * @throws InvocationTargetException when the method invocation results in an exception
      */
     public Object invoke(Object[] args) throws IllegalAccessException, InvocationTargetException {
-        return ReflectionUtils.invokeMethod(method, bean, args);
+        return ReflectionUtils.invokeMethod(this.method, this.bean, args);
     }
 
     public boolean equals(Object o) {
@@ -90,16 +91,16 @@ public final class MethodEndpoint {
         }
         if (o != null && o instanceof MethodEndpoint) {
             MethodEndpoint other = (MethodEndpoint) o;
-            return bean.equals(other.bean) && method.equals(other.method);
+            return this.bean.equals(other.bean) && this.method.equals(other.method);
         }
         return false;
     }
 
     public int hashCode() {
-        return 31 * bean.hashCode() + method.hashCode();
+        return 31 * this.bean.hashCode() + this.method.hashCode();
     }
 
     public String toString() {
-        return method.toString();
+        return this.method.toString();
     }
 }
