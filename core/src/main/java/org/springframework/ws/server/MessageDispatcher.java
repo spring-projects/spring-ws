@@ -35,26 +35,38 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.ws.NoEndpointFoundException;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.server.endpoint.MessageEndpoint;
+import org.springframework.ws.server.endpoint.PayloadEndpoint;
+import org.springframework.ws.server.endpoint.adapter.MessageEndpointAdapter;
+import org.springframework.ws.server.endpoint.adapter.MessageMethodEndpointAdapter;
+import org.springframework.ws.server.endpoint.adapter.PayloadEndpointAdapter;
+import org.springframework.ws.server.endpoint.adapter.PayloadMethodEndpointAdapter;
+import org.springframework.ws.soap.server.SoapMessageDispatcher;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
 import org.springframework.ws.transport.support.DefaultStrategiesHelper;
 
 /**
  * Central dispatcher for use within Spring-WS, dispatching Web service messages to registered endpoints.
  * <p/>
- * <p>This dispatcher is quite similar to Spring MVCs <code>DispatcherServlet</code>. Just like its counterpart, this
- * dispatcher is very flexible.
- * <p/>
- * <ul> <li>It can use any <code>EndpointMapping</code> implementation - whether standard, or provided as part of an
+ * This dispatcher is quite similar to Spring MVCs {@link DispatcherServlet}. Just like its counterpart, this
+ * dispatcher is very flexible. This class is SOAP agnostic; in typical SOAP Web Services, the
+ * {@link SoapMessageDispatcher} subclass is used.
+ * <ul>
+ * <li>It can use any {@link EndpointMapping} implementation - whether standard, or provided as part of an
  * application - to control the routing of request messages to endpoint objects. Endpoint mappings can be registered
- * using the <code>endpointMappings</code> property.</li> <li>It can use any <code>EndpointAdapter</code>; this allows
- * one to use any endpoint interface or form. Defaults to the <code>MessageEndpointAdapter</code> and
- * <code>PayloadEndpointAdapter</code>, for <code>MessageEndpoint</code> and <code>PayloadEndpoint</code>, respectively.
- * Additional endpoint adapters can be added through the <code>endpointAdapters</code> property.</li> <li>Its exception
- * resolution strategy can be specified via a <code>EndpointExceptionResolver</code>, for example mapping certain
- * exceptions to SOAP Faults. Default is none. Additional exception resolvers can be added through the
- * <code>endpointExceptionResolvers</code> property.</li> </ul>
+ * using the <code>endpointMappings</code> property.</li>
+ * <li>It can use any {@link EndpointAdapter}; this allows one to use any endpoint interface or form. Defaults to the
+ * {@link MessageEndpointAdapter} and {@link PayloadEndpointAdapter}, for {@link MessageEndpoint} and
+ * {@link PayloadEndpoint}, respectively, and the {@link MessageMethodEndpointAdapter} and
+ * {@link PayloadMethodEndpointAdapter}. Additional endpoint adapters can be added through the
+ * <code>endpointAdapters</code> property.</li>
+ * <li>Its exception resolution strategy can be specified via a {@link EndpointExceptionResolver}, for example mapping
+ * certain exceptions to SOAP Faults. Default is none. Additional exception resolvers can be added through the
+ * <code>endpointExceptionResolvers</code> property.</li>
+ * </ul>
  *
  * @author Arjen Poutsma
  * @see EndpointMapping
