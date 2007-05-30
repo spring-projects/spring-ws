@@ -37,6 +37,7 @@ public class SimpleMethodEndpointMappingTest extends TestCase {
 
     public void testRegistration() throws Exception {
         assertNotNull("Endpoint not registered", mapping.lookupEndpoint("MyRequest"));
+        assertNull("Endpoint registered", mapping.lookupEndpoint("request"));
     }
 
     public void testGetLookupKeyForMessageNoNamespace() throws Exception {

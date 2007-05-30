@@ -19,7 +19,9 @@ package org.springframework.ws.server.endpoint.adapter;
 import java.lang.reflect.Method;
 
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.server.MessageDispatcher;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
+import org.springframework.ws.soap.server.SoapMessageDispatcher;
 
 /**
  * Adapter that supports endpoint methods that use marshalling. Supports methods with the following signature:
@@ -28,6 +30,8 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
  * </pre>
  * I.e. methods that take a single {@link MessageContext} parameter, and return <code>void</code>. The method can have
  * any name, as long as it is mapped by an {@link org.springframework.ws.server.EndpointMapping}.
+ * <p/>
+ * This adapter is registered by default by the {@link MessageDispatcher} and {@link SoapMessageDispatcher}.
  *
  * @author Arjen Poutsma
  */
@@ -38,7 +42,6 @@ public class MessageMethodEndpointAdapter extends AbstractMethodEndpointAdapter 
         Method method = methodEndpoint.getMethod();
         return Void.TYPE.isAssignableFrom(method.getReturnType()) && method.getParameterTypes().length == 1 &&
                 MessageContext.class.isAssignableFrom(method.getParameterTypes()[0]);
-
     }
 
     protected void invokeInternal(MessageContext messageContext, MethodEndpoint methodEndpoint) throws Exception {

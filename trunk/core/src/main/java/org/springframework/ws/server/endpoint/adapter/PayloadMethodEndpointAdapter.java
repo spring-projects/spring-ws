@@ -22,7 +22,9 @@ import javax.xml.transform.Transformer;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.server.MessageDispatcher;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
+import org.springframework.ws.soap.server.SoapMessageDispatcher;
 
 /**
  * Adapter that supports endpoint methods that use marshalling. Supports methods with the following signature:
@@ -35,6 +37,8 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
  * </pre>
  * I.e. methods that take a single {@link Source} parameter, and return either <code>void</code> or a {@link Source}.
  * The method can have any name, as long as it is mapped by an {@link org.springframework.ws.server.EndpointMapping}.
+ * <p/>
+ * This adapter is registered by default by the {@link MessageDispatcher} and {@link SoapMessageDispatcher}.
  *
  * @author Arjen Poutsma
  */
