@@ -91,20 +91,63 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
 
     private boolean whitespacePreserve = false;
 
+    private boolean ignoreExtraAttributes = true;
+
+    private boolean ignoreExtraElements = false;
+
     /**
-     * Set if the Castor <code>Unmarshaller</code> should validate the incoming document. Default is
-     * <code>false</code>.
+     * Returns whether the Castor  {@link Unmarshaller} should ignore attributes that do not match
+     * a specific field.
      */
-    public void setValidating(boolean validating) {
-        this.validating = validating;
+    public boolean getIgnoreExtraAttributes() {
+        return ignoreExtraAttributes;
     }
 
     /**
-     * Indicates whether the Castor <code>Unmarshaller</code> should preserve "ignorable" whitespace. Default is
+     * Sets whether the Castor  {@link Unmarshaller} should ignore attributes that do not match
+     * a specific field. Default is <code>true</code>: extra attributes are ignored.
+     */
+    public void setIgnoreExtraAttributes(boolean ignoreExtraAttributes) {
+        this.ignoreExtraAttributes = ignoreExtraAttributes;
+    }
+
+    /**
+     * Returns whether the Castor  {@link Unmarshaller} should ignore elements that do not match
+     * a specific field.
+     */
+    public boolean getIgnoreExtraElements() {
+        return ignoreExtraElements;
+    }
+
+    /**
+     * Sets whether the Castor  {@link Unmarshaller} should ignore elements that do not match
+     * a specific field. Default is <code>false</code>, extra attributes are flagged as an error.
+     */
+    public void setIgnoreExtraElements(boolean ignoreExtraElements) {
+        this.ignoreExtraElements = ignoreExtraElements;
+    }
+
+    /** Returns whether the Castor {@link Unmarshaller} should preserve "ignorable" whitespace. */
+    public boolean getWhitespacePreserve() {
+        return whitespacePreserve;
+    }
+
+    /**
+     * Sets whether the Castor {@link Unmarshaller} should preserve "ignorable" whitespace. Default is
      * <code>false</code>.
      */
     public void setWhitespacePreserve(boolean whitespacePreserve) {
         this.whitespacePreserve = whitespacePreserve;
+    }
+
+    /** Returns whether this marshaller should validate in- and outgoing documents. */
+    public boolean isValidating() {
+        return validating;
+    }
+
+    /** Sets whether this marshaller should validate in- and outgoing documents. Default is <code>false</code>. */
+    public void setValidating(boolean validating) {
+        this.validating = validating;
     }
 
     /**
@@ -116,16 +159,6 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
         this.encoding = encoding;
     }
 
-    /**
-     * Sets the Castor target class. If this property is set, this <code>CastorMarshaller</code> is tied to this one
-     * specific class. Use a mapping file for unmarshalling multiple classes.
-     * <p/>
-     * You cannot set both this property and the mapping (location).
-     */
-    public void setTargetClass(Class targetClass) {
-        this.targetClass = targetClass;
-    }
-
     /** Sets the locations of the Castor XML Mapping files. */
     public void setMappingLocation(Resource mappingLocation) {
         mappingLocations = new Resource[]{mappingLocation};
@@ -134,6 +167,16 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
     /** Sets the locations of the Castor XML Mapping files. */
     public void setMappingLocations(Resource[] mappingLocations) {
         this.mappingLocations = mappingLocations;
+    }
+
+    /**
+     * Sets the Castor target class. If this property is set, this <code>CastorMarshaller</code> is tied to this one
+     * specific class. Use a mapping file for unmarshalling multiple classes.
+     * <p/>
+     * You cannot set both this property and the mapping (location).
+     */
+    public void setTargetClass(Class targetClass) {
+        this.targetClass = targetClass;
     }
 
     public final void afterPropertiesSet() throws IOException {
@@ -160,8 +203,101 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
         }
     }
 
+    /** Returns <code>true</code> for all classes, i.e. Castor supports arbitrary classes. */
     public boolean supports(Class clazz) {
         return true;
+    }
+
+    protected final void marshalDomNode(Object graph, Node node) throws XmlMappingException {
+        marshalSaxHandlers(graph, new DomContentHandler(node), null);
+    }
+
+    protected final void marshalSaxHandlers(Object graph, ContentHandler contentHandler, LexicalHandler lexicalHandler)
+            throws XmlMappingException {
+        try {
+            marshal(graph, new Marshaller(contentHandler));
+        }
+        catch (IOException ex) {
+            throw new CastorSystemException("Could not construct Castor ContentHandler Marshaller", ex);
+        }
+    }
+
+    protected final void marshalOutputStream(Object graph, OutputStream outputStream)
+            throws XmlMappingException, IOException {
+        marshalWriter(graph, new OutputStreamWriter(outputStream, encoding));
+    }
+
+    protected final void marshalWriter(Object graph, Writer writer) throws XmlMappingException, IOException {
+        marshal(graph, new Marshaller(writer));
+    }
+
+    protected final void marshalXmlEventWriter(Object graph, XMLEventWriter eventWriter) throws XmlMappingException {
+        marshalSaxHandlers(graph, new StaxEventContentHandler(eventWriter), null);
+    }
+
+    protected final void marshalXmlStreamWriter(Object graph, XMLStreamWriter streamWriter) throws XmlMappingException {
+        marshalSaxHandlers(graph, new StaxStreamContentHandler(streamWriter), null);
+    }
+
+    protected final Object unmarshalDomNode(Node node) throws XmlMappingException {
+        try {
+            return createUnmarshaller().unmarshal(node);
+        }
+        catch (XMLException ex) {
+            throw convertCastorException(ex, false);
+        }
+    }
+
+    protected final Object unmarshalInputStream(InputStream inputStream) throws XmlMappingException, IOException {
+        try {
+            return createUnmarshaller().unmarshal(new InputSource(inputStream));
+        }
+        catch (XMLException ex) {
+            throw convertCastorException(ex, false);
+        }
+    }
+
+    protected final Object unmarshalReader(Reader reader) throws XmlMappingException, IOException {
+        try {
+            return createUnmarshaller().unmarshal(new InputSource(reader));
+        }
+        catch (XMLException ex) {
+            throw convertCastorException(ex, false);
+        }
+    }
+
+    protected final Object unmarshalXmlEventReader(XMLEventReader eventReader) {
+        XMLReader reader = new StaxEventXmlReader(eventReader);
+        try {
+            return unmarshalSaxReader(reader, new InputSource());
+        }
+        catch (IOException ex) {
+            throw new CastorUnmarshallingFailureException(new MarshalException(ex));
+        }
+    }
+
+    protected final Object unmarshalSaxReader(XMLReader xmlReader, InputSource inputSource)
+            throws XmlMappingException, IOException {
+        UnmarshalHandler unmarshalHandler = createUnmarshaller().createHandler();
+        try {
+            ContentHandler contentHandler = Unmarshaller.getContentHandler(unmarshalHandler);
+            xmlReader.setContentHandler(contentHandler);
+            xmlReader.parse(inputSource);
+            return unmarshalHandler.getObject();
+        }
+        catch (SAXException ex) {
+            throw new CastorUnmarshallingFailureException(ex);
+        }
+    }
+
+    protected final Object unmarshalXmlStreamReader(XMLStreamReader streamReader) {
+        XMLReader reader = new StaxStreamXmlReader(streamReader);
+        try {
+            return unmarshalSaxReader(reader, new InputSource());
+        }
+        catch (IOException ex) {
+            throw new CastorUnmarshallingFailureException(new MarshalException(ex));
+        }
     }
 
     /**
@@ -194,6 +330,55 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
         return classDescriptorResolver;
     }
 
+    private Unmarshaller createUnmarshaller() {
+        Unmarshaller unmarshaller = null;
+        if (targetClass != null) {
+            unmarshaller = new Unmarshaller(targetClass);
+        }
+        else {
+            unmarshaller = new Unmarshaller();
+        }
+        unmarshaller.setResolver(classDescriptorResolver);
+        customizeUnmarshaller(unmarshaller);
+        return unmarshaller;
+    }
+
+    /**
+     * Template method that allows for customizing of the given Castor {@link Unmarshaller}.
+     * <p/>
+     * Default implementation invokes {@link Unmarshaller#setValidation(boolean)},
+     * {@link Unmarshaller#setWhitespacePreserve(boolean)},
+     * {@link Unmarshaller#setIgnoreExtraAttributes(boolean)}, and {@link Unmarshaller#setIgnoreExtraElements(boolean)}
+     * with the properties set on this marshaller.
+     */
+    protected void customizeUnmarshaller(Unmarshaller unmarshaller) {
+        unmarshaller.setValidation(isValidating());
+        unmarshaller.setWhitespacePreserve(getWhitespacePreserve());
+        unmarshaller.setIgnoreExtraAttributes(getIgnoreExtraAttributes());
+        unmarshaller.setIgnoreExtraElements(getIgnoreExtraElements());
+    }
+
+    private void marshal(Object graph, Marshaller marshaller) {
+        try {
+            marshaller.setResolver(classDescriptorResolver);
+            customizeMarshaller(marshaller);
+            marshaller.marshal(graph);
+        }
+        catch (XMLException ex) {
+            throw convertCastorException(ex, true);
+        }
+    }
+
+    /**
+     * Template method that allows for customizing of the given Castor {@link Marshaller}.
+     * <p/>
+     * Default implementation invokes {@link Marshaller#setValidation(boolean)} with the property set on this
+     * marshaller.
+     */
+    protected void customizeMarshaller(Marshaller marshaller) {
+        marshaller.setValidation(isValidating());
+    }
+
     /**
      * Converts the given <code>CastorException</code> to an appropriate exception from the
      * <code>org.springframework.oxm</code> hierarchy.
@@ -213,125 +398,5 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
         return CastorUtils.convertXmlException(ex, marshalling);
     }
 
-    private Unmarshaller createUnmarshaller() {
-        Unmarshaller unmarshaller = null;
-        if (targetClass != null) {
-            unmarshaller = new Unmarshaller(targetClass);
-        }
-        else {
-            unmarshaller = new Unmarshaller();
-        }
-        unmarshaller.setResolver(classDescriptorResolver);
-        unmarshaller.setValidation(validating);
-        unmarshaller.setWhitespacePreserve(whitespacePreserve);
-        return unmarshaller;
-    }
-
-    private void marshal(Object graph, Marshaller marshaller) {
-        try {
-            marshaller.setResolver(classDescriptorResolver);
-            marshaller.marshal(graph);
-        }
-        catch (XMLException ex) {
-            throw convertCastorException(ex, true);
-        }
-    }
-
-    protected void marshalDomNode(Object graph, Node node) throws XmlMappingException {
-        ContentHandler contentHandler = new DomContentHandler(node);
-        marshalSaxHandlers(graph, contentHandler, null);
-    }
-
-    protected void marshalXmlEventWriter(Object graph, XMLEventWriter eventWriter) throws XmlMappingException {
-        ContentHandler contentHandler = new StaxEventContentHandler(eventWriter);
-        marshalSaxHandlers(graph, contentHandler, null);
-    }
-
-    protected void marshalXmlStreamWriter(Object graph, XMLStreamWriter streamWriter) throws XmlMappingException {
-        ContentHandler contentHandler = new StaxStreamContentHandler(streamWriter);
-        marshalSaxHandlers(graph, contentHandler, null);
-    }
-
-    protected void marshalOutputStream(Object graph, OutputStream outputStream)
-            throws XmlMappingException, IOException {
-        OutputStreamWriter writer = new OutputStreamWriter(outputStream, encoding);
-        marshalWriter(graph, writer);
-    }
-
-    protected void marshalSaxHandlers(Object graph, ContentHandler contentHandler, LexicalHandler lexicalHandler)
-            throws XmlMappingException {
-        try {
-            Marshaller marshaller = new Marshaller(contentHandler);
-            marshal(graph, marshaller);
-        }
-        catch (IOException ex) {
-            throw new CastorSystemException("Could not construct Castor ContentHandler Marshaller", ex);
-        }
-    }
-
-    protected void marshalWriter(Object graph, Writer writer) throws XmlMappingException, IOException {
-        Marshaller marshaller = new Marshaller(writer);
-        marshal(graph, marshaller);
-    }
-
-    protected Object unmarshalDomNode(Node node) throws XmlMappingException {
-        try {
-            return createUnmarshaller().unmarshal(node);
-        }
-        catch (XMLException ex) {
-            throw convertCastorException(ex, false);
-        }
-    }
-
-    protected Object unmarshalXmlEventReader(XMLEventReader eventReader) {
-        XMLReader reader = new StaxEventXmlReader(eventReader);
-        try {
-            return unmarshalSaxReader(reader, new InputSource());
-        }
-        catch (IOException ex) {
-            throw new CastorUnmarshallingFailureException(new MarshalException(ex));
-        }
-    }
-
-    protected Object unmarshalXmlStreamReader(XMLStreamReader streamReader) {
-        XMLReader reader = new StaxStreamXmlReader(streamReader);
-        try {
-            return unmarshalSaxReader(reader, new InputSource());
-        }
-        catch (IOException ex) {
-            throw new CastorUnmarshallingFailureException(new MarshalException(ex));
-        }
-    }
-
-    protected Object unmarshalSaxReader(XMLReader xmlReader, InputSource inputSource)
-            throws XmlMappingException, IOException {
-        UnmarshalHandler unmarshalHandler = createUnmarshaller().createHandler();
-        try {
-            ContentHandler contentHandler = Unmarshaller.getContentHandler(unmarshalHandler);
-            xmlReader.setContentHandler(contentHandler);
-            xmlReader.parse(inputSource);
-            return unmarshalHandler.getObject();
-        }
-        catch (SAXException ex) {
-            throw new CastorUnmarshallingFailureException(ex);
-        }
-    }
-
-    protected Object unmarshalInputStream(InputStream inputStream) throws XmlMappingException, IOException {
-        try {
-            return createUnmarshaller().unmarshal(new InputSource(inputStream));
-        }
-        catch (XMLException ex) {
-            throw convertCastorException(ex, false);
-        }
-    }
-
-    protected Object unmarshalReader(Reader reader) throws XmlMappingException, IOException {
-        try {
-            return createUnmarshaller().unmarshal(new InputSource(reader));
-        }
-        catch (XMLException ex) {
-            throw convertCastorException(ex, false);
-        }
-    }
+// abstract
 }

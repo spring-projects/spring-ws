@@ -59,37 +59,10 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public abstract class AbstractMarshaller implements Marshaller, Unmarshaller {
 
-    /**
-     * Logger available to subclasses.
-     */
+    /** Logger available to subclasses. */
     protected final Log logger = LogFactory.getLog(getClass());
 
-    private boolean validating = false;
-
-    private boolean namespaceAware = true;
-
     private DocumentBuilderFactory documentBuilderFactory;
-
-    /**
-     * Set whether or not the XML parser should be XML namespace aware. Default is <code>true</code>.
-     */
-    public void setNamespaceAware(boolean namespaceAware) {
-        this.namespaceAware = namespaceAware;
-    }
-
-    /**
-     * Set if the XML parser should validate the document. Default is <code>false</code>.
-     */
-    public void setValidating(boolean validating) {
-        this.validating = validating;
-    }
-
-    /**
-     * Returns whether the XML parser should validate the document. Default is <code>false</code>.
-     */
-    public boolean isValidating() {
-        return validating;
-    }
 
     /**
      * Marshals the object graph with the given root into the provided <code>javax.xml.transform.Result</code>.
@@ -103,9 +76,9 @@ public abstract class AbstractMarshaller implements Marshaller, Unmarshaller {
      * @throws IOException              if an I/O exception occurs
      * @throws IllegalArgumentException if <code>result</code> if neither a <code>DOMResult</code>,
      *                                  <code>SAXResult</code>, <code>StreamResult</code>
-     * @see #marshalDomResult(Object, javax.xml.transform.dom.DOMResult)
-     * @see #marshalSaxResult(Object, javax.xml.transform.sax.SAXResult)
-     * @see #marshalStreamResult(Object, javax.xml.transform.stream.StreamResult)
+     * @see #marshalDomResult(Object,javax.xml.transform.dom.DOMResult)
+     * @see #marshalSaxResult(Object,javax.xml.transform.sax.SAXResult)
+     * @see #marshalStreamResult(Object,javax.xml.transform.stream.StreamResult)
      */
     public final void marshal(Object graph, Result result) throws XmlMappingException, IOException {
         if (result instanceof DOMResult) {
@@ -183,8 +156,8 @@ public abstract class AbstractMarshaller implements Marshaller, Unmarshaller {
      */
     protected DocumentBuilderFactory createDocumentBuilderFactory() throws ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setValidating(validating);
-        factory.setNamespaceAware(namespaceAware);
+        factory.setValidating(false);
+        factory.setNamespaceAware(true);
         return factory;
     }
 
@@ -246,7 +219,7 @@ public abstract class AbstractMarshaller implements Marshaller, Unmarshaller {
      * @param graph     the root of the object graph to marshal
      * @param saxResult the <code>SAXResult</code>
      * @throws XmlMappingException if the given object cannot be marshalled to the result
-     * @see #marshalSaxHandlers(Object, org.xml.sax.ContentHandler, org.xml.sax.ext.LexicalHandler)
+     * @see #marshalSaxHandlers(Object,org.xml.sax.ContentHandler,org.xml.sax.ext.LexicalHandler)
      */
     protected void marshalSaxResult(Object graph, SAXResult saxResult) throws XmlMappingException {
         ContentHandler contentHandler = saxResult.getHandler();
@@ -340,7 +313,7 @@ public abstract class AbstractMarshaller implements Marshaller, Unmarshaller {
      * @return the object graph
      * @throws XmlMappingException if the given source cannot be mapped to an object
      * @throws IOException         if an I/O Exception occurs
-     * @see #unmarshalSaxReader(org.xml.sax.XMLReader, org.xml.sax.InputSource)
+     * @see #unmarshalSaxReader(org.xml.sax.XMLReader,org.xml.sax.InputSource)
      */
     protected Object unmarshalSaxSource(SAXSource saxSource) throws XmlMappingException, IOException {
         if (saxSource.getXMLReader() == null) {

@@ -32,7 +32,7 @@
     </target>
 
     <target name="generate-test-castor" depends="generate-test-init" unless="skip">
-        <taskdef name="castor-srcgen" classname="org.exolab.castor.tools.ant.taskdefs.CastorSourceGenTask"
+        <taskdef name="castor-srcgen" classname="org.castor.anttask.CastorCodeGenTask"
                  classpathref="maven.test.classpath"/>
         <castor-srcgen types="j2" warnings="false" file="${schema}" todir="${generate.target.directory}"
                        package="org.springframework.oxm.castor"/>

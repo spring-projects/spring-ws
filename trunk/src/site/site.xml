@@ -7,13 +7,14 @@
     </skin>
     <publishDate position="left" format="yyyy-MM-dd"/>
     <bannerLeft>
+        <name>Spring Web Services</name>
         <src>images/spring-ws.png</src>
         <href>http://www.springframework.org/spring-ws</href>
     </bannerLeft>
     <body>
         <links>
-            <item name="Spring Framework" href="http://www.springframework.org/"/>
-            <item name="Spring Web Services" href="http://www.springframework.org/spring-ws/"/>
+            <item name="Spring Framework" href="http://www.springframework.org"/>
+            <item name="Spring Web Services" href="http://www.springframework.org/spring-ws"/>
         </links>
         <menu name="Overview">
             <item name="Home" href="index.html"/>
