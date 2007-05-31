@@ -397,6 +397,4 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
     public XmlMappingException convertCastorException(XMLException ex, boolean marshalling) {
         return CastorUtils.convertXmlException(ex, marshalling);
     }
-
-// abstract
 }
