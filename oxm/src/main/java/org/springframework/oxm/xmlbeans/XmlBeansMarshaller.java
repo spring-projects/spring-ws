@@ -20,6 +20,7 @@ import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.XmlSaxHandler;
 import org.apache.xmlbeans.XmlValidationError;
 import org.springframework.oxm.AbstractMarshaller;
+import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.xml.stream.StaxEventContentHandler;
 import org.springframework.xml.stream.StaxEventXmlReader;
@@ -36,61 +37,60 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 
 /**
- * Implementation of the <code>Marshaller</code> interface for XMLBeans. Further options can be set by setting the
- * <code>xmlOptions</code> property. A <code>XmlOptionsFactoryBean</code> is provided to easily wire up
- * <code>XmlObjects</code> instances.
+ * Implementation of the {@link Marshaller} interface for XMLBeans. Further options can be set by setting the
+ * <code>xmlOptions</code> property. The {@link XmlOptionsFactoryBean} is provided to easily wire up
+ * {@link XmlOptions} instances.
  * <p/>
  * Unmarshalled objects can be validated by setting the <code>validating</code> property, or by calling the
- * <code>validiate()</code> method directly. Invalid objects will result in an <code>XmlBeansValidationFailureException</code>.
+ * {@link #validate(XmlObject)} method directly. Invalid objects will result in an
+ * {@link XmlBeansValidationFailureException}.
  * <p/>
  * <strong>Note</strong> that due to the nature of XMLBeans, this marshaller requires all passed objects to be of type
- * <code>XmlObject</code>.
+ * {@link XmlObject}.
  *
  * @author Arjen Poutsma
  * @see #setXmlOptions(org.apache.xmlbeans.XmlOptions)
  * @see XmlOptionsFactoryBean
  * @see #setValidating(boolean)
- * @see org.apache.xmlbeans.XmlObject
  */
 public class XmlBeansMarshaller extends AbstractMarshaller {
 
     private XmlOptions xmlOptions;
 
+    private boolean validating = false;
+
+    /** Returns the <code>XmlOptions</code>. */
+    public XmlOptions getXmlOptions() {
+        return xmlOptions;
+    }
+
     /**
      * Sets the <code>XmlOptions</code>.
      *
-     * @param xmlOptions the xml options
+     * @see XmlOptionsFactoryBean
      */
     public void setXmlOptions(XmlOptions xmlOptions) {
         this.xmlOptions = xmlOptions;
     }
 
+    /** Returns whether this marshaller should validate in- and outgoing documents. */
+    public boolean isValidating() {
+        return validating;
+    }
+
+    /** Sets whether this marshaller should validate in- and outgoing documents.  Default is <code>false</code>. */
+    public void setValidating(boolean validating) {
+        this.validating = validating;
+    }
+
+    /** Returns true if the given class is an implementation of {@link XmlObject}. */
     public boolean supports(Class clazz) {
         return XmlObject.class.isAssignableFrom(clazz);
     }
 
-    /**
-     * Converts the given XMLBeans exception to an appropriate exception from the <code>org.springframework.oxm</code>
-     * hierarchy.
-     * <p/>
-     * The default implementation delegates to <code>XmlBeansUtils</code>. Can be overridden in subclasses.
-     * <p/>
-     * A boolean flag is used to indicate whether this exception occurs during marshalling or unmarshalling, since
-     * XMLBeans itself does not make this distinction in its exception hierarchy.
-     *
-     * @param ex          XMLBeans Exception that occured
-     * @param marshalling indicates whether the exception occurs during marshalling (<code>true</code>), or
-     *                    unmarshalling (<code>false</code>)
-     * @return the corresponding <code>XmlMappingException</code>
-     * @see XmlBeansUtils#convertXmlBeansException(Exception,boolean)
-     */
-    public XmlMappingException convertXmlBeansException(Exception ex, boolean marshalling) {
-        return XmlBeansUtils.convertXmlBeansException(ex, marshalling);
-    }
-
-    protected void marshalDomNode(Object graph, Node node) throws XmlMappingException {
+    protected final void marshalDomNode(Object graph, Node node) throws XmlMappingException {
         Document document = node.getNodeType() == Node.DOCUMENT_NODE ? (Document) node : node.getOwnerDocument();
-        Node xmlBeansNode = ((XmlObject) graph).newDomNode(xmlOptions);
+        Node xmlBeansNode = ((XmlObject) graph).newDomNode(getXmlOptions());
         NodeList xmlBeansChildNodes = xmlBeansNode.getChildNodes();
         for (int i = 0; i < xmlBeansChildNodes.getLength(); i++) {
             Node xmlBeansChildNode = xmlBeansChildNodes.item(i);
@@ -99,38 +99,38 @@ public class XmlBeansMarshaller extends AbstractMarshaller {
         }
     }
 
-    protected void marshalOutputStream(Object graph, OutputStream outputStream)
+    protected final void marshalOutputStream(Object graph, OutputStream outputStream)
             throws XmlMappingException, IOException {
-        ((XmlObject) graph).save(outputStream, xmlOptions);
+        ((XmlObject) graph).save(outputStream, getXmlOptions());
     }
 
-    protected void marshalSaxHandlers(Object graph, ContentHandler contentHandler, LexicalHandler lexicalHandler)
+    protected final void marshalSaxHandlers(Object graph, ContentHandler contentHandler, LexicalHandler lexicalHandler)
             throws XmlMappingException {
         try {
-            ((XmlObject) graph).save(contentHandler, lexicalHandler, xmlOptions);
+            ((XmlObject) graph).save(contentHandler, lexicalHandler, getXmlOptions());
         }
         catch (SAXException ex) {
             throw convertXmlBeansException(ex, true);
         }
     }
 
-    protected void marshalWriter(Object graph, Writer writer) throws XmlMappingException, IOException {
-        ((XmlObject) graph).save(writer, xmlOptions);
+    protected final void marshalWriter(Object graph, Writer writer) throws XmlMappingException, IOException {
+        ((XmlObject) graph).save(writer, getXmlOptions());
     }
 
-    protected void marshalXmlEventWriter(Object graph, XMLEventWriter eventWriter) {
+    protected final void marshalXmlEventWriter(Object graph, XMLEventWriter eventWriter) {
         ContentHandler contentHandler = new StaxEventContentHandler(eventWriter);
         marshalSaxHandlers(graph, contentHandler, null);
     }
 
-    protected void marshalXmlStreamWriter(Object graph, XMLStreamWriter streamWriter) throws XmlMappingException {
+    protected final void marshalXmlStreamWriter(Object graph, XMLStreamWriter streamWriter) throws XmlMappingException {
         ContentHandler contentHandler = new StaxStreamContentHandler(streamWriter);
         marshalSaxHandlers(graph, contentHandler, null);
     }
 
-    protected Object unmarshalDomNode(Node node) throws XmlMappingException {
+    protected final Object unmarshalDomNode(Node node) throws XmlMappingException {
         try {
-            XmlObject object = XmlObject.Factory.parse(node, xmlOptions);
+            XmlObject object = XmlObject.Factory.parse(node, getXmlOptions());
             validate(object);
             return object;
         }
@@ -139,9 +139,9 @@ public class XmlBeansMarshaller extends AbstractMarshaller {
         }
     }
 
-    protected Object unmarshalInputStream(InputStream inputStream) throws XmlMappingException, IOException {
+    protected final Object unmarshalInputStream(InputStream inputStream) throws XmlMappingException, IOException {
         try {
-            XmlObject object = XmlObject.Factory.parse(inputStream, xmlOptions);
+            XmlObject object = XmlObject.Factory.parse(inputStream, getXmlOptions());
             validate(object);
             return object;
         }
@@ -150,9 +150,9 @@ public class XmlBeansMarshaller extends AbstractMarshaller {
         }
     }
 
-    protected Object unmarshalReader(Reader reader) throws XmlMappingException, IOException {
+    protected final Object unmarshalReader(Reader reader) throws XmlMappingException, IOException {
         try {
-            XmlObject object = XmlObject.Factory.parse(reader, xmlOptions);
+            XmlObject object = XmlObject.Factory.parse(reader, getXmlOptions());
             validate(object);
             return object;
         }
@@ -161,9 +161,9 @@ public class XmlBeansMarshaller extends AbstractMarshaller {
         }
     }
 
-    protected Object unmarshalSaxReader(XMLReader xmlReader, InputSource inputSource)
+    protected final Object unmarshalSaxReader(XMLReader xmlReader, InputSource inputSource)
             throws XmlMappingException, IOException {
-        XmlSaxHandler saxHandler = XmlObject.Factory.newXmlSaxHandler(xmlOptions);
+        XmlSaxHandler saxHandler = XmlObject.Factory.newXmlSaxHandler(getXmlOptions());
         xmlReader.setContentHandler(saxHandler.getContentHandler());
         try {
             xmlReader.setProperty("http://xml.org/sax/properties/lexical-handler", saxHandler.getLexicalHandler());
@@ -188,7 +188,7 @@ public class XmlBeansMarshaller extends AbstractMarshaller {
         }
     }
 
-    protected Object unmarshalXmlEventReader(XMLEventReader eventReader) throws XmlMappingException {
+    protected final Object unmarshalXmlEventReader(XMLEventReader eventReader) throws XmlMappingException {
         XMLReader reader = new StaxEventXmlReader(eventReader);
         try {
             return unmarshalSaxReader(reader, new InputSource());
@@ -198,15 +198,34 @@ public class XmlBeansMarshaller extends AbstractMarshaller {
         }
     }
 
-    protected Object unmarshalXmlStreamReader(XMLStreamReader streamReader) throws XmlMappingException {
+    protected final Object unmarshalXmlStreamReader(XMLStreamReader streamReader) throws XmlMappingException {
         try {
-            XmlObject object = XmlObject.Factory.parse(streamReader, xmlOptions);
+            XmlObject object = XmlObject.Factory.parse(streamReader, getXmlOptions());
             validate(object);
             return object;
         }
         catch (XmlException ex) {
             throw convertXmlBeansException(ex, false);
         }
+    }
+
+    /**
+     * Converts the given XMLBeans exception to an appropriate exception from the <code>org.springframework.oxm</code>
+     * hierarchy.
+     * <p/>
+     * The default implementation delegates to <code>XmlBeansUtils</code>. Can be overridden in subclasses.
+     * <p/>
+     * A boolean flag is used to indicate whether this exception occurs during marshalling or unmarshalling, since
+     * XMLBeans itself does not make this distinction in its exception hierarchy.
+     *
+     * @param ex          XMLBeans Exception that occured
+     * @param marshalling indicates whether the exception occurs during marshalling (<code>true</code>), or
+     *                    unmarshalling (<code>false</code>)
+     * @return the corresponding <code>XmlMappingException</code>
+     * @see XmlBeansUtils#convertXmlBeansException(Exception,boolean)
+     */
+    public XmlMappingException convertXmlBeansException(Exception ex, boolean marshalling) {
+        return XmlBeansUtils.convertXmlBeansException(ex, marshalling);
     }
 
     /**
@@ -219,7 +238,7 @@ public class XmlBeansMarshaller extends AbstractMarshaller {
     public void validate(XmlObject object) throws XmlBeansValidationFailureException {
         if (isValidating() && object != null) {
             // create a temporary xmlOptions just for validation
-            XmlOptions validateOptions = xmlOptions != null ? xmlOptions : new XmlOptions();
+            XmlOptions validateOptions = getXmlOptions() != null ? getXmlOptions() : new XmlOptions();
             List errorsList = new ArrayList();
             validateOptions.setErrorListener(errorsList);
             if (!object.validate(validateOptions)) {
