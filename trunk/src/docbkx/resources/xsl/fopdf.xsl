@@ -27,9 +27,7 @@
                     <fo:table-row>
                         <fo:table-cell text-align="center">
                             <fo:block>
-                                <fo:block font-family="Helvetica" font-size="24pt" padding-before="10mm">
-                                    <xsl:value-of select="bookinfo/title"/>
-                                </fo:block>
+                                <fo:external-graphic src="file:src/docbkx/resources/images/spring-ws-logo.png"/>
                             </fo:block>
                             <fo:block font-family="Helvetica" font-size="22pt" padding-before="10mm">
                                 <xsl:value-of select="bookinfo/subtitle"/>
@@ -139,7 +137,7 @@
         </xsl:choose>
     </xsl:template>
 
-   <!--###################################################
+    <!--###################################################
                      Extensions
    ################################################### -->
 
