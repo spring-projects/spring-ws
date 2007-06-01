@@ -238,4 +238,15 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
         }
     }
 
+    public String toString() {
+        StringBuffer buffer = new StringBuffer("AxiomSoapMessageFactory[");
+        if (soapFactory instanceof SOAP11Factory) {
+            buffer.append("SOAP 1.1");
+        }
+        else if (soapFactory instanceof SOAP12Factory) {
+            buffer.append("SOAP 1.2");
+        }
+        buffer.append(']');
+        return buffer.toString();
+    }
 }

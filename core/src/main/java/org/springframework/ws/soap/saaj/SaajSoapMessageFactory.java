@@ -65,14 +65,14 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
         this.messageFactory = messageFactory;
     }
 
-    /** Sets the SAAJ <code>MessageFactory</code>. */
-    public void setMessageFactory(MessageFactory messageFactory) {
-        this.messageFactory = messageFactory;
-    }
-
     /** Returns the SAAJ <code>MessageFactory</code> used. */
     public MessageFactory getMessageFactory() {
         return messageFactory;
+    }
+
+    /** Sets the SAAJ <code>MessageFactory</code>. */
+    public void setMessageFactory(MessageFactory messageFactory) {
+        this.messageFactory = messageFactory;
     }
 
     public void setSoapVersion(SoapVersion version) {
@@ -115,11 +115,17 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
                 }
                 else {
                     throw new IllegalStateException(
-                            "SaajSoapMessageFactory requires SAAJ 1.1, which was not" + "found on the classpath");
+                            "SaajSoapMessageFactory requires SAAJ 1.1, which was not found on the classpath");
                 }
             }
+            catch (NoSuchMethodError ex) {
+                throw new SoapMessageCreationException(
+                        "Could not create SAAJ MessageFactory. Is the version of the SAAJ specification interfaces [" +
+                                SaajUtils.getSaajVersionString() +
+                                "] the same as the version supported by the application server?", ex);
+            }
             catch (SOAPException ex) {
-                throw new SoapMessageCreationException("Could not create MessageFactory: " + ex.getMessage(), ex);
+                throw new SoapMessageCreationException("Could not create SAAJ MessageFactory: " + ex.getMessage(), ex);
             }
         }
         if (logger.isDebugEnabled()) {
@@ -157,5 +163,16 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
         catch (SOAPException ex) {
             throw new SoapMessageCreationException("Could not create message from InputStream: " + ex.getMessage(), ex);
         }
+    }
+
+    public String toString() {
+        StringBuffer buffer = new StringBuffer("SaajSoapMessageFactory[");
+        buffer.append(SaajUtils.getSaajVersionString());
+        if (SaajUtils.getSaajVersion() >= SaajUtils.SAAJ_13) {
+            buffer.append(',');
+            buffer.append(messageFactoryProtocol);
+        }
+        buffer.append(']');
+        return buffer.toString();
     }
 }
