@@ -91,9 +91,7 @@ public abstract class AbstractFaultCreatingValidatingInterceptor extends Abstrac
         this.addValidationErrorDetail = addValidationErrorDetail;
     }
 
-    /**
-     * Returns the fault detail element name when validation errors occur on the request.
-     */
+    /** Returns the fault detail element name when validation errors occur on the request. */
     public QName getDetailElementName() {
         return detailElementName;
     }
@@ -108,9 +106,7 @@ public abstract class AbstractFaultCreatingValidatingInterceptor extends Abstrac
         this.detailElementName = detailElementName;
     }
 
-    /**
-     * Sets the SOAP <code>faultstring</code> or <code>Reason</code> used when validation errors occur on the request.
-     */
+    /** Sets the SOAP <code>faultstring</code> or <code>Reason</code> used when validation errors occur on the request. */
     public String getFaultStringOrReason() {
         return faultStringOrReason;
     }
@@ -126,9 +122,7 @@ public abstract class AbstractFaultCreatingValidatingInterceptor extends Abstrac
         this.faultStringOrReason = faultStringOrReason;
     }
 
-    /**
-     * Returns the SOAP fault reason locale used when validation errors occur on the request.
-     */
+    /** Returns the SOAP fault reason locale used when validation errors occur on the request. */
     public Locale getFaultStringOrReasonLocale() {
         return faultStringOrReasonLocale;
     }
@@ -143,6 +137,16 @@ public abstract class AbstractFaultCreatingValidatingInterceptor extends Abstrac
         this.faultStringOrReasonLocale = faultStringOrReasonLocale;
     }
 
+    /**
+     * Template method that is called when the request message contains validation errors. This implementation logs all
+     * errors, returns <code>false</code>, and creates a {@link SoapBody#addClientOrSenderFault(String,Locale) client
+     * or sender} {@link SoapFault}, adding a {@link SoapFaultDetail} with all errors if the
+     * <code>addValidationErrorDetail</code> property is <code>true</code>.
+     *
+     * @param messageContext the message context
+     * @param errors         the validation errors
+     * @return <code>true</code> to continue processing the request, <code>false</code> (the default) otherwise
+     */
     protected boolean handleRequestValidationErrors(MessageContext messageContext, SAXParseException[] errors)
             throws TransformerException {
         for (int i = 0; i < errors.length; i++) {
