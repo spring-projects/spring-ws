@@ -104,6 +104,28 @@ public abstract class SaajUtils {
     }
 
     /**
+     * Returns the SAAJ version as a String. The returned string will be "<code>SAAJ 1.3</code>",
+     * "<code>SAAJ 1.2</code>", or "<code>SAAJ 1.1</code>".
+     *
+     * @return a string representation of the SAAJ version
+     * @see #getSaajVersion()
+     */
+    public static String getSaajVersionString() {
+        if (saajVersion >= SaajUtils.SAAJ_13) {
+            return "SAAJ 1.3";
+        }
+        else if (saajVersion == SaajUtils.SAAJ_12) {
+            return "SAAJ 1.2";
+        }
+        else if (saajVersion == SaajUtils.SAAJ_11) {
+            return "SAAJ 1.1";
+        }
+        else {
+            return "";
+        }
+    }
+
+    /**
      * Converts a <code>javax.xml.namespace.QName</code> to a <code>javax.xml.soap.Name</code>. A
      * <code>SOAPElement</code> is required to create the name.
      *

@@ -20,7 +20,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.springframework.util.Assert;
-import org.springframework.util.ReflectionUtils;
 
 /**
  * Represents a bean method that will be invoked as part of an incoming Web service message.
@@ -78,11 +77,30 @@ public final class MethodEndpoint {
      *
      * @param args the arguments
      * @return the invocation result
-     * @throws IllegalAccessException    when there is insufficient access to invoke the method
-     * @throws InvocationTargetException when the method invocation results in an exception
+     * @throws Exception when the method invocation results in an exception
      */
-    public Object invoke(Object[] args) throws IllegalAccessException, InvocationTargetException {
-        return ReflectionUtils.invokeMethod(this.method, this.bean, args);
+    public Object invoke(Object[] args) throws Exception {
+        try {
+            return this.method.invoke(this.bean, args);
+        }
+        catch (InvocationTargetException ex) {
+            handleInvocationTargetException(ex);
+            throw new IllegalStateException("Unexpected exception thrown by method - " +
+                    ex.getTargetException().getClass().getName() + ": " + ex.getTargetException().getMessage());
+        }
+    }
+
+    private void handleInvocationTargetException(InvocationTargetException ex) throws Exception {
+        if (ex.getTargetException() instanceof RuntimeException) {
+            throw (RuntimeException) ex.getTargetException();
+        }
+        if (ex.getTargetException() instanceof Error) {
+            throw (Error) ex.getTargetException();
+        }
+        if (ex.getTargetException() instanceof Exception) {
+            throw (Exception) ex.getTargetException();
+        }
+
     }
 
     public boolean equals(Object o) {
