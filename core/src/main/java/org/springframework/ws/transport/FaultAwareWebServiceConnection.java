@@ -19,15 +19,15 @@ package org.springframework.ws.transport;
 import java.io.IOException;
 
 /**
- * Sub-interface of {@link WebServiceConnection} that is aware of any Faults received. Typically, fault detection is
- * done by inspecting connection error codes, etc.
+ * Sub-interface of {@link WebServiceConnection} that is aware of any SOAP Faults received. Typically, fault detection
+ * is done by inspecting connection error codes, etc.
  *
  * @author Arjen Poutsma
  */
 public interface FaultAwareWebServiceConnection extends WebServiceConnection {
 
     /**
-     * Indicates whether this connection has a fault.
+     * Indicates whether this connection has a SOAP Fault.
      *
      * @return <code>true</code> if this connection has a fault; <code>false</code> otherwise.
      */
