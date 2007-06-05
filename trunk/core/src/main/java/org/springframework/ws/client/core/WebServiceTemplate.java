@@ -48,6 +48,9 @@ import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.TransportException;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
+import org.springframework.ws.transport.context.DefaultTransportContext;
+import org.springframework.ws.transport.context.TransportContext;
+import org.springframework.ws.transport.context.TransportContextHolder;
 import org.springframework.ws.transport.support.DefaultStrategiesHelper;
 
 /**
@@ -348,9 +351,11 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                                  WebServiceMessageExtractor responseExtractor) {
         Assert.notNull(responseExtractor, "'responseExtractor' must not be null");
         Assert.hasLength(uri, "'uri' must not be empty");
+        TransportContext previousTransportContext = TransportContextHolder.getTransportContext();
         WebServiceConnection connection = null;
         try {
             connection = createConnection(uri);
+            TransportContextHolder.setTransportContext(new DefaultTransportContext(connection));
             WebServiceMessage request = getMessageFactory().createWebServiceMessage();
             if (requestCallback != null) {
                 requestCallback.doInMessage(request);
@@ -384,6 +389,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                     logger.debug("Could not close WebServiceConnection", ex);
                 }
             }
+            TransportContextHolder.setTransportContext(previousTransportContext);
         }
     }
 

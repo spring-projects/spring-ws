@@ -6,6 +6,7 @@
     </properties>
     <body>
         <release version="1.0-rc2">
+            <action dev="poutsma" type="add" issue="SWS-135">Implement client-side TransportContext</action>
             <action dev="poutsma" type="add" issue="SWS-133">Added ignoreExtraAttributes and ignoreExtraElements
                 properties to CastorMarshaller
             </action>
