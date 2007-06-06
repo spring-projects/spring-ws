@@ -205,7 +205,7 @@ public class Jaxb2MarshallerTest extends XMLTestCase {
         Resource logo = new ClassPathResource("spring-ws.png", getClass());
         DataHandler dataHandler = new DataHandler(new FileDataSource(logo.getFile()));
 
-        expect(mimeContainer.isXopPackage()).andReturn(true);
+        expect(mimeContainer.convertToXopPackage()).andReturn(true);
         mimeContainer.addAttachment(isA(String.class), isA(DataHandler.class));
         expectLastCall().times(3);
 
