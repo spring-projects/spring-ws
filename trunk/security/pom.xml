@@ -17,6 +17,11 @@
             <url>http://download.java.net/maven/1/</url>
             <layout>legacy</layout>
         </repository>
+        <repository>
+            <id>spring-ext</id>
+            <name>Spring External Dependencies Repository</name>
+            <url>https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/</url>
+        </repository>
     </repositories>
     <dependencies>
         <!-- Spring-WS dependencies -->
