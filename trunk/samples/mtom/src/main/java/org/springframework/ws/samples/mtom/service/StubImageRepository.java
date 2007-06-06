@@ -16,13 +16,18 @@
 
 package org.springframework.ws.samples.mtom.service;
 
-import java.awt.Image;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.PixelGrabber;
+import java.awt.image.ColorModel;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import javax.swing.*;
 
 /** @author Arjen Poutsma */
 public class StubImageRepository implements ImageRepository {
@@ -37,7 +42,7 @@ public class StubImageRepository implements ImageRepository {
     }
 
     public void storeImage(String name, Image image) throws IOException {
-        logger.info("Storing image " + name + " with [" + image.getHeight(null) + "," + image.getWidth(null) + "]");
+        logger.info("Storing image " + name );
         images.put(name, image);
     }
 }
