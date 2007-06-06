@@ -12,6 +12,7 @@
     <modules>
         <module>echo</module>
         <module>tutorial</module>
+        <module>mtom</module>
         <module>airline</module>
     </modules>
     <build>
