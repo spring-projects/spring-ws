@@ -398,7 +398,7 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller implements MimeMarsh
             if (contentId.startsWith("cid:")) {
                 contentId = contentId.substring("cid:".length());
                 try {
-                    URLDecoder.decode(contentId, "UTF-8");
+                    contentId = URLDecoder.decode(contentId, "UTF-8");
                 }
                 catch (UnsupportedEncodingException e) {
                     // ignore
