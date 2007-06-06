@@ -20,6 +20,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Map;
 import java.util.UUID;
 import javax.activation.DataHandler;
@@ -336,9 +341,27 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller implements MimeMarsh
         }
 
         public String addMtomAttachment(DataHandler dataHandler, String elementNamespace, String elementLocalName) {
-            String contentId = UUID.randomUUID() + "@" + elementNamespace;
+            String host = getHost(elementNamespace, dataHandler);
+            String contentId = UUID.randomUUID() + "@" + host;
             mimeContainer.addAttachment("<" + contentId + ">", dataHandler);
+            try {
+                contentId = URLEncoder.encode(contentId, "UTF-8");
+            }
+            catch (UnsupportedEncodingException e) {
+                // ignore
+            }
             return "cid:" + contentId;
+        }
+
+        private String getHost(String elementNamespace, DataHandler dataHandler) {
+            try {
+                URI uri = new URI(elementNamespace);
+                return uri.getHost();
+            }
+            catch (URISyntaxException e) {
+                // ignore
+            }
+            return dataHandler.getName();
         }
 
         public String addSwaRefAttachment(DataHandler dataHandler) {
@@ -373,7 +396,14 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller implements MimeMarsh
 
         public DataHandler getAttachmentAsDataHandler(String contentId) {
             if (contentId.startsWith("cid:")) {
-                contentId = '<' + contentId.substring("cid:".length()) + '>';
+                contentId = contentId.substring("cid:".length());
+                try {
+                    URLDecoder.decode(contentId, "UTF-8");
+                }
+                catch (UnsupportedEncodingException e) {
+                    // ignore
+                }
+                contentId = '<' + contentId + '>';
             }
             return mimeContainer.getAttachment(contentId);
         }
