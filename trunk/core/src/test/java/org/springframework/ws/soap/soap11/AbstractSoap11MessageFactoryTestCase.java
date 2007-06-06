@@ -88,7 +88,27 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
         Iterator iter = soapMessage.getAttachments();
         assertTrue("No attachments read", iter.hasNext());
 
-        Attachment attachment = soapMessage.getAttachment("1.urn:uuid:492264AB42E57108E01176731445504@apache.org");
+        Attachment attachment = soapMessage.getAttachment("<1.urn:uuid:492264AB42E57108E01176731445504@apache.org>");
+        assertNotNull("No attachment read", attachment);
+    }
+
+    public void testCreateSoapMessageMtomWeirdStartInfo() throws Exception {
+        InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-mtom.bin");
+        Properties headers = new Properties();
+        headers.setProperty("Content-Type", "multipart/related;" + "startinfo=\"text/xml\";" +
+                "type=\"application/xop+xml\";" + "start=\"<0.urn:uuid:492264AB42E57108E01176731445508@apache.org>\";" +
+                "boundary=\"MIMEBoundaryurn_uuid_492264AB42E57108E01176731445507\"");
+        TransportInputStream tis = new MockTransportInputStream(is, headers);
+
+        WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
+        assertTrue("Not a SoapMessage", message instanceof SoapMessage);
+        SoapMessage soapMessage = (SoapMessage) message;
+        assertEquals("Invalid soap version", SoapVersion.SOAP_11, soapMessage.getVersion());
+        assertTrue("Message not a XOP pacakge", soapMessage.isXopPackage());
+        Iterator iter = soapMessage.getAttachments();
+        assertTrue("No attachments read", iter.hasNext());
+
+        Attachment attachment = soapMessage.getAttachment("<1.urn:uuid:492264AB42E57108E01176731445504@apache.org>");
         assertNotNull("No attachment read", attachment);
     }
 

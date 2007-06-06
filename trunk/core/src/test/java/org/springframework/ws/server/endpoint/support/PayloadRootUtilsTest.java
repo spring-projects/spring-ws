@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.server.endpoint.mapping.support;
+package org.springframework.ws.server.endpoint.support;
 
 import java.io.StringReader;
 import javax.xml.namespace.QName;

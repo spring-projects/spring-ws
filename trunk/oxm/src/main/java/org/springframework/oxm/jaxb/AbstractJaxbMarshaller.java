@@ -18,7 +18,6 @@ package org.springframework.oxm.jaxb;
 
 import java.util.Iterator;
 import java.util.Map;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -27,7 +26,6 @@ import javax.xml.bind.ValidationEventHandler;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.oxm.XmlMappingException;
 
@@ -45,9 +43,7 @@ import org.springframework.oxm.XmlMappingException;
 public abstract class AbstractJaxbMarshaller
         implements org.springframework.oxm.Marshaller, org.springframework.oxm.Unmarshaller, InitializingBean {
 
-    /**
-     * Logger available to subclasses.
-     */
+    /** Logger available to subclasses. */
     protected final Log logger = LogFactory.getLog(getClass());
 
     private String contextPath;
@@ -60,16 +56,12 @@ public abstract class AbstractJaxbMarshaller
 
     private ValidationEventHandler validationEventHandler;
 
-    /**
-     * Returns the JAXB Context path.
-     */
+    /** Returns the JAXB Context path. */
     protected String getContextPath() {
         return contextPath;
     }
 
-    /**
-     * Sets the JAXB Context path.
-     */
+    /** Sets the JAXB Context path. */
     public void setContextPath(String contextPath) {
         this.contextPath = contextPath;
     }
@@ -79,7 +71,7 @@ public abstract class AbstractJaxbMarshaller
      * <code>Marshaller</code>, and allow for features such as indentation.
      *
      * @param properties the properties
-     * @see javax.xml.bind.Marshaller#setProperty(String, Object)
+     * @see javax.xml.bind.Marshaller#setProperty(String,Object)
      * @see javax.xml.bind.Marshaller#JAXB_ENCODING
      * @see javax.xml.bind.Marshaller#JAXB_FORMATTED_OUTPUT
      * @see javax.xml.bind.Marshaller#JAXB_NO_NAMESPACE_SCHEMA_LOCATION
@@ -94,7 +86,7 @@ public abstract class AbstractJaxbMarshaller
      * <code>Unmarshaller</code>.
      *
      * @param properties the properties
-     * @see javax.xml.bind.Unmarshaller#setProperty(String, Object)
+     * @see javax.xml.bind.Unmarshaller#setProperty(String,Object)
      */
     public void setUnmarshallerProperties(Map properties) {
         this.unmarshallerProperties = properties;
@@ -108,6 +100,11 @@ public abstract class AbstractJaxbMarshaller
      */
     public void setValidationEventHandler(ValidationEventHandler validationEventHandler) {
         this.validationEventHandler = validationEventHandler;
+    }
+
+    /** Returns the {@link JAXBContext} created in {@link #afterPropertiesSet()}. */
+    public JAXBContext getJaxbContext() {
+        return jaxbContext;
     }
 
     public final void afterPropertiesSet() throws Exception {
@@ -133,9 +130,7 @@ public abstract class AbstractJaxbMarshaller
         return JaxbUtils.convertJaxbException(ex);
     }
 
-    /**
-     * Returns a newly created JAXB marshaller. JAXB marshallers are not necessarily thread safe.
-     */
+    /** Returns a newly created JAXB marshaller. JAXB marshallers are not necessarily thread safe. */
     protected Marshaller createMarshaller() {
         try {
             Marshaller marshaller = jaxbContext.createMarshaller();
@@ -156,9 +151,7 @@ public abstract class AbstractJaxbMarshaller
         }
     }
 
-    /**
-     * Returns a newly created JAXB unmarshaller. JAXB unmarshallers are not necessarily thread safe.
-     */
+    /** Returns a newly created JAXB unmarshaller. JAXB unmarshallers are not necessarily thread safe. */
     protected Unmarshaller createUnmarshaller() {
         try {
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
@@ -197,8 +190,6 @@ public abstract class AbstractJaxbMarshaller
     protected void initJaxbUnmarshaller(Unmarshaller unmarshaller) throws JAXBException {
     }
 
-    /**
-     * Template method that returns a newly created JAXB context. Called from <code>afterPropertiesSet()</code>.
-     */
+    /** Template method that returns a newly created JAXB context. Called from <code>afterPropertiesSet()</code>. */
     protected abstract JAXBContext createJaxbContext() throws Exception;
 }

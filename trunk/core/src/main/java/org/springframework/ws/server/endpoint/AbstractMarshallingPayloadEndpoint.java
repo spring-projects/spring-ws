@@ -17,21 +17,16 @@
 package org.springframework.ws.server.endpoint;
 
 import java.io.IOException;
-import javax.activation.DataHandler;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
-import org.springframework.oxm.mime.MimeContainer;
-import org.springframework.oxm.mime.MimeMarshaller;
-import org.springframework.oxm.mime.MimeUnmarshaller;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.mime.Attachment;
-import org.springframework.ws.mime.MimeMessage;
+import org.springframework.ws.server.endpoint.support.MarshallingUtils;
 
 /**
  * Endpoint that unmarshals the request payload, and marshals the response object. This endpoint needs a
@@ -84,8 +79,8 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
                     "AbstractMarshallingPayloadEndpoint(Marshaller, Unmarshaller) constructor.");
         }
         else {
-            this.marshaller = marshaller;
-            this.unmarshaller = (Unmarshaller) marshaller;
+            this.setMarshaller(marshaller);
+            this.setUnmarshaller((Unmarshaller) marshaller);
         }
     }
 
@@ -98,12 +93,12 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
     protected AbstractMarshallingPayloadEndpoint(Marshaller marshaller, Unmarshaller unmarshaller) {
         Assert.notNull(marshaller, "marshaller must not be null");
         Assert.notNull(unmarshaller, "unmarshaller must not be null");
-        this.marshaller = marshaller;
-        this.unmarshaller = unmarshaller;
+        this.setMarshaller(marshaller);
+        this.setUnmarshaller(unmarshaller);
     }
 
     /** Returns the marshaller used for transforming objects into XML. */
-    public final Marshaller getMarshaller() {
+    public Marshaller getMarshaller() {
         return marshaller;
     }
 
@@ -113,7 +108,7 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
     }
 
     /** Returns the unmarshaller used for transforming XML into objects. */
-    public final Unmarshaller getUnmarshaller() {
+    public Unmarshaller getUnmarshaller() {
         return unmarshaller;
     }
 
@@ -123,8 +118,8 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
     }
 
     public final void afterPropertiesSet() throws Exception {
-        Assert.notNull(marshaller, "marshaller is required");
-        Assert.notNull(unmarshaller, "unmarshaller is required");
+        Assert.notNull(getMarshaller(), "marshaller is required");
+        Assert.notNull(getUnmarshaller(), "unmarshaller is required");
         afterMarshallerSet();
     }
 
@@ -139,15 +134,7 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
     }
 
     private Object unmarshalRequest(WebServiceMessage request) throws IOException {
-        Object requestObject;
-        if (unmarshaller instanceof MimeUnmarshaller && request instanceof MimeMessage) {
-            MimeUnmarshaller mimeUnmarshaller = (MimeUnmarshaller) unmarshaller;
-            MimeMessageContainer container = new MimeMessageContainer((MimeMessage) request);
-            requestObject = mimeUnmarshaller.unmarshal(request.getPayloadSource(), container);
-        }
-        else {
-            requestObject = unmarshaller.unmarshal(request.getPayloadSource());
-        }
+        Object requestObject = MarshallingUtils.unmarshal(getUnmarshaller(), request);
         if (logger.isDebugEnabled()) {
             logger.debug("Unmarshalled payload request to [" + requestObject + "]");
         }
@@ -158,14 +145,7 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
         if (logger.isDebugEnabled()) {
             logger.debug("Marshalling [" + responseObject + "] to response payload");
         }
-        if (marshaller instanceof MimeMarshaller && response instanceof MimeMessage) {
-            MimeMarshaller mimeMarshaller = (MimeMarshaller) marshaller;
-            MimeMessageContainer container = new MimeMessageContainer((MimeMessage) response);
-            mimeMarshaller.marshal(responseObject, response.getPayloadResult(), container);
-        }
-        else {
-            marshaller.marshal(responseObject, response.getPayloadResult());
-        }
+        MarshallingUtils.marshal(getMarshaller(), responseObject, response);
     }
 
     /**
@@ -179,33 +159,11 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
     /**
      * Template method that subclasses must implement to process a request.
      * <p/>
-     * The unmarshaled request object is passed as a parameter, and the returned object is marshalled to a response.
-     * If no response is required, return <code>null</code>.
+     * The unmarshaled request object is passed as a parameter, and the returned object is marshalled to a response. If
+     * no response is required, return <code>null</code>.
      *
      * @param requestObject the unnmarshalled message payload as an object
      * @return the object to be marshalled as response, or <code>null</code> if a response is not required
      */
     protected abstract Object invokeInternal(Object requestObject) throws Exception;
-
-    private static class MimeMessageContainer implements MimeContainer {
-
-        private final MimeMessage mimeMessage;
-
-        public MimeMessageContainer(MimeMessage mimeMessage) {
-            this.mimeMessage = mimeMessage;
-        }
-
-        public boolean isXopPackage() {
-            return mimeMessage.isXopPackage();
-        }
-
-        public void addAttachment(String contentId, DataHandler dataHandler) {
-            mimeMessage.addAttachment(contentId, dataHandler);
-        }
-
-        public DataHandler getAttachment(String contentId) {
-            Attachment attachment = mimeMessage.getAttachment(contentId);
-            return attachment.getDataHandler();
-        }
-    }
 }

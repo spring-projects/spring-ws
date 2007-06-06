@@ -25,7 +25,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.server.endpoint.mapping.support.PayloadRootUtils;
+import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
 
 /**
  * Simple subclass of {@link AbstractMethodEndpointMapping} that maps from the local name of the request payload to

@@ -37,6 +37,7 @@ import org.springframework.ws.soap.AbstractSoapMessage;
 import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
+import org.springframework.ws.transport.TransportConstants;
 
 /**
  * SAAJ-specific implementation of the {@link SoapMessage} interface. Created via the {@link SaajSoapMessageFactory},
@@ -47,15 +48,11 @@ import org.springframework.ws.soap.saaj.support.SaajUtils;
  */
 public class SaajSoapMessage extends AbstractSoapMessage {
 
-    private static final String MIME_HEADER_SOAP_ACTION = "SOAPAction";
-
-    private static final String MIME_HEADER_CONTENT_ID = "Content-Id";
-
-    private static final String MIME_HEADER_CONTENT_TYPE = "Content-Type";
-
     private SOAPMessage saajMessage;
 
     private SoapEnvelope envelope;
+
+    private static final String CONTENT_TYPE_XOP = "application/xop+xml";
 
     /**
      * Create a new <code>SaajSoapMessage</code> based on the given SAAJ <code>SOAPMessage</code>.
@@ -93,13 +90,13 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 
     public String getSoapAction() {
         MimeHeaders mimeHeaders = getImplementation().getMimeHeaders(getSaajMessage());
-        String[] values = mimeHeaders.getHeader(MIME_HEADER_SOAP_ACTION);
+        String[] values = mimeHeaders.getHeader(TransportConstants.HEADER_SOAP_ACTION);
         return ObjectUtils.isEmpty(values) ? null : values[0];
     }
 
     public void setSoapAction(String soapAction) {
         MimeHeaders mimeHeaders = getImplementation().getMimeHeaders(getSaajMessage());
-        mimeHeaders.setHeader(MIME_HEADER_SOAP_ACTION, soapAction);
+        mimeHeaders.setHeader(TransportConstants.HEADER_SOAP_ACTION, soapAction);
     }
 
     public void writeTo(OutputStream outputStream) throws IOException {
@@ -113,14 +110,53 @@ public class SaajSoapMessage extends AbstractSoapMessage {
     }
 
     public boolean isXopPackage() {
-        SOAPPart saajPart = saajMessage.getSOAPPart();
-        String[] contentTypes = saajPart.getMimeHeader(MIME_HEADER_CONTENT_TYPE);
-        for (int i = 0; i < contentTypes.length; i++) {
-            if (contentTypes[i].indexOf("application/xop+xml") != -1) {
-                return true;
+        if (SaajUtils.getSaajVersion() >= SaajUtils.SAAJ_13) {
+            SOAPPart saajPart = saajMessage.getSOAPPart();
+            String[] contentTypes = saajPart.getMimeHeader(TransportConstants.HEADER_CONTENT_TYPE);
+            for (int i = 0; i < contentTypes.length; i++) {
+                if (contentTypes[i].indexOf(CONTENT_TYPE_XOP) != -1) {
+                    return true;
+                }
             }
         }
         return false;
+    }
+
+    public boolean convertToXopPackage() {
+        if (SaajUtils.getSaajVersion() >= SaajUtils.SAAJ_13) {
+            convertMessageToXop();
+            convertPartToXop();
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private void convertMessageToXop() {
+        MimeHeaders mimeHeaders = saajMessage.getMimeHeaders();
+        String[] oldContentTypes = mimeHeaders.getHeader(TransportConstants.HEADER_CONTENT_TYPE);
+        String oldContentType =
+                !ObjectUtils.isEmpty(oldContentTypes) ? oldContentTypes[0] : getVersion().getContentType();
+        StringBuffer buffer = new StringBuffer(CONTENT_TYPE_XOP);
+        buffer.append(";type=");
+        buffer.append('"');
+        buffer.append(oldContentType);
+        buffer.append('"');
+        mimeHeaders.setHeader(TransportConstants.HEADER_CONTENT_TYPE, buffer.toString());
+    }
+
+    private void convertPartToXop() {
+        SOAPPart saajPart = saajMessage.getSOAPPart();
+        String[] oldContentTypes = saajPart.getMimeHeader(TransportConstants.HEADER_CONTENT_TYPE);
+        String oldContentType =
+                !ObjectUtils.isEmpty(oldContentTypes) ? oldContentTypes[0] : getVersion().getContentType();
+        StringBuffer buffer = new StringBuffer(CONTENT_TYPE_XOP);
+        buffer.append(";type=");
+        buffer.append('"');
+        buffer.append(oldContentType);
+        buffer.append('"');
+        saajPart.setMimeHeader(TransportConstants.HEADER_CONTENT_TYPE, buffer.toString());
     }
 
     public Iterator getAttachments() throws AttachmentException {
@@ -131,13 +167,8 @@ public class SaajSoapMessage extends AbstractSoapMessage {
     public Attachment getAttachment(String contentId) {
         Assert.hasLength(contentId, "contentId must not be empty");
         MimeHeaders mimeHeaders = new MimeHeaders();
-        mimeHeaders.setHeader(MIME_HEADER_CONTENT_ID, contentId);
+        mimeHeaders.setHeader(TransportConstants.HEADER_CONTENT_ID, contentId);
         Iterator iterator = getImplementation().getAttachment(getSaajMessage(), mimeHeaders);
-        if (!iterator.hasNext()) {
-            // try to prefix it with an MTOM-specific < and >
-            mimeHeaders.setHeader(MIME_HEADER_CONTENT_ID, "<" + contentId + ">");
-            iterator = getImplementation().getAttachment(getSaajMessage(), mimeHeaders);
-        }
         if (!iterator.hasNext()) {
             return null;
         }

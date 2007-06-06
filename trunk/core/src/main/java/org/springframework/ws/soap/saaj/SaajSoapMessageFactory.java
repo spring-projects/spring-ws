@@ -56,6 +56,8 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 
     private String messageFactoryProtocol;
 
+    private static final String CONTENT_TYPE = "Content-Type";
+
     /** Default, empty constructor. */
     public SaajSoapMessageFactory() {
     }
@@ -161,6 +163,19 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
             return new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, inputStream));
         }
         catch (SOAPException ex) {
+            // SAAJ 1.3 RI has a issue with handling multipart XOP content types which contain "startinfo" rather than
+            // "start-info", so let's try and do something about it
+            String contentType = StringUtils.arrayToCommaDelimitedString(mimeHeaders.getHeader(CONTENT_TYPE));
+            if (contentType.indexOf("startinfo") != -1) {
+                contentType = contentType.replace("startinfo", "start-info");
+                mimeHeaders.setHeader(CONTENT_TYPE, contentType);
+                try {
+                    return new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, inputStream));
+                }
+                catch (SOAPException e) {
+                    // fall-through
+                }
+            }
             throw new SoapMessageCreationException("Could not create message from InputStream: " + ex.getMessage(), ex);
         }
     }

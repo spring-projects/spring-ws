@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.server.endpoint.mapping.support;
+package org.springframework.ws.server.endpoint.support;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
@@ -37,6 +37,10 @@ import org.w3c.dom.Node;
  * @author Arjen Poutsma
  */
 public abstract class PayloadRootUtils {
+
+    private PayloadRootUtils() {
+
+    }
 
     /**
      * Returns the root qualified name of the given source, transforming it if necessary.
