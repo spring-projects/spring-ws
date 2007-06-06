@@ -122,10 +122,10 @@ public class Jaxb2UnmarshallerTest extends TestCase {
 
         expect(mimeContainer.isXopPackage()).andReturn(true);
         expect(mimeContainer.getAttachment(
-                "cid:6b76528d-7a9c-4def-8e13-095ab89e9bb7@http://springframework.org/spring-ws"))
+                "<6b76528d-7a9c-4def-8e13-095ab89e9bb7@http://springframework.org/spring-ws>"))
                 .andReturn(dataHandler);
         expect(mimeContainer.getAttachment(
-                "cid:99bd1592-0521-41a2-9688-a8bfb40192fb@http://springframework.org/spring-ws"))
+                "<99bd1592-0521-41a2-9688-a8bfb40192fb@http://springframework.org/spring-ws>"))
                 .andReturn(dataHandler);
         expect(mimeContainer.getAttachment("696cfb9a-4d2d-402f-bb5c-59fa69e7f0b3@spring-ws.png"))
                 .andReturn(dataHandler);
