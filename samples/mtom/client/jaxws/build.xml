@@ -72,7 +72,7 @@
 
     <target name="run" depends="build">
         <java classname="org.springframework.ws.samples.mtom.client.jaxws.Main" fork="true" failonerror="true">
-            <arg path="spring-ws-logo.png"/>
+            <arg path="../spring-ws-logo.png"/>
             <classpath refid="compile.classpath"/>
             <classpath refid="runtime.classpath"/>
             <classpath location="${bin.dir}"/>
