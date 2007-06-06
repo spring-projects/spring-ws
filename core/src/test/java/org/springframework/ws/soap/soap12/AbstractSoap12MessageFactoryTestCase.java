@@ -47,7 +47,7 @@ public abstract class AbstractSoap12MessageFactoryTestCase extends AbstractSoapM
         assertTrue("Not a SoapMessage", message instanceof SoapMessage);
         SoapMessage soapMessage = (SoapMessage) message;
         assertEquals("Invalid soap version", SoapVersion.SOAP_12, soapMessage.getVersion());
-        assertFalse("Message a XOP pacakge", soapMessage.isXopPackage());
+        assertFalse("Message is a XOP pacakge", soapMessage.isXopPackage());
     }
 
     public void testCreateSoapMessageSwA() throws Exception {
@@ -61,7 +61,7 @@ public abstract class AbstractSoap12MessageFactoryTestCase extends AbstractSoapM
         assertTrue("Not a SoapMessage", message instanceof SoapMessage);
         SoapMessage soapMessage = (SoapMessage) message;
         assertEquals("Invalid soap version", SoapVersion.SOAP_12, soapMessage.getVersion());
-        assertFalse("Message a XOP pacakge", soapMessage.isXopPackage());
+        assertFalse("Message is a XOP package", soapMessage.isXopPackage());
         Attachment attachment = soapMessage.getAttachment("interface21");
         assertNotNull("No attachment read", attachment);
     }
@@ -78,11 +78,11 @@ public abstract class AbstractSoap12MessageFactoryTestCase extends AbstractSoapM
         assertTrue("Not a SoapMessage", message instanceof SoapMessage);
         SoapMessage soapMessage = (SoapMessage) message;
         assertEquals("Invalid soap version", SoapVersion.SOAP_12, soapMessage.getVersion());
-        assertTrue("Message not a XOP pacakge", soapMessage.isXopPackage());
+        assertTrue("Message is not a XOP pacakge", soapMessage.isXopPackage());
         Iterator iter = soapMessage.getAttachments();
         assertTrue("No attachments read", iter.hasNext());
 
-        Attachment attachment = soapMessage.getAttachment("1.urn:uuid:40864869929B855F971176851454452@apache.org");
+        Attachment attachment = soapMessage.getAttachment("<1.urn:uuid:40864869929B855F971176851454452@apache.org>");
         assertNotNull("No attachment read", attachment);
     }
 

@@ -21,7 +21,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.server.endpoint.mapping.support.PayloadRootUtils;
+import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
 
 /**
  * Implementation of the <code>EndpointMapping</code> interface to map from the qualified name of the request payload

@@ -24,7 +24,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointMapping;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
-import org.springframework.ws.server.endpoint.mapping.support.PayloadRootUtils;
+import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
 
 /**
  * Implementation of the {@link EndpointMapping} interface that uses the {@link PayloadRoot} annotation to map methods

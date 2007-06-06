@@ -15,6 +15,7 @@
  */
 package org.springframework.oxm.jaxb;
 
+import java.io.IOException;
 import javax.xml.bind.UnmarshalException;
 
 import org.springframework.oxm.UnmarshallingFailureException;
@@ -30,4 +31,7 @@ public class JaxbUnmarshallingFailureException extends UnmarshallingFailureExcep
         super("JAXB unmarshalling exception: " + ex.getMessage(), ex);
     }
 
+    public JaxbUnmarshallingFailureException(IOException ex) {
+        super("JAXB unmarshalling exception: " + ex.getMessage(), ex);
+    }
 }

@@ -314,8 +314,8 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller implements MimeMarsh
     }
 
     /*
-     * Inner classes
-     */
+    * Inner classes
+    */
 
     private static class Jaxb2AttachmentMarshaller extends AttachmentMarshaller {
 
@@ -337,7 +337,7 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller implements MimeMarsh
 
         public String addMtomAttachment(DataHandler dataHandler, String elementNamespace, String elementLocalName) {
             String contentId = UUID.randomUUID() + "@" + elementNamespace;
-            mimeContainer.addAttachment(contentId, dataHandler);
+            mimeContainer.addAttachment("<" + contentId + ">", dataHandler);
             return "cid:" + contentId;
         }
 
@@ -349,7 +349,7 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller implements MimeMarsh
 
         @Override
         public boolean isXOPPackage() {
-            return mimeContainer.isXopPackage();
+            return mimeContainer.convertToXopPackage();
         }
     }
 
@@ -367,12 +367,15 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller implements MimeMarsh
                 return FileCopyUtils.copyToByteArray(dataHandler.getInputStream());
             }
             catch (IOException ex) {
-                return null;
+                throw new JaxbUnmarshallingFailureException(ex);
             }
         }
 
-        public DataHandler getAttachmentAsDataHandler(String cid) {
-            return mimeContainer.getAttachment(cid);
+        public DataHandler getAttachmentAsDataHandler(String contentId) {
+            if (contentId.startsWith("cid:")) {
+                contentId = '<' + contentId.substring("cid:".length()) + '>';
+            }
+            return mimeContainer.getAttachment(contentId);
         }
 
         @Override

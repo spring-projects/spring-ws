@@ -125,6 +125,13 @@ public class MockWebServiceMessage implements WebServiceMessage {
         writer.write(content.toString());
     }
 
+    public String toString() {
+        StringBuffer buffer = new StringBuffer("MockWebServiceMessage {");
+        buffer.append(content);
+        buffer.append('}');
+        return buffer.toString();
+    }
+
     private class StringBufferWriter extends Writer {
 
         private StringBufferWriter() {

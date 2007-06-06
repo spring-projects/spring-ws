@@ -36,6 +36,14 @@ public interface MimeContainer {
     boolean isXopPackage();
 
     /**
+     * Turns this message into a XOP package.
+     *
+     * @return <code>true</code> when the message is a XOP package
+     * @see <a href="http://www.w3.org/TR/2005/REC-xop10-20050125/#xop_packages">XOP Packages</a>
+     */
+    boolean convertToXopPackage();
+
+    /**
      * Adds the given data handler as an attachment to this container.
      *
      * @param contentId   the content id of the attachment

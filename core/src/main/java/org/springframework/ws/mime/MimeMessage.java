@@ -26,6 +26,14 @@ public interface MimeMessage extends WebServiceMessage {
     boolean isXopPackage();
 
     /**
+     * Turns this message into a XOP package.
+     *
+     * @return <code>true</code> when the message is a XOP package
+     * @see <a href="http://www.w3.org/TR/2005/REC-xop10-20050125/#xop_packages">XOP Packages</a>
+     */
+    boolean convertToXopPackage();
+
+    /**
      * Returns the <code>Attachment</code> with the specified content Id.
      *
      * @return the attachment with the specified content id; or <code>null</code> if it cannot be found

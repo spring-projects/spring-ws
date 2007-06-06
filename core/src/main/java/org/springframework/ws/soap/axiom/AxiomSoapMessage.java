@@ -23,9 +23,11 @@ import javax.activation.DataHandler;
 import javax.xml.stream.XMLStreamException;
 
 import org.apache.axiom.attachments.Attachments;
+import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMOutputFormat;
 import org.apache.axiom.om.impl.MTOMConstants;
+import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPMessage;
@@ -81,11 +83,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
      * @param payloadCaching whether the contents of the SOAP body should be cached or not
      */
     public AxiomSoapMessage(SOAPMessage soapMessage, String soapAction, boolean payloadCaching) {
-        axiomMessage = soapMessage;
-        axiomFactory = (SOAPFactory) soapMessage.getSOAPEnvelope().getOMFactory();
-        this.attachments = new Attachments();
-        this.soapAction = soapAction;
-        this.payloadCaching = payloadCaching;
+        this(soapMessage, new Attachments(), soapAction, payloadCaching);
     }
 
     /**
@@ -100,6 +98,8 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
                             Attachments attachments,
                             String soapAction,
                             boolean payloadCaching) {
+        Assert.notNull(soapMessage, "'soapMessage' must not be null");
+        Assert.notNull(attachments, "'attachments' must not be null");
         axiomMessage = soapMessage;
         axiomFactory = (SOAPFactory) soapMessage.getSOAPEnvelope().getOMFactory();
         this.attachments = attachments;
@@ -147,7 +147,15 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         }
     }
 
+    public boolean convertToXopPackage() {
+        return false;
+    }
+
     public Attachment getAttachment(String contentId) {
+        Assert.hasLength(contentId, "contentId must not be empty");
+        if (contentId.startsWith("<") && contentId.endsWith(">")) {
+            contentId = contentId.substring(1, contentId.length() - 1);
+        }
         DataHandler dataHandler = attachments.getDataHandler(contentId);
         return dataHandler != null ? new AxiomAttachment(contentId, dataHandler) : null;
     }
@@ -189,6 +197,27 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         catch (OMException ex) {
             throw new AxiomSoapMessageException("Could not write message to OutputStream: " + ex.getMessage(), ex);
         }
+    }
+
+    public String toString() {
+        StringBuffer buffer = new StringBuffer("AxiomSoapMessage");
+        try {
+            SOAPEnvelope envelope = axiomMessage.getSOAPEnvelope();
+            if (envelope != null) {
+                SOAPBody body = envelope.getBody();
+                if (body != null) {
+                    OMElement bodyElement = body.getFirstElement();
+                    if (bodyElement != null) {
+                        buffer.append(' ');
+                        buffer.append(bodyElement.getQName());
+                    }
+                }
+            }
+        }
+        catch (OMException ex) {
+            // ignore
+        }
+        return buffer.toString();
     }
 
     private class AxiomAttachmentIterator implements Iterator {

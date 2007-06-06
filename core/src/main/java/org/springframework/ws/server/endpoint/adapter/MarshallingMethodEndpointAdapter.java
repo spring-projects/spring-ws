@@ -16,6 +16,7 @@
 
 package org.springframework.ws.server.endpoint.adapter;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 
 import org.springframework.beans.factory.InitializingBean;
@@ -26,6 +27,7 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointMapping;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
+import org.springframework.ws.server.endpoint.support.MarshallingUtils;
 
 /**
  * Adapter that supports endpoint methods that use marshalling. Supports methods with the following signature:
@@ -62,8 +64,8 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
     }
 
     /**
-     * Creates a new <code>MarshallingMethodEndpointAdapter</code>. The {@link Marshaller} and {@link Unmarshaller}
-     * must be injected using properties.
+     * Creates a new <code>MarshallingMethodEndpointAdapter</code>. The {@link Marshaller} and {@link Unmarshaller} must
+     * be injected using properties.
      *
      * @see #setMarshaller(org.springframework.oxm.Marshaller)
      * @see #setUnmarshaller(org.springframework.oxm.Unmarshaller)
@@ -129,17 +131,28 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
 
     protected void invokeInternal(MessageContext messageContext, MethodEndpoint methodEndpoint) throws Exception {
         WebServiceMessage request = messageContext.getRequest();
-        Object requestObject = unmarshaller.unmarshal(request.getPayloadSource());
+        Object requestObject = unmarshalRequest(request);
+        Object responseObject = methodEndpoint.invoke(new Object[]{requestObject});
+        if (responseObject != null) {
+            WebServiceMessage response = messageContext.getResponse();
+            marshalResponse(responseObject, response);
+        }
+
+    }
+
+    private Object unmarshalRequest(WebServiceMessage request) throws IOException {
+        Object requestObject = MarshallingUtils.unmarshal(unmarshaller, request);
         if (logger.isDebugEnabled()) {
             logger.debug("Unmarshalled payload request to [" + requestObject + "]");
         }
-        Object responseObject = methodEndpoint.invoke(new Object[]{requestObject});
-        if (responseObject != null) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Marshalling [" + responseObject + "] to response payload");
-            }
-            WebServiceMessage response = messageContext.getResponse();
-            marshaller.marshal(responseObject, response.getPayloadResult());
-        }
+        return requestObject;
     }
+
+    private void marshalResponse(Object responseObject, WebServiceMessage response) throws IOException {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Marshalling [" + responseObject + "] to response payload");
+        }
+        MarshallingUtils.marshal(marshaller, responseObject, response);
+    }
+
 }
