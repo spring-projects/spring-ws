@@ -16,15 +16,14 @@
 
 package org.springframework.ws.samples.mtom.service;
 
-import java.io.InputStream;
+import java.awt.Image;
 import java.io.IOException;
-import java.io.OutputStream;
 
 /** @author Arjen Poutsma */
 public interface ImageRepository {
 
-    void streamImage(String name, OutputStream os) throws IOException;
+    Image readImage(String name) throws IOException;
 
-    void storeImage(String name, InputStream is) throws IOException;
+    void storeImage(String name, Image image) throws IOException;
 
 }

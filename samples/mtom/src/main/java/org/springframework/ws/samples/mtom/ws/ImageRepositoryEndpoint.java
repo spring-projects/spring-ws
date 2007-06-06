@@ -16,15 +16,11 @@
 
 package org.springframework.ws.samples.mtom.ws;
 
-import java.io.IOException;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import javax.activation.DataHandler;
-import javax.activation.DataSource;
 import javax.xml.bind.JAXBElement;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.util.Assert;
 import org.springframework.ws.samples.mtom.schema.Image;
 import org.springframework.ws.samples.mtom.schema.ObjectFactory;
@@ -49,19 +45,17 @@ public class ImageRepositoryEndpoint {
     @PayloadRoot(localPart = "StoreImageRequest", namespace = "http://www.springframework.org/spring-ws/samples/mtom")
     public void store(JAXBElement<Image> requestElement) throws IOException {
         Image request = requestElement.getValue();
-        imageRepository.storeImage(request.getName(), request.getImage().getInputStream());
+        imageRepository.storeImage(request.getName(), request.getImage());
     }
 
     @PayloadRoot(localPart = "LoadImageRequest", namespace = "http://www.springframework.org/spring-ws/samples/mtom")
     public JAXBElement<Image> load(JAXBElement<String> requestElement) throws IOException {
         String name = requestElement.getValue();
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        imageRepository.streamImage(name, os);
-        DataHandler dataHandler = new DataHandler(os.toByteArray(), "application/octet-stream");
         Image response = new Image();
         response.setName(name);
-        response.setImage(dataHandler);
+        response.setImage(imageRepository.readImage(name));
         return objectFactory.createLoadImageResponse(response);
     }
+
 
 }
