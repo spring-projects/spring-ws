@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <artifactId>spring-ws</artifactId>
         <groupId>org.springframework.ws</groupId>
@@ -11,9 +12,10 @@
     <description>Spring-WS WS-Security implementation</description>
     <repositories>
         <repository>
-            <id>spring-ext</id>
-            <name>Spring External Dependencies Repository</name>
-            <url>https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/</url>
+            <id>java.net</id>
+            <name>Java.net Repository for Maven2</name>
+            <url>http://download.java.net/maven/1/</url>
+            <layout>legacy</layout>
         </repository>
     </repositories>
     <dependencies>
@@ -21,6 +23,12 @@
         <dependency>
             <groupId>org.springframework.ws</groupId>
             <artifactId>spring-ws-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.ws</groupId>
+                    <artifactId>spring-oxm</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.ws</groupId>
@@ -57,10 +65,29 @@
         <dependency>
             <groupId>com.sun.xml.wss</groupId>
             <artifactId>xws-security</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.xml.parsers</groupId>
+                    <artifactId>jaxp-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jaxb-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.xml.ws</groupId>
+                    <artifactId>jaxws-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.xml</groupId>
+                    <artifactId>jaxrpc-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.sun.org.apache.xml.security</groupId>
+            <groupId>xml-security</groupId>
             <artifactId>xmlsec</artifactId>
+            <version>1.3.0</version>
         </dependency>
         <dependency>
             <groupId>org.acegisecurity</groupId>

@@ -34,16 +34,14 @@ import java.security.cert.X509CertSelector;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.Enumeration;
-
 import javax.crypto.SecretKey;
 
-import com.sun.org.apache.xml.internal.security.utils.RFC2253Parser;
 import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
 import com.sun.xml.wss.impl.callback.DecryptionKeyCallback;
 import com.sun.xml.wss.impl.callback.EncryptionKeyCallback;
 import com.sun.xml.wss.impl.callback.SignatureKeyCallback;
 import com.sun.xml.wss.impl.callback.SignatureVerificationKeyCallback;
-
+import org.apache.xml.security.utils.RFC2253Parser;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -158,9 +156,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
         return null;
     }
 
-    /**
-     * Sets the key store alias for the default certificate and private key.
-     */
+    /** Sets the key store alias for the default certificate and private key. */
     public void setDefaultAlias(String defaultAlias) {
         this.defaultAlias = defaultAlias;
     }
