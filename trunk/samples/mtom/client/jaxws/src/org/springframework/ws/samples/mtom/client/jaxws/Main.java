@@ -18,12 +18,9 @@ package org.springframework.ws.samples.mtom.client.jaxws;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.net.MalformedURLException;
+import java.awt.image.RenderedImage;
+import java.awt.Toolkit;
 import javax.activation.DataHandler;
-import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.soap.SOAPFaultException;
@@ -42,13 +39,13 @@ public class Main {
 
             ImageRepositoryService service = new ImageRepositoryService();
             ImageRepository imageRepository = service.getImageRepositoryPort();
-            SOAPBinding binding = (SOAPBinding)((BindingProvider)imageRepository).getBinding ();
-            binding.setMTOMEnabled (true);
-            
+            SOAPBinding binding = (SOAPBinding) ((BindingProvider) imageRepository).getBinding();
+            binding.setMTOMEnabled(true);
+
             Image request = new Image();
             File file = new File(args[0]);
             request.setName(file.getName());
-            request.setImage(new DataHandler(file.toURL()));
+            request.setImage(Toolkit.getDefaultToolkit().getImage(args[0]));
             StopWatch stopWatch = new StopWatch();
             stopWatch.start("store");
             imageRepository.storeImage(request);

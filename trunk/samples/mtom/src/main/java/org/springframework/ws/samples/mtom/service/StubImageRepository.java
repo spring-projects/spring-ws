@@ -16,34 +16,28 @@
 
 package org.springframework.ws.samples.mtom.service;
 
+import java.awt.Image;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.util.FileCopyUtils;
 
 /** @author Arjen Poutsma */
 public class StubImageRepository implements ImageRepository {
 
     private static final Log logger = LogFactory.getLog(StubImageRepository.class);
 
-    private Map<String, byte[]> images = new HashMap<String, byte[]>();
+    private Map<String, Image> images = new HashMap<String, Image>();
 
-    public void streamImage(String name, OutputStream os) throws IOException {
-        if (images.containsKey(name)) {
-            logger.info("Streaming image " + name);
-            byte[] buf = images.get(name);
-            FileCopyUtils.copy(buf, os);
-        }
+    public Image readImage(String name) throws IOException {
+        logger.info("Streaming image " + name);
+        return images.get(name);
     }
 
-    public void storeImage(String name, InputStream is) throws IOException {
-        byte[] buf = FileCopyUtils.copyToByteArray(is);
-        logger.info("Storing image " + name + " with size: " + buf.length);
-        images.put(name, buf);
+    public void storeImage(String name, Image image) throws IOException {
+        logger.info("Storing image " + name + " with [" + image.getHeight(null) + "," + image.getWidth(null) + "]");
+        images.put(name, image);
     }
 }

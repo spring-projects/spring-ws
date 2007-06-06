@@ -12,7 +12,7 @@
     <complexType name="Image">
         <sequence>
             <element name="name" type="string"/>
-            <element name="image" type="base64Binary" xmime:expectedContentTypes="application/octet-stream"/>
+            <element name="image" type="base64Binary" xmime:expectedContentTypes="image/png"/>
         </sequence>
     </complexType>
 
