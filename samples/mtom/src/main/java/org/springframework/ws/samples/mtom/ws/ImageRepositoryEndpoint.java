@@ -1,0 +1,67 @@
+/*
+ * Copyright 2007 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.springframework.ws.samples.mtom.ws;
+
+import java.io.IOException;
+import java.io.ByteArrayOutputStream;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.xml.bind.JAXBElement;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.util.Assert;
+import org.springframework.ws.samples.mtom.schema.Image;
+import org.springframework.ws.samples.mtom.schema.ObjectFactory;
+import org.springframework.ws.samples.mtom.service.ImageRepository;
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+
+/** @author Arjen Poutsma */
+@Endpoint
+public class ImageRepositoryEndpoint {
+
+    private ImageRepository imageRepository;
+
+    private ObjectFactory objectFactory;
+
+    public ImageRepositoryEndpoint(ImageRepository imageRepository) {
+        Assert.notNull(imageRepository, "'imageRepository' must not be null");
+        this.imageRepository = imageRepository;
+        this.objectFactory = new ObjectFactory();
+    }
+
+    @PayloadRoot(localPart = "StoreImageRequest", namespace = "http://www.springframework.org/spring-ws/samples/mtom")
+    public void store(JAXBElement<Image> requestElement) throws IOException {
+        Image request = requestElement.getValue();
+        imageRepository.storeImage(request.getName(), request.getImage().getInputStream());
+    }
+
+    @PayloadRoot(localPart = "LoadImageRequest", namespace = "http://www.springframework.org/spring-ws/samples/mtom")
+    public JAXBElement<Image> load(JAXBElement<String> requestElement) throws IOException {
+        String name = requestElement.getValue();
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        imageRepository.streamImage(name, os);
+        DataHandler dataHandler = new DataHandler(os.toByteArray(), "application/octet-stream");
+        Image response = new Image();
+        response.setName(name);
+        response.setImage(dataHandler);
+        return objectFactory.createLoadImageResponse(response);
+    }
+
+}
