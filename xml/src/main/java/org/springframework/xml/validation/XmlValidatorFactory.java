@@ -38,14 +38,10 @@ public abstract class XmlValidatorFactory {
 
     private static final Log logger = LogFactory.getLog(XmlValidatorFactory.class);
 
-    /**
-     * Constant that defines a W3C XML Schema.
-     */
+    /** Constant that defines a W3C XML Schema. */
     public static final String SCHEMA_W3C_XML = "http://www.w3.org/2001/XMLSchema";
 
-    /**
-     * Constant that defines a RELAX NG Schema.
-     */
+    /** Constant that defines a RELAX NG Schema. */
     public static final String SCHEMA_RELAX_NG = "http://relaxng.org/ns/structure/1.0";
 
     /**
@@ -89,11 +85,11 @@ public abstract class XmlValidatorFactory {
             Assert.isTrue(schemaResources[i].exists(), "schema [" + schemaResources[i] + "] does not exist");
         }
         if (JaxpVersion.getJaxpVersion() >= JaxpVersion.JAXP_13) {
-            logger.debug("Creating JAXP 1.3 XmlValidator");
+            logger.trace("Creating JAXP 1.3 XmlValidator");
             return Jaxp13ValidatorFactory.createValidator(schemaResources, schemaLanguage);
         }
         else if (JaxpVersion.getJaxpVersion() >= JaxpVersion.JAXP_10) {
-            logger.debug("Creating JAXP 1.0 XmlValidator");
+            logger.trace("Creating JAXP 1.0 XmlValidator");
             return Jaxp10ValidatorFactory.createValidator(schemaResources, schemaLanguage);
         }
         else {

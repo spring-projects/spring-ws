@@ -44,14 +44,10 @@ public abstract class XPathExpressionFactory {
     private static boolean jaxenAvailable;
 
     static {
-        // Check whether JAXP 1.3, or Jaxen are available
-        if (JaxpVersion.getJaxpVersion() >= JaxpVersion.JAXP_13) {
-            logger.debug("JAXP 1.3 available");
-        }
+        // Check whether Jaxen is available
         try {
             ClassUtils.forName(JAXEN_CLASS_NAME);
             jaxenAvailable = true;
-            logger.debug("Jaxen available");
         }
         catch (ClassNotFoundException ex) {
             jaxenAvailable = false;
@@ -85,11 +81,11 @@ public abstract class XPathExpressionFactory {
             throws IllegalStateException, XPathParseException {
         Assert.hasLength(expression, "expression is empty");
         if (JaxpVersion.getJaxpVersion() >= JaxpVersion.JAXP_13) {
-            logger.debug("Creating [javax.xml.xpath.XPathExpression]");
+            logger.trace("Creating [javax.xml.xpath.XPathExpression]");
             return Jaxp13XPathExpressionFactory.createXPathExpression(expression, namespaces);
         }
         else if (jaxenAvailable) {
-            logger.debug("Creating [org.jaxen.XPath]");
+            logger.trace("Creating [org.jaxen.XPath]");
             return JaxenXPathExpressionFactory.createXPathExpression(expression, namespaces);
         }
         else {
