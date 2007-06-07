@@ -51,22 +51,17 @@ import org.springframework.ws.transport.support.DefaultStrategiesHelper;
 /**
  * Central dispatcher for use within Spring-WS, dispatching Web service messages to registered endpoints.
  * <p/>
- * This dispatcher is quite similar to Spring MVCs {@link DispatcherServlet}. Just like its counterpart, this
- * dispatcher is very flexible. This class is SOAP agnostic; in typical SOAP Web Services, the
- * {@link SoapMessageDispatcher} subclass is used.
- * <ul>
- * <li>It can use any {@link EndpointMapping} implementation - whether standard, or provided as part of an
- * application - to control the routing of request messages to endpoint objects. Endpoint mappings can be registered
- * using the <code>endpointMappings</code> property.</li>
- * <li>It can use any {@link EndpointAdapter}; this allows one to use any endpoint interface or form. Defaults to the
- * {@link MessageEndpointAdapter} and {@link PayloadEndpointAdapter}, for {@link MessageEndpoint} and
- * {@link PayloadEndpoint}, respectively, and the {@link MessageMethodEndpointAdapter} and
- * {@link PayloadMethodEndpointAdapter}. Additional endpoint adapters can be added through the
- * <code>endpointAdapters</code> property.</li>
- * <li>Its exception resolution strategy can be specified via a {@link EndpointExceptionResolver}, for example mapping
- * certain exceptions to SOAP Faults. Default is none. Additional exception resolvers can be added through the
- * <code>endpointExceptionResolvers</code> property.</li>
- * </ul>
+ * This dispatcher is quite similar to Spring MVCs {@link DispatcherServlet}. Just like its counterpart, this dispatcher
+ * is very flexible. This class is SOAP agnostic; in typical SOAP Web Services, the {@link SoapMessageDispatcher}
+ * subclass is used. <ul> <li>It can use any {@link EndpointMapping} implementation - whether standard, or provided as
+ * part of an application - to control the routing of request messages to endpoint objects. Endpoint mappings can be
+ * registered using the <code>endpointMappings</code> property.</li> <li>It can use any {@link EndpointAdapter}; this
+ * allows one to use any endpoint interface or form. Defaults to the {@link MessageEndpointAdapter} and {@link
+ * PayloadEndpointAdapter}, for {@link MessageEndpoint} and {@link PayloadEndpoint}, respectively, and the {@link
+ * MessageMethodEndpointAdapter} and {@link PayloadMethodEndpointAdapter}. Additional endpoint adapters can be added
+ * through the <code>endpointAdapters</code> property.</li> <li>Its exception resolution strategy can be specified via a
+ * {@link EndpointExceptionResolver}, for example mapping certain exceptions to SOAP Faults. Default is none. Additional
+ * exception resolvers can be added through the <code>endpointExceptionResolvers</code> property.</li> </ul>
  *
  * @author Arjen Poutsma
  * @see EndpointMapping
@@ -358,8 +353,8 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
             else {
                 endpointAdapters =
                         defaultStrategiesHelper.getDefaultStrategies(EndpointAdapter.class, applicationContext);
-                if (logger.isInfoEnabled() && !endpointAdapters.isEmpty()) {
-                    logger.info("No EndpointAdapters found, using defaults");
+                if (logger.isDebugEnabled()) {
+                    logger.debug("No EndpointAdapters found, using defaults");
                 }
             }
         }
@@ -382,8 +377,8 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
             else {
                 endpointExceptionResolvers = defaultStrategiesHelper
                         .getDefaultStrategies(EndpointExceptionResolver.class, applicationContext);
-                if (logger.isInfoEnabled() && !endpointExceptionResolvers.isEmpty()) {
-                    logger.info("No EndpointExceptionResolvers found, using defaults");
+                if (logger.isDebugEnabled()) {
+                    logger.debug("No EndpointExceptionResolvers found, using defaults");
                 }
             }
         }
@@ -406,8 +401,8 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
             else {
                 endpointMappings = defaultStrategiesHelper
                         .getDefaultStrategies(EndpointMapping.class, applicationContext);
-                if (logger.isInfoEnabled() && !endpointMappings.isEmpty()) {
-                    logger.info("No EndpointMappings found, using defaults");
+                if (logger.isDebugEnabled()) {
+                    logger.debug("No EndpointMappings found, using defaults");
                 }
             }
         }

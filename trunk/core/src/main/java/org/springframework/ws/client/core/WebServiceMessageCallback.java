@@ -22,20 +22,20 @@ import org.springframework.ws.WebServiceMessage;
 
 /**
  * Generic callback interface for code that operates on a {@link WebServiceMessage}.
- *
- * <p>Implementations can execute any number of operations on the message, such as
- * set the contents of the message, or set the <code>SOAPAction</code> header.
+ * <p/>
+ * Implementations can execute any number of operations on the message, such as set the contents of the message, or set
+ * the <code>SOAPAction</code> header.
  *
  * @author Arjen Poutsma
  */
 public interface WebServiceMessageCallback {
 
     /**
-     * Execute any number of operations on the supplied <code>message</code>. 
+     * Execute any number of operations on the supplied <code>message</code>.
      *
      * @param message the message
      * @throws IOException in case of I/O errors
      */
-    void doInMessage(WebServiceMessage message) throws IOException;
+    void doWithMessage(WebServiceMessage message) throws IOException;
 
 }

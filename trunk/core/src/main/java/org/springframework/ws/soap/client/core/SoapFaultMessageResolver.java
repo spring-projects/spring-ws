@@ -14,22 +14,25 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.client.core;
+package org.springframework.ws.soap.client.core;
+
+import java.io.IOException;
 
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.client.WebServiceFaultException;
+import org.springframework.ws.client.core.FaultMessageResolver;
+import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.client.SoapFaultClientException;
 
 /**
- * Simple fault resolver that simply throws a {@link org.springframework.ws.client.WebServiceFaultException} when a
- * fault occurs.
+ * Simple fault resolver that simply throws a {@link SoapFaultClientException} when a fault occurs.
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.client.WebServiceFaultException
+ * @see SoapFaultClientException
  */
-public class SimpleFaultResolver implements FaultResolver {
+public class SoapFaultMessageResolver implements FaultMessageResolver {
 
-    /** Throws a new <code>WebServiceFaultException</code>. */
-    public void resolveFault(WebServiceMessage message) {
-        throw new WebServiceFaultException(message.getFaultReason());
+    public void resolveFault(WebServiceMessage message) throws IOException {
+        SoapMessage soapMessage = (SoapMessage) message;
+        throw new SoapFaultClientException(soapMessage);
     }
 }

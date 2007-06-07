@@ -25,7 +25,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -42,24 +41,20 @@ import org.springframework.ws.wsdl.WsdlDefinition;
 
 /**
  * Servlet for simplified dispatching of Web service messages.
- *
- * <p>This servlet is a convenient alternative to the standard Spring-MVC
- * {@link DispatcherServlet} with separate
- * {@link WebServiceMessageReceiverHandlerAdapter}, {@link MessageDispatcher}, and
- * {@link WsdlDefinitionHandlerAdapter} instances.
- *
- * <p>This servlet automatically detects {@link EndpointAdapter EndpointAdapters},
- * {@link EndpointMapping EndpointMappings}, and
- * {@link EndpointExceptionResolver EndpointExceptionResolvers} by type.
- *
- * <p>This servlet also automatically detects any {@link WsdlDefinition} in its
- * application context. This WSDL is exposed under the bean name: for example, a
- * {@link WsdlDefinition} bean named '<code>echo</code>' will be exposed as
- * <code>echo.wsdl</code> in this servlet's context:
- * <code>http://localhost:8080/spring-ws/echo.wsdl</code>. When the
- * <code>transformWsdlLocations</code> init-param is set to <code>true</code> in
- * this servlet's configuration in <code>web.xml</code>, all <code>location</code>
- * attributes in the WSDL definitions will reflect the URL of the incoming request.
+ * <p/>
+ * <p>This servlet is a convenient alternative to the standard Spring-MVC {@link DispatcherServlet} with separate {@link
+ * WebServiceMessageReceiverHandlerAdapter}, {@link MessageDispatcher}, and {@link WsdlDefinitionHandlerAdapter}
+ * instances.
+ * <p/>
+ * <p>This servlet automatically detects {@link EndpointAdapter EndpointAdapters}, {@link EndpointMapping
+ * EndpointMappings}, and {@link EndpointExceptionResolver EndpointExceptionResolvers} by type.
+ * <p/>
+ * <p>This servlet also automatically detects any {@link WsdlDefinition} in its application context. This WSDL is
+ * exposed under the bean name: for example, a {@link WsdlDefinition} bean named '<code>echo</code>' will be exposed as
+ * <code>echo.wsdl</code> in this servlet's context: <code>http://localhost:8080/spring-ws/echo.wsdl</code>. When the
+ * <code>transformWsdlLocations</code> init-param is set to <code>true</code> in this servlet's configuration in
+ * <code>web.xml</code>, all <code>location</code> attributes in the WSDL definitions will reflect the URL of the
+ * incoming request.
  *
  * @author Arjen Poutsma
  * @see org.springframework.web.servlet.DispatcherServlet
@@ -75,8 +70,8 @@ public class MessageDispatcherServlet extends FrameworkServlet {
     public static final String MESSAGE_RECEIVER_BEAN_NAME = "messageReceiver";
 
     /**
-     * Name of the class path resource (relative to the {@link MessageDispatcherServlet}
-     * class) that defines <code>MessageDispatcherServlet's</code> default strategy names.
+     * Name of the class path resource (relative to the {@link MessageDispatcherServlet} class) that defines
+     * <code>MessageDispatcherServlet's</code> default strategy names.
      */
     private static final String DEFAULT_STRATEGIES_PATH = "MessageDispatcherServlet.properties";
 
@@ -102,14 +97,13 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 
     /** Public constructor, necessary for some Web application servers. */
     public MessageDispatcherServlet() {
-        this.defaultStrategiesHelper = new DefaultStrategiesHelper(
+        defaultStrategiesHelper = new DefaultStrategiesHelper(
                 new ClassPathResource(DEFAULT_STRATEGIES_PATH, MessageDispatcherServlet.class));
     }
 
     /**
-     * Sets whether relative address locations in the WSDL are to be transformed using
-     * the request URI of the incoming {@link HttpServletRequest}.
-     * <p>Defaults to <code>false</code>.
+     * Sets whether relative address locations in the WSDL are to be transformed using the request URI of the incoming
+     * {@link HttpServletRequest}. <p>Defaults to <code>false</code>.
      */
     public void setTransformWsdlLocations(boolean transformWsdlLocations) {
         this.transformWsdlLocations = transformWsdlLocations;
@@ -129,10 +123,10 @@ public class MessageDispatcherServlet extends FrameworkServlet {
     protected long getLastModified(HttpServletRequest httpServletRequest) {
         WsdlDefinition definition = getWsdlDefinition(httpServletRequest);
         if (definition != null) {
-            return this.wsdlDefinitionHandlerAdapter.getLastModified(httpServletRequest, definition);
+            return wsdlDefinitionHandlerAdapter.getLastModified(httpServletRequest, definition);
         }
         else {
-            return this.messageReceiverHandlerAdapter.getLastModified(httpServletRequest, this.messageReceiver);
+            return messageReceiverHandlerAdapter.getLastModified(httpServletRequest, messageReceiver);
         }
     }
 
@@ -140,27 +134,27 @@ public class MessageDispatcherServlet extends FrameworkServlet {
             throws Exception {
         WsdlDefinition definition = getWsdlDefinition(httpServletRequest);
         if (definition != null) {
-            this.wsdlDefinitionHandlerAdapter.handle(httpServletRequest, httpServletResponse, definition);
+            wsdlDefinitionHandlerAdapter.handle(httpServletRequest, httpServletResponse, definition);
         }
         else {
-            this.messageReceiverHandlerAdapter.handle(httpServletRequest, httpServletResponse, this.messageReceiver);
+            messageReceiverHandlerAdapter.handle(httpServletRequest, httpServletResponse, messageReceiver);
         }
     }
 
     /**
-     * Determines the {@link WsdlDefinition} for a given request, or <code>null</code>
-     * if none is found.
+     * Determines the {@link WsdlDefinition} for a given request, or <code>null</code> if none is found.
      * <p/>
-     * Default implementation checks whether the request method is <code>GET</code>,
-     * whether the request uri ends with <code>".wsdl"</code>, and if there is a
-     * <code>WsdlDefinition</code> with the same name as the filename in the request uri.
+     * Default implementation checks whether the request method is <code>GET</code>, whether the request uri ends with
+     * <code>".wsdl"</code>, and if there is a <code>WsdlDefinition</code> with the same name as the filename in the
+     * request uri.
+     *
      * @param request the <code>HttpServletRequest</code>
      * @return a definition, or <code>null</code>
      */
     protected WsdlDefinition getWsdlDefinition(HttpServletRequest request) {
         if ("GET".equals(request.getMethod()) && request.getRequestURI().endsWith(WSDL_SUFFIX_NAME)) {
             String fileName = WebUtils.extractFilenameFromUrlPath(request.getRequestURI());
-            return (WsdlDefinition) this.wsdlDefinitions.get(fileName);
+            return (WsdlDefinition) wsdlDefinitions.get(fileName);
         }
         else {
             return null;
@@ -170,13 +164,13 @@ public class MessageDispatcherServlet extends FrameworkServlet {
     private void initHandlerAdapters() throws BeansException {
         try {
             // setup the receiver adapter
-            this.messageReceiverHandlerAdapter = new WebServiceMessageReceiverHandlerAdapter();
+            messageReceiverHandlerAdapter = new WebServiceMessageReceiverHandlerAdapter();
             initWebServiceMessageFactory();
-            this.messageReceiverHandlerAdapter.afterPropertiesSet();
+            messageReceiverHandlerAdapter.afterPropertiesSet();
             // setup the wsdl adapter
-            this.wsdlDefinitionHandlerAdapter = new WsdlDefinitionHandlerAdapter();
-            this.wsdlDefinitionHandlerAdapter.setTransformLocations(this.transformWsdlLocations);
-            this.wsdlDefinitionHandlerAdapter.afterPropertiesSet();
+            wsdlDefinitionHandlerAdapter = new WsdlDefinitionHandlerAdapter();
+            wsdlDefinitionHandlerAdapter.setTransformLocations(transformWsdlLocations);
+            wsdlDefinitionHandlerAdapter.afterPropertiesSet();
         }
         catch (Exception ex) {
             throw new BeanInitializationException("Could not initialize handler adapters", ex);
@@ -190,43 +184,35 @@ public class MessageDispatcherServlet extends FrameworkServlet {
                     .getBean(WEB_SERVICE_MESSAGE_FACTORY_BEAN_NAME, WebServiceMessageFactory.class);
         }
         catch (NoSuchBeanDefinitionException ignored) {
-            messageFactory = (WebServiceMessageFactory) this.defaultStrategiesHelper
+            messageFactory = (WebServiceMessageFactory) defaultStrategiesHelper
                     .getDefaultStrategy(WebServiceMessageFactory.class, getWebApplicationContext());
-            if (this.logger.isInfoEnabled()) {
-                this.logger.info("Unable to locate WebServiceMessageFactory with name '" +
-                        WEB_SERVICE_MESSAGE_FACTORY_BEAN_NAME + "': using default [" + messageFactory + "]");
-            }
-            if (messageFactory instanceof InitializingBean) {
-                ((InitializingBean) messageFactory).afterPropertiesSet();
+            if (logger.isDebugEnabled()) {
+                logger.debug("No WebServiceMessageFactory found in servlet '" + getServletName() + "': using default");
             }
         }
-        this.messageReceiverHandlerAdapter.setMessageFactory(messageFactory);
+        messageReceiverHandlerAdapter.setMessageFactory(messageFactory);
     }
 
     private void initMessageReceiver() {
         try {
-            this.messageReceiver = (WebServiceMessageReceiver) getWebApplicationContext()
+            messageReceiver = (WebServiceMessageReceiver) getWebApplicationContext()
                     .getBean(MESSAGE_RECEIVER_BEAN_NAME, WebServiceMessageReceiver.class);
         }
         catch (NoSuchBeanDefinitionException ex) {
-            this.messageReceiver = (WebServiceMessageReceiver) this.defaultStrategiesHelper
+            messageReceiver = (WebServiceMessageReceiver) defaultStrategiesHelper
                     .getDefaultStrategy(WebServiceMessageReceiver.class, getWebApplicationContext());
-            if (this.messageReceiver instanceof BeanNameAware) {
-                ((BeanNameAware) this.messageReceiver).setBeanName(getServletName());
+            if (messageReceiver instanceof BeanNameAware) {
+                ((BeanNameAware) messageReceiver).setBeanName(getServletName());
             }
-            if (this.logger.isInfoEnabled()) {
-                this.logger.info("Unable to locate MessageDispatcher with name '" + MESSAGE_RECEIVER_BEAN_NAME +
-                        "': using default [" + this.messageReceiver + "]");
+            if (logger.isDebugEnabled()) {
+                logger.debug("No MessageDispatcher found in servlet '" + getServletName() + "': using default");
             }
         }
     }
 
-    /**
-     * Find all {@link WsdlDefinition WsdlDefinitions} in the ApplicationContext,
-     * incuding ancestor contexts.
-     */
+    /** Find all {@link WsdlDefinition WsdlDefinitions} in the ApplicationContext, incuding ancestor contexts. */
     private void initWsdlDefinitions() {
-        this.wsdlDefinitions = BeanFactoryUtils
+        wsdlDefinitions = BeanFactoryUtils
                 .beansOfTypeIncludingAncestors(getWebApplicationContext(), WsdlDefinition.class, true, false);
     }
 }

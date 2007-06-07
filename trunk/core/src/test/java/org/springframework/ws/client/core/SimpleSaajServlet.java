@@ -31,6 +31,8 @@ import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
+import org.springframework.util.StringUtils;
+
 /**
  * A simple Servlet that uses SAAJ to echo request.
  *
@@ -53,52 +55,32 @@ public class SimpleSaajServlet extends HttpServlet {
     private MimeHeaders getHeaders(HttpServletRequest httpServletRequest) {
         Enumeration enumeration = httpServletRequest.getHeaderNames();
         MimeHeaders headers = new MimeHeaders();
-
         while (enumeration.hasMoreElements()) {
             String headerName = (String) enumeration.nextElement();
             String headerValue = httpServletRequest.getHeader(headerName);
-
             StringTokenizer values = new StringTokenizer(headerValue, ",");
-
             while (values.hasMoreTokens()) {
                 headers.addHeader(headerName, values.nextToken().trim());
             }
         }
-
         return headers;
     }
 
     private void putHeaders(MimeHeaders headers, HttpServletResponse res) {
         Iterator it = headers.getAllHeaders();
-
         while (it.hasNext()) {
             MimeHeader header = (MimeHeader) it.next();
-
             String[] values = headers.getHeader(header.getName());
-
-            if (values.length == 1) {
-                res.setHeader(header.getName(), header.getValue());
-            }
-            else {
-                StringBuffer concat = new StringBuffer();
-                int i = 0;
-
-                while (i < values.length) {
-                    if (i != 0) {
-                        concat.append(',');
-                    }
-                    concat.append(values[i++]);
-                }
-                res.setHeader(header.getName(), concat.toString());
-            }
+            String value = StringUtils.arrayToCommaDelimitedString(values);
+            res.setHeader(header.getName(), value);
         }
     }
 
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             MimeHeaders headers = getHeaders(req);
-            SOAPMessage msg = msgFactory.createMessage(headers, req.getInputStream());
-            SOAPMessage reply = onMessage(msg);
+            SOAPMessage request = msgFactory.createMessage(headers, req.getInputStream());
+            SOAPMessage reply = onMessage(request);
             if (reply != null) {
                 if (reply.saveRequired()) {
                     reply.saveChanges();
@@ -117,7 +99,7 @@ public class SimpleSaajServlet extends HttpServlet {
         }
     }
 
-    public SOAPMessage onMessage(SOAPMessage message) {
+    protected SOAPMessage onMessage(SOAPMessage message) {
         return message;
     }
 

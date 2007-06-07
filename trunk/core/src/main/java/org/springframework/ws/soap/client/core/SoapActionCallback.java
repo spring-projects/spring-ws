@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.client.core.support;
+package org.springframework.ws.soap.client.core;
 
 import java.io.IOException;
 
@@ -40,14 +40,12 @@ public class SoapActionCallback implements WebServiceMessageCallback {
 
     private final String soapAction;
 
-    /**
-     * Create a new <code>SoapActionCallback</code> with the given string SOAPAction.
-     */
+    /** Create a new <code>SoapActionCallback</code> with the given string SOAPAction. */
     public SoapActionCallback(String soapAction) {
         this.soapAction = soapAction;
     }
 
-    public void doInMessage(WebServiceMessage message) throws IOException {
+    public void doWithMessage(WebServiceMessage message) throws IOException {
         SoapMessage soapMessage = (SoapMessage) message;
         soapMessage.setSoapAction(soapAction);
     }

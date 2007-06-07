@@ -16,22 +16,19 @@
 
 package org.springframework.ws.client.core;
 
-import java.io.IOException;
-
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.client.WebServiceFaultException;
 
 /**
- * Defines the interface for objects than can resolve faults in received {@link org.springframework.ws.WebServiceMessage}.
+ * Simple fault resolver that simply throws a {@link WebServiceFaultException} when a fault occurs.
  *
  * @author Arjen Poutsma
+ * @see WebServiceFaultException
  */
-public interface FaultResolver {
+public class SimpleFaultMessageResolver implements FaultMessageResolver {
 
-    /**
-     * Try to resolve the given fault message that got received.
-     *
-     * @param message the fault message
-     */
-    void resolveFault(WebServiceMessage message) throws IOException;
-
+    /** Throws a new <code>WebServiceFaultException</code>. */
+    public void resolveFault(WebServiceMessage message) {
+        throw new WebServiceFaultException(message);
+    }
 }

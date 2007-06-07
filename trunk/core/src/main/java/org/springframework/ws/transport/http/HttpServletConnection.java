@@ -65,12 +65,20 @@ public class HttpServletConnection extends AbstractReceiverConnection implements
 
     public void endpointNotFound() {
         endpointFound = false;
-        httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        getHttpServletResponse().setStatus(HttpServletResponse.SC_NOT_FOUND);
+    }
+
+    public boolean hasError() throws IOException {
+        return false;
+    }
+
+    public String getErrorMessage() throws IOException {
+        return null;
     }
 
     public void close() throws IOException {
         if (!sentResponse && endpointFound) {
-            httpServletResponse.setStatus(HttpServletResponse.SC_ACCEPTED);
+            getHttpServletResponse().setStatus(HttpServletResponse.SC_ACCEPTED);
         }
     }
 
@@ -79,15 +87,15 @@ public class HttpServletConnection extends AbstractReceiverConnection implements
      */
 
     protected Iterator getRequestHeaderNames() throws IOException {
-        return new EnumerationIterator(httpServletRequest.getHeaderNames());
+        return new EnumerationIterator(getHttpServletRequest().getHeaderNames());
     }
 
     protected Iterator getRequestHeaders(String name) throws IOException {
-        return new EnumerationIterator(httpServletRequest.getHeaders(name));
+        return new EnumerationIterator(getHttpServletRequest().getHeaders(name));
     }
 
     protected InputStream getRequestInputStream() throws IOException {
-        return httpServletRequest.getInputStream();
+        return getHttpServletRequest().getInputStream();
     }
 
     /*
@@ -95,20 +103,20 @@ public class HttpServletConnection extends AbstractReceiverConnection implements
     */
 
     protected void addResponseHeader(String name, String value) throws IOException {
-        httpServletResponse.addHeader(name, value);
+        getHttpServletResponse().addHeader(name, value);
     }
 
     protected OutputStream getResponseOutputStream() throws IOException {
-        return httpServletResponse.getOutputStream();
+        return getHttpServletResponse().getOutputStream();
     }
 
     protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
         sentResponse = true;
         if (!message.hasFault()) {
-            httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+            getHttpServletResponse().setStatus(HttpServletResponse.SC_OK);
         }
         else {
-            httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            getHttpServletResponse().setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 }

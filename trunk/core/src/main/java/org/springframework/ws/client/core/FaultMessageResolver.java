@@ -14,31 +14,24 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.client;
+package org.springframework.ws.client.core;
+
+import java.io.IOException;
 
 import org.springframework.ws.WebServiceMessage;
 
 /**
- * Thrown by <code>SimpleFaultMessageResolver</code> when the response message has a fault.
+ * Defines the interface for objects than can resolve fault {@link WebServiceMessage}.
  *
  * @author Arjen Poutsma
  */
-public class WebServiceFaultException extends WebServiceClientException {
-
-    private final WebServiceMessage webServiceMessage;
+public interface FaultMessageResolver {
 
     /**
-     * Create a new instance of the <code>WebServiceFaultException</code> class.
+     * Try to resolve the given fault message that got received.
      *
-     * @param faultMessage the fault message
+     * @param message the fault message
      */
-    public WebServiceFaultException(WebServiceMessage faultMessage) {
-        super(faultMessage.getFaultReason());
-        webServiceMessage = faultMessage;
-    }
+    void resolveFault(WebServiceMessage message) throws IOException;
 
-    /** Returns the fault message. */
-    public WebServiceMessage getWebServiceMessage() {
-        return webServiceMessage;
-    }
 }

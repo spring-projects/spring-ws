@@ -22,20 +22,36 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import javax.servlet.ServletContext;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanClassLoaderAware;
+import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.BeanInitializationException;
+import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.context.MessageSourceAware;
+import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.ServletContextAware;
+import org.springframework.web.context.WebApplicationContext;
 
 /**
  * Helper class for for loading default implementations of an interface. Encapsulates a properties object, which
  * contains strategy interface names as keys, and comma-separated class names as values.
+ * <p/>
+ * Simulates the {@link BeanFactory normal lifecycle} for beans, by calling {@link
+ * BeanFactoryAware#setBeanFactory(BeanFactory)}, {@link ApplicationContextAware#setApplicationContext(ApplicationContext)},
+ * etc.
  *
  * @author Arjen Poutsma
  */
@@ -68,12 +84,25 @@ public class DefaultStrategiesHelper {
     }
 
     /**
-     * Create a list of strategy objects for the given strategy interface. Strategies are retrieved from the given
-     * <code>Properties</code> object. It instantiates the strategy objects and satisifies
+     * Create a list of strategy objects for the given strategy interface. Strategies are retrieved from the
+     * <code>Properties</code> object given at construction-time.
+     *
+     * @param strategyInterface the strategy interface
+     * @return a list of corresponding strategy objects
+     * @throws BeansException if initialization failed
+     */
+    public List getDefaultStrategies(Class strategyInterface) throws BeanInitializationException {
+        return getDefaultStrategies(strategyInterface, null);
+    }
+
+    /**
+     * Create a list of strategy objects for the given strategy interface. Strategies are retrieved from the
+     * <code>Properties</code> object given at construction-time. It instantiates the strategy objects and satisifies
      * <code>ApplicationContextAware</code> with the supplied context if necessary.
      *
      * @param strategyInterface  the strategy interface
-     * @param applicationContext used to satisfy strategies that are application context aware
+     * @param applicationContext used to satisfy strategies that are application context aware, may be
+     *                           <code>null</code>
      * @return a list of corresponding strategy objects
      * @throws BeansException if initialization failed
      */
@@ -88,10 +117,7 @@ public class DefaultStrategiesHelper {
                 result = new ArrayList(classNames.length);
                 for (int i = 0; i < classNames.length; i++) {
                     Class clazz = ClassUtils.forName(classNames[i]);
-                    Object strategy = BeanUtils.instantiateClass(clazz);
-                    if (strategy instanceof ApplicationContextAware) {
-                        ((ApplicationContextAware) strategy).setApplicationContext(applicationContext);
-                    }
+                    Object strategy = instantiateBean(clazz, applicationContext);
                     result.add(strategy);
                 }
             }
@@ -104,17 +130,74 @@ public class DefaultStrategiesHelper {
             throw new BeanInitializationException("Could not find default strategy class for interface [" + key + "]",
                     ex);
         }
+    }
 
+    /** Instantiates the given bean, simulating the standard bean lifecycle. */
+    private Object instantiateBean(Class clazz, ApplicationContext applicationContext) {
+        Object strategy = BeanUtils.instantiateClass(clazz);
+        if (strategy instanceof BeanNameAware) {
+            BeanNameAware beanNameAware = (BeanNameAware) strategy;
+            beanNameAware.setBeanName(clazz.getName());
+        }
+        if (applicationContext != null) {
+            if (strategy instanceof BeanClassLoaderAware) {
+                ((BeanClassLoaderAware) strategy).setBeanClassLoader(applicationContext.getClassLoader());
+            }
+            if (strategy instanceof BeanFactoryAware) {
+                ((BeanFactoryAware) strategy).setBeanFactory(applicationContext);
+            }
+            if (strategy instanceof ResourceLoaderAware) {
+                ((ResourceLoaderAware) strategy).setResourceLoader(applicationContext);
+            }
+            if (strategy instanceof ApplicationEventPublisherAware) {
+                ((ApplicationEventPublisherAware) strategy).setApplicationEventPublisher(applicationContext);
+            }
+            if (strategy instanceof MessageSourceAware) {
+                ((MessageSourceAware) strategy).setMessageSource(applicationContext);
+            }
+            if (strategy instanceof ApplicationContextAware) {
+                ApplicationContextAware applicationContextAware = (ApplicationContextAware) strategy;
+                applicationContextAware.setApplicationContext(applicationContext);
+            }
+            if (applicationContext instanceof WebApplicationContext && strategy instanceof ServletContextAware) {
+                ServletContext servletContext = ((WebApplicationContext) applicationContext).getServletContext();
+                ((ServletContextAware) strategy).setServletContext(servletContext);
+            }
+        }
+        if (strategy instanceof InitializingBean) {
+            InitializingBean initializingBean = (InitializingBean) strategy;
+            try {
+                initializingBean.afterPropertiesSet();
+            }
+            catch (Throwable ex) {
+                throw new BeanCreationException("Invocation of init method failed", ex);
+            }
+        }
+        return strategy;
     }
 
     /**
-     * Return the default strategy object for the given strategy interface. <p>Delegates to
-     * <code>getDefaultStrategies</code>, expecting a single object in the list.
+     * Return the default strategy object for the given strategy interface.
      *
      * @param strategyInterface the strategy interface
      * @return the corresponding strategy object
      * @throws BeansException if initialization failed
      * @see #getDefaultStrategies
+     */
+    public Object getDefaultStrategy(Class strategyInterface) throws BeanInitializationException {
+        return getDefaultStrategy(strategyInterface, null);
+    }
+
+    /**
+     * Return the default strategy object for the given strategy interface.
+     * <p/>
+     * Delegates to {@link #getDefaultStrategies(Class,ApplicationContext)}, expecting a single object in the list.
+     *
+     * @param strategyInterface  the strategy interface
+     * @param applicationContext used to satisfy strategies that are application context aware, may be
+     *                           <code>null</code>
+     * @return the corresponding strategy object
+     * @throws BeansException if initialization failed
      */
     public Object getDefaultStrategy(Class strategyInterface, ApplicationContext applicationContext)
             throws BeanInitializationException {

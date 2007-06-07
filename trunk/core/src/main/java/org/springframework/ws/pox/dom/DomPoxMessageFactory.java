@@ -22,57 +22,56 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerFactory;
 
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
+import org.springframework.xml.transform.TransformerObjectSupport;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * Implementation of the {@link org.springframework.ws.WebServiceMessageFactory WebServiceMessageFactory} interinterface
- * that creates a DOM PoxMessage.
+ * Implementation of the {@link WebServiceMessageFactory} interinterface that creates a {@link DomPoxMessage}.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.pox.dom.DomPoxMessage
  */
-public class DomPoxMessageFactory implements WebServiceMessageFactory, InitializingBean {
+public class DomPoxMessageFactory extends TransformerObjectSupport implements WebServiceMessageFactory {
 
-    private DocumentBuilderFactory documentBuilderFactory;
+    /** The default content type for the POX messages. */
+    public static final String DEFAULT_CONTENT_TYPE = "application/xml";
 
-    private boolean namespaceAware = true;
+    private DocumentBuilderFactory documentBuilderFactory =
+            documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
-    private TransformerFactory transformerFactory;
+    private String contentType = DEFAULT_CONTENT_TYPE;
 
-    private boolean validating = false;
+    public DomPoxMessageFactory() {
+        documentBuilderFactory.setNamespaceAware(true);
+        documentBuilderFactory.setValidating(false);
+    }
 
-    /**
-     * Set whether or not the XML parser should be XML namespace aware. Default is <code>true</code>.
-     */
+    /** Sets the content-type for the {@link DomPoxMessage}. */
+    public void setContentType(String contentType) {
+        Assert.hasLength(contentType, "'contentType' must not be empty");
+        this.contentType = contentType;
+    }
+
+    /** Set whether or not the XML parser should be XML namespace aware. Default is <code>true</code>. */
     public void setNamespaceAware(boolean namespaceAware) {
-        this.namespaceAware = namespaceAware;
-    }
-
-    /**
-     * Set if the XML parser should validate the document. Default is <code>false</code>.
-     */
-    public void setValidating(boolean validating) {
-        this.validating = validating;
-    }
-
-    public void afterPropertiesSet() throws Exception {
-        documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        documentBuilderFactory.setValidating(validating);
         documentBuilderFactory.setNamespaceAware(namespaceAware);
-        transformerFactory = TransformerFactory.newInstance();
+    }
+
+    /** Set if the XML parser should validate the document. Default is <code>false</code>. */
+    public void setValidating(boolean validating) {
+        documentBuilderFactory.setValidating(validating);
     }
 
     public WebServiceMessage createWebServiceMessage() {
         try {
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document request = documentBuilder.newDocument();
-            return new DomPoxMessage(request, transformerFactory.newTransformer());
+            return new DomPoxMessage(request, createTransformer(), contentType);
         }
         catch (ParserConfigurationException ex) {
             throw new DomPoxMessageException("Could not create message context", ex);
@@ -86,7 +85,7 @@ public class DomPoxMessageFactory implements WebServiceMessageFactory, Initializ
         try {
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document request = documentBuilder.parse(inputStream);
-            return new DomPoxMessage(request, transformerFactory.newTransformer());
+            return new DomPoxMessage(request, createTransformer(), contentType);
         }
         catch (ParserConfigurationException ex) {
             throw new DomPoxMessageException("Could not create message context", ex);
