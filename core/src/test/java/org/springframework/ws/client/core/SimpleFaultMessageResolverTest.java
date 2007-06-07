@@ -21,12 +21,12 @@ import org.easymock.MockControl;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.WebServiceFaultException;
 
-public class SimpleFaultResolverTest extends TestCase {
+public class SimpleFaultMessageResolverTest extends TestCase {
 
-    private SimpleFaultResolver resolver;
+    private SimpleFaultMessageResolver resolver;
 
     protected void setUp() throws Exception {
-        resolver = new SimpleFaultResolver();
+        resolver = new SimpleFaultMessageResolver();
     }
 
     public void testResolveFault() throws Exception {

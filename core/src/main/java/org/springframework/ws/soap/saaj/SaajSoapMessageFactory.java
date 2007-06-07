@@ -130,8 +130,8 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
                 throw new SoapMessageCreationException("Could not create SAAJ MessageFactory: " + ex.getMessage(), ex);
             }
         }
-        if (logger.isDebugEnabled()) {
-            logger.debug("Using MessageFactory class [" + messageFactory.getClass().getName() + "]");
+        if (logger.isTraceEnabled()) {
+            logger.trace("Using MessageFactory class [" + messageFactory.getClass().getName() + "]");
         }
     }
 

@@ -26,11 +26,7 @@ import javax.xml.namespace.QName;
  */
 public interface SoapFault extends SoapElement {
 
-    /**
-     * Returns the fault code.
-     *
-     * @return a <code>QName</code> representing the fault code
-     */
+    /** Returns the fault code. */
     QName getFaultCode();
 
     /**
@@ -39,14 +35,10 @@ public interface SoapFault extends SoapElement {
      */
     String getFaultStringOrReason();
 
-    /**
-     * Returns the fault actor or role. For SOAP 1.1, this returns the actor. For SOAP 1.2, this returns the role.
-     */
+    /** Returns the fault actor or role. For SOAP 1.1, this returns the actor. For SOAP 1.2, this returns the role. */
     String getFaultActorOrRole();
 
-    /**
-     * Sets the fault actor. For SOAP 1.1, this sets the actor. For SOAP 1.2, this sets the role.
-     */
+    /** Sets the fault actor. For SOAP 1.1, this sets the actor. For SOAP 1.2, this sets the role. */
     void setFaultActorOrRole(String faultActor);
 
     /**

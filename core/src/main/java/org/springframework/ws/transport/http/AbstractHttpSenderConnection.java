@@ -39,7 +39,7 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 
     protected static final String ENCODING_GZIP = "gzip";
 
-    protected static final int HTTP_STATUS_INTERNAL_ERROR = 500;
+    protected static final int HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
 
     /** Buffer used for reading the response, when the content length is invalid. */
     private byte[] responseBuffer;
@@ -55,8 +55,13 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
         return contentLength > 0;
     }
 
+    public final boolean hasError() throws IOException {
+        int code = getResponseCode();
+        return code / 100 != 2 && code != HTTP_STATUS_INTERNAL_SERVER_ERROR;
+    }
+
     public final boolean hasFault() throws IOException {
-        return getResponseCode() == HTTP_STATUS_INTERNAL_ERROR;
+        return getResponseCode() == HTTP_STATUS_INTERNAL_SERVER_ERROR;
     }
 
     protected final InputStream getResponseInputStream() throws IOException {

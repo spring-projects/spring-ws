@@ -60,7 +60,6 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
 
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(messageFactory, "messageFactory is required");
-        logger.info("Using message factory [" + messageFactory + "]");
     }
 
     /**

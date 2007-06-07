@@ -58,6 +58,10 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
         connection.disconnect();
     }
 
+    public String getErrorMessage() throws IOException {
+        return connection.getResponseMessage();
+    }
+
     /*
      * Sending request
      */
@@ -113,15 +117,11 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
     }
 
     protected InputStream getRawResponseInputStream() throws IOException {
-        if (connection.getResponseCode() == HttpURLConnection.HTTP_INTERNAL_ERROR) {
+        if (connection.getResponseCode() / 100 != 2) {
             return connection.getErrorStream();
         }
-        else if (connection.getResponseCode() / 100 == 2) {
-            return connection.getInputStream();
-        }
         else {
-            throw new HttpTransportException("Did not receive successful HTTP response: status code = " +
-                    connection.getResponseCode() + ", status message = [" + connection.getResponseMessage() + "]");
+            return connection.getInputStream();
         }
     }
 }

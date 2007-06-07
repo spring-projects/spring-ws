@@ -2,6 +2,23 @@
                                                        Upgrading
                                                        ---------
 
+Upgrading from version 1.0-RC1 to 1.0-RC2
+
+	Some minor last changes were made between version 1.0 Release Candidate 1 and 2of the project. The following
+should help most users the project update their applications:
+
+* Client-side
+
+    Some issues have been resolved which make the WebServiceTemplate more useable in Plain Old XML settings, and less
+SOAP-specific.
+
+    * The <<<WebServiceMessageCallback>>> method <<<doInMessage()>>> has been renamed to <<<doWithMessage()>>>, since it
+    was poorly named.
+
+    * The <<<FaultResolver>>> has been renamed to <<<FaultMessageReceiver>>> to indicate its responsibility more clearly.
+
+    * The <<<SoapActionCallback>>> has been moved to <<<org.springframework.ws.soap.client.core>>>.
+
 Upgrading from version 1.0-M3 to 1.0-RC1
 
 	Some minor changes were made between version 1.0 Milestone 3 and Release Candidate 1 of the project. The following

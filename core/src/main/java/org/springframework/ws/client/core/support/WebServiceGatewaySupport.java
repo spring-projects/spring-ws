@@ -18,10 +18,7 @@ package org.springframework.ws.client.core.support;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.util.Assert;
@@ -44,7 +41,7 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  * @see org.springframework.ws.client.core.WebServiceTemplate
  * @see #setMarshaller(org.springframework.oxm.Marshaller)
  */
-public abstract class WebServiceGatewaySupport implements InitializingBean, ApplicationContextAware {
+public abstract class WebServiceGatewaySupport implements InitializingBean {
 
     /** Logger available to subclasses. */
     protected final Log logger = LogFactory.getLog(getClass());
@@ -142,10 +139,6 @@ public abstract class WebServiceGatewaySupport implements InitializingBean, Appl
      */
     public final void setUnmarshaller(Unmarshaller unmarshaller) {
         webServiceTemplate.setUnmarshaller(unmarshaller);
-    }
-
-    public final void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        webServiceTemplate.setApplicationContext(applicationContext);
     }
 
     public final void afterPropertiesSet() throws Exception {

@@ -6,6 +6,12 @@
     </properties>
     <body>
         <release version="1.0-rc2">
+            <action dev="poutsma" type="update">WebServiceTemplate returns boolean values rather than void</action>
+            <action dev="poutsma" type="update" issue="SWS-126">Changed WebServiceMessageCallback's doInMessage() to
+                doWithMessage()
+            </action>
+            <action dev="poutsma" type="update">Renamed FaultResolver to FaultMessageResolver</action>
+            <action dev="poutsma" type="update">Moved SoapActionCallback to soap package</action>
             <action dev="poutsma" type="fix">Added an MTOM sample</action>
             <action dev="poutsma" type="fix">Fixed various MTOM issues</action>
             <action dev="poutsma" type="add" issue="SWS-135">Implement client-side TransportContext</action>

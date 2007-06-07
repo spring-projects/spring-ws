@@ -54,7 +54,6 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
      */
     public final void setDefaultEndpoint(Object defaultEndpoint) {
         this.defaultEndpoint = defaultEndpoint;
-        logger.info("Default mapping to endpoint [" + this.defaultEndpoint + "]");
     }
 
     /**

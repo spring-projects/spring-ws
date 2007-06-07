@@ -41,7 +41,7 @@ public class DomPoxMessageTest extends XMLTestCase {
         Document document = documentBuilder.newDocument();
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         transformer = transformerFactory.newTransformer();
-        message = new DomPoxMessage(document, transformer);
+        message = new DomPoxMessage(document, transformer, DomPoxMessageFactory.DEFAULT_CONTENT_TYPE);
     }
 
     public void testGetPayload() throws Exception {

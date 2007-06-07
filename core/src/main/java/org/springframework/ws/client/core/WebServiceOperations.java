@@ -166,9 +166,10 @@ public interface WebServiceOperations {
      *
      * @param requestPayload the payload of the request message
      * @param responseResult the result to write the response payload to
+     * @return <code>true</code> if a response was received; <code>false</code> otherwise
      * @throws WebServiceClientException if there is a problem sending or receiving the message
      */
-    void sendAndReceive(Source requestPayload, Result responseResult) throws WebServiceClientException;
+    boolean sendAndReceive(Source requestPayload, Result responseResult) throws WebServiceClientException;
 
     /**
      * Sends a web service message that contains the given payload. Writes the response, if any, to the given
@@ -177,9 +178,10 @@ public interface WebServiceOperations {
      * @param uri            the URI to send the message to
      * @param requestPayload the payload of the request message
      * @param responseResult the result to write the response payload to
+     * @return <code>true</code> if a response was received; <code>false</code> otherwise
      * @throws WebServiceClientException if there is a problem sending or receiving the message
      */
-    void sendAndReceive(String uri, Source requestPayload, Result responseResult) throws WebServiceClientException;
+    boolean sendAndReceive(String uri, Source requestPayload, Result responseResult) throws WebServiceClientException;
 
     /**
      * Sends a web service message that contains the given payload. Writes the response, if any, to the given
@@ -192,9 +194,10 @@ public interface WebServiceOperations {
      * @param requestPayload  the payload of the request message
      * @param requestCallback callback to change message, can be <code>null</code>
      * @param responseResult  the result to write the response payload to
+     * @return <code>true</code> if a response was received; <code>false</code> otherwise
      * @throws WebServiceClientException if there is a problem sending or receiving the message
      */
-    void sendAndReceive(Source requestPayload, WebServiceMessageCallback requestCallback, Result responseResult)
+    boolean sendAndReceive(Source requestPayload, WebServiceMessageCallback requestCallback, Result responseResult)
             throws WebServiceClientException;
 
     /**
@@ -207,12 +210,13 @@ public interface WebServiceOperations {
      * @param requestPayload  the payload of the request message
      * @param requestCallback callback to change message, can be <code>null</code>
      * @param responseResult  the result to write the response payload to
+     * @return <code>true</code> if a response was received; <code>false</code> otherwise
      * @throws WebServiceClientException if there is a problem sending or receiving the message
      */
-    void sendAndReceive(String uri,
-                        Source requestPayload,
-                        WebServiceMessageCallback requestCallback,
-                        Result responseResult) throws WebServiceClientException;
+    boolean sendAndReceive(String uri,
+                           Source requestPayload,
+                           WebServiceMessageCallback requestCallback,
+                           Result responseResult) throws WebServiceClientException;
 
     /**
      * Sends a web service message that can be manipulated with the given callback, reading the result with a
@@ -250,9 +254,10 @@ public interface WebServiceOperations {
      *
      * @param requestCallback  the callback to be used for manipulating the request message
      * @param responseCallback the callback to be used for manipulating the response message
+     * @return <code>true</code> if a response was received; <code>false</code> otherwise
      * @throws WebServiceClientException if there is a problem sending or receiving the message
      */
-    void sendAndReceive(WebServiceMessageCallback requestCallback, WebServiceMessageCallback responseCallback)
+    boolean sendAndReceive(WebServiceMessageCallback requestCallback, WebServiceMessageCallback responseCallback)
             throws WebServiceClientException;
 
     /**
@@ -262,9 +267,10 @@ public interface WebServiceOperations {
      * @param uri              the URI to send the message to
      * @param requestCallback  the callback to be used for manipulating the request message
      * @param responseCallback the callback to be used for manipulating the response message
+     * @return <code>true</code> if a response was received; <code>false</code> otherwise
      * @throws WebServiceClientException if there is a problem sending or receiving the message
      */
-    void sendAndReceive(String uri,
-                        WebServiceMessageCallback requestCallback,
-                        WebServiceMessageCallback responseCallback) throws WebServiceClientException;
+    boolean sendAndReceive(String uri,
+                           WebServiceMessageCallback requestCallback,
+                           WebServiceMessageCallback responseCallback) throws WebServiceClientException;
 }

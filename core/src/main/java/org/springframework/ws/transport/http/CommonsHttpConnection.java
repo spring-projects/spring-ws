@@ -25,7 +25,6 @@ import java.util.Iterator;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.springframework.util.Assert;
@@ -55,6 +54,10 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 
     public PostMethod getPostMethod() {
         return postMethod;
+    }
+
+    public String getErrorMessage() throws IOException {
+        return postMethod.getStatusText();
     }
 
     public void close() throws IOException {
@@ -96,11 +99,6 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
     }
 
     protected InputStream getRawResponseInputStream() throws IOException {
-        if (postMethod.getStatusCode() != HttpStatus.SC_INTERNAL_SERVER_ERROR &&
-                postMethod.getStatusCode() / 100 != 2) {
-            throw new HttpTransportException("Did not receive successful HTTP response: status code = " +
-                    postMethod.getStatusCode() + ", status message = [" + postMethod.getStatusText() + "]");
-        }
         return postMethod.getResponseBodyAsStream();
     }
 

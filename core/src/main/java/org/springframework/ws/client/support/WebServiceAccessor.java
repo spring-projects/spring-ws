@@ -64,7 +64,7 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
      */
     public void setMessageSender(WebServiceMessageSender messageSender) {
         Assert.notNull(messageSender, "'messageSender' must not be null");
-        this.messageSenders = new WebServiceMessageSender[]{messageSender};
+        messageSenders = new WebServiceMessageSender[]{messageSender};
     }
 
     /**
@@ -79,7 +79,7 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
         this.messageSenders = messageSenders;
     }
 
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         Assert.notNull(getMessageFactory(), "Property 'messageFactory' is required");
         Assert.notEmpty(getMessageSenders(), "Property 'messageSenders' is required");
     }

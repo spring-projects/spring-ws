@@ -25,6 +25,7 @@ import org.springframework.oxm.Unmarshaller;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.client.WebServiceTransportException;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
@@ -89,7 +90,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
     public void testSendAndReceiveMessageResponse() throws Exception {
         MockControl callbackControl = MockControl.createControl(WebServiceMessageCallback.class);
         WebServiceMessageCallback requestCallback = (WebServiceMessageCallback) callbackControl.getMock();
-        requestCallback.doInMessage(null);
+        requestCallback.doWithMessage(null);
         callbackControl.setMatcher(MockControl.ALWAYS_MATCHER);
         callbackControl.replay();
 
@@ -103,6 +104,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
 
         connectionMock.send(null);
         connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        connectionControl.expectAndReturn(connectionMock.hasError(), false);
         connectionControl
                 .expectAndReturn(connectionMock.receive(messageFactory), new MockWebServiceMessage("<response/>"));
         connectionControl.expectAndReturn(connectionMock.hasFault(), false);
@@ -119,59 +121,76 @@ public class WebServiceTemplateTest extends XMLTestCase {
     }
 
     public void testSendAndReceiveMessageNoResponse() throws Exception {
-        MockControl callbackControl = MockControl.createControl(WebServiceMessageCallback.class);
-        WebServiceMessageCallback requestCallback = (WebServiceMessageCallback) callbackControl.getMock();
-        requestCallback.doInMessage(null);
-        callbackControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        callbackControl.replay();
-
         MockControl extractorControl = MockControl.createControl(WebServiceMessageExtractor.class);
         WebServiceMessageExtractor extractorMock = (WebServiceMessageExtractor) extractorControl.getMock();
         extractorControl.replay();
 
         connectionMock.send(null);
         connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        connectionControl.expectAndReturn(connectionMock.hasError(), false);
         connectionControl.expectAndReturn(connectionMock.receive(messageFactory), null);
         connectionMock.close();
         connectionControl.replay();
 
-        Object result = (WebServiceMessage) template.sendAndReceive(requestCallback, extractorMock);
+        Object result = (WebServiceMessage) template.sendAndReceive(null, extractorMock);
         assertNull("Invalid response", result);
-        callbackControl.verify();
         extractorControl.verify();
         connectionControl.verify();
     }
 
     public void testSendAndReceiveMessageFault() throws Exception {
-        MockControl callbackControl = MockControl.createControl(WebServiceMessageCallback.class);
-        WebServiceMessageCallback requestCallback = (WebServiceMessageCallback) callbackControl.getMock();
-        requestCallback.doInMessage(null);
-        callbackControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        callbackControl.replay();
-
         MockControl extractorControl = MockControl.createControl(WebServiceMessageExtractor.class);
         WebServiceMessageExtractor extractorMock = (WebServiceMessageExtractor) extractorControl.getMock();
         extractorControl.replay();
 
-        MockControl faultResolverControl = MockControl.createControl(FaultResolver.class);
-        FaultResolver faultResolverMock = (FaultResolver) faultResolverControl.getMock();
-        template.setFaultResolver(faultResolverMock);
-        faultResolverMock.resolveFault(null);
+        MockControl faultResolverControl = MockControl.createControl(FaultMessageResolver.class);
+        FaultMessageResolver faultMessageResolverMock = (FaultMessageResolver) faultResolverControl.getMock();
+        template.setFaultMessageResolver(faultMessageResolverMock);
+        faultMessageResolverMock.resolveFault(null);
         faultResolverControl.setMatcher(MockControl.ALWAYS_MATCHER);
         faultResolverControl.replay();
 
         connectionMock.send(null);
         connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        connectionControl.expectAndReturn(connectionMock.hasError(), false);
         connectionControl
                 .expectAndReturn(connectionMock.receive(messageFactory), new MockWebServiceMessage("<response/>"));
         connectionControl.expectAndReturn(connectionMock.hasFault(), true);
         connectionMock.close();
         connectionControl.replay();
 
-        Object result = template.sendAndReceive(requestCallback, extractorMock);
+        Object result = template.sendAndReceive(null, extractorMock);
         assertNull("Invalid response", result);
 
-        callbackControl.verify();
+        extractorControl.verify();
+        connectionControl.verify();
+        faultResolverControl.verify();
+    }
+
+    public void testSendAndReceiveConnectionError() throws Exception {
+        MockControl extractorControl = MockControl.createControl(WebServiceMessageExtractor.class);
+        WebServiceMessageExtractor extractorMock = (WebServiceMessageExtractor) extractorControl.getMock();
+        extractorControl.replay();
+
+        template.setFaultMessageResolver(null);
+
+        connectionMock.send(null);
+        connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        connectionControl.expectAndReturn(connectionMock.hasError(), true);
+        String errorMessage = "errorMessage";
+        connectionControl.expectAndReturn(connectionMock.getErrorMessage(), errorMessage, 2);
+        connectionMock.close();
+        connectionControl.replay();
+
+        try {
+            template.sendAndReceive(null, extractorMock);
+            fail("Expected WebServiceTransportException");
+        }
+        catch (WebServiceTransportException ex) {
+            //expected
+            assertEquals("Invalid exception message", errorMessage, ex.getMessage());
+        }
+
         extractorControl.verify();
         connectionControl.verify();
     }
@@ -187,6 +206,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
 
         connectionMock.send(null);
         connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        connectionControl.expectAndReturn(connectionMock.hasError(), false);
         connectionControl
                 .expectAndReturn(connectionMock.receive(messageFactory), new MockWebServiceMessage("<response/>"));
         connectionControl.expectAndReturn(connectionMock.hasFault(), false);
@@ -207,6 +227,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
 
         connectionMock.send(null);
         connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        connectionControl.expectAndReturn(connectionMock.hasError(), false);
         connectionControl.expectAndReturn(connectionMock.receive(messageFactory), null);
         connectionMock.close();
         connectionControl.replay();
@@ -221,6 +242,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
     public void testSendAndReceiveResultResponse() throws Exception {
         connectionMock.send(null);
         connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        connectionControl.expectAndReturn(connectionMock.hasError(), false);
         connectionControl
                 .expectAndReturn(connectionMock.receive(messageFactory), new MockWebServiceMessage("<response/>"));
         connectionControl.expectAndReturn(connectionMock.hasFault(), false);
@@ -228,7 +250,24 @@ public class WebServiceTemplateTest extends XMLTestCase {
         connectionControl.replay();
 
         StringResult result = new StringResult();
-        template.sendAndReceive(new StringSource("<request />"), result);
+        boolean b = template.sendAndReceive(new StringSource("<request />"), result);
+        assertTrue("Invalid result", b);
+
+        connectionControl.verify();
+    }
+
+    public void testSendAndReceiveResultNoResponse() throws Exception {
+        connectionMock.send(null);
+        connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        connectionControl.expectAndReturn(connectionMock.hasError(), false);
+        connectionControl
+                .expectAndReturn(connectionMock.receive(messageFactory), null);
+        connectionMock.close();
+        connectionControl.replay();
+
+        StringResult result = new StringResult();
+        boolean b = template.sendAndReceive(new StringSource("<request />"), result);
+        assertFalse("Invalid result", b);
 
         connectionControl.verify();
     }
@@ -252,6 +291,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
 
         connectionMock.send(null);
         connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        connectionControl.expectAndReturn(connectionMock.hasError(), false);
         connectionControl
                 .expectAndReturn(connectionMock.receive(messageFactory), new MockWebServiceMessage("<response/>"));
         connectionControl.expectAndReturn(connectionMock.hasFault(), false);
@@ -281,6 +321,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
 
         connectionMock.send(null);
         connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        connectionControl.expectAndReturn(connectionMock.hasError(), false);
         connectionControl
                 .expectAndReturn(connectionMock.receive(messageFactory), null);
         connectionMock.close();
@@ -309,7 +350,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
         });
         MockControl callbackControl = MockControl.createControl(WebServiceMessageCallback.class);
         WebServiceMessageCallback requestCallback = (WebServiceMessageCallback) callbackControl.getMock();
-        requestCallback.doInMessage(null);
+        requestCallback.doWithMessage(null);
         callbackControl.setMatcher(MockControl.ALWAYS_MATCHER);
         callbackControl.replay();
 
@@ -323,6 +364,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
 
         connectionMock.send(null);
         connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        connectionControl.expectAndReturn(connectionMock.hasError(), false);
         connectionControl
                 .expectAndReturn(connectionMock.receive(messageFactory), new MockWebServiceMessage("<response/>"));
         connectionControl.expectAndReturn(connectionMock.hasFault(), false);

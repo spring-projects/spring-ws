@@ -26,9 +26,13 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.springframework.util.Assert;
 import org.springframework.ws.pox.PoxMessage;
+import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportOutputStream;
+import org.springframework.xml.namespace.QNameUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Implementation of the <code>PoxMessage</code> interface that is based on a DOM Document.
@@ -38,25 +42,27 @@ import org.w3c.dom.Document;
  */
 public class DomPoxMessage implements PoxMessage {
 
-    private static final String CONTENT_TYPE = "text/xml";
+    private final String contentType;
 
     private final Document document;
 
-    private Transformer transformer;
+    private final Transformer transformer;
 
     /**
      * Constructs a new instance of the <code>DomPoxMessage</code> with the given document.
      *
      * @param document the document to base the message on
      */
-    public DomPoxMessage(Document document, Transformer transformer) {
+    public DomPoxMessage(Document document, Transformer transformer, String contentType) {
+        Assert.notNull(document, "'document' must not be null");
+        Assert.notNull(transformer, "'transformer' must not be null");
+        Assert.hasLength(contentType, "'contentType' must not be empty");
         this.document = document;
         this.transformer = transformer;
+        this.contentType = contentType;
     }
 
-    /**
-     * Returns the document underlying this message.
-     */
+    /** Returns the document underlying this message. */
     public Document getDocument() {
         return document;
     }
@@ -77,11 +83,21 @@ public class DomPoxMessage implements PoxMessage {
         return null;
     }
 
+    public String toString() {
+        StringBuffer buffer = new StringBuffer("DomPoxMessage ");
+        Element root = document.getDocumentElement();
+        if (root != null) {
+            buffer.append(' ');
+            buffer.append(QNameUtils.getQNameForNode(root));
+        }
+        return buffer.toString();
+    }
+
     public void writeTo(OutputStream outputStream) throws IOException {
         try {
             if (outputStream instanceof TransportOutputStream) {
                 TransportOutputStream transportOutputStream = (TransportOutputStream) outputStream;
-                transportOutputStream.addHeader("Content-Type", CONTENT_TYPE);
+                transportOutputStream.addHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
             }
             transformer.transform(getPayloadSource(), new StreamResult(outputStream));
         }
