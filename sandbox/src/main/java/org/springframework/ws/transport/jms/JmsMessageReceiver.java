@@ -28,12 +28,12 @@ import org.springframework.ws.transport.support.SimpleWebServiceMessageReceiverO
  * Convenience base class for JMS server-side transport objects. Contains a {@link WebServiceMessageReceiver}, and has
  * methods for handling incoming JMS <code>Message</code> requests.
  * <p/>
- * This class can be used as a base for a EJB MessageDrivenBean, or using Spring-2.0's MessageDriven POJO's.
+ * Used by {@link WebServiceMessageListener} and {@link WebServiceMessageBean}.
  *
  * @author Arjen Poutsma
  * @see #handleMessage(javax.jms.Message,javax.jms.Session)
  */
-public abstract class JmsWebServiceMessageReceiverObjectSupport extends SimpleWebServiceMessageReceiverObjectSupport {
+public class JmsMessageReceiver extends SimpleWebServiceMessageReceiverObjectSupport {
 
     /**
      * Handles an incoming <code>Message</code>s. Uses the given <code>Session</code> to create a response request.
