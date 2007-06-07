@@ -28,7 +28,7 @@
         <property name="messageListener" ref="messageListener"/>
     </bean>
 
-    <bean id="messageListener" class="org.springframework.ws.transport.jms.WebServiceMessageReceiverMessageListener">
+    <bean id="messageListener" class="org.springframework.ws.transport.jms.WebServiceMessageListener">
         <description>
             Spring 2.0 SessionAwareMessageListener that creates a SOAP message from the invoming JMS message using
             a messageFactory, and forwards it to the message to the messageDispatcher. Both of these beans are defined

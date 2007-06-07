@@ -37,12 +37,15 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
  * @see #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
  * @see #setMessageReceiver(org.springframework.ws.transport.WebServiceMessageReceiver)
  */
-public class WebServiceMessageReceiverMessageListener extends JmsWebServiceMessageReceiverObjectSupport
+public class WebServiceMessageListener extends JmsWebServiceMessageReceiverObjectSupport
         implements SessionAwareMessageListener {
 
     public void onMessage(Message message, Session session) throws JMSException {
         try {
             handleMessage(message, session);
+        }
+        catch (JmsTransportException ex) {
+            throw ex.getJmsException();
         }
         catch (Exception ex) {
             JMSException jmsException = new JMSException(ex.getMessage());

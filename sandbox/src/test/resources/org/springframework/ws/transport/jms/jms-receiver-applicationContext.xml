@@ -21,7 +21,7 @@
         <property name="messageListener" ref="messageListener"/>
     </bean>
 
-    <bean id="messageListener" class="org.springframework.ws.transport.jms.WebServiceMessageReceiverMessageListener">
+    <bean id="messageListener" class="org.springframework.ws.transport.jms.WebServiceMessageListener">
         <property name="messageFactory">
             <bean class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
         </property>

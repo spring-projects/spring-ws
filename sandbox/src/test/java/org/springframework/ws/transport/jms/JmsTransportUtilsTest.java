@@ -16,26 +16,12 @@
 
 package org.springframework.ws.transport.jms;
 
-import javax.jms.JMSException;
+import junit.framework.TestCase;
 
-import org.springframework.ws.transport.TransportException;
+public class JmsTransportUtilsTest extends TestCase {
 
-/** @author Arjen Poutsma */
-public class JmsTransportException extends TransportException {
-
-    private final JMSException jmsException;
-
-    public JmsTransportException(String msg, JMSException ex) {
-        super(msg + ": " + ex.getMessage());
-        jmsException = ex;
-    }
-
-    public JmsTransportException(JMSException ex) {
-        super(ex.getMessage());
-        jmsException = ex;
-    }
-
-    public JMSException getJmsException() {
-        return jmsException;
+    public void testHeaderToJmsProperty() throws Exception {
+        String result = JmsTransportUtils.headerToJmsProperty("SOAPAction");
+        assertEquals("Invalid result", "SOAPJMS_soapAction", result);
     }
 }
