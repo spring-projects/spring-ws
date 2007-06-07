@@ -44,7 +44,7 @@ public abstract class JmsWebServiceMessageReceiverObjectSupport extends SimpleWe
      */
     protected final void handleMessage(Message request, Session session) throws Exception {
         if (request instanceof BytesMessage) {
-            WebServiceConnection connection = new JmsReceivingWebServiceConnection((BytesMessage) request, session);
+            WebServiceConnection connection = new JmsReceiverConnection((BytesMessage) request, session, logger);
             handleConnection(connection, getMessageReceiver());
         }
         else {
