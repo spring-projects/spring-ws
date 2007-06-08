@@ -36,7 +36,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.NoEndpointFoundException;
+import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
 import org.springframework.ws.server.endpoint.PayloadEndpoint;
@@ -322,8 +324,12 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
                                        MessageContext messageContext) throws Exception {
         if (mappedEndpoint != null && messageContext.hasResponse() &&
                 !ObjectUtils.isEmpty(mappedEndpoint.getInterceptors())) {
+            boolean hasFault = false;
+            WebServiceMessage response = messageContext.getResponse();
+            if (response instanceof FaultAwareWebServiceMessage) {
+                hasFault = ((FaultAwareWebServiceMessage) response).hasFault();
+            }
             boolean resume = true;
-            boolean hasFault = messageContext.getResponse().hasFault();
             for (int i = interceptorIndex; resume && i >= 0; i--) {
                 EndpointInterceptor interceptor = mappedEndpoint.getInterceptors()[i];
                 if (!hasFault) {

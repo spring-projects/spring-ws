@@ -16,6 +16,7 @@
 
 package org.springframework.ws.client.core;
 
+import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.WebServiceFaultException;
 
@@ -29,6 +30,11 @@ public class SimpleFaultMessageResolver implements FaultMessageResolver {
 
     /** Throws a new <code>WebServiceFaultException</code>. */
     public void resolveFault(WebServiceMessage message) {
-        throw new WebServiceFaultException(message);
+        if (message instanceof FaultAwareWebServiceMessage) {
+            throw new WebServiceFaultException((FaultAwareWebServiceMessage) message);
+        }
+        else {
+            throw new WebServiceFaultException("Message has unknown fault: " + message);
+        }
     }
 }

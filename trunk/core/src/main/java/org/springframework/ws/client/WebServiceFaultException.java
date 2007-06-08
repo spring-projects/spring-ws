@@ -16,7 +16,7 @@
 
 package org.springframework.ws.client;
 
-import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.FaultAwareWebServiceMessage;
 
 /**
  * Thrown by <code>SimpleFaultMessageResolver</code> when the response message has a fault.
@@ -25,20 +25,26 @@ import org.springframework.ws.WebServiceMessage;
  */
 public class WebServiceFaultException extends WebServiceClientException {
 
-    private final WebServiceMessage webServiceMessage;
+    private final FaultAwareWebServiceMessage faultMessage;
+
+    /** Create a new instance of the <code>WebServiceFaultException</code> class. */
+    public WebServiceFaultException(String msg) {
+        super(msg);
+        faultMessage = null;
+    }
 
     /**
      * Create a new instance of the <code>WebServiceFaultException</code> class.
      *
      * @param faultMessage the fault message
      */
-    public WebServiceFaultException(WebServiceMessage faultMessage) {
+    public WebServiceFaultException(FaultAwareWebServiceMessage faultMessage) {
         super(faultMessage.getFaultReason());
-        webServiceMessage = faultMessage;
+        this.faultMessage = faultMessage;
     }
 
     /** Returns the fault message. */
-    public WebServiceMessage getWebServiceMessage() {
-        return webServiceMessage;
+    public FaultAwareWebServiceMessage getWebServiceMessage() {
+        return faultMessage;
     }
 }

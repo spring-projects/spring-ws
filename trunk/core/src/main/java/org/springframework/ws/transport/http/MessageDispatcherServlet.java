@@ -64,7 +64,7 @@ import org.springframework.ws.wsdl.WsdlDefinition;
 public class MessageDispatcherServlet extends FrameworkServlet {
 
     /** Well-known name for the {@link WebServiceMessageFactory} bean in the bean factory for this namespace. */
-    public static final String WEB_SERVICE_MESSAGE_FACTORY_BEAN_NAME = "messageFactory";
+    public static final String MESSAGE_FACTORY_BEAN_NAME = "messageFactory";
 
     /** Well-known name for the {@link WebServiceMessageReceiver} object in the bean factory for this namespace. */
     public static final String MESSAGE_RECEIVER_BEAN_NAME = "messageReceiver";
@@ -181,7 +181,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
         WebServiceMessageFactory messageFactory;
         try {
             messageFactory = (WebServiceMessageFactory) getWebApplicationContext()
-                    .getBean(WEB_SERVICE_MESSAGE_FACTORY_BEAN_NAME, WebServiceMessageFactory.class);
+                    .getBean(MESSAGE_FACTORY_BEAN_NAME, WebServiceMessageFactory.class);
         }
         catch (NoSuchBeanDefinitionException ignored) {
             messageFactory = (WebServiceMessageFactory) defaultStrategiesHelper

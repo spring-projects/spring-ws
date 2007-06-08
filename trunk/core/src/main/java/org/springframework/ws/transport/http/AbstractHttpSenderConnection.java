@@ -35,16 +35,20 @@ import org.springframework.ws.transport.WebServiceConnection;
 public abstract class AbstractHttpSenderConnection extends AbstractSenderConnection
         implements FaultAwareWebServiceConnection {
 
-    protected static final String HTTP_HEADER_CONTENT_ENCODING = "Content-Encoding";
-
-    protected static final String ENCODING_GZIP = "gzip";
-
-    protected static final int HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
-
     /** Buffer used for reading the response, when the content length is invalid. */
     private byte[] responseBuffer;
 
+    public final boolean hasError() throws IOException {
+        return getResponseCode() / 100 != 2;
+    }
+
+    /*
+     * Receiving response
+     */
     protected final boolean hasResponse() throws IOException {
+        if (getResponseCode() == HttpTransportConstants.STATUS_ACCEPTED) {
+            return false;
+        }
         long contentLength = getResponseContentLength();
         if (contentLength < 0) {
             if (responseBuffer == null) {
@@ -53,15 +57,6 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
             contentLength = responseBuffer.length;
         }
         return contentLength > 0;
-    }
-
-    public final boolean hasError() throws IOException {
-        int code = getResponseCode();
-        return code / 100 != 2 && code != HTTP_STATUS_INTERNAL_SERVER_ERROR;
-    }
-
-    public final boolean hasFault() throws IOException {
-        return getResponseCode() == HTTP_STATUS_INTERNAL_SERVER_ERROR;
     }
 
     protected final InputStream getResponseInputStream() throws IOException {
@@ -77,9 +72,10 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 
     /** Determine whether the given response is a GZIP response. */
     private boolean isGzipResponse() throws IOException {
-        for (Iterator iterator = getResponseHeaders(HTTP_HEADER_CONTENT_ENCODING); iterator.hasNext();) {
+        for (Iterator iterator = getResponseHeaders(HttpTransportConstants.HEADER_CONTENT_ENCODING);
+             iterator.hasNext();) {
             String encodingHeader = (String) iterator.next();
-            return encodingHeader.toLowerCase().indexOf(ENCODING_GZIP) != -1;
+            return encodingHeader.toLowerCase().indexOf(HttpTransportConstants.CONTENT_ENCODING_GZIP) != -1;
         }
         return false;
     }
@@ -92,5 +88,15 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 
     protected abstract InputStream getRawResponseInputStream() throws IOException;
 
+    /*
+     * Faults
+     */
+
+    public final boolean hasFault() throws IOException {
+        return getResponseCode() == HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR;
+    }
+
+    public final void setFault(boolean fault) {
+    }
 
 }

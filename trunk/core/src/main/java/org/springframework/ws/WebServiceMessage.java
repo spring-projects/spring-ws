@@ -23,7 +23,7 @@ import javax.xml.transform.Source;
 
 /**
  * Represents a protocol-agnostic XML message.
- * 
+ * <p/>
  * <p>Contains methods that provide access to the payload of the message.
  *
  * @author Arjen Poutsma
@@ -33,17 +33,16 @@ import javax.xml.transform.Source;
 public interface WebServiceMessage {
 
     /**
-     * Returns the contents of the message as a {@link Source}.
-     * <p> Depending on the implementation, this can be retrieved multiple times,
-     * or just a single time.
+     * Returns the contents of the message as a {@link Source}. <p> Depending on the implementation, this can be
+     * retrieved multiple times, or just a single time.
      *
      * @return the message contents
      */
     Source getPayloadSource();
 
     /**
-     * Returns the contents of the message as a {@link Result}.
-     * <p>Implementations that are read-only will throw an {@link UnsupportedOperationException}.
+     * Returns the contents of the message as a {@link Result}. <p>Implementations that are read-only will throw an
+     * {@link UnsupportedOperationException}.
      *
      * @return the message contents
      * @throws UnsupportedOperationException if the message is read-only
@@ -51,30 +50,12 @@ public interface WebServiceMessage {
     Result getPayloadResult();
 
     /**
-     * Writes the entire message to the given output stream.
-     * <p>If the given stream is an instance of
-     * {@link org.springframework.ws.transport.TransportOutputStream}, the
-     * corresponding headers will be written as well.
+     * Writes the entire message to the given output stream. <p>If the given stream is an instance of {@link
+     * org.springframework.ws.transport.TransportOutputStream}, the corresponding headers will be written as well.
      *
      * @param outputStream the stream to write to
      * @throws IOException if an I/O exception occurs
      */
     void writeTo(OutputStream outputStream) throws IOException;
-
-    /**
-     * Does this message have a fault?
-     *
-     * @return <code>true</code> if the message has a fault.
-     * @see #getFaultReason()
-     */
-    boolean hasFault();
-
-    /**
-     * Returns the fault reason message.
-     *
-     * @return the fault reason message, if any; returns <code>null</code> when no fault is present.
-     * @see #hasFault()
-     */
-    String getFaultReason();
 
 }

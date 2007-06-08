@@ -22,12 +22,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
+import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.NoEndpointFoundException;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.transport.EndpointAwareWebServiceConnection;
+import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
 import org.springframework.ws.transport.context.DefaultTransportContext;
@@ -63,8 +65,9 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
     }
 
     /**
-     * Handles an incoming connection by reading a message from the connection input stream, passing it to the receiver,
-     * and writing the response (if any) to the output stream.
+     * Handles an incoming connection by {@link WebServiceConnection#receive(WebServiceMessageFactory) receving} a
+     * message from it, passing it to the {@link WebServiceMessageReceiver#receive(MessageContext) receiver}, and {@link
+     * WebServiceConnection#send(WebServiceMessage) sending} the response (if any).
      * <p/>
      * Stores the given connection in the transport context.
      *
@@ -82,6 +85,13 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
             MessageContext messageContext = new DefaultMessageContext(request, getMessageFactory());
             receiver.receive(messageContext);
             if (messageContext.hasResponse()) {
+                WebServiceMessage response = messageContext.getResponse();
+                if (response instanceof FaultAwareWebServiceMessage &&
+                        connection instanceof FaultAwareWebServiceConnection) {
+                    FaultAwareWebServiceMessage faultResponse = (FaultAwareWebServiceMessage) response;
+                    FaultAwareWebServiceConnection faultConnection = (FaultAwareWebServiceConnection) connection;
+                    faultConnection.setFault(faultResponse.hasFault());
+                }
                 connection.send(messageContext.getResponse());
             }
         }

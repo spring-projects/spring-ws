@@ -50,7 +50,6 @@ import org.springframework.ws.pox.dom.DomPoxMessageFactory;
 import org.springframework.ws.soap.SoapMessageFactory;
 import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.ws.soap.client.SoapFaultClientException;
-import org.springframework.ws.soap.client.core.SoapFaultMessageResolver;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.http.CommonsHttpMessageSender;
 import org.springframework.xml.transform.StringResult;
@@ -74,9 +73,6 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
         jettyContext.addServlet(new ServletHolder(new ErrorServlet(404)), "/errors/notfound");
         jettyContext.addServlet(new ServletHolder(new ErrorServlet(500)), "/errors/server");
         jettyServer.start();
-        template = new WebServiceTemplate();
-        template.setMessageSender(new CommonsHttpMessageSender());
-        template.setFaultMessageResolver(new SoapFaultMessageResolver());
     }
 
     protected void tearDown() throws Exception {
@@ -88,8 +84,8 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
     }
 
     public void testPox() throws Exception {
-        template.setMessageFactory(new DomPoxMessageFactory());
-        template.setFaultMessageResolver(null);
+        template = new WebServiceTemplate(new DomPoxMessageFactory());
+        template.setMessageSender(new CommonsHttpMessageSender());
         String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
         StringResult result = new StringResult();
         template.sendAndReceive("http://localhost:8888/pox", new StringSource(content), result);
@@ -117,7 +113,8 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
 
     private void testSoap(SoapMessageFactory messageFactory)
             throws SAXException, IOException, ParserConfigurationException {
-        template.setMessageFactory(messageFactory);
+        template = new WebServiceTemplate(messageFactory);
+        template.setMessageSender(new CommonsHttpMessageSender());
         String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
         StringResult result = new StringResult();
         template.sendAndReceive("http://localhost:8888/soap/echo", new StringSource(content), result);

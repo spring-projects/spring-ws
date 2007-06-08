@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractReceiverConnection;
 import org.springframework.ws.transport.EndpointAwareWebServiceConnection;
+import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.support.EnumerationIterator;
 
@@ -34,21 +35,20 @@ import org.springframework.ws.transport.support.EnumerationIterator;
  *
  * @author Arjen Poutsma
  */
-public class HttpServletConnection extends AbstractReceiverConnection implements EndpointAwareWebServiceConnection {
+public class HttpServletConnection extends AbstractReceiverConnection
+        implements EndpointAwareWebServiceConnection, FaultAwareWebServiceConnection {
 
     private final HttpServletRequest httpServletRequest;
 
     private final HttpServletResponse httpServletResponse;
 
-    private boolean sentResponse = false;
-
-    private boolean endpointFound = true;
+    private boolean statusCodeSet = false;
 
     /**
      * Constructs a new servlet connection with the given <code>HttpServletRequest</code> and
      * <code>HttpServletResponse</code>.
      */
-    public HttpServletConnection(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+    protected HttpServletConnection(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         this.httpServletRequest = httpServletRequest;
         this.httpServletResponse = httpServletResponse;
     }
@@ -64,8 +64,8 @@ public class HttpServletConnection extends AbstractReceiverConnection implements
     }
 
     public void endpointNotFound() {
-        endpointFound = false;
-        getHttpServletResponse().setStatus(HttpServletResponse.SC_NOT_FOUND);
+        getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_NOT_FOUND);
+        statusCodeSet = true;
     }
 
     public boolean hasError() throws IOException {
@@ -74,12 +74,6 @@ public class HttpServletConnection extends AbstractReceiverConnection implements
 
     public String getErrorMessage() throws IOException {
         return null;
-    }
-
-    public void close() throws IOException {
-        if (!sentResponse && endpointFound) {
-            getHttpServletResponse().setStatus(HttpServletResponse.SC_ACCEPTED);
-        }
     }
 
     /*
@@ -110,13 +104,31 @@ public class HttpServletConnection extends AbstractReceiverConnection implements
         return getHttpServletResponse().getOutputStream();
     }
 
-    protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
-        sentResponse = true;
-        if (!message.hasFault()) {
-            getHttpServletResponse().setStatus(HttpServletResponse.SC_OK);
+    protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
+        statusCodeSet = true;
+    }
+
+    public void close() throws IOException {
+        if (!statusCodeSet) {
+            getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_ACCEPTED);
+        }
+    }
+
+    /*
+     * Faults
+     */
+
+    public boolean hasFault() throws IOException {
+        return false;
+    }
+
+    public void setFault(boolean fault) throws IOException {
+        if (fault) {
+            getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR);
         }
         else {
-            getHttpServletResponse().setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_OK);
         }
+        statusCodeSet = true;
     }
 }

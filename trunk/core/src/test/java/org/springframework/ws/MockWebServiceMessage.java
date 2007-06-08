@@ -42,7 +42,7 @@ import org.springframework.xml.transform.StringSource;
  *
  * @author Arjen Poutsma
  */
-public class MockWebServiceMessage implements WebServiceMessage {
+public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
 
     private final StringBuffer content;
 
