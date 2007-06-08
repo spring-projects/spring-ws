@@ -18,20 +18,34 @@ package org.springframework.ws.transport;
 
 import java.io.IOException;
 
+import org.springframework.ws.soap.SoapFault;
+
 /**
  * Sub-interface of {@link WebServiceConnection} that is aware of any Fault messages received. Fault messages (such as
- * SOAP Faults often require different processing rules. Typically, fault detection is done by inspecting connection
- * error codes, etc.
+ * {@link SoapFault} SOAP Faults) often require different processing rules. Typically, fault detection is done by
+ * inspecting connection error codes, etc.
  *
  * @author Arjen Poutsma
  */
 public interface FaultAwareWebServiceConnection extends WebServiceConnection {
 
     /**
-     * Indicates whether this connection has a Fault.
+     * Indicates whether this connection received a fault.
+     * <p/>
+     * Typically implemented by looking at an HTTP status code.
      *
-     * @return <code>true</code> if this connection has a fault; <code>false</code> otherwise.
+     * @return <code>true</code> if this connection received a fault; <code>false</code> otherwise.
+     * @throws IOException in case of I/O errors
      */
     boolean hasFault() throws IOException;
 
+    /**
+     * Sets whether this connection will send a fault.
+     * <p/>
+     * Typically implemented by setting an HTTP status code.
+     *
+     * @param fault <code>true</code> if this will send a fault; <code>false</code> otherwise.
+     * @throws IOException in case of I/O errors
+     */
+    void setFault(boolean fault) throws IOException;
 }

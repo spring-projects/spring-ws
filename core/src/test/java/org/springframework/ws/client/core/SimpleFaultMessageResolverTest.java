@@ -18,7 +18,7 @@ package org.springframework.ws.client.core;
 
 import junit.framework.TestCase;
 import org.easymock.MockControl;
-import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.client.WebServiceFaultException;
 
 public class SimpleFaultMessageResolverTest extends TestCase {
@@ -30,8 +30,8 @@ public class SimpleFaultMessageResolverTest extends TestCase {
     }
 
     public void testResolveFault() throws Exception {
-        MockControl messageControl = MockControl.createControl(WebServiceMessage.class);
-        WebServiceMessage messageMock = (WebServiceMessage) messageControl.getMock();
+        MockControl messageControl = MockControl.createControl(FaultAwareWebServiceMessage.class);
+        FaultAwareWebServiceMessage messageMock = (FaultAwareWebServiceMessage) messageControl.getMock();
         String message = "message";
         messageControl.expectAndReturn(messageMock.getFaultReason(), message);
         messageControl.replay();

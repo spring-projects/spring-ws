@@ -117,7 +117,6 @@ public class WebServiceTemplateTest extends XMLTestCase {
         callbackControl.verify();
         extractorControl.verify();
         connectionControl.verify();
-
     }
 
     public void testSendAndReceiveMessageNoResponse() throws Exception {
@@ -150,11 +149,15 @@ public class WebServiceTemplateTest extends XMLTestCase {
         faultResolverControl.setMatcher(MockControl.ALWAYS_MATCHER);
         faultResolverControl.replay();
 
+        MockWebServiceMessage response = new MockWebServiceMessage("<response/>");
+        response.setFault(true);
+
         connectionMock.send(null);
         connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        connectionControl.expectAndReturn(connectionMock.hasError(), false);
+        connectionControl.expectAndReturn(connectionMock.hasError(), true);
+        connectionControl.expectAndReturn(connectionMock.hasFault(), true);
         connectionControl
-                .expectAndReturn(connectionMock.receive(messageFactory), new MockWebServiceMessage("<response/>"));
+                .expectAndReturn(connectionMock.receive(messageFactory), response);
         connectionControl.expectAndReturn(connectionMock.hasFault(), true);
         connectionMock.close();
         connectionControl.replay();
@@ -177,6 +180,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
         connectionMock.send(null);
         connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
         connectionControl.expectAndReturn(connectionMock.hasError(), true);
+        connectionControl.expectAndReturn(connectionMock.hasFault(), false);
         String errorMessage = "errorMessage";
         connectionControl.expectAndReturn(connectionMock.getErrorMessage(), errorMessage, 2);
         connectionMock.close();

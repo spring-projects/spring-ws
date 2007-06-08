@@ -22,8 +22,8 @@ import junit.framework.TestCase;
 import org.easymock.MockControl;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.NoEndpointFoundException;
-import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
@@ -48,9 +48,9 @@ public class WebServiceMessageReceiverHandlerAdapterTest extends TestCase {
 
     private MockControl messageControl;
 
-    private WebServiceMessage responseMock;
+    private FaultAwareWebServiceMessage responseMock;
 
-    private WebServiceMessage requestMock;
+    private FaultAwareWebServiceMessage requestMock;
 
     protected void setUp() throws Exception {
         adapter = new WebServiceMessageReceiverHandlerAdapter();
@@ -59,9 +59,9 @@ public class WebServiceMessageReceiverHandlerAdapterTest extends TestCase {
         factoryControl = MockControl.createControl(WebServiceMessageFactory.class);
         factoryMock = (WebServiceMessageFactory) factoryControl.getMock();
         adapter.setMessageFactory(factoryMock);
-        messageControl = MockControl.createControl(WebServiceMessage.class);
-        requestMock = (WebServiceMessage) messageControl.getMock();
-        responseMock = (WebServiceMessage) messageControl.getMock();
+        messageControl = MockControl.createControl(FaultAwareWebServiceMessage.class);
+        requestMock = (FaultAwareWebServiceMessage) messageControl.getMock();
+        responseMock = (FaultAwareWebServiceMessage) messageControl.getMock();
     }
 
     public void testHandleNonPost() throws Exception {

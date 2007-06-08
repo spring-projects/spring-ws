@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap;
 
+import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.mime.MimeMessage;
 
 /**
@@ -28,7 +29,7 @@ import org.springframework.ws.mime.MimeMessage;
  * @see #getPayloadResult()
  * @see #getEnvelope()
  */
-public interface SoapMessage extends MimeMessage {
+public interface SoapMessage extends MimeMessage, FaultAwareWebServiceMessage {
 
     /** Returns the <code>SoapEnvelope</code> associated with this <code>SoapMessage</code>. */
     SoapEnvelope getEnvelope() throws SoapEnvelopeException;

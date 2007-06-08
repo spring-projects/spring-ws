@@ -75,10 +75,6 @@ public abstract class AbstractWebServiceMessageTestCase extends XMLTestCase {
         XMLUnit.setIgnoreWhitespace(true);
     }
 
-    public void testHasFault() throws Exception {
-        assertFalse("Message has fault", webServiceMessage.hasFault());
-    }
-
     public void testDomPayload() throws Exception {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);

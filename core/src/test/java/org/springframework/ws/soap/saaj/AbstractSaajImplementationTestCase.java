@@ -20,7 +20,6 @@ import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
 import java.util.Locale;
 import javax.activation.DataHandler;
-import javax.mail.util.ByteArrayDataSource;
 import javax.xml.namespace.QName;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.Detail;
@@ -273,7 +272,7 @@ public abstract class AbstractSaajImplementationTestCase extends XMLTestCase {
     }
 
     public void testAddAttachmentPart() throws Exception {
-        DataHandler dataHandler = new DataHandler(new ByteArrayDataSource("data", "text"));
+        DataHandler dataHandler = new DataHandler("data", "text/plain");
         AttachmentPart attachmentPart = implementation.addAttachmentPart(message, dataHandler);
         assertNotNull("No attachment part", attachmentPart);
     }

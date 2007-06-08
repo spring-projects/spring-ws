@@ -33,6 +33,7 @@ import org.springframework.oxm.Unmarshaller;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.client.WebServiceIOException;
@@ -72,6 +73,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     private FaultMessageResolver faultMessageResolver;
 
     private String defaultUri;
+
+    private boolean checkConnectionForFault = true;
 
     /** Creates a new <code>WebServiceTemplate</code> using default settings. */
     public WebServiceTemplate() {
@@ -140,6 +143,25 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      */
     public void setFaultMessageResolver(FaultMessageResolver faultMessageResolver) {
         this.faultMessageResolver = faultMessageResolver;
+    }
+
+    /**
+     * Indicates whether the {@link FaultAwareWebServiceConnection#hasFault() connection} should be checked for fault
+     * indicators (<code>true</code>), or whether we should rely on the {@link FaultAwareWebServiceMessage#hasFault()
+     * message} only (<code>false</code>). The default is <code>true</code>.
+     * <p/>
+     * When using a HTTP transport, this property defines whether to check the HTTP response status code for fault
+     * indicators. Both the SOAP specification and the WS-I Basic Profile define that a Web service must return a "500
+     * Internal Server Error" HTTP status code if the response envelope is a Fault. Setting this property to
+     * <code>false</code> allows this template to deal with non-conformant services.
+     *
+     * @see #hasFault(WebServiceConnection,WebServiceMessage)
+     * @see <a href="http://www.w3.org/TR/2000/NOTE-SOAP-20000508/#_Toc478383529">SOAP 1.1 specification</a>
+     * @see <a href="http://www.ws-i.org/Profiles/BasicProfile-1.1.html#HTTP_Server_Error_Status_Codes">WS-I Basic
+     *      Profile</a>
+     */
+    public void setCheckConnectionForFault(boolean checkConnectionForFault) {
+        this.checkConnectionForFault = checkConnectionForFault;
     }
 
     /**
@@ -358,7 +380,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                 requestCallback.doWithMessage(request);
             }
             sendRequest(connection, request);
-            if (connection.hasError()) {
+            if (hasError(connection, request)) {
                 return handleError(connection, request);
             }
             WebServiceMessage response = connection.receive(getMessageFactory());
@@ -396,23 +418,28 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     }
 
     /**
-     * Determines whether the given connection or message context has a fault. Default implementation checks whether the
-     * connection is a {@link FaultAwareWebServiceConnection}, and calls returns {@link
-     * FaultAwareWebServiceConnection#hasFault()} if so. Otherwise, {@link WebServiceMessage#hasFault()} is returned
-     * (which required a full message parse).
+     * Determines whether the given connection or message context has an error.
+     * <p/>
+     * This implementation checks the {@link WebServiceConnection#hasError() connection} first. If it indicates an
+     * error, it makes sure that it is not a {@link FaultAwareWebServiceConnection#hasFault() fault}.
      *
      * @param connection the connection (possibly a {@link FaultAwareWebServiceConnection}
-     * @param response   the response message
-     * @return <code>true</code> if either the connection or the message has a fault; <code>false</code> otherwise
+     * @param request    the response message (possibly a {@link FaultAwareWebServiceMessage}
+     * @return <code>true</code> if the connection has an error; <code>false</code> otherwise
      * @throws IOException in case of I/O errors
      */
-    protected boolean hasFault(WebServiceConnection connection, WebServiceMessage response) throws IOException {
-        if (connection instanceof FaultAwareWebServiceConnection) {
-            return ((FaultAwareWebServiceConnection) connection).hasFault();
+    protected boolean hasError(WebServiceConnection connection, WebServiceMessage request) throws IOException {
+        if (connection.hasError()) {
+            // this could be a fault rather than an error
+            if (connection instanceof FaultAwareWebServiceConnection) {
+                FaultAwareWebServiceConnection faultConnection = (FaultAwareWebServiceConnection) connection;
+                if (faultConnection.hasFault() && request instanceof FaultAwareWebServiceMessage) {
+                    return false;
+                }
+            }
+            return true;
         }
-        else {
-            return response.hasFault();
-        }
+        return false;
     }
 
     /**
@@ -425,8 +452,36 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      *WebServiceMessageExtractor)}, if any
      */
     protected Object handleError(WebServiceConnection connection, WebServiceMessage request) throws IOException {
-        logger.debug("Received " + connection.getErrorMessage() + " error for request [" + request + "]");
+        logger.warn("Received " + connection.getErrorMessage() + " error for request [" + request + "]");
         throw new WebServiceTransportException(connection.getErrorMessage());
+    }
+
+    /**
+     * Determines whether the given connection or message has a fault.
+     * <p/>
+     * This implementation checks the {@link FaultAwareWebServiceConnection#hasFault() connection} if the {@link
+     * #setCheckConnectionForFault(boolean) checkConnectionForFault} property is true, and defaults to the {@link
+     * FaultAwareWebServiceMessage#hasFault() message} otherwise.
+     *
+     * @param connection the connection (possibly a {@link FaultAwareWebServiceConnection}
+     * @param response   the response message (possibly a {@link FaultAwareWebServiceMessage}
+     * @return <code>true</code> if either the connection or the message has a fault; <code>false</code> otherwise
+     * @throws IOException in case of I/O errors
+     */
+    protected boolean hasFault(WebServiceConnection connection, WebServiceMessage response) throws IOException {
+        if (checkConnectionForFault && connection instanceof FaultAwareWebServiceConnection) {
+            // check whether the connection has a fault (i.e. status code 500 in HTTP)
+            FaultAwareWebServiceConnection faultConnection = (FaultAwareWebServiceConnection) connection;
+            if (!faultConnection.hasFault()) {
+                return false;
+            }
+        }
+        if (response instanceof FaultAwareWebServiceMessage) {
+            // either the connection has a fault, or checkConnectionForFault is false: let's verify the fault
+            FaultAwareWebServiceMessage faultMessage = (FaultAwareWebServiceMessage) response;
+            return faultMessage.hasFault();
+        }
+        return false;
     }
 
     /**
