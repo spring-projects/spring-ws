@@ -6,6 +6,9 @@
     </properties>
     <body>
         <release version="1.0-rc2">
+            <action dev="poutsma" type="add" issue="SWS-124">Allow specifying names of message factory and message
+                receiver in MessageDispatcherServlet
+            </action>
             <action dev="poutsma" type="add" issue="SWS-137">Added checkConnectionForFault to WebServiceTemplate to
                 deal with Web services which are not WS-I compliant
             </action>
