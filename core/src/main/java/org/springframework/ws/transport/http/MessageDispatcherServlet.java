@@ -64,10 +64,10 @@ import org.springframework.ws.wsdl.WsdlDefinition;
 public class MessageDispatcherServlet extends FrameworkServlet {
 
     /** Well-known name for the {@link WebServiceMessageFactory} bean in the bean factory for this namespace. */
-    public static final String MESSAGE_FACTORY_BEAN_NAME = "messageFactory";
+    public static final String DEFAULT_MESSAGE_FACTORY_BEAN_NAME = "messageFactory";
 
     /** Well-known name for the {@link WebServiceMessageReceiver} object in the bean factory for this namespace. */
-    public static final String MESSAGE_RECEIVER_BEAN_NAME = "messageReceiver";
+    public static final String DEFAULT_MESSAGE_RECEIVER_BEAN_NAME = "messageReceiver";
 
     /**
      * Name of the class path resource (relative to the {@link MessageDispatcherServlet} class) that defines
@@ -80,12 +80,16 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 
     private final DefaultStrategiesHelper defaultStrategiesHelper;
 
+    private String messageFactoryBeanName = DEFAULT_MESSAGE_FACTORY_BEAN_NAME;
+
     /** The {@link WebServiceMessageReceiverHandlerAdapter} used by this servlet. */
     private WebServiceMessageReceiverHandlerAdapter messageReceiverHandlerAdapter =
             new WebServiceMessageReceiverHandlerAdapter();
 
     /** The {@link WsdlDefinitionHandlerAdapter} used by this servlet. */
     private WsdlDefinitionHandlerAdapter wsdlDefinitionHandlerAdapter = new WsdlDefinitionHandlerAdapter();
+
+    private String messageReceiverBeanName = DEFAULT_MESSAGE_RECEIVER_BEAN_NAME;
 
     /** The {@link WebServiceMessageReceiver} used by this servlet. */
     private WebServiceMessageReceiver messageReceiver;
@@ -101,17 +105,57 @@ public class MessageDispatcherServlet extends FrameworkServlet {
                 new ClassPathResource(DEFAULT_STRATEGIES_PATH, MessageDispatcherServlet.class));
     }
 
+    /** Returns the bean name used to lookup a {@link WebServiceMessageFactory}. */
+    public String getMessageFactoryBeanName() {
+        return messageFactoryBeanName;
+    }
+
+    /**
+     * Sets the bean name used to lookup a {@link WebServiceMessageFactory}. Defaults to {@link
+     * #DEFAULT_MESSAGE_FACTORY_BEAN_NAME}.
+     */
+    public void setMessageFactoryBeanName(String messageFactoryBeanName) {
+        this.messageFactoryBeanName = messageFactoryBeanName;
+    }
+
+    /** Returns the bean name used to lookup a {@link WebServiceMessageReceiver}. */
+    public String getMessageReceiverBeanName() {
+        return messageReceiverBeanName;
+    }
+
+    /**
+     * Sets the bean name used to lookup a {@link WebServiceMessageReceiver}. Defaults to {@link
+     * #DEFAULT_MESSAGE_RECEIVER_BEAN_NAME}.
+     */
+    public void setMessageReceiverBeanName(String messageReceiverBeanName) {
+        this.messageReceiverBeanName = messageReceiverBeanName;
+    }
+
+    /**
+     * Indicates whether relative address locations in the WSDL are to be transformed using the request URI of the
+     * incoming {@link HttpServletRequest}.
+     */
+    public boolean isTransformWsdlLocations() {
+        return transformWsdlLocations;
+    }
+
     /**
      * Sets whether relative address locations in the WSDL are to be transformed using the request URI of the incoming
-     * {@link HttpServletRequest}. <p>Defaults to <code>false</code>.
+     * {@link HttpServletRequest}. Defaults to <code>false</code>.
      */
     public void setTransformWsdlLocations(boolean transformWsdlLocations) {
         this.transformWsdlLocations = transformWsdlLocations;
     }
 
-    /** Returns the {@link WebServiceMessageReceiver} used by this servlet. */
-    protected WebServiceMessageReceiver getMessageReceiver() {
-        return messageReceiver;
+    protected void doService(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
+            throws Exception {
+        WsdlDefinition definition = getWsdlDefinition(httpServletRequest);
+        if (definition != null) {
+            wsdlDefinitionHandlerAdapter.handle(httpServletRequest, httpServletResponse, definition);
+        }
+        else {
+            messageReceiverHandlerAdapter.handle(httpServletRequest, httpServletResponse, messageReceiver);
+        }
     }
 
     protected void initFrameworkServlet() throws ServletException, BeansException {
@@ -130,15 +174,9 @@ public class MessageDispatcherServlet extends FrameworkServlet {
         }
     }
 
-    protected void doService(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
-            throws Exception {
-        WsdlDefinition definition = getWsdlDefinition(httpServletRequest);
-        if (definition != null) {
-            wsdlDefinitionHandlerAdapter.handle(httpServletRequest, httpServletResponse, definition);
-        }
-        else {
-            messageReceiverHandlerAdapter.handle(httpServletRequest, httpServletResponse, messageReceiver);
-        }
+    /** Returns the {@link WebServiceMessageReceiver} used by this servlet. */
+    protected WebServiceMessageReceiver getMessageReceiver() {
+        return messageReceiver;
     }
 
     /**
@@ -169,7 +207,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
             messageReceiverHandlerAdapter.afterPropertiesSet();
             // setup the wsdl adapter
             wsdlDefinitionHandlerAdapter = new WsdlDefinitionHandlerAdapter();
-            wsdlDefinitionHandlerAdapter.setTransformLocations(transformWsdlLocations);
+            wsdlDefinitionHandlerAdapter.setTransformLocations(isTransformWsdlLocations());
             wsdlDefinitionHandlerAdapter.afterPropertiesSet();
         }
         catch (Exception ex) {
@@ -181,7 +219,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
         WebServiceMessageFactory messageFactory;
         try {
             messageFactory = (WebServiceMessageFactory) getWebApplicationContext()
-                    .getBean(MESSAGE_FACTORY_BEAN_NAME, WebServiceMessageFactory.class);
+                    .getBean(getMessageFactoryBeanName(), WebServiceMessageFactory.class);
         }
         catch (NoSuchBeanDefinitionException ignored) {
             messageFactory = (WebServiceMessageFactory) defaultStrategiesHelper
@@ -196,7 +234,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
     private void initMessageReceiver() {
         try {
             messageReceiver = (WebServiceMessageReceiver) getWebApplicationContext()
-                    .getBean(MESSAGE_RECEIVER_BEAN_NAME, WebServiceMessageReceiver.class);
+                    .getBean(getMessageReceiverBeanName(), WebServiceMessageReceiver.class);
         }
         catch (NoSuchBeanDefinitionException ex) {
             messageReceiver = (WebServiceMessageReceiver) defaultStrategiesHelper
