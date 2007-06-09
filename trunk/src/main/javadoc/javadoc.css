@@ -1,7 +1,7 @@
 /* Spring-specific Javadoc style sheet rules */
 
 #overviewBody {
-	
+
 }
 
 .code {
@@ -13,12 +13,12 @@
 /* Vanilla Javadoc style sheet rules */
 
 body {
-	font-family: Arial;
+	font-family: Helvetica, Arial, sans-serif;
 	background-color: white;
 	font-size: 10pt;
 }
 
-td { font-size: 10pt; font-family: Arial }/* Javadoc style sheet */
+td { font-size: 10pt; font-family: Helvetica, Arial, sans-serif }/* Javadoc style sheet */
 
 /* Define colors, fonts and other style attributes here to override the defaults */
 

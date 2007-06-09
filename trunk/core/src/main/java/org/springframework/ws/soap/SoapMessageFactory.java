@@ -31,7 +31,7 @@ public interface SoapMessageFactory extends WebServiceMessageFactory {
     /**
      * Sets the SOAP Version used by this factory.
      *
-     * @return the version constant
+     * @param version the version constant
      * @see SoapVersion#SOAP_11
      * @see SoapVersion#SOAP_12
      */

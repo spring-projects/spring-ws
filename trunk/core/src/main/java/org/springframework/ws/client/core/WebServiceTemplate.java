@@ -56,11 +56,43 @@ import org.springframework.ws.transport.support.DefaultStrategiesHelper;
  * receiving {@link WebServiceMessage} instances.
  * <p/>
  * Code using this class need only implement callback interfaces, provide {@link Source} objects to read data from, or
- * use the pluggable {@link Marshaller} support.
+ * use the pluggable {@link Marshaller} support. For invoking the {@link #marshalSendAndReceive marshalling methods},
+ * the {@link #setMarshaller(Marshaller) marshaller} and {@link #setUnmarshaller(Unmarshaller) unmarshaller} properties
+ * must be set.
  * <p/>
  * This template uses a {@link SoapFaultMessageResolver} to handle fault response messages. Another {@link
  * FaultMessageResolver} can be defined with with {@link #setFaultMessageResolver(FaultMessageResolver)
- * faultMessageResolver}  property. If this property is set to <code>null</code>, no fault resolving is performed.
+ * faultMessageResolver} property. If this property is set to <code>null</code>, no fault resolving is performed.
+ * <p/>
+ * This template uses the following algorithm for sending and receiving.
+ * <ol>
+ * <li>Call to {@link #createConnection(String) createConnection()}.</li>
+ * <li>Call to {@link WebServiceMessageFactory#createWebServiceMessage() createWebServiceMessage()} on the registered
+ *     message factory to create a request message.</li>
+ * <li>Invoke {@link WebServiceMessageCallback#doWithMessage(WebServiceMessage) doWithMessage()} on the request
+ *     callback, if any. This step stores content in the request message, based on <code>Source</code>, marshalling,
+ * etc.</li>
+ * <li>Call {@link WebServiceConnection#send(WebServiceMessage) send()} on the connection.</li>
+ * <li>Call {@link #hasError(WebServiceConnection, WebServiceMessage) hasError()} to check if the connection has an
+ *     error. For an HTTP transport, a status code other than <code>2xx</code> indicates an error. However, since a
+ *     status code of 500 can also indicate a SOAP fault, the template verifies whether the error is not a fault.</li>
+ * <ul>
+ *     <li>If the connection has an error, call the {@link #handleError handleError()} method, which by default throws a
+ *         {@link WebServiceTransportException}.</li>
+ *     <li>If the connection has no error, continue with the next step.
+ * </ul>
+ * <li>Invoke {@link WebServiceConnection#receive(WebServiceMessageFactory) receive} on the connection to read the
+ *     response message, if any.</li>
+ * <ul>
+ *     <li>If no response was received, return <code>null</code> or <code>false</code></li>
+ *     <li>Call {@link #hasFault(WebServiceConnection, WebServiceMessage) hasFault()} to determine whether the response
+ *         has a fault. If it has, call the {@link #handleFault handleFault()} method.</li>
+ *     <li>Otherwise, invoke {@link WebServiceMessageExtractor#extractData(WebServiceMessage) extractData()} on the
+ *         response extractor, or {@link WebServiceMessageCallback#doWithMessage(WebServiceMessage) doWithMessage} on
+ *         the response callback.</li>
+ * </ul>
+ * <li>Call to {@link WebServiceConnection#close() close} on the connection.</li>
+ * </ol>
  *
  * @author Arjen Poutsma
  */

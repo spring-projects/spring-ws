@@ -66,6 +66,16 @@
             </plugin>
         </plugins>
     </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <stylesheetfile>${basedir}/../src/main/javadoc/javadoc.css</stylesheetfile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
     <dependencies>
         <!-- Spring-WS dependencies -->
         <dependency>
