@@ -86,6 +86,10 @@
             <name>Kristoffer Moum</name>
         </contributor>
     </contributors>
+    <organization>
+        <name>The Spring Web Services Framework</name>
+        <url>http://www.springframework.org/spring-ws</url>
+    </organization>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -281,6 +285,10 @@
                 <configuration>
                     <aggregate>true</aggregate>
                     <breakiterator>true</breakiterator>
+                    <header>Spring Web Services Framework</header>
+                    <source>1.5</source>
+                    <stylesheetfile>${basedir}/src/main/javadoc/javadoc.css</stylesheetfile>
+                    <overview>${basedir}/src/main/javadoc/overview.html</overview>
                     <groups>
                         <group>
                             <title>Spring-WS</title>

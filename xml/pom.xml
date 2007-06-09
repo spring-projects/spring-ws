@@ -10,6 +10,16 @@
     <packaging>jar</packaging>
     <name>Spring XML</name>
     <description>Various XML support classes for Spring Web Services</description>
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <stylesheetfile>${basedir}/../src/main/javadoc/javadoc.css</stylesheetfile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
     <dependencies>
         <!-- XML handling dependencies -->
         <dependency>

@@ -42,7 +42,7 @@ public interface WebServiceMessageSender {
     WebServiceConnection createConnection(String uri) throws IOException;
 
     /**
-     * Does this {@link {@link WebServiceMessageSender}} support the supplied URI?
+     * Does this {@link WebServiceMessageSender} support the supplied URI?
      *
      * @param uri the URI to be checked
      * @return <code>true</code> if this <code>WebServiceMessageSender</code> supports the supplied URI
