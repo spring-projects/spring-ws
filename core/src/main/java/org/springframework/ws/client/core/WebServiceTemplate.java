@@ -64,35 +64,24 @@ import org.springframework.ws.transport.support.DefaultStrategiesHelper;
  * FaultMessageResolver} can be defined with with {@link #setFaultMessageResolver(FaultMessageResolver)
  * faultMessageResolver} property. If this property is set to <code>null</code>, no fault resolving is performed.
  * <p/>
- * This template uses the following algorithm for sending and receiving.
- * <ol>
- * <li>Call to {@link #createConnection(String) createConnection()}.</li>
- * <li>Call to {@link WebServiceMessageFactory#createWebServiceMessage() createWebServiceMessage()} on the registered
- *     message factory to create a request message.</li>
- * <li>Invoke {@link WebServiceMessageCallback#doWithMessage(WebServiceMessage) doWithMessage()} on the request
- *     callback, if any. This step stores content in the request message, based on <code>Source</code>, marshalling,
- * etc.</li>
- * <li>Call {@link WebServiceConnection#send(WebServiceMessage) send()} on the connection.</li>
- * <li>Call {@link #hasError(WebServiceConnection, WebServiceMessage) hasError()} to check if the connection has an
- *     error. For an HTTP transport, a status code other than <code>2xx</code> indicates an error. However, since a
- *     status code of 500 can also indicate a SOAP fault, the template verifies whether the error is not a fault.</li>
- * <ul>
- *     <li>If the connection has an error, call the {@link #handleError handleError()} method, which by default throws a
- *         {@link WebServiceTransportException}.</li>
- *     <li>If the connection has no error, continue with the next step.
- * </ul>
- * <li>Invoke {@link WebServiceConnection#receive(WebServiceMessageFactory) receive} on the connection to read the
- *     response message, if any.</li>
- * <ul>
- *     <li>If no response was received, return <code>null</code> or <code>false</code></li>
- *     <li>Call {@link #hasFault(WebServiceConnection, WebServiceMessage) hasFault()} to determine whether the response
- *         has a fault. If it has, call the {@link #handleFault handleFault()} method.</li>
- *     <li>Otherwise, invoke {@link WebServiceMessageExtractor#extractData(WebServiceMessage) extractData()} on the
- *         response extractor, or {@link WebServiceMessageCallback#doWithMessage(WebServiceMessage) doWithMessage} on
- *         the response callback.</li>
- * </ul>
- * <li>Call to {@link WebServiceConnection#close() close} on the connection.</li>
- * </ol>
+ * This template uses the following algorithm for sending and receiving. <ol> <li>Call to {@link
+ * #createConnection(String) createConnection()}.</li> <li>Call to {@link WebServiceMessageFactory#createWebServiceMessage()
+ * createWebServiceMessage()} on the registered message factory to create a request message.</li> <li>Invoke {@link
+ * WebServiceMessageCallback#doWithMessage(WebServiceMessage) doWithMessage()} on the request callback, if any. This
+ * step stores content in the request message, based on <code>Source</code>, marshalling, etc.</li> <li>Call {@link
+ * WebServiceConnection#send(WebServiceMessage) send()} on the connection.</li> <li>Call {@link
+ * #hasError(WebServiceConnection,WebServiceMessage) hasError()} to check if the connection has an error. For an HTTP
+ * transport, a status code other than <code>2xx</code> indicates an error. However, since a status code of 500 can also
+ * indicate a SOAP fault, the template verifies whether the error is not a fault.</li> <ul> <li>If the connection has an
+ * error, call the {@link #handleError handleError()} method, which by default throws a {@link
+ * WebServiceTransportException}.</li> <li>If the connection has no error, continue with the next step. </ul> <li>Invoke
+ * {@link WebServiceConnection#receive(WebServiceMessageFactory) receive} on the connection to read the response
+ * message, if any.</li> <ul> <li>If no response was received, return <code>null</code> or <code>false</code></li>
+ * <li>Call {@link #hasFault(WebServiceConnection,WebServiceMessage) hasFault()} to determine whether the response has a
+ * fault. If it has, call the {@link #handleFault handleFault()} method.</li> <li>Otherwise, invoke {@link
+ * WebServiceMessageExtractor#extractData(WebServiceMessage) extractData()} on the response extractor, or {@link
+ * WebServiceMessageCallback#doWithMessage(WebServiceMessage) doWithMessage} on the response callback.</li> </ul>
+ * <li>Call to {@link WebServiceConnection#close() close} on the connection.</li> </ol>
  *
  * @author Arjen Poutsma
  */
@@ -264,7 +253,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
         }
         return sendAndReceive(uri, new WebServiceMessageCallback() {
 
-            public void doWithMessage(WebServiceMessage message) throws IOException {
+            public void doWithMessage(WebServiceMessage message) throws IOException, TransformerException {
                 getMarshaller().marshal(requestPayload, message.getPayloadResult());
                 if (requestCallback != null) {
                     requestCallback.doWithMessage(message);
@@ -305,13 +294,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
             Boolean retVal = (Boolean) doSendAndReceive(uri, transformer, requestPayload, requestCallback,
                     new SourceExtractor() {
 
-                        public Object extractData(Source source) throws IOException {
-                            try {
-                                transformer.transform(source, responseResult);
-                            }
-                            catch (TransformerException ex) {
-                                throw new WebServiceTransformerException("Could not transform payload", ex);
-                            }
+                        public Object extractData(Source source) throws IOException, TransformerException {
+                            transformer.transform(source, responseResult);
                             return Boolean.TRUE;
                         }
                     });
@@ -360,15 +344,10 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                                     final SourceExtractor responseExtractor) {
         Assert.notNull(responseExtractor, "responseExtractor must not be null");
         return sendAndReceive(uri, new WebServiceMessageCallback() {
-            public void doWithMessage(WebServiceMessage message) throws IOException {
-                try {
-                    transformer.transform(requestPayload, message.getPayloadResult());
-                    if (requestCallback != null) {
-                        requestCallback.doWithMessage(message);
-                    }
-                }
-                catch (TransformerException ex) {
-                    throw new WebServiceTransformerException("Could not transform payload to request message", ex);
+            public void doWithMessage(WebServiceMessage message) throws IOException, TransformerException {
+                transformer.transform(requestPayload, message.getPayloadResult());
+                if (requestCallback != null) {
+                    requestCallback.doWithMessage(message);
                 }
             }
         }, new SourceExtractorMessageExtractor(responseExtractor));
@@ -426,12 +405,17 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                 }
             }
             else {
-                logger.debug("Received no response for request [" + request + "]");
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Received no response for request [" + request + "]");
+                }
                 return null;
             }
         }
         catch (TransportException ex) {
             throw new WebServiceTransportException("Could not use transport: " + ex.getMessage(), ex);
+        }
+        catch (TransformerException ex) {
+            throw new WebServiceTransformerException("Transformation error: " + ex.getMessage(), ex);
         }
         catch (IOException ex) {
             throw new WebServiceIOException("I/O error: " + ex.getMessage(), ex);
@@ -484,7 +468,6 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      *WebServiceMessageExtractor)}, if any
      */
     protected Object handleError(WebServiceConnection connection, WebServiceMessage request) throws IOException {
-        logger.warn("Received " + connection.getErrorMessage() + " error for request [" + request + "]");
         throw new WebServiceTransportException(connection.getErrorMessage());
     }
 
@@ -575,7 +558,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
             this.callback = callback;
         }
 
-        public Object extractData(WebServiceMessage message) throws IOException {
+        public Object extractData(WebServiceMessage message) throws IOException, TransformerException {
             callback.doWithMessage(message);
             return Boolean.TRUE;
         }
@@ -590,7 +573,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
             this.sourceExtractor = sourceExtractor;
         }
 
-        public Object extractData(WebServiceMessage message) throws IOException {
+        public Object extractData(WebServiceMessage message) throws IOException, TransformerException {
             return sourceExtractor.extractData(message.getPayloadSource());
         }
     }
