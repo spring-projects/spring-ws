@@ -27,11 +27,12 @@ import org.springframework.ws.soap.SoapMessage;
  * <p/>
  * A usage example with {@link org.springframework.ws.client.core.WebServiceTemplate}:
  * <pre>
- * WebServiceTemplate template = new WebServiceTemplate(messageFactory, messageSender);
- * Source result = template.sendAndReceive(
+ * WebServiceTemplate template = new WebServiceTemplate(messageFactory);
+ * Result result = new DOMResult();
+ * template.sendAndReceive(
  *     new StringSource("&lt;content xmlns=\"http://tempuri.org\"/&gt;"),
- *     new SoapActionCallback("http://tempuri.org/SOAPAction")
- * );
+ *     new SoapActionCallback("http://tempuri.org/SOAPAction"),
+ *     result);
  * </pre>
  *
  * @author Arjen Poutsma
