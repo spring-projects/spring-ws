@@ -101,6 +101,9 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
         WebServiceMessageSender[] messageSenders = getMessageSenders();
         for (int i = 0; i < messageSenders.length; i++) {
             if (messageSenders[i].supports(uri)) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Opening connection to [" + uri + "] using [" + messageSenders[i] + "]");
+                }
                 return messageSenders[i].createConnection(uri);
             }
         }

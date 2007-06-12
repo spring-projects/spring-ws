@@ -58,10 +58,6 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
         connection.disconnect();
     }
 
-    public String getErrorMessage() throws IOException {
-        return connection.getResponseMessage();
-    }
-
     /*
      * Sending request
      */
@@ -114,6 +110,10 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
 
     protected int getResponseCode() throws IOException {
         return connection.getResponseCode();
+    }
+
+    protected String getResponseMessage() throws IOException {
+        return connection.getResponseMessage();
     }
 
     protected InputStream getRawResponseInputStream() throws IOException {

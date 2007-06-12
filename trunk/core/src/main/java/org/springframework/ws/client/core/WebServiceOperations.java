@@ -128,7 +128,7 @@ public interface WebServiceOperations {
      * <p/>
      * The given callback allows changing of the request message after the payload has been written to it.
      * <p/>
-     * This will only work with a default specified!
+     * This will only work with a default uri specified!
      *
      * @param requestPayload    the payload of the request message
      * @param requestCallback   callback to change message, can be <code>null</code>
@@ -162,7 +162,7 @@ public interface WebServiceOperations {
      * Sends a web service message that contains the given payload. Writes the response, if any, to the given
      * <code>Result</code>.
      * <p/>
-     * This will only work with a default specified!
+     * This will only work with a default uri specified!
      *
      * @param requestPayload the payload of the request message
      * @param responseResult the result to write the response payload to
@@ -189,7 +189,7 @@ public interface WebServiceOperations {
      * <p/>
      * The given callback allows changing of the request message after the payload has been written to it.
      * <p/>
-     * This will only work with a default specified!
+     * This will only work with a default uri specified!
      *
      * @param requestPayload  the payload of the request message
      * @param requestCallback callback to change message, can be <code>null</code>
@@ -222,7 +222,7 @@ public interface WebServiceOperations {
      * Sends a web service message that can be manipulated with the given callback, reading the result with a
      * <code>WebServiceMessageExtractor</code>.
      * <p/>
-     * This will only work with a default specified!
+     * This will only work with a default uri specified!
      *
      * @param requestCallback   the requestCallback to be used for manipulating the request message
      * @param responseExtractor object that will extract results
@@ -250,7 +250,7 @@ public interface WebServiceOperations {
      * Sends a web service message that can be manipulated with the given callback, reading the result with a
      * <code>WebServiceMessageExtractor</code>.
      * <p/>
-     * This will only work with a default specified!
+     * This will only work with a default uri specified!
      *
      * @param requestCallback  the callback to be used for manipulating the request message
      * @param responseCallback the callback to be used for manipulating the response message

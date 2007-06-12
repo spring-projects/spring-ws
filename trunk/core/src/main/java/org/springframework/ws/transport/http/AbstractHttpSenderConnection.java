@@ -42,6 +42,14 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
         return getResponseCode() / 100 != 2;
     }
 
+    public final String getErrorMessage() throws IOException {
+        StringBuffer buffer = new StringBuffer(getResponseMessage());
+        buffer.append(" [");
+        buffer.append(getResponseCode());
+        buffer.append(']');
+        return buffer.toString();
+    }
+
     /*
      * Receiving response
      */
@@ -82,6 +90,9 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 
     /** Returns the HTTP status code of the response. */
     protected abstract int getResponseCode() throws IOException;
+
+    /** Returns the HTTP status message of the response. */
+    protected abstract String getResponseMessage() throws IOException;
 
     /** Returns the length of the response. */
     protected abstract long getResponseContentLength() throws IOException;

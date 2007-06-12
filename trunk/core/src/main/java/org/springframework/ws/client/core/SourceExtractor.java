@@ -18,6 +18,7 @@ package org.springframework.ws.client.core;
 
 import java.io.IOException;
 import javax.xml.transform.Source;
+import javax.xml.transform.TransformerException;
 
 /**
  * Callback interface for extracting a result object from a {@link javax.xml.transform.Source} instance.
@@ -43,6 +44,6 @@ public interface SourceExtractor {
      *         latter case)
      * @throws IOException in case of I/O errors
      */
-    Object extractData(Source source) throws IOException;
+    Object extractData(Source source) throws IOException, TransformerException;
 
 }
