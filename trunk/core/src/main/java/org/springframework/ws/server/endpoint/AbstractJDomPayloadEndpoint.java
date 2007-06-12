@@ -17,7 +17,6 @@
 package org.springframework.ws.server.endpoint;
 
 import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
 
 import org.jdom.Element;
 import org.jdom.transform.JDOMResult;
@@ -26,10 +25,10 @@ import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
  * Abstract base class for endpoints that handle the message payload as JDOM elements.
- *
+ * <p/>
  * <p>Offers the message payload as a JDOM {@link Element}, and allows subclasses to create a response by returning an
  * <code>Element</code>.
- *
+ * <p/>
  * <pAn <code>AbstractJDomPayloadEndpoint</code> can accept only <i>one</i> payload element. Multiple payload elements
  * are not in accordance with WS-I.
  *
@@ -38,9 +37,8 @@ import org.springframework.xml.transform.TransformerObjectSupport;
 public abstract class AbstractJDomPayloadEndpoint extends TransformerObjectSupport implements PayloadEndpoint {
 
     public final Source invoke(Source request) throws Exception {
-        Transformer transformer = createTransformer();
         JDOMResult jdomResult = new JDOMResult();
-        transformer.transform(request, jdomResult);
+        transform(request, jdomResult);
         Element requestElement = jdomResult.getDocument().getRootElement();
         Element responseElement = invokeInternal(requestElement);
         return responseElement != null ? new JDOMSource(responseElement) : null;

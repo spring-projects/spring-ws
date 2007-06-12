@@ -17,7 +17,6 @@
 package org.springframework.ws.server.endpoint;
 
 import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.sax.SAXResult;
 
 import org.springframework.xml.transform.TransformerObjectSupport;
@@ -45,10 +44,9 @@ public abstract class AbstractSaxPayloadEndpoint extends TransformerObjectSuppor
      * @see #getResponse(org.xml.sax.ContentHandler)
      */
     public final Source invoke(Source request) throws Exception {
-        Transformer transformer = createTransformer();
         ContentHandler contentHandler = createContentHandler();
         SAXResult result = new SAXResult(contentHandler);
-        transformer.transform(request, result);
+        transform(request, result);
         return getResponse(contentHandler);
     }
 

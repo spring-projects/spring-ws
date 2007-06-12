@@ -24,7 +24,6 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
@@ -79,9 +78,8 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
         }
         if (streamReader == null) {
             // as a final resort, transform the source to a stream, and read from that
-            Transformer transformer = createTransformer();
             ByteArrayOutputStream os = new ByteArrayOutputStream();
-            transformer.transform(source, new StreamResult(os));
+            transform(source, new StreamResult(os));
             ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
             streamReader = getInputFactory().createXMLStreamReader(is);
         }
@@ -146,9 +144,8 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
                     streamWriter.flush();
                     // if we used an output stream cache, we have to transform it to the response again
                     try {
-                        Transformer transformer = createTransformer();
                         ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-                        transformer.transform(new StreamSource(is), messageContext.getResponse().getPayloadResult());
+                        transform(new StreamSource(is), messageContext.getResponse().getPayloadResult());
                         os = null;
                     }
                     catch (TransformerException ex) {
