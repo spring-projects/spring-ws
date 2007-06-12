@@ -182,7 +182,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
         connectionControl.expectAndReturn(connectionMock.hasError(), true);
         connectionControl.expectAndReturn(connectionMock.hasFault(), false);
         String errorMessage = "errorMessage";
-        connectionControl.expectAndReturn(connectionMock.getErrorMessage(), errorMessage, 2);
+        connectionControl.expectAndReturn(connectionMock.getErrorMessage(), errorMessage);
         connectionMock.close();
         connectionControl.replay();
 

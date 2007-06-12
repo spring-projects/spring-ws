@@ -56,10 +56,6 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
         return postMethod;
     }
 
-    public String getErrorMessage() throws IOException {
-        return postMethod.getStatusText();
-    }
-
     public void close() throws IOException {
         postMethod.releaseConnection();
     }
@@ -92,6 +88,10 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 
     protected int getResponseCode() throws IOException {
         return postMethod.getStatusCode();
+    }
+
+    protected String getResponseMessage() throws IOException {
+        return postMethod.getStatusText();
     }
 
     protected long getResponseContentLength() throws IOException {

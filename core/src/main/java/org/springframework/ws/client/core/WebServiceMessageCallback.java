@@ -17,6 +17,7 @@
 package org.springframework.ws.client.core;
 
 import java.io.IOException;
+import javax.xml.transform.TransformerException;
 
 import org.springframework.ws.WebServiceMessage;
 
@@ -34,8 +35,9 @@ public interface WebServiceMessageCallback {
      * Execute any number of operations on the supplied <code>message</code>.
      *
      * @param message the message
-     * @throws IOException in case of I/O errors
+     * @throws IOException          in case of I/O errors
+     * @throws TransformerException in case of transformation errors
      */
-    void doWithMessage(WebServiceMessage message) throws IOException;
+    void doWithMessage(WebServiceMessage message) throws IOException, TransformerException;
 
 }

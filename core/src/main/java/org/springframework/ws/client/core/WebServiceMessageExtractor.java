@@ -17,6 +17,7 @@
 package org.springframework.ws.client.core;
 
 import java.io.IOException;
+import javax.xml.transform.TransformerException;
 
 import org.springframework.ws.WebServiceMessage;
 
@@ -41,8 +42,9 @@ public interface WebServiceMessageExtractor {
      * @param message the message to extract data from (possibly a <code>SoapMessage</code>)
      * @return an arbitrary result object, or <code>null</code> if none (the extractor will typically be stateful in the
      *         latter case)
-     * @throws IOException in case of I/O errors
+     * @throws IOException          in case of I/O errors
+     * @throws TransformerException in case of transformation errors
      */
-    Object extractData(WebServiceMessage message) throws IOException;
+    Object extractData(WebServiceMessage message) throws IOException, TransformerException;
 
 }
