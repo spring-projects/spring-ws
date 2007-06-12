@@ -21,7 +21,6 @@ import java.lang.reflect.Method;
 import java.util.Properties;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.xpath.XPath;
@@ -112,8 +111,7 @@ public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEnd
         if (result != null && result instanceof Source) {
             Source responseSource = (Source) result;
             WebServiceMessage response = messageContext.getResponse();
-            Transformer transformer = createTransformer();
-            transformer.transform(responseSource, response.getPayloadResult());
+            transform(responseSource, response.getPayloadResult());
         }
     }
 
@@ -166,9 +164,8 @@ public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEnd
      * @return the root element
      */
     private Element getRootElement(Source source) throws TransformerException {
-        Transformer transformer = createTransformer();
         DOMResult domResult = new DOMResult();
-        transformer.transform(source, domResult);
+        transform(source, domResult);
         Document document = (Document) domResult.getNode();
         return document.getDocumentElement();
     }

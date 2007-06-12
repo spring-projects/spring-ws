@@ -20,7 +20,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
@@ -30,10 +29,10 @@ import org.w3c.dom.Element;
 
 /**
  * Abstract base class for endpoints that handle the message payload as DOM elements.
- *
+ * <p/>
  * <p>Offers the message payload as a DOM <code>Element</code>, and allows subclasses to create a response by returning
  * an <code>Element</code>.
- *
+ * <p/>
  * <p>An <code>AbstractDomPayloadEndpoint</code> only accept <i>one</i> payload element. Multiple payload elements are
  * not in accordance with WS-I.
  *
@@ -49,29 +48,24 @@ public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSuppor
 
     private boolean namespaceAware = true;
 
-    /**
-     * Set whether or not the XML parser should be XML namespace aware. Default is <code>true</code>.
-     */
+    /** Set whether or not the XML parser should be XML namespace aware. Default is <code>true</code>. */
     public void setNamespaceAware(boolean namespaceAware) {
         this.namespaceAware = namespaceAware;
     }
 
-    /**
-     * Set if the XML parser should validate the document. Default is <code>false</code>.
-     */
+    /** Set if the XML parser should validate the document. Default is <code>false</code>. */
     public void setValidating(boolean validating) {
         this.validating = validating;
     }
 
     public final Source invoke(Source request) throws Exception {
-        Transformer transformer = createTransformer();
         if (documentBuilderFactory == null) {
             documentBuilderFactory = createDocumentBuilderFactory();
         }
         DocumentBuilder documentBuilder = createDocumentBuilder(documentBuilderFactory);
         Document requestDocument = documentBuilder.newDocument();
         DOMResult domResult = new DOMResult(requestDocument);
-        transformer.transform(request, domResult);
+        transform(request, domResult);
         Element requestElement = (Element) requestDocument.getFirstChild();
         Document responseDocument = documentBuilder.newDocument();
         Element responseElement = invokeInternal(requestElement, responseDocument);
@@ -113,10 +107,10 @@ public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSuppor
 
     /**
      * Template method that subclasses must implement to process the request.
-     *
+     * <p/>
      * <p>Offers the request payload as a DOM <code>Element</code>, and allows subclasses to return a response
      * <code>Element</code>.
-     *
+     * <p/>
      * <p>The given DOM <code>Document</code> is to be used for constructing <code>Node</code>s, by using the various
      * <code>create</code> methods.
      *

@@ -27,7 +27,6 @@ import javax.xml.stream.events.XMLEvent;
 import javax.xml.stream.util.XMLEventConsumer;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
@@ -69,9 +68,7 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
         return XMLEventFactory.newInstance();
     }
 
-    /**
-     * Returns an <code>XMLEventFactory</code> to read XML from.
-     */
+    /** Returns an <code>XMLEventFactory</code> to read XML from. */
     private XMLEventFactory getEventFactory() {
         if (eventFactory == null) {
             eventFactory = createXmlEventFactory();
@@ -103,9 +100,8 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
         }
         if (eventReader == null) {
             // as a final resort, transform the source to a stream, and read from that
-            Transformer transformer = createTransformer();
             ByteArrayOutputStream os = new ByteArrayOutputStream();
-            transformer.transform(source, new StreamResult(os));
+            transform(source, new StreamResult(os));
             ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
             eventReader = getInputFactory().createXMLEventReader(is);
         }
@@ -181,9 +177,8 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
                     eventWriter.flush();
                     // if we used an output stream cache, we have to transform it to the response again
                     try {
-                        Transformer transformer = createTransformer();
                         ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-                        transformer.transform(new StreamSource(is), messageContext.getResponse().getPayloadResult());
+                        transform(new StreamSource(is), messageContext.getResponse().getPayloadResult());
                     }
                     catch (TransformerException ex) {
                         throw new XMLStreamException(ex);

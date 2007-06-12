@@ -24,7 +24,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
@@ -113,9 +112,8 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 
     private Source invokeUsingReflection(Source request) throws Exception {
         try {
-            Transformer transformer = createTransformer();
             Result xomResult = createXomResult();
-            transformer.transform(request, xomResult);
+            transform(request, xomResult);
             Element requestElement = getRequestElement(xomResult);
 
             Element responseElement = invokeInternal(requestElement);

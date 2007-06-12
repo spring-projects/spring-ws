@@ -16,8 +16,11 @@
 
 package org.springframework.xml.transform;
 
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 
 import org.apache.commons.logging.Log;
@@ -49,7 +52,7 @@ public abstract class TransformerObjectSupport {
     }
 
     /**
-     * Creates a new <code>Transformer</code>. Must be called per request, as transformer is not thread-safe.
+     * Creates a new <code>Transformer</code>. Must be called per request, as transformers are not thread-safe.
      *
      * @return the created transformer
      * @throws TransformerConfigurationException
@@ -57,6 +60,19 @@ public abstract class TransformerObjectSupport {
      */
     protected final Transformer createTransformer() throws TransformerConfigurationException {
         return transformerFactory.newTransformer();
+    }
+
+    /**
+     * Transforms the given {@link Source} to the given {@link Result}. Creates a new {@link Transformer} for every
+     * call, as transformers are not thread-safe.
+     *
+     * @param source the source to transform from
+     * @param result the result to transform to
+     * @throws TransformerException if thrown by JAXP methods
+     */
+    protected final void transform(Source source, Result result) throws TransformerException {
+        Transformer transformer = createTransformer();
+        transformer.transform(source, result);
     }
 
 }

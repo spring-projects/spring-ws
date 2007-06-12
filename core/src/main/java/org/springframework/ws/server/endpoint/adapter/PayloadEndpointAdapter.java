@@ -17,7 +17,6 @@
 package org.springframework.ws.server.endpoint.adapter;
 
 import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
@@ -48,8 +47,7 @@ public class PayloadEndpointAdapter extends TransformerObjectSupport implements 
         Source responseSource = payloadEndpoint.invoke(requestSource);
         if (responseSource != null) {
             WebServiceMessage response = messageContext.getResponse();
-            Transformer transformer = createTransformer();
-            transformer.transform(responseSource, response.getPayloadResult());
+            transform(responseSource, response.getPayloadResult());
         }
     }
 }

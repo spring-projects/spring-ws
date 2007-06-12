@@ -18,7 +18,6 @@ package org.springframework.ws.server.endpoint.adapter;
 
 import java.lang.reflect.Method;
 import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
@@ -58,8 +57,7 @@ public class PayloadMethodEndpointAdapter extends AbstractMethodEndpointAdapter 
         if (result != null) {
             Source responseSource = (Source) result;
             WebServiceMessage response = messageContext.getResponse();
-            Transformer transformer = createTransformer();
-            transformer.transform(responseSource, response.getPayloadResult());
+            transform(responseSource, response.getPayloadResult());
         }
     }
 }

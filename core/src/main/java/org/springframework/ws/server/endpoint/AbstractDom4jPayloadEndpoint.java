@@ -17,7 +17,6 @@
 package org.springframework.ws.server.endpoint;
 
 import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -39,9 +38,8 @@ import org.springframework.xml.transform.TransformerObjectSupport;
 public abstract class AbstractDom4jPayloadEndpoint extends TransformerObjectSupport implements PayloadEndpoint {
 
     public final Source invoke(Source request) throws Exception {
-        Transformer transformer = createTransformer();
         DocumentResult dom4jResult = new DocumentResult();
-        transformer.transform(request, dom4jResult);
+        transform(request, dom4jResult);
         Element requestElement = dom4jResult.getDocument().getRootElement();
         Document responseDocument = DocumentHelper.createDocument();
         Element responseElement = invokeInternal(requestElement, responseDocument);
