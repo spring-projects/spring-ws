@@ -18,8 +18,6 @@ package org.springframework.ws.context;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
@@ -30,23 +28,15 @@ import org.springframework.ws.WebServiceMessageFactory;
  *
  * @author Arjen Poutsma
  */
-public class DefaultMessageContext implements MessageContext {
+public class DefaultMessageContext extends AbstractMessageContext {
 
     private final WebServiceMessageFactory messageFactory;
-
-    /**
-     * Keys are <code>Strings</code>, values are <code>Objects</code>. Lazily initalized by
-     * <code>getProperties()</code>.
-     */
-    private Map properties;
 
     private WebServiceMessage request;
 
     private WebServiceMessage response;
 
-    /**
-     * Construct a new, empty instance of the <code>DefaultMessageContext</code> with the given message factory.
-     */
+    /** Construct a new, empty instance of the <code>DefaultMessageContext</code> with the given message factory. */
     public DefaultMessageContext(WebServiceMessageFactory messageFactory) {
         this(messageFactory.createWebServiceMessage(), messageFactory);
     }
@@ -86,30 +76,4 @@ public class DefaultMessageContext implements MessageContext {
         }
     }
 
-    public boolean containsProperty(String name) {
-        return getProperties().containsKey(name);
-    }
-
-    public Object getProperty(String name) {
-        return getProperties().get(name);
-    }
-
-    public String[] getPropertyNames() {
-        return (String[]) getProperties().keySet().toArray(new String[getProperties().size()]);
-    }
-
-    public void removeProperty(String name) {
-        getProperties().remove(name);
-    }
-
-    public void setProperty(String name, Object value) {
-        getProperties().put(name, value);
-    }
-
-    private Map getProperties() {
-        if (properties == null) {
-            properties = new HashMap();
-        }
-        return properties;
-    }
 }
