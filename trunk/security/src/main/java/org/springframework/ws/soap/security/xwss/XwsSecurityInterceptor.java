@@ -113,11 +113,9 @@ public class XwsSecurityInterceptor extends AbstractWsSecurityInterceptor implem
     }
 
     /**
-     * Secures the given SoapMessage message in accordance with the defined security policy and returns the secured
-     * result.
+     * Secures the given SoapMessage message in accordance with the defined security policy.
      *
      * @param soapMessage the message to be secured
-     * @return the secured message
      * @throws XwsSecuritySecurementException in case of errors
      * @throws IllegalArgumentException       when soapMessage is not a <code>SaajSoapMessage</code>
      */
@@ -136,11 +134,9 @@ public class XwsSecurityInterceptor extends AbstractWsSecurityInterceptor implem
     }
 
     /**
-     * Validates the given SoapMessage message in accordance with the defined security policy and returns the validated
-     * result.
+     * Validates the given SoapMessage message in accordance with the defined security policy.
      *
      * @param soapMessage the message to be validated
-     * @return the validated message
      * @throws XwsSecurityValidationException in case of errors
      * @throws IllegalArgumentException       when soapMessage is not a <code>SaajSoapMessage</code>
      */
