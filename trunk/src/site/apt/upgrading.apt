@@ -12,6 +12,9 @@ should help most users the project update their applications:
     Some issues have been resolved which make the WebServiceTemplate more useable in Plain Old XML settings, and less
 SOAP-specific.
 
+    * The various overloaded <<<sendAndReceive()>>> methods have been renamed to aid comprehension. The method signature
+    now reflects what is sent (eg. a Source), and what is received (eg. a Result).
+
     * The <<<WebServiceMessageCallback>>> method <<<doInMessage()>>> has been renamed to <<<doWithMessage()>>>, since it
     was poorly named.
 
