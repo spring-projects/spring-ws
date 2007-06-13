@@ -93,6 +93,8 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller implements MimeMarsh
 
     private Map<java.lang.String, ?> jaxbContextProperties;
 
+    private boolean mtomEnabled = true;
+
     /**
      * Sets the <code>XmlAdapter</code>s to be registered with the JAXB <code>Marshaller</code> and
      * <code>Unmarshaller</code>
@@ -122,6 +124,14 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller implements MimeMarsh
     /** Sets the <code>Marshaller.Listener</code> to be registered with the JAXB <code>Marshaller</code>. */
     public void setMarshallerListener(Marshaller.Listener marshallerListener) {
         this.marshallerListener = marshallerListener;
+    }
+
+    /**
+     * Indicates whether MTOM support should be enabled or not. Default is <code>true</code>, marshalling using XOP/MTOM
+     * is enabled.
+     */
+    public void setMtomEnabled(boolean mtomEnabled) {
+        this.mtomEnabled = mtomEnabled;
     }
 
     /**
@@ -252,7 +262,7 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller implements MimeMarsh
     public void marshal(Object graph, Result result, MimeContainer mimeContainer) throws XmlMappingException {
         try {
             Marshaller marshaller = createMarshaller();
-            if (mimeContainer != null) {
+            if (mtomEnabled && mimeContainer != null) {
                 marshaller.setAttachmentMarshaller(new Jaxb2AttachmentMarshaller(mimeContainer));
             }
             if (result instanceof StaxResult) {
@@ -291,7 +301,7 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller implements MimeMarsh
     public Object unmarshal(Source source, MimeContainer mimeContainer) throws XmlMappingException {
         try {
             Unmarshaller unmarshaller = createUnmarshaller();
-            if (mimeContainer != null) {
+            if (mtomEnabled && mimeContainer != null) {
                 unmarshaller.setAttachmentUnmarshaller(new Jaxb2AttachmentUnmarshaller(mimeContainer));
             }
             if (source instanceof StaxSource) {
