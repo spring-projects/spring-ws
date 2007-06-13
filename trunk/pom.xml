@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.ws</groupId>
@@ -256,7 +257,8 @@
                             </fileset>
                         </copy>
                         <move file="target/site/reference/pdf/index.pdf"
-                              tofile="target/site/reference/pdf/spring-ws-reference.pdf" failonerror="false"/>
+                              tofile="target/site/reference/pdf/spring-ws-reference.pdf"
+                              failonerror="false"/>
                     </postProcess>
                 </configuration>
             </plugin>
@@ -303,6 +305,7 @@
                             <packages>org.springframework.xml*</packages>
                         </group>
                     </groups>
+                    <javadocDirectory>${basedir}/src/main/javadoc</javadocDirectory>
                     <excludePackageNames>org.springframework.ws.samples</excludePackageNames>
                     <links>
                         <link>http://java.sun.com/j2se/1.4.2/docs/api</link>
@@ -369,6 +372,11 @@
             <dependency>
                 <groupId>org.springframework.ws</groupId>
                 <artifactId>spring-ws-security</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.ws</groupId>
+                <artifactId>spring-ws-mock</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

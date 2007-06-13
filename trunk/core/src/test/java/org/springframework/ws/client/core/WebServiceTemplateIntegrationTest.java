@@ -88,10 +88,10 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
         template.setMessageSender(new CommonsHttpMessageSender());
         String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
         StringResult result = new StringResult();
-        template.sendAndReceive("http://localhost:8888/pox", new StringSource(content), result);
+        template.sendSourceAndReceiveToResult("http://localhost:8888/pox", new StringSource(content), result);
         assertXMLEqual(content, result.toString());
         try {
-            template.sendAndReceive("http://localhost:8888/errors/notfound", new StringSource(content),
+            template.sendSourceAndReceiveToResult("http://localhost:8888/errors/notfound", new StringSource(content),
                     new StringResult());
             fail("WebServiceTransportException expected");
         }
@@ -99,7 +99,7 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
             //expected
         }
         try {
-            template.sendAndReceive("http://localhost:8888/errors/server", new StringSource(content), result);
+            template.sendSourceAndReceiveToResult("http://localhost:8888/errors/server", new StringSource(content), result);
             fail("WebServiceTransportException expected");
         }
         catch (WebServiceTransportException ex) {
@@ -117,13 +117,13 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
         template.setMessageSender(new CommonsHttpMessageSender());
         String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
         StringResult result = new StringResult();
-        template.sendAndReceive("http://localhost:8888/soap/echo", new StringSource(content), result);
+        template.sendSourceAndReceiveToResult("http://localhost:8888/soap/echo", new StringSource(content), result);
         assertXMLEqual(content, result.toString());
-        boolean b = template.sendAndReceive("http://localhost:8888/soap/noResponse", new StringSource(content),
+        boolean b = template.sendSourceAndReceiveToResult("http://localhost:8888/soap/noResponse", new StringSource(content),
                 new StringResult());
         assertFalse("Invalid result", b);
         try {
-            template.sendAndReceive("http://localhost:8888/errors/notfound", new StringSource(content),
+            template.sendSourceAndReceiveToResult("http://localhost:8888/errors/notfound", new StringSource(content),
                     new StringResult());
             fail("WebServiceTransportException expected");
         }
@@ -131,7 +131,7 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
             //expected
         }
         try {
-            template.sendAndReceive("http://localhost:8888/soap/fault", new StringSource(content), result);
+            template.sendSourceAndReceiveToResult("http://localhost:8888/soap/fault", new StringSource(content), result);
             fail("SoapFaultClientException expected");
         }
         catch (SoapFaultClientException ex) {

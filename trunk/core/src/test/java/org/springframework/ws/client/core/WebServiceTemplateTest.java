@@ -217,7 +217,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
         connectionMock.close();
         connectionControl.replay();
 
-        Object result = template.sendAndReceive(new StringSource("<request />"), extractorMock);
+        Object result = template.sendSourceAndReceive(new StringSource("<request />"), extractorMock);
         assertEquals("Invalid response", extracted, result);
 
         extractorControl.verify();
@@ -236,7 +236,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
         connectionMock.close();
         connectionControl.replay();
 
-        Object result = template.sendAndReceive(new StringSource("<request />"), extractorMock);
+        Object result = template.sendSourceAndReceive(new StringSource("<request />"), extractorMock);
         assertNull("Invalid response", result);
 
         extractorControl.verify();
@@ -254,7 +254,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
         connectionControl.replay();
 
         StringResult result = new StringResult();
-        boolean b = template.sendAndReceive(new StringSource("<request />"), result);
+        boolean b = template.sendSourceAndReceiveToResult(new StringSource("<request />"), result);
         assertTrue("Invalid result", b);
 
         connectionControl.verify();
@@ -270,7 +270,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
         connectionControl.replay();
 
         StringResult result = new StringResult();
-        boolean b = template.sendAndReceive(new StringSource("<request />"), result);
+        boolean b = template.sendSourceAndReceiveToResult(new StringSource("<request />"), result);
         assertFalse("Invalid result", b);
 
         connectionControl.verify();
@@ -381,8 +381,6 @@ public class WebServiceTemplateTest extends XMLTestCase {
         callbackControl.verify();
         extractorControl.verify();
         connectionControl.verify();
-
     }
-
 
 }
