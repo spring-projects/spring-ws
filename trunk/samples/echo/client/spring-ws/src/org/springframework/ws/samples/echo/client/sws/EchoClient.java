@@ -37,7 +37,7 @@ public class EchoClient extends WebServiceGatewaySupport {
     public void echo() throws IOException {
         Source requestSource = new ResourceSource(request);
         StringResult result = new StringResult();
-        getWebServiceTemplate().sendAndReceive(requestSource, result);
+        getWebServiceTemplate().sendSourceAndReceiveToResult(requestSource, result);
         System.out.println(result);
     }
 
