@@ -29,7 +29,7 @@ import org.springframework.ws.soap.SoapMessage;
  * <pre>
  * WebServiceTemplate template = new WebServiceTemplate(messageFactory);
  * Result result = new DOMResult();
- * template.sendAndReceive(
+ * template.sendSourceAndReceiveToResult(
  *     new StringSource("&lt;content xmlns=\"http://tempuri.org\"/&gt;"),
  *     new SoapActionCallback("http://tempuri.org/SOAPAction"),
  *     result);

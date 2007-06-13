@@ -64,24 +64,35 @@ import org.springframework.ws.transport.support.DefaultStrategiesHelper;
  * FaultMessageResolver} can be defined with with {@link #setFaultMessageResolver(FaultMessageResolver)
  * faultMessageResolver} property. If this property is set to <code>null</code>, no fault resolving is performed.
  * <p/>
- * This template uses the following algorithm for sending and receiving. <ol> <li>Call to {@link
- * #createConnection(String) createConnection()}.</li> <li>Call to {@link WebServiceMessageFactory#createWebServiceMessage()
- * createWebServiceMessage()} on the registered message factory to create a request message.</li> <li>Invoke {@link
- * WebServiceMessageCallback#doWithMessage(WebServiceMessage) doWithMessage()} on the request callback, if any. This
- * step stores content in the request message, based on <code>Source</code>, marshalling, etc.</li> <li>Call {@link
- * WebServiceConnection#send(WebServiceMessage) send()} on the connection.</li> <li>Call {@link
- * #hasError(WebServiceConnection,WebServiceMessage) hasError()} to check if the connection has an error. For an HTTP
- * transport, a status code other than <code>2xx</code> indicates an error. However, since a status code of 500 can also
- * indicate a SOAP fault, the template verifies whether the error is not a fault.</li> <ul> <li>If the connection has an
- * error, call the {@link #handleError handleError()} method, which by default throws a {@link
- * WebServiceTransportException}.</li> <li>If the connection has no error, continue with the next step. </ul> <li>Invoke
- * {@link WebServiceConnection#receive(WebServiceMessageFactory) receive} on the connection to read the response
- * message, if any.</li> <ul> <li>If no response was received, return <code>null</code> or <code>false</code></li>
- * <li>Call {@link #hasFault(WebServiceConnection,WebServiceMessage) hasFault()} to determine whether the response has a
- * fault. If it has, call the {@link #handleFault handleFault()} method.</li> <li>Otherwise, invoke {@link
- * WebServiceMessageExtractor#extractData(WebServiceMessage) extractData()} on the response extractor, or {@link
- * WebServiceMessageCallback#doWithMessage(WebServiceMessage) doWithMessage} on the response callback.</li> </ul>
- * <li>Call to {@link WebServiceConnection#close() close} on the connection.</li> </ol>
+ * This template uses the following algorithm for sending and receiving.
+ * <ol>
+ * <li>Call to {@link #createConnection(String) createConnection()}.</li>
+ * <li>Call to {@link WebServiceMessageFactory#createWebServiceMessage() createWebServiceMessage()} on the registered
+ *     message factory to create a request message.</li>
+ * <li>Invoke {@link WebServiceMessageCallback#doWithMessage(WebServiceMessage) doWithMessage()} on the request
+ *     callback, if any. This step stores content in the request message, based on <code>Source</code>, marshalling,
+ * etc.</li>
+ * <li>Call {@link WebServiceConnection#send(WebServiceMessage) send()} on the connection.</li>
+ * <li>Call {@link #hasError(WebServiceConnection, WebServiceMessage) hasError()} to check if the connection has an
+ *     error. For an HTTP transport, a status code other than <code>2xx</code> indicates an error. However, since a
+ *     status code of 500 can also indicate a SOAP fault, the template verifies whether the error is not a fault.</li>
+ * <ul>
+ *     <li>If the connection has an error, call the {@link #handleError handleError()} method, which by default throws a
+ *         {@link WebServiceTransportException}.</li>
+ *     <li>If the connection has no error, continue with the next step.
+ * </ul>
+ * <li>Invoke {@link WebServiceConnection#receive(WebServiceMessageFactory) receive} on the connection to read the
+ *     response message, if any.</li>
+ * <ul>
+ *     <li>If no response was received, return <code>null</code> or <code>false</code></li>
+ *     <li>Call {@link #hasFault(WebServiceConnection, WebServiceMessage) hasFault()} to determine whether the response
+ *         has a fault. If it has, call the {@link #handleFault handleFault()} method.</li>
+ *     <li>Otherwise, invoke {@link WebServiceMessageExtractor#extractData(WebServiceMessage) extractData()} on the
+ *         response extractor, or {@link WebServiceMessageCallback#doWithMessage(WebServiceMessage) doWithMessage} on
+ *         the response callback.</li>
+ * </ul>
+ * <li>Call to {@link WebServiceConnection#close() close} on the connection.</li>
+ * </ol>
  *
  * @author Arjen Poutsma
  */
@@ -123,10 +134,10 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      *
      * @see #marshalSendAndReceive(Object)
      * @see #marshalSendAndReceive(Object,WebServiceMessageCallback)
-     * @see #sendAndReceive(Source,Result)
-     * @see #sendAndReceive(Source,WebServiceMessageCallback,Result)
-     * @see #sendAndReceive(Source,SourceExtractor)
-     * @see #sendAndReceive(Source,WebServiceMessageCallback,SourceExtractor)
+     * @see #sendSourceAndReceiveToResult(Source,Result)
+     * @see #sendSourceAndReceiveToResult(Source,WebServiceMessageCallback,Result)
+     * @see #sendSourceAndReceive(Source,SourceExtractor)
+     * @see #sendSourceAndReceive(Source,WebServiceMessageCallback,SourceExtractor)
      * @see #sendAndReceive(WebServiceMessageCallback,WebServiceMessageCallback)
      */
     public void setDefaultUri(String uri) {
@@ -271,21 +282,21 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     * Result-handling methods
     */
 
-    public boolean sendAndReceive(Source requestPayload, Result responseResult) {
-        return sendAndReceive(requestPayload, null, responseResult);
+    public boolean sendSourceAndReceiveToResult(Source requestPayload, Result responseResult) {
+        return sendSourceAndReceiveToResult(requestPayload, null, responseResult);
     }
 
-    public boolean sendAndReceive(String uri, Source requestPayload, Result responseResult) {
-        return sendAndReceive(uri, requestPayload, null, responseResult);
+    public boolean sendSourceAndReceiveToResult(String uri, Source requestPayload, Result responseResult) {
+        return sendSourceAndReceiveToResult(uri, requestPayload, null, responseResult);
     }
 
-    public boolean sendAndReceive(Source requestPayload,
+    public boolean sendSourceAndReceiveToResult(Source requestPayload,
                                   WebServiceMessageCallback requestCallback,
                                   final Result responseResult) {
-        return sendAndReceive(getDefaultUri(), requestPayload, requestCallback, responseResult);
+        return sendSourceAndReceiveToResult(getDefaultUri(), requestPayload, requestCallback, responseResult);
     }
 
-    public boolean sendAndReceive(String uri,
+    public boolean sendSourceAndReceiveToResult(String uri,
                                   Source requestPayload,
                                   WebServiceMessageCallback requestCallback,
                                   final Result responseResult) {
@@ -310,21 +321,21 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     * Source-handling methods
     */
 
-    public Object sendAndReceive(final Source requestPayload, final SourceExtractor responseExtractor) {
-        return sendAndReceive(requestPayload, null, responseExtractor);
+    public Object sendSourceAndReceive(final Source requestPayload, final SourceExtractor responseExtractor) {
+        return sendSourceAndReceive(requestPayload, null, responseExtractor);
     }
 
-    public Object sendAndReceive(String uri, final Source requestPayload, final SourceExtractor responseExtractor) {
-        return sendAndReceive(uri, requestPayload, null, responseExtractor);
+    public Object sendSourceAndReceive(String uri, final Source requestPayload, final SourceExtractor responseExtractor) {
+        return sendSourceAndReceive(uri, requestPayload, null, responseExtractor);
     }
 
-    public Object sendAndReceive(final Source requestPayload,
+    public Object sendSourceAndReceive(final Source requestPayload,
                                  final WebServiceMessageCallback requestCallback,
                                  final SourceExtractor responseExtractor) {
-        return sendAndReceive(getDefaultUri(), requestPayload, requestCallback, responseExtractor);
+        return sendSourceAndReceive(getDefaultUri(), requestPayload, requestCallback, responseExtractor);
     }
 
-    public Object sendAndReceive(String uri,
+    public Object sendSourceAndReceive(String uri,
                                  final Source requestPayload,
                                  final WebServiceMessageCallback requestCallback,
                                  final SourceExtractor responseExtractor) {
@@ -354,8 +365,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     }
 
     /*
-    * WebServiceMessage-handling methods
-    */
+     * WebServiceMessage-handling methods
+     */
 
     public boolean sendAndReceive(WebServiceMessageCallback requestCallback,
                                   WebServiceMessageCallback responseCallback) {

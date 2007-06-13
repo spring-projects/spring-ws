@@ -6,6 +6,8 @@
     </properties>
     <body>
         <release version="1.0-rc2">
+            <action dev="poutsma" type="update" issue="SWS-134">Reduce the number of overloaded methods on the
+            WebServiceTemplate class to aid comprehension.</action>
             <action dev="poutsma" type="add" issue="SWS-124">Allow specifying names of message factory and message
                 receiver in MessageDispatcherServlet
             </action>
