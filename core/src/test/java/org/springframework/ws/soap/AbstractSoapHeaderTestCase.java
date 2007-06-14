@@ -26,6 +26,10 @@ public abstract class AbstractSoapHeaderTestCase extends AbstractSoapElementTest
 
     protected SoapHeader soapHeader;
 
+    protected static final String NAMESPACE = "http://www.springframework.org";
+
+    protected static final String PREFIX = "spring";
+
     protected final SoapElement createSoapElement() throws Exception {
         soapHeader = createSoapHeader();
         return soapHeader;
@@ -34,7 +38,7 @@ public abstract class AbstractSoapHeaderTestCase extends AbstractSoapElementTest
     protected abstract SoapHeader createSoapHeader() throws Exception;
 
     public void testAddHeaderElement() throws Exception {
-        QName qName = new QName("http://www.springframework.org", "localName", "spring");
+        QName qName = new QName(NAMESPACE, "localName", PREFIX);
         SoapHeaderElement headerElement = soapHeader.addHeaderElement(qName);
         assertNotNull("No SoapHeaderElement returned", headerElement);
         assertEquals("Invalid qName for element", qName, headerElement.getName());
@@ -45,7 +49,7 @@ public abstract class AbstractSoapHeaderTestCase extends AbstractSoapElementTest
     }
 
     public void testExamineAllHeaderElement() throws Exception {
-        QName qName = new QName("http://www.springframework.org", "localName", "spring");
+        QName qName = new QName(NAMESPACE, "localName", PREFIX);
         SoapHeaderElement headerElement = soapHeader.addHeaderElement(qName);
         assertEquals("Invalid qName for element", qName, headerElement.getName());
         assertNotNull("No SoapHeaderElement returned", headerElement);
@@ -65,11 +69,11 @@ public abstract class AbstractSoapHeaderTestCase extends AbstractSoapElementTest
     }
 
     public void testExamineMustUnderstandHeaderElements() throws Exception {
-        QName qName1 = new QName("http://www.springframework.org", "localName1", "spring");
+        QName qName1 = new QName(NAMESPACE, "localName1", PREFIX);
         SoapHeaderElement headerElement1 = soapHeader.addHeaderElement(qName1);
         headerElement1.setMustUnderstand(true);
         headerElement1.setActorOrRole("role1");
-        QName qName2 = new QName("http://www.springframework.org", "localName2", "spring");
+        QName qName2 = new QName(NAMESPACE, "localName2", PREFIX);
         SoapHeaderElement headerElement2 = soapHeader.addHeaderElement(qName2);
         headerElement2.setMustUnderstand(true);
         headerElement2.setActorOrRole("role2");

@@ -37,6 +37,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.context.ResourceLoaderAware;
+import org.springframework.core.OrderComparator;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
@@ -123,6 +124,7 @@ public class DefaultStrategiesHelper {
             else {
                 result = Collections.EMPTY_LIST;
             }
+            Collections.sort(result, new OrderComparator());
             return result;
         }
         catch (ClassNotFoundException ex) {

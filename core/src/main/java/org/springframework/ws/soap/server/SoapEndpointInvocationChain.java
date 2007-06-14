@@ -32,6 +32,8 @@ public class SoapEndpointInvocationChain extends EndpointInvocationChain {
 
     private String[] actorsOrRoles;
 
+    private boolean isUltimateReceiver = true;
+
     /**
      * Create new <code>SoapEndpointInvocationChain</code>.
      *
@@ -54,13 +56,18 @@ public class SoapEndpointInvocationChain extends EndpointInvocationChain {
     /**
      * Create new <code>EndpointInvocationChain</code>.
      *
-     * @param endpoint      the endpoint object to invoke
-     * @param interceptors  the array of interceptors to apply
-     * @param actorsOrRoles the array of actorsOrRoles to set
+     * @param endpoint           the endpoint object to invoke
+     * @param interceptors       the array of interceptors to apply
+     * @param actorsOrRoles      the array of actorsOrRoles to set
+     * @param isUltimateReceiver whether this chain fullfils the SOAP 1.2 Ultimate receiver role
      */
-    public SoapEndpointInvocationChain(Object endpoint, EndpointInterceptor[] interceptors, String[] actorsOrRoles) {
+    public SoapEndpointInvocationChain(Object endpoint,
+                                       EndpointInterceptor[] interceptors,
+                                       String[] actorsOrRoles,
+                                       boolean isUltimateReceiver) {
         super(endpoint, interceptors);
         this.actorsOrRoles = actorsOrRoles;
+        this.isUltimateReceiver = isUltimateReceiver;
     }
 
     /**
@@ -71,5 +78,10 @@ public class SoapEndpointInvocationChain extends EndpointInvocationChain {
      */
     public String[] getActorsOrRoles() {
         return actorsOrRoles;
+    }
+
+    /** Indicates whether this chain fulfills the SOAP 1.2 Ultimate Receiver role. Default is <code>true</code>. */
+    public boolean isUltimateReceiver() {
+        return isUltimateReceiver;
     }
 }

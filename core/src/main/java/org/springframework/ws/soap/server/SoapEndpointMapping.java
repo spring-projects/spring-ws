@@ -36,4 +36,6 @@ public interface SoapEndpointMapping extends EndpointMapping {
     /** Sets the array of SOAP actors/actorsOrRoles to apply to all endpoints mapped by the delegate endpoint mapping. */
     void setActorsOrRoles(String[] actorsOrRoles);
 
+    /** Indicates whether this the endpoint fulfills the SOAP 1.2 Ultimate Receiver role. */
+    void setUltimateReceiver(boolean ultimateReceiver);
 }

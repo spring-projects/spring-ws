@@ -17,6 +17,7 @@
 package org.springframework.ws.server.endpoint.mapping;
 
 import org.springframework.context.support.ApplicationObjectSupport;
+import org.springframework.core.Ordered;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.EndpointInvocationChain;
@@ -29,32 +30,13 @@ import org.springframework.ws.server.EndpointMapping;
  * @see #getEndpointInternal(org.springframework.ws.context.MessageContext)
  * @see org.springframework.ws.server.EndpointInterceptor
  */
-public abstract class AbstractEndpointMapping extends ApplicationObjectSupport implements EndpointMapping {
+public abstract class AbstractEndpointMapping extends ApplicationObjectSupport implements EndpointMapping, Ordered {
+
+    private int order = Integer.MAX_VALUE;  // default: same as non-Ordered
 
     private Object defaultEndpoint;
 
     private EndpointInterceptor[] interceptors;
-
-    /**
-     * Returns the default endpoint for this endpoint mapping.
-     *
-     * @return the default endpoint mapping, or null if none
-     */
-    protected final Object getDefaultEndpoint() {
-        return defaultEndpoint;
-    }
-
-    /**
-     * Sets the default endpoint for this endpoint mapping. This endpoint will be returned if no specific mapping was
-     * found.
-     * <p/>
-     * Default is <code>null</code>, indicating no default endpoint.
-     *
-     * @param defaultEndpoint the default endpoint, or null if none
-     */
-    public final void setDefaultEndpoint(Object defaultEndpoint) {
-        this.defaultEndpoint = defaultEndpoint;
-    }
 
     /**
      * Returns the the endpoint interceptors to apply to all endpoints mapped by this endpoint mapping.
@@ -72,6 +54,21 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
      */
     public final void setInterceptors(EndpointInterceptor[] interceptors) {
         this.interceptors = interceptors;
+    }
+
+    public final int getOrder() {
+        return order;
+    }
+
+    /**
+     * Specify the order value for this mapping.
+     * <p/>
+     * Default value is {@link Integer#MAX_VALUE}, meaning that it's non-ordered.
+     *
+     * @see org.springframework.core.Ordered#getOrder()
+     */
+    public final void setOrder(int order) {
+        this.order = order;
     }
 
     /**
@@ -113,6 +110,27 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
                                                                     Object endpoint,
                                                                     EndpointInterceptor[] interceptors) {
         return new EndpointInvocationChain(endpoint, interceptors);
+    }
+
+    /**
+     * Returns the default endpoint for this endpoint mapping.
+     *
+     * @return the default endpoint mapping, or null if none
+     */
+    protected final Object getDefaultEndpoint() {
+        return defaultEndpoint;
+    }
+
+    /**
+     * Sets the default endpoint for this endpoint mapping. This endpoint will be returned if no specific mapping was
+     * found.
+     * <p/>
+     * Default is <code>null</code>, indicating no default endpoint.
+     *
+     * @param defaultEndpoint the default endpoint, or null if none
+     */
+    public final void setDefaultEndpoint(Object defaultEndpoint) {
+        this.defaultEndpoint = defaultEndpoint;
     }
 
     /**

@@ -46,6 +46,8 @@ public class DelegatingSoapEndpointMapping implements InitializingBean, SoapEndp
 
     private String[] actorsOrRoles;
 
+    private boolean isUltimateReceiver = true;
+
     /** Sets the delegate <code>EndpointMapping</code> to resolve the endpoint with. */
     public void setDelegate(EndpointMapping delegate) {
         this.delegate = delegate;
@@ -61,6 +63,10 @@ public class DelegatingSoapEndpointMapping implements InitializingBean, SoapEndp
         this.actorsOrRoles = actorsOrRoles;
     }
 
+    public final void setUltimateReceiver(boolean ultimateReceiver) {
+        isUltimateReceiver = ultimateReceiver;
+    }
+
     /**
      * Creates a new <code>SoapEndpointInvocationChain</code> based on the delegate endpoint, the delegate interceptors,
      * and set actors/roles.
@@ -70,7 +76,7 @@ public class DelegatingSoapEndpointMapping implements InitializingBean, SoapEndp
     public EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception {
         EndpointInvocationChain delegateChain = delegate.getEndpoint(messageContext);
         return new SoapEndpointInvocationChain(delegateChain.getEndpoint(), delegateChain.getInterceptors(),
-                actorsOrRoles);
+                actorsOrRoles, isUltimateReceiver);
     }
 
     public void afterPropertiesSet() throws Exception {
