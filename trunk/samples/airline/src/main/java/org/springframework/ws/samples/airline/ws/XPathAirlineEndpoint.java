@@ -96,7 +96,7 @@ public class XPathAirlineEndpoint implements AirlineWebServiceConstants {
         LocalDate departureDate = new LocalDate(departureDateString);
         ServiceClass serviceClass = null;
         if (StringUtils.hasLength(serviceClassString)) {
-            serviceClass = ServiceClass.valueOf(serviceClassString);
+            serviceClass = ServiceClass.valueOf(serviceClassString.toUpperCase());
         }
         List<Flight> flights = airlineService.getFlights(from, to, departureDate, serviceClass);
 
