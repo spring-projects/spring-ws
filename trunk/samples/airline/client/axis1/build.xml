@@ -5,7 +5,7 @@
     <property name="bin.dir" value="bin"/>
     <property name="src.dir" value="src"/>
     <property name="gen.dir" value="gen"/>
-    <property name="wsdl" value="${basedir}/../../src/main/webapp/airline.wsdl"/>
+    <property name="wsdl" value="http://localhost:8080/airline/airline.wsdl"/>
 
     <target name="init">
         <typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant">

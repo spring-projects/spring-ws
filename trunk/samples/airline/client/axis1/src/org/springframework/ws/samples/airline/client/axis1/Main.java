@@ -34,7 +34,7 @@ public class Main {
         if (args.length > 0) {
             service.setAirlinePortEndpointAddress(args[0]);
         }
-        AirlinePortType portType = service.getAirlinePort();
+        Airline airline = service.getAirlinePort();
         GetFlightsRequest request = new GetFlightsRequest();
         request.setFrom("AMS");
         request.setTo("VCE");
@@ -46,7 +46,7 @@ public class Main {
         request.setDepartureDate(departureDate);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         System.out.println("Requesting flights on " + dateFormat.format(departureDate));
-        Flight[] flights = portType.getFlights(request);
+        Flight[] flights = airline.getFlights(request);
         System.out.println("Got " + flights.length + " results");
         if (flights.length > 0)
         {
@@ -57,7 +57,7 @@ public class Main {
             BookFlightRequestPassengers passengers = new BookFlightRequestPassengers();
             passengers.setUsername("john");
             bookFlightRequest.setPassengers(passengers);
-            Ticket ticket = portType.bookFlight(bookFlightRequest);
+            Ticket ticket = airline.bookFlight(bookFlightRequest);
             writeTicket(ticket);
         }
     }
