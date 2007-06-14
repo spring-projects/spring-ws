@@ -1,4 +1,4 @@
-SPRING WEB SERVICES 1.0-M3 (Januari 2007)
+SPRING WEB SERVICES 1.0-RC2 (June 2007)
 -------------------------------
 http://www.springframework.org/spring-ws
 http://forum.springframework.org/forumdisplay.php?f=39
@@ -38,26 +38,30 @@ The following distinct jar files are included in the distribution. This list spe
 third-party dependencies. Libraries in [brackets] are optional, i.e. just necessary for certain functionality. For an 
 exact list of Spring-WS project dependencies see the respective Maven2 pom.xml files.
 
-* spring-oxm-1.0-m3.jar
+* spring-oxm-1.0-rc2.jar
 - Contents: The Spring Object/XML Mapping framework
 - Dependencies: Commons Logging, spring-beans, spring-core
                 [Log4J, JAXB 1, Castor, XMLBeans, StAX, JiBX, XStream]
 
-* spring-oxm-1.0-m3.jar
+* spring-oxm-tiger-1.0-rc2.jar
 - Contents: The Spring Object/XML Mapping framework for Java 5
 - Dependencies: Commons Logging, spring-beans, spring-core, JAXB 2
 
-* spring-ws-core-1.0-m3.jar
+* spring-ws-core-1.0-rc2.jar
 - Contents: The Spring-WS Core
 - Dependencies: Commons Logging, spring-beans, spring-core, spring-context, spring-oxm
                 [Log4J, spring-web, spring-webmvc, SAAJ, JDOM, StAX, Servlet API, JAF, Axiom, DOM4J, XOM]
 
-* spring-ws-security-1.0-m3.jar
+* spring-ws-core-tiger-1.0-rc2.jar
+- Contents: The Spring-WS Core for Java 5
+- Dependencies: Commons Logging, spring-beans, spring-core, spring-context, spring-core
+
+* spring-ws-security-1.0-rc2.jar
 - Contents: Spring-WS Security integration
 - Dependencies: Commons Logging, spring-beans, spring-core, spring-context, spring-ws-core
                 [Log4J, xmlsdig, xmlsec, XWS-security, Acegi]
 
-* spring-xml-1.0-m3.jar
+* spring-xml-1.0-rc2.jar
 - Contents: Spring XML utility framework
 - Dependencies: Commons Logging, spring-beans, spring-core
                 [StAX, Xalan, Jaxen]
