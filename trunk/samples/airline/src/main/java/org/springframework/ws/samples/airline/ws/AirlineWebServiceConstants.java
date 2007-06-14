@@ -19,5 +19,13 @@ package org.springframework.ws.samples.airline.ws;
 /** @author Arjen Poutsma */
 public interface AirlineWebServiceConstants {
 
+    String BOOK_FLIGHT_REQUEST = "BookFlightRequest";
+
+    String GET_FLIGHTS_REQUEST = "GetFlightsRequest";
+
+    String GET_FREQUENT_FLYER_MILEAGE_RESPONSE = "GetFrequentFlyerMileageResponse";
+
     String NAMESPACE = "http://www.springframework.org/spring-ws/samples/airline/schemas";
+
+    String GET_FREQUENT_FLYER_MILEAGE_REQUEST = "GetFrequentFlyerMileageRequest";
 }

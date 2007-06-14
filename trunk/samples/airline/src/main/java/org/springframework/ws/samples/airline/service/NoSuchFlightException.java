@@ -17,12 +17,15 @@
 package org.springframework.ws.samples.airline.service;
 
 import org.joda.time.DateTime;
+import org.springframework.ws.soap.server.endpoint.annotation.FaultCode;
+import org.springframework.ws.soap.server.endpoint.annotation.SoapFault;
 
 /**
  * Exception thrown when a specified flight cannot be found.
  *
  * @author Arjen Poutsma
  */
+@SoapFault(faultCode = FaultCode.CLIENT)
 public class NoSuchFlightException extends Exception {
 
     private String flightNumber;

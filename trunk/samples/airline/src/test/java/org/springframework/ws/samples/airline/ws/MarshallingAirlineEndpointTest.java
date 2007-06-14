@@ -189,16 +189,4 @@ public class MarshallingAirlineEndpointTest extends TestCase {
         verify(airlineServiceMock);
     }
 
-    public void testGetFrequentFlyerMileage() throws Exception {
-        JAXBElement<String> request = objectFactory.createGetFrequentFlyerMileageRequest(null);
-
-        expect(airlineServiceMock.getFrequentFlyerMileage()).andReturn(42);
-
-        replay(airlineServiceMock);
-
-        JAXBElement<Integer> response = endpoint.getFrequentFlyerMileage(request);
-        assertEquals("Invalid amount of miles received", 42, response.getValue().intValue());
-
-        verify(airlineServiceMock);
-    }
 }

@@ -58,7 +58,7 @@ public class MarshallingAirlineEndpoint implements AirlineWebServiceConstants {
 
     private static final Log logger = LogFactory.getLog(MarshallingAirlineEndpoint.class);
 
-    private AirlineService airlineService;
+    private final AirlineService airlineService;
 
     private ObjectFactory objectFactory = new ObjectFactory();
 
@@ -72,7 +72,7 @@ public class MarshallingAirlineEndpoint implements AirlineWebServiceConstants {
      *
      * @param request the JAXB2 representation of a <code>&lt;GetFlightsRequest&gt;</code>
      */
-    @PayloadRoot(localPart = "GetFlightsRequest", namespace = NAMESPACE)
+    @PayloadRoot(localPart = GET_FLIGHTS_REQUEST, namespace = NAMESPACE)
     public GetFlightsResponse getFlights(GetFlightsRequest request) throws DatatypeConfigurationException {
         if (logger.isDebugEnabled()) {
             logger.debug("Received GetFlightsRequest '" + request.getFrom() + "' to '" + request.getTo() + "' on " +
@@ -106,7 +106,7 @@ public class MarshallingAirlineEndpoint implements AirlineWebServiceConstants {
      * @param request the JAXB2 representation of a <code>&lt;BookFlightRequest&gt;</code>
      * @return the JAXB2 representation of a <code>&lt;BookFlightResponse&gt;</code>
      */
-    @PayloadRoot(localPart = "BookFlightRequest", namespace = NAMESPACE)
+    @PayloadRoot(localPart = BOOK_FLIGHT_REQUEST, namespace = NAMESPACE)
     public JAXBElement<Ticket> bookFlight(BookFlightRequest request)
             throws NoSeatAvailableException, DatatypeConfigurationException, NoSuchFlightException {
         if (logger.isDebugEnabled()) {
@@ -141,20 +141,6 @@ public class MarshallingAirlineEndpoint implements AirlineWebServiceConstants {
         org.springframework.ws.samples.airline.domain.Ticket domainTicket =
                 airlineService.bookFlight(flightNumber, departureTime, passengers);
         return SchemaConversionUtils.toSchemaType(domainTicket);
-    }
-
-    /**
-     * This endpoint method uses marshalling to handle message with a <code>&lt;GetFrequentFlyerMileageRequest&gt;</code>
-     * payload.
-     *
-     * @param ignored is ignored
-     * @return the JAXB2 representation of a <code>&lt;GetFrequentFlyerMileageResponse&gt;</code>
-     */
-    @PayloadRoot(localPart = "GetFrequentFlyerMileageRequest", namespace = NAMESPACE)
-    public JAXBElement<Integer> getFrequentFlyerMileage(JAXBElement<String> ignored) {
-        logger.debug("Received GetFrequentFlyerMileageRequest request");
-        int result = airlineService.getFrequentFlyerMileage();
-        return objectFactory.createGetFrequentFlyerMileageResponse(result);
     }
 
 }
