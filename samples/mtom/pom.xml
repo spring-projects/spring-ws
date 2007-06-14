@@ -83,6 +83,11 @@
          <version>2.1.3</version>
          <scope>runtime</scope>
       </dependency>
+      <dependency>
+          <groupId>stax</groupId>
+          <artifactId>stax-api</artifactId>
+          <scope>runtime</scope>
+      </dependency>
       <!-- Test dependencies -->
       <dependency>
          <groupId>org.springframework</groupId>
