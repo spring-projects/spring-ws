@@ -18,6 +18,16 @@
            <layout>legacy</layout>
        </pluginRepository>
    </pluginRepositories>   
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <stylesheetfile>${basedir}/../../src/main/javadoc/javadoc.css</stylesheetfile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
    <build>
       <plugins>
          <plugin>
