@@ -31,10 +31,6 @@ public class JpaTicketDaoTest extends AbstractJpaTests {
 
     private TicketDao ticketDao;
 
-    private DateTime departureTime;
-
-    private DateTime arrivalTime;
-
     private Flight flight;
 
     private Passenger passenger;
@@ -50,8 +46,8 @@ public class JpaTicketDaoTest extends AbstractJpaTests {
 
     @Override
     protected void onSetUpBeforeTransaction() throws Exception {
-        departureTime = new DateTime(2006, 1, 31, 10, 5, 0, 0, DateTimeZone.UTC);
-        arrivalTime = new DateTime(2006, 1, 31, 12, 25, 0, 0, DateTimeZone.UTC);
+        DateTime departureTime = new DateTime(2006, 1, 31, 10, 5, 0, 0, DateTimeZone.UTC);
+        DateTime arrivalTime = new DateTime(2006, 1, 31, 12, 25, 0, 0, DateTimeZone.UTC);
         Airport fromAirport = new Airport("RTM", "Rotterdam Airport", "Rotterdam");
         Airport toAirport = new Airport("OSL", "Gardermoen", "Oslo");
         flight = new Flight(42L);
