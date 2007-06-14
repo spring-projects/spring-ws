@@ -19,6 +19,7 @@ package org.springframework.ws.samples.airline.client.jaxws;
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
@@ -42,15 +43,16 @@ public class Main {
                         "AirlineService");
                 service = new AirlineService(new URL(args[0]), serviceName);
             }
-            AirlinePortType portType = service.getAirlinePort();
+            Airline airline = service.getAirlinePort();
             GetFlightsRequest request = new GetFlightsRequest();
             request.setFrom("AMS");
             request.setTo("VCE");
             XMLGregorianCalendar departureDate =
-                    DatatypeFactory.newInstance().newXMLGregorianCalendarDate(2006, 1, 31, 0);
+                    DatatypeFactory.newInstance().newXMLGregorianCalendarDate(2006, 1, 31,
+                    DatatypeConstants.FIELD_UNDEFINED);
             request.setDepartureDate(departureDate);
             System.out.format("Requesting flights on %1tD%n", departureDate.toGregorianCalendar());
-            GetFlightsResponse response = portType.getFlights(request);
+            GetFlightsResponse response = airline.getFlights(request);
             System.out.format("Got %1d results%n", response.getFlight().size());
             if (!response.getFlight().isEmpty())
             // Book the first flight using John Doe as a frequent flyer
@@ -62,7 +64,7 @@ public class Main {
                 BookFlightRequest.Passengers passengers = new BookFlightRequest.Passengers();
                 passengers.getPassengerOrUsername().add("john");
                 bookFlightRequest.setPassengers(passengers);
-                Ticket ticket = portType.bookFlight(bookFlightRequest);
+                Ticket ticket = airline.bookFlight(bookFlightRequest);
                 writeTicket(ticket);
             }
         }
