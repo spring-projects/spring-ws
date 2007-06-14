@@ -16,9 +16,16 @@
 
 package org.springframework.ws.samples.airline.ws;
 
+import java.util.Collections;
+import javax.xml.transform.Source;
+
 import junit.framework.TestCase;
-import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.*;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDate;
 import org.springframework.oxm.Marshaller;
+import org.springframework.ws.samples.airline.domain.Airport;
 import org.springframework.ws.samples.airline.service.AirlineService;
 
 public class XPathAirlineEndpointTest extends TestCase {
@@ -36,6 +43,42 @@ public class XPathAirlineEndpointTest extends TestCase {
     }
 
     public void testGetFlights() throws Exception {
-        endpoint.getFlights("ABC", "DEF", "2006-01-31Z", "");
+        org.springframework.ws.samples.airline.domain.Flight domainFlight = createDomainFlight();
+
+        expect(airlineServiceMock.getFlights("ABC", "DEF", new LocalDate(2007, 6, 13),
+                org.springframework.ws.samples.airline.domain.ServiceClass.FIRST))
+                .andReturn(Collections.singletonList(domainFlight));
+
+        replay(airlineServiceMock, marshallerMock);
+
+        Source response = endpoint.getFlights("ABC", "DEF", "2007-06-13", "first");
+        assertNotNull("No response received", response);
+
+        verify(airlineServiceMock, marshallerMock);
     }
+
+    private org.springframework.ws.samples.airline.domain.Flight createDomainFlight() {
+        org.springframework.ws.samples.airline.domain.Flight domainFlight =
+                new org.springframework.ws.samples.airline.domain.Flight();
+        domainFlight.setNumber("ABC1234");
+        domainFlight.setDepartureTime(new DateTime(2007, 6, 13, 12, 0, 0, 0, DateTimeZone.UTC));
+        domainFlight.setFrom(new Airport("ABC", "ABC Airport", "ABC City"));
+        domainFlight.setArrivalTime(new DateTime(2007, 6, 13, 14, 0, 0, 0, DateTimeZone.UTC));
+        domainFlight.setTo(new Airport("DEF", "DEF Airport", "DEF City"));
+        domainFlight.setServiceClass(org.springframework.ws.samples.airline.domain.ServiceClass.FIRST);
+        return domainFlight;
+    }
+
+    public void testGetFrequentFlyerMileage() throws Exception {
+        expect(airlineServiceMock.getFrequentFlyerMileage()).andReturn(42);
+
+        replay(airlineServiceMock);
+
+        Source response = endpoint.getFrequentFlyerMileage();
+        assertNotNull("Invalid response", response);
+
+        verify(airlineServiceMock);
+    }
+
+
 }
