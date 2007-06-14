@@ -17,8 +17,10 @@ package org.springframework.ws.samples.airline.service;
 
 import java.util.List;
 
+import org.acegisecurity.annotation.Secured;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ws.samples.airline.domain.Flight;
 import org.springframework.ws.samples.airline.domain.FrequentFlyer;
 import org.springframework.ws.samples.airline.domain.Passenger;
@@ -30,6 +32,7 @@ import org.springframework.ws.samples.airline.domain.Ticket;
  *
  * @author Arjen Poutsma
  */
+@Transactional(readOnly = true)
 public interface AirlineService {
 
     /**
@@ -69,6 +72,7 @@ public interface AirlineService {
      * @see org.springframework.ws.samples.airline.domain.Passenger
      * @see org.springframework.ws.samples.airline.domain.FrequentFlyer
      */
+    @Transactional(rollbackFor = {NoSuchFlightException.class, NoSeatAvailableException.class})
     Ticket bookFlight(String flightNumber, DateTime departureTime, List<Passenger> passengers)
             throws NoSuchFlightException, NoSeatAvailableException;
 
@@ -77,5 +81,6 @@ public interface AirlineService {
      *
      * @return the amount of frequent flyer miles
      */
+    @Secured({"ROLE_FREQUENT_FLYER"})
     int getFrequentFlyerMileage();
 }

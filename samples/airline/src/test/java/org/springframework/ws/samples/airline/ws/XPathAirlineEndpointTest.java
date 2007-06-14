@@ -69,16 +69,5 @@ public class XPathAirlineEndpointTest extends TestCase {
         return domainFlight;
     }
 
-    public void testGetFrequentFlyerMileage() throws Exception {
-        expect(airlineServiceMock.getFrequentFlyerMileage()).andReturn(42);
-
-        replay(airlineServiceMock);
-
-        Source response = endpoint.getFrequentFlyerMileage();
-        assertNotNull("Invalid response", response);
-
-        verify(airlineServiceMock);
-    }
-
 
 }

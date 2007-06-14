@@ -17,12 +17,10 @@ package org.springframework.ws.samples.airline.service.impl;
 
 import java.util.List;
 
-import org.acegisecurity.annotation.Secured;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.ws.samples.airline.dao.FlightDao;
 import org.springframework.ws.samples.airline.dao.TicketDao;
@@ -61,7 +59,6 @@ public class AirlineServiceImpl implements AirlineService {
         this.frequentFlyerSecurityService = frequentFlyerSecurityService;
     }
 
-    @Transactional(rollbackFor = {NoSuchFlightException.class, NoSeatAvailableException.class})
     public Ticket bookFlight(String flightNumber, DateTime departureTime, List<Passenger> passengers)
             throws NoSuchFlightException, NoSeatAvailableException {
         Assert.notEmpty(passengers, "No passengers given");
@@ -96,7 +93,6 @@ public class AirlineServiceImpl implements AirlineService {
         return ticketDao.save(ticket);
     }
 
-    @Transactional(readOnly = true)
     public Flight getFlight(Long id) throws NoSuchFlightException {
         Flight flight = flightDao.getFlight(id);
         if (flight != null) {
@@ -107,7 +103,6 @@ public class AirlineServiceImpl implements AirlineService {
         }
     }
 
-    @Transactional(readOnly = true)
     public List<Flight> getFlights(String fromAirportCode,
                                    String toAirportCode,
                                    LocalDate departureDate,
@@ -127,9 +122,10 @@ public class AirlineServiceImpl implements AirlineService {
         return flights;
     }
 
-    @Transactional(readOnly = true)
-    @Secured({"ROLE_FREQUENT_FLYER"})
     public int getFrequentFlyerMileage() {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Using " + frequentFlyerSecurityService + " for security");
+        }
         FrequentFlyer frequentFlyer = frequentFlyerSecurityService.getCurrentlyAuthenticatedFrequentFlyer();
         return frequentFlyer != null ? frequentFlyer.getMiles() : 0;
     }

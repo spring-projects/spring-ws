@@ -63,11 +63,11 @@ public class XPathAirlineEndpoint implements AirlineWebServiceConstants {
 
     private static final Log logger = LogFactory.getLog(XPathAirlineEndpoint.class);
 
-    private AirlineService airlineService;
+    private final AirlineService airlineService;
 
     private ObjectFactory objectFactory = new ObjectFactory();
 
-    private Marshaller marshaller;
+    private final Marshaller marshaller;
 
     public XPathAirlineEndpoint(AirlineService airlineService, Marshaller marshaller) {
         Assert.notNull(airlineService, "airlineService must not be null");
@@ -84,7 +84,7 @@ public class XPathAirlineEndpoint implements AirlineWebServiceConstants {
      * @param departureDateString the string representation of the departure date
      * @param serviceClassString  the string representation of the service class
      */
-    @PayloadRoot(localPart = "GetFlightsRequest", namespace = NAMESPACE)
+    @PayloadRoot(localPart = GET_FLIGHTS_REQUEST, namespace = NAMESPACE)
     public Source getFlights(@XPathParam("//tns:from")String from,
                              @XPathParam("//tns:to")String to,
                              @XPathParam("//tns:departureDate")String departureDateString,
@@ -115,7 +115,7 @@ public class XPathAirlineEndpoint implements AirlineWebServiceConstants {
      * @param passengerNodes      the passenger nodes
      * @param frequentFlyerNodes  the frequent flyer nodes
      */
-    @PayloadRoot(localPart = "BookFlightRequest", namespace = NAMESPACE)
+    @PayloadRoot(localPart = BOOK_FLIGHT_REQUEST, namespace = NAMESPACE)
     public Source bookFlight(@XPathParam("//tns:flightNumber")String flightNumber,
                              @XPathParam("//tns:departureTime")String departureTimeString,
                              @XPathParam("//tns:passengers/tns:passenger")NodeList passengerNodes,
@@ -159,18 +159,6 @@ public class XPathAirlineEndpoint implements AirlineWebServiceConstants {
             FrequentFlyer frequentFlyer = new FrequentFlyer(frequentFlyerElement.getTextContent());
             passengers.add(frequentFlyer);
         }
-    }
-
-    /**
-     * This endpoint method uses XPath to handle message with a <code>&lt;GetFrequentFlyerMileageRequest&gt;</code>
-     * payload.
-     */
-    @PayloadRoot(localPart = "GetFrequentFlyerMileageRequest", namespace = NAMESPACE)
-    public Source getFrequentFlyerMileage() {
-        logger.debug("Received GetFrequentFlyerMileageRequest request");
-        int result = airlineService.getFrequentFlyerMileage();
-        JAXBElement<Integer> response = objectFactory.createGetFrequentFlyerMileageResponse(result);
-        return new MarshallingSource(marshaller, response);
     }
 
 

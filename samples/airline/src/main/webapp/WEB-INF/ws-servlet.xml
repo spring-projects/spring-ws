@@ -8,22 +8,35 @@
     <!-- ===================== ENDPOINTS  ===================================== -->
 
     <!--
-        <bean id="marshallingEndpoint" class="org.springframework.ws.samples.airline.ws.MarshallingAirlineEndpoint">
+        The marshallingEndpoint and xpathEndpoint handle the same messages. So, you can only use one of them at the
+        same time. This is done for illustration purposes only, typically you would not create two endpoints which
+        handle the same messages.
+    -->
+
+    <bean id="marshallingEndpoint" class="org.springframework.ws.samples.airline.ws.MarshallingAirlineEndpoint">
+        <description>
+            This endpoint handles the Airline Web Service messages using JAXB2 marshalling.
+        </description>
+        <constructor-arg ref="airlineService"/>
+    </bean>
+
+    <!--
+        <bean id="xpathEndpoint" class="org.springframework.ws.samples.airline.ws.XPathAirlineEndpoint">
             <description>
-                This endpoint handles the Airline Web Service messages using JAXB2 marshalling.
+                This endpoint handles the Airline Web Service messages using XPath expressions and JAXB2 marshalling.
             </description>
             <constructor-arg ref="airlineService"/>
+            <constructor-arg ref="marshaller"/>
         </bean>
     -->
 
-    <bean id="xpathEndpoint" class="org.springframework.ws.samples.airline.ws.XPathAirlineEndpoint">
+    <bean id="getFrequentFlyerMileageEndpoint"
+          class="org.springframework.ws.samples.airline.ws.GetFrequentFlyerMileageEndpoint">
         <description>
-            This endpoint handles the Airline Web Service messages using XPath expressions and JAXB2 marshalling.
+            This endpoint handles get frequent flyer mileage requests.
         </description>
         <constructor-arg ref="airlineService"/>
-        <constructor-arg ref="marshaller"/>
     </bean>
-
 
     <bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
         <description>
@@ -33,8 +46,13 @@
         <property name="contextPath" value="org.springframework.ws.samples.airline.schema"/>
     </bean>
 
-
     <!-- ===================== ENDPOINT MAPPINGS  ============================== -->
+
+    <!--
+        The endpoint mappings map from a request to an endpoint. Because we only want the security interception to
+        occur for the GetFrequentFlyerMileageEndpoint, we define two mappings: one with the securityInterceptor, and
+        a general one without it.
+    -->
 
     <bean class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping">
         <description>
@@ -52,9 +70,39 @@
                 </bean>
             </list>
         </property>
+        <property name="order" value="1"/>
     </bean>
 
+    <bean id="secureMapping" class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
+        <description>
+            This endpoint mapping is used for endpoints that are secured via WS-Security. It uses a
+            securityInterceptor, defined in applicationContext-security.xml, to validate incoming messages.
+        </description>
+        <property name="mappings">
+            <props>
+                <prop key="{http://www.springframework.org/spring-ws/samples/airline/schemas}GetFrequentFlyerMileageRequest">
+                    getFrequentFlyerMileageEndpoint
+                </prop>
+            </props>
+        </property>
+        <property name="interceptors">
+            <list>
+                <bean class="org.springframework.ws.soap.server.endpoint.interceptor.SoapEnvelopeLoggingInterceptor"/>
+                <ref bean="wsSecurityInterceptor"/>
+            </list>
+        </property>
+        <property name="order" value="2"/>
+    </bean>
+
+
     <!-- ===================== ENDPOINT ADAPTERS  ============================== -->
+
+    <!--
+        Endpoint adapters adapt from the incoming message to a specific object or method signature. Because this
+        example application uses three different endpoint programming models, we have to define three adapters. This
+        is done for illustration purposes only, typically you would use one adapter, for instance the
+        MarshallingMethodEndpointAdapter.
+    -->
 
     <bean class="org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter">
         <description>
@@ -75,25 +123,44 @@
         </property>
     </bean>
 
+    <bean class="org.springframework.ws.server.endpoint.adapter.PayloadEndpointAdapter">
+        <description>
+            This adapter allows for endpoints which implement the PayloadEndpoint interface. The Get
+            FrequentFlyerMileageEndpoint implements this interface.
+        </description>
+    </bean>
 
     <!-- ===================== ENDPOINT EXCEPTION RESOLVER ===================== -->
 
+    <!--
+        Endpoint exception resolvers can handle exceptions as they occur in the Web service. We have two sorts of
+        exceptions we want to handle: the business logic exceptions NoSeatAvailableException and NoSuchFlightException,
+        which both have a @SoapFault annotation, and other exceptions, which don't have the annotation. Therefore, we
+        have two exception resolvers here.
+    -->
+
+    <bean class="org.springframework.ws.soap.server.endpoint.SoapFaultAnnotationExceptionResolver">
+        <description>
+            This exception resolver maps exceptions with the @SoapFault annotation to SOAP Faults. The business logic
+            exceptions NoSeatAvailableException and NoSuchFlightException have these.
+        </description>
+        <property name="order" value="1"/>
+    </bean>
+
     <bean class="org.springframework.ws.soap.server.endpoint.SoapFaultMappingExceptionResolver">
         <description>
-            This exception resolver maps exceptions to SOAP Faults. The business logic exceptions
-            NoSeatAvailableException and NoSuchFlightException are explictely mapped. Both
-            UnmarshallingException andValidationFailureException are mapped to a SOAP Fault with a "Sender" fault code.
+            This exception resolver maps other exceptions to SOAP Faults. Both UnmarshallingException and
+            ValidationFailureException are mapped to a SOAP Fault with a "Client" fault code.
             All other exceptions are mapped to a "Server" error code, the default.
         </description>
         <property name="defaultFault" value="SERVER"/>
         <property name="exceptionMappings">
             <props>
-                <prop key="org.springframework.ws.samples.airline.service.NoSuchFlightException">CLIENT</prop>
-                <prop key="org.springframework.ws.samples.airline.service.NoSeatAvailableException">SERVER</prop>
                 <prop key="org.springframework.oxm.UnmarshallingFailureException">CLIENT,Invalid request</prop>
                 <prop key="org.springframework.oxm.ValidationFailureException">CLIENT,Invalid request</prop>
             </props>
         </property>
+        <property name="order" value="2"/>
     </bean>
 
     <!-- ===================== WSDL DEFINITION    ============================== -->
