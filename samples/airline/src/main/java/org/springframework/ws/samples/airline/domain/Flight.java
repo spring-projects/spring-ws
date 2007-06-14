@@ -15,25 +15,68 @@
  */
 package org.springframework.ws.samples.airline.domain;
 
+import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
-public class Flight extends Entity {
+@Entity
+@Table(name = "FLIGHT")
+public class Flight implements Serializable {
 
+    @Id
+    @Column(name = "ID")
+    @GeneratedValue
+    private Long id;
+
+    @Column(name = "NUMBER")
     private String number;
 
+    @Column(name = "DEPARTURE_TIME")
+    @Type(type = "org.springframework.ws.samples.airline.domain.hibernate.DateTimeUserType")
     private DateTime departureTime;
 
-    private DateTime arrivalTime;
-
-    private Airport to;
-
+    @ManyToOne
+    @JoinColumn(name = "FROM_AIRPORT_CODE", nullable = false)
     private Airport from;
 
+    @Column(name = "ARRIVAL_TIME")
+    @Type(type = "org.springframework.ws.samples.airline.domain.hibernate.DateTimeUserType")
+    private DateTime arrivalTime;
+
+    @ManyToOne
+    @JoinColumn(name = "TO_AIRPORT_CODE", nullable = false)
+    private Airport to;
+
+    @Column(name = "SERVICE_CLASS")
+    @Enumerated(EnumType.STRING)
     private ServiceClass serviceClass;
 
+    @Column(name = "SEATS_AVAILABLE")
     private int seatsAvailable;
 
+    @Column(name = "MILES")
     private int miles;
+
+    public Flight() {
+    }
+
+    public Flight(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
 
     public DateTime getArrivalTime() {
         return arrivalTime;
@@ -99,6 +142,10 @@ public class Flight extends Entity {
         this.to = to;
     }
 
+    public void substractSeats(int count) {
+        seatsAvailable -= count;
+    }
+
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -120,8 +167,7 @@ public class Flight extends Entity {
     }
 
     public int hashCode() {
-        int result;
-        result = number.hashCode();
+        int result = number.hashCode();
         result = 29 * result + departureTime.hashCode();
         return result;
     }
@@ -130,11 +176,7 @@ public class Flight extends Entity {
         StringBuffer buffer = new StringBuffer();
         buffer.append(getNumber());
         buffer.append(' ');
-        buffer.append(getDepartureTime());
+        buffer.append(getDepartureTime().toString());
         return buffer.toString();
-    }
-
-    public void substractSeats(int count) {
-        this.seatsAvailable -= count;
     }
 }

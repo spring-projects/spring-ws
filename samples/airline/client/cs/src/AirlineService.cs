@@ -13,6 +13,7 @@
 //
 namespace Spring.Ws.Samples.Airline.Client.CSharp {
     
+    
     /// <remarks/>
     [System.Web.Services.WebServiceBinding(Name="AirlinePort", Namespace="http://www.springframework.org/spring-ws/samples/airline/definitions")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -26,7 +27,7 @@ namespace Spring.Ws.Samples.Airline.Client.CSharp {
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://www.springframework.org/spring-ws/samples/airline/GetFlights", ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare, Use=System.Web.Services.Description.SoapBindingUse.Literal)]
         [return: System.Xml.Serialization.XmlArray(ElementName="GetFlightsResponse", Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
         [return: System.Xml.Serialization.XmlArrayItem(ElementName="flight", IsNullable=false)]
-        public Flight[] GetFlights([System.Xml.Serialization.XmlElement(Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")] MessageGetFlightsRequest GetFlightsRequest) {
+        public Flight[] GetFlights([System.Xml.Serialization.XmlElementAttribute(Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")] MessageGetFlightsRequest GetFlightsRequest) {
             object[] results = this.Invoke("GetFlights", new object[] {
                 GetFlightsRequest});
             return ((Flight[])(results[0]));
@@ -43,8 +44,8 @@ namespace Spring.Ws.Samples.Airline.Client.CSharp {
         }
         
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://www.springframework.org/spring-ws/samples/airline/BookFlight", ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare, Use=System.Web.Services.Description.SoapBindingUse.Literal)]
-        [return: System.Xml.Serialization.XmlElement("BookFlightResponse", Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
-        public Ticket BookFlight([System.Xml.Serialization.XmlElement(Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")] MessageBookFlightRequest BookFlightRequest) {
+        [return: System.Xml.Serialization.XmlElementAttribute("BookFlightResponse", Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
+        public Ticket BookFlight([System.Xml.Serialization.XmlElementAttribute(Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")] MessageBookFlightRequest BookFlightRequest) {
             object[] results = this.Invoke("BookFlight", new object[] {
                 BookFlightRequest});
             return ((Ticket)(results[0]));
@@ -61,8 +62,8 @@ namespace Spring.Ws.Samples.Airline.Client.CSharp {
         }
         
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://www.springframework.org/spring-ws/samples/airline/GetFrequentFlyerMileage", ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare, Use=System.Web.Services.Description.SoapBindingUse.Literal)]
-        [return: System.Xml.Serialization.XmlElement("GetFrequentFlyerMileageResponse", Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
-        public int GetFrequentFlyerMileage([System.Xml.Serialization.XmlElement(Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")] object GetFrequentFlyerMileageRequest) {
+        [return: System.Xml.Serialization.XmlElementAttribute("GetFrequentFlyerMileageResponse", Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
+        public int GetFrequentFlyerMileage([System.Xml.Serialization.XmlElementAttribute(Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")] object GetFrequentFlyerMileageRequest) {
             object[] results = this.Invoke("GetFrequentFlyerMileage", new object[] {
                 GetFrequentFlyerMileageRequest});
             return ((int)(results[0]));
@@ -80,8 +81,8 @@ namespace Spring.Ws.Samples.Airline.Client.CSharp {
     }
     
     /// <remarks/>
-    [System.Xml.Serialization.XmlType(Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
-    [System.Xml.Serialization.XmlRoot("GetFlightsRequest", Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
+    [System.Xml.Serialization.XmlRootAttribute("GetFlightsRequest", Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
     public class MessageGetFlightsRequest {
         
         /// <remarks/>
@@ -91,7 +92,7 @@ namespace Spring.Ws.Samples.Airline.Client.CSharp {
         public string to;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElement(DataType="date")]
+        [System.Xml.Serialization.XmlElementAttribute(DataType="date")]
         public System.DateTime departureDate;
         
         /// <remarks/>
@@ -117,7 +118,7 @@ namespace Spring.Ws.Samples.Airline.Client.CSharp {
     }
     
     /// <remarks/>
-    [System.Xml.Serialization.XmlType(Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
     public class Flight {
         
         /// <remarks/>
@@ -140,7 +141,7 @@ namespace Spring.Ws.Samples.Airline.Client.CSharp {
     }
     
     /// <remarks/>
-    [System.Xml.Serialization.XmlType(Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
     public class Airport {
         
         /// <remarks/>
@@ -154,8 +155,8 @@ namespace Spring.Ws.Samples.Airline.Client.CSharp {
     }
     
     /// <remarks/>
-    [System.Xml.Serialization.XmlType(Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
-    [System.Xml.Serialization.XmlRoot("BookFlightRequest", Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
+    [System.Xml.Serialization.XmlRootAttribute("BookFlightRequest", Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
     public class MessageBookFlightRequest {
         
         /// <remarks/>
@@ -171,7 +172,7 @@ namespace Spring.Ws.Samples.Airline.Client.CSharp {
     }
     
     /// <remarks/>
-    [System.Xml.Serialization.XmlType(Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
     public class Name {
         
         /// <remarks/>
@@ -182,15 +183,15 @@ namespace Spring.Ws.Samples.Airline.Client.CSharp {
     }
     
     /// <remarks/>
-    [System.Xml.Serialization.XmlType(Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
-    [System.Xml.Serialization.XmlRoot("BookFlightResponse", Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
+    [System.Xml.Serialization.XmlRootAttribute("BookFlightResponse", Namespace="http://www.springframework.org/spring-ws/samples/airline/schemas")]
     public class Ticket {
         
         /// <remarks/>
         public long id;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElement(DataType="date")]
+        [System.Xml.Serialization.XmlElementAttribute(DataType="date")]
         public System.DateTime issueDate;
         
         /// <remarks/>
@@ -200,5 +201,4 @@ namespace Spring.Ws.Samples.Airline.Client.CSharp {
         /// <remarks/>
         public Flight flight;
     }
-    
 }

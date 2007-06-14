@@ -11,7 +11,7 @@ namespace Spring.Ws.Samples.Airline.Client.CSharp {
 				if (args.Length > 0) {
 					service.Url = args[0];
 				} else {
-					service.Url = "http://localhost:8080/airline/Airline";
+					service.Url = "http://localhost:8080/airline/services";
 				}
 				// Get all flights on 31st Januari, 2006 from Amsterdam to Venice
 				MessageGetFlightsRequest getFlightsRequest = new MessageGetFlightsRequest();

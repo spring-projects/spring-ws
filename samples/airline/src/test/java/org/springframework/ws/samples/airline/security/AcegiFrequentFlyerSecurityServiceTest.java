@@ -21,8 +21,7 @@ import org.acegisecurity.context.SecurityContext;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.context.SecurityContextImpl;
 import org.acegisecurity.providers.TestingAuthenticationToken;
-import org.easymock.MockControl;
-
+import static org.easymock.EasyMock.*;
 import org.springframework.ws.samples.airline.dao.FrequentFlyerDao;
 import org.springframework.ws.samples.airline.domain.FrequentFlyer;
 
@@ -30,15 +29,11 @@ public class AcegiFrequentFlyerSecurityServiceTest extends TestCase {
 
     private AcegiFrequentFlyerSecurityService securityService;
 
-    private MockControl control;
-
-    private FrequentFlyerDao mock;
+    private FrequentFlyerDao flyerDaoMock;
 
     protected void setUp() throws Exception {
-        securityService = new AcegiFrequentFlyerSecurityService();
-        control = MockControl.createControl(FrequentFlyerDao.class);
-        mock = (FrequentFlyerDao) control.getMock();
-        securityService.setFrequentFlyerDao(mock);
+        flyerDaoMock = createMock(FrequentFlyerDao.class);
+        securityService = new AcegiFrequentFlyerSecurityService(flyerDaoMock);
     }
 
     public void testGetCurrentlyAuthenticatedFrequentFlyer() throws Exception {
@@ -48,18 +43,18 @@ public class AcegiFrequentFlyerSecurityServiceTest extends TestCase {
         SecurityContext context = new SecurityContextImpl();
         context.setAuthentication(token);
         SecurityContextHolder.setContext(context);
-        control.replay();
+        replay(flyerDaoMock);
         FrequentFlyer result = securityService.getCurrentlyAuthenticatedFrequentFlyer();
         assertEquals("Invalid result", frequentFlyer, result);
-        control.verify();
+        verify(flyerDaoMock);
     }
 
     public void testGetFrequentFlyer() throws Exception {
         FrequentFlyer frequentFlyer = new FrequentFlyer("john");
-        control.expectAndReturn(mock.get("john"), frequentFlyer);
-        control.replay();
+        expect(flyerDaoMock.get("john")).andReturn(frequentFlyer);
+        replay(flyerDaoMock);
         FrequentFlyer result = securityService.getFrequentFlyer("john");
         assertEquals("Invalid result", frequentFlyer, result);
-        control.verify();
+        verify(flyerDaoMock);
     }
 }

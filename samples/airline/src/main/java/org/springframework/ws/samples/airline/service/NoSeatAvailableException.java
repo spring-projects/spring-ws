@@ -17,12 +17,15 @@
 package org.springframework.ws.samples.airline.service;
 
 import org.springframework.ws.samples.airline.domain.Flight;
+import org.springframework.ws.soap.server.endpoint.annotation.FaultCode;
+import org.springframework.ws.soap.server.endpoint.annotation.SoapFault;
 
 /**
  * Exception thrown when not enough seats are available for a flight.
  *
  * @author Arjen Poutsma
  */
+@SoapFault(faultCode = FaultCode.SERVER)
 public class NoSeatAvailableException extends Exception {
 
     private Flight flight;

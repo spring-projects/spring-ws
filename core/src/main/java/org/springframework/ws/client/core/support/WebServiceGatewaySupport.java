@@ -122,7 +122,7 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
      *
      * @see org.springframework.ws.client.core.WebServiceTemplate#marshalSendAndReceive
      */
-    public void setMarshaller(Marshaller marshaller) {
+    public final void setMarshaller(Marshaller marshaller) {
         webServiceTemplate.setMarshaller(marshaller);
     }
 

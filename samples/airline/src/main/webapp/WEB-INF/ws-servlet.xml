@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+    <!-- ===================== ENDPOINTS  ===================================== -->
+
+    <!--
+        <bean id="marshallingEndpoint" class="org.springframework.ws.samples.airline.ws.MarshallingAirlineEndpoint">
+            <description>
+                This endpoint handles the Airline Web Service messages using JAXB2 marshalling.
+            </description>
+            <constructor-arg ref="airlineService"/>
+        </bean>
+    -->
+
+    <bean id="xpathEndpoint" class="org.springframework.ws.samples.airline.ws.XPathAirlineEndpoint">
+        <description>
+            This endpoint handles the Airline Web Service messages using XPath expressions and JAXB2 marshalling.
+        </description>
+        <constructor-arg ref="airlineService"/>
+        <constructor-arg ref="marshaller"/>
+    </bean>
+
+
+    <bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <description>
+            The JAXB 2 Marshaller is used by the endpoints.
+        </description>
+        <property name="mtomEnabled" value="false"/>
+        <property name="contextPath" value="org.springframework.ws.samples.airline.schema"/>
+    </bean>
+
+
+    <!-- ===================== ENDPOINT MAPPINGS  ============================== -->
+
+    <bean class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping">
+        <description>
+            Detects @PayloadRoot annotations on @Endpoint bean methods. The MarshallingAirlineEndpoint
+            has such annotations. It uses two interceptors: one that logs the message payload, and the other validates
+            it accoring to the 'airline.xsd' schema file.
+        </description>
+        <property name="interceptors">
+            <list>
+                <bean class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor"/>
+                <bean class="org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor">
+                    <property name="schema" value="/WEB-INF/xsd/airline.xsd"/>
+                    <property name="validateRequest" value="true"/>
+                    <property name="validateResponse" value="true"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <!-- ===================== ENDPOINT ADAPTERS  ============================== -->
+
+    <bean class="org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter">
+        <description>
+            This adapter allows for methods that need and returns marshalled objects. The MarshallingEndpoint
+            uses JAXB2 objects.
+        </description>
+        <constructor-arg ref="marshaller"/>
+    </bean>
+
+    <bean class="org.springframework.ws.server.endpoint.adapter.XPathParamAnnotationMethodEndpointAdapter">
+        <description>
+            This adapter allows for methods that use @XPathParam annotations. The XPathAirlineEndpoint uses JAXB2 these.
+        </description>
+        <property name="namespaces">
+            <props>
+                <prop key="tns">http://www.springframework.org/spring-ws/samples/airline/schemas</prop>
+            </props>
+        </property>
+    </bean>
+
+
+    <!-- ===================== ENDPOINT EXCEPTION RESOLVER ===================== -->
+
+    <bean class="org.springframework.ws.soap.server.endpoint.SoapFaultMappingExceptionResolver">
+        <description>
+            This exception resolver maps exceptions to SOAP Faults. The business logic exceptions
+            NoSeatAvailableException and NoSuchFlightException are explictely mapped. Both
+            UnmarshallingException andValidationFailureException are mapped to a SOAP Fault with a "Sender" fault code.
+            All other exceptions are mapped to a "Server" error code, the default.
+        </description>
+        <property name="defaultFault" value="SERVER"/>
+        <property name="exceptionMappings">
+            <props>
+                <prop key="org.springframework.ws.samples.airline.service.NoSuchFlightException">CLIENT</prop>
+                <prop key="org.springframework.ws.samples.airline.service.NoSeatAvailableException">SERVER</prop>
+                <prop key="org.springframework.oxm.UnmarshallingFailureException">CLIENT,Invalid request</prop>
+                <prop key="org.springframework.oxm.ValidationFailureException">CLIENT,Invalid request</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- ===================== WSDL DEFINITION    ============================== -->
+
+    <bean id="airline" class="org.springframework.ws.wsdl.wsdl11.DynamicWsdl11Definition">
+        <description>
+            Dynamically builds a WSDL from the airline.xsd.This bean definition represents the airline.wsdl file found
+            in the root of the web application. It is used
+            by the WsdlDefinitionHandlerAdapter in airline-servlet.xml.
+        </description>
+        <property name="builder">
+            <bean class="org.springframework.ws.wsdl.wsdl11.builder.XsdBasedSoap11Wsdl4jDefinitionBuilder">
+                <property name="schema" value="/WEB-INF/xsd/airline.xsd"/>
+                <property name="portTypeName" value="Airline"/>
+                <property name="locationUri" value="http://localhost:8080/airline/services"/>
+                <property name="targetNamespace"
+                          value="http://www.springframework.org/spring-ws/samples/airline/definitions"/>
+            </bean>
+        </property>
+    </bean>
+
+
+</beans>

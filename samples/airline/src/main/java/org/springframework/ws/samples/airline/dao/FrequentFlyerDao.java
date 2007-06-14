@@ -23,6 +23,4 @@ public interface FrequentFlyerDao {
 
     FrequentFlyer get(String username) throws DataAccessException;
 
-    void update(FrequentFlyer frequentFlyer) throws DataAccessException;
-
 }

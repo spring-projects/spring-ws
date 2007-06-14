@@ -19,7 +19,11 @@ package org.springframework.ws.samples.airline.security;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.context.SecurityContext;
 import org.acegisecurity.context.SecurityContextHolder;
-
+import org.acegisecurity.userdetails.UserDetails;
+import org.acegisecurity.userdetails.UserDetailsService;
+import org.acegisecurity.userdetails.UsernameNotFoundException;
+import org.springframework.dao.DataAccessException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ws.samples.airline.dao.FrequentFlyerDao;
 import org.springframework.ws.samples.airline.domain.FrequentFlyer;
 
@@ -28,14 +32,15 @@ import org.springframework.ws.samples.airline.domain.FrequentFlyer;
  *
  * @author Arjen Poutsma
  */
-public class AcegiFrequentFlyerSecurityService implements FrequentFlyerSecurityService {
+public class AcegiFrequentFlyerSecurityService implements FrequentFlyerSecurityService, UserDetailsService {
 
     private FrequentFlyerDao frequentFlyerDao;
 
-    public void setFrequentFlyerDao(FrequentFlyerDao frequentFlyerDao) {
+    public AcegiFrequentFlyerSecurityService(FrequentFlyerDao frequentFlyerDao) {
         this.frequentFlyerDao = frequentFlyerDao;
     }
 
+    @Transactional
     public FrequentFlyer getCurrentlyAuthenticatedFrequentFlyer() {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
@@ -53,7 +58,20 @@ public class AcegiFrequentFlyerSecurityService implements FrequentFlyerSecurityS
         }
     }
 
+    @Transactional
     public FrequentFlyer getFrequentFlyer(String username) {
         return frequentFlyerDao.get(username);
     }
+
+    @Transactional
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
+        FrequentFlyer frequentFlyer = frequentFlyerDao.get(username);
+        if (frequentFlyer != null) {
+            return new FrequentFlyerDetails(frequentFlyer);
+        }
+        else {
+            throw new UsernameNotFoundException("Frequent flyer '" + username + "' not found");
+        }
+    }
+
 }

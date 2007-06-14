@@ -17,13 +17,23 @@
 package org.springframework.ws.samples.airline.domain;
 
 import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "AIRPORT")
 public class Airport implements Serializable {
 
+    @Id
+    @Column(name = "CODE")
     private String code;
 
+    @Column(name = "NAME")
     private String name;
 
+    @Column(name = "CITY")
     private String city;
 
     public Airport() {
@@ -39,24 +49,12 @@ public class Airport implements Serializable {
         return city;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
     public String getCode() {
         return code;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public boolean equals(Object other) {
@@ -67,7 +65,7 @@ public class Airport implements Serializable {
             return false;
         }
         final Airport that = (Airport) other;
-        return this.code.equals(that.code);
+        return code.equals(that.code);
     }
 
     public int hashCode() {

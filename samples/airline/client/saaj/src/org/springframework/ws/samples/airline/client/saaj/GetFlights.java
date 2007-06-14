@@ -117,7 +117,7 @@ public class GetFlights {
     }
 
     public static void main(String[] args) throws Exception {
-        String url = "http://localhost:8080/airline/Airline";
+        String url = "http://localhost:8080/airline/services";
         if (args.length > 0) {
             url = args[0];
         }

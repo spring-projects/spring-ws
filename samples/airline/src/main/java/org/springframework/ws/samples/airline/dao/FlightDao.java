@@ -25,10 +25,12 @@ import org.springframework.ws.samples.airline.domain.ServiceClass;
 
 public interface FlightDao {
 
-    List findFlights(String fromAirportCode, String toAirportCode, Interval interval, ServiceClass serviceClass)
+    List<Flight> findFlights(String fromAirportCode, String toAirportCode, Interval interval, ServiceClass serviceClass)
             throws DataAccessException;
+
+    Flight getFlight(Long id);
 
     Flight getFlight(String flightNumber, DateTime departureTime);
 
-    void update(Flight flight);
+    Flight update(Flight flight);
 }

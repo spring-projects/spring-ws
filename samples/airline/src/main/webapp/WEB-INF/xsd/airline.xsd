@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.springframework.org/spring-ws/samples/airline/schemas"
+        xmlns:tns="http://www.springframework.org/spring-ws/samples/airline/schemas"
+        elementFormDefault="qualified">
+
+    <element name="GetFlightsRequest">
+        <complexType>
+            <all>
+                <element name="from" type="tns:AirportCode"/>
+                <element name="to" type="tns:AirportCode"/>
+                <element name="departureDate" type="date"/>
+                <element name="serviceClass" type="tns:ServiceClass" minOccurs="0"/>
+            </all>
+        </complexType>
+    </element>
+
+    <element name="GetFlightsResponse">
+        <complexType>
+            <sequence>
+                <element name="flight" type="tns:Flight" minOccurs="0" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="BookFlightRequest">
+        <complexType>
+            <all>
+                <element name="flightNumber" type="tns:FlightNumber"/>
+                <element name="departureTime" type="dateTime"/>
+                <element name="passengers">
+                    <complexType>
+                        <choice maxOccurs="9">
+                            <element name="passenger" type="tns:Name"/>
+                            <element name="username" type="tns:FrequentFlyerUsername"/>
+                        </choice>
+                    </complexType>
+                </element>
+            </all>
+        </complexType>
+    </element>
+
+    <element name="BookFlightResponse" type="tns:Ticket"/>
+
+    <element name="GetFrequentFlyerMileageRequest" nillable="true" type="string"/>
+
+    <element name="GetFrequentFlyerMileageResponse" type="int"/>
+
+
+    <complexType name="Flight">
+        <sequence>
+            <element name="number" type="tns:FlightNumber"/>
+            <element name="departureTime" type="dateTime"/>
+            <element name="from" type="tns:Airport"/>
+            <element name="arrivalTime" type="dateTime"/>
+            <element name="to" type="tns:Airport"/>
+            <element name="serviceClass" type="tns:ServiceClass"/>
+        </sequence>
+    </complexType>
+
+    <simpleType name="FlightNumber">
+        <restriction base="string">
+            <pattern value="[A-Z][A-Z][0-9][0-9][0-9][0-9]"/>
+        </restriction>
+    </simpleType>
+
+    <complexType name="Name">
+        <sequence>
+            <element name="first" type="string"/>
+            <element name="last" type="string"/>
+        </sequence>
+    </complexType>
+
+    <simpleType name="FrequentFlyerUsername">
+        <restriction base="string"/>
+    </simpleType>
+
+
+    <complexType name="Airport">
+        <all>
+            <element name="code" type="tns:AirportCode"/>
+            <element name="name" type="string"/>
+            <element name="city" type="string"/>
+        </all>
+    </complexType>
+
+    <simpleType name="AirportCode">
+        <restriction base="string">
+            <pattern value="[A-Z][A-Z][A-Z]"/>
+        </restriction>
+    </simpleType>
+
+
+    <complexType name="Ticket">
+        <all>
+            <element name="id" type="long"/>
+            <element name="issueDate" type="date"/>
+            <element name="passengers">
+                <complexType>
+                    <sequence>
+                        <element name="passenger" type="tns:Name" maxOccurs="9"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="flight" type="tns:Flight"/>
+        </all>
+    </complexType>
+
+    <simpleType name="ServiceClass">
+        <restriction base="NCName">
+            <enumeration value="economy"/>
+            <enumeration value="business"/>
+            <enumeration value="first"/>
+        </restriction>
+    </simpleType>
+
+
+</schema>
