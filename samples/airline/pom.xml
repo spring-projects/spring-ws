@@ -227,11 +227,20 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.ws</groupId>
+            <artifactId>spring-ws-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ws</groupId>
             <artifactId>spring-ws-core-tiger</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.ws</groupId>
+            <artifactId>spring-oxm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ws</groupId>
             <artifactId>spring-oxm-tiger</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.ws</groupId>
@@ -239,6 +248,10 @@
             <scope>runtime</scope>
         </dependency>
         <!-- Spring dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
@@ -252,6 +265,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-jpa</artifactId>
             <version>${spring.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -261,6 +275,14 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -276,6 +298,16 @@
             <groupId>taglibs</groupId>
             <artifactId>standard</artifactId>
             <version>1.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>persistence-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>stax</groupId>
+            <artifactId>stax-api</artifactId>
+            <scope>compile</scope>
         </dependency>
         <!-- O/X Mapping dependencies -->
         <dependency>
@@ -293,6 +325,12 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
+            <version>3.2.1.ga</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-annotations</artifactId>
             <version>3.2.1.ga</version>
         </dependency>
         <dependency>
@@ -338,6 +376,7 @@
             <groupId>aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
             <version>1.5.3</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.acegisecurity</groupId>
