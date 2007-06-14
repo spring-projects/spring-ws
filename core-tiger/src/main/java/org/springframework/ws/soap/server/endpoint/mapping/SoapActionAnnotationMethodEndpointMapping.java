@@ -51,6 +51,8 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
 
     private String[] actorsOrRoles;
 
+    private boolean isUltimateReceiver = true;
+
     public final void setActorOrRole(String actorOrRole) {
         Assert.notNull(actorOrRole, "actorOrRole must not be null");
         actorsOrRoles = new String[]{actorOrRole};
@@ -59,6 +61,10 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
     public final void setActorsOrRoles(String[] actorsOrRoles) {
         Assert.notEmpty(actorsOrRoles, "actorsOrRoles must not be empty");
         this.actorsOrRoles = actorsOrRoles;
+    }
+
+    public final void setUltimateReceiver(boolean ultimateReceiver) {
+        isUltimateReceiver = ultimateReceiver;
     }
 
     /**
@@ -74,7 +80,7 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
     protected final EndpointInvocationChain createEndpointInvocationChain(MessageContext messageContext,
                                                                           Object endpoint,
                                                                           EndpointInterceptor[] interceptors) {
-        return new SoapEndpointInvocationChain(endpoint, interceptors, actorsOrRoles);
+        return new SoapEndpointInvocationChain(endpoint, interceptors, actorsOrRoles, isUltimateReceiver);
     }
 
     protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
