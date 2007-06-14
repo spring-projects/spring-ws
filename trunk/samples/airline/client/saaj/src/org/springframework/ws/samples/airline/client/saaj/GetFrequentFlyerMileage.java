@@ -122,8 +122,8 @@ public class GetFrequentFlyerMileage {
         else {
             SOAPFault fault = response.getSOAPBody().getFault();
             System.err.println("Received SOAP Fault");
-            System.err.println("SOAP Fault Code :" + fault.getFaultCode());
-            System.err.println("SOAP Fault String :" + fault.getFaultString());
+            System.err.println("SOAP Fault Code:   " + fault.getFaultCode());
+            System.err.println("SOAP Fault String: " + fault.getFaultString());
         }
     }
 
