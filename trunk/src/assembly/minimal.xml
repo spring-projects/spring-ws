@@ -7,7 +7,7 @@
     <componentDescriptors>
         <componentDescriptor>src/assembly/docs.xml</componentDescriptor>
     </componentDescriptors>
-    <includeBaseDirectory>false</includeBaseDirectory>
+    <includeBaseDirectory>true</includeBaseDirectory>
     <moduleSets>
         <moduleSet>
             <includes>
