@@ -16,10 +16,12 @@
 
 package org.springframework.ws.soap.soap12;
 
+import java.util.Iterator;
 import javax.xml.namespace.QName;
 
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
+import org.springframework.ws.soap.SoapHeaderException;
 
 /**
  * Subinterface of <code>SoapHeader</code> that exposes SOAP 1.2 functionality.
@@ -47,5 +49,19 @@ public interface Soap12Header extends SoapHeader {
      *          if the header cannot be created
      */
     SoapHeaderElement addUpgradeHeaderElement(java.lang.String[] supportedSoapUris);
+
+    /**
+     * Returns an <code>Iterator</code> over all the {@link SoapHeaderElement header elements} that should be processed
+     * for the given roles. Headers target to the "next" role will always be included, and those targeted to "none" will
+     * never be included.
+     *
+     * @param roles              an array of roles to search for
+     * @param isUltimateReceiver whether to search for headers for the ultimate receiver
+     * @return an iterator over all the header elements that contain the specified roles
+     * @throws SoapHeaderException if the headers cannot be returned
+     * @see SoapHeaderElement
+     */
+    Iterator examineHeaderElementsToProcess(String[] roles, boolean isUltimateReceiver) throws SoapHeaderException;
+
 
 }

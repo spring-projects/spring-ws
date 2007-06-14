@@ -16,16 +16,22 @@
 
 package org.springframework.ws.soap.axiom;
 
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMNamespace;
+import org.apache.axiom.soap.RolePlayer;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axiom.soap.SOAPHeaderBlock;
 import org.apache.axiom.soap.SOAPProcessingException;
+import org.springframework.util.ObjectUtils;
 import org.springframework.ws.soap.SoapHeaderElement;
+import org.springframework.ws.soap.SoapHeaderException;
 import org.springframework.ws.soap.soap12.Soap12Header;
 import org.springframework.xml.namespace.QNameUtils;
 
@@ -68,5 +74,24 @@ class AxiomSoap12Header extends AxiomSoapHeader implements Soap12Header {
         catch (OMException ex) {
             throw new AxiomSoapHeaderException(ex);
         }
+    }
+
+    public Iterator examineHeaderElementsToProcess(final String[] roles, final boolean isUltimateDestination)
+            throws SoapHeaderException {
+        RolePlayer rolePlayer = null;
+        if (!ObjectUtils.isEmpty(roles)) {
+            rolePlayer = new RolePlayer() {
+
+                public List getRoles() {
+                    return Arrays.asList(roles);
+                }
+
+                public boolean isUltimateDestination() {
+                    return isUltimateDestination;
+                }
+            };
+        }
+        Iterator result = getAxiomHeader().getHeadersToProcess(rolePlayer);
+        return new AxiomSoapHeaderElementIterator(result);
     }
 }

@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap.soap12;
 
+import java.util.Iterator;
 import javax.xml.namespace.QName;
 
 import org.springframework.ws.soap.AbstractSoapHeaderTestCase;
@@ -24,6 +25,10 @@ import org.springframework.ws.soap.SoapVersion;
 import org.springframework.xml.transform.StringResult;
 
 public abstract class AbstractSoap12HeaderTestCase extends AbstractSoapHeaderTestCase {
+
+    public void testGetType() {
+        assertTrue("Invalid type returned", soapHeader instanceof Soap12Header);
+    }
 
     public void testGetName() throws Exception {
         assertEquals("Invalid qualified name", new QName(SoapVersion.SOAP_12.getEnvelopeNamespaceUri(), "Header"),
@@ -65,6 +70,62 @@ public abstract class AbstractSoap12HeaderTestCase extends AbstractSoapHeaderTes
                 "</Upgrade>" +
                 "</Header>", result.toString());
 */
+    }
+
+    public void testExamineHeaderElementsToProcessActors() throws Exception {
+        QName qName = new QName(NAMESPACE, "localName1", PREFIX);
+        SoapHeaderElement headerElement = soapHeader.addHeaderElement(qName);
+        headerElement.setActorOrRole("role1");
+        qName = new QName(NAMESPACE, "localName2", PREFIX);
+        headerElement = soapHeader.addHeaderElement(qName);
+        headerElement.setActorOrRole("role2");
+        qName = new QName(NAMESPACE, "localName3", PREFIX);
+        headerElement = soapHeader.addHeaderElement(qName);
+        headerElement.setActorOrRole(SoapVersion.SOAP_12.getNextActorOrRoleUri());
+        Iterator iterator = ((Soap12Header) soapHeader).examineHeaderElementsToProcess(new String[]{"role1"}, false);
+        assertNotNull("header element iterator is null", iterator);
+        assertTrue("header element iterator has no elements", iterator.hasNext());
+        checkHeaderElement((SoapHeaderElement) iterator.next());
+        assertTrue("header element iterator has no elements", iterator.hasNext());
+        checkHeaderElement((SoapHeaderElement) iterator.next());
+        assertFalse("header element iterator has too many elements", iterator.hasNext());
+    }
+
+    public void testExamineHeaderElementsToProcessNoActors() throws Exception {
+        QName qName = new QName(NAMESPACE, "localName1", PREFIX);
+        SoapHeaderElement headerElement = soapHeader.addHeaderElement(qName);
+        headerElement.setActorOrRole("");
+        qName = new QName(NAMESPACE, "localName2", PREFIX);
+        headerElement = soapHeader.addHeaderElement(qName);
+        headerElement.setActorOrRole("role1");
+        qName = new QName(NAMESPACE, "localName3", PREFIX);
+        headerElement = soapHeader.addHeaderElement(qName);
+        headerElement.setActorOrRole(SoapVersion.SOAP_12.getNextActorOrRoleUri());
+        Iterator iterator = ((Soap12Header) soapHeader).examineHeaderElementsToProcess(new String[0], false);
+        assertNotNull("header element iterator is null", iterator);
+        assertTrue("header element iterator has no elements", iterator.hasNext());
+        checkHeaderElement((SoapHeaderElement) iterator.next());
+        assertTrue("header element iterator has no elements", iterator.hasNext());
+        checkHeaderElement((SoapHeaderElement) iterator.next());
+        assertFalse("header element iterator has too many elements", iterator.hasNext());
+    }
+
+    public void testExamineHeaderElementsToProcessUltimateDestination() throws Exception {
+        QName qName = new QName(NAMESPACE, "localName", PREFIX);
+        SoapHeaderElement headerElement = soapHeader.addHeaderElement(qName);
+        headerElement.setActorOrRole(SoapVersion.SOAP_12.getUltimateReceiverRoleUri());
+        Iterator iterator = ((Soap12Header) soapHeader).examineHeaderElementsToProcess(new String[]{"role"}, true);
+        assertNotNull("header element iterator is null", iterator);
+        headerElement = (SoapHeaderElement) iterator.next();
+        assertEquals("Invalid name on header element", new QName(NAMESPACE, "localName", PREFIX),
+                headerElement.getName());
+        assertFalse("header element iterator has too many elements", iterator.hasNext());
+    }
+
+    private void checkHeaderElement(SoapHeaderElement headerElement) {
+        QName name = headerElement.getName();
+        assertTrue("Invalid name on header element", new QName(NAMESPACE, "localName1", PREFIX).equals(name) ||
+                new QName(NAMESPACE, "localName3", PREFIX).equals(name));
     }
 
 }

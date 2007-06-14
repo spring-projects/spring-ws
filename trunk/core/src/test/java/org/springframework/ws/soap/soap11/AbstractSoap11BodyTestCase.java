@@ -29,6 +29,10 @@ import org.springframework.xml.transform.StringSource;
 
 public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCase {
 
+    public void testGetType() {
+        assertTrue("Invalid type returned", soapBody instanceof Soap11Body);
+    }
+
     public void testGetName() throws Exception {
         assertEquals("Invalid qualified name", SoapVersion.SOAP_11.getBodyName(), soapBody.getName());
     }

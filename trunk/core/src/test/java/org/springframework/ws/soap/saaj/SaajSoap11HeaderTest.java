@@ -28,6 +28,6 @@ public class SaajSoap11HeaderTest extends AbstractSoap11HeaderTestCase {
     protected SoapHeader createSoapHeader() throws Exception {
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
         SOAPMessage saajMessage = messageFactory.createMessage();
-        return new SaajSoapHeader(saajMessage.getSOAPPart().getEnvelope().getHeader());
+        return new SaajSoap11Header(saajMessage.getSOAPPart().getEnvelope().getHeader());
     }
 }

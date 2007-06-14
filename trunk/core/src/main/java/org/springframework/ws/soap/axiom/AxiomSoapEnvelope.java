@@ -36,7 +36,7 @@ class AxiomSoapEnvelope extends AxiomSoapElement implements SoapEnvelope {
                 SOAPHeader axiomHeader = getAxiomEnvelope().getHeader();
                 String namespaceURI = getAxiomEnvelope().getNamespace().getNamespaceURI();
                 if (SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(namespaceURI)) {
-                    return new AxiomSoapHeader(axiomHeader, getAxiomFactory());
+                    return new AxiomSoap11Header(axiomHeader, getAxiomFactory());
                 }
                 else if (SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(namespaceURI)) {
                     return new AxiomSoap12Header(axiomHeader, getAxiomFactory());

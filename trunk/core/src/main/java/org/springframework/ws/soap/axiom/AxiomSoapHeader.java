@@ -36,7 +36,7 @@ import org.springframework.xml.namespace.QNameUtils;
  *
  * @author Arjen Poutsma
  */
-class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
+abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
 
     AxiomSoapHeader(SOAPHeader axiomHeader, SOAPFactory axiomFactory) {
         super(axiomHeader, axiomFactory);
@@ -89,11 +89,11 @@ class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
         return (SOAPHeader) getAxiomElement();
     }
 
-    private class AxiomSoapHeaderElementIterator implements Iterator {
+    protected class AxiomSoapHeaderElementIterator implements Iterator {
 
         private final Iterator axiomIterator;
 
-        private AxiomSoapHeaderElementIterator(Iterator axiomIterator) {
+        protected AxiomSoapHeaderElementIterator(Iterator axiomIterator) {
             this.axiomIterator = axiomIterator;
         }
 

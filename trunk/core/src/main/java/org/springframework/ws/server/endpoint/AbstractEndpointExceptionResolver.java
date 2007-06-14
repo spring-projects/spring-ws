@@ -20,43 +20,56 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.core.Ordered;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointExceptionResolver;
 
 /**
  * Abstract base class for {@link EndpointExceptionResolver EndpointExceptionResolvers}.
- *
+ * <p/>
  * <p>Provides a set of mapped endpoints that the resolver should map.
  *
  * @author Arjen Poutsma
  */
-public abstract class AbstractEndpointExceptionResolver implements EndpointExceptionResolver {
+public abstract class AbstractEndpointExceptionResolver implements EndpointExceptionResolver, Ordered {
 
     /** Shared {@link Log} for subclasses to use. */
     protected final Log logger = LogFactory.getLog(getClass());
 
+    private int order = Integer.MAX_VALUE;  // default: same as non-Ordered
 
     private Set mappedEndpoints;
 
-
     /**
-     * Specify the set of endpoints that this exception resolver should map.
-     * <p>The exception mappings and the default fault will only apply to the
-     * specified endpoints.
+     * Specify the set of endpoints that this exception resolver should map. <p>The exception mappings and the default
+     * fault will only apply to the specified endpoints.
      * <p/>
-     * If no endpoints are set, both the exception mappings and the default fault
-     * will apply to all handlers. This means that a specified default fault will
-     * be used as fallback for all exceptions; any further
+     * If no endpoints are set, both the exception mappings and the default fault will apply to all handlers. This means
+     * that a specified default fault will be used as fallback for all exceptions; any further
      * <code>EndpointExceptionResolvers</code> in the chain will be ignored in this case.
      */
     public void setMappedEndpoints(Set mappedEndpoints) {
         this.mappedEndpoints = mappedEndpoints;
     }
 
+    /**
+     * Specify the order value for this mapping.
+     * <p/>
+     * Default value is {@link Integer#MAX_VALUE}, meaning that it's non-ordered.
+     *
+     * @see org.springframework.core.Ordered#getOrder()
+     */
+    public final void setOrder(int order) {
+        this.order = order;
+    }
+
+    public final int getOrder() {
+        return order;
+    }
 
     /**
-     * Default implementation that checks whether the given <code>endpoint</code>
-     * is in the set of {@link #setMappedEndpoints mapped endpoints}.
+     * Default implementation that checks whether the given <code>endpoint</code> is in the set of {@link
+     * #setMappedEndpoints mapped endpoints}.
      *
      * @see #resolveExceptionInternal(org.springframework.ws.context.MessageContext,Object,Exception)
      */
@@ -67,10 +80,8 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
         return resolveExceptionInternal(messageContext, endpoint, ex);
     }
 
-
     /**
-     * Template method for resolving exceptions that is called by
-     * {@link #resolveException}.
+     * Template method for resolving exceptions that is called by {@link #resolveException}.
      *
      * @param messageContext current message context
      * @param endpoint       the executed endpoint, or <code>null</code> if none chosen at the time of the exception

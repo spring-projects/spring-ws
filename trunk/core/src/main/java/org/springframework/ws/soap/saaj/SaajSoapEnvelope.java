@@ -68,7 +68,7 @@ class SaajSoapEnvelope extends SaajSoapElement implements SoapEnvelope {
                 if (saajHeader != null) {
                     if (getImplementation().getName(saajHeader).getNamespaceURI()
                             .equals(SoapVersion.SOAP_11.getEnvelopeNamespaceUri())) {
-                        header = new SaajSoapHeader(saajHeader);
+                        header = new SaajSoap11Header(saajHeader);
                     }
                     else {
                         header = new SaajSoap12Header(saajHeader);

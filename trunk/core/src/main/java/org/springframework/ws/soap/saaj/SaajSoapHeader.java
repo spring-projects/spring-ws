@@ -33,7 +33,7 @@ import org.springframework.ws.soap.SoapHeaderException;
  *
  * @author Arjen Poutsma
  */
-class SaajSoapHeader extends SaajSoapElement implements SoapHeader {
+abstract class SaajSoapHeader extends SaajSoapElement implements SoapHeader {
 
     SaajSoapHeader(SOAPHeader header) {
         super(header);
@@ -67,11 +67,11 @@ class SaajSoapHeader extends SaajSoapElement implements SoapHeader {
         return getImplementation().getResult(getSaajHeader());
     }
 
-    private static class SaajSoapHeaderElementIterator implements Iterator {
+    protected static class SaajSoapHeaderElementIterator implements Iterator {
 
         private final Iterator iterator;
 
-        private SaajSoapHeaderElementIterator(Iterator iterator) {
+        protected SaajSoapHeaderElementIterator(Iterator iterator) {
             Assert.notNull(iterator, "iterator must not be null");
             this.iterator = iterator;
         }
