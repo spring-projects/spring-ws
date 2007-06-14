@@ -16,41 +16,11 @@
 
 package org.springframework.ws.samples.airline.domain;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+public enum ServiceClass {
 
-public class ServiceClass implements Serializable {
+    ECONOMY,
 
-    private String name;
+    BUSINESS,
 
-    public static final ServiceClass ECONOMY = new ServiceClass("economy");
-
-    public static final ServiceClass BUSINESS = new ServiceClass("business");
-
-    public static final ServiceClass FIRST = new ServiceClass("first");
-
-    private static final Map INSTANCES = new HashMap();
-
-    static {
-        INSTANCES.put(ECONOMY.toString(), ECONOMY);
-        INSTANCES.put(BUSINESS.toString(), BUSINESS);
-        INSTANCES.put(FIRST.toString(), FIRST);
-    }
-
-    private ServiceClass(String name) {
-        this.name = name;
-    }
-
-    public String toString() {
-        return name;
-    }
-
-    Object readResolve() {
-        return getInstance(name);
-    }
-
-    public static ServiceClass getInstance(String name) {
-        return (ServiceClass) INSTANCES.get(name);
-    }
+    FIRST
 }

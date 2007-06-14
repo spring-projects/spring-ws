@@ -35,6 +35,10 @@ public class NoSuchFlightException extends Exception {
         this.departureTime = departureTime;
     }
 
+    public NoSuchFlightException(Long id) {
+        super("No flight with id [" + id + "]");
+    }
+
     public String getFlightNumber() {
         return flightNumber;
     }

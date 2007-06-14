@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+
+    <bean id="flightDao" class="org.springframework.ws.samples.airline.dao.jpa.JpaFlightDao">
+        <description>
+            A DAO for Flights.
+        </description>
+    </bean>
+
+    <bean id="ticketDao" class="org.springframework.ws.samples.airline.dao.jpa.JpaTicketDao">
+        <description>
+            A DAO for Tickets.
+        </description>
+    </bean>
+
+
+    <bean id="frequentFlyerDao" class="org.springframework.ws.samples.airline.dao.jpa.JpaFrequentFlyerDao">
+        <description>
+            A DAO for FrequentFlyers.
+        </description>
+    </bean>
+
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+        </property>
+        <property name="jpaProperties">
+            <util:properties location="classpath:org/springframework/ws/samples/airline/dao/jpa/hibernate.properties"/>
+        </property>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations" value="classpath:org/springframework/ws/samples/airline/dao/jdbc.properties"/>
+    </bean>
+
+    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor">
+        <description>
+            Handles the @Repository annotation used on the JPA Dao's, and translates from the JPA
+            exceptions to Spring's richer DataAccessException hierarchy.
+        </description>
+    </bean>
+
+    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor">
+        <description>
+            Injects the JPA PersistenceContext into the JPA Dao's.
+        </description>
+    </bean>
+
+
+</beans>

@@ -16,12 +16,23 @@
 
 package org.springframework.ws.samples.airline.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "FREQUENT_FLYER")
+@PrimaryKeyJoinColumn(name = "PASSENGER_ID")
 public class FrequentFlyer extends Passenger {
 
+    @Column(name = "USERNAME")
     private String username;
 
+    @Column(name = "PASSWORD")
     private String password;
 
+    @Column(name = "MILES")
     private int miles;
 
     public FrequentFlyer() {
@@ -31,7 +42,7 @@ public class FrequentFlyer extends Passenger {
         this.username = username;
     }
 
-    public FrequentFlyer(String username, String password, String firstName, String lastName) {
+    public FrequentFlyer(String firstName, String lastName, String username, String password) {
         super(firstName, lastName);
         this.username = username;
         this.password = password;
@@ -69,11 +80,15 @@ public class FrequentFlyer extends Passenger {
             return false;
         }
         final FrequentFlyer that = (FrequentFlyer) other;
-        return this.username.equals(that.username);
+        return username.equals(that.username);
     }
 
     public int hashCode() {
         return username.hashCode();
+    }
+
+    public String toString() {
+        return username;
     }
 
     public void addMiles(int miles) {

@@ -16,18 +16,55 @@
 
 package org.springframework.ws.samples.airline.domain;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-import org.joda.time.YearMonthDay;
+import org.hibernate.annotations.Type;
+import org.joda.time.LocalDate;
 
-public class Ticket extends Entity {
+@Entity
+@Table(name = "TICKET")
+public class Ticket implements Serializable {
 
-    private YearMonthDay issueDate;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-    private Set passengers = new HashSet();
+    @Column(name = "ISSUE_DATE")
+    @Type(type = "org.springframework.ws.samples.airline.domain.hibernate.LocalDateUserType")
+    private LocalDate issueDate;
 
+    @ManyToOne
+    @JoinColumn(name = "FLIGHT_ID", nullable = false)
     private Flight flight;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "PASSENGER_TICKET",
+            joinColumns = @JoinColumn(name = "TICKET_ID"),
+            inverseJoinColumns = @JoinColumn(name = "PASSENGER_ID"))
+    private Set<Passenger> passengers = new HashSet<Passenger>();
+
+    public Ticket() {
+    }
+
+    public Ticket(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
 
     public Flight getFlight() {
         return flight;
@@ -37,19 +74,19 @@ public class Ticket extends Entity {
         this.flight = flight;
     }
 
-    public YearMonthDay getIssueDate() {
+    public LocalDate getIssueDate() {
         return issueDate;
     }
 
-    public void setIssueDate(YearMonthDay issueDate) {
+    public void setIssueDate(LocalDate issueDate) {
         this.issueDate = issueDate;
     }
 
-    public Set getPassengers() {
+    public Set<Passenger> getPassengers() {
         return passengers;
     }
 
-    public void setPassengers(Set passengers) {
+    public void setPassengers(Set<Passenger> passengers) {
         this.passengers = passengers;
     }
 

@@ -15,22 +15,59 @@
  */
 package org.springframework.ws.samples.airline.domain;
 
-import org.springframework.util.Assert;
+import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Table;
 
-public class Passenger extends Entity {
+@Entity
+@Table(name = "PASSENGER")
+@Inheritance(strategy = InheritanceType.JOINED)
+public class Passenger implements Serializable {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "ID")
+    private Long id;
+
+    @Column(name = "FIRST_NAME")
     private String firstName;
 
+    @Column(name = "LAST_NAME")
     private String lastName;
 
     public Passenger() {
     }
 
     public Passenger(String firstName, String lastName) {
-        Assert.hasLength(firstName);
-        Assert.hasLength(lastName);
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public Passenger(Long id, String firstName, String lastName) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String toString() {
+        return firstName + " " + lastName;
     }
 
     public boolean equals(Object o) {
@@ -57,25 +94,5 @@ public class Passenger extends Entity {
         int result = getFirstName().hashCode();
         result = 29 * result + getLastName().hashCode();
         return result;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String toString() {
-        return firstName + " " + lastName;
     }
 }

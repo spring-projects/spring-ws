@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <artifactId>spring-ws-samples</artifactId>
         <groupId>org.springframework.ws</groupId>
@@ -8,7 +10,19 @@
     <artifactId>airline</artifactId>
     <packaging>war</packaging>
     <name>Spring WS Airline Sample</name>
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <stylesheetfile>${basedir}/../../src/main/javadoc/javadoc.css</stylesheetfile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
     <profiles>
+        <!-- These three profiles represent the three databases supported by this sample. Refer to the readme.txt
+        to see how to use them -->
         <profile>
             <id>hsqldb</id>
             <dependencies>
@@ -23,10 +37,10 @@
                 <!-- Change these properties to reflect your HSQLDB connection settings -->
                 <jdbc.driverClassName>org.hsqldb.jdbcDriver</jdbc.driverClassName>
                 <jdbc.username>sa</jdbc.username>
-                <jdbc.password />
+                <jdbc.password/>
                 <jdbc.url>jdbc:hsqldb:hsql://localhost/airline</jdbc.url>
                 <hibernate.dialect>org.hibernate.dialect.HSQLDialect</hibernate.dialect>
-                <hibernate.hbm2ddl.auto />
+                <hibernate.hbm2ddl.auto/>
             </properties>
             <build>
                 <plugins>
@@ -70,7 +84,7 @@
                 <jdbc.password>airline</jdbc.password>
                 <jdbc.url>jdbc:mysql://localhost/airline</jdbc.url>
                 <hibernate.dialect>org.hibernate.dialect.MySQLInnoDBDialect</hibernate.dialect>
-                <hibernate.hbm2ddl.auto />
+                <hibernate.hbm2ddl.auto/>
             </properties>
             <build>
                 <plugins>
@@ -114,7 +128,7 @@
                 <jdbc.password>airline</jdbc.password>
                 <jdbc.url>jdbc:postgresql://localhost/airline</jdbc.url>
                 <hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
-                <hibernate.hbm2ddl.auto />
+                <hibernate.hbm2ddl.auto/>
             </properties>
             <build>
                 <plugins>
@@ -148,11 +162,19 @@
              The following values are for using an in-memory database, which is used for testing -->
         <jdbc.driverClassName>org.hsqldb.jdbcDriver</jdbc.driverClassName>
         <jdbc.username>sa</jdbc.username>
-        <jdbc.password />
+        <jdbc.password/>
         <jdbc.url>jdbc:hsqldb:mem:airline</jdbc.url>
         <hibernate.dialect>org.hibernate.dialect.HSQLDialect</hibernate.dialect>
         <hibernate.hbm2ddl.auto>create-drop</hibernate.hbm2ddl.auto>
     </properties>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>java.net</id>
+            <name>Java.net Repository for Maven2</name>
+            <url>http://download.java.net/maven/1/</url>
+            <layout>legacy</layout>
+        </pluginRepository>
+    </pluginRepositories>
     <build>
         <resources>
             <resource>
@@ -173,23 +195,27 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.sun.tools.xjc.maven2</groupId>
+                <artifactId>maven-jaxb-plugin</artifactId>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
-                        <configuration>
-                            <tasks>
-                                <ant antfile="${basedir}/build-maven2.xml" inheritRefs="true">
-                                    <target name="generate-sources" />
-                                </ant>
-                            </tasks>
-                            <sourceRoot>${project.build.directory}/generated-sources/main/java</sourceRoot>
-                        </configuration>
                         <goals>
-                            <goal>run</goal>
+                            <goal>generate</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <generatePackage>org.springframework.ws.samples.airline.schema</generatePackage>
+                    <schemaDirectory>src/main/webapp/WEB-INF/xsd</schemaDirectory>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -201,11 +227,11 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.ws</groupId>
-            <artifactId>spring-ws-core</artifactId>
+            <artifactId>spring-ws-core-tiger</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.ws</groupId>
-            <artifactId>spring-oxm</artifactId>
+            <artifactId>spring-oxm-tiger</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.ws</groupId>
@@ -224,7 +250,8 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-hibernate3</artifactId>
+            <artifactId>spring-jpa</artifactId>
+            <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -238,6 +265,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-mock</artifactId>
+            <scope>test</scope>
         </dependency>
         <!-- XML handling dependencies -->
         <dependency>
@@ -276,37 +304,34 @@
             <artifactId>xalan</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- JEE dependencies -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>taglibs</groupId>
+            <artifactId>standard</artifactId>
+            <version>1.1.2</version>
+        </dependency>
         <!-- O/X Mapping dependencies -->
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
-            <version>1.0</version>
+            <version>2.1</version>
         </dependency>
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-impl</artifactId>
-            <version>1.0.6</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-libs</artifactId>
-            <version>1.0.6</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-xjc</artifactId>
-            <version>1.0.6</version>
+            <version>2.1.3</version>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>com.sun.msv.datatype.xsd</groupId>
-            <artifactId>xsdlib</artifactId>
-            <version>20060615</version>
-            <scope>compile</scope>
-        </dependency>
         <!-- DAO dependencies -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>3.2.1.ga</version>
+        </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate</artifactId>
@@ -339,6 +364,12 @@
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time-jsptags</artifactId>
+            <version>1.0</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.acegisecurity</groupId>
@@ -375,10 +406,22 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time-hibernate</artifactId>
-            <version>0.8</version>
-            <scope>runtime</scope>
+            <groupId>org.acegisecurity</groupId>
+            <artifactId>acegi-security-tiger</artifactId>
+            <version>1.0.3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-aop</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <scope>test</scope>
+            <version>2.2</version>
         </dependency>
         <!-- Test dependencies -->
         <dependency>

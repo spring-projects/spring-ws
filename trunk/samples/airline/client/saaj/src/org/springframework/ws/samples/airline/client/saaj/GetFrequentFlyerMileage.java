@@ -69,10 +69,8 @@ public class GetFrequentFlyerMileage {
 
     private SOAPMessage createGetMileageRequest() throws SOAPException {
         SOAPMessage message = messageFactory.createMessage();
-        message.getMimeHeaders().addHeader("SOAPAction",
-                "\"http://www.springframework.org/spring-ws/samples/airline/GetFrequentFlyerMileage\"");
         SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
-        Name getFlightsRequestName = envelope.createName("GetFrequentFlyerMileage", GetFrequentFlyerMileage.PREFIX,
+        Name getFlightsRequestName = envelope.createName("GetFrequentFlyerMileageRequest", GetFrequentFlyerMileage.PREFIX,
                 GetFrequentFlyerMileage.NAMESPACE_URI);
         message.getSOAPBody().addBodyElement(getFlightsRequestName);
         return message;
@@ -130,7 +128,7 @@ public class GetFrequentFlyerMileage {
     }
 
     public static void main(String[] args) throws Exception {
-        String url = "http://localhost:8080/airline/Airline";
+        String url = "http://localhost:8080/airline/services";
         if (args.length < 2) {
             System.err.println(
                     "Usage: java org.springframework.ws.samples.airline.client.saaj.GetFrequentFlyerMileage " +

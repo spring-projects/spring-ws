@@ -1,26 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
     <description>
         This application context contains the WS-Security and Acegi beans.
     </description>
 
-    <bean id="securityService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+    <bean id="securityService"
+          class="org.springframework.ws.samples.airline.security.AcegiFrequentFlyerSecurityService">
         <description>
             A transactional security service used to obtain Frequent Flyer information.
         </description>
-        <property name="target">
-            <bean class="org.springframework.ws.samples.airline.security.AcegiFrequentFlyerSecurityService">
-                <property name="frequentFlyerDao" ref="frequentFlyerDao"/>
-            </bean>
-        </property>
-        <property name="transactionManager" ref="transactionManager"/>
-        <property name="transactionAttributes">
-            <props>
-                <prop key="get*">PROPAGATION_REQUIRED</prop>
-            </props>
-        </property>
+        <property name="frequentFlyerDao" ref="frequentFlyerDao"/>
     </bean>
 
     <!-- ===================== WS-SECURITY  ============================== -->
@@ -56,17 +48,9 @@
                   value="classpath:org/springframework/ws/samples/airline/security/securityPolicy.xml"/>
         <property name="callbackHandler">
             <bean class="org.springframework.ws.soap.security.xwss.callback.acegi.AcegiDigestPasswordValidationCallbackHandler">
-                <property name="userDetailsService" ref="userDetailsService"/>
+                <property name="userDetailsService" ref="securityService"/>
             </bean>
         </property>
-    </bean>
-
-    <bean id="getFrequentFlyerMileageEndpoint"
-          class="org.springframework.ws.samples.airline.security.GetFrequentFlyerMileageEndpoint">
-        <description>
-            This endpoint handles get frequent flier mileage requests.
-        </description>
-        <property name="airlineService" ref="airlineService"/>
     </bean>
 
     <!-- ======================== ACEGI AUTHENTICATION ======================= -->
@@ -77,13 +61,9 @@
         </description>
         <property name="providers">
             <bean class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
-                <property name="userDetailsService" ref="userDetailsService"/>
+                <property name="userDetailsService" ref="securityService"/>
             </bean>
         </property>
-    </bean>
-
-    <bean id="userDetailsService" class="org.springframework.ws.samples.airline.security.FrequentFlyerDetailsService">
-        <property name="frequentFlyerDao" ref="frequentFlyerDao"/>
     </bean>
 
     <bean id="loggerListener" class="org.acegisecurity.event.authentication.LoggerListener"/>
@@ -103,9 +83,11 @@
             </bean>
         </property>
         <property name="objectDefinitionSource">
-            <value>
-                org.springframework.ws.samples.airline.service.AirlineService.getFrequentFlyerMileage=ROLE_FREQUENT_FLYER
-            </value>
+            <bean class="org.acegisecurity.intercept.method.MethodDefinitionAttributes">
+                <property name="attributes">
+                    <bean class="org.acegisecurity.annotation.SecurityAnnotationAttributes"/>
+                </property>
+            </bean>
         </property>
     </bean>
 

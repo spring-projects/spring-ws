@@ -30,11 +30,7 @@ public class StubFrequentFlyerSecurityService implements FrequentFlyerSecuritySe
     private FrequentFlyer john;
 
     public StubFrequentFlyerSecurityService() {
-        john = new FrequentFlyer();
-        john.setUsername("john");
-        john.setFirstName("John");
-        john.setLastName("Doe");
-        john.setPassword("changeme");
+        john = new FrequentFlyer("John", "Doe", "john", "changeme");
         john.setMiles(10);
     }
 
