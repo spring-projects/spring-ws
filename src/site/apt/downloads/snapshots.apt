@@ -23,8 +23,8 @@ Snapshot Builds
 <dependency>
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws-core</artifactId>
-    <version>1.0-rc2-SNAPSHOT</version>
+    <version>1.0-rc3-SNAPSHOT</version>
 </dependency>
 +---------------
 
-	Additionally, there are {{{http://s3browse.com/explore/maven.springframework.org/org/springframework/ws/spring-ws/1.0-rc2-SNAPSHOT/}zips}} available which contain all jars.
+	Additionally, there are {{{http://s3browse.com/explore/maven.springframework.org/org/springframework/ws/spring-ws/1.0-rc3-SNAPSHOT/}zips}} available which contain all jars.
