@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.transport.jms;
+package org.springframework.ws.transport.mail;
 
-import junit.framework.TestCase;
+import java.io.IOException;
 
-public class JmsTransportUtilsTest extends TestCase {
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-    public void testHeaderToJmsProperty() throws Exception {
-        String result = JmsTransportUtils.headerToJmsProperty("SOAPAction");
-        assertEquals("Invalid result", "SOAPJMS_soapAction", result);
+/** @author Arjen Poutsma */
+public class Driver {
+
+    public static void main(String[] args) throws IOException {
+        new ClassPathXmlApplicationContext("applicationContext.xml", Driver.class);
+        System.out.println("Started....");
+        System.in.read();
     }
+
 }

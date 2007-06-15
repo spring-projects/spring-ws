@@ -35,7 +35,6 @@ public class JmsUriTest extends TestCase {
         assertEquals("Invalid prority", 8, uri.getPriority());
         assertEquals("Invalid time to live", 10, uri.getTimeToLive());
         assertEquals("Invalid reply to name", "interested", uri.getReplyTo());
-        assertEquals("Invalid custom property", "mystuff", uri.getCustomParameter("userprop"));
 
     }
 

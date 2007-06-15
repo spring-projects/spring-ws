@@ -26,16 +26,24 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import org.springframework.util.Assert;
-import org.springframework.ws.transport.AbstractReceivingWebServiceConnection;
+import org.springframework.ws.transport.AbstractReceiverConnection;
 
 /** @author Arjen Poutsma */
-public class TcpReceivingWebServiceConnection extends AbstractReceivingWebServiceConnection {
+public class TcpReceiverConnection extends AbstractReceiverConnection {
 
     private final Socket socket;
 
-    public TcpReceivingWebServiceConnection(Socket socket) {
+    protected TcpReceiverConnection(Socket socket) {
         Assert.notNull(socket, "socket must not be null");
         this.socket = socket;
+    }
+
+    public boolean hasError() throws IOException {
+        return false;
+    }
+
+    public String getErrorMessage() throws IOException {
+        return null;
     }
 
     public void close() throws IOException {
@@ -73,7 +81,7 @@ public class TcpReceivingWebServiceConnection extends AbstractReceivingWebServic
         };
     }
 
-    protected void sendResponse() throws IOException {
+    protected void sendResponse(boolean sentFault) throws IOException {
     }
 
 

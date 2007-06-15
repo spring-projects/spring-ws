@@ -26,20 +26,28 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import org.springframework.util.Assert;
-import org.springframework.ws.transport.AbstractSendingWebServiceConnection;
+import org.springframework.ws.transport.AbstractSenderConnection;
 
 /** @author Arjen Poutsma */
-public class TcpSendingWebServiceConnection extends AbstractSendingWebServiceConnection {
+public class TcpSenderConnection extends AbstractSenderConnection {
 
     private final Socket socket;
 
-    public TcpSendingWebServiceConnection(Socket socket) {
+    protected TcpSenderConnection(Socket socket) {
         Assert.notNull(socket, "socket must not be null");
         this.socket = socket;
     }
 
     public void close() throws IOException {
         socket.close();
+    }
+
+    public boolean hasError() throws IOException {
+        return false;
+    }
+
+    public String getErrorMessage() throws IOException {
+        return null;
     }
 
     protected void addRequestHeader(String name, String value) throws IOException {
