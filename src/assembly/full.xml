@@ -70,22 +70,22 @@
         <fileSet>
             <directory>samples</directory>
             <outputDirectory>samples</outputDirectory>
+            <includes>
+                <include>**/src/**</include>
+                <include>**/build*.xml</include>
+                <include>**/*.bat</include>
+                <include>**/pom.xml</include>
+                <include>**/Makefile</include>
+                <include>airline/hsqldb/**</include>
+                <include>mtom/**/spring-ws-logo.png</include>
+                <include>maven-artifact-ant-2.0.4-dep.jar</include>
+                <includes>**/*.exe</includes>
+            </includes>
             <excludes>
-                <exclude>**/target/**</exclude>
                 <exclude>**/target</exclude>
-                <exclude>**/bin/**</exclude>
+                <exclude>**/target/**</exclude>
                 <exclude>**/bin</exclude>
-                <exclude>**/gen/**</exclude>
-                <exclude>**/gen</exclude>
-                <exclude>**/*.class</exclude>
-                <exclude>**/*.iml</exclude>
-                <exclude>**/*.ipr</exclude>
-                <exclude>**/*.log</exclude>
-                <exclude>**/readme.txt</exclude>
-                <exclude>**/.classpath</exclude>
-                <exclude>**/.project</exclude>
-                <exclude>**/.settings</exclude>
-                <exclude>**/.settings/**</exclude>
+                <exclude>**/bin/**</exclude>
             </excludes>
         </fileSet>
     </fileSets>
