@@ -16,31 +16,13 @@
 
 package org.springframework.ws.transport.mail;
 
-import javax.jms.JMSException;
-import javax.mail.MessagingException;
-
-import org.springframework.ws.transport.TransportException;
+import org.springframework.ws.transport.TransportConstants;
 
 /** @author Arjen Poutsma */
-public class MailTransportException extends TransportException {
+public interface MailTransportConstants extends TransportConstants {
 
-    private MessagingException messagingException;
+    /** The "In-Reply-To" header. */
+    String HEADER_IN_REPLY_TO = "In-Reply-To";
 
-    public MailTransportException(String msg) {
-        super(msg);
-    }
 
-    public MailTransportException(String msg, MessagingException ex) {
-        super(msg + ": " + ex.getMessage());
-        initCause(ex);
-    }
-
-    public MailTransportException(MessagingException ex) {
-        super(ex.getMessage());
-        initCause(ex);
-    }
-
-    public MessagingException getMessagingException() {
-        return messagingException;
-    }
 }

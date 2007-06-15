@@ -24,10 +24,11 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import org.springframework.ws.transport.WebServiceConnection;
-import org.springframework.ws.transport.support.AbstractMessagingContainer;
+import org.springframework.ws.transport.support.AbstractMultiThreadedMessageReceiver;
 
 /** @author Arjen Poutsma */
-public class TcpMessagingContainer extends AbstractMessagingContainer {
+public class TcpMessageReceiver extends AbstractMultiThreadedMessageReceiver {
+    public static final int DEFAULT_PORT = 8081;
 
     private ServerSocket serverSocket;
 
@@ -35,7 +36,7 @@ public class TcpMessagingContainer extends AbstractMessagingContainer {
 
     private int backlog = -1;
 
-    private int port = -1;
+    private int port = DEFAULT_PORT;
 
     /** Sets the port the server will bind to. */
     public void setPort(int port) {
@@ -58,58 +59,34 @@ public class TcpMessagingContainer extends AbstractMessagingContainer {
         this.bindAddress = InetAddress.getByName(bindAddress);
     }
 
-    public void afterPropertiesSet() throws Exception {
-        super.afterPropertiesSet();
-        if (port == -1) {
-            throw new IllegalArgumentException("port is required");
-        }
-        openServerSocket();
-    }
-
     protected void onActivate() throws IOException {
         openServerSocket();
     }
 
     protected void onStart() {
         if (logger.isInfoEnabled()) {
-            logger.info("Starting tcp server [" + serverSocket.getLocalSocketAddress() + "]");
+            logger.info("Starting tcp receiver [" + serverSocket.getLocalSocketAddress() + "]");
         }
         getTaskExecutor().execute(new SocketAcceptingRunnable());
     }
 
     protected void onStop() {
         if (logger.isInfoEnabled()) {
-            logger.info("Stopping tcp server [" + serverSocket.getLocalSocketAddress() + "]");
+            logger.info("Stopping tcp receiver [" + serverSocket.getLocalSocketAddress() + "]");
         }
     }
 
     protected void onShutdown() {
         if (logger.isInfoEnabled()) {
-            logger.info("Shutting down tcp server [" + serverSocket.getLocalSocketAddress() + "]");
+            logger.info("Shutting down tcp receiver [" + serverSocket.getLocalSocketAddress() + "]");
         }
         closeServerSocket();
     }
 
     /**
-     * Establish a shared <code>ServerSocket</code> for this server.
-     * <p/>
-     * The default implementation delegates to <code>refreshSharedConnection</code>, which does one immediate attempt
-     * and throws an exception if it fails. Can be overridden to have a recovery proces in place, retrying until a
-     * ServerSocket can be successfully established.
-     *
-     * @see #refreshServerSocket()
+     * Establish a <code>ServerSocket</code> for this receiver.
      */
     protected void openServerSocket() throws IOException {
-        refreshServerSocket();
-    }
-
-    /**
-     * Refresh the shared <code>ServerSocket</code> that this server holds.
-     * <p/>
-     * Called on startup and also after an infrastructure exception that occured during listener setup and/or
-     * execution.
-     */
-    protected final void refreshServerSocket() throws IOException {
         closeServerSocket();
         serverSocket = new ServerSocket(port, backlog, bindAddress);
     }
@@ -154,7 +131,7 @@ public class TcpMessagingContainer extends AbstractMessagingContainer {
         }
 
         public void run() {
-            WebServiceConnection connection = new TcpReceivingWebServiceConnection(socket);
+            WebServiceConnection connection = new TcpReceiverConnection(socket);
             try {
                 handleConnection(connection);
             }

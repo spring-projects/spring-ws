@@ -32,11 +32,15 @@ import javax.jms.Session;
 import org.apache.commons.logging.Log;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.util.Assert;
+import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractReceiverConnection;
+import org.springframework.ws.transport.FaultAwareWebServiceConnection;
+import org.springframework.ws.transport.jms.support.JmsTransportUtils;
 
 /** @author Arjen Poutsma */
-public class JmsReceiverConnection extends AbstractReceiverConnection implements JmsTransportConstants {
+public class JmsReceiverConnection extends AbstractReceiverConnection
+        implements JmsTransportConstants, FaultAwareWebServiceConnection {
 
     private final Log logger;
 
@@ -61,9 +65,6 @@ public class JmsReceiverConnection extends AbstractReceiverConnection implements
 
     public boolean hasError() throws IOException {
         return false;
-    }
-
-    public void close() throws IOException {
     }
 
     /*
@@ -102,15 +103,18 @@ public class JmsReceiverConnection extends AbstractReceiverConnection implements
     }
 
     /*
-    * Sending
-    */
+     * Sending
+     */
 
     protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
         try {
             responseMessage = session.createBytesMessage();
             responseMessage.setJMSCorrelationID(requestMessage.getJMSMessageID());
             responseMessage.setStringProperty(PROPERTY_BINDING_VERSION, "1.0");
-            responseMessage.setBooleanProperty(PROPERTY_IS_FAULT, message.hasFault());
+            if (message instanceof FaultAwareWebServiceMessage) {
+                FaultAwareWebServiceMessage faultMessage = (FaultAwareWebServiceMessage) message;
+                responseMessage.setBooleanProperty(PROPERTY_IS_FAULT, faultMessage.hasFault());
+            }
         }
         catch (JMSException ex) {
             throw new JmsTransportException("Could not create response message", ex);
@@ -151,5 +155,33 @@ public class JmsReceiverConnection extends AbstractReceiverConnection implements
             JmsUtils.closeMessageProducer(messageProducer);
         }
     }
+
+    public void close() throws IOException {
+    }
+
+    /*
+     * Faults
+     */
+
+    public boolean hasFault() throws IOException {
+        try {
+            return requestMessage.getBooleanProperty(JmsTransportConstants.PROPERTY_IS_FAULT);
+        }
+        catch (JMSException ex) {
+            throw new JmsTransportException(ex);
+        }
+    }
+
+    public void setFault(boolean fault) throws IOException {
+        if (responseMessage != null) {
+            try {
+                responseMessage.setBooleanProperty(JmsTransportConstants.PROPERTY_IS_FAULT, true);
+            }
+            catch (JMSException ex) {
+                throw new JmsTransportException(ex);
+            }
+        }
+    }
+
 
 }

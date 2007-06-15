@@ -16,31 +16,7 @@
 
 package org.springframework.ws.transport.mail;
 
-import javax.jms.JMSException;
-import javax.mail.MessagingException;
-
-import org.springframework.ws.transport.TransportException;
-
 /** @author Arjen Poutsma */
-public class MailTransportException extends TransportException {
+public interface MonitoringStrategy {
 
-    private MessagingException messagingException;
-
-    public MailTransportException(String msg) {
-        super(msg);
-    }
-
-    public MailTransportException(String msg, MessagingException ex) {
-        super(msg + ": " + ex.getMessage());
-        initCause(ex);
-    }
-
-    public MailTransportException(MessagingException ex) {
-        super(ex.getMessage());
-        initCause(ex);
-    }
-
-    public MessagingException getMessagingException() {
-        return messagingException;
-    }
 }

@@ -16,24 +16,12 @@
 
 package org.springframework.ws.transport.support;
 
-import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.Lifecycle;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
-import org.springframework.core.task.TaskExecutor;
-import org.springframework.util.ClassUtils;
 
-/**
- * Abstract base class for standalone, server-side transport objects. Contains a Spring {@link TaskExecutor}, and
- * various lifecycle callbacks.
- *
- * @author Arjen Poutsma
- */
-public abstract class AbstractMessagingContainer extends SimpleWebServiceMessageReceiverObjectSupport
-        implements Lifecycle, DisposableBean, BeanNameAware {
-
-    /** Default thread name prefix. */
-    public final String DEFAULT_THREAD_NAME_PREFIX = ClassUtils.getShortName(getClass()) + "-";
+/** @author Arjen Poutsma */
+public abstract class AbstractStandaloneMessagingReceiver extends SimpleWebServiceMessageReceiverObjectSupport
+        implements Lifecycle, DisposableBean {
 
     private volatile boolean active = false;
 
@@ -42,39 +30,6 @@ public abstract class AbstractMessagingContainer extends SimpleWebServiceMessage
     private boolean running = false;
 
     private final Object lifecycleMonitor = new Object();
-
-    private TaskExecutor taskExecutor;
-
-    private String beanName;
-
-    /**
-     * Set whether to automatically start the listener after initialization.
-     * <p/>
-     * Default is <code>true</code>; set this to <code>false</code> to allow for manual startup.
-     */
-    public void setAutoStartup(boolean autoStartup) {
-        this.autoStartup = autoStartup;
-    }
-
-    /**
-     * Set the Spring {@link TaskExecutor} to use for running the listener threads. Default is {@link
-     * SimpleAsyncTaskExecutor}, starting up a number of new threads.
-     * <p/>
-     * Specify an alternative task executor for integration with an existing thread pool, such as the {@link
-     * org.springframework.scheduling.commonj.WorkManagerTaskExecutor} to integrate with WebSphere or WebLogic.
-     */
-    public void setTaskExecutor(TaskExecutor taskExecutor) {
-        this.taskExecutor = taskExecutor;
-    }
-
-    /** Returns the task executor. */
-    public TaskExecutor getTaskExecutor() {
-        return taskExecutor;
-    }
-
-    public void setBeanName(String beanName) {
-        this.beanName = beanName;
-    }
 
     /** Return whether this server is currently active, that is, whether it has been set up but not shut down yet. */
     public final boolean isActive() {
@@ -91,23 +46,15 @@ public abstract class AbstractMessagingContainer extends SimpleWebServiceMessage
     }
 
     /**
-     * Create a default TaskExecutor. Called if no explicit TaskExecutor has been specified.
+     * Set whether to automatically start the listener after initialization.
      * <p/>
-     * The default implementation builds a {@link org.springframework.core.task.SimpleAsyncTaskExecutor} with the
-     * specified bean name (or the class name, if no bean name specified) as thread name prefix.
-     *
-     * @see org.springframework.core.task.SimpleAsyncTaskExecutor#SimpleAsyncTaskExecutor(String)
+     * Default is <code>true</code>; set this to <code>false</code> to allow for manual startup.
      */
-    protected TaskExecutor createDefaultTaskExecutor() {
-        String threadNamePrefix = beanName != null ? beanName + "-" : DEFAULT_THREAD_NAME_PREFIX;
-        return new SimpleAsyncTaskExecutor(threadNamePrefix);
+    public void setAutoStartup(boolean autoStartup) {
+        this.autoStartup = autoStartup;
     }
 
     public void afterPropertiesSet() throws Exception {
-        super.afterPropertiesSet();
-        if (taskExecutor == null) {
-            taskExecutor = createDefaultTaskExecutor();
-        }
         activate();
     }
 
@@ -167,5 +114,4 @@ public abstract class AbstractMessagingContainer extends SimpleWebServiceMessage
     protected abstract void onStop();
 
     protected abstract void onShutdown();
-
 }

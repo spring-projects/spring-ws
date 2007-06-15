@@ -28,49 +28,17 @@ import javax.naming.Context;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import org.springframework.ws.transport.support.ParameterizedUri;
 
 /**
  * @author Arjen Poutsma
  * @see <a href="http://mail-archives.apache.org/mod_mbox/ws-axis-dev/200701.mbox/raw/%3C80A43FC052CE3949A327527DCD5D6B27020FB65C@MAIL01.bedford.progress.com%3E/2">RI
  *      Scheme for Java Message Service 1.0 RC1</a>
  */
-public class JmsUri implements JmsTransportConstants {
-
-    private final String uri;
-
-    private final String destination;
-
-    // keys are string parameter names; values are string parameter values
-    private final Map parameters = new HashMap();
+public class JmsUri extends ParameterizedUri implements JmsTransportConstants {
 
     public JmsUri(String uri) {
-        Assert.hasLength(uri, "'uri' must not be empty");
-        String scheme = URI_SCHEME + ":";
-        Assert.isTrue(uri.startsWith(scheme), uri + " does not start with " + scheme);
-        Assert.isTrue(uri.length() > scheme.length(), uri + " does not have a destination");
-        int paramStart = uri.indexOf('?');
-        if (paramStart == -1) {
-            destination = uri.substring(scheme.length());
-        }
-        else {
-            destination = uri.substring(scheme.length(), paramStart);
-            parseParameters(uri.substring(paramStart + 1));
-        }
-        this.uri = uri;
-    }
-
-    private void parseParameters(String parametersString) {
-        StringTokenizer params = new StringTokenizer(parametersString, "&");
-        while (params.hasMoreTokens()) {
-            String param = params.nextToken();
-            int paramSep = param.indexOf('=');
-            if (paramSep == -1) {
-                throw new IllegalArgumentException(param + " is not a valid parameter: it has no '='");
-            }
-            String paramName = param.substring(0, paramSep);
-            String paramValue = param.substring(paramSep + 1);
-            parameters.put(paramName, paramValue);
-        }
+        super(uri);
         validateParameters();
     }
 
@@ -85,7 +53,7 @@ public class JmsUri implements JmsTransportConstants {
     }
 
     private void validateIntegerParameter(String paramName) {
-        String paramValue = (String) parameters.get(paramName);
+        String paramValue = (String) getParameter(paramName);
         if (StringUtils.hasLength(paramValue)) {
             try {
                 Integer.parseInt(paramValue);
@@ -106,9 +74,8 @@ public class JmsUri implements JmsTransportConstants {
         return getIntegerParameter(PARAM_DELIVERY_MODE, Message.DEFAULT_DELIVERY_MODE);
     }
 
-    /** Returns thethe JNDI name of the destination queue or topic. */
     public String getDestination() {
-        return destination;
+        return super.getDestination();
     }
 
     /**
@@ -116,7 +83,7 @@ public class JmsUri implements JmsTransportConstants {
      * "<code>topic</code>", respectively.
      */
     public String getDestinationType() {
-        return (String) parameters.get(PARAM_DESTINATION_TYPE);
+        return getParameter(PARAM_DESTINATION_TYPE);
     }
 
     /**
@@ -134,13 +101,8 @@ public class JmsUri implements JmsTransportConstants {
     }
 
     private int getIntegerParameter(String paramName, int defaultValue) {
-        String paramValue = (String) parameters.get(paramName);
+        String paramValue = getParameter(paramName);
         return paramValue != null ? Integer.parseInt(paramValue) : defaultValue;
-    }
-
-    /** Returns the full JMS URI. */
-    public String getUri() {
-        return uri;
     }
 
     /** Indicates whether this URI has a connection factory name. */
@@ -150,7 +112,7 @@ public class JmsUri implements JmsTransportConstants {
 
     /** Returns the JNDI name of the Java class providing the connection factory. */
     public String getConnectionFactoryName() {
-        return (String) parameters.get(PARAM_CONNECTION_FACTORY_NAME);
+        return getParameter(PARAM_CONNECTION_FACTORY_NAME);
     }
 
     /** Indicates whether this URI has a "InitialContextFactory". */
@@ -164,7 +126,7 @@ public class JmsUri implements JmsTransportConstants {
      * @see Context#INITIAL_CONTEXT_FACTORY
      */
     public String getInitialContextFactory() {
-        return (String) parameters.get(PARAM_INITIAL_CONTEXT_FACTORY);
+        return getParameter(PARAM_INITIAL_CONTEXT_FACTORY);
     }
 
     /** Indicates whether this URI has a JNDI provider URL. */
@@ -178,7 +140,7 @@ public class JmsUri implements JmsTransportConstants {
      * @see Context#PROVIDER_URL
      */
     public String getJndiUrl() {
-        return (String) parameters.get(PARAM_JNDI_URL);
+        return getParameter(PARAM_JNDI_URL);
     }
 
     /** Indicates whether this URI has a reply-to name. */
@@ -192,7 +154,7 @@ public class JmsUri implements JmsTransportConstants {
      * @see Message#setJMSReplyTo(Destination)
      */
     public String getReplyTo() {
-        return (String) parameters.get(PARAM_REPLY_TO_NAME);
+        return getParameter(PARAM_REPLY_TO_NAME);
     }
 
     /**
@@ -203,8 +165,4 @@ public class JmsUri implements JmsTransportConstants {
         return DESTINATION_TYPE_TOPIC.equals(getDestinationType());
     }
 
-    /** Returns the value of a custom parameter with the given name. */
-    public String getCustomParameter(String paramName) {
-        return (String) parameters.get(paramName);
-    }
 }

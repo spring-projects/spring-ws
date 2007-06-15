@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.transport.jms;
+package org.springframework.ws.transport.jms.support;
+
+import org.springframework.ws.transport.jms.JmsTransportConstants;
 
 /** @author Arjen Poutsma */
 public class JmsTransportUtils {

@@ -31,7 +31,7 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.xml.transform.StringSource;
 
-public class TcpServerIntegrationTest extends AbstractDependencyInjectionSpringContextTests {
+public class TcpMessageReceiverIntegrationTest extends AbstractDependencyInjectionSpringContextTests {
 
     private WebServiceMessageFactory messageFactory;
 
@@ -54,7 +54,7 @@ public class TcpServerIntegrationTest extends AbstractDependencyInjectionSpringC
                     "    </SOAP-ENV:Body>\n" + "</SOAP-ENV:Envelope>";
 
     public void testServer() throws IOException, InterruptedException {
-        Socket socket = new Socket("localhost", 9999);
+        Socket socket = new Socket("localhost", TcpMessageReceiver.DEFAULT_PORT);
         Writer writer = null;
         BufferedReader reader = null;
         try {
@@ -74,8 +74,9 @@ public class TcpServerIntegrationTest extends AbstractDependencyInjectionSpringC
     }
 
     public void testTemplate() throws Exception {
-        WebServiceTemplate template = new WebServiceTemplate(messageFactory, messageSender);
-        template.sendAndReceive(new StringSource(REQUEST), new StreamResult(System.out));
+        WebServiceTemplate template = new WebServiceTemplate(messageFactory);
+        template.setMessageSender(messageSender);
+        template.sendAndReceive("tcp://localhost",new StringSource(REQUEST), new StreamResult(System.out));
     }
 
     protected String[] getConfigLocations() {

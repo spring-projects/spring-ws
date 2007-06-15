@@ -37,9 +37,11 @@ import javax.jms.TemporaryQueue;
 import org.springframework.jms.connection.ConnectionFactoryUtils;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.util.Assert;
+import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractSenderConnection;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
+import org.springframework.ws.transport.jms.support.JmsTransportUtils;
 
 /** @author Arjen Poutsma */
 public class JmsSenderConnection extends AbstractSenderConnection
@@ -88,6 +90,14 @@ public class JmsSenderConnection extends AbstractSenderConnection
         return responseMessage;
     }
 
+    public boolean hasError() throws IOException {
+        return false;
+    }
+
+    public String getErrorMessage() throws IOException {
+        return null;
+    }
+
     /*
      * Sending
      */
@@ -96,8 +106,11 @@ public class JmsSenderConnection extends AbstractSenderConnection
         try {
             requestMessage = session.createBytesMessage();
             requestMessage.setStringProperty(PROPERTY_BINDING_VERSION, "1.0");
-            requestMessage.setBooleanProperty(PROPERTY_IS_FAULT, message.hasFault());
-            requestMessage.setStringProperty(PROPERTY_REQUEST_IRI, uri.getUri());
+            if (message instanceof FaultAwareWebServiceMessage) {
+                FaultAwareWebServiceMessage faultMessage = (FaultAwareWebServiceMessage) message;
+                requestMessage.setBooleanProperty(PROPERTY_IS_FAULT, faultMessage.hasFault());
+            }
+            requestMessage.setStringProperty(PROPERTY_REQUEST_IRI, uri.toString());
         }
         catch (JMSException ex) {
             throw new JmsTransportException(ex);
@@ -176,6 +189,10 @@ public class JmsSenderConnection extends AbstractSenderConnection
         }
     }
 
+    protected boolean hasResponse() throws IOException {
+        return responseMessage != null;
+    }
+
     protected Iterator getResponseHeaderNames() throws IOException {
         try {
             List headerNames = new ArrayList();
@@ -216,9 +233,9 @@ public class JmsSenderConnection extends AbstractSenderConnection
         ConnectionFactoryUtils.releaseConnection(connection, connectionFactory, true);
     }
 
-    protected boolean hasResponse() throws IOException {
-        return responseMessage != null;
-    }
+    /*
+     * Faults
+     */
 
     public boolean hasFault() throws IOException {
         if (responseMessage != null) {
@@ -234,11 +251,13 @@ public class JmsSenderConnection extends AbstractSenderConnection
         }
     }
 
-    public boolean hasError() throws IOException {
-        return false;
+    public void setFault(boolean fault) throws IOException {
+        try {
+            requestMessage.setBooleanProperty(JmsTransportConstants.PROPERTY_IS_FAULT, true);
+        }
+        catch (JMSException ex) {
+            throw new JmsTransportException(ex);
+        }
     }
 
-    public String getErrorMessage() throws IOException {
-        return null;
-    }
 }

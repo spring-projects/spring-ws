@@ -2,14 +2,13 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-    <bean id="messagingReceiver" class="org.springframework.ws.transport.tcp.TcpMessageReceiver">
+    <bean id="messagingReceiver" class="org.springframework.ws.transport.mail.MailMessageReceiver">
+        <property name="storeUri" value="imap://ajwpi21:sjantaL.@imap.xs4all.nl/INBOX"/>
         <property name="messageFactory" ref="messageFactory"/>
         <property name="messageReceiver">
             <bean class="org.springframework.ws.transport.SimpleTestingMessageReceiver"/>
         </property>
     </bean>
-
-    <bean id="tcpSender" class="org.springframework.ws.transport.tcp.TcpMessageSender" />
 
     <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
 

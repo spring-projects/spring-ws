@@ -17,57 +17,49 @@
 package org.springframework.ws.transport.tcp;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.net.UnknownHostException;
 
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
 
 /** @author Arjen Poutsma */
-public class TcpMessageSender implements WebServiceMessageSender, InitializingBean {
+public class TcpMessageSender implements WebServiceMessageSender {
 
-    private InetAddress address;
+    private static final String TCP_SCHEME = "tcp://";
 
-    private int port = -1;
+    public static final int DEFAULT_PORT = 8081;
 
     private int timeOut = 1000;
-
-    /** Sets the port the sender will connect to. */
-    public void setPort(int port) {
-        this.port = port;
-    }
 
     /** Sets the amount of milliseconds before the tcp connection will timeout. */
     public void setTimeOut(int timeOut) {
         this.timeOut = timeOut;
     }
 
-    /**
-     * Sets the internet address the client will connect to.
-     *
-     * @throws java.net.UnknownHostException when the given address is not known
-     */
-    public void setAddress(String address) throws UnknownHostException {
-        this.address = InetAddress.getByName(address);
+    public boolean supports(String uri) {
+        return StringUtils.hasLength(uri) && uri.startsWith(TCP_SCHEME);
     }
 
-    public WebServiceConnection createConnection() throws IOException {
-        Socket socket = new Socket();
-        SocketAddress socketAddress = new InetSocketAddress(address, port);
-        socket.connect(socketAddress, timeOut);
-        return new TcpSendingWebServiceConnection(socket);
-    }
-
-    public void afterPropertiesSet() throws Exception {
-        if (port == -1) {
-            throw new IllegalArgumentException("port is required");
+    public WebServiceConnection createConnection(String uri) throws IOException {
+        Assert.isTrue(uri.startsWith(TCP_SCHEME), "Invalid uri: " + uri);
+        uri = uri.substring(TCP_SCHEME.length());
+        int idx = uri.indexOf(':');
+        String hostname;
+        int port;
+        if (idx != -1) {
+            hostname = uri.substring(0, idx);
+            port = Integer.parseInt(uri.substring(idx + 1));
+        } else {
+            hostname = uri;
+            port = DEFAULT_PORT;
         }
-        Assert.notNull(address, "address is required");
-
+        Socket socket = new Socket();
+        SocketAddress socketAddress = new InetSocketAddress(hostname, port);
+        socket.connect(socketAddress, timeOut);
+        return new TcpSenderConnection(socket);
     }
 }
