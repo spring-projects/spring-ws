@@ -73,10 +73,13 @@
             <excludes>
                 <exclude>**/target/**</exclude>
                 <exclude>**/target</exclude>
+                <exclude>**/bin/**</exclude>
+                <exclude>**/bin</exclude>
+                <exclude>**/gen/**</exclude>
+                <exclude>**/gen</exclude>
                 <exclude>**/*.class</exclude>
                 <exclude>**/*.iml</exclude>
                 <exclude>**/*.ipr</exclude>
-                <exclude>**/META-INF/*</exclude>
                 <exclude>**/*.log</exclude>
                 <exclude>**/readme.txt</exclude>
                 <exclude>**/.classpath</exclude>
