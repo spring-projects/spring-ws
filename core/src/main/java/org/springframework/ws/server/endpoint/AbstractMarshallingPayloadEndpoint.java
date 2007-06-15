@@ -60,9 +60,9 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
     }
 
     /**
-     * Creates a new <code>AbstractMarshallingPayloadEndpoint</code> with the given marshaller. If the given {@link
-     * Marshaller} also implements the {@link Unmarshaller} interface, it is used for both marshalling and
-     * unmarshalling. Otherwise, an exception is thrown.
+     * Creates a new <code>AbstractMarshallingPayloadEndpoint</code> with the given marshaller. The given {@link
+     * Marshaller} should also implements the {@link Unmarshaller}, since it is used for both marshalling and
+     * unmarshalling. If it is not, an exception is thrown.
      * <p/>
      * Note that all {@link Marshaller} implementations in Spring-WS also implement the {@link Unmarshaller} interface,
      * so that you can safely use this constructor.
@@ -70,6 +70,7 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
      * @param marshaller object used as marshaller and unmarshaller
      * @throws IllegalArgumentException when <code>marshaller</code> does not implement the {@link Unmarshaller}
      *                                  interface
+     * @see #AbstractMarshallingPayloadEndpoint(Marshaller,Unmarshaller)
      */
     protected AbstractMarshallingPayloadEndpoint(Marshaller marshaller) {
         Assert.notNull(marshaller, "marshaller must not be null");
@@ -79,8 +80,8 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
                     "AbstractMarshallingPayloadEndpoint(Marshaller, Unmarshaller) constructor.");
         }
         else {
-            this.setMarshaller(marshaller);
-            this.setUnmarshaller((Unmarshaller) marshaller);
+            setMarshaller(marshaller);
+            setUnmarshaller((Unmarshaller) marshaller);
         }
     }
 
@@ -93,8 +94,8 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
     protected AbstractMarshallingPayloadEndpoint(Marshaller marshaller, Unmarshaller unmarshaller) {
         Assert.notNull(marshaller, "marshaller must not be null");
         Assert.notNull(unmarshaller, "unmarshaller must not be null");
-        this.setMarshaller(marshaller);
-        this.setUnmarshaller(unmarshaller);
+        setMarshaller(marshaller);
+        setUnmarshaller(unmarshaller);
     }
 
     /** Returns the marshaller used for transforming objects into XML. */
