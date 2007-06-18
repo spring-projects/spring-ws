@@ -8,6 +8,13 @@
     <artifactId>airline</artifactId>
     <packaging>war</packaging>
     <name>Spring WS Airline Sample</name>
+    <repositories>
+        <repository>
+            <id>spring-ext</id>
+            <name>Spring External Dependencies Repository</name>
+            <url>https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/</url>
+        </repository>
+    </repositories>
     <reporting>
         <plugins>
             <plugin>
