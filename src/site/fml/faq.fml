@@ -11,10 +11,8 @@
                     bundled with the older XML parser Crimson, which does not handle namespaces correctly. Additionally,
                     it is bundled with an older version of Xalan, which also has problems.
                     Unfortunately, placing newer versions of these on the class path does not override them.
-                    See
-                    <a href="http://xml.apache.org/xalan-j/faq.html#faq-N100D6">this FAQ</a>
-                    entry on the Xalan site, and also
-                    <a href="http://xerces.apache.org/xerces2-j/faq-general.html#faq-4">this entry</a>
+                    See <a href="http://xml.apache.org/xalan-j/faq.html#faq-N100D6">this FAQ</a> entry on the Xalan
+                    site, and also <a href="http://xerces.apache.org/xerces2-j/faq-general.html#faq-4">this entry</a>
                     on the Xerces site.
                 </p>
                 <p>
@@ -33,10 +31,8 @@
                 </p>
                 <p>
                     The jar can be found at
-                    <tt>
-                        /System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/.compatibility/14compatibility.jar
-                    </tt>
-                    . You can safely remove or rename it, and the tests will run again.
+                    <tt>/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/.compatibility/14compatibility.jar</tt>.
+                    You can safely remove or rename it, and the tests will run again.
                 </p>
             </answer>
         </faq>
@@ -48,20 +44,13 @@
             <answer>
                 <p>
                     SAAJ is the SOAP with Attachments API for Java. Previously, it has been part of JAXM, but it has
-                    been
-                    released as a seperate API as part of the
-                    <a href="http://java.sun.com/webservices/jwsdp/index.jsp">Java Web Service
-                        Developer Pack
-                    </a>
-                    , and also as part of J2EE 1.4. SAAJ is generally known as the package
-                    <tt>javax.xml.soap</tt>
-                    .
+                    been released as a seperate API as part of the
+                    <a href="http://java.sun.com/webservices/jwsdp/index.jsp">Java Web Service Developer Pack</a>, and
+                    also as part of J2EE 1.4. SAAJ is generally known as the package <tt>javax.xml.soap</tt>.
                 </p>
                 <p>
                     Spring-WS uses this standard SAAJ library to create representations of SOAP messages. Alternatively,
-                    it can use
-                    <a href="http://ws.apache.org/commons/axiom/index.html">Apache AXIOM</a>
-                    .
+                    it can use <a href="http://ws.apache.org/commons/axiom/index.html">Apache AXIOM</a>.
                 </p>
             </answer>
         </faq>
@@ -90,9 +79,14 @@
                             <td>SUN Glassfish 1</td>
                             <td>1.3</td>
                         </tr>
+                        <tr>
+                            <td>JBoss 4.2</td>
+                            <td>1.3 <sup>**</sup></td>
+                        </tr>
                     </tbody>
                 </table>
                 <p>* = See <a href="#saaj-weblogic9">below</a>.</p>
+                <p>** = See <a href="#saaj-jboss">below</a>.</p>
                 <p>Additionally, Java SE 6 includes SAAJ 1.3.</p>
             </answer>
         </faq>
@@ -113,11 +107,8 @@ java.lang.NoSuchMethodError:
 javax.xml.soap.MessageFactory.newInstance(Ljava/lang/String;)Ljavax/xml/soap/MessageFactory;
                 </pre>
                 <p>
-                    Like most J2EE libraries, SAAJ consists of two parts: the API that consists of interfaces (
-                    <tt>saaj-api.jar</tt>
-                    ) and the implementation (
-                    <tt>saaj-impl.jar</tt>
-                    ).
+                    Like most J2EE libraries, SAAJ consists of two parts: the API that consists of interfaces
+                    (<tt>saaj-api.jar</tt>) and the implementation (<tt>saaj-impl.jar</tt>).
                     The stack trace is due to the fact that you are using a new version of the API (SAAJ 1.3), while
                     your application server provides an earlier version of the implementation (SAAJ 1.2 or even 1.1).
                     Spring-WS supports all three versions of SAAJ (1.1 through 1.3), but things break when it sees
@@ -150,12 +141,28 @@ javax.xml.soap.MessageFactory.newInstance(Ljava/lang/String;)Ljavax/xml/soap/Mes
                 <p>
                     The solution is to not use BEA's version of SAAJ, but to use another implementation, like the one
                     from Axis 1, or SUN. In you application context, use the following:
-                    <pre>
-&lt;bean id=&quot;messageFactory&quot; class=&quot;org.springframework.ws.soap.saaj.SaajSoapMessageFactory&quot;&gt;
-  &lt;property name=&quot;messageFactory&quot;&gt;
-    &lt;bean class=&quot;com.sun.xml.messaging.saaj.soap.MessageFactoryImpl&quot;/&gt;
-&lt;/bean&gt;
-</pre>
+                    <source><bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory">
+  <property name="messageFactory">
+    <bean class="com.sun.xml.messaging.saaj.soap.MessageFactoryImpl"/>
+  </property>
+</bean></source>
+                </p>
+            </answer>
+        </faq>
+        <faq id="saaj-jboss">
+            <question>
+                I get a <tt>IndexOutOfBoundsException</tt> when I use SAAJ under JBoss. What can I do about it?
+            </question>
+            <answer>
+                <p>
+                    The SAAJ implementation provided by JBoss has some issues. The solution is therefore not to use
+                    the JBoss implementation, but to use another implementation. For instance, you can use SUN's
+                    reference implementation like so:
+                    <source><bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory">
+  <property name="messageFactory">
+    <bean class="com.sun.xml.messaging.saaj.soap.ver1_1.SOAPMessageFactory1_1Impl"/>
+  </property>
+</bean></source>
                 </p>
             </answer>
         </faq>
@@ -187,37 +194,16 @@ javax.xml.soap.MessageFactory.newInstance(Ljava/lang/String;)Ljavax/xml/soap/Mes
                     <ul>
                         <li>
                             Simply add the WSDL to the root of the WAR, and the file is served normally. This has the
-                            disadvantage
-                            that the "location" attribute in the WSDL is static, i.e. it does not necessarily reflect
-                            the
-                            host name
-                            of
-                            the
-                            server. That is why in the airline sample
-                            <tt>airline-servlet.xml</tt>
-                            , we define an
+                            disadvantage that the "location" attribute in the WSDL is static, i.e. it does not
+                            necessarily reflect the host name of the server. You can transform locations by using a
+                            <a href="http://static.springframework.org/spring-ws/site/apidocs/org/springframework/ws/transport/http/WsdlDefinitionHandlerAdapter.html">
                             <tt>WsdlDefinitionHandlerAdapter</tt>
-                            there, which
-                            transforms the
-                            location.
+                            </a>.
                         </li>
-                        <li>Use the
-                            <tt>MessageDispatcherServlet</tt>
-                            , which is done is the echo sample. Every
-                            <tt>WsdlDefinition</tt>
-                            listed in the
-                            <tt>*-servlet.xml</tt>
-                            will be exposed under the bean name. So if you define a
-                            <tt>WsdlDefinition</tt>
-                            named
-                            <tt>echo</tt>
-                            , it will be
-                            exposed as
-                            <tt>echo.wsdl</tt>
-                            . (i.e.
-                            <tt>http://localhost:8080/echo/echo.wsdl
-                            </tt>
-                            ).
+                        <li>Use the <tt>MessageDispatcherServlet</tt>, which is done is the samples. Every
+                            <tt>WsdlDefinition</tt> listed in the <tt>*-servlet.xml</tt> will be exposed under the
+                            bean name. So if you define a <tt>WsdlDefinition</tt> named <tt>echo</tt>, it will be
+                            exposed as <tt>echo.wsdl</tt>. (i.e. <tt>http://localhost:8080/echo/echo.wsdl</tt>).
                         </li>
                     </ul>
                 </p>
