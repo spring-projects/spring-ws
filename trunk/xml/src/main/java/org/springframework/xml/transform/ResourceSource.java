@@ -23,8 +23,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.xml.sax.SaxUtils;
 
 /**
- * Convenient subclass of <code>StreamSource</code> that reads from a Spring {@link
- * org.springframework.core.io.Resource}. The resource to be read can be set via the constructor.
+ * Convenient subclass of {@link SAXSource} that reads from a Spring {@link Resource}. The resource to be read can be
+ * set via the constructor.
  *
  * @author Arjen Poutsma
  */
