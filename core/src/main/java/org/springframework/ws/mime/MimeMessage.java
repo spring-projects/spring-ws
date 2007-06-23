@@ -34,7 +34,7 @@ public interface MimeMessage extends WebServiceMessage {
     boolean convertToXopPackage();
 
     /**
-     * Returns the <code>Attachment</code> with the specified content Id.
+     * Returns the {@link Attachment} with the specified content Id.
      *
      * @return the attachment with the specified content id; or <code>null</code> if it cannot be found
      * @throws AttachmentException in case of errors
@@ -42,7 +42,7 @@ public interface MimeMessage extends WebServiceMessage {
     Attachment getAttachment(String contentId) throws AttachmentException;
 
     /**
-     * Returns an <code>Iterator</code> over all <code>Attachment</code>s that are part of this message.
+     * Returns an <code>Iterator</code> over all {@link Attachment} objects that are part of this message.
      *
      * @return an iterator over all attachments
      * @throws AttachmentException in case of errors
