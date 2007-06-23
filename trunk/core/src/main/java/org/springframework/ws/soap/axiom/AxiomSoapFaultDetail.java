@@ -51,7 +51,7 @@ class AxiomSoapFaultDetail extends AxiomSoapElement implements SoapFaultDetail {
     }
 
     public Iterator getDetailEntries() {
-        return new AxiomSoapFaultDetailElementIterator(getAxiomFaultDetail().getAllDetailEntries());
+        return new AxiomSoapFaultDetailElementIterator(getAxiomFaultDetail().getChildElements());
     }
 
     public Result getResult() {
