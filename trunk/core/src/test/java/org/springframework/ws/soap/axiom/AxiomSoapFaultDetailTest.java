@@ -26,7 +26,6 @@ import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapFaultDetail;
 
-/** @author Arjen Poutsma */
 public class AxiomSoapFaultDetailTest extends TestCase {
 
     private static final String FAILING_FAULT =
