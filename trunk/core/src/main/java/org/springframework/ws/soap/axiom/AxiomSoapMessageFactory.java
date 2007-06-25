@@ -41,6 +41,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapMessageFactory;
 import org.springframework.ws.soap.SoapVersion;
+import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportInputStream;
 
 /**
@@ -67,11 +68,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 
     private static final String CHAR_SET_ENCODING = "charset";
 
-    private static final String CONTENT_TYPE_HEADER = "Content-Type";
-
     private static final String DEFAULT_CHAR_SET_ENCODING = "UTF-8";
-
-    private static final String SOAP_ACTION_HEADER = "SOAPAction";
 
     private static final String MULTI_PART_RELATED_CONTENT_TYPE = "multipart/related";
 
@@ -126,11 +123,11 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
             throw new IllegalArgumentException("AxiomSoapMessageFactory requires a TransportInputStream");
         }
         TransportInputStream transportInputStream = (TransportInputStream) inputStream;
-        String contentType = getHeaderValue(transportInputStream, CONTENT_TYPE_HEADER);
+        String contentType = getHeaderValue(transportInputStream, TransportConstants.HEADER_CONTENT_TYPE);
         if (!StringUtils.hasLength(contentType)) {
             throw new IllegalArgumentException("TransportInputStream contains no Content-Type header");
         }
-        String soapAction = getHeaderValue(transportInputStream, SOAP_ACTION_HEADER);
+        String soapAction = getHeaderValue(transportInputStream, TransportConstants.HEADER_SOAP_ACTION);
         try {
             if (isMultiPartRelated(contentType)) {
                 return createMultiPartAxiomSoapMessage(inputStream, contentType, soapAction);
