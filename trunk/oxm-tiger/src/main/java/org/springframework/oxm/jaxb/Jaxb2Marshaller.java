@@ -93,7 +93,7 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller implements MimeMarsh
 
     private Map<java.lang.String, ?> jaxbContextProperties;
 
-    private boolean mtomEnabled = true;
+    private boolean mtomEnabled = false;
 
     /**
      * Sets the <code>XmlAdapter</code>s to be registered with the JAXB <code>Marshaller</code> and
@@ -127,8 +127,8 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller implements MimeMarsh
     }
 
     /**
-     * Indicates whether MTOM support should be enabled or not. Default is <code>true</code>, marshalling using XOP/MTOM
-     * is enabled.
+     * Indicates whether MTOM support should be enabled or not. Default is <code>false</code>, marshalling using
+     * XOP/MTOM is not enabled.
      */
     public void setMtomEnabled(boolean mtomEnabled) {
         this.mtomEnabled = mtomEnabled;

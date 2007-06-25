@@ -114,6 +114,7 @@ public class Jaxb2UnmarshallerTest extends TestCase {
     public void testMarshalAttachments() throws Exception {
         unmarshaller = new Jaxb2Marshaller();
         unmarshaller.setClassesToBeBound(new Class[]{BinaryObject.class});
+        unmarshaller.setMtomEnabled(true);
         unmarshaller.afterPropertiesSet();
         MimeContainer mimeContainer = createMock(MimeContainer.class);
 

@@ -199,6 +199,7 @@ public class Jaxb2MarshallerTest extends XMLTestCase {
     public void testMarshalAttachments() throws Exception {
         marshaller = new Jaxb2Marshaller();
         marshaller.setClassesToBeBound(new Class[]{BinaryObject.class});
+        marshaller.setMtomEnabled(true);
         marshaller.afterPropertiesSet();
         MimeContainer mimeContainer = createMock(MimeContainer.class);
 
