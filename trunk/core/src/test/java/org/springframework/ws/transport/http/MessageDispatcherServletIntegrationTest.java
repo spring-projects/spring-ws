@@ -29,14 +29,13 @@ import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.ws.transport.TransportConstants;
 
 public class MessageDispatcherServletIntegrationTest extends TestCase {
 
     private Server jettyServer;
 
     private HttpClient client;
-
-    private static final String SOAP_ACTION = "SOAPAction";
 
     private static final String CONTENT_TYPE = "Content-Type";
 
@@ -59,7 +58,8 @@ public class MessageDispatcherServletIntegrationTest extends TestCase {
     public void testNoResponse() throws IOException {
         PostMethod postMethod = new PostMethod("http://localhost:8888/service");
         postMethod.addRequestHeader(CONTENT_TYPE, "text/xml");
-        postMethod.addRequestHeader(SOAP_ACTION, "http://springframework.org/spring-ws/NoResponse");
+        postMethod.addRequestHeader(TransportConstants.HEADER_SOAP_ACTION,
+                "http://springframework.org/spring-ws/NoResponse");
         Resource soapRequest = new ClassPathResource("soapRequest.xml", MessageDispatcherServletIntegrationTest.class);
         postMethod.setRequestEntity(new InputStreamRequestEntity(soapRequest.getInputStream()));
         client.executeMethod(postMethod);
@@ -70,7 +70,8 @@ public class MessageDispatcherServletIntegrationTest extends TestCase {
     public void testResponse() throws IOException {
         PostMethod postMethod = new PostMethod("http://localhost:8888/service");
         postMethod.addRequestHeader(CONTENT_TYPE, "text/xml");
-        postMethod.addRequestHeader(SOAP_ACTION, "http://springframework.org/spring-ws/Response");
+        postMethod.addRequestHeader(TransportConstants.HEADER_SOAP_ACTION,
+                "http://springframework.org/spring-ws/Response");
         Resource soapRequest = new ClassPathResource("soapRequest.xml", MessageDispatcherServletIntegrationTest.class);
         postMethod.setRequestEntity(new InputStreamRequestEntity(soapRequest.getInputStream()));
         client.executeMethod(postMethod);
@@ -81,7 +82,8 @@ public class MessageDispatcherServletIntegrationTest extends TestCase {
     public void testNoEndpoint() throws IOException {
         PostMethod postMethod = new PostMethod("http://localhost:8888/service");
         postMethod.addRequestHeader(CONTENT_TYPE, "text/xml");
-        postMethod.addRequestHeader(SOAP_ACTION, "http://springframework.org/spring-ws/NoEndpoint");
+        postMethod.addRequestHeader(TransportConstants.HEADER_SOAP_ACTION,
+                "http://springframework.org/spring-ws/NoEndpoint");
         Resource soapRequest = new ClassPathResource("soapRequest.xml", MessageDispatcherServletIntegrationTest.class);
         postMethod.setRequestEntity(new InputStreamRequestEntity(soapRequest.getInputStream()));
         client.executeMethod(postMethod);
@@ -92,7 +94,8 @@ public class MessageDispatcherServletIntegrationTest extends TestCase {
     public void testFault() throws IOException {
         PostMethod postMethod = new PostMethod("http://localhost:8888/service");
         postMethod.addRequestHeader(CONTENT_TYPE, "text/xml");
-        postMethod.addRequestHeader(SOAP_ACTION, "http://springframework.org/spring-ws/Fault");
+        postMethod
+                .addRequestHeader(TransportConstants.HEADER_SOAP_ACTION, "http://springframework.org/spring-ws/Fault");
         Resource soapRequest = new ClassPathResource("soapRequest.xml", MessageDispatcherServletIntegrationTest.class);
         postMethod.setRequestEntity(new InputStreamRequestEntity(soapRequest.getInputStream()));
         client.executeMethod(postMethod);

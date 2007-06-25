@@ -38,6 +38,7 @@ import org.springframework.ws.soap.AbstractSoapMessage;
 import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
+import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportOutputStream;
 
 /**
@@ -185,8 +186,8 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
                 TransportOutputStream transportOutputStream = (TransportOutputStream) outputStream;
                 String contentType = format.getContentType();
                 contentType += "; charset=\"" + charsetEncoding + "\"";
-                transportOutputStream.addHeader("Content-Type", contentType);
-                transportOutputStream.addHeader("SOAPAction", soapAction);
+                transportOutputStream.addHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
+                transportOutputStream.addHeader(TransportConstants.HEADER_SOAP_ACTION, soapAction);
             }
             axiomMessage.serializeAndConsume(outputStream, format);
             outputStream.flush();
