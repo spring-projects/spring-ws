@@ -5,98 +5,60 @@
         <author email="apoutsma@interface21.com">Arjen Poutsma</author>
     </properties>
     <body>
+        <release version="1.0">
+            <action dev="poutsma" type="fix" issue="145">When using JAXB2, all messages become MTOM</action>
+            <action dev="poutsma" types="fix" issue="142">AxiomSoapFaultDetailElementIterator does not consider whitespace nodes.</action>
+        </release>
         <release version="1.0-rc2">
             <action dev="poutsma" types="add">Added MarshallingSource, a TrAX Source that uses a Marshaller.</action>
-            <action dev="poutsma" type="update" issue="SWS-134">Reduce the number of overloaded methods on the
-                WebServiceTemplate class to aid comprehension.
-            </action>
-            <action dev="poutsma" type="add" issue="SWS-124">Allow specifying names of message factory and message
-                receiver in MessageDispatcherServlet
-            </action>
-            <action dev="poutsma" type="add" issue="SWS-137">Added checkConnectionForFault to WebServiceTemplate to
-                deal with Web services which are not WS-I compliant
-            </action>
+            <action dev="poutsma" type="update" issue="SWS-134">Reduce the number of overloaded methods on the WebServiceTemplate class to aid comprehension.</action>
+            <action dev="poutsma" type="add" issue="SWS-124">Allow specifying names of message factory and message receiver in MessageDispatcherServlet</action>
+            <action dev="poutsma" type="add" issue="SWS-137">Added checkConnectionForFault to WebServiceTemplate to deal with Web services which are not WS-I compliant</action>
             <action dev="poutsma" type="update">WebServiceTemplate returns boolean values rather than void</action>
-            <action dev="poutsma" type="update" issue="SWS-126">Changed WebServiceMessageCallback's doInMessage() to
-                doWithMessage()
-            </action>
+            <action dev="poutsma" type="update" issue="SWS-126">Changed WebServiceMessageCallback's doInMessage() to doWithMessage()</action>
             <action dev="poutsma" type="update">Renamed FaultResolver to FaultMessageResolver</action>
             <action dev="poutsma" type="update">Moved SoapActionCallback to soap package</action>
             <action dev="poutsma" type="fix">Added an MTOM sample</action>
             <action dev="poutsma" type="fix">Fixed various MTOM issues</action>
             <action dev="poutsma" type="add" issue="SWS-135">Implement client-side TransportContext</action>
-            <action dev="poutsma" type="add" issue="SWS-133">Added ignoreExtraAttributes and ignoreExtraElements
-                properties to CastorMarshaller
-            </action>
+            <action dev="poutsma" type="add" issue="SWS-133">Added ignoreExtraAttributes and ignoreExtraElements properties to CastorMarshaller</action>
             <action dev="poutsma" type="add" issue="SWS-129">Moved SimpleMethodEndpointMapping from sandbox</action>
-            <action dev="poutsma" type="add">Moved PayloadMethodEndpointAdapter and MessageMethodEndpointAdapter from
-                sandbox
-            </action>
-            <action dev="poutsma" type="add" issue="SWS-123">CommonsHttpMessageSender should expose setters for username
-                and password
-            </action>
-            <action dev="poutsma" type="add" issue="SWS-122">A MessageSender setter on WebServicesGatewaySupport
-            </action>
-            <action dev="poutsma" type="fix" issue="SWS-128">A SOAP:Fault does not set the the response code to 500
-            </action>
+            <action dev="poutsma" type="add">Moved PayloadMethodEndpointAdapter and MessageMethodEndpointAdapter from sandbox</action>
+            <action dev="poutsma" type="add" issue="SWS-123">CommonsHttpMessageSender should expose setters for username and password</action>
+            <action dev="poutsma" type="add" issue="SWS-122">A MessageSender setter on WebServicesGatewaySupport</action>
+            <action dev="poutsma" type="fix" issue="SWS-128">A SOAP:Fault does not set the the response code to 500</action>
         </release>
         <release version="1.0-rc1" date="2007-05-21">
             <action dev="poutsma" type="add" issue="SWS-98">Changing URL in CommonsHttpMessageSender</action>
-            <action dev="poutsma" type="add" issue="SWS-117">Allow SoapFaultMappingExceptionResolver to use strategy to
-                obtain SoapFaultDefinition
-            </action>
-            <action dev="poutsma" type="add">Pulled handleFault() from SoapEndpointInterceptor up to EndpointInterceptor
-            </action>
-            <action dev="poutsma" type="fix" issue="SWS-119">Remove IOExceptions from WebServiceTemplate. A runtime
-                exception hierarchy has been created in org.springframework.ws.client.
-            </action>
-            <action dev="poutsma" type="fix" issue="SWS-116">Support JAXB's MTOM/XOP/MIME support. As a result, all
-                Mime-related code in SoapMessage has been moved to the org.springframework.ws.mime package
-            </action>
+            <action dev="poutsma" type="add" issue="SWS-117">Allow SoapFaultMappingExceptionResolver to use strategy to obtain SoapFaultDefinition</action>
+            <action dev="poutsma" type="add">Pulled handleFault() from SoapEndpointInterceptor up to EndpointInterceptor</action>
+            <action dev="poutsma" type="fix" issue="SWS-119">Remove IOExceptions from WebServiceTemplate. A runtime exception hierarchy has been created in org.springframework.ws.client.</action>
+            <action dev="poutsma" type="fix" issue="SWS-116">Support JAXB's MTOM/XOP/MIME support. As a result, all Mime-related code in SoapMessage has been moved to the org.springframework.ws.mime package</action>
             <action dev="poutsma" type="fix" issue="SWS-115">Client is not able to read long response</action>
             <action dev="poutsma" type="add">Add methods to access attributes on SoapElement</action>
-            <action dev="poutsma" type="add">Added XPath template, for evaluating XPaths in a template-like fashion
-            </action>
+            <action dev="poutsma" type="add">Added XPath template, for evaluating XPaths in a template-like fashion</action>
             <action dev="poutsma" type="add" issue="SWS-62">MTOM support</action>
-            <action dev="poutsma" type="add">Added XPathExpressionFactoryBean, for injection of XPath expressions
-            </action>
+            <action dev="poutsma" type="add">Added XPathExpressionFactoryBean, for injection of XPath expressions</action>
             <action dev="poutsma" type="fix" issue="SWS-106">Default message factory for WebServiceTemplate</action>
             <action dev="poutsma" type="fix" issue="SWS-79">Add faults into dynamically created WSDL</action>
-            <action dev="poutsma" type="add" issue="SWS-20">Added MethodEndpoint functionality, invoking methods for
-                incoming requests
-            </action>
+            <action dev="poutsma" type="add" issue="SWS-20">Added MethodEndpoint functionality, invoking methods for incoming requests</action>
             <action dev="poutsma" type="fix" issue="SWS-105">GZip compression is not enabled</action>
-            <action dev="poutsma" type="update">WebServiceConnection is now container for TransportInputStream and
-                TransportOutputStream, used on both client- and server-side
-            </action>
+            <action dev="poutsma" type="update">WebServiceConnection is now container for TransportInputStream and TransportOutputStream, used on both client- and server-side</action>
             <action dev="poutsma" type="add">Added supports method to Marshaller and Unmarshaller</action>
-            <action dev="poutsma" type="fix" issue="SWS-88">Allow CastorMarshaller to accept more than one mapping file
-            </action>
+            <action dev="poutsma" type="fix" issue="SWS-88">Allow CastorMarshaller to accept more than one mapping file</action>
             <action dev="poutsma" type="fix" issue="SWS-96">Set WhitespacePreserve flag in CastorMarshaller</action>
             <action dev="poutsma" type="fix" issue="SWS-97">OXM Marshal encoding definition</action>
-            <action dev="poutsma" type="add" issue="SWS-100">Cannot set DateConverter in
-                XStreamMarshaller.setConverters(Converter[])
-            </action>
-            <action dev="poutsma" type="update">Replaced method which returned a Source from WebServiceTemplate with
-                SourceExtractor methods, because the Source could be closed before returned
-            </action>
+            <action dev="poutsma" type="add" issue="SWS-100">Cannot set DateConverter in XStreamMarshaller.setConverters(Converter[])</action>
+            <action dev="poutsma" type="update">Replaced method which returned a Source from WebServiceTemplate with SourceExtractor methods, because the Source could be closed before returned</action>
             <action dev="poutsma" type="add" issue="SWS-85">Added XPathPayloadEndpointMapping (#SWS-85)</action>
-            <action dev="poutsma" type="fix" issue="SWS-87">AbstractSoapMessage.getPayloadSource returns null with Axis
-                SAAJ
-            </action>
-            <action dev="poutsma" type="fix" issue="SWS-89">DefaultTimestapValidator now handles timestamps with
-                milliseconds correctly
-            </action>
-            <action dev="poutsma" type="fix" issue="SWS-86">Stream closed before response read with WebServiceTemplate +
-                Axis SAAJ Soap Messages
-            </action>
+            <action dev="poutsma" type="fix" issue="SWS-87">AbstractSoapMessage.getPayloadSource returns null with Axis SAAJ</action>
+            <action dev="poutsma" type="fix" issue="SWS-89">DefaultTimestapValidator now handles timestamps with milliseconds correctly</action>
+            <action dev="poutsma" type="fix" issue="SWS-86">Stream closed before response read with WebServiceTemplate + Axis SAAJ Soap Messages</action>
             <action dev="poutsma" type="fix">Fixed issue with reading response HTTP headers</action>
-            <action dev="poutsma" type="fix" issue="SWS-101">XsdBasedSoap11Wsdl4jDefinitionBuilder parsing error
-            </action>
+            <action dev="poutsma" type="fix" issue="SWS-101">XsdBasedSoap11Wsdl4jDefinitionBuilder parsing error</action>
             <action dev="poutsma" type="update">Prefixed abstract classes with Abstract</action>
             <action dev="poutsma" type="fix" issue="SWS-93">new location for log4j.properties</action>
         </release>
-
         <release version="1.0-M3" date="2007-01-24">
             <action dev="poutsma" type="fix" issue="SWS-70">AbstractMarshallerTestCase.testMarshalDOMResult() builds a
                 DOM object that does not retain namespace
