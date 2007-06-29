@@ -16,6 +16,7 @@
 
 package org.springframework.ws.transport.http;
 
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -89,7 +90,12 @@ public class HttpServletConnection extends AbstractReceiverConnection
     }
 
     protected InputStream getRequestInputStream() throws IOException {
-        return getHttpServletRequest().getInputStream();
+        return new FilterInputStream(getHttpServletRequest().getInputStream()) {
+
+            public void close() throws IOException {
+                // defer close, some SAAJ implementations (Axis 1) lazy-initialize the SOAPMessage 
+            }
+        };
     }
 
     /*
