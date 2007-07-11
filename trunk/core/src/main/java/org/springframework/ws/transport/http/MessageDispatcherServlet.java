@@ -42,14 +42,14 @@ import org.springframework.ws.wsdl.WsdlDefinition;
 /**
  * Servlet for simplified dispatching of Web service messages.
  * <p/>
- * <p>This servlet is a convenient alternative to the standard Spring-MVC {@link DispatcherServlet} with separate {@link
+ * This servlet is a convenient alternative to the standard Spring-MVC {@link DispatcherServlet} with separate {@link
  * WebServiceMessageReceiverHandlerAdapter}, {@link MessageDispatcher}, and {@link WsdlDefinitionHandlerAdapter}
  * instances.
  * <p/>
- * <p>This servlet automatically detects {@link EndpointAdapter EndpointAdapters}, {@link EndpointMapping
+ * This servlet automatically detects {@link EndpointAdapter EndpointAdapters}, {@link EndpointMapping
  * EndpointMappings}, and {@link EndpointExceptionResolver EndpointExceptionResolvers} by type.
  * <p/>
- * <p>This servlet also automatically detects any {@link WsdlDefinition} in its application context. This WSDL is
+ * This servlet also automatically detects any {@link WsdlDefinition} in its application context. This WSDL is
  * exposed under the bean name: for example, a {@link WsdlDefinition} bean named '<code>echo</code>' will be exposed as
  * <code>echo.wsdl</code> in this servlet's context: <code>http://localhost:8080/spring-ws/echo.wsdl</code>. When the
  * <code>transformWsdlLocations</code> init-param is set to <code>true</code> in this servlet's configuration in
