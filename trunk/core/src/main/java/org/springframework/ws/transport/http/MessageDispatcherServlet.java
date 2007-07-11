@@ -47,13 +47,13 @@ import org.springframework.ws.wsdl.WsdlDefinition;
  * instances.
  * <p/>
  * This servlet automatically detects {@link EndpointAdapter EndpointAdapters}, {@link EndpointMapping
- * EndpointMappings}, and {@link EndpointExceptionResolver EndpointExceptionResolvers} by type.
+ * EndpointMappings}, and {@link EndpointExceptionResolver EndpointExceptionResolvers} <i>by type</i>.
  * <p/>
- * This servlet also automatically detects any {@link WsdlDefinition} in its application context. This WSDL is
- * exposed under the bean name: for example, a {@link WsdlDefinition} bean named '<code>echo</code>' will be exposed as
- * <code>echo.wsdl</code> in this servlet's context: <code>http://localhost:8080/spring-ws/echo.wsdl</code>. When the
- * <code>transformWsdlLocations</code> init-param is set to <code>true</code> in this servlet's configuration in
- * <code>web.xml</code>, all <code>location</code> attributes in the WSDL definitions will reflect the URL of the
+ * This servlet also automatically detects any {@link WsdlDefinition} defined in its application context. This WSDL is
+ * exposed under the bean name: for example, a <code>WsdlDefinition</code> bean named '<code>echo</code>' will be
+ * exposed as <code>echo.wsdl</code> in this servlet's context: <code>http://localhost:8080/spring-ws/echo.wsdl</code>.
+ * When the <code>transformWsdlLocations</code> init-param is set to <code>true</code> in this servlet's configuration
+ * in <code>web.xml</code>, all <code>location</code> attributes in the WSDL definitions will reflect the URL of the
  * incoming request.
  *
  * @author Arjen Poutsma
