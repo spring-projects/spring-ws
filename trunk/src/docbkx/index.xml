@@ -34,10 +34,11 @@
         <title>Introduction</title>
         <partintro>
             <para>
-                This first part of the reference documentation gives an overview of
-                Spring Web Services, and the underlying concepts. Spring-WS is
-                introduced, and the concepts behind contract-first Web service
-                development are explained.
+                This first part of the reference documentation
+                <link linkend="what-is-spring-ws">is an overview</link> of
+                Spring Web Services and the underlying concepts. Spring-WS is
+                then introduced, and <link linkend="why-contract-first">the concepts</link>
+                behind contract-first Web service development are explained.
             </para>
         </partintro>
         <xi:include href="what-is-spring-ws.xml"/>
@@ -49,11 +50,14 @@
         <partintro>
             <para>
                 This part of the reference documentation details the various components
-                that comprise Spring Web Services. This includes a chapter that
-                discusses the parts common to both client- and server-side WS, a
-                chapter devoted to the specifics of writing server-side Web services,
-                a chapter about using Web services on the client-side, and chapters
-                on using WS-Security and Object/XML mapping.
+                that comprise Spring Web Services. This includes
+                <link linkend="common">a chapter</link> that discusses the parts common
+                to both client- and server-side WS, a chapter devoted to the specifics
+                of <link linkend="server">writing server-side Web services</link>,
+                a chapter about using Web services on
+                <link linkend="client">the client-side</link>, and chapters on using
+                <link linkend="security">WS-Security</link> and
+                <link linkend="oxm">Object/XML mapping</link>.
             </para>
         </partintro>
         <xi:include href="common.xml"/>
