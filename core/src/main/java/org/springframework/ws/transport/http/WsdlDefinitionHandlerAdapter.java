@@ -44,8 +44,9 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 
 /**
- * Adapter to use the <code>WsdlDefinition</code> interface with the generic <code>DispatcherServlet</code>. Reads the
- * source from the mapped <code>WsdlDefinition</code> implementation, and writes that as result to the
+ * Adapter to use the <code>WsdlDefinition</code> interface with the generic <code>DispatcherServlet</code>.
+ * <p/>
+ * Reads the source from the mapped <code>WsdlDefinition</code> implementation, and writes that as the result to the
  * <code>HttpServletResponse</code>.
  * <p/>
  * If the property <code>transformLocations</code> is set to <code>true</code>, this adapter will change
@@ -91,8 +92,8 @@ public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport imple
 
     /**
      * Sets the XPath expression used for extracting the <code>location</code> attributes from the WSDL 1.1 definition.
+     * <p/>
      * Defaults to <code>DEFAULT_LOCATION_EXPRESSION</code>.
-     *
      * @see #DEFAULT_LOCATION_EXPRESSION
      */
     public void setLocationExpression(String locationExpression) {

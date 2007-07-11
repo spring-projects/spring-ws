@@ -133,22 +133,64 @@
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
 
-    ]]><lineannotation>&lt;!-- ... --&gt;</lineannotation><![CDATA[
-
 </web-app>]]></programlisting>
             <para>
                 In the example above, all requests will be handled by the <literal>'spring-ws'</literal>
                 <classname>MessageDispatcherServlet</classname>. This is only the first step in setting up Spring Web
-                Services; the various endpoint and other beans used by the Spring-WS framework also need to be
-                configured.
-            </para>
-            <para>
-                Because the <classname>MessageDispatcherServlet</classname> is a standard Spring
+                Services, because the various component beans used by the Spring-WS framework also need to be
+                configured; this configuration consists of standard Spring XML <literal>&lt;bean/&gt;</literal>
+                definitions. Because the <classname>MessageDispatcherServlet</classname> is a standard Spring
                 <classname>DispatcherServlet</classname>, it will <emphasis>look for a file named
                 <literal>[servlet-name]-servlet.xml</literal></emphasis> in the <literal>WEB-INF</literal> directory
-                of your web application and create the beans defined there.
-                In the example above, that means that it looks for <filename>spring-ws-servlet.xml</filename>.
+                of your web application and create the beans defined there in a Spring container. In the example above,
+                that means that it looks for '<filename>/WEB-INF/spring-ws-servlet.xml</filename>'. This file will
+                contain all of the SWS-specific beans such as endpoints, marshallers and suchlike.
             </para>
+            <section>
+                <title>Automatic WSDL exposure</title>
+                <para>The <classname>MessageDispatcherServlet</classname> will automatically detect any
+                <interfacename>WsdlDefinition</interfacename> beans defined in it's Spring container. All such
+                <interfacename>WsdlDefinition</interfacename> beans that are detected will also be exposed via
+                a <classname>WsdlDefinitionHandlerAdapter</classname>; this is a very convenient way to expose your WSDL
+                to clients simply by just defining some beans. </para>
+                <para>By way of an example, consider the following bean definition, defined in the Spring-WS framework's
+                configuration file ('<literal>/WEB-INF/[servlet-name]-servlet.xml</literal>'). Take notice of the
+                value of the bean's '<literal>id</literal>' attribute, because this will be used when exposing
+                the WSDL.</para>
+                <programlisting><![CDATA[<bean id="orders" class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
+    <constructor-arg value="/WEB-INF/wsdl/Orders.wsdl"/>
+</bean>]]></programlisting>
+                <para>The WSDL defined in the '<filename>Orders.wsdl</filename>' file can then be accessed via
+                <literal>GET</literal> requests to a URL of the following form (substitute the host, port and servlet
+                context path as appropriate).</para>
+                <programlisting><![CDATA[http://localhost:8080/spring-ws/orders.wsdl]]></programlisting>
+                <para>Another cool feature of the <classname>MessageDispatcherServlet</classname> (or more
+                correctly the <classname>WsdlDefinitionHandlerAdapter</classname>) is that it is able to
+                transform the value of the '<literal>location</literal>' of all the WSDL that it exposes to reflect the
+                URL of the incoming request.</para>
+                <para>Please note that this '<literal>location</literal>' transformation feature is
+                <emphasis>off</emphasis> by default.To switch this feature on, you just need to specify an
+                initialization parameter to the <classname>MessageDispatcherServlet</classname>, like so:</para>
+                <programlisting><![CDATA[<web-app>
+
+    <servlet>
+        <servlet-name>spring-ws</servlet-name>
+        <servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>transformWsdlLocations</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>spring-ws</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+
+</web-app>]]></programlisting>
+                <para>Consult the class-level Javadoc on the <classname>WsdlDefinitionHandlerAdapter</classname> class
+                which explains the whole transformation process in more detail.</para>
+            </section>
         </section>
        </section>
     <section>
@@ -404,12 +446,11 @@ public class AnnotationOrderEndpoint {
                 <uri>http://samples</uri> namespace URI; the <methodname>order</methodname> method for requests with
                 a <literal>order</literal> local name. For more information about these annotations, refer to
                 <xref linkend="server-method-endpoint-mapping"/>.
-                Obviously, we also need to configure Spring-WS to support the JAXB objects
-                <classname>OrderRequest</classname> and <classname>Order</classname> by defining a
-                <classname>Jaxb2Marshaller</classname>. This is what the configuration
-                looks like:
+                We also need to configure Spring-WS to support the JAXB objects <classname>OrderRequest</classname> and
+                <classname>Order</classname> by defining a <classname>Jaxb2Marshaller</classname>:
             </para>
             <programlisting><![CDATA[<beans>
+
     <bean id="orderEndpoint" class="samples.AnnotationOrderEndpoint">
         <constructor-arg ref="orderService"/>
     </bean>
@@ -443,9 +484,9 @@ public class AnnotationOrderEndpoint {
                 <para>
                     As an alternative to using marshalling, we could have used <link linkend="xpath">XPath</link> to
                     extract the information out of the incoming XML request. Spring-WS offers another annotation for
-                    this purpose: <interfacename>@XPathParam</interfacename>. You simply annotate method parameters
-                    with this annotation, and it will be bound with the evaluation of that annotation.
-                    Here is an example:
+                    this purpose: <interfacename>@XPathParam</interfacename>. You simply annotate one or more method
+                    parameter with this annotation (each), and each such annotated parameter will be bound to the
+                    evaluation of that annotation. Here is an example:
                 </para>
                 <programlisting id="server-payload-root-annotation"><![CDATA[package samples;
 
@@ -467,12 +508,12 @@ public class AnnotationOrderEndpoint {
     @PayloadRoot(localPart = "orderRequest", namespace = "http://samples")
     public Source getOrder(]]><emphasis role="bold"><![CDATA[@XPathParam("/s:orderRequest/@id") double orderId]]></emphasis><![CDATA[) {
         Order order = orderService.getOrder((int) orderId);
-        ]]><lineannotation>// create Source from order and return it</lineannotation><![CDATA[
+        ]]><lineannotation>// create <interfacename>Source</interfacename> from order and return it</lineannotation><![CDATA[
     }
 
 }]]></programlisting>
                 <para>
-                    Since we use the prefix <literal>s</literal> in our XPath expression, we must bind it to the
+                    Since we use the prefix '<literal>s</literal>' in our XPath expression, we must bind it to the
                     <uri>http://samples</uri> namespace:
                 </para>
 
@@ -514,7 +555,7 @@ public class AnnotationOrderEndpoint {
             The endpoint mapping is responsible for mapping incoming messages to appropriate endpoints. There are some
             endpoint mappings you can use out of the box, for example, the
             <classname>PayloadRootQNameEndpointMapping</classname> or the
-            <classname>SoapActionEndpointMapping</classname>, but let's first examine the general concept of a
+            <classname>SoapActionEndpointMapping</classname>, but let's first examine the general concept of an
             <interfacename>EndpointMapping</interfacename>.
         </para>
         <para>
@@ -528,16 +569,16 @@ public class AnnotationOrderEndpoint {
         <para>
             The concept of configurable endpoint mappings that can optionally contain interceptors (which can manipulate
             the request or the response, or both) is extremely powerful. A lot of supporting functionality can be built
-            into custom <interfacename>EndpointMapping</interfacename>s. For example, there could be a custom endpoint mapping that
-            chooses an endpoint not only based on the contents of a message, but also on a specific SOAP header(or
-            indeed multiple SOAP headers).
+            into custom <interfacename>EndpointMapping</interfacename>s. For example, there could be a custom endpoint
+            mapping that chooses an endpoint not only based on the contents of a message, but also on a specific SOAP
+            header (or indeed multiple SOAP headers).
         </para>
         <para>
             Most endpoint mappings inherit from the <classname>AbstractEndpointMapping</classname>, which offers an
-            <property>interceptors</property> property, which is the list of interceptors to use.
-            <interfacename>EndpointInterceptor</interfacename>s are discussed in
+            '<property>interceptors</property>' property, which is the list of interceptors to use.
+            <interfacename>EndpointInterceptors</interfacename> are discussed in
             <xref linkend="server-endpoint-interceptor"/>. Additionally, there is the
-            <property>defaultEndpoint</property>, which is the default endpoint to use, when this endpoint mapping does
+            '<property>defaultEndpoint</property>', which is the default endpoint to use, when this endpoint mapping does
             not result in a matching endpoint.
         </para>
         <section>
@@ -680,12 +721,11 @@ public class AnnotationOrderEndpoint {
                 <title><classname>PayloadLoggingInterceptor</classname> and
                     <classname>SoapEnvelopeLoggingInterceptor</classname></title>
                 <para>
-                    When developing a Web service, it can be useful to log the incoming and outgoing XML messages to
-                    the log. Spring Web Services facilitates this with the
-                    <classname>PayloadLoggingInterceptor</classname> and the
-                    <classname>SoapEnvelopeLoggingInterceptor</classname>. The former logs just the payload of the
-                    message to the Commons Logging Log; the latter logs the entire SOAP envelope, including SOAP
-                    headers. This example shows you how to define them in an endpoint mapping:
+                    When developing a Web service, it can be useful to log the incoming and outgoing XML messages.
+                    SWS facilitates this with the <classname>PayloadLoggingInterceptor</classname> and
+                    <classname>SoapEnvelopeLoggingInterceptor</classname> classes. The former logs just the payload of
+                    the message to the Commons Logging Log; the latter logs the entire SOAP envelope, including SOAP
+                    headers. The following example shows you how to define them in an endpoint mapping:
                 </para>
                 <programlisting><![CDATA[<beans>
     <bean id="endpointMapping"
@@ -707,8 +747,8 @@ public class AnnotationOrderEndpoint {
     class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor"/>
 </beans>]]></programlisting>
                 <para>
-                    Both of these interceptors have two properties: <property>logRequest</property> and
-                    <property>logResponse</property>, which can be set to <literal>false</literal> to disable logging
+                    Both of these interceptors have two properties: '<property>logRequest</property>' and
+                    '<property>logResponse</property>', which can be set to <literal>false</literal> to disable logging
                     for either request or response messages.
                 </para>
             </section>
@@ -725,13 +765,15 @@ public class AnnotationOrderEndpoint {
                         Note that request validation may sound like a good idea, but makes the resulting Web service
                         very strict. Usually, it is not really important whether the request validates, only if the
                         endpoint can get sufficient information to fullfill a request. Validating the response
-                        <emphasis>is</emphasis> a good idea, because the endpoint should adhere to adhere to its schema.
+                        <emphasis>is</emphasis> a good idea, because the endpoint should adhere to its schema.
                         Remember Postel's Law:
                         <quote>Be conservative in what you do; be liberal in what you accept from others.</quote>
                     </para>
                 </note>
                 <para>
-                    Here is an example that uses the <classname>PayloadValidatingInterceptor</classname>:
+                    Here is an example that uses the <classname>PayloadValidatingInterceptor</classname>; in this
+                    example, we use the schema in <filename>/WEB-INF/orders.xsd</filename> to validate the response, but
+                    not the request.
                 </para>
                 <programlisting><![CDATA[<bean id="validatingInterceptor"
         class="org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor">
@@ -739,10 +781,6 @@ public class AnnotationOrderEndpoint {
     <property name="validateRequest" value="false"/>
     <property name="validateResponse" value="true"/>
 </bean>]]></programlisting>
-                <para>
-                    In this example, we use the schema in <filename>/WEB-INF/orders.xsd</filename> to validate the
-                    response, but not the request.
-                </para>
             </section>
             <section>
                 <title><classname>PayloadTransformingInterceptor</classname></title>
@@ -750,8 +788,8 @@ public class AnnotationOrderEndpoint {
                     To transform the payload to another XML format, Spring Web Services offers the
                     <classname>PayloadTransformingInterceptor</classname>. This endpoint interceptor is based on XSLT
                     stylesheets, and is especially useful when supporting multiple versions of a Web service:
-                    you simply can transform the older message format to the newer format.
-                    Here is an example to use the <classname>PayloadTransformingInterceptor</classname>:
+                    you can transform the older message format to the newer format. Here is an example to use the
+                    <classname>PayloadTransformingInterceptor</classname>:
                 </para>
                 <programlisting><![CDATA[<bean id="transformingInterceptor"
         class="org.springframework.ws.server.endpoint.interceptor.PayloadTransformingInterceptor">
@@ -793,7 +831,7 @@ public class AnnotationOrderEndpoint {
             creates a SOAP 1.1 Server or SOAP 1.2 Receiver Fault, and uses the exception message as the fault string.
         </para>
         <para>
-            A more sophisticated implementation is the <classname>SoapFaultMappingExceptionResolver</classname>.
+            The <classname>SoapFaultMappingExceptionResolver</classname> is a more sophisticated implementation.
             This resolver enables you to take the class name of any exception that might be thrown and map it to a
             SOAP Fault, like so:
         </para>
@@ -803,11 +841,7 @@ public class AnnotationOrderEndpoint {
     <property name="defaultFault" value="SERVER">
     </property>
     <property name="exceptionMappings">
-        <props>
-            <prop key="org.springframework.oxm.ValidationFailureException">
-                CLIENT,Invalid request
-            </prop>
-        </props>
+        org.springframework.oxm.ValidationFailureException=CLIENT,Invalid request
     </property>
     </bean>
 </beans>]]></programlisting>
