@@ -78,7 +78,7 @@
             <listitem>
                 <para>
                     If a response is returned, it is sent on its way. If no response is returned (which could be due to
-                    a pre- or postprocessor intercepting the request, for example, for security reasons), no response is
+                    a pre- or post-processor intercepting the request, for example, for security reasons), no response is
                     sent.
                 </para>
             </listitem>
@@ -187,7 +187,7 @@
             the payload. Typically, your code should not be dependent on messages, because the payload should
             contain the information of interest. Only when it is necessary to perform actions on the message as a whole,
             such as adding a SOAP header, get an attachment, and so forth, should you need to implement
-            <interfacename>MessageEndpoint</interfacename>, though these actions are usually performed in a
+            <interfacename>MessageEndpoint</interfacename>, though these actions are usually performed in an
             <link linkend="server-endpoint-interceptor">endpoint interceptor</link>.
         </para>
         <section>
@@ -457,6 +457,7 @@ import org.springframework.ws.server.endpoint.annotation.XPathParam;
 
 @Endpoint
 public class AnnotationOrderEndpoint {
+
     private final OrderService orderService;
 
     public AnnotationOrderEndpoint(OrderService orderService) {
@@ -643,7 +644,7 @@ public class AnnotationOrderEndpoint {
             </para>
         </section>
         <section id="server-endpoint-interceptor">
-            <title>Intecepting requests - the <interfacename>EndpointInterceptor</interfacename> interface</title>
+            <title>Intercepting requests - the <interfacename>EndpointInterceptor</interfacename> interface</title>
             <para>
                 The endpoint mapping mechanism has the notion of endpoint interceptors. These can be extremely useful
                 when you want to apply specific functionality to certain requests, for example, dealing with
