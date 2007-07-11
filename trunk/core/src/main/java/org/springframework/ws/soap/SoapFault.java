@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2006-2007 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,11 @@ package org.springframework.ws.soap;
 import javax.xml.namespace.QName;
 
 /**
- * Represents the <code>Fault</code> element in the body of a SOAP message. A faul consists of a fault code, string, and
- * role.
+ * Represents the <code>Fault</code> element in the body of a SOAP message.
+ * <p/>
+ * A fault consists of a {@link #getFaultCode() fault code},
+ * {@link #getFaultActorOrRole fault string/reason}, and
+ * {@link #getFaultActorOrRole() role}.
  *
  * @author Arjen Poutsma
  */
