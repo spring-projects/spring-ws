@@ -59,10 +59,10 @@
                 <title>Message factories</title>
                 <para>
                     In addition to a message sender, the <classname>WebServiceTemplate</classname> requires a Web 
-                    service message factory. As explained in <xref linkend="message-factories"/>, there are two message
-                    factories for SOAP: <classname>SaajSoapMessageFactory</classname> and 
-                    <classname>AxiomSoapMessageFactory</classname>. If no message factory is specified, Spring-WS will
-                    use the <classname>SaajSoapMessageFactory</classname> by default.
+                    service message factory. There are two message factories for SOAP:
+                    <classname>SaajSoapMessageFactory</classname> and <classname>AxiomSoapMessageFactory</classname>.
+                    If no message factory is specified (via the '<literal>messageFactory</literal>' property),
+                    Spring-WS will use the <classname>SaajSoapMessageFactory</classname> by default.
                 </para>
             </section>
         </section>
