@@ -38,9 +38,9 @@
             </url>
         </repository>
         <snapshotRepository>
-            <id>aws-s3</id>
-            <name>Amazon S3</name>
-            <url>s3://maven.springframework.org</url>
+            <id>spring-snapshot</id>
+            <name>Spring Snapshot Repository</name>
+            <url>s3://maven.springframework.org/snapshot</url>
         </snapshotRepository>
         <site>
             <id>static.springframework.org</id>
