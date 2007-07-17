@@ -15,7 +15,7 @@
                                    layout="legacy"/>
 
         <artifact:remoteRepository id="spring-ext"
-            url="https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/"/>
+            url="https://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo-ext/"/>
 
         <artifact:dependencies pathId="compile.classpath">
             <remoteRepository refid="java.net" />
