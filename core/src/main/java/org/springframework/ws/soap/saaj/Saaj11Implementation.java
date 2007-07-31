@@ -270,6 +270,7 @@ public class Saaj11Implementation implements SaajImplementation {
 
     public void removeContents(SOAPElement element) {
         for (Iterator iterator = element.getChildElements(); iterator.hasNext();) {
+            iterator.next();
             iterator.remove();
         }
     }

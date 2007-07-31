@@ -277,4 +277,12 @@ public abstract class AbstractSaajImplementationTestCase extends XMLTestCase {
         assertNotNull("No attachment part", attachmentPart);
     }
 
+    public void testRemoveContents() throws Exception {
+        body.addBodyElement(new QName("foo", "bar"));
+
+        assertTrue("Body has child nodes", body.hasChildNodes());
+        implementation.removeContents(message.getSOAPBody());
+        assertFalse("Body has child nodes", body.hasChildNodes());
+    }
+
 }
