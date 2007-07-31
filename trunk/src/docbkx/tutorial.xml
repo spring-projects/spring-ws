@@ -135,7 +135,7 @@
         elementFormDefault="qualified"
         targetNamespace="http://mycompany.com/hr/schemas"
         xmlns:hr="http://mycompany.com/hr/schemas">
-    <emphasis><xs:element name="HolidayRequest"></emphasis>
+    <xs:element name="HolidayRequest">
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="hr:Holiday"/>
@@ -143,7 +143,7 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <emphasis><xs:element name="Holiday"></emphasis>
+    <xs:element name="Holiday">
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="hr:StartDate"/>
@@ -151,9 +151,9 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <emphasis><xs:element name="StartDate" type="xs:NMTOKEN"/>
+    <xs:element name="StartDate" type="xs:NMTOKEN"/>
     <xs:element name="EndDate" type="xs:NMTOKEN"/>
-    <xs:element name="Employee"></emphasis>
+    <xs:element name="Employee">
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="hr:Number"/>
@@ -162,9 +162,9 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <emphasis><xs:element name="Number" type="xs:integer"/>
+    <xs:element name="Number" type="xs:integer"/>
     <xs:element name="FirstName" type="xs:NCName"/>
-    <xs:element name="LastName" type="xs:NCName"/></emphasis>
+    <xs:element name="LastName" type="xs:NCName"/>
 </xs:schema>]]></programlisting>
         <para>
             This generated schema obviously can be improved. The first thing

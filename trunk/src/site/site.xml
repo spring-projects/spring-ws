@@ -36,8 +36,7 @@
         <menu ref="reports" name="Reports"/>
     </body>
     <poweredBy>
-        <logo name="Powered by Spring" href="http://www.springframework.org"
-              img="images/logos/powered-by-spring_small.png"/>
+        <logo name="Powered by Spring" href="http://www.springframework.org" img="images/logos/spring.png"/>
         <logo name="Powered by Structure 101" href="http://www.headwaysoftware.com/products/structure101/"
               img="images/logos/s101d.png"/>
         <logo name="Powered by JIRA" href="http://www.atlassian.com/software/jira/" img="images/logos/jira.png"/>
