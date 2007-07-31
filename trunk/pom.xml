@@ -12,10 +12,10 @@
         aims to facilitate contract-first SOAP service development, allowing for the creation of flexible web services
         using one of the many ways to manipulate XML payloads.
     </description>
-    <url>http://www.springframework.org/spring-ws</url>
+    <url>http://static.springframework.org/spring-ws/site/index.html</url>
     <issueManagement>
         <system>JIRA</system>
-        <url>http://opensource2.atlassian.com/projects/spring/browse/SWS</url>
+        <url>http://opensource2.atlassian.com/projects/spring/browse/SWS/</url>
     </issueManagement>
     <ciManagement>
         <system>bamboo</system>
@@ -30,7 +30,7 @@
         </notifiers>
     </ciManagement>
     <distributionManagement>
-        <downloadUrl>http://www.springframework.org/spring-ws</downloadUrl>
+        <downloadUrl>http://static.springframework.org/spring-ws/site/downloads/releases.html</downloadUrl>
         <repository>
             <id>local</id>
             <url>
