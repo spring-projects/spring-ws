@@ -81,7 +81,7 @@ public class SaajContentHandler implements ContentHandler {
             for (int i = 0; i < atts.getLength(); i++) {
                 if (StringUtils.hasLength(atts.getLocalName(i))) {
                     String attributePrefix = getPrefix(atts.getQName(i));
-                    if (!"xmlns".equals(atts.getLocalName(i))) {
+                    if (!"xmlns".equals(atts.getLocalName(i)) && !"xmlns".equals(attributePrefix)) {
                         Name attributeName = envelope.createName(atts.getLocalName(i), attributePrefix, atts.getURI(i));
                         child.addAttribute(attributeName, atts.getValue(i));
                     }
