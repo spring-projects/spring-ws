@@ -104,8 +104,8 @@ public abstract class SaajUtils {
     }
 
     /**
-     * Returns the SAAJ version as a String. The returned string will be "<code>SAAJ 1.3</code>",
-     * "<code>SAAJ 1.2</code>", or "<code>SAAJ 1.1</code>".
+     * Returns the SAAJ version as a String. The returned string will be "<code>SAAJ 1.3</code>", "<code>SAAJ
+     * 1.2</code>", or "<code>SAAJ 1.1</code>".
      *
      * @return a string representation of the SAAJ version
      * @see #getSaajVersion()
@@ -126,8 +126,7 @@ public abstract class SaajUtils {
     }
 
     /**
-     * Converts a <code>javax.xml.namespace.QName</code> to a <code>javax.xml.soap.Name</code>. A
-     * <code>SOAPElement</code> is required to create the name.
+     * Converts a {@link QName} to a {@link Name}. A {@link SOAPElement} is required to resolve namespaces.
      *
      * @param qName          the <code>QName</code> to convert
      * @param resolveElement a <code>SOAPElement</code> used to resolve namespaces to prefixes
@@ -142,7 +141,13 @@ public abstract class SaajUtils {
             return envelope.createName(qName.getLocalPart(), qNamePrefix, qName.getNamespaceURI());
         }
         else if (StringUtils.hasLength(qName.getNamespaceURI())) {
-            Iterator prefixes = resolveElement.getVisibleNamespacePrefixes();
+            Iterator prefixes;
+            if (getSaajVersion() == SAAJ_11) {
+                prefixes = resolveElement.getNamespacePrefixes();
+            }
+            else {
+                prefixes = resolveElement.getVisibleNamespacePrefixes();
+            }
             while (prefixes.hasNext()) {
                 String prefix = (String) prefixes.next();
                 if (qName.getNamespaceURI().equals(resolveElement.getNamespaceURI(prefix))) {
