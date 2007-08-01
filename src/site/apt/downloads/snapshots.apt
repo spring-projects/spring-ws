@@ -13,7 +13,7 @@ Snapshot Builds
 <repository>
     <id>spring-s3</id>
     <name>Springframework Maven SNAPSHOT Repository</name>
-    <url>http://s3.amazonaws.com/maven.springframework.org/</url>
+    <url>http://s3.amazonaws.com/maven.springframework.org/snapshot</url>
 </repository>
 +---------------
 
@@ -27,4 +27,6 @@ Snapshot Builds
 </dependency>
 +---------------
 
-	Additionally, there are {{{http://s3browse.com/explore/maven.springframework.org/org/springframework/ws/spring-ws/1.0-rc3-SNAPSHOT/}zips}} available which contain all jars.
+	Additionally, there are
+    {{{http://s3browse.com/explore/maven.springframework.org/snapshot/org/springframework/ws/spring-ws/1.0-rc3-SNAPSHOT/}zips}}
+    available which contain all jars. Make sure to click 'Next >' a couple of times to get the most recent snapshots. 
