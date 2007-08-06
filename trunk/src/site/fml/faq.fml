@@ -19,6 +19,9 @@
                     The only solution that works is to add newer versions of Xerces and Xalan in the lib/endorsed
                     directory of your JDK, as explained in those FAQs.
                 </p>
+                <p>
+                    Note that the security module requires Java 5, because an underlying library (XWSS) requires it. 
+                </p>
             </answer>
         </faq>
         <faq id="osx">
