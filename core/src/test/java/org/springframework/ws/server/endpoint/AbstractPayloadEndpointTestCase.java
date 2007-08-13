@@ -41,6 +41,12 @@ public abstract class AbstractPayloadEndpointTestCase extends AbstractEndpointTe
         assertNull("Response source returned", resultSource);
     }
 
+    public void testNoRequest() throws Exception {
+        endpoint = createNoRequestEndpoint();
+        Source resultSource = endpoint.invoke(null);
+        assertNull("Response source returned", resultSource);
+    }
+
     protected final void testSource(Source requestSource) throws Exception {
         Source responseSource = endpoint.invoke(requestSource);
         assertNotNull("No response source returned", responseSource);
@@ -52,4 +58,6 @@ public abstract class AbstractPayloadEndpointTestCase extends AbstractEndpointTe
     protected abstract PayloadEndpoint createNoResponseEndpoint() throws Exception;
 
     protected abstract PayloadEndpoint createResponseEndpoint() throws Exception;
+
+    protected abstract PayloadEndpoint createNoRequestEndpoint() throws Exception;
 }

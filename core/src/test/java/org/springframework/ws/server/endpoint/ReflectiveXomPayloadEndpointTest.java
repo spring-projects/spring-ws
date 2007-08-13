@@ -41,5 +41,13 @@ public class ReflectiveXomPayloadEndpointTest extends AbstractPayloadEndpointTes
         };
     }
 
+    protected PayloadEndpoint createNoRequestEndpoint() throws Exception {
+        return new AbstractXomPayloadEndpoint(true) {
 
+            protected Element invokeInternal(Element requestElement) throws Exception {
+                assertNull("RequestElement passed", requestElement);
+                return null;
+            }
+        };
+    }
 }

@@ -41,6 +41,16 @@ public class NonReflectiveXomPayloadEndpointTest extends AbstractPayloadEndpoint
         };
     }
 
+    protected PayloadEndpoint createNoRequestEndpoint() throws Exception {
+        return new AbstractXomPayloadEndpoint(false) {
+
+            protected Element invokeInternal(Element requestElement) throws Exception {
+                assertNull("RequestElement passed", requestElement);
+                return null;
+            }
+        };
+    }
+
     public void testStaxSourceEventReader() throws Exception {
         // overriden, because XOM doesn not support it
     }

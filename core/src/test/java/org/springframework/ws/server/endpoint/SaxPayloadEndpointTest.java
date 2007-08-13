@@ -52,6 +52,20 @@ public class SaxPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
         };
     }
 
+    protected PayloadEndpoint createNoRequestEndpoint() throws Exception {
+        return new AbstractSaxPayloadEndpoint() {
+
+            protected ContentHandler createContentHandler() throws Exception {
+                fail("Not expected");
+                return null;
+            }
+
+            protected Source getResponse(ContentHandler contentHandler) throws Exception {
+                return null;
+            }
+        };
+    }
+
     private static class TestContentHandler extends DefaultHandler {
 
         public void endElement(String uri, String localName, String qName) throws SAXException {
