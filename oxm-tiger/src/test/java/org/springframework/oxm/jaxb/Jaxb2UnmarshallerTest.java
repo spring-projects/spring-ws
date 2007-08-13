@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.StringReader;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
+import javax.xml.bind.JAXBElement;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLEventReader;
@@ -153,9 +154,25 @@ public class Jaxb2UnmarshallerTest extends TestCase {
         Flights flights = (Flights) o;
         assertNotNull("Flights is null", flights);
         assertEquals("Invalid amount of flight elements", 1, flights.getFlight().size());
-        FlightType flight = (FlightType) flights.getFlight().get(0);
+        testFlight(flights.getFlight().get(0));
+    }
+
+    private void testFlight(Object o) {
+        FlightType flight = (FlightType) o;
         assertNotNull("Flight is null", flight);
         assertEquals("Number is invalid", 42L, flight.getNumber());
     }
+
+    public void testUnmarshalPartialStaxSourceXmlStreamReader() throws Exception {
+        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(INPUT_STRING));
+        streamReader.nextTag(); // skip to flights
+        streamReader.nextTag(); // skip to flight
+        StaxSource source = new StaxSource(streamReader);
+        JAXBElement<FlightType> element = (JAXBElement<FlightType>) unmarshaller.unmarshal(source);
+        FlightType flight = element.getValue();
+        testFlight(flight);
+    }
+
 
 }
