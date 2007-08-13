@@ -20,10 +20,10 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.core.JdkVersion;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
@@ -107,6 +107,7 @@ public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapp
      * @see #getLookupKeyForMethod(Method)
      */
     protected void registerMethods(Object endpoint) {
+        Assert.notNull(endpoint, "'endpoint' must not be null");
         Method[] methods = getEndpointClass(endpoint).getMethods();
         for (int i = 0; i < methods.length; i++) {
             if (JdkVersion.getMajorJavaVersion() >= JdkVersion.JAVA_15 && methods[i].isSynthetic() ||
@@ -141,10 +142,10 @@ public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapp
      * @return the bean class to expose
      */
     protected Class getEndpointClass(Object endpoint) {
-        if (AopUtils.isCglibProxy(endpoint)) {
-            return endpoint.getClass().getSuperclass();
-        }
-        return endpoint.getClass();
+        Class clazz = endpoint.getClass();
+        // The following is actually in Spring 2 ClassUtils.getUserClass, but since Spring-WS is Spring 1.2.9 upwards,
+        // we can't use it
+        return clazz != null && clazz.getName().indexOf("$$") != -1 ? clazz.getSuperclass() : clazz;
     }
 
 }
