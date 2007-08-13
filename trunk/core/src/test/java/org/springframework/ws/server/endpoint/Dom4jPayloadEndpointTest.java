@@ -43,5 +43,15 @@ public class Dom4jPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
         };
     }
 
+    protected PayloadEndpoint createNoRequestEndpoint() throws Exception {
+        return new AbstractDom4jPayloadEndpoint() {
+
+            protected Element invokeInternal(Element requestElement, Document responseDocument) throws Exception {
+                assertNull("RequestElement passed", requestElement);
+                return null;
+            }
+        };
+    }
+
 
 }

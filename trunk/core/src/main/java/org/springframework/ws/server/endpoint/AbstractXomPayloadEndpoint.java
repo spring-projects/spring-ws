@@ -112,10 +112,12 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 
     private Source invokeUsingReflection(Source request) throws Exception {
         try {
-            Result xomResult = createXomResult();
-            transform(request, xomResult);
-            Element requestElement = getRequestElement(xomResult);
-
+            Element requestElement = null;
+            if (request != null) {
+                Result xomResult = createXomResult();
+                transform(request, xomResult);
+                requestElement = getRequestElement(xomResult);
+            }
             Element responseElement = invokeInternal(requestElement);
             return responseElement != null ? createXomSource(responseElement) : null;
         }
@@ -134,20 +136,21 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
     }
 
     private Source invokeUsingTransformation(Source request) throws Exception {
-        logger.debug("Using transformations");
         Element requestElement = null;
-        if (request instanceof DOMSource) {
-            requestElement = handleDomSource(request);
-        }
-        else if (request instanceof SAXSource) {
-            requestElement = handleSaxSource(request);
-        }
-        else if (request instanceof StreamSource) {
-            requestElement = handleStreamSource(request);
-        }
-        else {
-            throw new IllegalArgumentException(
-                    "Source [" + request.getClass().getName() + "] is neither SAXSource, DOMSource, nor StreamSource");
+        if (request != null) {
+            if (request instanceof DOMSource) {
+                requestElement = handleDomSource(request);
+            }
+            else if (request instanceof SAXSource) {
+                requestElement = handleSaxSource(request);
+            }
+            else if (request instanceof StreamSource) {
+                requestElement = handleStreamSource(request);
+            }
+            else {
+                throw new IllegalArgumentException("Source [" + request.getClass().getName() +
+                        "] is neither SAXSource, DOMSource, nor StreamSource");
+            }
         }
         Element responseElement = invokeInternal(requestElement);
         if (responseElement != null) {

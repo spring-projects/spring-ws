@@ -41,4 +41,14 @@ public class JDomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
             }
         };
     }
+
+    protected PayloadEndpoint createNoRequestEndpoint() throws Exception {
+        return new AbstractJDomPayloadEndpoint() {
+
+            protected Element invokeInternal(Element requestElement) throws Exception {
+                assertNull("RequestElement passed", requestElement);
+                return null;
+            }
+        };
+    }
 }

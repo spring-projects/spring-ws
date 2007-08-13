@@ -37,9 +37,12 @@ import org.springframework.xml.transform.TransformerObjectSupport;
 public abstract class AbstractJDomPayloadEndpoint extends TransformerObjectSupport implements PayloadEndpoint {
 
     public final Source invoke(Source request) throws Exception {
-        JDOMResult jdomResult = new JDOMResult();
-        transform(request, jdomResult);
-        Element requestElement = jdomResult.getDocument().getRootElement();
+        Element requestElement = null;
+        if (request != null) {
+            JDOMResult jdomResult = new JDOMResult();
+            transform(request, jdomResult);
+            requestElement = jdomResult.getDocument().getRootElement();
+        }
         Element responseElement = invokeInternal(requestElement);
         return responseElement != null ? new JDOMSource(responseElement) : null;
     }
