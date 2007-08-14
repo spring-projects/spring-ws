@@ -26,7 +26,7 @@ import org.springframework.oxm.Unmarshaller;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.server.endpoint.support.MarshallingUtils;
+import org.springframework.ws.support.MarshallingUtils;
 
 /**
  * Endpoint that unmarshals the request payload, and marshals the response object. This endpoint needs a
