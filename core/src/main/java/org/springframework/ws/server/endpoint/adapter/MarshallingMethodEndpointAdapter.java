@@ -27,7 +27,7 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointMapping;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
-import org.springframework.ws.server.endpoint.support.MarshallingUtils;
+import org.springframework.ws.support.MarshallingUtils;
 
 /**
  * Adapter that supports endpoint methods that use marshalling. Supports methods with the following signature:

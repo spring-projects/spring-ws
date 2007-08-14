@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.server.endpoint.support;
+package org.springframework.ws.support;
 
 import java.io.IOException;
 import javax.activation.DataHandler;
