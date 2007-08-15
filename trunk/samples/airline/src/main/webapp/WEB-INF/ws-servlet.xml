@@ -42,7 +42,6 @@
         <description>
             The JAXB 2 Marshaller is used by the endpoints.
         </description>
-        <property name="mtomEnabled" value="false"/>
         <property name="contextPath" value="org.springframework.ws.samples.airline.schema"/>
     </bean>
 
