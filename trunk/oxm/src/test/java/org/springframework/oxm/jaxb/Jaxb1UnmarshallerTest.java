@@ -34,7 +34,11 @@ public class Jaxb1UnmarshallerTest extends AbstractUnmarshallerTestCase {
         Flights flights = (Flights) o;
         assertNotNull("Flights is null", flights);
         assertEquals("Invalid amount of flight elements", 1, flights.getFlight().size());
-        FlightType flight = (FlightType) flights.getFlight().get(0);
+        testFlight(flights.getFlight().get(0));
+    }
+
+    protected void testFlight(Object o) {
+        FlightType flight = (FlightType) o;
         assertNotNull("Flight is null", flight);
         assertEquals("Number is invalid", 42L, flight.getNumber());
     }

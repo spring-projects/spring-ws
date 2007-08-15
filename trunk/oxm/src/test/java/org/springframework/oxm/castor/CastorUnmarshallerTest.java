@@ -29,7 +29,11 @@ public class CastorUnmarshallerTest extends AbstractUnmarshallerTestCase {
         Flights flights = (Flights) o;
         assertNotNull("Flights is null", flights);
         assertEquals("Invalid amount of flight elements", 1, flights.getFlightCount());
-        Flight flight = flights.getFlight()[0];
+        testFlight(flights.getFlight()[0]);
+    }
+
+    protected void testFlight(Object o) {
+        Flight flight = (Flight) o;
         assertNotNull("Flight is null", flight);
         assertEquals("Number is invalid", 42L, flight.getNumber());
     }

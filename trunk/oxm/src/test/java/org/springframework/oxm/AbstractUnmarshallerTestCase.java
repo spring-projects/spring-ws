@@ -17,7 +17,7 @@ package org.springframework.oxm;
 
 import java.io.ByteArrayInputStream;
 import java.io.StringReader;
-
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLEventReader;
@@ -28,14 +28,13 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.TestCase;
+import org.springframework.xml.transform.StaxSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
-
-import org.springframework.xml.transform.StaxSource;
 
 public abstract class AbstractUnmarshallerTestCase extends TestCase {
 
@@ -52,6 +51,8 @@ public abstract class AbstractUnmarshallerTestCase extends TestCase {
     protected abstract Unmarshaller createUnmarshaller() throws Exception;
 
     protected abstract void testFlights(Object o);
+
+    protected abstract void testFlight(Object o);
 
     public void testUnmarshalDomSource() throws Exception {
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -102,5 +103,19 @@ public abstract class AbstractUnmarshallerTestCase extends TestCase {
         StaxSource source = new StaxSource(eventReader);
         Object flights = unmarshaller.unmarshal(source);
         testFlights(flights);
+    }
+
+    public void testUnmarshalPartialStaxSourceXmlStreamReader() throws Exception {
+        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(INPUT_STRING));
+        streamReader.nextTag(); // skip to flights
+        assertEquals("Invalid element", new QName("http://samples.springframework.org/flight", "flights"),
+                streamReader.getName());
+        streamReader.nextTag(); // skip to flight
+        assertEquals("Invalid element", new QName("http://samples.springframework.org/flight", "flight"),
+                streamReader.getName());
+        StaxSource source = new StaxSource(streamReader);
+        Object flight = unmarshaller.unmarshal(source);
+        testFlight(flight);
     }
 }

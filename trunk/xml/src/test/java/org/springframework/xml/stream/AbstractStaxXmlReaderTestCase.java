@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Arrays;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 
 import junit.framework.TestCase;
@@ -35,6 +36,8 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
+
+    protected static XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
     private static final String XML_DTD_HANDLER =
             "<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'><beans />";
@@ -96,7 +99,7 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
     protected abstract AbstractStaxXmlReader createStaxXmlReader(Reader reader) throws XMLStreamException;
 
     /** Easymock <code>ArgumentMatcher</code> implementation that matches SAX arguments. */
-    private static class SaxArgumentMatcher extends AbstractMatcher {
+    protected static class SaxArgumentMatcher extends AbstractMatcher {
 
         public boolean matches(Object[] expected, Object[] actual) {
             if (expected == actual) {
@@ -108,14 +111,14 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
             if (expected.length != actual.length) {
                 throw new IllegalArgumentException("Expected and actual arguments must have the same size");
             }
-            if (expected.length == 3 && (expected[0] instanceof char[]) && (expected[1] instanceof Integer) &&
-                    (expected[2] instanceof Integer)) {
+            if (expected.length == 3 && expected[0] instanceof char[] && expected[1] instanceof Integer &&
+                    expected[2] instanceof Integer) {
                 // handling of the character(char[], int, int) methods
                 String expectedString = new String((char[]) expected[0], ((Integer) expected[1]).intValue(),
                         ((Integer) expected[2]).intValue());
                 String actualString = new String((char[]) actual[0], ((Integer) actual[1]).intValue(),
                         ((Integer) actual[2]).intValue());
-                return (expectedString.equals(actualString));
+                return expectedString.equals(actualString);
             }
             else if (expected.length == 1 && (expected[0] instanceof Locator)) {
                 return true;
@@ -148,8 +151,8 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
             else if (expected instanceof Locator) {
                 Locator expectedLocator = (Locator) expected;
                 Locator actualLocator = (Locator) actual;
-                return (expectedLocator.getColumnNumber() == actualLocator.getColumnNumber() &&
-                        expectedLocator.getLineNumber() == actualLocator.getLineNumber());
+                return expectedLocator.getColumnNumber() == actualLocator.getColumnNumber() &&
+                        expectedLocator.getLineNumber() == actualLocator.getLineNumber();
             }
             return super.argumentMatches(expected, actual);
         }

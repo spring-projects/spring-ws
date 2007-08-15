@@ -23,6 +23,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.EndElement;
+import javax.xml.stream.events.EntityDeclaration;
 import javax.xml.stream.events.Namespace;
 import javax.xml.stream.events.NotationDeclaration;
 import javax.xml.stream.events.ProcessingInstruction;
@@ -72,15 +73,26 @@ public class StaxEventXmlReader extends AbstractStaxXmlReader {
     }
 
     protected void parseInternal() throws SAXException, XMLStreamException {
+        boolean documentStarted = false;
         boolean documentEnded = false;
-        while (reader.hasNext()) {
-            XMLEvent event = reader.nextEvent();
+        int elementDepth = 0;
+        XMLEvent event = null;
+        while (reader.hasNext() && elementDepth >= 0) {
+            event = reader.nextEvent();
+            if (!event.isStartDocument() && !event.isEndDocument() && !documentStarted) {
+                handleStartDocument();
+                documentStarted = true;
+            }
             switch (event.getEventType()) {
                 case XMLStreamConstants.START_ELEMENT:
+                    elementDepth++;
                     handleStartElement(event.asStartElement());
                     break;
                 case XMLStreamConstants.END_ELEMENT:
-                    handleEndElement(event.asEndElement());
+                    elementDepth--;
+                    if (elementDepth >= 0) {
+                        handleEndElement(event.asEndElement());
+                    }
                     break;
                 case XMLStreamConstants.PROCESSING_INSTRUCTION:
                     handleProcessingInstruction((ProcessingInstruction) event);
@@ -93,6 +105,7 @@ public class StaxEventXmlReader extends AbstractStaxXmlReader {
                 case XMLStreamConstants.START_DOCUMENT:
                     setLocator(event.getLocation());
                     handleStartDocument();
+                    documentStarted = true;
                     break;
                 case XMLStreamConstants.END_DOCUMENT:
                     handleEndDocument();
@@ -100,6 +113,9 @@ public class StaxEventXmlReader extends AbstractStaxXmlReader {
                     break;
                 case XMLStreamConstants.NOTATION_DECLARATION:
                     handleNotationDeclaration((NotationDeclaration) event);
+                    break;
+                case XMLStreamConstants.ENTITY_DECLARATION:
+                    handleEntityDeclaration((EntityDeclaration) event);
                     break;
             }
         }
@@ -142,6 +158,13 @@ public class StaxEventXmlReader extends AbstractStaxXmlReader {
     private void handleNotationDeclaration(NotationDeclaration declaration) throws SAXException {
         if (getDTDHandler() != null) {
             getDTDHandler().notationDecl(declaration.getName(), declaration.getPublicId(), declaration.getSystemId());
+        }
+    }
+
+    private void handleEntityDeclaration(EntityDeclaration entityDeclaration) throws SAXException {
+        if (getDTDHandler() != null) {
+            getDTDHandler().unparsedEntityDecl(entityDeclaration.getName(), entityDeclaration.getPublicId(),
+                    entityDeclaration.getSystemId(), entityDeclaration.getNotationName());
         }
     }
 

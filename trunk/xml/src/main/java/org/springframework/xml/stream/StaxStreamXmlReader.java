@@ -58,14 +58,26 @@ public class StaxStreamXmlReader extends AbstractStaxXmlReader {
     }
 
     protected void parseInternal() throws SAXException, XMLStreamException {
+        boolean documentStarted = false;
         boolean documentEnded = false;
+        int elementDepth = 0;
+        int eventType = reader.getEventType();
         while (true) {
-            switch (reader.getEventType()) {
+            if (eventType != XMLStreamConstants.START_DOCUMENT && eventType != XMLStreamConstants.END_DOCUMENT &&
+                    !documentStarted) {
+                handleStartDocument();
+                documentStarted = true;
+            }
+            switch (eventType) {
                 case XMLStreamConstants.START_ELEMENT:
+                    elementDepth++;
                     handleStartElement();
                     break;
                 case XMLStreamConstants.END_ELEMENT:
-                    handleEndElement();
+                    elementDepth--;
+                    if (elementDepth >= 0) {
+                        handleEndElement();
+                    }
                     break;
                 case XMLStreamConstants.PROCESSING_INSTRUCTION:
                     handleProcessingInstruction();
@@ -76,15 +88,17 @@ public class StaxStreamXmlReader extends AbstractStaxXmlReader {
                     handleCharacters();
                     break;
                 case XMLStreamConstants.START_DOCUMENT:
+                    setLocator(reader.getLocation());
                     handleStartDocument();
+                    documentStarted = true;
                     break;
                 case XMLStreamConstants.END_DOCUMENT:
                     handleEndDocument();
                     documentEnded = true;
                     break;
             }
-            if (reader.hasNext()) {
-                reader.next();
+            if (reader.hasNext() && elementDepth >= 0) {
+                eventType = reader.next();
             }
             else {
                 break;
@@ -137,7 +151,6 @@ public class StaxStreamXmlReader extends AbstractStaxXmlReader {
     }
 
     private void handleStartDocument() throws SAXException {
-        setLocator(reader.getLocation());
         if (getContentHandler() != null) {
             getContentHandler().startDocument();
         }
