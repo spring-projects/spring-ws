@@ -247,22 +247,6 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
     // Unmarshalling
     //
 
-    protected Object unmarshalDomNode(Node node) throws XmlMappingException {
-        try {
-            Transformer transformer = transfomerFactory.newTransformer();
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            transformer.transform(new DOMSource(node), new StreamResult(os));
-            ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-            return unmarshalInputStream(is);
-        }
-        catch (IOException ex) {
-            throw new JibxSystemException(ex);
-        }
-        catch (TransformerException ex) {
-            throw new JibxSystemException(ex);
-        }
-    }
-
     protected Object unmarshalInputStream(InputStream inputStream) throws XmlMappingException, IOException {
         try {
             IUnmarshallingContext unmarshallingContext = createUnmarshallingContext();
@@ -283,6 +267,48 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
         }
     }
 
+    protected Object unmarshalXmlStreamReader(XMLStreamReader streamReader) {
+        try {
+            UnmarshallingContext unmarshallingContext = (UnmarshallingContext) createUnmarshallingContext();
+            IXMLReader xmlReader = new StAXReaderWrapper(streamReader, null, true);
+            unmarshallingContext.setDocument(xmlReader);
+            return unmarshallingContext.unmarshalElement();
+        }
+        catch (JiBXException ex) {
+            throw convertJibxException(ex, false);
+        }
+    }
+
+    protected Object unmarshalXmlEventReader(XMLEventReader eventReader) {
+        try {
+            XMLStreamReader streamReader = new XmlEventStreamReader(eventReader);
+            return unmarshalXmlStreamReader(streamReader);
+        }
+        catch (XMLStreamException ex) {
+            throw new JibxSystemException(ex);
+        }
+    }
+
+    //
+    // Unsupported Unmarshalling
+    //
+
+    protected Object unmarshalDomNode(Node node) throws XmlMappingException {
+        try {
+            Transformer transformer = transfomerFactory.newTransformer();
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            transformer.transform(new DOMSource(node), new StreamResult(os));
+            ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+            return unmarshalInputStream(is);
+        }
+        catch (IOException ex) {
+            throw new JibxSystemException(ex);
+        }
+        catch (TransformerException ex) {
+            throw new JibxSystemException(ex);
+        }
+    }
+
     protected Object unmarshalSaxReader(XMLReader xmlReader, InputSource inputSource)
             throws XmlMappingException, IOException {
         try {
@@ -297,28 +323,6 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
         }
         catch (TransformerException ex) {
             throw new JibxSystemException(ex);
-        }
-    }
-
-    protected Object unmarshalXmlEventReader(XMLEventReader eventReader) {
-        try {
-            XMLStreamReader streamReader = new XmlEventStreamReader(eventReader);
-            return unmarshalXmlStreamReader(streamReader);
-        }
-        catch (XMLStreamException ex) {
-            throw new JibxSystemException(ex);
-        }
-    }
-
-    protected Object unmarshalXmlStreamReader(XMLStreamReader streamReader) {
-        try {
-            UnmarshallingContext unmarshallingContext = (UnmarshallingContext) createUnmarshallingContext();
-            IXMLReader xmlReader = new StAXReaderWrapper(streamReader, null, true);
-            unmarshallingContext.setDocument(xmlReader);
-            return unmarshallingContext.unmarshalElement();
-        }
-        catch (JiBXException ex) {
-            throw convertJibxException(ex, false);
         }
     }
 

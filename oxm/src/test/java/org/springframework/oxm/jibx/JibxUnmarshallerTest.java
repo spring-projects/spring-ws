@@ -31,10 +31,16 @@ public class JibxUnmarshallerTest extends AbstractUnmarshallerTestCase {
         Flights flights = (Flights) o;
         assertNotNull("Flights is null", flights);
         assertEquals("Invalid amount of flight elements", 1, flights.sizeFlightList());
-        FlightType flight = (FlightType) flights.getFlight(0);
+        testFlight(flights.getFlight(0));
+    }
+
+    protected void testFlight(Object o) {
+        FlightType flight = (FlightType) o;
         assertNotNull("Flight is null", flight);
         assertEquals("Number is invalid", 42L, flight.getNumber());
     }
 
-
+    public void testUnmarshalPartialStaxSourceXmlStreamReader() throws Exception {
+        // JiBX does not support reading XML fragments, hence the override here
+    }
 }
