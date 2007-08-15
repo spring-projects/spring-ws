@@ -5,7 +5,7 @@
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-rc3-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <name>Spring Web Services</name>
     <description>
         Spring Web Services is a product of the Spring community focused on creating document-driven Web services. It
@@ -24,7 +24,7 @@
             <notifier>
                 <type>mail</type>
                 <configuration>
-                    <address>arjenp@interface21.com</address>
+                    <address>apoutsma@interface21.com</address>
                 </configuration>
             </notifier>
         </notifiers>
@@ -33,9 +33,7 @@
         <downloadUrl>http://static.springframework.org/spring-ws/site/downloads/releases.html</downloadUrl>
         <repository>
             <id>local</id>
-            <url>
-                file:///Users/arjen/Projects/Spring/repos/repo
-            </url>
+            <url>file:///Users/arjen/Projects/Spring/repos/repo</url>
         </repository>
         <snapshotRepository>
             <id>spring-snapshot</id>
@@ -44,9 +42,7 @@
         </snapshotRepository>
         <site>
             <id>static.springframework.org</id>
-            <url>
-                scp://static.springframework.org/var/www/domains/springframework.org/static/htdocs/spring-ws/site
-            </url>
+            <url>scp://static.springframework.org/var/www/domains/springframework.org/static/htdocs/spring-ws/site</url>
         </site>
     </distributionManagement>
     <inceptionYear>2005</inceptionYear>
@@ -530,12 +526,12 @@
             <dependency>
                 <groupId>org.jibx</groupId>
                 <artifactId>jibx-run</artifactId>
-                <version>1.1.3</version>
+                <version>1.1.5</version>
             </dependency>
             <dependency>
                 <groupId>org.jibx</groupId>
                 <artifactId>jibx-bind</artifactId>
-                <version>1.1</version>
+                <version>1.1.5</version>
             </dependency>
             <dependency>
                 <groupId>bcel</groupId>
