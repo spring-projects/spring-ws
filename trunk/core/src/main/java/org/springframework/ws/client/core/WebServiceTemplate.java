@@ -85,6 +85,7 @@ import org.springframework.ws.transport.support.DefaultStrategiesHelper;
  * <li>Call to {@link WebServiceConnection#close() close} on the connection.</li> </ol>
  *
  * @author Arjen Poutsma
+* @since 1.0
  */
 public class WebServiceTemplate extends WebServiceAccessor implements WebServiceOperations {
 
