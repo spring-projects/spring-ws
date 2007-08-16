@@ -25,6 +25,7 @@ import org.springframework.ws.soap.soap11.Soap11Body;
  * Enumeration that represents the standard SOAP Fault codes for use with the JDK 1.5+ {@link SoapFault} annotation.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public enum FaultCode {
 

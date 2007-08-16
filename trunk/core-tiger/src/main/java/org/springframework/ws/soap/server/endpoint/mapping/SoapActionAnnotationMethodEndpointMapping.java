@@ -45,6 +45,7 @@ import org.springframework.ws.soap.server.endpoint.annotation.SoapAction;
  * </pre>
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotationMethodEndpointMapping
         implements SoapEndpointMapping {

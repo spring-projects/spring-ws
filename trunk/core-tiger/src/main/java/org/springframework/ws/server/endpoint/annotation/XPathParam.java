@@ -29,6 +29,7 @@ import java.lang.annotation.Target;
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.server.endpoint.adapter.XPathParamAnnotationMethodEndpointAdapter
+ * @since 1.0
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
