@@ -17,7 +17,6 @@ package org.springframework.oxm.xmlbeans;
 
 import org.apache.xmlbeans.XMLStreamValidationException;
 import org.apache.xmlbeans.XmlException;
-
 import org.springframework.oxm.ValidationFailureException;
 
 /**
@@ -25,6 +24,7 @@ import org.springframework.oxm.ValidationFailureException;
  *
  * @author Arjen Poutsma
  * @see org.springframework.oxm.xmlbeans.XmlBeansUtils#convertXmlBeansException
+ * @since 1.0
  */
 public class XmlBeansValidationFailureException extends ValidationFailureException {
 

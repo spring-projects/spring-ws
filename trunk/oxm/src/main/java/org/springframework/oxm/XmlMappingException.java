@@ -21,19 +21,16 @@ import org.springframework.xml.XmlException;
  * Root of the hierarchy of Object XML Mapping exceptions.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public abstract class XmlMappingException extends XmlException {
 
-    /**
-     * Constructor for <code>XmlMappingException</code>.
-     */
+    /** Constructor for <code>XmlMappingException</code>. */
     public XmlMappingException(String msg) {
         super(msg);
     }
 
-    /**
-     * Constructor for <code>XmlMappingException</code>.
-     */
+    /** Constructor for <code>XmlMappingException</code>. */
     public XmlMappingException(String msg, Throwable ex) {
         super(msg, ex);
     }

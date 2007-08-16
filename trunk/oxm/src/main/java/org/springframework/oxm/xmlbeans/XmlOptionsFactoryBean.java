@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.xmlbeans.XmlOptions;
-
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -33,6 +32,7 @@ import org.springframework.beans.factory.InitializingBean;
  * @see XmlOptions
  * @see #setOptions(java.util.Map)
  * @see XmlBeansMarshaller#setXmlOptions(org.apache.xmlbeans.XmlOptions)
+ * @since 1.0
  */
 public class XmlOptionsFactoryBean implements FactoryBean, InitializingBean {
 
@@ -40,23 +40,17 @@ public class XmlOptionsFactoryBean implements FactoryBean, InitializingBean {
 
     private Map options;
 
-    /**
-     * Returns the singleton <code>XmlOptions</code>.
-     */
+    /** Returns the singleton <code>XmlOptions</code>. */
     public Object getObject() throws Exception {
         return xmlOptions;
     }
 
-    /**
-     * Returns the class of <code>XmlOptions</code>.
-     */
+    /** Returns the class of <code>XmlOptions</code>. */
     public Class getObjectType() {
         return XmlOptions.class;
     }
 
-    /**
-     * Returns <code>true</code>.
-     */
+    /** Returns <code>true</code>. */
     public boolean isSingleton() {
         return true;
     }
@@ -65,7 +59,7 @@ public class XmlOptionsFactoryBean implements FactoryBean, InitializingBean {
      * Sets options on the underlying <code>XmlOptions</code> object. The keys of the supplied map should be one of the
      * string constants defined in <code>XmlOptions</code>, the values vary per option.
      *
-     * @see XmlOptions#put(Object, Object)
+     * @see XmlOptions#put(Object,Object)
      * @see XmlOptions#SAVE_PRETTY_PRINT
      * @see XmlOptions#LOAD_STRIP_COMMENTS
      */

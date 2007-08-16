@@ -17,14 +17,14 @@ package org.springframework.oxm.xmlbeans;
 
 import org.apache.xmlbeans.XMLStreamValidationException;
 import org.apache.xmlbeans.XmlException;
-import org.xml.sax.SAXException;
-
 import org.springframework.oxm.XmlMappingException;
+import org.xml.sax.SAXException;
 
 /**
  * Generic utility methods for working with XMLBeans. Mainly for internal use within the framework.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class XmlBeansUtils {
 

@@ -38,12 +38,11 @@ import org.xml.sax.ext.LexicalHandler;
 
 /**
  * Implementation of the {@link Marshaller} interface for XMLBeans. Further options can be set by setting the
- * <code>xmlOptions</code> property. The {@link XmlOptionsFactoryBean} is provided to easily wire up
- * {@link XmlOptions} instances.
+ * <code>xmlOptions</code> property. The {@link XmlOptionsFactoryBean} is provided to easily wire up {@link XmlOptions}
+ * instances.
  * <p/>
- * Unmarshalled objects can be validated by setting the <code>validating</code> property, or by calling the
- * {@link #validate(XmlObject)} method directly. Invalid objects will result in an
- * {@link XmlBeansValidationFailureException}.
+ * Unmarshalled objects can be validated by setting the <code>validating</code> property, or by calling the {@link
+ * #validate(XmlObject)} method directly. Invalid objects will result in an {@link XmlBeansValidationFailureException}.
  * <p/>
  * <strong>Note</strong> that due to the nature of XMLBeans, this marshaller requires all passed objects to be of type
  * {@link XmlObject}.
@@ -52,6 +51,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @see #setXmlOptions(org.apache.xmlbeans.XmlOptions)
  * @see XmlOptionsFactoryBean
  * @see #setValidating(boolean)
+ * @since 1.0
  */
 public class XmlBeansMarshaller extends AbstractMarshaller {
 

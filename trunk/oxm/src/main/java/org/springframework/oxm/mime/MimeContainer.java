@@ -23,6 +23,7 @@ import javax.activation.DataHandler;
  *
  * @author Arjen Poutsma
  * @see <a href="http://www.w3.org/TR/2005/REC-xop10-20050125/">XML-binary Optimized Packaging</a>
+ * @since 1.0
  */
 public interface MimeContainer {
 

@@ -18,13 +18,13 @@ package org.springframework.oxm.jibx;
 
 import org.jibx.runtime.JiBXException;
 import org.jibx.runtime.ValidationException;
-
 import org.springframework.oxm.XmlMappingException;
 
 /**
  * Generic utility methods for working with JiBX. Mainly for internal use within the framework.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public abstract class JibxUtils {
 

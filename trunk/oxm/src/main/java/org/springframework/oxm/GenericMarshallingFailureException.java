@@ -15,26 +15,22 @@
  */
 package org.springframework.oxm;
 
-
 /**
  * Base class for exception thrown when a marshalling or unmarshalling error occurs.
- * 
+ *
  * @author Arjen Poutsma
  * @see MarshallingFailureException
  * @see UnmarshallingFailureException
+ * @since 1.0
  */
 public abstract class GenericMarshallingFailureException extends XmlMappingException {
 
-    /**
-     * Constructor for <code>GenericMarshallingFailureException</code>.
-     */
+    /** Constructor for <code>GenericMarshallingFailureException</code>. */
     public GenericMarshallingFailureException(String msg) {
         super(msg);
     }
 
-    /**
-     * Constructor for <code>GenericMarshallingFailureException</code>.
-     */
+    /** Constructor for <code>GenericMarshallingFailureException</code>. */
     public GenericMarshallingFailureException(String msg, Throwable ex) {
         super(msg, ex);
     }

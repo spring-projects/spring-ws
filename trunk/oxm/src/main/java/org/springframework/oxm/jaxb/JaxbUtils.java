@@ -27,6 +27,7 @@ import org.springframework.util.ClassUtils;
  * Generic utility methods for working with JAXB. Mainly for internal use within the framework.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public abstract class JaxbUtils {
 
