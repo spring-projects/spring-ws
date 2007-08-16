@@ -43,6 +43,7 @@ import org.xml.sax.ContentHandler;
  * @see XMLEventWriter
  * @see XMLStreamWriter
  * @see javax.xml.transform.Transformer
+ * @since 1.0
  */
 public class StaxResult extends SAXResult {
 

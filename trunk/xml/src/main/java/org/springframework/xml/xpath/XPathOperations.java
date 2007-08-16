@@ -31,6 +31,7 @@ import org.w3c.dom.Node;
  * @author Arjen Poutsma
  * @see Jaxp13XPathTemplate
  * @see JaxenXPathTemplate
+ * @since 1.0
  */
 public interface XPathOperations {
 

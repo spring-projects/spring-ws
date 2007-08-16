@@ -34,6 +34,7 @@ import javax.xml.stream.events.XMLEvent;
  * vice-versa.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class XmlEventStreamReader extends AbstractXmlStreamReader {
 

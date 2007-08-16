@@ -33,14 +33,13 @@ import org.springframework.util.Assert;
  * <code>java.util.Properties</code> object
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class SimpleNamespaceContext implements NamespaceContext {
 
     private Map prefixToNamespaceUri = new HashMap();
 
-    /**
-     * Maps a <code>String</code> namespaceUri to a <code>List</code> of prefixes
-     */
+    /** Maps a <code>String</code> namespaceUri to a <code>List</code> of prefixes */
     private Map namespaceUriToPrefixes = new HashMap();
 
     private String defaultNamespaceUri = "";
@@ -110,9 +109,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
         }
     }
 
-    /**
-     * Removes all declared prefixes.
-     */
+    /** Removes all declared prefixes. */
     public void clear() {
         prefixToNamespaceUri.clear();
     }

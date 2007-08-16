@@ -17,7 +17,6 @@
 package org.springframework.xml.transform;
 
 import java.io.StringWriter;
-
 import javax.xml.transform.stream.StreamResult;
 
 /**
@@ -26,6 +25,7 @@ import javax.xml.transform.stream.StreamResult;
  *
  * @author Arjen Poutsma
  * @see #toString()
+ * @since 1.0
  */
 public class StringResult extends StreamResult {
 
@@ -33,9 +33,7 @@ public class StringResult extends StreamResult {
         super(new StringWriter());
     }
 
-    /**
-     * Returns the written XML as a string.
-     */
+    /** Returns the written XML as a string. */
     public String toString() {
         return getWriter().toString();
     }

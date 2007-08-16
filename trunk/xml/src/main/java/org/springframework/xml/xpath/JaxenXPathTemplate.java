@@ -36,6 +36,7 @@ import org.w3c.dom.Node;
  *
  * @author Arjen Poutsma
  * @see <a href="http://www.jaxen.org/">Jaxen</a>
+ * @since 1.0
  */
 public class JaxenXPathTemplate extends AbstractXPathTemplate {
 

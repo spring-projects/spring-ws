@@ -22,6 +22,7 @@ import org.springframework.xml.XmlException;
  * Expection thrown when a validation error occurs
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class XmlValidationException extends XmlException {
 

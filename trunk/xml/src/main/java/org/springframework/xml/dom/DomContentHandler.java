@@ -34,6 +34,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author Arjen Poutsma
  * @see org.w3c.dom.Node
+ * @since 1.0
  */
 public class DomContentHandler extends DefaultHandler {
 

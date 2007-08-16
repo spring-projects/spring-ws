@@ -43,6 +43,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Internal class that uses JAXP 1.0 features to create <code>XmlValidator</code> instances.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 abstract class Jaxp10ValidatorFactory {
 
@@ -154,9 +155,7 @@ abstract class Jaxp10ValidatorFactory {
         }
     }
 
-    /**
-     * <code>DefaultHandler</code> extension that stores errors and fatal errors in a list.
-     */
+    /** <code>DefaultHandler</code> extension that stores errors and fatal errors in a list. */
     private static class ValidationErrorHandler extends DefaultHandler {
 
         private List errors = new ArrayList();

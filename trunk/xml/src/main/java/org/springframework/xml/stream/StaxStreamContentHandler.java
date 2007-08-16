@@ -32,6 +32,7 @@ import org.xml.sax.Locator;
  *
  * @author Arjen Poutsma
  * @see XMLStreamWriter
+ * @since 1.0
  */
 public class StaxStreamContentHandler extends AbstractStaxContentHandler {
 

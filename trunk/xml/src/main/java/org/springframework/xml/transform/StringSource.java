@@ -17,7 +17,6 @@
 package org.springframework.xml.transform;
 
 import java.io.StringReader;
-
 import javax.xml.transform.stream.StreamSource;
 
 /**
@@ -25,6 +24,7 @@ import javax.xml.transform.stream.StreamSource;
  * can be set via the constructor.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class StringSource extends StreamSource {
 

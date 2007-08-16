@@ -17,7 +17,6 @@
 package org.springframework.xml.validation;
 
 import java.io.IOException;
-
 import javax.xml.transform.Source;
 
 import org.xml.sax.SAXParseException;
@@ -29,7 +28,8 @@ import org.xml.sax.SAXParseException;
  * <code>XmlValidator</code> instances are designed to be thread safe.
  *
  * @author Arjen Poutsma
- * @see XmlValidatorFactory#createValidator(org.springframework.core.io.Resource, String)
+ * @see XmlValidatorFactory#createValidator(org.springframework.core.io.Resource,String)
+ * @since 1.0
  */
 public interface XmlValidator {
 
