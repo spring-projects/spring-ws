@@ -74,6 +74,7 @@ import org.springframework.xml.validation.SchemaLoaderUtils;
  * @see #setMarshallerListener(javax.xml.bind.Marshaller.Listener)
  * @see #setUnmarshallerListener(javax.xml.bind.Unmarshaller.Listener)
  * @see #setAdapters(javax.xml.bind.annotation.adapters.XmlAdapter[])
+ * @since 1.0
  */
 public class Jaxb2Marshaller extends AbstractJaxbMarshaller implements MimeMarshaller, MimeUnmarshaller {
 
