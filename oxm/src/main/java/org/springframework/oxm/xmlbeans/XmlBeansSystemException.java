@@ -18,10 +18,11 @@ package org.springframework.oxm.xmlbeans;
 import org.springframework.oxm.UncategorizedXmlMappingException;
 
 /**
- * XMLBeans-specific subclass of <code>UncategorizedXmlMappingException</code>, for XMLBeans exceptions that cannot
- * be distinguished further.
- * 
+ * XMLBeans-specific subclass of <code>UncategorizedXmlMappingException</code>, for XMLBeans exceptions that cannot be
+ * distinguished further.
+ *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class XmlBeansSystemException extends UncategorizedXmlMappingException {
 

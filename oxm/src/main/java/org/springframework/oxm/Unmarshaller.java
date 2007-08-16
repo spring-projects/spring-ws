@@ -20,11 +20,11 @@ import javax.xml.transform.Source;
 
 /**
  * Defines the contract for Object XML Mapping unmarshallers.
- *
- * <p>Implementations of this interface can deserialize a given XML Stream to an
- * Object graph.
+ * <p/>
+ * <p>Implementations of this interface can deserialize a given XML Stream to an Object graph.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public interface Unmarshaller {
 

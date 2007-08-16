@@ -71,6 +71,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author Arjen Poutsma
  * @see org.jibx.runtime.IMarshallingContext
  * @see org.jibx.runtime.IUnmarshallingContext
+ * @since 1.0
  */
 public class JibxMarshaller extends AbstractMarshaller implements InitializingBean {
 

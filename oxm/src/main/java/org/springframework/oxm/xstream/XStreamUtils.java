@@ -19,13 +19,13 @@ package org.springframework.oxm.xstream;
 import com.thoughtworks.xstream.alias.CannotResolveClassException;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.io.StreamException;
-
 import org.springframework.oxm.XmlMappingException;
 
 /**
  * Generic utility methods for working with XStream. Mainly for internal use within the framework.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public abstract class XStreamUtils {
 

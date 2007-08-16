@@ -18,13 +18,13 @@ package org.springframework.oxm.castor;
 import org.exolab.castor.xml.MarshalException;
 import org.exolab.castor.xml.ValidationException;
 import org.exolab.castor.xml.XMLException;
-
 import org.springframework.oxm.XmlMappingException;
 
 /**
  * Generic utility methods for working with Castor. Mainly for internal use within the framework.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class CastorUtils {
 

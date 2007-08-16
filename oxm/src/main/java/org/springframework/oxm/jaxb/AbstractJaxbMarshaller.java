@@ -39,6 +39,7 @@ import org.springframework.oxm.XmlMappingException;
  * @author Arjen Poutsma
  * @see Jaxb1Marshaller
  * @see Jaxb2Marshaller
+ * @since 1.0
  */
 public abstract class AbstractJaxbMarshaller
         implements org.springframework.oxm.Marshaller, org.springframework.oxm.Unmarshaller, InitializingBean {

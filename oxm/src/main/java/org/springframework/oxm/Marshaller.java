@@ -27,6 +27,7 @@ import javax.xml.transform.Result;
  * class must be registered with the marshaller, or have a common base class.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public interface Marshaller {
 

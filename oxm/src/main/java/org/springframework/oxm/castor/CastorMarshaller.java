@@ -73,6 +73,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @see #setTargetClass(Class)
  * @see #setMappingLocation(org.springframework.core.io.Resource)
  * @see #setMappingLocations(org.springframework.core.io.Resource[])
+ * @since 1.0
  */
 public class CastorMarshaller extends AbstractMarshaller implements InitializingBean {
 
@@ -95,33 +96,27 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
 
     private boolean ignoreExtraElements = false;
 
-    /**
-     * Returns whether the Castor  {@link Unmarshaller} should ignore attributes that do not match
-     * a specific field.
-     */
+    /** Returns whether the Castor  {@link Unmarshaller} should ignore attributes that do not match a specific field. */
     public boolean getIgnoreExtraAttributes() {
         return ignoreExtraAttributes;
     }
 
     /**
-     * Sets whether the Castor  {@link Unmarshaller} should ignore attributes that do not match
-     * a specific field. Default is <code>true</code>: extra attributes are ignored.
+     * Sets whether the Castor  {@link Unmarshaller} should ignore attributes that do not match a specific field.
+     * Default is <code>true</code>: extra attributes are ignored.
      */
     public void setIgnoreExtraAttributes(boolean ignoreExtraAttributes) {
         this.ignoreExtraAttributes = ignoreExtraAttributes;
     }
 
-    /**
-     * Returns whether the Castor  {@link Unmarshaller} should ignore elements that do not match
-     * a specific field.
-     */
+    /** Returns whether the Castor  {@link Unmarshaller} should ignore elements that do not match a specific field. */
     public boolean getIgnoreExtraElements() {
         return ignoreExtraElements;
     }
 
     /**
-     * Sets whether the Castor  {@link Unmarshaller} should ignore elements that do not match
-     * a specific field. Default is <code>false</code>, extra attributes are flagged as an error.
+     * Sets whether the Castor  {@link Unmarshaller} should ignore elements that do not match a specific field. Default
+     * is <code>false</code>, extra attributes are flagged as an error.
      */
     public void setIgnoreExtraElements(boolean ignoreExtraElements) {
         this.ignoreExtraElements = ignoreExtraElements;
@@ -346,10 +341,9 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
     /**
      * Template method that allows for customizing of the given Castor {@link Unmarshaller}.
      * <p/>
-     * Default implementation invokes {@link Unmarshaller#setValidation(boolean)},
-     * {@link Unmarshaller#setWhitespacePreserve(boolean)},
-     * {@link Unmarshaller#setIgnoreExtraAttributes(boolean)}, and {@link Unmarshaller#setIgnoreExtraElements(boolean)}
-     * with the properties set on this marshaller.
+     * Default implementation invokes {@link Unmarshaller#setValidation(boolean)}, {@link
+     * Unmarshaller#setWhitespacePreserve(boolean)}, {@link Unmarshaller#setIgnoreExtraAttributes(boolean)}, and {@link
+     * Unmarshaller#setIgnoreExtraElements(boolean)} with the properties set on this marshaller.
      */
     protected void customizeUnmarshaller(Unmarshaller unmarshaller) {
         unmarshaller.setValidation(isValidating());

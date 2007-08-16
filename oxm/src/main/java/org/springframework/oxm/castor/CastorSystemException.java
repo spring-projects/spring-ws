@@ -20,8 +20,9 @@ import org.springframework.oxm.UncategorizedXmlMappingException;
 /**
  * Castor-specific subclass of <code>UncategorizedXmlMappingException</code>, for Castor exceptions that cannot be
  * distinguished further.
- * 
+ *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class CastorSystemException extends UncategorizedXmlMappingException {
 
