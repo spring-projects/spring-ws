@@ -28,27 +28,27 @@ import org.springframework.xml.sax.SaxUtils;
 
 /**
  * The default {@link Wsdl11Definition} implementation.
- *
- * <p>Allows a WSDL to be set by the {@link #setWsdl wsdl} property, or directly
- * in the {@link #SimpleWsdl11Definition(org.springframework.core.io.Resource) constructor}.
+ * <p/>
+ * <p>Allows a WSDL to be set by the {@link #setWsdl wsdl} property, or directly in the {@link
+ * #SimpleWsdl11Definition(org.springframework.core.io.Resource) constructor}.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBean {
 
     private Resource wsdlResource;
 
-
     /**
-     * Create a new instance of the <code>SimpleWsdl11Definition</code> class.
-     * <p>A subsequent call to the {@link #setWsdl(org.springframework.core.io.Resource)}
-     * method is required.
+     * Create a new instance of the <code>SimpleWsdl11Definition</code> class. <p>A subsequent call to the {@link
+     * #setWsdl(org.springframework.core.io.Resource)} method is required.
      */
     public SimpleWsdl11Definition() {
     }
 
     /**
      * Create a new instance of the <code>SimpleWsdl11Definition</code> class.
+     *
      * @param wsdlResource the WSDL resource; must not be <code>null</code>
      * @throws IllegalArgumentException if the supplied <code>wsdlResource</code> is <code>null</code>
      */
@@ -57,12 +57,10 @@ public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBea
         this.wsdlResource = wsdlResource;
     }
 
-
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(this.wsdlResource, "wsdl is required");
         Assert.isTrue(this.wsdlResource.exists(), "wsdl '" + this.wsdlResource + "' does not exit");
     }
-
 
     public Source getSource() {
         try {
@@ -73,10 +71,9 @@ public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBea
         }
     }
 
-
     /**
-     * Set the WSDL resource to be exposed by calls to this instances'
-     * {@link #getSource()} method.
+     * Set the WSDL resource to be exposed by calls to this instances' {@link #getSource()} method.
+     *
      * @param wsdlResource the WSDL resource
      */
     public void setWsdl(Resource wsdlResource) {

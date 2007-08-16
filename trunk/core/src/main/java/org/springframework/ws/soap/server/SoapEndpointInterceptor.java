@@ -24,6 +24,7 @@ import org.springframework.ws.soap.SoapHeaderElement;
  * are considered different from regular responses.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public interface SoapEndpointInterceptor extends EndpointInterceptor {
 

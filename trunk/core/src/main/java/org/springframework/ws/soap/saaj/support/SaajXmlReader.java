@@ -35,6 +35,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Arjen Poutsma
  * @see javax.xml.soap.Node
  * @see javax.xml.soap.SOAPElement
+ * @since 1.0
  */
 public class SaajXmlReader extends AbstractXmlReader {
 

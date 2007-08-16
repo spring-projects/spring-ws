@@ -27,6 +27,7 @@ import org.springframework.ws.mime.Attachment;
  * Axiom-specific implementation of {@link org.springframework.ws.mime.Attachment}
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 class AxiomAttachment implements Attachment {
 

@@ -25,6 +25,7 @@ import org.springframework.ws.soap.SoapMessage;
  *
  * @author Arjen Poutsma
  * @see SoapMessage
+ * @since 1.0
  */
 public interface FaultAwareWebServiceMessage extends WebServiceMessage {
 

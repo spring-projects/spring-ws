@@ -29,6 +29,7 @@ import javax.xml.transform.Source;
  * @author Arjen Poutsma
  * @see org.springframework.ws.soap.SoapMessage
  * @see WebServiceMessageFactory
+ * @since 1.0
  */
 public interface WebServiceMessage {
 

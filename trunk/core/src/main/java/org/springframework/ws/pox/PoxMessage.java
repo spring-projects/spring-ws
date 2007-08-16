@@ -22,6 +22,7 @@ import org.springframework.ws.WebServiceMessage;
  * Defines the contract for Plain Old XML messages. Currently only a tagging interface.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public interface PoxMessage extends WebServiceMessage {
 

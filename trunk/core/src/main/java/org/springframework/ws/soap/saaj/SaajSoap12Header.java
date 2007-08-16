@@ -35,6 +35,7 @@ import org.springframework.ws.soap.soap12.Soap12Header;
  * SAAJ-specific implementation of the <code>Soap12Header</code> interface. Wraps a {@link javax.xml.soap.SOAPHeader}.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 class SaajSoap12Header extends SaajSoapHeader implements Soap12Header {
 

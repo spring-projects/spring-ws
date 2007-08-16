@@ -25,27 +25,22 @@ import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapMessage;
 
 /**
- * Simple, SOAP-specific
- * {@link org.springframework.ws.server.EndpointExceptionResolver EndpointExceptionResolver}
+ * Simple, SOAP-specific {@link org.springframework.ws.server.EndpointExceptionResolver EndpointExceptionResolver}
  * implementation that stores the exception's message as the fault string.
- *
+ * <p/>
  * <p>The fault code is always set to a Sender (in SOAP 1.1) or Receiver (SOAP 1.2).
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class SimpleSoapExceptionResolver extends AbstractEndpointExceptionResolver {
 
     private Locale locale = Locale.ENGLISH;
 
-
-    /**
-     * Sets the locale for the faultstring or reason of the SOAP Fault.
-     * <p>Defaults to {@link Locale#ENGLISH}.
-     */
+    /** Sets the locale for the faultstring or reason of the SOAP Fault. <p>Defaults to {@link Locale#ENGLISH}. */
     public void setLocale(Locale locale) {
         this.locale = locale;
     }
-
 
     protected boolean resolveExceptionInternal(MessageContext messageContext, Object endpoint, Exception ex) {
         Assert.isTrue(messageContext.getResponse() instanceof SoapMessage,

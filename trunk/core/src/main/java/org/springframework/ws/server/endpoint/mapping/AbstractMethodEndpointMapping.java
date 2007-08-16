@@ -36,6 +36,7 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
  * #registerEndpoint(String,MethodEndpoint)}.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapping {
 

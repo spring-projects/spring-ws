@@ -27,6 +27,7 @@ import javax.xml.transform.Result;
  * @author Arjen Poutsma
  * @see SoapHeaderElement
  * @see SoapEnvelope#getHeader()
+ * @since 1.0
  */
 public interface SoapHeader extends SoapElement {
 

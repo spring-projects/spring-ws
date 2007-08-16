@@ -26,6 +26,7 @@ import javax.xml.namespace.QName;
  * @author Arjen Poutsma
  * @see SoapFaultDefinitionEditor
  * @see SoapFaultMappingExceptionResolver
+ * @since 1.0
  */
 public class SoapFaultDefinition {
 

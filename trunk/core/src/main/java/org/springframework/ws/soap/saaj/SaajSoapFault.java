@@ -28,6 +28,7 @@ import org.springframework.ws.soap.SoapFaultDetail;
  * SAAJ-specific abstract base class of the <code>SoapFault</code> interface. Wraps a {@link javax.xml.soap.SOAPFault}.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 abstract class SaajSoapFault extends SaajSoapElement implements SoapFault {
 

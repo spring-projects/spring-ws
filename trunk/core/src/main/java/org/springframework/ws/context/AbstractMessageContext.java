@@ -23,6 +23,7 @@ import java.util.Map;
  * Abstract base class for {@link MessageContext instances}.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public abstract class AbstractMessageContext implements MessageContext {
 

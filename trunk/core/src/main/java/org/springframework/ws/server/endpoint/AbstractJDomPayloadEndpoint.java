@@ -33,6 +33,7 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * are not in accordance with WS-I.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public abstract class AbstractJDomPayloadEndpoint extends TransformerObjectSupport implements PayloadEndpoint {
 

@@ -13,6 +13,7 @@ import org.springframework.ws.WebServiceMessage;
  *
  * @author Arjen Poutsma
  * @see Attachment
+ * @since 1.0
  */
 public interface MimeMessage extends WebServiceMessage {
 

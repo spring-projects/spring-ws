@@ -25,6 +25,7 @@ import org.springframework.ws.wsdl.WsdlDefinitionException;
  * class, etc.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public interface Wsdl11DefinitionBuilder {
 

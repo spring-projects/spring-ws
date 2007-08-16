@@ -24,6 +24,7 @@ import javax.xml.transform.Source;
  * The main entrypoint is {@link #invoke(Source)}, which gets invoked with the contents of the requesting message.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public interface PayloadEndpoint {
 

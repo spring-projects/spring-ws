@@ -34,6 +34,7 @@ import org.w3c.dom.Document;
  * @author Arjen Poutsma
  * @see #Wsdl4jDefinition(javax.wsdl.Definition)
  * @see #setDefinition(javax.wsdl.Definition)
+ * @since 1.0
  */
 public class Wsdl4jDefinition implements Wsdl11Definition {
 

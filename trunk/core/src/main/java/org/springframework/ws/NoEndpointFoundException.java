@@ -20,6 +20,7 @@ package org.springframework.ws;
  * Exception thrown when an endpoint cannot be resolved for an incoming message request.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public final class NoEndpointFoundException extends WebServiceException {
 

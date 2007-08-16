@@ -22,6 +22,7 @@ import org.springframework.ws.WebServiceMessageException;
  * Specific subclass of <code>WebServiceMessageException</code> for Plain Old XML messages.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public abstract class PoxMessageException extends WebServiceMessageException {
 

@@ -47,6 +47,7 @@ import org.xml.sax.SAXParseException;
  * @author Arjen Poutsma
  * @see #getValidationRequestSource(org.springframework.ws.WebServiceMessage)
  * @see #getValidationResponseSource(org.springframework.ws.WebServiceMessage)
+ * @since 1.0
  */
 public abstract class AbstractValidatingInterceptor extends TransformerObjectSupport
         implements EndpointInterceptor, InitializingBean {

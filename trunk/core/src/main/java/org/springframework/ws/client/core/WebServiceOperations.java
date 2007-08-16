@@ -28,6 +28,7 @@ import org.springframework.ws.client.WebServiceClientException;
  *
  * @author Arjen Poutsma
  * @see WebServiceTemplate
+ * @since 1.0
  */
 public interface WebServiceOperations {
 

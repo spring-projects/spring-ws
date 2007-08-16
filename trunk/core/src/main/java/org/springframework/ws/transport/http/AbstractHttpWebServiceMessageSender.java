@@ -24,6 +24,7 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  * HTTP.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public abstract class AbstractHttpWebServiceMessageSender implements WebServiceMessageSender {
 

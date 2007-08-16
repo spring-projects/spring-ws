@@ -40,6 +40,7 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  * @see #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
  * @see org.springframework.ws.client.core.WebServiceTemplate
  * @see #setMarshaller(org.springframework.oxm.Marshaller)
+ * @since 1.0
  */
 public abstract class WebServiceGatewaySupport implements InitializingBean {
 

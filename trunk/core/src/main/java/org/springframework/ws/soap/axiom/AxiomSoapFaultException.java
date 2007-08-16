@@ -20,6 +20,7 @@ import org.springframework.ws.soap.SoapFaultException;
 
 /**
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class AxiomSoapFaultException extends SoapFaultException {
 

@@ -24,6 +24,7 @@ import org.springframework.ws.wsdl.WsdlDefinitionException;
  * Subclass of <code>WsdlDefinitionException</code> that wraps <code>WSDLException</code>s.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class Wsdl4jDefinitionException extends WsdlDefinitionException {
 

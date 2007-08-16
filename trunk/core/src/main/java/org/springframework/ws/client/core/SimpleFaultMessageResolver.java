@@ -25,6 +25,7 @@ import org.springframework.ws.client.WebServiceFaultException;
  *
  * @author Arjen Poutsma
  * @see WebServiceFaultException
+ * @since 1.0
  */
 public class SimpleFaultMessageResolver implements FaultMessageResolver {
 

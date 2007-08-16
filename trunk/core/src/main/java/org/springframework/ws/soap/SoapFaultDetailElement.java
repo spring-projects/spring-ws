@@ -24,16 +24,13 @@ import javax.xml.transform.Result;
  *
  * @author Arjen Poutsma
  * @see SoapFaultDetail
+ * @since 1.0
  */
 public interface SoapFaultDetailElement extends SoapElement {
 
-    /**
-     * Returns a <code>Result</code> that allows for writing to the <strong>contents</strong> of the detail element.
-     */
+    /** Returns a <code>Result</code> that allows for writing to the <strong>contents</strong> of the detail element. */
     Result getResult();
 
-    /**
-     * Adds a new text node to this element.
-     */
+    /** Adds a new text node to this element. */
     void addText(String text);
 }

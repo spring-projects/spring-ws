@@ -20,11 +20,12 @@ import org.springframework.ws.wsdl.WsdlDefinition;
 
 /**
  * Models a WSDL 1.1-specific {@link WsdlDefinition}.
- *
+ * <p/>
  * <p>Just a marker interface at the moment.
  *
  * @author Arjen Poutsma
  * @see Wsdl11DefinitionBuilder
+ * @since 1.0
  */
 public interface Wsdl11Definition extends WsdlDefinition {
 

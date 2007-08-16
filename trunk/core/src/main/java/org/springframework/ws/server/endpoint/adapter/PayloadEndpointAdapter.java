@@ -34,6 +34,7 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * @author Arjen Poutsma
  * @see org.springframework.ws.server.endpoint.PayloadEndpoint
  * @see org.springframework.ws.server.EndpointInvocationChain
+ * @since 1.0
  */
 public class PayloadEndpointAdapter extends TransformerObjectSupport implements EndpointAdapter {
 

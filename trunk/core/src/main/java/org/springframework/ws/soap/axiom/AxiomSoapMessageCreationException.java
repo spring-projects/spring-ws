@@ -20,6 +20,7 @@ import org.springframework.ws.soap.SoapMessageCreationException;
 
 /**
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class AxiomSoapMessageCreationException extends SoapMessageCreationException {
 

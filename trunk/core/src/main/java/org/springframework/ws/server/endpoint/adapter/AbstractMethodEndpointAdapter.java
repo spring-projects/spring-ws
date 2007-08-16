@@ -28,6 +28,7 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * template methods for handling these method endpoints.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public abstract class AbstractMethodEndpointAdapter extends TransformerObjectSupport implements EndpointAdapter {
 

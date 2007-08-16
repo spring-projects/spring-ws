@@ -27,6 +27,7 @@ import org.springframework.ws.WebServiceMessageFactory;
  * Default implementation of <code>MessageContext</code>.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class DefaultMessageContext extends AbstractMessageContext {
 

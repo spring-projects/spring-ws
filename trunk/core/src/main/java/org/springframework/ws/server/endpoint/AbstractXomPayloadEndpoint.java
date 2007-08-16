@@ -54,6 +54,7 @@ import org.xml.sax.InputSource;
  *
  * @author Arjen Poutsma
  * @see Element
+ * @since 1.0
  */
 public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSupport implements PayloadEndpoint {
 

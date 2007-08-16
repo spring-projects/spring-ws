@@ -26,6 +26,7 @@ import org.springframework.ws.soap.SoapBody;
  * SOAP 1.2 with respect to SOAP Faults.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public interface Soap12Body extends SoapBody {
 

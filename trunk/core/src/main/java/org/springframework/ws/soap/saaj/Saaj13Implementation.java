@@ -49,6 +49,7 @@ import org.springframework.ws.transport.TransportOutputStream;
  * SAAJ 1.3 specific implementation of the <code>SaajImplementation</code> interface.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class Saaj13Implementation implements SaajImplementation {
 

@@ -57,6 +57,7 @@ import org.xml.sax.InputSource;
  * SAAJ 1.1 specific implementation of the <code>SaajImplementation</code> interface.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class Saaj11Implementation implements SaajImplementation {
 

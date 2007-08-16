@@ -20,6 +20,7 @@ package org.springframework.ws.soap;
  * Exception thrown when a SOAP element could not be accessed.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class SoapElementException extends SoapMessageException {
 

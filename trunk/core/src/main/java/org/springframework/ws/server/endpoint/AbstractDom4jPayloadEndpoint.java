@@ -34,6 +34,7 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  *
  * @author Arjen Poutsma
  * @see org.dom4j.Element
+ * @since 1.0
  */
 public abstract class AbstractDom4jPayloadEndpoint extends TransformerObjectSupport implements PayloadEndpoint {
 
