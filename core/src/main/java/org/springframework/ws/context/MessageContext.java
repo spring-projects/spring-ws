@@ -23,11 +23,12 @@ import org.springframework.ws.WebServiceMessage;
 
 /**
  * Context holder for message requests.
- *
- * <p>Contains both the message request as well as the response. Response message are
- * usually lazily created (but do not have to be).
+ * <p/>
+ * <p>Contains both the message request as well as the response. Response message are usually lazily created (but do not
+ * have to be).
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public interface MessageContext {
 

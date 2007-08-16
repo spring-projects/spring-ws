@@ -32,6 +32,7 @@ import org.springframework.xml.namespace.QNameUtils;
  * @author Arjen Poutsma
  * @see org.apache.axiom.om.OMNamespace
  * @see javax.xml.namespace.QName
+ * @since 1.0
  */
 public abstract class AxiomUtils {
 

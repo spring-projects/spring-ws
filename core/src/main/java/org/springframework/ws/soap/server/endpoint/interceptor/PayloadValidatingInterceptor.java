@@ -37,19 +37,16 @@ import org.springframework.ws.WebServiceMessage;
  * @see #setSchemas(org.springframework.core.io.Resource[])
  * @see #setValidateRequest(boolean)
  * @see #setValidateResponse(boolean)
+ * @since 1.0
  */
 public class PayloadValidatingInterceptor extends AbstractFaultCreatingValidatingInterceptor {
 
-    /**
-     * Returns the payload source of the given message.
-     */
+    /** Returns the payload source of the given message. */
     protected Source getValidationRequestSource(WebServiceMessage request) {
         return request.getPayloadSource();
     }
 
-    /**
-     * Returns the payload source of the given message.
-     */
+    /** Returns the payload source of the given message. */
     protected Source getValidationResponseSource(WebServiceMessage response) {
         return response.getPayloadSource();
     }

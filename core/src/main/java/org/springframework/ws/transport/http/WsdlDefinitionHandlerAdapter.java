@@ -72,6 +72,7 @@ import org.w3c.dom.Document;
  * @see #setTransformLocations(boolean)
  * @see #setLocationExpression(String)
  * @see #transformLocation(String,javax.servlet.http.HttpServletRequest)
+ * @since 1.0
  */
 public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport implements HandlerAdapter, InitializingBean {
 
@@ -94,6 +95,7 @@ public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport imple
      * Sets the XPath expression used for extracting the <code>location</code> attributes from the WSDL 1.1 definition.
      * <p/>
      * Defaults to <code>DEFAULT_LOCATION_EXPRESSION</code>.
+     *
      * @see #DEFAULT_LOCATION_EXPRESSION
      */
     public void setLocationExpression(String locationExpression) {

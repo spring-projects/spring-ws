@@ -36,22 +36,17 @@ import org.springframework.ws.wsdl.wsdl11.Wsdl4jDefinitionException;
  * Definition}, and passes that to subclass template methods.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public abstract class AbstractWsdl4jDefinitionBuilder implements Wsdl11DefinitionBuilder {
 
-    /**
-     * Logger available to subclasses.
-     */
+    /** Logger available to subclasses. */
     protected final Log logger = LogFactory.getLog(getClass());
 
-    /**
-     * WSDL4J extension registry. Lazily created in <code>createExtension()</code>.
-     */
+    /** WSDL4J extension registry. Lazily created in <code>createExtension()</code>. */
     private ExtensionRegistry extensionRegistry;
 
-    /**
-     * The WSDL4J <code>Definition</code> created by <code>buildDefinition()</code>.
-     */
+    /** The WSDL4J <code>Definition</code> created by <code>buildDefinition()</code>. */
     private Definition definition;
 
     public final void buildDefinition() throws WsdlDefinitionException {

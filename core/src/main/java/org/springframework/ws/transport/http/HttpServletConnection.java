@@ -35,6 +35,7 @@ import org.springframework.ws.transport.support.EnumerationIterator;
  * Implementation of {@link WebServiceConnection} that is based on the Servlet API.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class HttpServletConnection extends AbstractReceiverConnection
         implements EndpointAwareWebServiceConnection, FaultAwareWebServiceConnection {

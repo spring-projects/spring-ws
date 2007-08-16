@@ -37,6 +37,7 @@ import org.springframework.util.StringUtils;
  * A simple Servlet that uses SAAJ to echo request.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class SimpleSaajServlet extends HttpServlet {
 

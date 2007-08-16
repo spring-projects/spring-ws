@@ -35,6 +35,7 @@ import org.springframework.xml.transform.StaxSource;
  * Axiom-specific version of {@link SoapElement}.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 class AxiomSoapElement implements SoapElement {
 

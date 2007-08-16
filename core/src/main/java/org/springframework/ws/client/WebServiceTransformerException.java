@@ -22,11 +22,13 @@ import javax.xml.transform.TransformerException;
  * Exception thrown whenever a transformation error occurs <i>on the client-side</i>.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class WebServiceTransformerException extends WebServiceClientException {
 
     /**
      * Create a new instance of the <code>WebServiceTransformerException</code> class.
+     *
      * @param msg the detail message
      */
     public WebServiceTransformerException(String msg) {
@@ -35,6 +37,7 @@ public class WebServiceTransformerException extends WebServiceClientException {
 
     /**
      * Create a new instance of the <code>WebServiceTransformerException</code> class.
+     *
      * @param msg the detail message
      * @param ex  the root {@link Throwable exception}
      */

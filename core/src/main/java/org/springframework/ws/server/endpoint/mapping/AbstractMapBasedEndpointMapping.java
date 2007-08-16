@@ -34,6 +34,7 @@ import org.springframework.ws.context.MessageContext;
  * result of a XPath validation. The values are always endpoint objects, or bean names of endpoint objects.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMapping {
 

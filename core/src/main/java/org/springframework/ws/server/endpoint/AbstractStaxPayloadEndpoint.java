@@ -28,6 +28,7 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * @author Arjen Poutsma
  * @see XMLInputFactory
  * @see XMLOutputFactory
+ * @since 1.0
  */
 public abstract class AbstractStaxPayloadEndpoint extends TransformerObjectSupport {
 
@@ -35,9 +36,7 @@ public abstract class AbstractStaxPayloadEndpoint extends TransformerObjectSuppo
 
     private XMLOutputFactory outputFactory;
 
-    /**
-     * Returns an <code>XMLInputFactory</code> to read XML from.
-     */
+    /** Returns an <code>XMLInputFactory</code> to read XML from. */
     protected final XMLInputFactory getInputFactory() {
         if (inputFactory == null) {
             inputFactory = createXmlInputFactory();
@@ -45,9 +44,7 @@ public abstract class AbstractStaxPayloadEndpoint extends TransformerObjectSuppo
         return inputFactory;
     }
 
-    /**
-     * Returns an <code>XMLOutputFactory</code> to write XML to.
-     */
+    /** Returns an <code>XMLOutputFactory</code> to write XML to. */
     protected final XMLOutputFactory getOutputFactory() {
         if (outputFactory == null) {
             outputFactory = createXmlOutputFactory();

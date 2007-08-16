@@ -34,6 +34,7 @@ import org.springframework.ws.context.MessageContext;
  * @see org.springframework.ws.server.endpoint.mapping.AbstractEndpointMapping
  * @see org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping
  * @see org.springframework.ws.soap.server.endpoint.mapping.SoapActionEndpointMapping
+ * @since 1.0
  */
 public interface EndpointMapping {
 
@@ -45,9 +46,9 @@ public interface EndpointMapping {
      * so that endpoints are not constrained in any way. For example, a <code>EndpointAdapter</code> could be written to
      * allow another framework's endpoint objects to be used.
      * <p/>
-     * Returns <code>null</code> if no match was found. This is by design. The <code>MessageDispatcher</code> will
-     * query all registered <code>EndpointMapping</code> beans to find a match, and only decide there is an error if
-     * none can find an endpoint.
+     * Returns <code>null</code> if no match was found. This is by design. The <code>MessageDispatcher</code> will query
+     * all registered <code>EndpointMapping</code> beans to find a match, and only decide there is an error if none can
+     * find an endpoint.
      *
      * @return a HandlerExecutionChain instance containing endpoint object and any interceptors, or <code>null</code> if
      *         no mapping is found

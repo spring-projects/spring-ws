@@ -43,6 +43,7 @@ import org.springframework.ws.soap.soap12.Soap12Header;
  * @author Arjen Poutsma
  * @see org.springframework.ws.soap.SoapMessage
  * @see SoapEndpointInterceptor
+ * @since 1.0
  */
 public class SoapMessageDispatcher extends MessageDispatcher {
 

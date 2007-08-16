@@ -23,6 +23,7 @@ import org.springframework.ws.WebServiceMessageException;
  *
  * @author Arjen Poutsma
  * @see Attachment
+ * @since 1.0
  */
 public class AttachmentException extends WebServiceMessageException {
 

@@ -28,6 +28,7 @@ import org.springframework.ws.soap.client.SoapFaultClientException;
  *
  * @author Arjen Poutsma
  * @see SoapFaultClientException
+ * @since 1.0
  */
 public class SoapFaultMessageResolver implements FaultMessageResolver {
 

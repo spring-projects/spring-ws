@@ -54,6 +54,7 @@ import org.w3c.dom.Element;
  * @author Arjen Poutsma
  * @see #setExpression(String)
  * @see #setNamespaces(java.util.Properties)
+ * @since 1.0
  */
 public class XPathPayloadEndpointMapping extends AbstractMapBasedEndpointMapping implements InitializingBean {
 
@@ -65,16 +66,12 @@ public class XPathPayloadEndpointMapping extends AbstractMapBasedEndpointMapping
 
     private TransformerFactory transformerFactory;
 
-    /**
-     * Sets the XPath expression to be used.
-     */
+    /** Sets the XPath expression to be used. */
     public void setExpression(String expression) {
         expressionString = expression;
     }
 
-    /**
-     * Sets the namespaces bindings used in the expression. Keys are prefixes, values are namespaces.
-     */
+    /** Sets the namespaces bindings used in the expression. Keys are prefixes, values are namespaces. */
     public void setNamespaces(Properties namespaces) {
         this.namespaces = namespaces;
     }

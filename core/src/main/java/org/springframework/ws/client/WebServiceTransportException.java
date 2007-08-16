@@ -22,11 +22,13 @@ import org.springframework.ws.transport.TransportException;
  * Exception thrown whenever a transport error occurs on the client-side.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class WebServiceTransportException extends WebServiceIOException {
 
     /**
      * Create a new instance of the <code>WebServiceTransportException</code> class.
+     *
      * @param msg the detail message
      */
     public WebServiceTransportException(String msg) {
@@ -35,6 +37,7 @@ public class WebServiceTransportException extends WebServiceIOException {
 
     /**
      * Create a new instance of the <code>WebServiceTransportException</code> class.
+     *
      * @param msg the detail message
      * @param ex  the root {@link TransportException}
      */

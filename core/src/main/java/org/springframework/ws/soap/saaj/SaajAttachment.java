@@ -30,6 +30,7 @@ import org.springframework.ws.mime.Attachment;
  * javax.xml.soap.AttachmentPart}.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 class SaajAttachment implements Attachment {
 

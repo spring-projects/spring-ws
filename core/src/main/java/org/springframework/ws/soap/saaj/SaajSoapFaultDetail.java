@@ -33,6 +33,7 @@ import org.springframework.ws.soap.SoapFaultDetailElement;
  * javax.xml.soap.SOAPFaultElement}.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 class SaajSoapFaultDetail extends SaajSoapElement implements SoapFaultDetail {
 

@@ -43,6 +43,7 @@ import org.springframework.xml.transform.ResourceSource;
  * @author Arjen Poutsma
  * @see #setRequestXslt(org.springframework.core.io.Resource)
  * @see #setResponseXslt(org.springframework.core.io.Resource)
+ * @since 1.0
  */
 public class PayloadTransformingInterceptor implements EndpointInterceptor, InitializingBean {
 

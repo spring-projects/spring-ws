@@ -34,6 +34,7 @@ import org.springframework.ws.soap.server.SoapEndpointInterceptor;
  * @see #setLogRequest(boolean)
  * @see #setLogResponse(boolean)
  * @see #setLogFault(boolean)
+ * @since 1.0
  */
 public class SoapEnvelopeLoggingInterceptor extends AbstractLoggingInterceptor implements SoapEndpointInterceptor {
 

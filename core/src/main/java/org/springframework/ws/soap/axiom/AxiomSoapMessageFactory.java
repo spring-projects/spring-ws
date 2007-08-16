@@ -63,6 +63,7 @@ import org.springframework.ws.transport.TransportInputStream;
  * @author Arjen Poutsma
  * @see AxiomSoapMessage
  * @see #setPayloadCaching(boolean)
+ * @since 1.0
  */
 public class AxiomSoapMessageFactory implements SoapMessageFactory, InitializingBean {
 

@@ -22,11 +22,13 @@ import java.io.IOException;
  * Exception thrown whenever an I/O error occurs on the client-side.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class WebServiceIOException extends WebServiceClientException {
 
     /**
      * Create a new instance of the <code>WebServiceIOException</code> class.
+     *
      * @param msg the detail message
      */
     public WebServiceIOException(String msg) {
@@ -35,6 +37,7 @@ public class WebServiceIOException extends WebServiceClientException {
 
     /**
      * Create a new instance of the <code>WebServiceIOException</code> class.
+     *
      * @param msg the detail message
      * @param ex  the root {@link IOException}
      */

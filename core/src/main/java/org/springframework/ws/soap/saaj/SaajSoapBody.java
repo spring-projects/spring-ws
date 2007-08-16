@@ -27,6 +27,7 @@ import org.springframework.ws.soap.SoapBody;
  * SAAJ-specific abstract base class of the <code>SoapBody</code> interface. Wraps a {@link javax.xml.soap.SOAPBody}.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 abstract class SaajSoapBody extends SaajSoapElement implements SoapBody {
 

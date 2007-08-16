@@ -39,6 +39,7 @@ import org.springframework.ws.support.MarshallingUtils;
  * @see #setUnmarshaller(org.springframework.oxm.Unmarshaller)
  * @see Unmarshaller
  * @see #invokeInternal(Object)
+ * @since 1.0
  */
 public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpoint, InitializingBean {
 

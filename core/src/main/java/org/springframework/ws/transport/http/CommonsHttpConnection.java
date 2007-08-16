@@ -36,6 +36,7 @@ import org.springframework.ws.transport.WebServiceConnection;
  * PostMethod}.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 

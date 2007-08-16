@@ -30,6 +30,7 @@ import org.springframework.ws.soap.saaj.support.SaajUtils;
  * SAAJ-specific implementation of the <code>SoapElement</code> interface. Wraps a {@link javax.xml.soap.SOAPElement}.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 class SaajSoapElement implements SoapElement {
 

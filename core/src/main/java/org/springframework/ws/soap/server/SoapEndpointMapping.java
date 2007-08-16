@@ -27,6 +27,7 @@ import org.springframework.ws.server.EndpointMapping;
  * <code>SoapMessageDispatcher</code> does not require all endpoint mappings to implement this interface.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public interface SoapEndpointMapping extends EndpointMapping {
 

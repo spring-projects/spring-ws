@@ -25,6 +25,7 @@ import javax.xml.transform.Source;
  *
  * @author Arjen Poutsma
  * @see SoapMessage
+ * @since 1.0
  */
 public interface SoapElement {
 

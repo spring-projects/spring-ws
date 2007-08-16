@@ -20,6 +20,7 @@ import org.springframework.ws.soap.SoapMessageException;
 
 /**
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class SaajSoapMessageException extends SoapMessageException {
 

@@ -23,6 +23,7 @@ import org.springframework.ws.context.MessageContext;
  * coming in on a transport.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public interface WebServiceMessageReceiver {
 

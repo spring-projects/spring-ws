@@ -25,12 +25,11 @@ import org.springframework.ws.soap.SoapFault;
  * SOAP 1.2 with respect to SOAP Faults.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public interface Soap11Fault extends SoapFault {
 
-    /**
-     * Returns the locale of the fault string.
-     */
+    /** Returns the locale of the fault string. */
     Locale getFaultStringLocale();
 
 }

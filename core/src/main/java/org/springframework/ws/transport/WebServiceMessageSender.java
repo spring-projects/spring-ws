@@ -21,14 +21,14 @@ import java.io.IOException;
 import org.springframework.ws.WebServiceMessage;
 
 /**
- * Defines the methods for classes capable of sending and receiving
- * {@link WebServiceMessage} instances across a transport.
- *
- * <p>The <code>WebServiceMessageSender</code> is basically a factory for
- * {@link WebServiceConnection} objects.
+ * Defines the methods for classes capable of sending and receiving {@link WebServiceMessage} instances across a
+ * transport.
+ * <p/>
+ * <p>The <code>WebServiceMessageSender</code> is basically a factory for {@link WebServiceConnection} objects.
  *
  * @author Arjen Poutsma
  * @see WebServiceConnection
+ * @since 1.0
  */
 public interface WebServiceMessageSender {
 

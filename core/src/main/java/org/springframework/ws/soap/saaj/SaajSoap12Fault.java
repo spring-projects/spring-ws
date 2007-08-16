@@ -26,6 +26,7 @@ import org.springframework.ws.soap.soap12.Soap12Fault;
 
 /**
  * @author Arjen Poutsma
+ * @since 1.0
  */
 class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
 

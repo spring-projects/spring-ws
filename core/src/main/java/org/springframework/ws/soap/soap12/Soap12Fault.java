@@ -27,6 +27,7 @@ import org.springframework.ws.soap.SoapFault;
  * SOAP 1.2 with respect to SOAP Faults.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public interface Soap12Fault extends SoapFault {
 
@@ -44,24 +45,16 @@ public interface Soap12Fault extends SoapFault {
      */
     void addFaultSubcode(QName subcode);
 
-    /**
-     * Returns the fault node. Optional.
-     */
+    /** Returns the fault node. Optional. */
     String getFaultNode();
 
-    /**
-     * Sets the fault node.
-     */
+    /** Sets the fault node. */
     void setFaultNode(String uri);
 
-    /**
-     * Sets the specified fault reason text.
-     */
+    /** Sets the specified fault reason text. */
     void setFaultReasonText(Locale locale, String text);
 
-    /**
-     * Returns the reason associated with the given language.
-     */
+    /** Returns the reason associated with the given language. */
     String getFaultReasonText(Locale locale);
 
 }

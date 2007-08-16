@@ -36,6 +36,7 @@ import org.springframework.ws.soap.SoapMessage;
  * </pre>
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class SoapActionCallback implements WebServiceMessageCallback {
 

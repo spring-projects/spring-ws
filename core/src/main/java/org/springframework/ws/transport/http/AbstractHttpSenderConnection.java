@@ -31,6 +31,7 @@ import org.springframework.ws.transport.WebServiceConnection;
  * Abstract base class for {@link WebServiceConnection} implementations that send request over HTTP.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public abstract class AbstractHttpSenderConnection extends AbstractSenderConnection
         implements FaultAwareWebServiceConnection {

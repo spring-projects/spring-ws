@@ -33,6 +33,7 @@ import org.xml.sax.ContentHandler;
  * @author Arjen Poutsma
  * @see #createContentHandler()
  * @see #getResponse(org.xml.sax.ContentHandler)
+ * @since 1.0
  */
 public abstract class AbstractSaxPayloadEndpoint extends TransformerObjectSupport implements PayloadEndpoint {
 

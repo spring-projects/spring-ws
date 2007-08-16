@@ -26,6 +26,7 @@ import org.springframework.ws.soap.SoapHeaderException;
  * Subinterface of <code>SoapHeader</code> that exposes SOAP 1.1 functionality.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public interface Soap11Header extends SoapHeader {
 

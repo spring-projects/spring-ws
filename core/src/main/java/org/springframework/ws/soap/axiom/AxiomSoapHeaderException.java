@@ -20,6 +20,7 @@ import org.springframework.ws.soap.SoapHeaderException;
 
 /**
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class AxiomSoapHeaderException extends SoapHeaderException {
 
