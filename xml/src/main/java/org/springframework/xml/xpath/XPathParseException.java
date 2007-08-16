@@ -20,6 +20,7 @@ package org.springframework.xml.xpath;
  * Exception throws when a XPath expression cannot be parsed.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class XPathParseException extends XPathException {
 

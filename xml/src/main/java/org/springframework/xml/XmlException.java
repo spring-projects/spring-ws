@@ -22,6 +22,7 @@ import org.springframework.core.NestedRuntimeException;
  * Root of the hierarchy of XML exception.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public abstract class XmlException extends NestedRuntimeException {
 

@@ -27,6 +27,7 @@ import org.springframework.util.Assert;
  * Abstract base class for <code>XMLStreamReader</code>s.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public abstract class AbstractXmlStreamReader implements XMLStreamReader {
 

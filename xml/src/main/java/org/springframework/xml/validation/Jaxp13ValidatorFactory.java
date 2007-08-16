@@ -31,6 +31,7 @@ import org.xml.sax.SAXParseException;
  * Internal class that uses JAXP 1.0 features to create <code>XmlValidator</code> instances.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 abstract class Jaxp13ValidatorFactory {
 
@@ -66,9 +67,7 @@ abstract class Jaxp13ValidatorFactory {
         }
     }
 
-    /**
-     * <code>ErrorHandler</code> implementation that stores errors and fatal errors in a list.
-     */
+    /** <code>ErrorHandler</code> implementation that stores errors and fatal errors in a list. */
     private static class ValidationErrorHandler implements ErrorHandler {
 
         private List errors = new ArrayList();

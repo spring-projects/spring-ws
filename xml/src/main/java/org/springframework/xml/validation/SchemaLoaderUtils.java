@@ -31,6 +31,7 @@ import org.xml.sax.SAXException;
  * handling of input streams.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public abstract class SchemaLoaderUtils {
 
@@ -85,9 +86,7 @@ public abstract class SchemaLoaderUtils {
         }
     }
 
-    /**
-     * Retrieves the URL from the given resource as System ID. Returns <code>null</code> if it cannot be openened.
-     */
+    /** Retrieves the URL from the given resource as System ID. Returns <code>null</code> if it cannot be openened. */
     public static String getSystemId(Resource resource) {
         try {
             return resource.getURL().toString();

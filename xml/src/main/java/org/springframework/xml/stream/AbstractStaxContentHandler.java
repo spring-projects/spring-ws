@@ -31,6 +31,7 @@ import org.xml.sax.SAXException;
  * namespace context is used to keep track of declared namespaces.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public abstract class AbstractStaxContentHandler implements ContentHandler {
 
