@@ -43,6 +43,7 @@ import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
  * </pre>
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class PayloadRootAnnotationMethodEndpointMapping extends AbstractAnnotationMethodEndpointMapping {
 

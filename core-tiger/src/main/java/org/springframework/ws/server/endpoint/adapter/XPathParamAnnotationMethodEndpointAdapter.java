@@ -55,6 +55,7 @@ import org.w3c.dom.NodeList;
  * Double}</li> <li>{@link String}</li> <li>{@link Node}</li> <li>{@link NodeList}</li> </ul>
  *
  * @author Arjen Poutsma
+ * @since 1.0
  */
 public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEndpointAdapter
         implements InitializingBean {
