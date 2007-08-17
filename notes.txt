@@ -1,0 +1,17 @@
+After two years of development, I am delighted to announce that Spring Web Services 1.0.0 is now officially released!
+
+Spring Web Services is a product of the Spring community focussed on creating document-driven, contract-first Web Services. The key features of Spring Web Services include:
+
+- Makes the Best Practice an Easy Practice: Spring Web Services makes enforcing best practices easier. This includes practices such as the WS-I basic profile, Contract-First development, and having a loose coupling between contract and implementation.
+
+- Powerful mappings: You can distribute incoming XML request to any object, depending on message payload, SOAP Action header, or an XPath expression.
+
+- XML API support: Incoming XML messages can be handled in standard JAXP APIs such as DOM, SAX, and StAX, but also JDOM, dom4j, XOM, or even marshalling technologies.
+
+- Flexible XML Marshalling: The Object/XML Mapping module in the Spring Web Services distribution supports JAXB 1 and 2, Castor, XMLBeans, JiBX, and XStream. And because it is a separate module, you can use it in non-Web services code as well!
+
+- Reuses your Spring expertise: Spring-WS uses Spring application contexts for all configuration, which should help Spring developers get up-to-speed nice and quickly. Also, the architecture of Spring-WS resembles that of Spring-MVC.
+
+- Supports WS-Security: WS-Security allows you to sign SOAP messages, encrypt and decrypt them, or authenticate against them. And it integrates with Spring Security!
+
+For more information, see http://www.springframework.org/spring-ws.
