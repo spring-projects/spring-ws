@@ -5,7 +5,7 @@
         <author email="apoutsma@interface21.com">Arjen Poutsma</author>
     </properties>
     <body>
-        <release version="1.0">
+        <release version="1.0" date="2007-08-17">
       	 	<action dev="poutsma" type="fix" issue="SWS-150">Don't close the ServletInputStream in AbstractWebServiceConnection.receive</action>		
       	 	<action dev="poutsma" type="fix" issue="SWS-151">IllegalStateException in Saaj11Implementation.removeContents()</action>
       	 	<action dev="poutsma" type="fix" issue="SWS-152">NoSuchMethodError: SaajUtils.toName()</action>
@@ -19,7 +19,7 @@
       	 	<action dev="poutsma" type="fix" issue="SWS-141">Minor Documentation Bug: org.springframework.xml.transform.ResourceSource</action>
             <action dev="poutsma" types="fix" issue="SWS-142">AxiomSoapFaultDetailElementIterator does not consider whitespace nodes.</action>
         </release>
-        <release version="1.0-rc2">
+        <release version="1.0-rc2" date="2007-06-15">
             <action dev="poutsma" types="add">Added MarshallingSource, a TrAX Source that uses a Marshaller.</action>
             <action dev="poutsma" type="update" issue="SWS-134">Reduce the number of overloaded methods on the WebServiceTemplate class to aid comprehension.</action>
             <action dev="poutsma" type="add" issue="SWS-124">Allow specifying names of message factory and message receiver in MessageDispatcherServlet</action>
