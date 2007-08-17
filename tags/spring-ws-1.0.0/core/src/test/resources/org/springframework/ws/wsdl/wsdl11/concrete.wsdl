@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:defs="http://www.springframework.org/spring-ws/wsdl/definitions"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             targetNamespace="http://www.springframework.org/spring-ws/wsdl/service">
+
+    <import namespace="http://www.springframework.org/spring-ws/wsdl/definitions" location="abstract.wsdl"/>
+
+
+    <binding name="binding" type="defs:portType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="operation">
+            <soap:operation soapAction=""/>
+            <input name="request">
+                <soap:body use="literal"/>
+            </input>
+            <output name="response">
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <service name="service">
+        <port binding="defs:binding" name="port">
+            <soap:address location="http://www.springframework.org/spring-ws/wsdl"/>
+        </port>
+    </service>
+</definitions>
+
