@@ -6,8 +6,18 @@
     </properties>
     <body>
         <release version="1.0">
-            <action dev="poutsma" type="fix" issue="145">When using JAXB2, all messages become MTOM</action>
-            <action dev="poutsma" types="fix" issue="142">AxiomSoapFaultDetailElementIterator does not consider whitespace nodes.</action>
+      	 	<action dev="poutsma" type="fix" issue="SWS-150">Don't close the ServletInputStream in AbstractWebServiceConnection.receive</action>		
+      	 	<action dev="poutsma" type="fix" issue="SWS-151">IllegalStateException in Saaj11Implementation.removeContents()</action>
+      	 	<action dev="poutsma" type="fix" issue="SWS-152">NoSuchMethodError: SaajUtils.toName()</action>
+      	 	<action dev="poutsma" type="fix" issue="SWS-164">Null pointer while handling empty SOAP Body</action>
+      	 	<action dev="poutsma" type="fix" issue="SWS-145">When using JAXB2, all messages become MTOM</action>
+      	 	<action dev="poutsma" type="fix" issue="SWS-156">client-side support for JAXB2 MTOM marshalling is not working well</action>
+      	 	<action dev="poutsma" type="fix" issue="SWS-158">java.lang.IllegalArgumentException: This is not an attribute, it is a namespace: xmlns:xs</action>
+      	 	<action dev="poutsma" type="fix" issue="SWS-154">Mention namespace resolution for SoapFault annotation</action>
+      	 	<action dev="poutsma" type="fix" issue="SWS-147">Mention transformWsdlLocations servlet parameter to the reference docs</action>
+      	 	<action dev="poutsma" type="fix" issue="SWS-149">marshallSendAndReceivce bug in WebServiceTemplate</action>
+      	 	<action dev="poutsma" type="fix" issue="SWS-141">Minor Documentation Bug: org.springframework.xml.transform.ResourceSource</action>
+            <action dev="poutsma" types="fix" issue="SWS-142">AxiomSoapFaultDetailElementIterator does not consider whitespace nodes.</action>
         </release>
         <release version="1.0-rc2">
             <action dev="poutsma" types="add">Added MarshallingSource, a TrAX Source that uses a Marshaller.</action>
