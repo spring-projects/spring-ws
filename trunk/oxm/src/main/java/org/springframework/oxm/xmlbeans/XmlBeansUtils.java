@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
  * Generic utility methods for working with XMLBeans. Mainly for internal use within the framework.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class XmlBeansUtils {
 

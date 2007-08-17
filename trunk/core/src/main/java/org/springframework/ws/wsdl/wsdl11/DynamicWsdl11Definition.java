@@ -30,7 +30,7 @@ import org.springframework.util.Assert;
  * @see #setBuilder(Wsdl11DefinitionBuilder)
  * @see #setBuildAbstractPart(boolean)
  * @see #setBuildConcretePart(boolean)
- * @since 1.0
+ * @since 1.0.0
  */
 public class DynamicWsdl11Definition implements Wsdl11Definition, InitializingBean {
 

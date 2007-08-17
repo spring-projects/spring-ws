@@ -30,7 +30,7 @@ import org.springframework.util.Assert;
  *
  * @author Arjen Poutsma
  * @see #setExpression(String)
- * @since 1.0
+ * @since 1.0.0
  */
 public class XPathExpressionFactoryBean implements FactoryBean, InitializingBean {
 

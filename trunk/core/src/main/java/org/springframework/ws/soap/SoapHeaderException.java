@@ -20,7 +20,7 @@ package org.springframework.ws.soap;
  * Exception thrown when a SOAP header could not be accessed.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class SoapHeaderException extends SoapMessageException {
 

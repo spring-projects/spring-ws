@@ -47,7 +47,7 @@ import org.springframework.ws.transport.TransportOutputStream;
  *
  * @author Arjen Poutsma
  * @see SOAPMessage
- * @since 1.0
+ * @since 1.0.0
  */
 public class AxiomSoapMessage extends AbstractSoapMessage {
 

@@ -35,7 +35,7 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * changed using the <code>logRequest</code> and <code>logResponse</code> properties.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class AbstractLoggingInterceptor extends TransformerObjectSupport implements EndpointInterceptor {
 

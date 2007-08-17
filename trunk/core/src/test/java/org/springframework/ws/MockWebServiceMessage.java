@@ -41,7 +41,7 @@ import org.springframework.xml.transform.StringSource;
  * Mock implementation of the <code>WebServiceMessage</code> interface.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
 

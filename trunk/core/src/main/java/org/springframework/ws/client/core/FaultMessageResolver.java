@@ -24,7 +24,7 @@ import org.springframework.ws.WebServiceMessage;
  * Defines the interface for objects than can resolve fault {@link WebServiceMessage}.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public interface FaultMessageResolver {
 

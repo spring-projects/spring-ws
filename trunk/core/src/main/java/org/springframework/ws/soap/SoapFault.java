@@ -25,7 +25,7 @@ import javax.xml.namespace.QName;
  * {@link #getFaultActorOrRole() role}.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public interface SoapFault extends SoapElement {
 

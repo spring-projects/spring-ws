@@ -26,7 +26,7 @@ import org.springframework.util.CollectionUtils;
  * <code>exceptionMappings</code> property, the format of which is documented in {@link SoapFaultDefinitionEditor}.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class SoapFaultMappingExceptionResolver extends AbstractSoapFaultDefinitionExceptionResolver {
 

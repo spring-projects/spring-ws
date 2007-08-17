@@ -41,7 +41,7 @@ import org.springframework.ws.wsdl.wsdl11.Wsdl4jDefinitionException;
  * <code>port</code>s that match the <code>binding</code>s. Lets subclasses populate these through template methods.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class AbstractBindingWsdl4jDefinitionBuilder extends AbstractWsdl4jDefinitionBuilder {
 

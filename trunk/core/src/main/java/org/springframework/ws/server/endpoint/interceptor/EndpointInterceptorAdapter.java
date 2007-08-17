@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
  * pre-only/post-only interceptors.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class EndpointInterceptorAdapter implements EndpointInterceptor {
 

@@ -43,7 +43,7 @@ import org.springframework.ws.transport.WebServiceConnection;
  * @see HttpUrlConnectionMessageSender
  * @see HttpClient
  * @see #setCredentials(Credentials)
- * @since 1.0
+ * @since 1.0.0
  */
 public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSender
         implements InitializingBean, DisposableBean {

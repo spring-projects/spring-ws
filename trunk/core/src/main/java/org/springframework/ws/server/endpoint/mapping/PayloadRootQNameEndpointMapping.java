@@ -42,7 +42,7 @@ import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
  *
  * @author Arjen Poutsma
  * @see org.springframework.xml.namespace.QNameEditor
- * @since 1.0
+ * @since 1.0.0
  */
 public class PayloadRootQNameEndpointMapping extends AbstractQNameEndpointMapping {
 

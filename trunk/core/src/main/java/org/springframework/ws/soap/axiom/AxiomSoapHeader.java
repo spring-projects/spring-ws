@@ -35,7 +35,7 @@ import org.springframework.xml.namespace.QNameUtils;
  * Axiom-specific version of <code>org.springframework.ws.soap.SoapHeader</code>.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
 

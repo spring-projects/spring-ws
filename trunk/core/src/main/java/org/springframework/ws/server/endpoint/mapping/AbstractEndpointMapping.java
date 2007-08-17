@@ -29,7 +29,7 @@ import org.springframework.ws.server.EndpointMapping;
  * @author Arjen Poutsma
  * @see #getEndpointInternal(org.springframework.ws.context.MessageContext)
  * @see org.springframework.ws.server.EndpointInterceptor
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class AbstractEndpointMapping extends ApplicationObjectSupport implements EndpointMapping, Ordered {
 

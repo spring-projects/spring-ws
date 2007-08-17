@@ -15,7 +15,7 @@ import org.springframework.ws.soap.SoapHeader;
  * Axiom-Specific version of <code>org.springframework.ws.soap.SoapEnvelope</code>.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 class AxiomSoapEnvelope extends AxiomSoapElement implements SoapEnvelope {
 

@@ -43,7 +43,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Internal class that uses JAXP 1.0 features to create <code>XmlValidator</code> instances.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 abstract class Jaxp10ValidatorFactory {
 

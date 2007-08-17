@@ -28,7 +28,7 @@ import org.springframework.ws.mime.MimeMessage;
  * @see #getPayloadSource()
  * @see #getPayloadResult()
  * @see #getEnvelope()
- * @since 1.0
+ * @since 1.0.0
  */
 public interface SoapMessage extends MimeMessage, FaultAwareWebServiceMessage {
 

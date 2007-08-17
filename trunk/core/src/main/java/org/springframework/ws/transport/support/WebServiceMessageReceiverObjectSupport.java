@@ -42,7 +42,7 @@ import org.springframework.ws.transport.context.TransportContextHolder;
  *
  * @author Arjen Poutsma
  * @see #handleConnection
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class WebServiceMessageReceiverObjectSupport implements InitializingBean {
 

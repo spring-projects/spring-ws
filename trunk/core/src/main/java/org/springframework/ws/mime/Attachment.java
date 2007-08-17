@@ -26,7 +26,7 @@ import javax.activation.DataHandler;
  * @author Arjen Poutsma
  * @see MimeMessage#getAttachments()
  * @see MimeMessage#addAttachment
- * @since 1.0
+ * @since 1.0.0
  */
 public interface Attachment {
 

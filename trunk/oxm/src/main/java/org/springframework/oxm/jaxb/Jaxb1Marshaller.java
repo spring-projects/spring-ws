@@ -36,7 +36,7 @@ import org.springframework.util.StringUtils;
  * @see #setMarshallerProperties(java.util.Map)
  * @see #setUnmarshallerProperties(java.util.Map)
  * @see #setValidating(boolean)
- * @since 1.0
+ * @since 1.0.0
  */
 public class Jaxb1Marshaller extends AbstractJaxbMarshaller implements InitializingBean {
 

@@ -28,7 +28,7 @@ import org.springframework.ws.WebServiceMessage;
  *
  * @author Arjen Poutsma
  * @see WebServiceConnection
- * @since 1.0
+ * @since 1.0.0
  */
 public interface WebServiceMessageSender {
 

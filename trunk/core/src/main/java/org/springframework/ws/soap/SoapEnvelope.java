@@ -21,7 +21,7 @@ package org.springframework.ws.soap;
  * <code>SoapHeader</code> and <code>SoapBody</code>.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public interface SoapEnvelope extends SoapElement {
 

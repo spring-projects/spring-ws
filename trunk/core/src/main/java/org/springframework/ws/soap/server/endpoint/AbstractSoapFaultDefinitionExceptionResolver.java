@@ -34,7 +34,7 @@ import org.springframework.ws.soap.soap11.Soap11Body;
  * @author Arjen Poutsma
  * @see #setDefaultFault(SoapFaultDefinition)
  * @see #getFaultDefinition(Object,Exception)
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class AbstractSoapFaultDefinitionExceptionResolver extends AbstractEndpointExceptionResolver {
 

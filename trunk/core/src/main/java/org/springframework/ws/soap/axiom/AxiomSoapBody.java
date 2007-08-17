@@ -34,7 +34,7 @@ import org.springframework.xml.transform.StaxSource;
  * Axiom-specific version of <code>org.springframework.ws.soap.Soap11Body</code>.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 abstract class AxiomSoapBody extends AxiomSoapElement implements SoapBody {
 

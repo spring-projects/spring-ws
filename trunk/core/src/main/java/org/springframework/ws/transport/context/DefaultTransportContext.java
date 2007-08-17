@@ -22,7 +22,7 @@ import org.springframework.ws.transport.WebServiceConnection;
  * Default implementation of the <code>TransportContext</code> interface.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class DefaultTransportContext implements TransportContext {
 

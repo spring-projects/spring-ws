@@ -29,7 +29,7 @@ import org.springframework.ws.WebServiceMessageFactory;
  *
  * @author Arjen Poutsma
  * @see WebServiceMessageSender#createConnection(String)
- * @since 1.0
+ * @since 1.0.0
  */
 public interface WebServiceConnection {
 

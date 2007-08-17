@@ -32,7 +32,7 @@ import org.springframework.ws.mime.MimeMessage;
  * Helper class for endpoints and endpoint mappings that use marshalling.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class MarshallingUtils {
 

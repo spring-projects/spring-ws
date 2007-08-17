@@ -52,7 +52,7 @@ import org.springframework.ws.transport.TransportOutputStream;
  * SAAJ 1.2 specific implementation of the <code>SaajImplementation</code> interface.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class Saaj12Implementation implements SaajImplementation {
 

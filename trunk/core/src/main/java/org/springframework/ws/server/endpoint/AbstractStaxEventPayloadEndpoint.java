@@ -45,7 +45,7 @@ import org.springframework.xml.transform.StaxSource;
  *javax.xml.stream.XMLEventFactory)
  * @see XMLEventReader
  * @see XMLEventWriter
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPayloadEndpoint implements MessageEndpoint {
 

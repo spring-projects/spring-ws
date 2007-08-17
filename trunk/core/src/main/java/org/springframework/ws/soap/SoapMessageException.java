@@ -22,7 +22,7 @@ import org.springframework.ws.WebServiceMessageException;
  * Base class for all SOAP message exceptions.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class SoapMessageException extends WebServiceMessageException {
 

@@ -48,7 +48,7 @@ import org.springframework.ws.soap.server.SoapEndpointMapping;
  * <code>payloadCaching</code> disabled).
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class SoapActionEndpointMapping extends AbstractMapBasedEndpointMapping implements SoapEndpointMapping {
 

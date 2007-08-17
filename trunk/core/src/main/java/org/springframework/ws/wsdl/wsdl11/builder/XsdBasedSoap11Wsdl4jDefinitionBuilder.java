@@ -60,7 +60,7 @@ import org.xml.sax.SAXException;
  * @see #setPortTypeName(String)
  * @see #setRequestSuffix(String)
  * @see #setResponseSuffix(String)
- * @since 1.0
+ * @since 1.0.0
  */
 public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jDefinitionBuilder
         implements InitializingBean {

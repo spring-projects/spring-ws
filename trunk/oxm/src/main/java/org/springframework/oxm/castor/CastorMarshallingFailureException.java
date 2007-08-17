@@ -23,7 +23,7 @@ import org.springframework.oxm.MarshallingFailureException;
  *
  * @author Arjen Poutsma
  * @see CastorUtils#convertXmlException
- * @since 1.0
+ * @since 1.0.0
  */
 public class CastorMarshallingFailureException extends MarshallingFailureException {
 

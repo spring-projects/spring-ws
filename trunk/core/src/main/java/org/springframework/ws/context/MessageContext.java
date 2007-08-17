@@ -28,7 +28,7 @@ import org.springframework.ws.WebServiceMessage;
  * have to be).
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public interface MessageContext {
 

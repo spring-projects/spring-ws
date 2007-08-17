@@ -51,7 +51,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @see #setXmlOptions(org.apache.xmlbeans.XmlOptions)
  * @see XmlOptionsFactoryBean
  * @see #setValidating(boolean)
- * @since 1.0
+ * @since 1.0.0
  */
 public class XmlBeansMarshaller extends AbstractMarshaller {
 

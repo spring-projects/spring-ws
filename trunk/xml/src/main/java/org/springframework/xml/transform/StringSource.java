@@ -24,7 +24,7 @@ import javax.xml.transform.stream.StreamSource;
  * can be set via the constructor.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class StringSource extends StreamSource {
 

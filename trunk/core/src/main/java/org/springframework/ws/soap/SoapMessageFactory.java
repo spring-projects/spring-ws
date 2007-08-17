@@ -25,7 +25,7 @@ import org.springframework.ws.WebServiceMessageFactory;
  * version is {@link SoapVersion#SOAP_11}.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public interface SoapMessageFactory extends WebServiceMessageFactory {
 

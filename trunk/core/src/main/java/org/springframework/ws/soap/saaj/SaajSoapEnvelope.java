@@ -31,7 +31,7 @@ import org.springframework.ws.soap.SoapVersion;
  * javax.xml.soap.SOAPEnvelope}.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 class SaajSoapEnvelope extends SaajSoapElement implements SoapEnvelope {
 

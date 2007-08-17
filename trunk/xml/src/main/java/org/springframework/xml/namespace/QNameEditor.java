@@ -43,7 +43,7 @@ import org.springframework.util.StringUtils;
  * @see javax.xml.namespace.QName
  * @see javax.xml.namespace.QName#toString()
  * @see javax.xml.namespace.QName#valueOf(String)
- * @since 1.0
+ * @since 1.0.0
  */
 public class QNameEditor extends PropertyEditorSupport {
 

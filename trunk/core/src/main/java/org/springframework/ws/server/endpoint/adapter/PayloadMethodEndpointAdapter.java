@@ -40,7 +40,7 @@ import org.springframework.ws.soap.server.SoapMessageDispatcher;
  * This adapter is registered by default by the {@link MessageDispatcher} and {@link SoapMessageDispatcher}.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class PayloadMethodEndpointAdapter extends AbstractMethodEndpointAdapter {
 

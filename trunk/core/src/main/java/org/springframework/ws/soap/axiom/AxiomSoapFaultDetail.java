@@ -32,7 +32,7 @@ import org.springframework.ws.soap.SoapFaultDetailElement;
  * Axiom-specific version of <code>org.springframework.ws.soap.SoapFaultDetail</code>.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 class AxiomSoapFaultDetail extends AxiomSoapElement implements SoapFaultDetail {
 

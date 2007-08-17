@@ -22,7 +22,7 @@ import org.springframework.ws.WebServiceException;
  * Exception thrown whenever an error occurs on the client-side.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class WebServiceClientException extends WebServiceException {
 

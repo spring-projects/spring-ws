@@ -70,7 +70,7 @@ import org.springframework.ws.transport.support.DefaultStrategiesHelper;
  * @see EndpointAdapter
  * @see EndpointExceptionResolver
  * @see org.springframework.web.servlet.DispatcherServlet
- * @since 1.0
+ * @since 1.0.0
  */
 public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAware, ApplicationContextAware {
 

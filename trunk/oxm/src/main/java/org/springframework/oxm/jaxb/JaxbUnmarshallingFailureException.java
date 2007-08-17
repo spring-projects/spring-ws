@@ -24,7 +24,7 @@ import org.springframework.oxm.UnmarshallingFailureException;
  * JAXB-specific subclass of <code>UnmarshallingFailureException</code>.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class JaxbUnmarshallingFailureException extends UnmarshallingFailureException {
 

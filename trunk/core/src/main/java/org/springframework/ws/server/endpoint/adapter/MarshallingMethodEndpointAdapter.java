@@ -48,7 +48,7 @@ import org.springframework.ws.support.MarshallingUtils;
  * @author Arjen Poutsma
  * @see #setMarshaller(org.springframework.oxm.Marshaller)
  * @see #setUnmarshaller(org.springframework.oxm.Unmarshaller)
- * @since 1.0
+ * @since 1.0.0
  */
 public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdapter implements InitializingBean {
 

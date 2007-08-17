@@ -29,7 +29,7 @@ import org.springframework.util.Assert;
  * @author Arjen Poutsma
  * @see #getHeaderNames()
  * @see #getHeaders(String)
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class TransportInputStream extends InputStream {
 

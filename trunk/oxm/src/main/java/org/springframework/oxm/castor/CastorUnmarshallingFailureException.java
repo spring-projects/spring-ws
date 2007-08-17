@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
  *
  * @author Arjen Poutsma
  * @see CastorUtils#convertXmlException
- * @since 1.0
+ * @since 1.0.0
  */
 public class CastorUnmarshallingFailureException extends UnmarshallingFailureException {
 

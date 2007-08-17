@@ -54,7 +54,7 @@ import org.springframework.web.context.WebApplicationContext;
  * etc.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class DefaultStrategiesHelper {
 

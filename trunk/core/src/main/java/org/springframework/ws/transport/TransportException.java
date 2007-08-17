@@ -22,7 +22,7 @@ import java.io.IOException;
  * Abstract base class for exceptions related to the transport layer.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class TransportException extends IOException {
 

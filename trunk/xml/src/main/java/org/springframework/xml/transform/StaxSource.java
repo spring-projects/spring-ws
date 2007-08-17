@@ -43,7 +43,7 @@ import org.xml.sax.XMLReader;
  * @see XMLEventReader
  * @see XMLStreamReader
  * @see javax.xml.transform.Transformer
- * @since 1.0
+ * @since 1.0.0
  */
 public class StaxSource extends SAXSource {
 

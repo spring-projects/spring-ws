@@ -22,7 +22,7 @@ import org.springframework.ws.transport.TransportException;
  * Exception that is thrown when an error occurs in the HTTP transport.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class HttpTransportException extends TransportException {
 

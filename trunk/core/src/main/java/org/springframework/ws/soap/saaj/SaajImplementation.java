@@ -41,7 +41,7 @@ import javax.xml.transform.Source;
  * Forms a bridge between the SOAP class hierarchy and a specific version of SAAJ.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public interface SaajImplementation {
 

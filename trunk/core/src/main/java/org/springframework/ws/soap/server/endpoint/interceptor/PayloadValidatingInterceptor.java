@@ -37,7 +37,7 @@ import org.springframework.ws.WebServiceMessage;
  * @see #setSchemas(org.springframework.core.io.Resource[])
  * @see #setValidateRequest(boolean)
  * @see #setValidateResponse(boolean)
- * @since 1.0
+ * @since 1.0.0
  */
 public class PayloadValidatingInterceptor extends AbstractFaultCreatingValidatingInterceptor {
 

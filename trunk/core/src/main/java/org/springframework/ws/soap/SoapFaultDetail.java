@@ -26,7 +26,7 @@ import javax.xml.transform.Result;
  *
  * @author Arjen Poutsma
  * @see SoapFaultDetailElement
- * @since 1.0
+ * @since 1.0.0
  */
 public interface SoapFaultDetail extends SoapElement {
 

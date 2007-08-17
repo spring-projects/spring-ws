@@ -24,7 +24,7 @@ import org.springframework.ws.NoEndpointFoundException;
  *
  * @author Arjen Poutsma
  * @see NoEndpointFoundException
- * @since 1.0
+ * @since 1.0.0
  */
 public interface EndpointAwareWebServiceConnection extends WebServiceConnection {
 

@@ -33,7 +33,7 @@ import javax.xml.transform.TransformerException;
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.client.core.WebServiceTemplate
- * @since 1.0
+ * @since 1.0.0
  */
 public interface SourceExtractor {
 

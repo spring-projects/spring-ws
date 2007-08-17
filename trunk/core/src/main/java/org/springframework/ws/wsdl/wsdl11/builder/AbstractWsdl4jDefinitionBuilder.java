@@ -36,7 +36,7 @@ import org.springframework.ws.wsdl.wsdl11.Wsdl4jDefinitionException;
  * Definition}, and passes that to subclass template methods.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class AbstractWsdl4jDefinitionBuilder implements Wsdl11DefinitionBuilder {
 

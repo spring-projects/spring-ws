@@ -24,7 +24,7 @@ import org.springframework.oxm.XmlMappingException;
  * Generic utility methods for working with JiBX. Mainly for internal use within the framework.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class JibxUtils {
 

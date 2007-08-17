@@ -24,7 +24,7 @@ import org.springframework.core.NestedRuntimeException;
  * Root of the hierarchy of Web Service exceptions.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class WebServiceException extends NestedRuntimeException implements Serializable {
 

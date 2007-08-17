@@ -28,7 +28,7 @@ import org.springframework.ws.WebServiceMessage;
  * the <code>SOAPAction</code> header.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public interface WebServiceMessageCallback {
 

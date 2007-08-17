@@ -22,7 +22,7 @@ import org.springframework.xml.XmlException;
  * Exception thrown when an error occurs during XPath processing.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class XPathException extends XmlException {
 

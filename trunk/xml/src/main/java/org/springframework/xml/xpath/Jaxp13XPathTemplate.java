@@ -44,7 +44,7 @@ import org.xml.sax.InputSource;
  *
  * @author Arjen Poutsma
  * @see #setNamespaces(java.util.Properties)
- * @since 1.0
+ * @since 1.0.0
  */
 public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 

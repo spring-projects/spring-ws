@@ -43,7 +43,7 @@ import org.xml.sax.SAXParseException;
  * @see #setDetailElementName(javax.xml.namespace.QName)
  * @see #DEFAULT_DETAIL_ELEMENT_NAME
  * @see #handleResponseValidationErrors(org.springframework.ws.context.MessageContext,org.xml.sax.SAXParseException[])
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class AbstractFaultCreatingValidatingInterceptor extends AbstractValidatingInterceptor {
 

@@ -28,7 +28,7 @@ import org.w3c.dom.Node;
  * used by {@link XPathOperations} implementations.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public interface XPathExpression {
 

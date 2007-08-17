@@ -29,7 +29,7 @@ import org.xml.sax.SAXParseException;
  *
  * @author Arjen Poutsma
  * @see XmlValidatorFactory#createValidator(org.springframework.core.io.Resource,String)
- * @since 1.0
+ * @since 1.0.0
  */
 public interface XmlValidator {
 

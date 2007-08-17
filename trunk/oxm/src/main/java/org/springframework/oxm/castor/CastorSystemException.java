@@ -22,7 +22,7 @@ import org.springframework.oxm.UncategorizedXmlMappingException;
  * distinguished further.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class CastorSystemException extends UncategorizedXmlMappingException {
 

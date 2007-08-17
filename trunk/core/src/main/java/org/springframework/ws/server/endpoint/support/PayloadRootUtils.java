@@ -35,7 +35,7 @@ import org.w3c.dom.Node;
  * Helper class for determining the root qualified name of a Web Service payload.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class PayloadRootUtils {
 

@@ -26,7 +26,7 @@ import org.springframework.ws.soap.SoapFault;
  * inspecting connection error codes, etc.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public interface FaultAwareWebServiceConnection extends WebServiceConnection {
 

@@ -39,7 +39,7 @@ import org.w3c.dom.Element;
  * @author Arjen Poutsma
  * @author Alef Arendsen
  * @see #invokeInternal(org.w3c.dom.Element,org.w3c.dom.Document)
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSupport implements PayloadEndpoint {
 

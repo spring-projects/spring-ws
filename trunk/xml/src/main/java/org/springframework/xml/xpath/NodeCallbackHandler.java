@@ -29,7 +29,7 @@ import org.w3c.dom.Node;
  *
  * @author Arjen Poutsma
  * @see XPathOperations#evaluate(String,javax.xml.transform.Source,NodeCallbackHandler)
- * @since 1.0
+ * @since 1.0.0
  */
 public interface NodeCallbackHandler {
 

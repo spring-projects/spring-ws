@@ -43,7 +43,7 @@ import javax.xml.namespace.QName;
  *
  * @author Arjen Poutsma
  * @see #setLocationUri(String)
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class AbstractSoap11Wsdl4jDefinitionBuilder extends AbstractBindingWsdl4jDefinitionBuilder {
 

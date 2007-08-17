@@ -20,7 +20,7 @@ package org.springframework.ws;
  * Base class for all web service message exceptions.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class WebServiceMessageException extends WebServiceException {
 

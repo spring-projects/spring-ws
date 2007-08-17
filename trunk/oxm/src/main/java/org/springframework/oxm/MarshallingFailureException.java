@@ -19,7 +19,7 @@ package org.springframework.oxm;
  * Exception thrown on marshalling failure.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class MarshallingFailureException extends GenericMarshallingFailureException {
 

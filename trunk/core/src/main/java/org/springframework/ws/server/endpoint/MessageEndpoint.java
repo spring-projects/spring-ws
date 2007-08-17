@@ -26,7 +26,7 @@ import org.springframework.ws.context.MessageContext;
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.server.endpoint.PayloadEndpoint
- * @since 1.0
+ * @since 1.0.0
  */
 public interface MessageEndpoint {
 

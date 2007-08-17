@@ -26,7 +26,7 @@ import org.xml.sax.SAXException;
  * <code>endDocument</code> is called. Used for returing <code>SAXResult</code>s from Axiom elements.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 class AxiomContentHandler extends SAXOMBuilder {
 

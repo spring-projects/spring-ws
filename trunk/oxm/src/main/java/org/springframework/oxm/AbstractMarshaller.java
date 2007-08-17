@@ -56,7 +56,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * methods.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class AbstractMarshaller implements Marshaller, Unmarshaller {
 

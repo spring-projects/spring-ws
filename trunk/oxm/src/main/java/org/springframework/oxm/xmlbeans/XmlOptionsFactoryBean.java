@@ -32,7 +32,7 @@ import org.springframework.beans.factory.InitializingBean;
  * @see XmlOptions
  * @see #setOptions(java.util.Map)
  * @see XmlBeansMarshaller#setXmlOptions(org.apache.xmlbeans.XmlOptions)
- * @since 1.0
+ * @since 1.0.0
  */
 public class XmlOptionsFactoryBean implements FactoryBean, InitializingBean {
 

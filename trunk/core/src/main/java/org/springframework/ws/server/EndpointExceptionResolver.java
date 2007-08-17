@@ -23,7 +23,7 @@ import org.springframework.ws.context.MessageContext;
  * messages.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public interface EndpointExceptionResolver {
 

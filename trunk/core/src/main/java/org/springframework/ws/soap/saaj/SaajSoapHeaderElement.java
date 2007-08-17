@@ -28,7 +28,7 @@ import org.springframework.ws.soap.SoapHeaderException;
  * javax.xml.soap.SOAPHeaderElement}.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 class SaajSoapHeaderElement extends SaajSoapElement implements SoapHeaderElement {
 

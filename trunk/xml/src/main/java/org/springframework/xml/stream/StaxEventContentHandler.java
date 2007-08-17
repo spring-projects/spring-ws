@@ -40,7 +40,7 @@ import org.xml.sax.Locator;
  * @author Arjen Poutsma
  * @see XMLEvent
  * @see XMLEventConsumer
- * @since 1.0
+ * @since 1.0.0
  */
 public class StaxEventContentHandler extends AbstractStaxContentHandler {
 
