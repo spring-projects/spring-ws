@@ -634,7 +634,7 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
     <dependency>
         <groupId>org.springframework.ws</groupId>
         <artifactId>spring-ws-core</artifactId>
-        <version>1.0-rc2</version>
+        <version>1.0.0</version>
     </dependency>
     <dependency>
         <groupId>jdom</groupId>
