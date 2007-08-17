@@ -1,0 +1,23 @@
+SPRING WEB SERVICES CHANGELOG
+=============================
+http://www.springframework.org/spring-ws
+
+Changes in version 1.0.0
+-------------------------
+
+** Bug
+    * [SWS-141] - Minor Documentation Bug: org.springframework.xml.transform.ResourceSource
+    * [SWS-142] - AxiomSoapFaultDetailElementIterator does not consider whitespace nodes
+    * [SWS-145] - When using JAXB2, all messages become MTOM
+    * [SWS-149] - marshallSendAndReceivce bug in WebServiceTemplate
+    * [SWS-150] - Don't close the ServletInputStream in AbstractWebServiceConnection.receive
+    * [SWS-151] - IllegalStateException in Saaj11Implementation.removeContents()
+    * [SWS-152] - NoSuchMethodError: SaajUtils.toName()
+    * [SWS-156] - client-side support for JAXB2 MTOM marshalling is not working well
+    * [SWS-158] - java.lang.IllegalArgumentException: This is not an attribute, it is a namespace: xmlns:xs
+    * [SWS-164] - Null pointer while handling empty SOAP Body
+
+** Improvement
+    * [SWS-144] - FaultMessageResolver should not be constrained to IOExceptions
+    * [SWS-147] - Mention transformWsdlLocations servlet parameter to the reference docs
+    * [SWS-154] - Mention namespace resolution for SoapFault annotation
