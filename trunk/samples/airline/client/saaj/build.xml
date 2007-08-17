@@ -21,7 +21,12 @@
             <remoteRepository refid="java.net"/>
             <remoteRepository refid="spring-ext"/>
             <dependency groupId="javax.xml.soap" artifactId="saaj-api" version="1.3"/>
-            <dependency groupId="com.sun.xml.wss" artifactId="xws-security" version="2.0-ea2"/>
+            <dependency groupId="com.sun.xml.wss" artifactId="xws-security" version="2.0-FCS">
+                <exclusion groupId="javax.xml.parsers" artifactId="jaxp-api"/>
+                <exclusion groupId="javax.xml.bind" artifactId="jaxb-api"/>
+                <exclusion groupId="javax.xml.ws" artifactId="jaxws-api"/>
+                <exclusion groupId="javax.xml" artifactId="jaxrpc-api"/>
+            </dependency>
             <dependency groupId="com.sun.org.apache.xml.security" artifactId="xmlsec" version="2.0"/>
         </artifact:dependencies>
 
