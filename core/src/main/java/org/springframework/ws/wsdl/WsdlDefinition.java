@@ -22,7 +22,7 @@ import javax.xml.transform.Source;
  * Represents an abstraction for WSDL definitions.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public interface WsdlDefinition {
 

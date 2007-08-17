@@ -27,7 +27,7 @@ import org.springframework.ws.server.EndpointInvocationChain;
  * @author Arjen Poutsma
  * @see #getActorsOrRoles()
  * @see SoapMessageDispatcher
- * @since 1.0
+ * @since 1.0.0
  */
 public class SoapEndpointInvocationChain extends EndpointInvocationChain {
 

@@ -27,7 +27,7 @@ import org.springframework.ws.soap.SoapFaultDetailElement;
  * javax.xml.soap.DetailEntry}.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 class SaajSoapFaultDetailElement extends SaajSoapElement implements SoapFaultDetailElement {
 

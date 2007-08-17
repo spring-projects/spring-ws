@@ -32,7 +32,7 @@ import org.springframework.util.Assert;
  * Abstract implementation of the {@link MimeMessage} interface. Contains convenient default implementations.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class AbstractMimeMessage implements MimeMessage {
 
@@ -58,7 +58,7 @@ public abstract class AbstractMimeMessage implements MimeMessage {
      * Activation framework <code>DataSource</code> that wraps a Spring <code>InputStreamSource</code>.
      *
      * @author Arjen Poutsma
-     * @since 1.0
+     * @since 1.0.0
      */
     private static class InputStreamSourceDataSource implements DataSource {
 

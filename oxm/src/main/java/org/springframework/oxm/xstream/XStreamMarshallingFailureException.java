@@ -25,7 +25,7 @@ import org.springframework.oxm.MarshallingFailureException;
  * XStream-specific subclass of <code>MarshallingFailureException</code>.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class XStreamMarshallingFailureException extends MarshallingFailureException {
 

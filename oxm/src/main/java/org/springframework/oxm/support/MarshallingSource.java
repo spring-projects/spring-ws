@@ -40,7 +40,7 @@ import org.xml.sax.SAXParseException;
  *
  * @author Arjen Poutsma
  * @see javax.xml.transform.Transformer
- * @since 1.0
+ * @since 1.0.0
  */
 public class MarshallingSource extends SAXSource {
 

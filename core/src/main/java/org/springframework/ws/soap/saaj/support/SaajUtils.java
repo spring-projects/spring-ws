@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
  * @author Arjen Poutsma
  * @see Name
  * @see QName
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class SaajUtils {
 

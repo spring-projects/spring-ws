@@ -60,7 +60,7 @@ import org.springframework.ws.wsdl.WsdlDefinition;
  * @see org.springframework.web.servlet.DispatcherServlet
  * @see org.springframework.ws.server.MessageDispatcher
  * @see org.springframework.ws.transport.http.WebServiceMessageReceiverHandlerAdapter
- * @since 1.0
+ * @since 1.0.0
  */
 public class MessageDispatcherServlet extends FrameworkServlet {
 

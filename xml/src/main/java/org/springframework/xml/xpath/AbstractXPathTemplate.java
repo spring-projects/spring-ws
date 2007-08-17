@@ -31,7 +31,7 @@ import org.w3c.dom.Node;
  * Abstract base class for implementations of {@link XPathOperations}. Contains a namespaces property.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class AbstractXPathTemplate extends TransformerObjectSupport implements XPathOperations {
 

@@ -30,7 +30,7 @@ import org.springframework.ws.server.EndpointExceptionResolver;
  * <p>Provides a set of mapped endpoints that the resolver should map.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class AbstractEndpointExceptionResolver implements EndpointExceptionResolver, Ordered {
 

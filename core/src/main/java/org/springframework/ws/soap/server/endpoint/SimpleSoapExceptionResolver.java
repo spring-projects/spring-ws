@@ -31,7 +31,7 @@ import org.springframework.ws.soap.SoapMessage;
  * <p>The fault code is always set to a Sender (in SOAP 1.1) or Receiver (SOAP 1.2).
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class SimpleSoapExceptionResolver extends AbstractEndpointExceptionResolver {
 

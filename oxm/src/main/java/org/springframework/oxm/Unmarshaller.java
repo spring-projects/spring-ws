@@ -24,7 +24,7 @@ import javax.xml.transform.Source;
  * <p>Implementations of this interface can deserialize a given XML Stream to an Object graph.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public interface Unmarshaller {
 

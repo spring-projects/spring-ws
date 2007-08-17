@@ -29,7 +29,7 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
  * The methods of each bean carrying @Endpoint will be registered using {@link #registerMethods(Object)}.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class AbstractAnnotationMethodEndpointMapping extends AbstractMethodEndpointMapping
         implements BeanPostProcessor {

@@ -22,7 +22,7 @@ import org.springframework.ws.pox.PoxMessageException;
  * Specific subclass of <code>PoxMessageException</code> for DOM Plain Old XML messages.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class DomPoxMessageException extends PoxMessageException {
 

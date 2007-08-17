@@ -34,7 +34,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Arjen Poutsma
  * @see Transformer
  * @see #createTransformer()
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class TransformerObjectSupport {
 

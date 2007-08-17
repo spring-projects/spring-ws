@@ -22,7 +22,7 @@ import org.springframework.ws.FaultAwareWebServiceMessage;
  * Thrown by <code>SimpleFaultMessageResolver</code> when the response message has a fault.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class WebServiceFaultException extends WebServiceClientException {
 

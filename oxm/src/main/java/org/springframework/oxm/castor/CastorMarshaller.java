@@ -73,7 +73,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @see #setTargetClass(Class)
  * @see #setMappingLocation(org.springframework.core.io.Resource)
  * @see #setMappingLocations(org.springframework.core.io.Resource[])
- * @since 1.0
+ * @since 1.0.0
  */
 public class CastorMarshaller extends AbstractMarshaller implements InitializingBean {
 

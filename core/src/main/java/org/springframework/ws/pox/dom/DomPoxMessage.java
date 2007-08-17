@@ -39,7 +39,7 @@ import org.w3c.dom.Element;
  *
  * @author Arjen Poutsma
  * @see Document
- * @since 1.0
+ * @since 1.0.0
  */
 public class DomPoxMessage implements PoxMessage {
 

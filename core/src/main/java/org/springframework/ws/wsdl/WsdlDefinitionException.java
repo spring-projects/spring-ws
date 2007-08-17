@@ -22,7 +22,7 @@ import org.springframework.ws.WebServiceException;
  * Base class for all WSDL definition exceptions.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class WsdlDefinitionException extends WebServiceException {
 

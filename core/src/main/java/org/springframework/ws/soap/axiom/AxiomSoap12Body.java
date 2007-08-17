@@ -38,7 +38,7 @@ import org.springframework.ws.soap.soap12.Soap12Fault;
  * Axiom-specific version of <code>org.springframework.ws.soap.Soap12Body</code>.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 class AxiomSoap12Body extends AxiomSoapBody implements Soap12Body {
 

@@ -33,7 +33,7 @@ import org.springframework.xml.sax.SaxUtils;
  * #SimpleWsdl11Definition(org.springframework.core.io.Resource) constructor}.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBean {
 

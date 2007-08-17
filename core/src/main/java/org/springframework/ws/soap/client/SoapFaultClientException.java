@@ -27,7 +27,7 @@ import org.springframework.ws.soap.SoapMessage;
  * Thrown by <code>SoapFaultMessageResolver</code> when the response message has a fault.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class SoapFaultClientException extends WebServiceFaultException {
 

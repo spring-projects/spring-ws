@@ -25,7 +25,7 @@ import org.xml.sax.InputSource;
  * Convenient utility methods for dealing with SAX.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class SaxUtils {
 

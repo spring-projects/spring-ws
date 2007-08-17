@@ -40,7 +40,7 @@ import org.springframework.xml.namespace.QNameUtils;
  * Axiom-specific version of <code>org.springframework.ws.soap.Soap11Body</code>.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
 

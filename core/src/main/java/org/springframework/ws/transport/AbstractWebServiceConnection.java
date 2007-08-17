@@ -25,7 +25,7 @@ import org.springframework.ws.WebServiceMessageFactory;
  * Abstract base class for {@link WebServiceConnection} implementations.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class AbstractWebServiceConnection implements WebServiceConnection {
 

@@ -27,7 +27,7 @@ import org.springframework.xml.sax.SaxUtils;
  * set via the constructor.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class ResourceSource extends SAXSource {
 

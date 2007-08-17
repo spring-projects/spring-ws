@@ -32,7 +32,7 @@ import org.w3c.dom.Node;
  *
  * @author Arjen Poutsma
  * @see #createXPathExpression(String)
- * @since 1.0
+ * @since 1.0.0
  */
 abstract class JaxenXPathExpressionFactory {
 

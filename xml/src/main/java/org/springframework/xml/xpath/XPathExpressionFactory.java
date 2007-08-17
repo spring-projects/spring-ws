@@ -34,7 +34,7 @@ import org.springframework.xml.JaxpVersion;
  *
  * @author Arjen Poutsma
  * @see XPathExpression
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class XPathExpressionFactory {
 

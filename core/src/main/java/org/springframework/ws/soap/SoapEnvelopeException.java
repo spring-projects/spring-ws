@@ -20,7 +20,7 @@ package org.springframework.ws.soap;
  * Exception thrown when a SOAP body could not be accessed.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class SoapEnvelopeException extends SoapMessageException {
 

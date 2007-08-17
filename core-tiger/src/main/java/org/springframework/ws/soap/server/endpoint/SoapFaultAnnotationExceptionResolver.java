@@ -27,7 +27,7 @@ import org.springframework.ws.soap.server.endpoint.annotation.SoapFault;
  * SoapFault} annotation to map exceptions to SOAP Faults.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class SoapFaultAnnotationExceptionResolver extends AbstractSoapFaultDefinitionExceptionResolver {
 

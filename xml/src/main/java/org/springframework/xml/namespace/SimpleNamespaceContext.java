@@ -33,7 +33,7 @@ import org.springframework.util.Assert;
  * <code>java.util.Properties</code> object
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class SimpleNamespaceContext implements NamespaceContext {
 

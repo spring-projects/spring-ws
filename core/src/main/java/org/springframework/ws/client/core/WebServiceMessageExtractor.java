@@ -33,7 +33,7 @@ import org.springframework.ws.WebServiceMessage;
  * exception handling, or resource handling.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public interface WebServiceMessageExtractor {
 

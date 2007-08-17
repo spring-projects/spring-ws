@@ -54,7 +54,7 @@ import org.w3c.dom.Element;
  * @author Arjen Poutsma
  * @see #setExpression(String)
  * @see #setNamespaces(java.util.Properties)
- * @since 1.0
+ * @since 1.0.0
  */
 public class XPathPayloadEndpointMapping extends AbstractMapBasedEndpointMapping implements InitializingBean {
 

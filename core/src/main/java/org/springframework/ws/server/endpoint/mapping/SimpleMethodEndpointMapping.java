@@ -45,7 +45,7 @@ import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
  *
  * @author Arjen Poutsma
  * @see #setEndpoints(Object[])
- * @since 1.0
+ * @since 1.0.0
  */
 public class SimpleMethodEndpointMapping extends AbstractMethodEndpointMapping implements InitializingBean {
 

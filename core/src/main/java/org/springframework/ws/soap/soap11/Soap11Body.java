@@ -28,7 +28,7 @@ import org.springframework.ws.soap.SoapFaultException;
  *
  * @author Arjen Poutsma
  * @see Soap11Fault
- * @since 1.0
+ * @since 1.0.0
  */
 public interface Soap11Body extends SoapBody {
 

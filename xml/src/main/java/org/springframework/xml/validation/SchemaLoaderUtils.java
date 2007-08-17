@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  * handling of input streams.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class SchemaLoaderUtils {
 

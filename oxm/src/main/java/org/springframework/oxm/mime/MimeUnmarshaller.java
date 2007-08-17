@@ -30,7 +30,7 @@ import org.springframework.oxm.XmlMappingException;
  * @see <a href="http://www.w3.org/TR/2004/WD-soap12-mtom-20040608/">SOAP Message Transmission Optimization
  *      Mechanism</a>
  * @see <a href="http://www.w3.org/TR/2005/REC-xop10-20050125/">XML-binary Optimized Packaging</a>
- * @since 1.0
+ * @since 1.0.0
  */
 public interface MimeUnmarshaller extends Unmarshaller {
 

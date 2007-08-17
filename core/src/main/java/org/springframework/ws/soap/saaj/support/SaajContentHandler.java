@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
  * @author Arjen Poutsma
  * @see javax.xml.soap.Node
  * @see javax.xml.soap.SOAPElement
- * @since 1.0
+ * @since 1.0.0
  */
 public class SaajContentHandler implements ContentHandler {
 

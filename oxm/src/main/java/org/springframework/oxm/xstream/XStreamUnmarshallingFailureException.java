@@ -27,7 +27,7 @@ import org.springframework.oxm.UnmarshallingFailureException;
  * XStream-specific subclass of <code>UnmarshallingFailureException</code>.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class XStreamUnmarshallingFailureException extends UnmarshallingFailureException {
 

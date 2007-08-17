@@ -27,7 +27,7 @@ import org.springframework.ws.soap.SoapFault;
  * SOAP 1.2 with respect to SOAP Faults.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public interface Soap12Fault extends SoapFault {
 

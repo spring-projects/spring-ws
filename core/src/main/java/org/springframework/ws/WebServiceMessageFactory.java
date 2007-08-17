@@ -27,7 +27,7 @@ import java.io.InputStream;
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.WebServiceMessage
- * @since 1.0
+ * @since 1.0.0
  */
 public interface WebServiceMessageFactory {
 

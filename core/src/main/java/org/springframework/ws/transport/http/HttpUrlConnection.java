@@ -35,7 +35,7 @@ import org.springframework.ws.transport.WebServiceConnection;
  * Implementation of the {@link WebServiceConnection} interface that uses a {@link HttpURLConnection}.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class HttpUrlConnection extends AbstractHttpSenderConnection {
 

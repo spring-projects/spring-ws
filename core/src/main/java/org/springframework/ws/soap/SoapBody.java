@@ -32,7 +32,7 @@ import javax.xml.transform.Source;
  * @see #getPayloadSource()
  * @see #getPayloadResult()
  * @see SoapFault
- * @since 1.0
+ * @since 1.0.0
  */
 public interface SoapBody extends SoapElement {
 

@@ -45,7 +45,7 @@ import org.springframework.ws.transport.TransportConstants;
  *
  * @author Arjen Poutsma
  * @see SOAPMessage
- * @since 1.0
+ * @since 1.0.0
  */
 public class SaajSoapMessage extends AbstractSoapMessage {
 

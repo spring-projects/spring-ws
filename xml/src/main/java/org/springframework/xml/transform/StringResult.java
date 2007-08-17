@@ -25,7 +25,7 @@ import javax.xml.transform.stream.StreamResult;
  *
  * @author Arjen Poutsma
  * @see #toString()
- * @since 1.0
+ * @since 1.0.0
  */
 public class StringResult extends StreamResult {
 

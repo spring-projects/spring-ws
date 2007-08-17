@@ -27,7 +27,7 @@ import org.springframework.util.Assert;
  * Consists of a {@link Method}, and a bean {@link Object}.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public final class MethodEndpoint {
 

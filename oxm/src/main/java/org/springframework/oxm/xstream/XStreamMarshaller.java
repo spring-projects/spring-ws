@@ -74,7 +74,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @see #DEFAULT_ENCODING
  * @see #setAliases(Map)
  * @see #setConverters(ConverterMatcher[])
- * @since 1.0
+ * @since 1.0.0
  */
 public class XStreamMarshaller extends AbstractMarshaller {
 

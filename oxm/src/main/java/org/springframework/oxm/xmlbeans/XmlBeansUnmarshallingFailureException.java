@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
  *
  * @author Arjen Poutsma
  * @see XmlBeansUtils#convertXmlBeansException(Exception,boolean)
- * @since 1.0
+ * @since 1.0.0
  */
 public class XmlBeansUnmarshallingFailureException extends UnmarshallingFailureException {
 

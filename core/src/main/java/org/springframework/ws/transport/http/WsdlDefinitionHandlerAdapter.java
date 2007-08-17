@@ -72,7 +72,7 @@ import org.w3c.dom.Document;
  * @see #setTransformLocations(boolean)
  * @see #setLocationExpression(String)
  * @see #transformLocation(String,javax.servlet.http.HttpServletRequest)
- * @since 1.0
+ * @since 1.0.0
  */
 public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport implements HandlerAdapter, InitializingBean {
 

@@ -25,7 +25,7 @@ import javax.xml.namespace.QName;
  * @author Arjen Poutsma
  * @see #SOAP_11
  * @see #SOAP_12
- * @since 1.0
+ * @since 1.0.0
  */
 public interface SoapVersion {
 

@@ -42,7 +42,7 @@ import org.springframework.xml.transform.StaxSource;
  * @see #invokeInternal(javax.xml.stream.XMLStreamReader,javax.xml.stream.XMLStreamWriter)
  * @see XMLStreamReader
  * @see XMLStreamWriter
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayloadEndpoint implements MessageEndpoint {
 

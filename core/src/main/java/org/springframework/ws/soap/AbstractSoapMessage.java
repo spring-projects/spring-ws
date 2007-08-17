@@ -25,7 +25,7 @@ import org.springframework.ws.mime.AbstractMimeMessage;
  * Abstract implementation of the {@link SoapMessage} interface. Contains convenient default implementations.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class AbstractSoapMessage extends AbstractMimeMessage implements SoapMessage {
 

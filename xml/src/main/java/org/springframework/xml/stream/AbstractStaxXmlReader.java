@@ -34,7 +34,7 @@ import org.xml.sax.SAXParseException;
  * @see #setDTDHandler(org.xml.sax.DTDHandler)
  * @see #setEntityResolver(org.xml.sax.EntityResolver)
  * @see #setErrorHandler(org.xml.sax.ErrorHandler)
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class AbstractStaxXmlReader extends AbstractXmlReader {
 

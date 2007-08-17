@@ -32,7 +32,7 @@ import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationM
  * such as {@link SoapActionAnnotationMethodEndpointMapping}.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

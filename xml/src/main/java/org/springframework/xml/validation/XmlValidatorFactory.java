@@ -33,7 +33,7 @@ import org.springframework.xml.JaxpVersion;
  *
  * @author Arjen Poutsma
  * @see XmlValidator
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class XmlValidatorFactory {
 

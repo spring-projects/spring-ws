@@ -22,7 +22,7 @@ import org.springframework.ws.transport.TransportConstants;
  * Declares HTTP-specific transport constants.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public interface HttpTransportConstants extends TransportConstants {
 

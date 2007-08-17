@@ -32,7 +32,7 @@ import org.springframework.ws.soap.soap11.Soap11Fault;
  * SAAJ-specific implementation of the <code>Soap11Body</code> interface. Wraps a {@link javax.xml.soap.SOAPBody}.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 class SaajSoap11Body extends SaajSoapBody implements Soap11Body {
 

@@ -31,7 +31,7 @@ import org.springframework.ws.server.endpoint.AbstractLoggingInterceptor;
  * @author Arjen Poutsma
  * @see #setLogRequest(boolean)
  * @see #setLogResponse(boolean)
- * @since 1.0
+ * @since 1.0.0
  */
 public class PayloadLoggingInterceptor extends AbstractLoggingInterceptor {
 

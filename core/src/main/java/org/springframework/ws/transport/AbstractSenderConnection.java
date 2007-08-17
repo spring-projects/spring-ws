@@ -25,7 +25,7 @@ import java.util.Iterator;
  * Abstract base class for {@link WebServiceConnection} implementations used for sending requests.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class AbstractSenderConnection extends AbstractWebServiceConnection {
 

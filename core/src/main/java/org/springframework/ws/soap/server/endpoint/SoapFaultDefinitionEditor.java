@@ -59,7 +59,7 @@ import org.springframework.xml.namespace.QNameEditor;
  * @see SoapFaultDefinition#SENDER
  * @see SoapFaultDefinition#CLIENT
  * @see org.springframework.ws.soap.SoapFault#getFaultCode()
- * @since 1.0
+ * @since 1.0.0
  */
 public class SoapFaultDefinitionEditor extends PropertyEditorSupport {
 

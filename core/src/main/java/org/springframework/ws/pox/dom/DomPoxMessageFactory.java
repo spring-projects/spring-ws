@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.pox.dom.DomPoxMessage
- * @since 1.0
+ * @since 1.0.0
  */
 public class DomPoxMessageFactory extends TransformerObjectSupport implements WebServiceMessageFactory {
 

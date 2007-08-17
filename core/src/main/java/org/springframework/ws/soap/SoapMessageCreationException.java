@@ -20,7 +20,7 @@ package org.springframework.ws.soap;
  * Exception thrown when a web service message cannot be created.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 1.0.0
  */
 public class SoapMessageCreationException extends SoapMessageException {
 
