@@ -41,7 +41,6 @@
         </dependency>
         <!-- The following JEE dependencies can be changed from 'runtime' to 'provided' if you're running the samples on a full-fledged J2EE application
         server. They are required for running the samples on a Web container such as Tomcat -->
-        <!--
         <dependency>
             <groupId>javax.xml.soap</groupId>
             <artifactId>saaj-api</artifactId>
@@ -62,6 +61,5 @@
             <artifactId>saaj-impl</artifactId>
             <scope>runtime</scope>
         </dependency>
-        -->
     </dependencies>
 </project>
