@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
-                 "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+        "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
 <chapter id="common">
     <title>Shared components</title>
     <para>
-        In this chapter, we will explore the the components which are shared between client- and server-side
+        In this chapter, we will explore the components which are shared between client- and server-side
         Spring-WS development. These interfaces and classes represent the building blocks of Spring-WS, so
         it is important to understand what they do, even if you do not use them directly.
     </para>
