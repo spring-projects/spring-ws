@@ -18,6 +18,7 @@ package org.springframework.ws.support;
 
 import java.io.IOException;
 import javax.activation.DataHandler;
+import javax.xml.transform.Source;
 
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
@@ -41,6 +42,9 @@ public abstract class MarshallingUtils {
 
     /**
      * Unmarshals the payload of the given message using the provided {@link Unmarshaller}.
+     * <p/>
+     * If the request message has no payload (i.e. {@link WebServiceMessage#getPayloadSource()} returns
+     * <code>null</code>), this method will return <code>null</code>.
      *
      * @param unmarshaller the unmarshaller
      * @param message      the message of which the payload is to be unmarshalled
@@ -48,13 +52,17 @@ public abstract class MarshallingUtils {
      * @throws IOException in case of I/O errors
      */
     public static Object unmarshal(Unmarshaller unmarshaller, WebServiceMessage message) throws IOException {
-        if (unmarshaller instanceof MimeUnmarshaller && message instanceof MimeMessage) {
+        Source payload = message.getPayloadSource();
+        if (payload == null) {
+            return null;
+        }
+        else if (unmarshaller instanceof MimeUnmarshaller && message instanceof MimeMessage) {
             MimeUnmarshaller mimeUnmarshaller = (MimeUnmarshaller) unmarshaller;
             MimeMessageContainer container = new MimeMessageContainer((MimeMessage) message);
-            return mimeUnmarshaller.unmarshal(message.getPayloadSource(), container);
+            return mimeUnmarshaller.unmarshal(payload, container);
         }
         else {
-            return unmarshaller.unmarshal(message.getPayloadSource());
+            return unmarshaller.unmarshal(payload);
         }
     }
 

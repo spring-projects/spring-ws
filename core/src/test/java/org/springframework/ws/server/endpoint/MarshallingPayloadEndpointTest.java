@@ -143,6 +143,25 @@ public class MarshallingPayloadEndpointTest extends XMLTestCase {
         factoryControl.verify();
     }
 
+    public void testInvokeNoRequest() throws Exception {
+        MockWebServiceMessage request = new MockWebServiceMessage((StringBuffer) null);
+        context = new DefaultMessageContext(request, factoryMock);
+        AbstractMarshallingPayloadEndpoint endpoint = new AbstractMarshallingPayloadEndpoint() {
+
+            protected Object invokeInternal(Object requestObject) throws Exception {
+                assertNull("No request expected", requestObject);
+                return null;
+            }
+        };
+        endpoint.setMarshaller(new SimpleMarshaller());
+        endpoint.setUnmarshaller(new SimpleMarshaller());
+        endpoint.afterPropertiesSet();
+        factoryControl.replay();
+        endpoint.invoke(context);
+        assertFalse("Response created", context.hasResponse());
+        factoryControl.verify();
+    }
+
     public void testInvokeMimeMarshaller() throws Exception {
         MockControl unmarshallerControl = MockControl.createControl(MimeUnmarshaller.class);
         MimeUnmarshaller unmarshaller = (MimeUnmarshaller) unmarshallerControl.getMock();
@@ -187,7 +206,7 @@ public class MarshallingPayloadEndpointTest extends XMLTestCase {
         messageControl.verify();
     }
 
-    private abstract static class SimpleMarshaller implements Marshaller, Unmarshaller {
+    private static class SimpleMarshaller implements Marshaller, Unmarshaller {
 
         public void marshal(Object graph, Result result) throws XmlMappingException, IOException {
             fail("Not expected");

@@ -45,14 +45,13 @@ import org.springframework.xml.transform.StringSource;
  */
 public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
 
-    private final StringBuffer content;
+    private StringBuffer content;
 
     private boolean fault = false;
 
     private String faultReason;
 
     public MockWebServiceMessage() {
-        content = new StringBuffer();
     }
 
     public MockWebServiceMessage(Source source) throws TransformerException {
@@ -71,14 +70,17 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
     }
 
     public MockWebServiceMessage(String content) {
-        this.content = new StringBuffer(content);
+        if (content != null) {
+            this.content = new StringBuffer(content);
+        }
     }
 
     public String getPayloadAsString() {
-        return content.toString();
+        return content != null ? content.toString() : null;
     }
 
     public void setPayload(InputStreamSource inputStreamSource) throws IOException {
+        checkContent();
         InputStream is = null;
         try {
             is = inputStreamSource.getInputStream();
@@ -93,16 +95,24 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
     }
 
     public void setPayload(String content) {
+        checkContent();
         this.content.replace(0, this.content.length(), content);
     }
 
+    private void checkContent() {
+        if (content == null) {
+            content = new StringBuffer();
+        }
+    }
+
     public Result getPayloadResult() {
+        checkContent();
         content.setLength(0);
         return new StreamResult(new StringBufferWriter());
     }
 
     public Source getPayloadSource() {
-        return new StringSource(content.toString());
+        return content != null ? new StringSource(content.toString()) : null;
     }
 
     public boolean hasFault() {
@@ -122,13 +132,17 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
     }
 
     public void writeTo(OutputStream outputStream) throws IOException {
-        PrintWriter writer = new PrintWriter(outputStream);
-        writer.write(content.toString());
+        if (content != null) {
+            PrintWriter writer = new PrintWriter(outputStream);
+            writer.write(content.toString());
+        }
     }
 
     public String toString() {
         StringBuffer buffer = new StringBuffer("MockWebServiceMessage {");
-        buffer.append(content);
+        if (content != null) {
+            buffer.append(content);
+        }
         buffer.append('}');
         return buffer.toString();
     }

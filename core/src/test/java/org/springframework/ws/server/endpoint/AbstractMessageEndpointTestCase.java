@@ -42,6 +42,15 @@ public abstract class AbstractMessageEndpointTestCase extends AbstractEndpointTe
         assertFalse("Response message created", context.hasResponse());
     }
 
+    public void testNoRequestPayload() throws Exception {
+        endpoint = createNoRequestPayloadEndpoint();
+
+        MessageContext context = new DefaultMessageContext(new MockWebServiceMessage((StringBuffer) null),
+                new MockWebServiceMessageFactory());
+        endpoint.invoke(context);
+        assertFalse("Response message created", context.hasResponse());
+    }
+
     protected final void testSource(Source requestSource) throws Exception {
         MessageContext context =
                 new DefaultMessageContext(new MockWebServiceMessage(requestSource), new MockWebServiceMessageFactory());
@@ -51,6 +60,8 @@ public abstract class AbstractMessageEndpointTestCase extends AbstractEndpointTe
     }
 
     protected abstract MessageEndpoint createNoResponseEndpoint();
+
+    protected abstract MessageEndpoint createNoRequestPayloadEndpoint();
 
     protected abstract MessageEndpoint createResponseEndpoint();
 
