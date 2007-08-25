@@ -76,6 +76,24 @@ public class MarshallingUtilsTest extends TestCase {
         messageControl.verify();
     }
 
+    public void testUnmarshalNoPayload() throws Exception {
+        MockControl unmarshallerControl = MockControl.createControl(MimeUnmarshaller.class);
+        MimeUnmarshaller unmarshallerMock = (MimeUnmarshaller) unmarshallerControl.getMock();
+        MockControl messageControl = MockControl.createControl(MimeMessage.class);
+        MimeMessage messageMock = (MimeMessage) messageControl.getMock();
+
+        messageControl.expectAndReturn(messageMock.getPayloadSource(), null);
+
+        unmarshallerControl.replay();
+        messageControl.replay();
+
+        Object result = MarshallingUtils.unmarshal(unmarshallerMock, messageMock);
+        assertNull("Invalid unmarshalled object", result);
+
+        unmarshallerControl.verify();
+        messageControl.verify();
+    }
+
     public void testMarshal() throws Exception {
         MockControl marshallerControl = MockControl.createControl(Marshaller.class);
         Marshaller marshallerMock = (Marshaller) marshallerControl.getMock();

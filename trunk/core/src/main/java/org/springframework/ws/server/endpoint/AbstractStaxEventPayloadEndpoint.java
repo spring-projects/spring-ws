@@ -78,6 +78,9 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
     }
 
     private XMLEventReader getEventReader(Source source) throws XMLStreamException, TransformerException {
+        if (source == null) {
+            return null;
+        }
         XMLEventReader eventReader = null;
         if (source instanceof StaxSource) {
             StaxSource staxSource = (StaxSource) source;

@@ -6,6 +6,7 @@ import junit.framework.TestCase;
 import org.easymock.MockControl;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
+import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
@@ -38,7 +39,8 @@ public class MarshallingMethodEndpointAdapterTest extends TestCase {
         unmarshallerMock = (Unmarshaller) unmarshallerControl.getMock();
         adapter.setUnmarshaller(unmarshallerMock);
         adapter.afterPropertiesSet();
-        messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
+        MockWebServiceMessage request = new MockWebServiceMessage("<request/>");
+        messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
     }
 
     public void testNoResponse() throws Exception {
@@ -47,6 +49,20 @@ public class MarshallingMethodEndpointAdapterTest extends TestCase {
         unmarshallerMock.unmarshal(messageContext.getRequest().getPayloadSource());
         unmarshallerControl.setMatcher(MockControl.ALWAYS_MATCHER);
         unmarshallerControl.setReturnValue(new MyType());
+        marshallerControl.replay();
+        unmarshallerControl.replay();
+        assertFalse("Method invoked", noResponseInvoked);
+        adapter.invoke(messageContext, methodEndpoint);
+        assertTrue("Method not invoked", noResponseInvoked);
+        marshallerControl.verify();
+        unmarshallerControl.verify();
+    }
+
+    public void testNoRequestPayload() throws Exception {
+        MockWebServiceMessage request = new MockWebServiceMessage();
+        messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
+        Method noResponse = getClass().getMethod("noResponse", new Class[]{MyType.class});
+        MethodEndpoint methodEndpoint = new MethodEndpoint(this, noResponse);
         marshallerControl.replay();
         unmarshallerControl.replay();
         assertFalse("Method invoked", noResponseInvoked);

@@ -37,6 +37,18 @@ public class StaxEventPayloadEndpointTest extends AbstractMessageEndpointTestCas
             protected void invokeInternal(XMLEventReader eventReader,
                                           XMLEventConsumer eventWriter,
                                           XMLEventFactory eventFactory) throws Exception {
+                assertNotNull("No EventReader passed", eventReader);
+            }
+        };
+    }
+
+    protected MessageEndpoint createNoRequestPayloadEndpoint() {
+        return new AbstractStaxEventPayloadEndpoint() {
+
+            protected void invokeInternal(XMLEventReader eventReader,
+                                          XMLEventConsumer eventWriter,
+                                          XMLEventFactory eventFactory) throws Exception {
+                assertNull("EventReader passed", eventReader);
             }
         };
     }

@@ -42,6 +42,15 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
     protected MessageEndpoint createNoResponseEndpoint() {
         return new AbstractStaxStreamPayloadEndpoint() {
             protected void invokeInternal(XMLStreamReader streamReader, XMLStreamWriter streamWriter) throws Exception {
+                assertNotNull("No StreamReader passed", streamReader);
+            }
+        };
+    }
+
+    protected MessageEndpoint createNoRequestPayloadEndpoint() {
+        return new AbstractStaxStreamPayloadEndpoint() {
+            protected void invokeInternal(XMLStreamReader streamReader, XMLStreamWriter streamWriter) throws Exception {
+                assertNull("StreamReader passed", streamReader);
             }
         };
     }
