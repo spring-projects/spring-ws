@@ -518,7 +518,7 @@
         </para>
         <para>
             (You can see the contents of the <filename>'WEB-INF/spring-ws-servlet.xml'</filename> file for this
-            example <link linkend="tutorial.example.sws-conf-file">beginning here</link>.)
+            example in <xref linkend="tutorial.example.sws-conf-file"/>.)
         </para>
     </section>
     <section id="tutorial.implementing.endpoint">
@@ -526,7 +526,7 @@
         <para>
            In Spring-WS, you will implement <emphasis>Endpoints</emphasis> to handle incoming XML messages.
            There are two flavors of endpoints: <link linkend="message-endpoint">message endpoints</link> and
-           <link linkend="payload-endpoint">payload endpoints.</link>. <emphasis>Message endpoints</emphasis>
+           <link linkend="payload-endpoint">payload endpoints</link>. <emphasis>Message endpoints</emphasis>
            give access to the entire XML message, including SOAP headers. Typically, the endpoint will only be
            interested in the <emphasis>payload</emphasis> of the message, that is the contents of the SOAP body.
            In that case, creating a <emphasis>payload endpoint</emphasis> makes more sense.
