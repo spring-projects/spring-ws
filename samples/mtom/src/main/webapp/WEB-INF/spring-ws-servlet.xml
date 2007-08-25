@@ -16,6 +16,7 @@
 
     <bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
         <property name="contextPath" value="org.springframework.ws.samples.mtom.schema"/>
+        <property name="mtomEnabled" value="true"/>
     </bean>
 
     <bean id="mtom" class="org.springframework.ws.wsdl.wsdl11.DynamicWsdl11Definition">
