@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
-                 "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+        "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
 <chapter id="security">
 	<title>Securing your Web services with Spring-WS</title>
 
@@ -13,9 +13,9 @@
 		<formalpara>
 			<title>Authentication</title>
 			<para>
-				This is the process of determining whether a <emphasis>principal</emphasis> is who they claim to be.
-             In this context, a "principal" generally means a user, device or some other system which can perform
-             an action in your application.
+			    This is the process of determining whether a <emphasis>principal</emphasis> is who they claim to be.
+                In this context, a "principal" generally means a user, device or some other system which can perform
+                an action in your application.
 			</para>
 		</formalpara>
 		<formalpara>
@@ -29,19 +29,16 @@
 		<formalpara>
 			<title>Encryption and Decryption</title>
 			<para>
-				<emphasis>Encryption</emphasis>
-				is the process of transforming data into a form that is impossible to read without the appropriate key.
-				It is mainly used to keep information hidden from anyone for whom it is not intended.
-				<emphasis>Decryption</emphasis>
-				is the reverse of encryption; it is the process of transforming of encrypted data back into an readable
-				form.
+				<emphasis>Encryption</emphasis> is the process of transforming data into a form that is impossible to
+                read without the appropriate key. It is mainly used to keep information hidden from anyone for whom it
+                is not intended.
+				<emphasis>Decryption</emphasis> is the reverse of encryption; it is the process of transforming of
+                encrypted data back into an readable form.
 			</para>
 		</formalpara>
 		<para>
-			All of these three areas are implemented using the
-			<classname>XwsSecurityInterceptor</classname>
-			, which we will describe in
-			<xref linkend="security-xws-security-interceptor" />
+			All of these three areas are implemented using the <classname>XwsSecurityInterceptor</classname>, which we
+            will describe in <xref linkend="security-xws-security-interceptor"/>.
 		</para>
 		<note>
 			<para>
@@ -54,62 +51,39 @@
 	<section id="security-xws-security-interceptor">
 		<title><classname>XwsSecurityInterceptor</classname></title>
 		<para>
-			The
-			<classname>XwsSecurityInterceptor</classname>
-			is an
-			<classname>EndpointInterceptor</classname>
-			(see
-			<xref linkend="server-endpoint-interceptor" />
-			) that is based on SUN's XML and Web Services Security package (XWSS). This WS-Security implementation is
-			part of the Java Web Services Developer Pack (
-			<ulink url="http://java.sun.com/webservices/">
-				<citetitle>Java WSDP</citetitle>
-			</ulink>
-			).
+			The <classname>XwsSecurityInterceptor</classname> is an	<classname>EndpointInterceptor</classname>
+			(see <xref linkend="server-endpoint-interceptor"/>) that is based on SUN's XML and Web Services Security
+			package (XWSS). This WS-Security implementation is part of the Java Web Services Developer Pack 
+			(<ulink url="http://java.sun.com/webservices/"><citetitle>Java WSDP</citetitle></ulink>).
 		</para>
 		<para>
 			Like any other endpoint interceptor, it is defined in the endpoint mapping (see
-			<xref linkend="server-endpoint-mapping" />
+			<xref linkend="server-endpoint-mapping"/>
 			). This means that you can be selective about adding WS-Security support: some endpoint mappings require it,
 			while others do not.
 		</para>
 		<para>
-			The
-			<classname>XwsSecurityInterceptor</classname>
-			requires a
-			<emphasis>security policy file</emphasis>
+			The <classname>XwsSecurityInterceptor</classname> requires a <emphasis>security policy file</emphasis>
 			to operate. This XML file tells the interceptor what security aspects to require from incoming SOAP
 			messages, and what aspects to add to outgoing messages. The basic format of the policy file will be
 			explained in the following sections, but you can find a more in-depth tutorial
 			<ulink url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp564887">
-				<citetitle>here</citetitle>
-			</ulink>
-			. You can set the policy with the
-			<methodname>policyConfiguration</methodname>
-			property, which requires a Spring resource. The policy file can contain multiple elements, e.g. require a
+            <citetitle>here</citetitle></ulink>.
+            You can set the policy with the <methodname>policyConfiguration</methodname> property, which 
+			requires a Spring resource. The policy file can contain multiple elements, e.g. require a
 			username token on incoming messages, and sign all outgoing messages. It contains a
-			<literal>SecurityConfiguration</literal>
-			element as root (not a
-			<literal>JAXRPCSecurity</literal>
-			element).
+			<literal>SecurityConfiguration</literal> element as root (not a	<literal>JAXRPCSecurity</literal> element).
 		</para>
 		<para>
-			Additionally, the security interceptor requires one or more
-			<classname>CallbackHandler</classname>
-			s to operate. These handlers are used to retrieve certificates, private keys, validate user credentials,
+			Additionally, the security interceptor requires one or more	<classname>CallbackHandler</classname>s to 
+			operate. These handlers are used to retrieve certificates, private keys, validate user credentials,
 			etc. Spring-WS offers handlers for most common security concerns, e.g. authenticating against a Acegi
 			authentication manager, signing outgoing messages based on a X509 certificate. The following sections will
 			indicate what callback handler to use for which security concern. You can set the callback handlers using
-			the
-			<methodname>callbackHandler</methodname>
-			or
-			<methodname>callbackHandlers</methodname>
-			property.
+			the	<methodname>callbackHandler</methodname> or	<methodname>callbackHandlers</methodname> property.
 		</para>
 		<para>
-			Here is an example that shows how to wire the
-			<classname>XwsSecurityInterceptor</classname>
-			up:
+			Here is an example that shows how to wire the <classname>XwsSecurityInterceptor</classname>	up:
 			<programlisting><![CDATA[
 <beans>
     <bean id="wsSecurityInterceptor"
