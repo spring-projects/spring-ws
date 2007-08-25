@@ -106,7 +106,7 @@
     <bean class="org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter">
         <description>
             This adapter allows for methods that need and returns marshalled objects. The MarshallingEndpoint
-            uses JAXB2 objects.
+            uses JAXB 2 objects.
         </description>
         <constructor-arg ref="marshaller"/>
     </bean>

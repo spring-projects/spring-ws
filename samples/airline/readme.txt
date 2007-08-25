@@ -5,7 +5,7 @@
 1. INTRODUCTION
 
 Features a web service on top of an airline reservation system, backed by a database. The web service works by using XML
-Marshalling techniques (JAXB 1), and JDOM in combination with XPath queries to pull information from a message. All
+Marshalling techniques (JAXB2), and XPath in combination with XPath queries to pull information from a message. All
 messages follow the airline.xsd schema in src/main/webapp.
 
 Multiple clients are available, showing interoperability with Axis 1, SAAJ, C#, and more.
