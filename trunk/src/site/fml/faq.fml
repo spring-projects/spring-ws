@@ -24,6 +24,19 @@
                 </p>
             </answer>
         </faq>
+        <faq id="java-1.6">
+            <question>Does Spring-WS work under Java 1.6?</question>
+            <answer>
+                <p>
+                    Spring Web Services works under Java 1.6, but you must make sure to use the versions of Xerces and
+                    Xalan that are packaged with it. Using other XML parsing libraries will cause exceptions to occur
+                    in the <tt>org.apache.xml.serializer.ToXMLSAXHandler</tt>.
+                </p>
+                <p>
+                    Therefore, when using Java 6, do not bundle Xerces, nor Xalan in your application.
+                </p>
+            </answer>
+        </faq>
         <faq id="osx">
             <question>Why do the Spring-WS unit tests fail under Mac OS X?</question>
             <answer>
