@@ -44,7 +44,6 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.validation.Schema;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.oxm.mime.MimeContainer;
@@ -169,9 +168,19 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller implements MimeMarsh
             return true;
         }
         else if (!supportedClasses.containsKey(clazz)) {
-            Object instance = BeanUtils.instantiateClass(clazz);
+            boolean supported = false;
+            Object instance = null;
+            try {
+                instance = clazz.newInstance();
+            }
+            catch (InstantiationException e) {
+                // not supported
+            }
+            catch (IllegalAccessException e) {
+                // not supported
+            }
             JAXBIntrospector introspector = getJaxbContext().createJAXBIntrospector();
-            boolean supported = introspector.isElement(instance);
+            supported = introspector.isElement(instance);
             supportedClasses.put(clazz, supported);
         }
         return supportedClasses.get(clazz);
