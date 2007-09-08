@@ -25,6 +25,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import javax.activation.DataHandler;
@@ -33,9 +34,9 @@ import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.JAXBIntrospector;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.attachment.AttachmentMarshaller;
 import javax.xml.bind.attachment.AttachmentUnmarshaller;
@@ -43,6 +44,7 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.validation.Schema;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.oxm.mime.MimeContainer;
@@ -92,9 +94,11 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller implements MimeMarsh
 
     private Class[] classesToBeBound;
 
-    private Map<java.lang.String, ?> jaxbContextProperties;
+    private Map<String, ?> jaxbContextProperties;
 
     private boolean mtomEnabled = false;
+
+    private Map<Class, Boolean> supportedClasses = new HashMap<Class, Boolean>();
 
     /**
      * Sets the <code>XmlAdapter</code>s to be registered with the JAXB <code>Marshaller</code> and
@@ -161,9 +165,17 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller implements MimeMarsh
     }
 
     public boolean supports(Class clazz) {
-        return clazz.getAnnotation(XmlRootElement.class) != null || JAXBElement.class.isAssignableFrom(clazz);
+        if (JAXBElement.class.isAssignableFrom(clazz)) {
+            return true;
+        }
+        else if (!supportedClasses.containsKey(clazz)) {
+            Object instance = BeanUtils.instantiateClass(clazz);
+            JAXBIntrospector introspector = getJaxbContext().createJAXBIntrospector();
+            boolean supported = introspector.isElement(instance);
+            supportedClasses.put(clazz, supported);
+        }
+        return supportedClasses.get(clazz);
     }
-
     /*
      * JAXBContext
      */
