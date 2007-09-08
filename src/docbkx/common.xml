@@ -223,9 +223,8 @@
         <section id="message-context">
         	<title><interfacename>MessageContext</interfacename></title>
         	<para>
-        		Typically, messages come in pairs: a request and a response. A request
-            is created on the client-side, which is sent over some transport to the
-            server-side, where a response is generated. This response gets
+        		Typically, messages come in pairs: a request and a response. A request is created on the client-side,
+                which is sent over some transport to the server-side, where a response is generated. This response gets
         		sent back to the client, where it is read.
         	</para>
         	<para>
@@ -235,10 +234,32 @@
         		On the client-side, the message context is created by the <link linkend="client-web-service-template">
         		<classname>WebServiceTemplate</classname></link>.
         		On the server-side, the message context is read from the transport-specific input stream.
-            For example, in HTTP, it is read from the <interfacename>HttpServletRequest</interfacename> and the response is written back
-        		to the <interfacename>HttpServletResponse</interfacename>.
+                For example, in HTTP, it is read from the <interfacename>HttpServletRequest</interfacename> and the
+                response is written back to the <interfacename>HttpServletResponse</interfacename>.
        		</para>
         </section>
+    </section>
+    <section id="transport-context">
+        <title><interfacename>TransportContext</interfacename></title>
+        <para>
+            One of the key properties of the SOAP protocol is that it tries to be transport-agnostic. This is why, for
+            instance, Spring-WS does not support mapping messages to endpoints by HTTP request URL, but
+            rather by mesage content.
+        </para>
+        <para>
+            However, sometimes it is necessary to get access to the underlying transport, either on the client or server
+            side. For this, Spring Web Services has the <interfacename>TransportContext</interfacename>. The transport
+            context allows access to the underlying <interfacename>WebServiceConnection</interfacename>, which typically
+            is a <classname>HttpServletConnection</classname> on the server side; or a
+            <classname>HttpUrlConnection</classname> or <classname>CommonsHttpConnection</classname> on the client side.
+            For example, you can obtain the IP address of the current request in a server-side endpoint or
+            interceptor like so:
+        </para>
+        <programlisting><![CDATA[
+TransportContext context = TransportContextHolder.getTransportContext();
+HttpServletConnection connection = (HttpServletConnection )context.getConnection();
+HttpServletRequest request = connection.getHttpServletRequest();
+String ipAddress = request.getRemoteAddr();]]></programlisting>
     </section>
     <section id="xpath">
         <title>Handling XML With XPath</title>
