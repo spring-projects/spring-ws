@@ -100,14 +100,14 @@ public class WebServiceClient {
     public void simpleSendAndReceive() {
         StreamSource source = new StreamSource(new StringReader(MESSAGE));
         StreamResult result = new StreamResult(System.out);
-        webServiceTemplate.sendAndReceive(source, result);
+        webServiceTemplate.sendSourceAndReceiveToResult(source, result);
     }
 
     ]]><lineannotation>// send to an explicit URI</lineannotation><![CDATA[
     public void customSendAndReceive() {
         StreamSource source = new StreamSource(new StringReader(MESSAGE));
         StreamResult result = new StreamResult(System.out);
-        webServiceTemplate.sendAndReceive("http://localhost:8080/AnotherWebService", source, result);
+        webServiceTemplate.sendSourceAndReceiveToResult("http://localhost:8080/AnotherWebService", source, result);
     }
 
 }]]></programlisting>
@@ -196,9 +196,13 @@ public void marshalWithSoapActionHeader(MyObject o) {
                 in action:
             </para>
             <programlisting><![CDATA[
-public void marshalWithSoapActionHeader(MyObject o) {
+public void marshalWithSoapActionHeader(final Source s) {
+    final Transformer transformer = transformerFactory.newTransformer();
+    webServiceTemplate.sendAndReceive(new WebServiceMessageCallback() {
 
-    webServiceTemplate.sendAndReceive(o, new WebServiceMessageExtractor() {
+        public void doInMessage(WebServiceMessage message) {
+            transformer.transform(s, message.getPayloadResult());
+        }, new WebServiceMessageExtractor() {
 
         public Object extractData(WebServiceMessage message) throws IOException
             ]]><lineannotation>// do your own transforms with message.getPayloadResult()</lineannotation><![CDATA[
