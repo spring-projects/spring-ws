@@ -107,6 +107,7 @@ import org.springframework.ws.soap.security.support.KeyStoreFactoryBean;
  * @see SignatureVerificationKeyCallback
  * @see <a href="http://java.sun.com/j2se/1.4.2/docs/guide/security/jsse/JSSERefGuide.html#X509TrustManager">The
  *      standard Java trust store mechanism</a>
+ * @since 1.0.0
  */
 public class KeyStoreCallbackHandler extends CryptographyCallbackHandler implements InitializingBean {
 
@@ -597,7 +598,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
         factoryBean.setType(type);
         try {
             factoryBean.afterPropertiesSet();
-            this.trustStore = (KeyStore) factoryBean.getObject();
+            keyStore = (KeyStore) factoryBean.getObject();
             if (logger.isDebugEnabled()) {
                 logger.debug("Loaded default key store");
             }
@@ -654,7 +655,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
         factoryBean.setType(type);
         try {
             factoryBean.afterPropertiesSet();
-            this.trustStore = (KeyStore) factoryBean.getObject();
+            trustStore = (KeyStore) factoryBean.getObject();
             if (logger.isDebugEnabled()) {
                 logger.debug("Loaded default trust store");
             }
