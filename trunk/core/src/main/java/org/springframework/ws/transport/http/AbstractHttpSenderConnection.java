@@ -61,7 +61,7 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
         long contentLength = getResponseContentLength();
         if (contentLength < 0) {
             if (responseBuffer == null) {
-                responseBuffer = FileCopyUtils.copyToByteArray(getResponseInputStream());
+                responseBuffer = FileCopyUtils.copyToByteArray(getRawResponseInputStream());
             }
             contentLength = responseBuffer.length;
         }
@@ -98,6 +98,7 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
     /** Returns the length of the response. */
     protected abstract long getResponseContentLength() throws IOException;
 
+    /** Returns the raw, possibly compressed input stream to read the response from. */
     protected abstract InputStream getRawResponseInputStream() throws IOException;
 
     /*

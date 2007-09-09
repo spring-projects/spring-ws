@@ -133,6 +133,14 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
         validateResponse(servlet);
     }
 
+    public void testSendAndReceiveCompressedInvalidContentSize() throws Exception {
+        MyServlet servlet = new MyServlet();
+        servlet.setResponse(true);
+        servlet.setGzip(true);
+        servlet.setContentLength(-1);
+        validateResponse(servlet);
+    }
+
     public void testSendAndReceiveFault() throws Exception {
         MyServlet servlet = new MyServlet();
         servlet.setResponseStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
