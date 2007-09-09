@@ -52,7 +52,7 @@
                 </caption>
             </mediaobject>
         </para>
-           <para>
+        <para>
                When a <classname>MessageDispatcher</classname> is set up for use and a request comes in for that
                specific dispatcher, said <classname>MessageDispatcher</classname> starts processing the request. The
                list below describes the complete process a request goes through when handled by a
@@ -87,7 +87,7 @@
             Exceptions that are thrown during handling of the request get picked up by any of the endpoint exception
             resolvers that are declared in the application context. Using these exception resolvers allows you to define
             custom behaviors (such as returning a SOAP Fault) in case such exceptions get thrown.
-           </para>
+        </para>
         <para>
             The <classname>MessageDispatcher</classname> has several properties, for setting endpoint adapters,
             <link linkend="server-endpoint-mapping">mappings</link>,
@@ -95,20 +95,21 @@
             However, setting these properties is not required, since the dispatcher will automatically detect all of
             these types that are registered in the application context. Only when detection needs to be overriden,
             should these properties be set.
-           </para>
-           <para>
-               The message dispatcher operates on a <link linkend="message-context">message context</link>, and not
-               transport-specific input stream and output stream. As a result, transport specific requests need to read
-               into a <interfacename>MessageContext</interfacename>. For HTTP, this is done with a
-               <classname>WebServiceMessageReceiverHandlerAdapter</classname>, which is a Spring Web
-               <interfacename>HandlerInterceptor</interfacename>, so that the <classname>MessageDispatcher</classname>
-               can be wired in a standard <classname>DispatcherServlet</classname>. There is a more convenient way to do
-               this, however, which is shown in the next section.
-           </para>
+        </para>
+        <para>
+            The message dispatcher operates on a <link linkend="message-context">message context</link>, and not
+            transport-specific input stream and output stream. As a result, transport specific requests need to read
+            into a <interfacename>MessageContext</interfacename>. For HTTP, this is done with a
+            <classname>WebServiceMessageReceiverHandlerAdapter</classname>, which is a Spring Web
+            <interfacename>HandlerInterceptor</interfacename>, so that the <classname>MessageDispatcher</classname>
+            can be wired in a standard <classname>DispatcherServlet</classname>. There is a more convenient way to do
+            this, however, which is shown in the next section.
+        </para>
         <section>
             <title><classname>MessageDispatcherServlet</classname></title>
             <para>
-                The <classname>MessageDispatcherServlet</classname> is a standard <interfacename>Servlet</interfacename> which
+                The <classname>MessageDispatcherServlet</classname> is a standard <interfacename>Servlet</interfacename>
+                which
                 conveniently extends from the standard Spring Web <classname>DispatcherServlet</classname>, and wraps
                 a <classname>MessageDispatcher</classname>.  As such, it combines the attributes of these into one:
                 as a <classname>MessageDispatcher</classname>, it follows the same request handling flow as described
@@ -192,7 +193,37 @@
                 which explains the whole transformation process in more detail.</para>
             </section>
         </section>
-       </section>
+        <section>
+            <title>Wiring up Spring-WS in a <classname>DispatcherServlet</classname></title>
+            <para>
+                As an alternative to the <classname>MessageDispatcherServlet</classname>, you can wire up a
+                <classname>MessageDispatcher</classname> in a standard, Spring-Web MVC
+                <classname>DispatcherServlet</classname>.
+                By default, the <classname>DispatcherServlet</classname> can only delegate to
+                <interfacename>Controllers</interfacename>, but we can instruct it to delegate to a
+                <classname>MessageDispatcher</classname> by adding a
+                <classname>WebServiceMessageReceiverHandlerAdapter</classname> to the servlet's web application
+                context:
+            <programlisting><![CDATA[<beans>
+
+    <bean class="org.springframework.ws.transport.http.WebServiceMessageReceiverHandlerAdapter"/>
+
+    <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="defaultHandler" ref="messageDispatcher"/>
+    </bean
+
+    <bean id="messageDispatcher" class="org.springframework.ws.server.MessageDispatcher"/>
+
+    ...
+
+    <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>]]></programlisting>
+                Note that by explicitely adding the <classname>WebServiceMessageReceiverHandlerAdapter</classname>,
+                the dispatcher servlet does not load the default adapters, and is unable to handle standard Spring-MVC
+                <interfacename>Controllers</interfacename>. Therefore, we add the
+                <classname>SimpleControllerHandlerAdapter</classname> at the end.
+            </para>
+        </section>
+    </section>
     <section>
         <title>Endpoints</title>
         <para>
