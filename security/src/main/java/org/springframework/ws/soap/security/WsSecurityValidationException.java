@@ -23,6 +23,7 @@ package org.springframework.ws.soap.security;
  * fail. Failure to validate a message is usually not a fatal problem.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  */
 public abstract class WsSecurityValidationException extends WsSecurityException {
 

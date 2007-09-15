@@ -25,7 +25,6 @@ import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 
 import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
-
 import org.springframework.ws.soap.security.xwss.callback.AbstractCallbackHandler;
 
 /**
@@ -36,6 +35,7 @@ import org.springframework.ws.soap.security.xwss.callback.AbstractCallbackHandle
  *
  * @author Arjen Poutsma
  * @see #getLoginContextName()
+ * @since 1.0.0
  */
 public class JaasPlainTextPasswordValidationCallbackHandler extends AbstractJaasValidationCallbackHandler {
 

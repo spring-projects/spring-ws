@@ -18,7 +18,6 @@ package org.springframework.ws.soap.security.xwss.callback;
 
 import java.io.IOException;
 import java.security.cert.X509Certificate;
-
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
@@ -32,6 +31,7 @@ import com.sun.xml.wss.impl.callback.TimestampValidationCallback;
  * handler throws a <code>UnsupportedCallbackException</code>, the next handler is tried.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  */
 public class CallbackHandlerChain extends AbstractCallbackHandler {
 

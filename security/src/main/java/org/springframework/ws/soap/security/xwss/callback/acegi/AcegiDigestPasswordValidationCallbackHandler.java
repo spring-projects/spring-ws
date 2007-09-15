@@ -49,6 +49,7 @@ import org.springframework.ws.soap.security.xwss.callback.DefaultTimestampValida
  * @see PasswordValidationCallback
  * @see com.sun.xml.wss.impl.callback.PasswordValidationCallback.DigestPasswordRequest
  * @see org.acegisecurity.ui.digestauth.DigestProcessingFilter
+ * @since 1.0.0
  */
 public class AcegiDigestPasswordValidationCallbackHandler extends AbstractCallbackHandler {
 

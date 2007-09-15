@@ -35,6 +35,7 @@ import org.springframework.ws.soap.server.SoapEndpointInterceptor;
  * are on.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  */
 public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInterceptor {
 

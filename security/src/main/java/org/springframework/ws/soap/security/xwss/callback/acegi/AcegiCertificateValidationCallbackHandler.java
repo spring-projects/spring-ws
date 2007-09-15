@@ -18,7 +18,6 @@ package org.springframework.ws.soap.security.xwss.callback.acegi;
 
 import java.io.IOException;
 import java.security.cert.X509Certificate;
-
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
@@ -28,7 +27,6 @@ import org.acegisecurity.AuthenticationException;
 import org.acegisecurity.AuthenticationManager;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.providers.x509.X509AuthenticationToken;
-
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.xwss.callback.AbstractCallbackHandler;
 
@@ -49,6 +47,7 @@ import org.springframework.ws.soap.security.xwss.callback.AbstractCallbackHandle
  * @see org.acegisecurity.providers.x509.X509AuthenticationProvider
  * @see org.acegisecurity.ui.x509.X509ProcessingFilter
  * @see CertificateValidationCallback
+ * @since 1.0.0
  */
 public class AcegiCertificateValidationCallbackHandler extends AbstractCallbackHandler {
 
@@ -56,9 +55,7 @@ public class AcegiCertificateValidationCallbackHandler extends AbstractCallbackH
 
     private boolean ignoreFailure = false;
 
-    /**
-     * Sets the Acegi authentication manager. Required.
-     */
+    /** Sets the Acegi authentication manager. Required. */
     public void setAuthenticationManager(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }

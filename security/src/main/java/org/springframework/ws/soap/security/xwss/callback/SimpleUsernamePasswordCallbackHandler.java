@@ -17,13 +17,11 @@
 package org.springframework.ws.soap.security.xwss.callback;
 
 import java.io.IOException;
-
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
 import com.sun.xml.wss.impl.callback.PasswordCallback;
 import com.sun.xml.wss.impl.callback.UsernameCallback;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
@@ -36,6 +34,7 @@ import org.springframework.util.Assert;
  * @author Arjen Poutsma
  * @see #setUsername(String)
  * @see #setPassword(String)
+ * @since 1.0.0
  */
 public class SimpleUsernamePasswordCallbackHandler extends AbstractCallbackHandler implements InitializingBean {
 

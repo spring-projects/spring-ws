@@ -17,7 +17,6 @@
 package org.springframework.ws.soap.security.xwss.callback.jaas;
 
 import java.security.cert.X509Certificate;
-
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
@@ -36,6 +35,7 @@ import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
  * @author Arjen Poutsma
  * @see javax.security.auth.x500.X500Principal
  * @see #setLoginContextName(String)
+ * @since 1.0.0
  */
 public class JaasCertificateValidationCallbackHandler extends AbstractJaasValidationCallbackHandler {
 

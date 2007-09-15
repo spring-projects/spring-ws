@@ -54,6 +54,7 @@ import org.springframework.ws.soap.security.xwss.callback.CallbackHandlerChain;
  * @see com.sun.xml.wss.impl.callback.XWSSCallback
  * @see org.springframework.ws.soap.saaj.SaajSoapMessageFactory
  * @see <a href="https://xwss.dev.java.net/">XWSS</a>
+ * @since 1.0.0
  */
 public class XwsSecurityInterceptor extends AbstractWsSecurityInterceptor implements InitializingBean {
 
@@ -85,9 +86,7 @@ public class XwsSecurityInterceptor extends AbstractWsSecurityInterceptor implem
         this.callbackHandler = new CallbackHandlerChain(callbackHandler);
     }
 
-    /**
-     * Sets the policy configuration to use for XWSS. Required.
-     */
+    /** Sets the policy configuration to use for XWSS. Required. */
     public void setPolicyConfiguration(Resource policyConfiguration) {
         this.policyConfiguration = policyConfiguration;
     }
@@ -100,7 +99,7 @@ public class XwsSecurityInterceptor extends AbstractWsSecurityInterceptor implem
         InputStream is = null;
         try {
             if (logger.isInfoEnabled()) {
-                logger.info("Loading policy configuration from from '" + policyConfiguration.getFilename() + "'");
+                logger.info("Loading policy configuration from from '" + policyConfiguration + "'");
             }
             is = policyConfiguration.getInputStream();
             processor = processorFactory.createProcessorForSecurityConfiguration(is, callbackHandler);

@@ -29,6 +29,7 @@ import com.sun.xml.wss.impl.callback.TimestampValidationCallback;
  * in the JWSDP samples.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  */
 public class DefaultTimestampValidator implements TimestampValidationCallback.TimestampValidator {
 
