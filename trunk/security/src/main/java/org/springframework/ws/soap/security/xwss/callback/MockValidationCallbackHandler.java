@@ -18,7 +18,6 @@ package org.springframework.ws.soap.security.xwss.callback;
 
 import java.io.IOException;
 import java.security.cert.X509Certificate;
-
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
@@ -35,6 +34,7 @@ import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
  * throws an <code>UnsupportedCallbackException</code> for others
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  */
 public class MockValidationCallbackHandler extends AbstractCallbackHandler {
 

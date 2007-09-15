@@ -23,6 +23,7 @@ import org.springframework.ws.WebServiceException;
  * and validation.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  */
 public abstract class WsSecurityException extends WebServiceException {
 

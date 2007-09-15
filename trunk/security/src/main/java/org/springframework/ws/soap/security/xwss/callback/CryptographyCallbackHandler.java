@@ -17,7 +17,6 @@
 package org.springframework.ws.soap.security.xwss.callback;
 
 import java.io.IOException;
-
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
@@ -33,6 +32,7 @@ import com.sun.xml.wss.impl.callback.SignatureVerificationKeyCallback;
  * so you only need to override those you need.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  */
 public class CryptographyCallbackHandler extends AbstractCallbackHandler {
 
@@ -80,9 +80,9 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
      * implementation delegates to specific handling methods.
      *
      * @see #handlePrivateKeyRequest(com.sun.xml.wss.impl.callback.DecryptionKeyCallback,
-     *      com.sun.xml.wss.impl.callback.DecryptionKeyCallback.PrivateKeyRequest)
+     *com.sun.xml.wss.impl.callback.DecryptionKeyCallback.PrivateKeyRequest)
      * @see #handleSymmetricKeyRequest(com.sun.xml.wss.impl.callback.DecryptionKeyCallback,
-     *      com.sun.xml.wss.impl.callback.DecryptionKeyCallback.SymmetricKeyRequest)
+     *com.sun.xml.wss.impl.callback.DecryptionKeyCallback.SymmetricKeyRequest)
      */
     protected final void handleDecryptionKeyCallback(DecryptionKeyCallback callback)
             throws IOException, UnsupportedCallbackException {
@@ -102,13 +102,13 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
      * <code>handleDecryptionKeyCallback()</code>. Default implementation delegates to specific handling methods.
      *
      * @see #handlePublicKeyBasedPrivKeyCertRequest(com.sun.xml.wss.impl.callback.SignatureKeyCallback,
-     *      com.sun.xml.wss.impl.callback.SignatureKeyCallback.PublicKeyBasedPrivKeyCertRequest)
+     *com.sun.xml.wss.impl.callback.SignatureKeyCallback.PublicKeyBasedPrivKeyCertRequest)
      * @see #handleX509CertificateBasedRequest(com.sun.xml.wss.impl.callback.DecryptionKeyCallback,
-     *      com.sun.xml.wss.impl.callback.DecryptionKeyCallback.X509CertificateBasedRequest)
+     *com.sun.xml.wss.impl.callback.DecryptionKeyCallback.X509CertificateBasedRequest)
      * @see #handleX509IssuerSerialBasedRequest(com.sun.xml.wss.impl.callback.DecryptionKeyCallback,
-     *      com.sun.xml.wss.impl.callback.DecryptionKeyCallback.X509IssuerSerialBasedRequest)
+     *com.sun.xml.wss.impl.callback.DecryptionKeyCallback.X509IssuerSerialBasedRequest)
      * @see #handleX509SubjectKeyIdentifierBasedRequest(com.sun.xml.wss.impl.callback.DecryptionKeyCallback,
-     *      com.sun.xml.wss.impl.callback.DecryptionKeyCallback.X509SubjectKeyIdentifierBasedRequest)
+     *com.sun.xml.wss.impl.callback.DecryptionKeyCallback.X509SubjectKeyIdentifierBasedRequest)
      */
     protected final void handlePrivateKeyRequest(DecryptionKeyCallback callback,
                                                  DecryptionKeyCallback.PrivateKeyRequest request)
@@ -180,7 +180,7 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
      * <code>handleDecryptionKeyCallback()</code>. Default implementation delegates to specific handling methods.
      *
      * @see #handleAliasSymmetricKeyRequest(com.sun.xml.wss.impl.callback.DecryptionKeyCallback,
-     *      com.sun.xml.wss.impl.callback.DecryptionKeyCallback.AliasSymmetricKeyRequest)
+     *com.sun.xml.wss.impl.callback.DecryptionKeyCallback.AliasSymmetricKeyRequest)
      */
     protected final void handleSymmetricKeyRequest(DecryptionKeyCallback callback,
                                                    DecryptionKeyCallback.SymmetricKeyRequest request)
@@ -215,9 +215,9 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
      * implementation delegates to specific handling methods.
      *
      * @see #handleSymmetricKeyRequest(com.sun.xml.wss.impl.callback.EncryptionKeyCallback,
-     *      com.sun.xml.wss.impl.callback.EncryptionKeyCallback.SymmetricKeyRequest)
+     *com.sun.xml.wss.impl.callback.EncryptionKeyCallback.SymmetricKeyRequest)
      * @see #handleX509CertificateRequest(com.sun.xml.wss.impl.callback.EncryptionKeyCallback,
-     *      com.sun.xml.wss.impl.callback.EncryptionKeyCallback.X509CertificateRequest)
+     *com.sun.xml.wss.impl.callback.EncryptionKeyCallback.X509CertificateRequest)
      */
     protected final void handleEncryptionKeyCallback(EncryptionKeyCallback callback)
             throws IOException, UnsupportedCallbackException {
@@ -239,7 +239,7 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
      * <code>handleEncryptionKeyCallback()</code>. Default implementation delegates to specific handling methods.
      *
      * @see #handleAliasSymmetricKeyRequest(com.sun.xml.wss.impl.callback.EncryptionKeyCallback,
-     *      com.sun.xml.wss.impl.callback.EncryptionKeyCallback.AliasSymmetricKeyRequest)
+     *com.sun.xml.wss.impl.callback.EncryptionKeyCallback.AliasSymmetricKeyRequest)
      */
     protected final void handleSymmetricKeyRequest(EncryptionKeyCallback callback,
                                                    EncryptionKeyCallback.SymmetricKeyRequest request)
@@ -265,11 +265,11 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
      * <code>handleEncryptionKeyCallback()</code>. Default implementation delegates to specific handling methods.
      *
      * @see #handleAliasX509CertificateRequest(com.sun.xml.wss.impl.callback.EncryptionKeyCallback,
-     *      com.sun.xml.wss.impl.callback.EncryptionKeyCallback.AliasX509CertificateRequest)
+     *com.sun.xml.wss.impl.callback.EncryptionKeyCallback.AliasX509CertificateRequest)
      * @see #handleDefaultX509CertificateRequest(com.sun.xml.wss.impl.callback.EncryptionKeyCallback,
-     *      com.sun.xml.wss.impl.callback.EncryptionKeyCallback.DefaultX509CertificateRequest)
+     *com.sun.xml.wss.impl.callback.EncryptionKeyCallback.DefaultX509CertificateRequest)
      * @see #handlePublicKeyBasedRequest(com.sun.xml.wss.impl.callback.EncryptionKeyCallback,
-     *      com.sun.xml.wss.impl.callback.EncryptionKeyCallback.PublicKeyBasedRequest)
+     *com.sun.xml.wss.impl.callback.EncryptionKeyCallback.PublicKeyBasedRequest)
      */
     protected final void handleX509CertificateRequest(EncryptionKeyCallback callback,
                                                       EncryptionKeyCallback.X509CertificateRequest request)
@@ -331,7 +331,7 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
      * implementation delegates to specific handling methods.
      *
      * @see #handlePrivKeyCertRequest(com.sun.xml.wss.impl.callback.SignatureKeyCallback,
-     *      com.sun.xml.wss.impl.callback.SignatureKeyCallback.PrivKeyCertRequest)
+     *com.sun.xml.wss.impl.callback.SignatureKeyCallback.PrivKeyCertRequest)
      */
     protected final void handleSignatureKeyCallback(SignatureKeyCallback callback)
             throws IOException, UnsupportedCallbackException {
@@ -348,11 +348,11 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
      * <code>handleSignatureKeyCallback()</code>. Default implementation delegates to specific handling methods.
      *
      * @see #handleDefaultPrivKeyCertRequest(com.sun.xml.wss.impl.callback.SignatureKeyCallback,
-     *      com.sun.xml.wss.impl.callback.SignatureKeyCallback.DefaultPrivKeyCertRequest)
+     *com.sun.xml.wss.impl.callback.SignatureKeyCallback.DefaultPrivKeyCertRequest)
      * @see #handleAliasPrivKeyCertRequest(com.sun.xml.wss.impl.callback.SignatureKeyCallback,
-     *      com.sun.xml.wss.impl.callback.SignatureKeyCallback.AliasPrivKeyCertRequest)
+     *com.sun.xml.wss.impl.callback.SignatureKeyCallback.AliasPrivKeyCertRequest)
      * @see #handlePublicKeyBasedPrivKeyCertRequest(com.sun.xml.wss.impl.callback.SignatureKeyCallback,
-     *      com.sun.xml.wss.impl.callback.SignatureKeyCallback.PublicKeyBasedPrivKeyCertRequest)
+     *com.sun.xml.wss.impl.callback.SignatureKeyCallback.PublicKeyBasedPrivKeyCertRequest)
      */
     protected final void handlePrivKeyCertRequest(SignatureKeyCallback cb,
                                                   SignatureKeyCallback.PrivKeyCertRequest request)
@@ -413,7 +413,7 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
      * Default implementation delegates to specific handling methods.
      *
      * @see #handleX509CertificateRequest(com.sun.xml.wss.impl.callback.SignatureVerificationKeyCallback,
-     *      com.sun.xml.wss.impl.callback.SignatureVerificationKeyCallback.X509CertificateRequest)
+     *com.sun.xml.wss.impl.callback.SignatureVerificationKeyCallback.X509CertificateRequest)
      */
     protected final void handleSignatureVerificationKeyCallback(SignatureVerificationKeyCallback callback)
             throws UnsupportedCallbackException, IOException {
@@ -432,11 +432,11 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
      * handling methods.
      *
      * @see #handlePublicKeyBasedRequest(com.sun.xml.wss.impl.callback.SignatureVerificationKeyCallback,
-     *      com.sun.xml.wss.impl.callback.SignatureVerificationKeyCallback.PublicKeyBasedRequest)
+     *com.sun.xml.wss.impl.callback.SignatureVerificationKeyCallback.PublicKeyBasedRequest)
      * @see #handleX509IssuerSerialBasedRequest(com.sun.xml.wss.impl.callback.SignatureVerificationKeyCallback,
-     *      com.sun.xml.wss.impl.callback.SignatureVerificationKeyCallback.X509IssuerSerialBasedRequest)
+     *com.sun.xml.wss.impl.callback.SignatureVerificationKeyCallback.X509IssuerSerialBasedRequest)
      * @see #handleX509SubjectKeyIdentifierBasedRequest(com.sun.xml.wss.impl.callback.SignatureVerificationKeyCallback,
-     *      com.sun.xml.wss.impl.callback.SignatureVerificationKeyCallback.X509SubjectKeyIdentifierBasedRequest)
+     *com.sun.xml.wss.impl.callback.SignatureVerificationKeyCallback.X509SubjectKeyIdentifierBasedRequest)
      */
     protected final void handleX509CertificateRequest(SignatureVerificationKeyCallback callback,
                                                       SignatureVerificationKeyCallback.X509CertificateRequest request)

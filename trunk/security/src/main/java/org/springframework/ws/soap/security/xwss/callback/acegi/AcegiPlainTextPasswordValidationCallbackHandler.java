@@ -17,7 +17,6 @@
 package org.springframework.ws.soap.security.xwss.callback.acegi;
 
 import java.io.IOException;
-
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
@@ -27,7 +26,6 @@ import org.acegisecurity.AuthenticationException;
 import org.acegisecurity.AuthenticationManager;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
-
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.xwss.callback.AbstractCallbackHandler;
 
@@ -47,6 +45,7 @@ import org.springframework.ws.soap.security.xwss.callback.AbstractCallbackHandle
  * @see PasswordValidationCallback
  * @see com.sun.xml.wss.impl.callback.PasswordValidationCallback.PlainTextPasswordRequest
  * @see org.acegisecurity.ui.basicauth.BasicProcessingFilter
+ * @since 1.0.0
  */
 public class AcegiPlainTextPasswordValidationCallbackHandler extends AbstractCallbackHandler {
 
@@ -54,9 +53,7 @@ public class AcegiPlainTextPasswordValidationCallbackHandler extends AbstractCal
 
     private boolean ignoreFailure = false;
 
-    /**
-     * Sets the Acegi authentication manager. Required.
-     */
+    /** Sets the Acegi authentication manager. Required. */
     public void setAuthenticationManager(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }

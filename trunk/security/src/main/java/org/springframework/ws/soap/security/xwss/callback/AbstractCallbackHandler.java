@@ -17,7 +17,6 @@
 package org.springframework.ws.soap.security.xwss.callback;
 
 import java.io.IOException;
-
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
@@ -29,12 +28,11 @@ import org.apache.commons.logging.LogFactory;
  * Abstract implementation of a <code>CallbackHandler</code>.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  */
 public abstract class AbstractCallbackHandler implements CallbackHandler {
 
-    /**
-     * Logger available to subclasses.
-     */
+    /** Logger available to subclasses. */
     protected final Log logger = LogFactory.getLog(getClass());
 
     protected AbstractCallbackHandler() {
@@ -52,8 +50,6 @@ public abstract class AbstractCallbackHandler implements CallbackHandler {
         }
     }
 
-    /**
-     * Template method that should be implemented by subclasses.
-     */
+    /** Template method that should be implemented by subclasses. */
     protected abstract void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException;
 }

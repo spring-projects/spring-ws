@@ -24,6 +24,7 @@ import org.springframework.ws.soap.security.xwss.callback.AbstractCallbackHandle
  * Abstract base class for integrating with JAAS. Provides a login context name property.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  */
 public abstract class AbstractJaasValidationCallbackHandler extends AbstractCallbackHandler
         implements InitializingBean {
@@ -33,16 +34,12 @@ public abstract class AbstractJaasValidationCallbackHandler extends AbstractCall
     protected AbstractJaasValidationCallbackHandler() {
     }
 
-    /**
-     * Returns the login context name.
-     */
+    /** Returns the login context name. */
     public String getLoginContextName() {
         return loginContextName;
     }
 
-    /**
-     * Sets the login context name.
-     */
+    /** Sets the login context name. */
     public void setLoginContextName(String loginContextName) {
         this.loginContextName = loginContextName;
     }

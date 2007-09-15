@@ -23,7 +23,6 @@ import java.security.KeyStore;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
@@ -37,6 +36,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Arjen Poutsma
  * @see #setLocation(org.springframework.core.io.Resource)
+ * @since 1.0.0
  */
 public class KeyStoreFactoryBean implements FactoryBean, InitializingBean {
 
@@ -55,7 +55,7 @@ public class KeyStoreFactoryBean implements FactoryBean, InitializingBean {
     /**
      * Sets the location of the key store to use. If this is not set, a new, empty key store will be used.
      *
-     * @see KeyStore#load(java.io.InputStream, char[])
+     * @see KeyStore#load(java.io.InputStream,char[])
      */
     public void setLocation(Resource location) {
         this.location = location;
@@ -71,9 +71,7 @@ public class KeyStoreFactoryBean implements FactoryBean, InitializingBean {
         }
     }
 
-    /**
-     * Sets the provider of the key store to use. If this is not set, the default is used.
-     */
+    /** Sets the provider of the key store to use. If this is not set, the default is used. */
     public void setProvider(String provider) {
         this.provider = provider;
     }
