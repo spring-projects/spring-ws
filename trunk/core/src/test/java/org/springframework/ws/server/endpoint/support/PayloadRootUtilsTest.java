@@ -21,7 +21,6 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerFactory;
@@ -55,9 +54,6 @@ public class PayloadRootUtilsTest extends TestCase {
         String contents = "<prefix:localname xmlns:prefix='namespace'/>";
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(contents));
-        while (streamReader.getEventType() != XMLStreamConstants.START_ELEMENT) {
-            streamReader.next();
-        }
         Source source = new StaxSource(streamReader);
         QName qName = PayloadRootUtils.getPayloadRootQName(source, TransformerFactory.newInstance());
         assertNotNull("getQNameForNode returns null", qName);

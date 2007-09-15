@@ -18,6 +18,7 @@ package org.springframework.ws.server.endpoint.mapping;
 
 import java.lang.reflect.Method;
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 
@@ -127,7 +128,8 @@ public class SimpleMethodEndpointMapping extends AbstractMethodEndpointMapping i
     }
 
     /** Returns the local part of the payload root element of the request. */
-    protected String getLookupKeyForMessage(MessageContext messageContext) throws TransformerException {
+    protected String getLookupKeyForMessage(MessageContext messageContext)
+            throws TransformerException, XMLStreamException {
         WebServiceMessage request = messageContext.getRequest();
         QName rootQName = PayloadRootUtils.getPayloadRootQName(request.getPayloadSource(), transformerFactory);
         return rootQName.getLocalPart();

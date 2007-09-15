@@ -17,6 +17,7 @@
 package org.springframework.ws.server.endpoint.mapping;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 
@@ -52,7 +53,7 @@ public class PayloadRootQNameEndpointMapping extends AbstractQNameEndpointMappin
         transformerFactory = TransformerFactory.newInstance();
     }
 
-    protected QName resolveQName(MessageContext messageContext) throws TransformerException {
+    protected QName resolveQName(MessageContext messageContext) throws TransformerException, XMLStreamException {
         return PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerFactory);
     }
 
