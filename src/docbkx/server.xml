@@ -287,7 +287,7 @@ public class SampleEndpoint extends AbstractDomPayloadEndpoint {
     protected Element invokeInternal(
             Element requestElement,
             Document document) throws Exception {
-        String requestText = requestElement.getTextContext();
+        String requestText = requestElement.getTextContent();
         System.out.println("Request text: " + requestText);
 
         Element responseElement = document.createElementNS("http://samples", "response");
