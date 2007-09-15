@@ -18,6 +18,7 @@ package org.springframework.ws.server.endpoint.support;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -51,7 +52,7 @@ public abstract class PayloadRootUtils {
      * @return the root element
      */
     public static QName getPayloadRootQName(Source source, TransformerFactory transformerFactory)
-            throws TransformerException {
+            throws TransformerException, XMLStreamException {
         if (source instanceof DOMSource) {
             DOMSource domSource = (DOMSource) source;
             Node node = domSource.getNode();
@@ -67,6 +68,9 @@ public abstract class PayloadRootUtils {
             StaxSource staxSource = (StaxSource) source;
             if (staxSource.getXMLStreamReader() != null) {
                 XMLStreamReader streamReader = staxSource.getXMLStreamReader();
+                if (streamReader.getEventType() == XMLStreamConstants.START_DOCUMENT) {
+                    streamReader.nextTag();
+                }
                 if (streamReader.getEventType() == XMLStreamConstants.START_ELEMENT ||
                         streamReader.getEventType() == XMLStreamConstants.END_ELEMENT) {
                     return streamReader.getName();
