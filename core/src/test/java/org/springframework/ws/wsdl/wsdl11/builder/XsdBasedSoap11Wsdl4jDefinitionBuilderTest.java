@@ -55,7 +55,7 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilderTest extends XMLTestCase {
         }
     }
 
-    public void testBuilder() throws Exception {
+    public void testInline() throws Exception {
         builder.buildDefinition();
         builder.buildDefinition();
         builder.buildImports();
@@ -72,7 +72,30 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilderTest extends XMLTestCase {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document expected = documentBuilder.parse(getClass().getResourceAsStream("expected.wsdl"));
+        Document expected = documentBuilder.parse(getClass().getResourceAsStream("inline.wsdl"));
+        XMLUnit.setIgnoreWhitespace(true);
+        assertXMLEqual("Invalid WSDL built", expected, result);
+    }
+
+    public void testImport() throws Exception {
+        builder.setSchemaLocation("schema.xsd");
+        builder.buildDefinition();
+        builder.buildDefinition();
+        builder.buildImports();
+        builder.buildTypes();
+        builder.buildMessages();
+        builder.buildPortTypes();
+        builder.buildBindings();
+        builder.buildServices();
+        Wsdl11Definition definition = builder.getDefinition();
+        DOMResult domResult = new DOMResult();
+        transformer.transform(definition.getSource(), domResult);
+
+        Document result = (Document) domResult.getNode();
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(true);
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        Document expected = documentBuilder.parse(getClass().getResourceAsStream("import.wsdl"));
         XMLUnit.setIgnoreWhitespace(true);
         assertXMLEqual("Invalid WSDL built", expected, result);
     }

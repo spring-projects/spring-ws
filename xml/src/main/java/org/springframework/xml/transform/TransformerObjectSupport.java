@@ -41,11 +41,7 @@ public abstract class TransformerObjectSupport {
     /** Logger available to subclasses. */
     protected final Log logger = LogFactory.getLog(getClass());
 
-    private static TransformerFactory transformerFactory;
-
-    static {
-        transformerFactory = TransformerFactory.newInstance();
-    }
+    private static TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
     /** Returns the <code>TransformerFactory</code>. */
     protected TransformerFactory getTransformerFactory() {
