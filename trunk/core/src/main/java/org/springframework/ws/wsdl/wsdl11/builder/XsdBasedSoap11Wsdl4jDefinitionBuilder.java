@@ -40,6 +40,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import org.springframework.ws.wsdl.wsdl11.DynamicWsdl11Definition;
 import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.sax.SaxUtils;
 import org.w3c.dom.Document;
@@ -51,7 +52,24 @@ import org.xml.sax.SAXException;
  * Builds a <code>WsdlDefinition</code> with a SOAP 1.1 binding based on an XSD schema. This builder iterates over all
  * <code>element</code>s found in the schema, and creates a <code>message</code> for those elements that end with the
  * request or response suffix. It combines these messages into <code>operation</code>s, and builds a
- * <code>portType</code> based on the operations. The schema itself is inlined in a <code>types</code> block.
+ * <code>portType</code> based on the operations.
+ * <p/>
+ * By default, the schema file is inlined in a <code>types</code> block. However, if the <code>schemaLocation</code>
+ * property is set, an XSD <code>import</code> is used instead. As such, the imported schema file can contain further
+ * imports, which will be resolved correctly in accordance with the schema location.
+ * <p/>
+ * Typically used within a {@link DynamicWsdl11Definition}, like so:
+ * <pre>
+ * &lt;bean id=&quot;airline&quot; class=&quot;org.springframework.ws.wsdl.wsdl11.DynamicWsdl11Definition&quot;&gt;
+ *   &lt;property name=&quot;builder&quot;&gt;
+ *     &lt;bean class=&quot;org.springframework.ws.wsdl.wsdl11.builder.XsdBasedSoap11Wsdl4jDefinitionBuilder&quot;&gt;
+ *     &lt;property name=&quot;schema&quot; value=&quot;/WEB-INF/airline.xsd&quot;/&gt;
+ *     &lt;property name=&quot;portTypeName&quot; value=&quot;Airline&quot;/&gt;
+ *     &lt;property name=&quot;locationUri&quot; value=&quot;http://localhost:8080/airline/services&quot;/&gt;
+ *     &lt;/bean&gt;
+ *   &lt;/property&gt;
+ * &lt;/bean&gt;
+ * </pre>
  * <p/>
  * Requires the <code>schema</code> and <code>portTypeName</code> properties to be set.
  *
@@ -65,8 +83,11 @@ import org.xml.sax.SAXException;
 public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jDefinitionBuilder
         implements InitializingBean {
 
-    /** The schema namespace URI. */
-    private static final String SCHEMA_NAMESPACE_URI = "http://www.w3.org/2001/XMLSchema";
+    /** The schema qualified name. */
+    private static final QName SCHEMA_NAME = new QName("http://www.w3.org/2001/XMLSchema", "schema", "xsd");
+
+    /** The schema import qualified name. */
+    private static final QName IMPORT_NAME = new QName("http://www.w3.org/2001/XMLSchema", "import", "xsd");
 
     /** The default suffix used to detect request elements in the schema. */
     public static final String DEFAULT_REQUEST_SUFFIX = "Request";
@@ -88,6 +109,8 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
 
     private Resource schema;
 
+    private String schemaLocation;
+
     private Element schemaElement;
 
     private String targetNamespace;
@@ -103,6 +126,14 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
     private String responseSuffix = DEFAULT_RESPONSE_SUFFIX;
 
     private String faultSuffix = DEFAULT_FAULT_SUFFIX;
+
+    private String schemaTargetNamespace;
+
+    private static DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+
+    static {
+        documentBuilderFactory.setNamespaceAware(true);
+    }
 
     /**
      * Sets the suffix used to detect request elements in the schema.
@@ -166,6 +197,15 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
         this.schema = schema;
     }
 
+    /**
+     * Sets the location of the schema to import. If this property is set, the <code>schema</code> element in the
+     * generated WSDL will only contain an <code>import</code>, referring to the value of this property.
+     */
+    public void setSchemaLocation(String schemaLocation) {
+        Assert.hasLength(schemaLocation, "'schemaLocation' must not be empty");
+        this.schemaLocation = schemaLocation;
+    }
+
     public final void afterPropertiesSet() throws IOException, ParserConfigurationException, SAXException {
         Assert.notNull(schema, "schema is required");
         Assert.notNull(portTypeName, "portTypeName is required");
@@ -173,18 +213,16 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
     }
 
     private void parseSchema() throws ParserConfigurationException, SAXException, IOException {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        documentBuilderFactory.setNamespaceAware(true);
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         Document schemaDocument = documentBuilder.parse(SaxUtils.createInputSource(schema));
         schemaElement = schemaDocument.getDocumentElement();
-        Assert.isTrue("schema".equals(schemaElement.getLocalName()),
+        Assert.isTrue(SCHEMA_NAME.getLocalPart().equals(schemaElement.getLocalName()),
                 "schema document root element has invalid local name : [" + schemaElement.getLocalName() +
                         "] instead of [schema]");
-        Assert.isTrue(SCHEMA_NAMESPACE_URI.equals(schemaElement.getNamespaceURI()),
+        Assert.isTrue(SCHEMA_NAME.getNamespaceURI().equals(schemaElement.getNamespaceURI()),
                 "schema document root element has invalid namespace uri: [" + schemaElement.getNamespaceURI() +
-                        "] instead of [" + SCHEMA_NAMESPACE_URI + "]");
-        String schemaTargetNamespace = getSchemaTargetNamespace();
+                        "] instead of [" + SCHEMA_NAME.getNamespaceURI() + "]");
+        schemaTargetNamespace = getSchemaTargetNamespace();
         Assert.hasLength(schemaTargetNamespace, "schema document has no targetNamespace");
         if (!StringUtils.hasLength(targetNamespace)) {
             targetNamespace = schemaTargetNamespace;
@@ -210,15 +248,39 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
     }
 
     /**
-     * Creates a <code>Types</code> object that is populated with the types found in the schema.
+     * Creates a {@link Types} object containing a {@link Schema}. By default, the schema set by the <code>schema</code>
+     * property will be inlined into this <code>type</code>. If the <code>schemaLocation</code> is set, </code>object
+     * that is populated with the types found in the schema.
      *
      * @param definition the WSDL4J <code>Definition</code>
      * @throws WSDLException in case of errors
      */
     protected void buildTypes(Definition definition) throws WSDLException {
         Types types = definition.createTypes();
-        Schema schema = (Schema) createExtension(Types.class, QNameUtils.getQNameForNode(schemaElement));
-        schema.setElement(schemaElement);
+        Schema schema = null;
+        if (!StringUtils.hasLength(schemaLocation)) {
+            schema = (Schema) createExtension(Types.class, QNameUtils.getQNameForNode(schemaElement));
+            schema.setElement(schemaElement);
+        }
+        else {
+            schema = (Schema) createExtension(Types.class, SCHEMA_NAME);
+            Document document = null;
+            try {
+                DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+                document = documentBuilder.newDocument();
+            }
+            catch (ParserConfigurationException ex) {
+                throw new WSDLException(WSDLException.PARSER_ERROR, "Could not create DocumentBuilder", ex);
+            }
+            Element importingSchemaElement =
+                    document.createElementNS(SCHEMA_NAME.getNamespaceURI(), QNameUtils.toQualifiedName(SCHEMA_NAME));
+            schema.setElement(importingSchemaElement);
+            Element importElement =
+                    document.createElementNS(IMPORT_NAME.getNamespaceURI(), QNameUtils.toQualifiedName(IMPORT_NAME));
+            importingSchemaElement.appendChild(importElement);
+            importElement.setAttribute("namespace", schemaTargetNamespace);
+            importElement.setAttribute("schemaLocation", schemaLocation);
+        }
         types.addExtensibilityElement(schema);
         definition.setTypes(types);
     }
@@ -234,7 +296,7 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
      * @see #isFaultMessage(javax.xml.namespace.QName)
      */
     protected void buildMessages(Definition definition) throws WSDLException {
-        NodeList elements = schemaElement.getElementsByTagNameNS(SCHEMA_NAMESPACE_URI, "element");
+        NodeList elements = schemaElement.getElementsByTagNameNS(SCHEMA_NAME.getNamespaceURI(), "element");
         for (int i = 0; i < elements.getLength(); i++) {
             Element element = (Element) elements.item(i);
             QName elementName = getSchemaElementName(element);
@@ -336,7 +398,6 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
         portType.setQName(new QName(targetNamespace, portTypeName));
     }
 
-    /** @noinspection UnnecessaryLocalVariable */
     private void createOperations(Definition definition, PortType portType) throws WSDLException {
         for (Iterator messageIterator = definition.getMessages().values().iterator(); messageIterator.hasNext();) {
             Message message = (Message) messageIterator.next();
