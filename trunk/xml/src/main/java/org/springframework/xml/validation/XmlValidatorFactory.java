@@ -17,6 +17,7 @@
 package org.springframework.xml.validation;
 
 import java.io.IOException;
+import javax.xml.validation.Validator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,11 +26,11 @@ import org.springframework.util.Assert;
 import org.springframework.xml.JaxpVersion;
 
 /**
- * Factory for <code>XmlValidator</code>s, being aware of JAXP 1.3 <code>XmlValidator</code>s, and JAXP 1.0 parsing
+ * Factory for {@link XmlValidator} objects, being aware of JAXP 1.3 {@link Validator}s, and JAXP 1.0 parsing
  * capababilities. Mainly for internal use within the framework.
  * <p/>
  * The goal of this class is to avoid runtime dependencies on JAXP 1.3 by using the best validation implementation that
- * is available. Prefers JAXP 1.3 <code>XmlValidator</code> implementations to a custom, SAX-based implementation.
+ * is available. Prefers JAXP 1.3 {@link XmlValidator} implementations to a custom, SAX-based implementation.
  *
  * @author Arjen Poutsma
  * @see XmlValidator
@@ -46,8 +47,8 @@ public abstract class XmlValidatorFactory {
     public static final String SCHEMA_RELAX_NG = "http://relaxng.org/ns/structure/1.0";
 
     /**
-     * Create a <code>XmlValidator</code> with the given schema resource and schema language type. The schema language
-     * must be one of the <code>SCHEMA_XXX</code> constants.
+     * Create a {@link XmlValidator} with the given schema resource and schema language type. The schema language must
+     * be one of the <code>SCHEMA_XXX</code> constants.
      *
      * @param schemaResource a resource that locates the schema to validate against
      * @param schemaLanguage the language of the schema
@@ -64,8 +65,8 @@ public abstract class XmlValidatorFactory {
     }
 
     /**
-     * Create a <code>XmlValidator</code> with the given schema resources and schema language type. The schema language
-     * must be one of the <code>SCHEMA_XXX</code> constants.
+     * Create a {@link XmlValidator} with the given schema resources and schema language type. The schema language must
+     * be one of the <code>SCHEMA_XXX</code> constants.
      *
      * @param schemaResources an array of resource that locate the schemas to validate against
      * @param schemaLanguage  the language of the schemas

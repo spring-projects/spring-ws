@@ -22,10 +22,9 @@ import javax.xml.transform.Source;
 import org.xml.sax.SAXParseException;
 
 /**
- * Simple processor that validates a given <code>Source</code>. Can be created via the
- * <code>XmlValidatorFactory</code>.
+ * Simple processor that validates a given {@link Source}. Can be created via the {@link XmlValidatorFactory}.
  * <p/>
- * <code>XmlValidator</code> instances are designed to be thread safe.
+ * Instances of this class are designed to be thread safe.
  *
  * @author Arjen Poutsma
  * @see XmlValidatorFactory#createValidator(org.springframework.core.io.Resource,String)
@@ -34,8 +33,8 @@ import org.xml.sax.SAXParseException;
 public interface XmlValidator {
 
     /**
-     * Validates the given <code>Source</code>, and returns an array of <code>SAXParseException</code>s as result. The
-     * array will be empty if no validation errors are found.
+     * Validates the given {@link Source}, and returns an array of {@link SAXParseException}s as result. The array will
+     * be empty if no validation errors are found.
      *
      * @param source the input document
      * @return an array of <code>SAXParseException</code>s
