@@ -45,16 +45,16 @@ public interface SoapFault extends SoapElement {
     void setFaultActorOrRole(String faultActor);
 
     /**
-     * Creates an optional <code>SoapFaultDetail</code> object and assigns it to this fault.
+     * Returns the optional detail element for this <code>SoapFault</code>.
      *
-     * @return the created detail
+     * @return a fault detail
      */
     SoapFaultDetail getFaultDetail();
 
     /**
-     * Returns the optional detail element for this <code>SoapFault</code>.
+     * Creates an optional <code>SoapFaultDetail</code> object and assigns it to this fault.
      *
-     * @return a fault detail
+     * @return the created detail
      */
     SoapFaultDetail addFaultDetail();
 }
