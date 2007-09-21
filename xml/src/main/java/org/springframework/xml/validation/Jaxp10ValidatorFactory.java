@@ -34,6 +34,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.springframework.core.io.Resource;
+import org.springframework.xml.sax.SaxUtils;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -54,8 +55,7 @@ abstract class Jaxp10ValidatorFactory {
     static XmlValidator createValidator(Resource[] schemaResources, String schemaLanguage) throws IOException {
         InputSource[] inputSources = new InputSource[schemaResources.length];
         for (int i = 0; i < schemaResources.length; i++) {
-            inputSources[i] = new InputSource(schemaResources[i].getInputStream());
-            inputSources[i].setSystemId(SchemaLoaderUtils.getSystemId(schemaResources[i]));
+            inputSources[i] = SaxUtils.createInputSource(schemaResources[i]);
         }
         return new Jaxp10Validator(inputSources, schemaLanguage);
     }

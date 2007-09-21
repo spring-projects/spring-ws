@@ -17,18 +17,17 @@
 package org.springframework.xml.validation;
 
 import java.io.IOException;
-import java.io.InputStream;
-import javax.xml.transform.stream.StreamSource;
+import javax.xml.transform.Source;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
+import org.springframework.xml.transform.ResourceSource;
 import org.xml.sax.SAXException;
 
 /**
- * Convenient utility methods for loading of <code>javax.xml.validation.Schema</code> objects, performing standard
- * handling of input streams.
+ * Convenient utility methods for loading of {@link Schema} objects, performing standard handling of input streams.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -64,26 +63,14 @@ public abstract class SchemaLoaderUtils {
     public static Schema loadSchema(Resource[] resources, String schemaLanguage) throws IOException, SAXException {
         Assert.notEmpty(resources, "No resources given");
         Assert.hasLength(schemaLanguage, "No schema language provided");
-        StreamSource[] schemaSources = new StreamSource[resources.length];
-        try {
-            for (int i = 0; i < resources.length; i++) {
-                Assert.notNull(resources[i], "Resource is null");
-                Assert.isTrue(resources[i].exists(), "Resource " + resources[i] + " does not exist");
-                schemaSources[i] = new StreamSource(resources[i].getInputStream(), getSystemId(resources[i]));
-            }
-            SchemaFactory schemaFactory = SchemaFactory.newInstance(schemaLanguage);
-            return schemaFactory.newSchema(schemaSources);
+        Source[] schemaSources = new Source[resources.length];
+        for (int i = 0; i < resources.length; i++) {
+            Assert.notNull(resources[i], "Resource is null");
+            Assert.isTrue(resources[i].exists(), "Resource " + resources[i] + " does not exist");
+            schemaSources[i] = new ResourceSource(resources[i]);
         }
-        finally {
-            for (int i = 0; i < schemaSources.length; i++) {
-                if (schemaSources[i] != null) {
-                    InputStream inputStream = schemaSources[i].getInputStream();
-                    if (inputStream != null) {
-                        inputStream.close();
-                    }
-                }
-            }
-        }
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(schemaLanguage);
+        return schemaFactory.newSchema(schemaSources);
     }
 
     /** Retrieves the URL from the given resource as System ID. Returns <code>null</code> if it cannot be openened. */
