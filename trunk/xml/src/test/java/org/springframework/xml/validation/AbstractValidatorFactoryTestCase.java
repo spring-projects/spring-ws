@@ -18,6 +18,7 @@ package org.springframework.xml.validation;
 
 import java.io.InputStream;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
@@ -25,6 +26,7 @@ import javax.xml.transform.stream.StreamSource;
 import junit.framework.TestCase;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.xml.transform.ResourceSource;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXParseException;
@@ -100,6 +102,23 @@ public abstract class AbstractValidatorFactoryTestCase extends TestCase {
         SAXParseException[] errors = validator.validate(new DOMSource(document));
         assertNotNull("Null returned for errors", errors);
         assertEquals("ValidationErrors returned", 3, errors.length);
+    }
+
+    public void testMultipleSchemasValidMessage() throws Exception {
+        Resource[] schemaResources = new Resource[]{
+                new ClassPathResource("multipleSchemas1.xsd", AbstractValidatorFactoryTestCase.class),
+                new ClassPathResource("multipleSchemas2.xsd", AbstractValidatorFactoryTestCase.class)};
+        validator = createValidator(schemaResources, XmlValidatorFactory.SCHEMA_W3C_XML);
+
+        Source document = new ResourceSource(
+                new ClassPathResource("multipleSchemas1.xml", AbstractValidatorFactoryTestCase.class));
+        SAXParseException[] errors = validator.validate(document);
+        assertEquals("ValidationErrors returned", 0, errors.length);
+        validator = createValidator(schemaResources, XmlValidatorFactory.SCHEMA_W3C_XML);
+        document = new ResourceSource(
+                new ClassPathResource("multipleSchemas2.xml", AbstractValidatorFactoryTestCase.class));
+        errors = validator.validate(document);
+        assertEquals("ValidationErrors returned", 0, errors.length);
     }
 
 }
