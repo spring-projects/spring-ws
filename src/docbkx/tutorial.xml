@@ -704,7 +704,7 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
                 </para>
         </section>
     </section>
-    <section>
+    <section id="tutorial-publishing-wsdl">
         <title>Publishing the WSDL</title>
         <para>
             Finally, we need to publish the WSDL. As stated in <xref linkend="tutorial-service-contract"/>, we don't
