@@ -61,25 +61,22 @@
         <orderedlist>
             <listitem>
                 <para>
-                    An appropriate endpoint is searched for using the configured
-                    <literal>EndpointMapping(s)</literal>. If an endpoint is found,
-                    the invocation chain associated with the endpoint (preprocessors,
-                    postprocessors, and endpoints) will be executed in order to create
-                    a response.
+                    An appropriate endpoint is searched for using the configured <literal>EndpointMapping(s)</literal>.
+                    If an endpoint is found, the invocation chain associated with the endpoint (preprocessors,
+                    postprocessors, and endpoints) will be executed in order to create a response.
                 </para>
             </listitem>
             <listitem>
                 <para>
-                    An appropriate adapter is searched for the endpoint. The
-                    <classname>MessageDispatcher</classname> delegates to this adapter
-                    to invoke the endpoint.
+                    An appropriate adapter is searched for the endpoint. The <classname>MessageDispatcher</classname>
+                    delegates to this adapter to invoke the endpoint.
                 </para>
             </listitem>
             <listitem>
                 <para>
                     If a response is returned, it is sent on its way. If no response is returned (which could be due to
-                    a pre- or post-processor intercepting the request, for example, for security reasons), no response is
-                    sent.
+                    a pre- or post-processor intercepting the request, for example, for security reasons), no response
+                    is sent.
                 </para>
             </listitem>
         </orderedlist>
@@ -149,29 +146,39 @@
             </para>
             <section>
                 <title>Automatic WSDL exposure</title>
-                <para>The <classname>MessageDispatcherServlet</classname> will automatically detect any
-                <interfacename>WsdlDefinition</interfacename> beans defined in it's Spring container. All such
-                <interfacename>WsdlDefinition</interfacename> beans that are detected will also be exposed via
-                a <classname>WsdlDefinitionHandlerAdapter</classname>; this is a very convenient way to expose your WSDL
-                to clients simply by just defining some beans. </para>
-                <para>By way of an example, consider the following bean definition, defined in the Spring-WS framework's
-                configuration file ('<literal>/WEB-INF/[servlet-name]-servlet.xml</literal>'). Take notice of the
-                value of the bean's '<literal>id</literal>' attribute, because this will be used when exposing
-                the WSDL.</para>
+                <para>
+                    The <classname>MessageDispatcherServlet</classname> will automatically detect any
+                    <interfacename>WsdlDefinition</interfacename> beans defined in it's Spring container. All such
+                    <interfacename>WsdlDefinition</interfacename> beans that are detected will also be exposed via
+                    a <classname>WsdlDefinitionHandlerAdapter</classname>; this is a very convenient way to expose your
+                    WSDL to clients simply by just defining some beans.
+                </para>
+                <para>
+                    By way of an example, consider the following bean definition, defined in the Spring-WS framework's
+                    configuration file ('<filename>/WEB-INF/[servlet-name]-servlet.xml</filename>'). Take notice of the
+                    value of the bean's '<literal>id</literal>' attribute, because this will be used when exposing
+                    the WSDL.
+                </para>
                 <programlisting><![CDATA[<bean id="orders" class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
     <constructor-arg value="/WEB-INF/wsdl/Orders.wsdl"/>
 </bean>]]></programlisting>
-                <para>The WSDL defined in the '<filename>Orders.wsdl</filename>' file can then be accessed via
-                <literal>GET</literal> requests to a URL of the following form (substitute the host, port and servlet
-                context path as appropriate).</para>
+                <para>
+                    The WSDL defined in the '<filename>Orders.wsdl</filename>' file can then be accessed via
+                    <literal>GET</literal> requests to a URL of the following form (substitute the host, port and
+                    servlet context path as appropriate).
+                </para>
                 <programlisting><![CDATA[http://localhost:8080/spring-ws/orders.wsdl]]></programlisting>
-                <para>Another cool feature of the <classname>MessageDispatcherServlet</classname> (or more
-                correctly the <classname>WsdlDefinitionHandlerAdapter</classname>) is that it is able to
-                transform the value of the '<literal>location</literal>' of all the WSDL that it exposes to reflect the
-                URL of the incoming request.</para>
-                <para>Please note that this '<literal>location</literal>' transformation feature is
-                <emphasis>off</emphasis> by default.To switch this feature on, you just need to specify an
-                initialization parameter to the <classname>MessageDispatcherServlet</classname>, like so:</para>
+                <para>
+                    Another cool feature of the <classname>MessageDispatcherServlet</classname> (or more correctly the
+                    <classname>WsdlDefinitionHandlerAdapter</classname>) is that it is able to
+                    transform the value of the '<literal>location</literal>' of all the WSDL that it exposes to reflect
+                    the URL of the incoming request.
+                </para>
+                <para>
+                    Please note that this '<literal>location</literal>' transformation feature is
+                    <emphasis>off</emphasis> by default.To switch this feature on, you just need to specify an
+                    initialization parameter to the <classname>MessageDispatcherServlet</classname>, like so:
+                </para>
                 <programlisting><![CDATA[<web-app>
 
     <servlet>
@@ -189,8 +196,58 @@
     </servlet-mapping>
 
 </web-app>]]></programlisting>
-                <para>Consult the class-level Javadoc on the <classname>WsdlDefinitionHandlerAdapter</classname> class
-                which explains the whole transformation process in more detail.</para>
+                <para>
+                    Consult the class-level Javadoc on the <classname>WsdlDefinitionHandlerAdapter</classname> class
+                    which explains the whole transformation process in more detail.
+                </para>
+                <section>
+                    <title>Exposing a static WSDL</title>
+                    <para>
+                        As indicated above, a static WSDL file can be exposed by using the
+                        <classname>SimpleWsdl11Definition</classname>. Simply wire it up, and give it a
+                        <interfacename>Resource</interfacename> for the <property>wsdl</property> property, or use the
+                        contructor, as shown in the example above.
+                    </para>
+                </section>
+                <section>
+                    <title>Dynamically creating a WSDL from an XSD</title>
+                    <para>
+                        As shown in <xref linkend="tutorial-publishing-wsdl"/>, Spring Web Services can generate a WSDL
+                        file from a XSD schema, using conventions. The next application context snippet shows how to
+                        create such a dynamic WSDL file:
+                    </para>
+                    <programlisting><![CDATA[
+<bean id="holiday" class="org.springframework.ws.wsdl.wsdl11.DynamicWsdl11Definition">
+  <property name="builder">
+    <bean class="org.springframework.ws.wsdl.wsdl11.builder.XsdBasedSoap11Wsdl4jDefinitionBuilder">
+      <property name="schema" value="/WEB-INF/xsd/Orders.xsd"/>
+      <property name="portTypeName" value="Orders"/>
+      <property name="locationUri" value="http://localhost:8080/ordersService/"/>
+    </bean>
+  </property>
+</bean>]]></programlisting>
+                    <para>
+                        The <classname>DynamicWsdl11Definition</classname> uses a
+                        <interfacename>Wsdl11DefinitionBuilder</interfacename> implementation
+                        to generate a WSDL the first time it is requested.
+                        Typically, we use a <classname>XsdBasedSoap11Wsdl4jDefinitionBuilder</classname>, which builds
+                        a WSDL from a XSD schema.  This builder iterates over all <literal>element</literal> elements
+                        found in the schema, and creates a <literal>message</literal> for elements that end with the
+                        defined request or response suffix. The default request suffix is <literal>Request</literal>;
+                        the default response suffix is <literal>Response</literal>, though these can be changed by
+                        setting the <property>requestSuffix</property> and <property>responseSuffix</property>
+                        properties, respectively.
+                        Next, the builder combines the request and response messages into a WSDL
+                        <literal>operation</literal>s, and builds a <literal>portType</literal> based on the operations.
+                    </para>
+                    <para>
+                        For instance, if our <filename>Orders.xsd</filename> schema defines the
+                        <literal>GetOrdersRequest</literal> and <literal>GetOrdersResponse</literal> elements, the
+                        <classname>XsdBasedSoap11Wsdl4jDefinitionBuilder</classname> will create a
+                        <literal>GetOrdersRequest</literal> and <literal>GetOrdersResponse</literal> message, and a
+                        <literal>GetOrders</literal> operation, which is put in a <literal>Orders</literal> port type.
+                    </para>
+                </section>
             </section>
         </section>
         <section>
