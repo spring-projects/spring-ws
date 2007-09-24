@@ -60,7 +60,9 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public abstract class AbstractMarshaller implements Marshaller, Unmarshaller {
 
-    /** Logger available to subclasses. */
+    /**
+     * Logger available to subclasses.
+     */
     protected final Log logger = LogFactory.getLog(getClass());
 
     private DocumentBuilderFactory documentBuilderFactory;
@@ -479,6 +481,7 @@ public abstract class AbstractMarshaller implements Marshaller, Unmarshaller {
      * @param inputSource the input source to parse from
      * @return the object graph
      * @throws XmlMappingException if the given reader and input source cannot be converted to an object
+     * @throws java.io.IOException if an I/O exception occurs
      */
     protected abstract Object unmarshalSaxReader(XMLReader xmlReader, InputSource inputSource)
             throws XmlMappingException, IOException;
