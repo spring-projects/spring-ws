@@ -18,6 +18,12 @@ package org.springframework.ws.soap.security.xwss;
 
 import org.springframework.ws.soap.security.WsSecuritySecurementException;
 
+/**
+ * XWSS-specific version of the {@link WsSecuritySecurementException}.
+ *
+ * @author Arjen Poutsma
+ * @since 1.0.0
+ */
 public class XwsSecuritySecurementException extends WsSecuritySecurementException {
 
     public XwsSecuritySecurementException(String msg) {

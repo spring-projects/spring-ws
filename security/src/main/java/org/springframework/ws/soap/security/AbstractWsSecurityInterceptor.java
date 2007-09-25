@@ -24,9 +24,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapBody;
+import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.server.SoapEndpointInterceptor;
+import org.springframework.ws.soap.soap11.Soap11Body;
 
 /**
  * Interceptor base class for interceptors that handle WS-Security.
@@ -42,19 +44,25 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
     private static final QName WS_SECURITY_NAME =
             new QName("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security");
 
-    /** Logger available to subclasses. */
+    /**
+     * Logger available to subclasses.
+     */
     protected final Log logger = LogFactory.getLog(getClass());
 
     private boolean secureResponse = true;
 
     private boolean validateRequest = true;
 
-    /** Indicates whether outgoing responsed are to be secured. Defaults to <code>true</code>. */
+    /**
+     * Indicates whether outgoing responsed are to be secured. Defaults to <code>true</code>.
+     */
     public void setSecureResponse(boolean secureResponse) {
         this.secureResponse = secureResponse;
     }
 
-    /** Indicates whether incoming request are to be validated. Defaults to <code>true</code>. */
+    /**
+     * Indicates whether incoming request are to be validated. Defaults to <code>true</code>.
+     */
     public void setValidateRequest(boolean validateRequest) {
         this.validateRequest = validateRequest;
     }
@@ -69,6 +77,9 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
             }
             catch (WsSecurityValidationException ex) {
                 return handleValidationException(ex, messageContext);
+            }
+            catch (WsSecurityFaultException ex) {
+                return handleFaultException(ex, messageContext);
             }
         }
         else {
@@ -87,13 +98,18 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
             catch (WsSecuritySecurementException ex) {
                 return handleSecurementException(ex, messageContext);
             }
+            catch (WsSecurityFaultException ex) {
+                return handleFaultException(ex, messageContext);
+            }
         }
         else {
             return true;
         }
     }
 
-    /** Returns <code>true</code>, i.e. faults are not secured. */
+    /**
+     * Returns <code>true</code>, i.e. faults are not secured.
+     */
     public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
         return true;
     }
@@ -131,6 +147,30 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
         }
         SoapBody response = ((SoapMessage) messageContext.getResponse()).getSoapBody();
         response.addClientOrSenderFault(ex.getMessage(), Locale.ENGLISH);
+        return false;
+    }
+
+    /**
+     * Handles a fault exception.Default implementation logs the given exception, and creates a SOAP Fault with the
+     * properties of the given exception, and returns <code>false</code>.
+     *
+     * @param ex             the validation exception
+     * @param messageContext the message context
+     * @return <code>true</code> to continue processing the message, <code>false</code> (the default) otherwise
+     */
+    protected boolean handleFaultException(WsSecurityFaultException ex, MessageContext messageContext) {
+        if (logger.isWarnEnabled()) {
+            logger.warn("Could not handle request: " + ex.getMessage());
+        }
+        SoapBody response = ((SoapMessage) messageContext.getResponse()).getSoapBody();
+        SoapFault fault;
+        if (response instanceof Soap11Body) {
+            fault = ((Soap11Body) response).addFault(ex.getFaultCode(), ex.getFaultString(), Locale.ENGLISH);
+        }
+        else {
+            fault = response.addClientOrSenderFault(ex.getFaultString(), Locale.ENGLISH);
+        }
+        fault.setFaultActorOrRole(ex.getFaultActor());
         return false;
     }
 
