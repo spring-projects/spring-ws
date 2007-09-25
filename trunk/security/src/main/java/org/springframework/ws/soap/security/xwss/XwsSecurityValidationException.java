@@ -18,6 +18,12 @@ package org.springframework.ws.soap.security.xwss;
 
 import org.springframework.ws.soap.security.WsSecurityValidationException;
 
+/**
+ * XWSS-specific version of the {@link WsSecurityValidationException}.
+ *
+ * @author Arjen Poutsma
+ * @since 1.0.0
+ */
 public class XwsSecurityValidationException extends WsSecurityValidationException {
 
     public XwsSecurityValidationException(String msg) {

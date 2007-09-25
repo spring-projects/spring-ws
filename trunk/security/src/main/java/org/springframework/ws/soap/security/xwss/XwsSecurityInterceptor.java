@@ -24,6 +24,7 @@ import com.sun.xml.wss.ProcessingContext;
 import com.sun.xml.wss.XWSSProcessor;
 import com.sun.xml.wss.XWSSProcessorFactory;
 import com.sun.xml.wss.XWSSecurityException;
+import com.sun.xml.wss.impl.WssSoapFaultException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -86,7 +87,9 @@ public class XwsSecurityInterceptor extends AbstractWsSecurityInterceptor implem
         this.callbackHandler = new CallbackHandlerChain(callbackHandler);
     }
 
-    /** Sets the policy configuration to use for XWSS. Required. */
+    /**
+     * Sets the policy configuration to use for XWSS. Required.
+     */
     public void setPolicyConfiguration(Resource policyConfiguration) {
         this.policyConfiguration = policyConfiguration;
     }
@@ -130,6 +133,9 @@ public class XwsSecurityInterceptor extends AbstractWsSecurityInterceptor implem
         catch (XWSSecurityException ex) {
             throw new XwsSecuritySecurementException(ex.getMessage(), ex);
         }
+        catch (WssSoapFaultException ex) {
+            throw new XwsSecurityFaultException(ex.getFaultCode(), ex.getFaultString(), ex.getFaultActor());
+        }
     }
 
     /**
@@ -151,5 +157,9 @@ public class XwsSecurityInterceptor extends AbstractWsSecurityInterceptor implem
         catch (XWSSecurityException ex) {
             throw new XwsSecurityValidationException(ex.getMessage(), ex);
         }
+        catch (WssSoapFaultException ex) {
+            throw new XwsSecurityFaultException(ex.getFaultCode(), ex.getFaultString(), ex.getFaultActor());
+        }
     }
+
 }
