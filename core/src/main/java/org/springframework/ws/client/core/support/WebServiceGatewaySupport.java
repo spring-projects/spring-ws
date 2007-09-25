@@ -35,11 +35,16 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  * In addition to the message factory property, this gateway offers {@link Marshaller} and {@link Unmarshaller}
  * properties. Setting these is required when the {@link WebServiceTemplate#marshalSendAndReceive(Object) marshalling
  * methods} of the template are to be used.
+ * <p/>
+ * Note that when {@link #setWebServiceTemplate(WebServiceTemplate) injecting a <code>WebServiceTemplate</code>}
+ * directly, the convenience setters ({@link #setMarshaller(Marshaller)}, {@link #setUnmarshaller(Unmarshaller)}, {@link
+ * #setMessageSender(WebServiceMessageSender)}, {@link #setMessageSenders(WebServiceMessageSender[])}, and {@link
+ * #setDefaultUri(String)}) should not be used on this class, but on the template directly.
  *
  * @author Arjen Poutsma
- * @see #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
- * @see org.springframework.ws.client.core.WebServiceTemplate
- * @see #setMarshaller(org.springframework.oxm.Marshaller)
+ * @see #setMessageFactory(WebServiceMessageFactory)
+ * @see WebServiceTemplate
+ * @see #setMarshaller(Marshaller)
  * @since 1.0.0
  */
 public abstract class WebServiceGatewaySupport implements InitializingBean {
@@ -106,7 +111,14 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
         return webServiceTemplate;
     }
 
-    /** Sets the <code>WebServiceTemplate</code> to be used by the gateway. */
+    /**
+     * Sets the <code>WebServiceTemplate</code> to be used by the gateway.
+     * <p/>
+     * When using this property, the convenience setters ({@link #setMarshaller(Marshaller)}, {@link
+     * #setUnmarshaller(Unmarshaller)}, {@link #setMessageSender(WebServiceMessageSender)}, {@link
+     * #setMessageSenders(WebServiceMessageSender[])}, and {@link #setDefaultUri(String)}) should not be set on this
+     * class, but on the template directly.
+     */
     public final void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
         Assert.notNull(webServiceTemplate, "'webServiceTemplate' must not be null");
         this.webServiceTemplate = webServiceTemplate;
@@ -121,7 +133,7 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
      * Sets the <code>Marshaller</code> used by the gateway. Setting this property is only required if the marshalling
      * functionality of <code>WebServiceTemplate</code> is to be used.
      *
-     * @see org.springframework.ws.client.core.WebServiceTemplate#marshalSendAndReceive
+     * @see WebServiceTemplate#marshalSendAndReceive
      */
     public final void setMarshaller(Marshaller marshaller) {
         webServiceTemplate.setMarshaller(marshaller);
@@ -136,7 +148,7 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
      * Sets the <code>Unmarshaller</code> used by the gateway. Setting this property is only required if the marshalling
      * functionality of <code>WebServiceTemplate</code> is to be used.
      *
-     * @see org.springframework.ws.client.core.WebServiceTemplate#marshalSendAndReceive
+     * @see WebServiceTemplate#marshalSendAndReceive
      */
     public final void setUnmarshaller(Unmarshaller unmarshaller) {
         webServiceTemplate.setUnmarshaller(unmarshaller);
