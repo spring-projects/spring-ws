@@ -77,8 +77,8 @@ public class Wsdl4jDefinition implements Wsdl11Definition {
     }
 
     public Source getSource() {
-        Assert.notNull(definition, "definition must not be null");
         synchronized (monitor) {
+            Assert.notNull(definition, "definition must not be null");
             if (document == null) {
                 try {
                     WSDLFactory wsdlFactory = WSDLFactory.newInstance();
