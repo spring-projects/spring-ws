@@ -40,6 +40,12 @@ public class Wsdl4jDefinition implements Wsdl11Definition {
 
     private Definition definition;
 
+    /** Cached DOM version of the definition */
+    private Document document;
+
+    /** WSDL4J is not thread safe, hence the need for a monitor. */
+    private final Object monitor = new Object();
+
     /**
      * Constructs a new, empty <code>Wsdl4jDefinition</code>.
      *
@@ -54,7 +60,7 @@ public class Wsdl4jDefinition implements Wsdl11Definition {
      * @param definition the WSDL4J definition
      */
     public Wsdl4jDefinition(Definition definition) {
-        this.definition = definition;
+        setDefinition(definition);
     }
 
     /** Returns the WSDL4J <code>Definition</code>. */
@@ -64,19 +70,26 @@ public class Wsdl4jDefinition implements Wsdl11Definition {
 
     /** Set the WSDL4J <code>Definition</code>. */
     public void setDefinition(Definition definition) {
-        this.definition = definition;
+        synchronized (monitor) {
+            this.definition = definition;
+            this.document = null;
+        }
     }
 
     public Source getSource() {
         Assert.notNull(definition, "definition must not be null");
-        try {
-            WSDLFactory wsdlFactory = WSDLFactory.newInstance();
-            WSDLWriter wsdlWriter = wsdlFactory.newWSDLWriter();
-            Document document = wsdlWriter.getDocument(definition);
-            return new DOMSource(document);
+        synchronized (monitor) {
+            if (document == null) {
+                try {
+                    WSDLFactory wsdlFactory = WSDLFactory.newInstance();
+                    WSDLWriter wsdlWriter = wsdlFactory.newWSDLWriter();
+                    document = wsdlWriter.getDocument(definition);
+                }
+                catch (WSDLException ex) {
+                    throw new WsdlDefinitionException(ex.getMessage(), ex);
+                }
+            }
         }
-        catch (WSDLException ex) {
-            throw new WsdlDefinitionException(ex.getMessage(), ex);
-        }
+        return new DOMSource(document);
     }
 }
