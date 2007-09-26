@@ -90,7 +90,7 @@ abstract class Jaxp13XPathExpressionFactory {
     /** JAXP 1.3 implementation of the <code>XPathExpression</code> interface. */
     private static class Jaxp13XPathExpression implements XPathExpression {
 
-        javax.xml.xpath.XPathExpression xpathExpression;
+        private final javax.xml.xpath.XPathExpression xpathExpression;
 
         private Jaxp13XPathExpression(javax.xml.xpath.XPathExpression xpathExpression) {
             this.xpathExpression = xpathExpression;
