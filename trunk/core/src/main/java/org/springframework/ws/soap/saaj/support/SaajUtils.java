@@ -23,6 +23,7 @@ import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.Name;
+import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
@@ -36,8 +37,8 @@ import org.springframework.xml.namespace.QNameUtils;
 import org.w3c.dom.Element;
 
 /**
- * Collection of generic utility methods to work with SAAJ. Includes conversion from <code>Name</code>s to
- * <code>QName</code>s and vice-versa, and SAAJ version checking.
+ * Collection of generic utility methods to work with SAAJ. Includes conversion from SAAJ {@link Name} objects to {@link
+ * QName}s and vice-versa, and SAAJ version checking.
  *
  * @author Arjen Poutsma
  * @see Name
@@ -57,37 +58,58 @@ public abstract class SaajUtils {
     private static int saajVersion = SAAJ_12;
 
     static {
-        try {
-            ClassUtils.forName(SAAJ_13_CLASS_NAME);
+        if (isSaaj13()) {
             saajVersion = SAAJ_13;
         }
+        else if (isSaaj12()) {
+            saajVersion = SAAJ_12;
+        }
+        else {
+            saajVersion = SAAJ_11;
+        }
+    }
+
+    private static boolean isSaaj13() {
+        try {
+            ClassUtils.forName(SAAJ_13_CLASS_NAME);
+            MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+            return true;
+        }
         catch (ClassNotFoundException ex) {
-            if (Element.class.isAssignableFrom(SOAPElement.class) && !isWebLogic9Implementation()) {
-                saajVersion = SAAJ_12;
-            }
-            else {
-                saajVersion = SAAJ_11;
-            }
+            return false;
+        }
+        catch (NoSuchMethodError ex) {
+            return false;
+        }
+        catch (SOAPException ex) {
+            return false;
         }
     }
 
     /**
-     * Checks whether we are dealing with a WebLogic 9 implementation of SAAJ. WebLogic 9 does implement SAAJ 1.2, but
-     * throws UnsupportedOperationExceptions when a SAAJ 1.2 method is called.
+     * Checks whether we can find a SAAJ 1.2 implementation, being aware of the broken WebLogic 9 SAAJ implementation.
+     * <p/>
+     * WebLogic 9 does implement SAAJ 1.2, but throws UnsupportedOperationExceptions when a SAAJ 1.2 method is called.
      */
-    private static boolean isWebLogic9Implementation() {
-        try {
-            MessageFactory messageFactory = MessageFactory.newInstance();
-            SOAPMessage message = messageFactory.createMessage();
+    private static boolean isSaaj12() {
+        if (Element.class.isAssignableFrom(SOAPElement.class)) {
+            // see if we are dealing with WebLogic 9
             try {
-                message.getSOAPBody();
+                MessageFactory messageFactory = MessageFactory.newInstance();
+                SOAPMessage message = messageFactory.createMessage();
+                try {
+                    message.getSOAPBody();
+                    return true;
+                }
+                catch (UnsupportedOperationException ex) {
+                    return false;
+                }
             }
-            catch (UnsupportedOperationException ex) {
-                return true;
+            catch (SOAPException e) {
+                return false;
             }
-            return false;
         }
-        catch (SOAPException e) {
+        else {
             return false;
         }
     }
