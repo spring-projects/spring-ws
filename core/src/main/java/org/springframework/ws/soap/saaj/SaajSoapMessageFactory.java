@@ -88,7 +88,7 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
             }
             else {
                 throw new IllegalArgumentException(
-                        "Invalid version [" + version + "]. " + "Expected the SOAP_11 or SOAP_12 constant");
+                        "Invalid version [" + version + "]. Expected the SOAP_11 or SOAP_12 constant");
             }
         }
         else if (SoapVersion.SOAP_11 != version) {
