@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.springframework.org/spring-ws/test/multipleSchemas1"
+        elementFormDefault="qualified">
+
+    <element name="multipleSchemas1">
+        <simpleType>
+            <restriction base="string">
+                <pattern value="[a-c]+"/>
+            </restriction>
+        </simpleType>
+    </element>
+
+</schema>

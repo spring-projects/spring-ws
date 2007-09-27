@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<project name="spring-ws-airline-sample-clients" default="run-all">
+
+    <target name="run-all">
+        <ant dir="axis1" target="run"/>
+        <ant dir="jax-ws" target="run"/>
+        <ant dir="saaj" target="run"/>
+        <ant dir="spring-ws" target="run"/>
+    </target>
+</project>
+
