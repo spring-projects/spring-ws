@@ -16,17 +16,14 @@
 
 package org.springframework.ws.transport.mail;
 
-import java.util.Properties;
-import javax.jms.BytesMessage;
+import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPMessage;
-import javax.mail.URLName;
 
 import junit.framework.TestCase;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
-import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
 
 public class MailMessageSenderIntegrationTest extends TestCase {
@@ -36,17 +33,15 @@ public class MailMessageSenderIntegrationTest extends TestCase {
     private MessageFactory messageFactory;
 
     private static final String URI = "mailto:ajwpi21@xs4all.nl?subject=SOAP Test";
+//    private static final String URI = "mailto:revans@interface21.com?subject=Believe me now?";
 
     private static final String SOAP_ACTION = "http://springframework.org/DoIt";
 
     protected void setUp() throws Exception {
-        Properties properties = new Properties();
-        properties.setProperty("mail.smtp.host", "smtp.xs4all.nl");
         messageSender = new MailMessageSender();
         messageSender.setStoreUri("pop3://ajwpi21:sjantaL.@pop.xs4all.nl/INBOX");
         messageSender.setTransportUri("smtp://ajwpi21:sjantaL.@smtp.xs4all.nl");
         messageSender.setFrom("Arjen Poutsma <ajwp@xs4all.nl>");
-        messageSender.setJavaMailProperties(properties);
         messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
     }
 
@@ -55,6 +50,7 @@ public class MailMessageSenderIntegrationTest extends TestCase {
         try {
             connection = messageSender.createConnection(URI);
             SOAPMessage saajMessage = messageFactory.createMessage();
+            saajMessage.getSOAPBody().addBodyElement(new QName("http://springframework.org", "test"));
             SoapMessage soapRequest = new SaajSoapMessage(saajMessage);
             soapRequest.setSoapAction(SOAP_ACTION);
             connection.send(soapRequest);

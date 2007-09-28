@@ -21,18 +21,14 @@ import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPMessage;
 
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
-import org.w3c.dom.Element;
 
 public class AddressingHelperTest extends AbstractWsAddressingTestCase {
 
     private AddressingHelper helper;
 
-    private Element headerElement;
-
     protected void onSetUp() throws Exception {
         helper = new AddressingHelper(new WsAddressing200408());
         SaajSoapMessage message = loadSaajMessage("request-200408.xml");
-        headerElement = message.getSaajMessage().getSOAPHeader();
     }
 
     public void testAddMessageHeaderRequiredFault12() throws Exception {

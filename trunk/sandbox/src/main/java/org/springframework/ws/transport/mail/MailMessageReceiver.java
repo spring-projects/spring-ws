@@ -18,34 +18,41 @@ package org.springframework.ws.transport.mail;
 
 import java.util.Properties;
 import javax.mail.Folder;
-import javax.mail.FolderClosedException;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.URLName;
-import javax.mail.event.MessageCountEvent;
-import javax.mail.event.MessageCountListener;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
-import com.sun.mail.imap.IMAPFolder;
 import org.springframework.util.Assert;
 import org.springframework.ws.transport.mail.support.MailUtils;
 import org.springframework.ws.transport.support.AbstractMultiThreadedMessageReceiver;
 
-/** @author Arjen Poutsma */
+/**
+ * @author Arjen Poutsma
+ */
 public class MailMessageReceiver extends AbstractMultiThreadedMessageReceiver {
 
     private Session session = Session.getInstance(new Properties(), null);
 
     private URLName storeUri;
 
-    private Folder folder;
+    private URLName transportUri;
 
-    private MessageCountHandler eventHandler;
+    private Folder folder;
 
     private Store store;
 
-    private boolean supportsIdle;
+    private MonitoringStrategy monitoringStrategy = new DefaultMonitoringStrategy();
+
+    private InternetAddress from;
+
+    public void setFrom(String from) throws AddressException {
+        this.from = new InternetAddress(from);
+    }
 
     /**
      * Set JavaMail properties for the {@link Session}.
@@ -57,6 +64,14 @@ public class MailMessageReceiver extends AbstractMultiThreadedMessageReceiver {
      */
     public void setJavaMailProperties(Properties javaMailProperties) {
         session = Session.getInstance(javaMailProperties, null);
+    }
+
+    /**
+     *
+     * @param monitoringStrategy
+     */
+    public void setMonitoringStrategy(MonitoringStrategy monitoringStrategy) {
+        this.monitoringStrategy = monitoringStrategy;
     }
 
     /**
@@ -79,9 +94,15 @@ public class MailMessageReceiver extends AbstractMultiThreadedMessageReceiver {
         this.storeUri = new URLName(storeUri);
     }
 
+    public void setTransportUri(String transportUri) {
+        this.transportUri = new URLName(transportUri);
+    }
+
     public void afterPropertiesSet() throws Exception {
-        super.afterPropertiesSet();
         Assert.notNull(storeUri, "Property 'storeUri' is required");
+        Assert.notNull(transportUri, "Property 'transportUri' is required");
+        Assert.notNull(monitoringStrategy, "Property 'monitoringStrategy' is required");
+        super.afterPropertiesSet();
     }
 
     protected void onActivate() throws Exception {
@@ -92,34 +113,12 @@ public class MailMessageReceiver extends AbstractMultiThreadedMessageReceiver {
         if (logger.isInfoEnabled()) {
             logger.info("Starting mail receiver [" + storeUri.toString() + "]");
         }
-        eventHandler = new MessageCountHandler();
-        folder.addMessageCountListener(eventHandler);
-/*
-        try {
-            if (folder instanceof IMAPFolder) {
-                IMAPFolder f = (IMAPFolder) folder;
-                logger.debug(folder.isOpen());
-                logger.debug("Starting IDLE");
-                f.idle();
-                logger.debug("IDLE done");
-                supportsIdle = true;
-            }
-        }
-        catch (MessagingException mex) {
-            supportsIdle = false;
-        }
-*/
-        logger.debug("Support IDLE: " + supportsIdle);
         getTaskExecutor().execute(new MonitoringRunnable());
     }
 
     protected void onStop() {
         if (logger.isInfoEnabled()) {
             logger.info("Stopping mail receiver [" + storeUri.toString() + "]");
-        }
-        if (eventHandler != null) {
-            folder.removeMessageCountListener(eventHandler);
-            eventHandler = null;
         }
     }
 
@@ -130,6 +129,11 @@ public class MailMessageReceiver extends AbstractMultiThreadedMessageReceiver {
         closeFolder();
     }
 
+    protected void closeFolder() {
+        MailUtils.closeFolder(folder, true);
+        MailUtils.closeService(store);
+    }
+
     protected void openFolder() throws MessagingException, MailTransportException {
         store = session.getStore(storeUri);
         store.connect();
@@ -138,51 +142,50 @@ public class MailMessageReceiver extends AbstractMultiThreadedMessageReceiver {
             throw new MailTransportException("No default folder to receive from");
         }
         folder.open(Folder.READ_WRITE);
-        logger.info("folder contains " + folder.getMessageCount() + " messages");
-    }
-
-    protected void closeFolder() {
-        MailUtils.closeFolder(folder);
-        MailUtils.closeService(store);
     }
 
     private class MonitoringRunnable implements Runnable {
 
         public void run() {
-            try {
-                while (isRunning()) {
-                    if (supportsIdle && folder instanceof IMAPFolder) {
-                        IMAPFolder f = (IMAPFolder) folder;
-                        logger.debug("IDLE starts");
-                        f.idle();
-                        logger.debug("IDLE done");
-                    }
-                    else {
-                        Thread.sleep(500); // sleep for freq milliseconds
-
-                        // This is to force the IMAP server to send us
-                        // EXISTS notifications.
-                        folder.getMessageCount();
+            while (isRunning()) {
+                try {
+                    Message[] newMessages = monitoringStrategy.getNewMessages(folder);
+                    for (int i = 0; i < newMessages.length; i++) {
+                        if (logger.isDebugEnabled()) {
+                            if (newMessages[i] instanceof MimeMessage) {
+                                MimeMessage mimeMessage = (MimeMessage) newMessages[i];
+                                logger.debug("Received email message with MessageID " + mimeMessage.getMessageID());
+                            }
+                        }
+                        MessageRequestHandler handler = new MessageRequestHandler(newMessages[i]);
+                        getTaskExecutor().execute(handler);
                     }
                 }
-            }
-            catch (InterruptedException ex) {
-                logger.warn(ex);
-            }
-            catch (MessagingException ex) {
-                logger.warn(ex);
+                catch (MessagingException ex) {
+                    logger.warn(ex);
+                }
             }
         }
     }
 
-    private class MessageCountHandler implements MessageCountListener {
+    private class MessageRequestHandler implements Runnable {
 
-        public void messagesAdded(MessageCountEvent event) {
-            Message[] msgs = event.getMessages();
-            logger.info("Got " + msgs.length + " new messages");
+        private final Message message;
+
+        public MessageRequestHandler(Message message) {
+            this.message = message;
         }
 
-        public void messagesRemoved(MessageCountEvent e) {
+        public void run() {
+            MailReceiverConnection connection = new MailReceiverConnection(message, session);
+            connection.setTransportUri(transportUri);
+            connection.setFrom(from);
+            try {
+                handleConnection(connection);
+            }
+            catch (Exception ex) {
+                logger.warn("Could not handle message", ex);
+            }
         }
     }
 }

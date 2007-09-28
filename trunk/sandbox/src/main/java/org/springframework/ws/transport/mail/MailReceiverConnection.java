@@ -16,42 +16,42 @@
 
 package org.springframework.ws.transport.mail;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
 import javax.mail.Header;
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.URLName;
-import javax.mail.internet.MimeMessage;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
+import javax.mail.internet.InternetAddress;
 
 import org.springframework.util.Assert;
+import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractReceiverConnection;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.mail.support.MailUtils;
-import org.springframework.ws.transport.jms.JmsTransportException;
-import org.springframework.ws.WebServiceMessage;
 
-/** @author Arjen Poutsma */
+/**
+ * @author Arjen Poutsma
+ */
 public class MailReceiverConnection extends AbstractReceiverConnection {
 
-    private final MimeMessage requestMessage;
+    private final Message requestMessage;
 
     private final Session session;
 
-    private MimeMessage responseMessage;
+    private Message responseMessage;
 
     private ByteArrayOutputStream responseBuffer;
 
@@ -59,7 +59,9 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 
     private URLName transportUri;
 
-    public MailReceiverConnection(MimeMessage requestMessage, Session session) {
+    private InternetAddress from;
+
+    public MailReceiverConnection(Message requestMessage, Session session) {
         Assert.notNull(requestMessage, "'requestMessage' must not be null");
         Assert.notNull(session, "'session' must not be null");
         this.requestMessage = requestMessage;
@@ -112,7 +114,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 
     protected InputStream getRequestInputStream() throws IOException {
         try {
-            return requestMessage.getDataHandler().getInputStream();
+            return requestMessage.getInputStream();
         }
         catch (MessagingException ex) {
             throw new MailTransportException(ex);
@@ -141,7 +143,8 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 
     protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
         try {
-            responseMessage = (MimeMessage) requestMessage.reply(false);
+            responseMessage = requestMessage.reply(false);
+            responseMessage.setFrom(from);
 
             responseBuffer = new ByteArrayOutputStream();
         }
@@ -153,12 +156,12 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
     protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
         Transport transport = null;
         try {
-            requestMessage.setDataHandler(
+            responseMessage.setDataHandler(
                     new DataHandler(new ByteArrayDataSource(responseContentType, responseBuffer.toByteArray())));
             transport = session.getTransport(transportUri);
             transport.connect();
-            requestMessage.saveChanges();
-            transport.sendMessage(requestMessage, requestMessage.getAllRecipients());
+            responseMessage.saveChanges();
+            transport.sendMessage(responseMessage, responseMessage.getAllRecipients());
         }
         catch (MessagingException ex) {
             throw new MailTransportException(ex);
@@ -166,6 +169,10 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
         finally {
             MailUtils.closeService(transport);
         }
+    }
+
+    public void setFrom(InternetAddress from) {
+        this.from = from;
     }
 
     private class ByteArrayDataSource implements DataSource {

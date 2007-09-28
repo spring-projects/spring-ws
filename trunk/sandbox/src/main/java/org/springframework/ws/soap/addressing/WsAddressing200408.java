@@ -20,11 +20,11 @@ import javax.xml.namespace.QName;
 
 /**
  * Implements the August 2004 edition of the WS-Addressing specification. This version of the specification is used by
- * Microsoft's Web Service Enhancements (WSE) 3.0.
+ * Microsoft's Web Services Enhancements (WSE) 3.0.
  *
  * @author Arjen Poutsma
  * @see <a href="http://msdn.microsoft.com/ws/2004/08/ws-addressing/">Web Services Addressing, August 2004</a>
- * @see <a href="http://msdn.microsoft.com/webservices/webservices/building/wse/">Web Service Enhancements</a>
+ * @see <a href="http://msdn.microsoft.com/webservices/webservices/building/wse/">Web Services Enhancements</a>
  */
 public class WsAddressing200408 implements WsAddressingVersion {
 
