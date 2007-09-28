@@ -18,8 +18,6 @@ package org.springframework.ws.soap.addressing;
 
 import javax.xml.transform.TransformerException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.core.JdkVersion;
 import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
@@ -33,12 +31,14 @@ import org.springframework.ws.soap.server.SoapEndpointInvocationChain;
 import org.springframework.ws.soap.server.SoapEndpointMapping;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
-/** @author Arjen Poutsma */
+/**
+ * @author Arjen Poutsma
+ */
 public abstract class AbstractWsAddressingMapping extends TransformerObjectSupport implements SoapEndpointMapping {
 
-    protected final Log logger = LogFactory.getLog(getClass());
-
     private String[] actorsOrRoles;
+
+    private boolean isUltimateReceiver = true;
 
     private MessageIdProvider messageIdProvider;
 
@@ -50,7 +50,9 @@ public abstract class AbstractWsAddressingMapping extends TransformerObjectSuppo
 
     private static final Object MISSING_HEADER_ENDPOINT = new Object();
 
-    /** Protected constructor */
+    /**
+     * Protected constructor
+     */
     protected AbstractWsAddressingMapping() {
         if (JdkVersion.getMajorJavaVersion() >= JdkVersion.JAVA_15) {
             messageIdProvider = new UuidMessageIdProvider();
@@ -70,6 +72,10 @@ public abstract class AbstractWsAddressingMapping extends TransformerObjectSuppo
         this.actorsOrRoles = actorsOrRoles;
     }
 
+    public final void setUltimateReceiver(boolean ultimateReceiver) {
+        this.isUltimateReceiver = ultimateReceiver;
+    }
+
     /**
      * Sets the message id provider used for creating WS-Addressing MessageIds. By default, the {@link
      * UuidMessageIdProvider} is used on Java 5 and higher, and the {@link UidMessageIdProvider} on Java 1.4 and lower.
@@ -80,9 +86,9 @@ public abstract class AbstractWsAddressingMapping extends TransformerObjectSuppo
 
     public final void setVersions(WsAddressingVersion[] versions) {
         Assert.notEmpty(versions, "specifications must not be empty");
-        helpers = new AddressingHelper[versions.length];
+        this.helpers = new AddressingHelper[versions.length];
         for (int i = 0; i < versions.length; i++) {
-            helpers[i] = new AddressingHelper(versions[i]);
+            this.helpers[i] = new AddressingHelper(versions[i]);
         }
     }
 
@@ -107,7 +113,7 @@ public abstract class AbstractWsAddressingMapping extends TransformerObjectSuppo
             if (endpoint == null) {
                 return null;
             }
-            return new SoapEndpointInvocationChain(endpoint, null, actorsOrRoles);
+            return new SoapEndpointInvocationChain(endpoint, null, actorsOrRoles, isUltimateReceiver);
         }
         return null;
     }

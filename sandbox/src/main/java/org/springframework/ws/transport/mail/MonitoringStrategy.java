@@ -16,7 +16,25 @@
 
 package org.springframework.ws.transport.mail;
 
-/** @author Arjen Poutsma */
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+
+/**
+ * Defines the contract for objects that monitor a given folder for new messages. Allows for multiple implementation
+ * strategies, including polling, or event-driven techniques such as IMAP's <code>IDLE</code> command.
+ *
+ * @author Arjen Poutsma
+ */
 public interface MonitoringStrategy {
+
+    /**
+     * Return the new messages in a given JavaMail folder.
+     *
+     * @param folder the folder in which to look for new messages
+     * @return the new messages
+     * @throws MessagingException in case of JavaMail errors
+     */
+    Message[] getNewMessages(Folder folder) throws MessagingException;
 
 }

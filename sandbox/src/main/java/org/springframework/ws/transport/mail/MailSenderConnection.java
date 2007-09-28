@@ -46,12 +46,15 @@ import javax.mail.search.SearchTerm;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractSenderConnection;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.mail.support.MailUtils;
 
-/** @author Arjen Poutsma */
+/**
+ * @author Arjen Poutsma
+ */
 public class MailSenderConnection extends AbstractSenderConnection {
 
     private static final Log logger = LogFactory.getLog(MailSenderConnection.class);
@@ -62,7 +65,7 @@ public class MailSenderConnection extends AbstractSenderConnection {
 
     private MimeMessage requestMessage;
 
-    private MimeMessage responseMessage;
+    private Message responseMessage;
 
     private String requestContentType;
 
@@ -84,7 +87,7 @@ public class MailSenderConnection extends AbstractSenderConnection {
         this.from = from;
     }
 
-    public MimeMessage getRequestMessage() {
+    public Message getRequestMessage() {
         return requestMessage;
     }
 
@@ -162,35 +165,43 @@ public class MailSenderConnection extends AbstractSenderConnection {
         Store store = null;
         Folder folder = null;
         try {
-            try {
-                Thread.sleep(5000);
+            String requestMessageId = null;
+            if (requestMessage instanceof MimeMessage) {
+                requestMessageId = ((MimeMessage) requestMessage).getMessageID();
             }
-            catch (InterruptedException e) {
-                logger.debug(e);
-            }
-            store = session.getStore(storeUri);
-            store.connect();
-            folder = store.getFolder(storeUri);
-            if (folder == null || !folder.exists()) {
-                throw new MailTransportException("No default folder to receive from");
-            }
-            if (deleteAfterReceive) {
-                folder.open(Folder.READ_WRITE);
+            if (StringUtils.hasLength(requestMessageId)) {
+                try {
+                    Thread.sleep(5000);
+                }
+                catch (InterruptedException e) {
+                    logger.debug(e);
+                }
+                store = session.getStore(storeUri);
+                store.connect();
+                folder = store.getFolder(storeUri);
+                if (folder == null || !folder.exists()) {
+                    throw new MailTransportException("No default folder to receive from");
+                }
+                if (deleteAfterReceive) {
+                    folder.open(Folder.READ_WRITE);
+                }
+                else {
+                    folder.open(Folder.READ_ONLY);
+                }
+                SearchTerm searchTerm = new HeaderTerm(MailTransportConstants.HEADER_IN_REPLY_TO, requestMessageId);
+                Message[] responses = folder.search(searchTerm);
+                if (responses.length > 0) {
+                    if (responses.length > 1) {
+                        logger.warn("Received more than one response for request with ID [" + requestMessageId + "]");
+                    }
+                    responseMessage = (MimeMessage) responses[0];
+                }
+                if (deleteAfterReceive) {
+                    responseMessage.setFlag(Flags.Flag.DELETED, true);
+                }
             }
             else {
-                folder.open(Folder.READ_ONLY);
-            }
-            String requestMessageId = requestMessage.getMessageID();
-            SearchTerm searchTerm = new HeaderTerm(MailTransportConstants.HEADER_IN_REPLY_TO, requestMessageId);
-            Message[] responses = folder.search(searchTerm);
-            if (responses.length > 0) {
-                if (responses.length > 1) {
-                    logger.warn("Received more than one response for request with ID [" + requestMessageId + "]");
-                }
-                responseMessage = (MimeMessage) responses[0];
-            }
-            if (deleteAfterReceive) {
-                responseMessage.setFlag(Flags.Flag.DELETED, true);
+                logger.warn("Request message had no Message ID, could not find response");
             }
         }
         catch (MessagingException ex) {
@@ -279,4 +290,5 @@ public class MailSenderConnection extends AbstractSenderConnection {
             return "ByteArrayDataSource";
         }
     }
+
 }

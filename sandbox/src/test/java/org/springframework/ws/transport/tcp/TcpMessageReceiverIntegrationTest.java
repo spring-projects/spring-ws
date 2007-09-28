@@ -76,7 +76,8 @@ public class TcpMessageReceiverIntegrationTest extends AbstractDependencyInjecti
     public void testTemplate() throws Exception {
         WebServiceTemplate template = new WebServiceTemplate(messageFactory);
         template.setMessageSender(messageSender);
-        template.sendAndReceive("tcp://localhost",new StringSource(REQUEST), new StreamResult(System.out));
+        template.sendSourceAndReceiveToResult("tcp://localhost", new StringSource(REQUEST),
+                new StreamResult(System.out));
     }
 
     protected String[] getConfigLocations() {
