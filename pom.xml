@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws</artifactId>
@@ -92,8 +93,10 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk</connection>
-        <developerConnection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk</developerConnection>
+        <connection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk
+        </connection>
+        <developerConnection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk
+        </developerConnection>
         <url>http://fisheye3.cenqua.com/browse/springframework/spring-ws/trunk</url>
     </scm>
     <modules>
@@ -235,19 +238,20 @@
                     <postProcess>
                         <copy todir="target/site/reference">
                             <fileset dir="target/docbkx">
-                                <include name="**/*.html" />
-                                <include name="**/*.pdf" />
+                                <include name="**/*.html"/>
+                                <include name="**/*.pdf"/>
                             </fileset>
                         </copy>
                         <copy todir="target/site/reference/html">
                             <fileset dir="src/docbkx/resources">
-                                <include name="**/*.css" />
-                                <include name="**/*.png" />
-                                <include name="**/*.gif" />
-                                <include name="**/*.jpg" />
+                                <include name="**/*.css"/>
+                                <include name="**/*.png"/>
+                                <include name="**/*.gif"/>
+                                <include name="**/*.jpg"/>
                             </fileset>
                         </copy>
-                        <move file="target/site/reference/pdf/index.pdf" tofile="target/site/reference/pdf/spring-ws-reference.pdf" failonerror="false" />
+                        <move file="target/site/reference/pdf/index.pdf"
+                              tofile="target/site/reference/pdf/spring-ws-reference.pdf" failonerror="false"/>
                     </postProcess>
                 </configuration>
             </plugin>
@@ -446,6 +450,11 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-jms</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-remoting</artifactId>
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
