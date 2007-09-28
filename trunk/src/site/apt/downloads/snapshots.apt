@@ -23,10 +23,10 @@ Snapshot Builds
 <dependency>
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws-core</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
 </dependency>
 +---------------
 
 	Additionally, there are
-    {{{http://s3browse.com/explore/maven.springframework.org/snapshot/org/springframework/ws/spring-ws/1.0.1-SNAPSHOT/}zips}}
+    {{{http://s3browse.com/explore/maven.springframework.org/snapshot/org/springframework/ws/spring-ws/1.0.2-SNAPSHOT/}zips}}
     available which contain all jars. Make sure to click 'Next >' a couple of times to get the most recent snapshots. 

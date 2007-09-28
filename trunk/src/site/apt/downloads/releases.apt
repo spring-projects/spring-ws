@@ -6,11 +6,11 @@ Downloads
 
 * Get the latest Spring Web Services releases here
 
-	* <<Spring-WS 1.0.0 is the current production release>>
+	* <<Spring-WS 1.0.1 is the current production release>>
 
-		* {{{http://sourceforge.net/project/showfiles.php?group_id=73357&package_id=178569&release_id=532966}Download}} | {{{http://static.springframework.org/spring-ws/docs/1.0.0/changelog.txt}Changelog}} | {{{http://forum.springframework.org/showthread.php?t=42788}Announcement}}
+		* {{{http://sourceforge.net/project/showfiles.php?group_id=73357&package_id=178569&release_id=542737}Download}} | {{{http://static.springframework.org/spring-ws/docs/1.0.1/changelog.txt}Changelog}} | {{{http://forum.springframework.org/showthread.php?t=44351}Announcement}}
 		
 	
-	* <<Spring-WS 1.0.1 is the upcoming development release>>
+	* <<Spring-WS 1.0.2 is the upcoming development release>>
 
 		* {{{snapshots.html}Download nighly snapshots}}
