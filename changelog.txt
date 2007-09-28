@@ -1,0 +1,42 @@
+SPRING WEB SERVICES CHANGELOG
+=============================
+http://www.springframework.org/spring-ws
+
+Changes in version 1.0.1
+-------------------------
+
+** Bug
+    * [SWS-164] - Null pointer while handling empty SOAP Body
+    * [SWS-165] - GZIP decompression handling in client
+    * [SWS-166] - No Java extensionType found to represent a '{http://www.w3.org/2001/XMLSchema}schema' element in the context of a 'javax.wsdl.Types'.
+    * [SWS-167] - Reference documentation - Chapter 3.5 - Creating the project
+    * [SWS-168] - Reference documentation - Chapter 4.0 - spelling
+    * [SWS-170] - AxiomSoapMessageFactory + PayloadRootAnnotationMethodEndpointMapping allways falls to DOM parsing
+    * [SWS-171] - Jaxb2Marshaller.supports(Class clazz) is too eager
+    * [SWS-175] - SAAJ0511: Unable to create envelope from given source
+    * [SWS-176] - PayloadValidatingInterceptor ignores schema list
+    * [SWS-177] - Fix MTOM sample
+    * [SWS-182] - Order of setting properties in WebServiceGatewaySupport
+    * [SWS-188] - WS-Security exception not being handled
+    * [SWS-189] - XPathExpression is not thread-safe
+    * [SWS-191] - Loading default key store overwrites truststore
+    * [SWS-195] - Incorrect javadoc in org.springframework.ws.soap.SoapFault
+    * [SWS-198] - SaajUtils wrong way to detect SAAJ version
+    * [SWS-200] - Thread safe problem during wsdl generation
+
+** Improvement
+    * [SWS-169] - Document conventions of XsdBasedSoap11Wsdl4jDefinitionBuilder
+    * [SWS-172] - Document SimpleWsdl11Definition
+    * [SWS-173] - Remove JAXB1 references from airline sample
+    * [SWS-178] - Mention TransportContext in docs
+    * [SWS-185] - Mention usage of Spring-WS in a normal DispatcherServlet context
+    * [SWS-190] - Document Java6 & SAAJ behavior
+
+** New Feature
+    * [SWS-104] - Allow alternative schema location in XsdBasedSoap11Wsdl4jDefinitionBuilder
+    * [SWS-162] - The XsdBasedSoap11Wsdl4jDefinitionBuilder does not support multiple xsds in generating a WSDL file.
+
+** Task
+    * [SWS-174] - Update WebServiceTemplate documentation for the new method names
+    * [SWS-181] - Option to allow marshaller skip xml declarations
+    * [SWS-183] - typo in source-example of reference documentation
