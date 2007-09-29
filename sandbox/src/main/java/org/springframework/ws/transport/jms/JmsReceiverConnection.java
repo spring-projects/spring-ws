@@ -29,20 +29,23 @@ import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 
-import org.apache.commons.logging.Log;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.util.Assert;
 import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractReceiverConnection;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
+import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.jms.support.JmsTransportUtils;
 
-/** @author Arjen Poutsma */
+/**
+ * Implementation of {@link WebServiceConnection} that is used for server-side JMS access.
+ *
+ * @author Arjen Poutsma
+ * @since 1.1.0
+ */
 public class JmsReceiverConnection extends AbstractReceiverConnection
         implements JmsTransportConstants, FaultAwareWebServiceConnection {
-
-    private final Log logger;
 
     private final BytesMessage requestMessage;
 
@@ -50,13 +53,28 @@ public class JmsReceiverConnection extends AbstractReceiverConnection
 
     private BytesMessage responseMessage;
 
-    protected JmsReceiverConnection(BytesMessage requestMessage, Session session, Log logger) {
+    /**
+     * Constructs a new JMS connection with the given parameters.
+     */
+    protected JmsReceiverConnection(BytesMessage requestMessage, Session session) {
         Assert.notNull(requestMessage, "requestMessage must not be null");
         Assert.notNull(session, "session must not be null");
-        Assert.notNull(logger, "'logger' must not be null");
         this.requestMessage = requestMessage;
         this.session = session;
-        this.logger = logger;
+    }
+
+    /**
+     * Returns the request message for this connection.
+     */
+    public BytesMessage getRequestMessage() {
+        return requestMessage;
+    }
+
+    /**
+     * Returns the response message, if any, for this connection.
+     */
+    public BytesMessage getResponseMessage() {
+        return responseMessage;
     }
 
     public String getErrorMessage() throws IOException {
@@ -144,9 +162,6 @@ public class JmsReceiverConnection extends AbstractReceiverConnection
                 messageProducer.setPriority(requestMessage.getJMSPriority());
                 messageProducer.send(responseMessage);
             }
-            else {
-                logger.warn("Incoming message has no ReplyTo set, not sending response");
-            }
         }
         catch (JMSException ex) {
             throw new JmsTransportException(ex);
@@ -175,7 +190,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection
     public void setFault(boolean fault) throws IOException {
         if (responseMessage != null) {
             try {
-                responseMessage.setBooleanProperty(JmsTransportConstants.PROPERTY_IS_FAULT, true);
+                responseMessage.setBooleanProperty(JmsTransportConstants.PROPERTY_IS_FAULT, fault);
             }
             catch (JMSException ex) {
                 throw new JmsTransportException(ex);

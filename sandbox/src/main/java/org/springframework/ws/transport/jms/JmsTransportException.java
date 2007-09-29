@@ -20,7 +20,13 @@ import javax.jms.JMSException;
 
 import org.springframework.ws.transport.TransportException;
 
-/** @author Arjen Poutsma */
+/**
+ * Exception that is thrown when an error occurs in the JMS transport.
+ *
+ * @author Arjen Poutsma
+ * @since 1.1.0
+ */
+
 public class JmsTransportException extends TransportException {
 
     private final JMSException jmsException;

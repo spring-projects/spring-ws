@@ -19,24 +19,21 @@ package org.springframework.ws.transport.jms;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import javax.jms.BytesMessage;
-import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
-import javax.xml.soap.SOAPMessage;
 
-import junit.framework.TestCase;
-import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
+import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
 
-public class JmsMessageSenderIntegrationTest extends TestCase {
+public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjectionSpringContextTests {
 
     private JmsMessageSender messageSender;
 
@@ -44,55 +41,30 @@ public class JmsMessageSenderIntegrationTest extends TestCase {
 
     private MessageFactory messageFactory;
 
-    private static final String URI = "jms:RequestQueue";
+    private static final String REQUEST_QUEUE_URI = "jms:RequestQueue";
 
     private static final String SOAP_ACTION = "http://springframework.org/DoIt";
 
-    protected void setUp() throws Exception {
-        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false");
-        jmsTemplate = new JmsTemplate(connectionFactory);
-        jmsTemplate.setDefaultDestinationName("RequestQueue");
-        messageSender = new JmsMessageSender(connectionFactory);
+    protected void onSetUp() throws Exception {
         messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
     }
 
-    public void testSendAndReceiveQueueNoResponse() throws Exception {
-        WebServiceConnection connection = null;
-        try {
-            connection = messageSender.createConnection(URI);
-            SOAPMessage saajMessage = messageFactory.createMessage();
-            SoapMessage soapRequest = new SaajSoapMessage(saajMessage);
-            soapRequest.setSoapAction(SOAP_ACTION);
-            connection.send(soapRequest);
-            BytesMessage jmsRequest = (BytesMessage) jmsTemplate.receive();
-            validateMessage(jmsRequest);
-        }
-        finally {
-            if (connection != null) {
-                connection.close();
-            }
-        }
+    protected String[] getConfigLocations() {
+        return new String[]{"classpath:org/springframework/ws/transport/jms/jms-sender-applicationContext.xml"};
     }
 
-    private void validateMessage(BytesMessage message) throws JMSException, IOException {
-        assertEquals("Invalid SOAPAction", SOAP_ACTION,
-                message.getStringProperty(JmsTransportConstants.PROPERTY_SOAP_ACTION));
-        assertEquals("Invalid binding version", "1.0",
-                message.getStringProperty(JmsTransportConstants.PROPERTY_BINDING_VERSION));
-        assertEquals("Invalid service IRI", URI, message.getStringProperty(JmsTransportConstants.PROPERTY_REQUEST_IRI));
-        assertFalse("Message is Fault", message.getBooleanProperty(JmsTransportConstants.PROPERTY_IS_FAULT));
-        assertTrue("Invalid Content Type",
-                message.getStringProperty(JmsTransportConstants.PROPERTY_CONTENT_TYPE).indexOf("text/xml") != -1);
-        assertTrue("No Content Length", message.getIntProperty(JmsTransportConstants.PROPERTY_CONTENT_LENGTH) > 0);
+    public void setJmsTemplate(JmsTemplate jmsTemplate) {
+        this.jmsTemplate = jmsTemplate;
+    }
 
-        assertTrue("Message has no contents", getMessageContents(message).length() > 0);
-
+    public void setMessageSender(JmsMessageSender messageSender) {
+        this.messageSender = messageSender;
     }
 
     public void testSendAndReceiveResponse() throws Exception {
         WebServiceConnection connection = null;
         try {
-            connection = messageSender.createConnection(URI);
+            connection = messageSender.createConnection(REQUEST_QUEUE_URI);
             SoapMessage soapRequest = new SaajSoapMessage(messageFactory.createMessage());
             soapRequest.setSoapAction(SOAP_ACTION);
             connection.send(soapRequest);
@@ -110,7 +82,7 @@ public class JmsMessageSenderIntegrationTest extends TestCase {
                     response.setIntProperty(JmsTransportConstants.PROPERTY_CONTENT_LENGTH, buf.length);
                     response.setStringProperty(JmsTransportConstants.PROPERTY_CONTENT_TYPE, "text/xml");
                     response.setBooleanProperty(JmsTransportConstants.PROPERTY_IS_FAULT, false);
-                    response.setStringProperty(JmsTransportConstants.PROPERTY_REQUEST_IRI, URI);
+                    response.setStringProperty(JmsTransportConstants.PROPERTY_REQUEST_IRI, REQUEST_QUEUE_URI);
                     response.setStringProperty(JmsTransportConstants.PROPERTY_SOAP_ACTION, SOAP_ACTION);
 
                     response.writeBytes(buf);
@@ -129,10 +101,26 @@ public class JmsMessageSenderIntegrationTest extends TestCase {
         }
     }
 
+    private void validateMessage(BytesMessage message) throws JMSException, IOException {
+        assertEquals("Invalid SOAPAction", SOAP_ACTION,
+                message.getStringProperty(JmsTransportConstants.PROPERTY_SOAP_ACTION));
+        assertEquals("Invalid binding version", "1.0",
+                message.getStringProperty(JmsTransportConstants.PROPERTY_BINDING_VERSION));
+        assertEquals("Invalid service IRI", REQUEST_QUEUE_URI,
+                message.getStringProperty(JmsTransportConstants.PROPERTY_REQUEST_IRI));
+        assertFalse("Message is Fault", message.getBooleanProperty(JmsTransportConstants.PROPERTY_IS_FAULT));
+        assertTrue("Invalid Content Type",
+                message.getStringProperty(JmsTransportConstants.PROPERTY_CONTENT_TYPE).indexOf("text/xml") != -1);
+        assertTrue("No Content Length", message.getIntProperty(JmsTransportConstants.PROPERTY_CONTENT_LENGTH) > 0);
+
+        assertTrue("Message has no contents", getMessageContents(message).length() > 0);
+
+    }
+
     private String getMessageContents(BytesMessage message) throws JMSException, IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
-        int bytesRead = -1;
+        int bytesRead;
         while ((bytesRead = message.readBytes(buffer)) != -1) {
             out.write(buffer, 0, bytesRead);
         }

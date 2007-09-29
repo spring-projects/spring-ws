@@ -17,23 +17,17 @@
 package org.springframework.ws.transport.jms;
 
 import java.io.IOException;
-import java.util.Properties;
 import javax.jms.BytesMessage;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
-import javax.jms.Queue;
-import javax.naming.Context;
-import javax.naming.NamingException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.jndi.JndiTemplate;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
- * <code>WebServiceMessageSender</code> implementation that uses JMS {@link Queue}.
+ * {@link WebServiceMessageSender} implementation that uses JMS.
  * <p/>
  * This message sender sends the request message of the queue configured with either the <code>queue</code> or
  * <code>queueName</code> property. It creates a temporary queue for the response message. For both request and response
@@ -41,41 +35,43 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  *
  * @author Arjen Poutsma
  */
-public class JmsMessageSender implements WebServiceMessageSender {
+public class JmsMessageSender implements WebServiceMessageSender, JmsTransportConstants {
 
-    private static final Log logger = LogFactory.getLog(JmsMessageSender.class);
-
-    /** Default timeout for receive operations: -1 indicates a blocking receive without timeout. */
+    /**
+     * Default timeout for receive operations: -1 indicates a blocking receive without timeout.
+     */
     public static final long DEFAULT_RECEIVE_TIMEOUT = -1;
 
-    private static final String JMS_SCHEME = "jms:";
-
-    private ConnectionFactory defaultConnectionFactory;
+    private ConnectionFactory connectionFactory;
 
     private long receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;
 
     public JmsMessageSender() {
     }
 
-    public JmsMessageSender(ConnectionFactory defaultConnectionFactory) {
-        this.defaultConnectionFactory = defaultConnectionFactory;
+    public JmsMessageSender(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
     }
 
-    /** Set the default ConnectionFactory to use for obtaining JMS Connections. */
-    public void setDefaultConnectionFactory(ConnectionFactory defaultConnectionFactory) {
-        this.defaultConnectionFactory = defaultConnectionFactory;
+    /**
+     * Set the default ConnectionFactory to use for obtaining JMS Connections.
+     */
+    public void setConnectionFactory(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
     }
 
-    /** Set the timeout to use for receive calls. The default is 0, which means no timeout. */
+    /**
+     * Set the timeout to use for receive calls. The default is 0, which means no timeout.
+     */
     public void setReceiveTimeout(long receiveTimeout) {
         this.receiveTimeout = receiveTimeout;
     }
 
     public WebServiceConnection createConnection(String uriString) throws IOException {
+        Assert.notNull(connectionFactory, "connectionFactory must not be null");
         JmsSenderConnection connection = null;
         try {
             JmsUri uri = new JmsUri(uriString);
-            ConnectionFactory connectionFactory = resolveConnectionFactory(uri);
             connection = new JmsSenderConnection(uri, connectionFactory, receiveTimeout);
             return connection;
         }
@@ -88,34 +84,7 @@ public class JmsMessageSender implements WebServiceMessageSender {
     }
 
     public boolean supports(String uri) {
-        return StringUtils.hasLength(uri) && uri.startsWith(JMS_SCHEME);
-    }
-
-    protected ConnectionFactory resolveConnectionFactory(JmsUri uri) {
-        if (uri.hasConnectionFactoryName()) {
-            Properties environment = new Properties();
-            if (uri.hasInitialContextFactory()) {
-                environment.setProperty(Context.INITIAL_CONTEXT_FACTORY, uri.getInitialContextFactory());
-            }
-            if (uri.hasJndiUrl()) {
-                environment.setProperty(Context.PROVIDER_URL, uri.getJndiUrl());
-            }
-            try {
-                JndiTemplate jndiTemplate = new JndiTemplate(environment);
-                return (ConnectionFactory) jndiTemplate.lookup(uri.getConnectionFactoryName(), ConnectionFactory.class);
-            }
-            catch (NamingException ex) {
-                logger.debug("ConnectionFactory [" + uri.getConnectionFactoryName() + "] not found in JNDI", ex);
-                // fall through to the default
-            }
-        }
-        if (defaultConnectionFactory != null) {
-            return defaultConnectionFactory;
-        }
-        else {
-            throw new IllegalStateException("Could not resolve JMS ConnectionFactory. " +
-                    "Specify a 'defaultConnectionFactory' or 'connectionFactoryName' in the URI.");
-        }
+        return StringUtils.hasLength(uri) && uri.startsWith(URI_SCHEME + ":");
     }
 
 }

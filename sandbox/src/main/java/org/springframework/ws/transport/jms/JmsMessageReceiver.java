@@ -26,26 +26,26 @@ import org.springframework.ws.transport.support.SimpleWebServiceMessageReceiverO
 
 /**
  * Convenience base class for JMS server-side transport objects. Contains a {@link WebServiceMessageReceiver}, and has
- * methods for handling incoming JMS <code>Message</code> requests.
+ * methods for handling incoming JMS {@link Message} requests.
  * <p/>
- * Used by {@link WebServiceMessageListener} and {@link WebServiceMessageBean}.
+ * Used by {@link WebServiceMessageListener} and {@link WebServiceMessageDrivenBean}.
  *
  * @author Arjen Poutsma
- * @see #handleMessage(javax.jms.Message,javax.jms.Session)
+ * @since 1.1.0
  */
 public class JmsMessageReceiver extends SimpleWebServiceMessageReceiverObjectSupport {
 
     /**
-     * Handles an incoming <code>Message</code>s. Uses the given <code>Session</code> to create a response request.
+     * Handles an incoming messages. Uses the given session to create a response message.
      *
      * @param request the incoming message
      * @param session the JMS session used to create a response
-     * @throws IllegalArgumentException when request is not a <code>BytesMessage</code>
+     * @throws IllegalArgumentException when request is not a {@link BytesMessage}
      */
     protected final void handleMessage(Message request, Session session) throws Exception {
         if (request instanceof BytesMessage) {
-            WebServiceConnection connection = new JmsReceiverConnection((BytesMessage) request, session, logger);
-            handleConnection(connection, getMessageReceiver());
+            WebServiceConnection connection = new JmsReceiverConnection((BytesMessage) request, session);
+            handleConnection(connection);
         }
         else {
             throw new IllegalArgumentException(

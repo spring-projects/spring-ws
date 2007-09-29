@@ -27,15 +27,16 @@ import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
 
 /**
- * Spring-2.0 {@link SessionAwareMessageListener} that can be used to handleMessage incoming JMS messages. Requires a
- * {@link WebServiceMessageFactory} which is used to convert the incoming JMS {@link BytesMessage}s into a {@link
- * WebServiceMessage}, and passes that context to the {@link WebServiceMessageReceiver} set with the property
- * <code>messageReceiver</code>. If a response is created, it is sent using the {@link BytesMessage#getJMSReplyTo()
- * reply to header} of the request message.
+ * Spring-2.0 {@link SessionAwareMessageListener} that can be used to handle incoming JMS messages.
+ * <p/>
+ * Requires a {@link WebServiceMessageFactory} which is used to convert the incoming JMS {@link BytesMessage} into a
+ * {@link WebServiceMessage}, and passes that to the {@link WebServiceMessageReceiver} {@link
+ * #setMessageReceiver(WebServiceMessageReceiver) registered}.
  *
  * @author Arjen Poutsma
  * @see #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
  * @see #setMessageReceiver(org.springframework.ws.transport.WebServiceMessageReceiver)
+ * @since 1.1.0
  */
 public class WebServiceMessageListener extends JmsMessageReceiver implements SessionAwareMessageListener {
 

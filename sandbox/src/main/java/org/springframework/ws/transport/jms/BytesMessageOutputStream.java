@@ -22,9 +22,10 @@ import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 
 /**
- * Output stream that wraps a {@link javax.jms.BytesMessage}.
+ * Output stream that wraps a {@link BytesMessage}.
  *
  * @author Arjen Poutsma
+ * @since 1.1.0
  */
 class BytesMessageOutputStream extends OutputStream {
 

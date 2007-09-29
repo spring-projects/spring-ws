@@ -41,9 +41,15 @@ import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractSenderConnection;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
+import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.jms.support.JmsTransportUtils;
 
-/** @author Arjen Poutsma */
+/**
+ * Implementation of {@link WebServiceConnection} that is used for client-side JMS access.
+ *
+ * @author Arjen Poutsma
+ * @since 1.1.0
+ */
 public class JmsSenderConnection extends AbstractSenderConnection
         implements FaultAwareWebServiceConnection, JmsTransportConstants {
 
@@ -65,6 +71,9 @@ public class JmsSenderConnection extends AbstractSenderConnection
 
     private long receiveTimeout;
 
+    /**
+     * Constructs a new JMS connection with the given parameters.
+     */
     protected JmsSenderConnection(JmsUri uri, ConnectionFactory connectionFactory, long receiveTimeout)
             throws JMSException {
         Assert.notNull(uri, "'uri' must not be null");
@@ -82,10 +91,16 @@ public class JmsSenderConnection extends AbstractSenderConnection
         this.receiveTimeout = receiveTimeout;
     }
 
+    /**
+     * Returns the request message for this connection.
+     */
     public BytesMessage getRequestMessage() {
         return requestMessage;
     }
 
+    /**
+     * Returns the response message, if any, for this connection.
+     */
     public BytesMessage getResponseMessage() {
         return responseMessage;
     }
@@ -253,7 +268,7 @@ public class JmsSenderConnection extends AbstractSenderConnection
 
     public void setFault(boolean fault) throws IOException {
         try {
-            requestMessage.setBooleanProperty(JmsTransportConstants.PROPERTY_IS_FAULT, true);
+            requestMessage.setBooleanProperty(JmsTransportConstants.PROPERTY_IS_FAULT, fault);
         }
         catch (JMSException ex) {
             throw new JmsTransportException(ex);

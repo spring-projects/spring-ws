@@ -23,9 +23,10 @@ import javax.jms.JMSException;
 import javax.jms.MessageEOFException;
 
 /**
- * Input stream that wraps a {@link javax.jms.BytesMessage}.
+ * Input stream that wraps a {@link BytesMessage}.
  *
  * @author Arjen Poutsma
+ * @since 1.1.0
  */
 class BytesMessageInputStream extends InputStream {
 
