@@ -39,8 +39,6 @@ public class MailMessageSenderIntegrationTest extends TestCase {
 
     protected void setUp() throws Exception {
         messageSender = new MailMessageSender();
-        messageSender.setStoreUri("pop3://ajwpi21:sjantaL.@pop.xs4all.nl/INBOX");
-        messageSender.setTransportUri("smtp://ajwpi21:sjantaL.@smtp.xs4all.nl");
         messageSender.setFrom("Arjen Poutsma <ajwp@xs4all.nl>");
         messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
     }

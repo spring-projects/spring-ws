@@ -6,18 +6,31 @@
         <property name="brokerURL" value="vm://localhost?broker.persistent=false"/>
     </bean>
 
+    <bean id="requestQueue" class="org.apache.activemq.command.ActiveMQQueue">
+        <property name="physicalName" value="RequestQueue"/>
+    </bean>
+
+    <bean id="requestTopic" class="org.apache.activemq.command.ActiveMQTopic">
+        <property name="physicalName" value="RequestTopic"/>
+    </bean>
+
     <bean id="responseQueue" class="org.apache.activemq.command.ActiveMQQueue">
         <property name="physicalName" value="ResponseQueue"/>
     </bean>
 
     <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
         <property name="connectionFactory" ref="connectionFactory"/>
-        <property name="defaultDestinationName" value="RequestQueue"/>
     </bean>
 
-    <bean id="messageListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+    <bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">
         <property name="connectionFactory" ref="connectionFactory"/>
-        <property name="destinationName" value="RequestQueue"/>
+        <property name="destination" ref="requestQueue"/>
+        <property name="messageListener" ref="messageListener"/>
+    </bean>
+
+    <bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="destination" ref="requestTopic"/>
         <property name="messageListener" ref="messageListener"/>
     </bean>
 
