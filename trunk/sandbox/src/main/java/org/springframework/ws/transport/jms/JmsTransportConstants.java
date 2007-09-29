@@ -18,7 +18,12 @@ package org.springframework.ws.transport.jms;
 
 import org.springframework.ws.transport.TransportConstants;
 
-/** @author Arjen Poutsma */
+/**
+ * Declares JMS-specific transport constants.
+ *
+ * @author Arjen Poutsma
+ * @since 1.1.0
+ */
 public interface JmsTransportConstants extends TransportConstants {
 
     String URI_SCHEME = "jms";

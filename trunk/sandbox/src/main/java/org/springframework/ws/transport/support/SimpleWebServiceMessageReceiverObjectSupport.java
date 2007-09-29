@@ -21,18 +21,28 @@ import org.springframework.util.Assert;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
 
-/** @author Arjen Poutsma */
-public class SimpleWebServiceMessageReceiverObjectSupport extends WebServiceMessageReceiverObjectSupport
+/**
+ * Base class for server-side transport objects which have a predefined {@link WebServiceMessageReceiver}.
+ *
+ * @author Arjen Poutsma
+ * @see #handleConnection(WebServiceConnection)
+ * @since 1.1.0
+ */
+public abstract class SimpleWebServiceMessageReceiverObjectSupport extends WebServiceMessageReceiverObjectSupport
         implements InitializingBean {
 
     private WebServiceMessageReceiver messageReceiver;
 
-    /** Returns the <code>WebServiceMessageReceiver</code> used by this listener. */
+    /**
+     * Returns the <code>WebServiceMessageReceiver</code> used by this listener.
+     */
     public WebServiceMessageReceiver getMessageReceiver() {
         return messageReceiver;
     }
 
-    /** Sets the <code>WebServiceMessageReceiver</code> used by this listener. */
+    /**
+     * Sets the <code>WebServiceMessageReceiver</code> used by this listener.
+     */
     public void setMessageReceiver(WebServiceMessageReceiver messageReceiver) {
         this.messageReceiver = messageReceiver;
     }

@@ -25,13 +25,10 @@ public class JmsUriTest extends TestCase {
                 "destinationType=topic&" + "initialContextFactory=com.sun.jndi.ldap.LdapCtxFactory&" +
                 "jndiURL=theJndiURL&" + "priority=8&" + "timeToLive=10&" + "replyToName=interested&" +
                 "userprop=mystuff");
-        assertEquals("Invalid connection factory name", "SOAPJMSFactory", uri.getConnectionFactoryName());
         assertEquals("Invalid delivery mode", 2, uri.getDeliveryMode());
         assertEquals("Invalid destination", "news", uri.getDestination());
         assertEquals("Invalid destination type", "topic", uri.getDestinationType());
         assertTrue("Invalid pub sub domain", uri.isPubSubDomain());
-        assertEquals("Invalid initial context factory", "com.sun.jndi.ldap.LdapCtxFactory",
-                uri.getInitialContextFactory());
         assertEquals("Invalid prority", 8, uri.getPriority());
         assertEquals("Invalid time to live", 10, uri.getTimeToLive());
         assertEquals("Invalid reply to name", "interested", uri.getReplyTo());

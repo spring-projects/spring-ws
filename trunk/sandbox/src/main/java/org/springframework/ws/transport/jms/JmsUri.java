@@ -16,15 +16,11 @@
 
 package org.springframework.ws.transport.jms;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
 import javax.jms.DeliveryMode;
 import javax.jms.Destination;
 import javax.jms.Message;
 import javax.jms.Queue;
 import javax.jms.Topic;
-import javax.naming.Context;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -47,13 +43,16 @@ public class JmsUri extends ParameterizedUri implements JmsTransportConstants {
         validateIntegerParameter(PARAM_PRIORITY);
         validateIntegerParameter(PARAM_TIME_TO_LIVE);
         String destinationType = getDestinationType();
-        Assert.isTrue(DESTINATION_TYPE_QUEUE.equals(destinationType) || DESTINATION_TYPE_TOPIC.equals(destinationType),
-                "Invalid " + PARAM_DESTINATION_TYPE + ": [" + destinationType + "]. Expected '" +
-                        DESTINATION_TYPE_QUEUE + "' or '" + DESTINATION_TYPE_TOPIC + "'");
+        if (StringUtils.hasLength(destinationType)) {
+            Assert.isTrue(
+                    DESTINATION_TYPE_QUEUE.equals(destinationType) || DESTINATION_TYPE_TOPIC.equals(destinationType),
+                    "Invalid " + PARAM_DESTINATION_TYPE + ": [" + destinationType + "]. Expected '" +
+                            DESTINATION_TYPE_QUEUE + "' or '" + DESTINATION_TYPE_TOPIC + "'");
+        }
     }
 
     private void validateIntegerParameter(String paramName) {
-        String paramValue = (String) getParameter(paramName);
+        String paramValue = getParameter(paramName);
         if (StringUtils.hasLength(paramValue)) {
             try {
                 Integer.parseInt(paramValue);
@@ -95,9 +94,12 @@ public class JmsUri extends ParameterizedUri implements JmsTransportConstants {
         return getIntegerParameter(PARAM_PRIORITY, Message.DEFAULT_PRIORITY);
     }
 
-    /** Returns the lifetime, in milliseconds, of the request message. */
-    public int getTimeToLive() {
-        return getIntegerParameter(PARAM_TIME_TO_LIVE, (int) Message.DEFAULT_TIME_TO_LIVE);
+    /**
+     * Returns the lifetime, in milliseconds, of the request message.
+     */
+    public long getTimeToLive() {
+        String paramValue = getParameter(PARAM_TIME_TO_LIVE);
+        return paramValue != null ? Long.parseLong(paramValue) : Message.DEFAULT_TIME_TO_LIVE;
     }
 
     private int getIntegerParameter(String paramName, int defaultValue) {
@@ -105,45 +107,9 @@ public class JmsUri extends ParameterizedUri implements JmsTransportConstants {
         return paramValue != null ? Integer.parseInt(paramValue) : defaultValue;
     }
 
-    /** Indicates whether this URI has a connection factory name. */
-    public boolean hasConnectionFactoryName() {
-        return StringUtils.hasLength(getConnectionFactoryName());
-    }
-
-    /** Returns the JNDI name of the Java class providing the connection factory. */
-    public String getConnectionFactoryName() {
-        return getParameter(PARAM_CONNECTION_FACTORY_NAME);
-    }
-
-    /** Indicates whether this URI has a "InitialContextFactory". */
-    public boolean hasInitialContextFactory() {
-        return StringUtils.hasLength(getInitialContextFactory());
-    }
-
     /**
-     * Returns the fully qualified Java class name of the "InitialContextFactory" implementation class to use.
-     *
-     * @see Context#INITIAL_CONTEXT_FACTORY
+     * Indicates whether this URI has a reply-to name.
      */
-    public String getInitialContextFactory() {
-        return getParameter(PARAM_INITIAL_CONTEXT_FACTORY);
-    }
-
-    /** Indicates whether this URI has a JNDI provider URL. */
-    public boolean hasJndiUrl() {
-        return StringUtils.hasLength(getJndiUrl());
-    }
-
-    /**
-     * Returns the JNDI provider URL.
-     *
-     * @see Context#PROVIDER_URL
-     */
-    public String getJndiUrl() {
-        return getParameter(PARAM_JNDI_URL);
-    }
-
-    /** Indicates whether this URI has a reply-to name. */
     public boolean hasReplyTo() {
         return StringUtils.hasLength(getReplyTo());
     }
