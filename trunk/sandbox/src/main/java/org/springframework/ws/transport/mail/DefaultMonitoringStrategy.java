@@ -73,8 +73,8 @@ public class DefaultMonitoringStrategy extends AbstractPollingMonitoringStrategy
 
     /**
      * Creates the search term that defines the messages to look for. Default implementation returns a term that
-     * searches for all messages in the folder that are {@link Flags.Flag#RECENT RECENT}, and not {@link
-     * Flags.Flag#ANSWERED ANSWERED}, and not {@link Flags.Flag#DELETED DELETED}.
+     * searches for all messages in the folder that are {@link Flags.Flag#RECENT RECENT}, not {@link Flags.Flag#ANSWERED
+     * ANSWERED}, and not {@link Flags.Flag#DELETED DELETED}.
      * <p/>
      * Return <code>null</code> if all messages should be returned from {@link #pollForNewMessages(Folder)}.
      */

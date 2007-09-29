@@ -165,10 +165,7 @@ public class MailSenderConnection extends AbstractSenderConnection {
         Store store = null;
         Folder folder = null;
         try {
-            String requestMessageId = null;
-            if (requestMessage instanceof MimeMessage) {
-                requestMessageId = ((MimeMessage) requestMessage).getMessageID();
-            }
+            String requestMessageId = requestMessage.getMessageID();
             if (StringUtils.hasLength(requestMessageId)) {
                 try {
                     Thread.sleep(5000);
@@ -194,7 +191,7 @@ public class MailSenderConnection extends AbstractSenderConnection {
                     if (responses.length > 1) {
                         logger.warn("Received more than one response for request with ID [" + requestMessageId + "]");
                     }
-                    responseMessage = (MimeMessage) responses[0];
+                    responseMessage = responses[0];
                 }
                 if (deleteAfterReceive) {
                     responseMessage.setFlag(Flags.Flag.DELETED, true);

@@ -18,11 +18,15 @@ package org.springframework.ws.transport.mail;
 
 import org.springframework.ws.transport.TransportConstants;
 
-/** @author Arjen Poutsma */
+/**
+ * @author Arjen Poutsma
+ */
 public interface MailTransportConstants extends TransportConstants {
 
-    /** The "In-Reply-To" header. */
+    /**
+     * The "In-Reply-To" header.
+     */
     String HEADER_IN_REPLY_TO = "In-Reply-To";
 
-
+    String URI_SCHEME = "mailto";
 }

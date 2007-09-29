@@ -18,19 +18,18 @@ package org.springframework.ws.transport.mail;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import javax.mail.Address;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.transport.support.ParameterizedUri;
 
-/** @author Arjen Poutsma */
+/**
+ * @author Arjen Poutsma
+ */
 public class MailtoUri extends ParameterizedUri {
-
-    static final String MAILTO_SCHEME = "mailto:";
 
     public MailtoUri(String uri) {
         super(uri);
-        Assert.isTrue(uri.startsWith(MAILTO_SCHEME), "Invalid uri: " + uri);
+        Assert.isTrue(uri.startsWith(MailTransportConstants.URI_SCHEME), "Invalid uri: " + uri);
         try {
             InternetAddress.parse(getDestination(), false);
         }

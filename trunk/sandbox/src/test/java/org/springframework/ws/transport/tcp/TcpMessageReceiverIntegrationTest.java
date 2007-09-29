@@ -55,15 +55,15 @@ public class TcpMessageReceiverIntegrationTest extends AbstractDependencyInjecti
 
     public void testServer() throws IOException, InterruptedException {
         Socket socket = new Socket("localhost", TcpMessageReceiver.DEFAULT_PORT);
-        Writer writer = null;
-        BufferedReader reader = null;
+        Writer writer;
+        BufferedReader reader;
         try {
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"));
             writer.write(REQUEST);
             writer.flush();
             socket.shutdownOutput();
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
-            String line = null;
+            String line;
             while ((line = reader.readLine()) != null) {
                 System.out.println(line);
             }

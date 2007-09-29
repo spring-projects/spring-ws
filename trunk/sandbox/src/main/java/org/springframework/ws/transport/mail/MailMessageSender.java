@@ -20,16 +20,18 @@ import java.io.IOException;
 import java.util.Properties;
 import javax.mail.Session;
 import javax.mail.URLName;
-import javax.mail.internet.InternetAddress;
 import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
-import org.springframework.beans.factory.InitializingBean;
 
-/** @author Arjen Poutsma */
+/**
+ * @author Arjen Poutsma
+ */
 public class MailMessageSender implements WebServiceMessageSender, InitializingBean {
 
     private Session session = Session.getInstance(new Properties(), null);
@@ -97,6 +99,6 @@ public class MailMessageSender implements WebServiceMessageSender, InitializingB
     }
 
     public boolean supports(String uri) {
-        return StringUtils.hasLength(uri) && uri.startsWith(MailtoUri.MAILTO_SCHEME);
+        return StringUtils.hasLength(uri) && uri.startsWith(MailTransportConstants.URI_SCHEME + ":");
     }
 }
