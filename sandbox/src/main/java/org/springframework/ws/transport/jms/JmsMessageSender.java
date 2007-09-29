@@ -18,9 +18,12 @@ package org.springframework.ws.transport.jms;
 
 import java.io.IOException;
 import javax.jms.BytesMessage;
+import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 
+import org.springframework.jms.support.destination.DestinationResolver;
+import org.springframework.jms.support.destination.DynamicDestinationResolver;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.transport.WebServiceConnection;
@@ -44,6 +47,8 @@ public class JmsMessageSender implements WebServiceMessageSender, JmsTransportCo
 
     private ConnectionFactory connectionFactory;
 
+    private DestinationResolver destinationResolver = new DynamicDestinationResolver();
+
     private long receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;
 
     public JmsMessageSender() {
@@ -54,10 +59,14 @@ public class JmsMessageSender implements WebServiceMessageSender, JmsTransportCo
     }
 
     /**
-     * Set the default ConnectionFactory to use for obtaining JMS Connections.
+     * Set the ConnectionFactory to use for obtaining JMS {@link Connection}s.
      */
     public void setConnectionFactory(ConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
+    }
+
+    public void setDestinationResolver(DestinationResolver destinationResolver) {
+        this.destinationResolver = destinationResolver;
     }
 
     /**
@@ -72,7 +81,7 @@ public class JmsMessageSender implements WebServiceMessageSender, JmsTransportCo
         JmsSenderConnection connection = null;
         try {
             JmsUri uri = new JmsUri(uriString);
-            connection = new JmsSenderConnection(uri, connectionFactory, receiveTimeout);
+            connection = new JmsSenderConnection(uri, connectionFactory, destinationResolver, receiveTimeout);
             return connection;
         }
         catch (JMSException ex) {

@@ -61,7 +61,7 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
         this.messageSender = messageSender;
     }
 
-    public void testSendAndReceiveResponse() throws Exception {
+    public void testSendAndReceiveQueue() throws Exception {
         WebServiceConnection connection = null;
         try {
             connection = messageSender.createConnection(REQUEST_QUEUE_URI);

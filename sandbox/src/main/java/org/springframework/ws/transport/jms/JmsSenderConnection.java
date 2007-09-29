@@ -36,6 +36,7 @@ import javax.jms.TemporaryQueue;
 
 import org.springframework.jms.connection.ConnectionFactoryUtils;
 import org.springframework.jms.support.JmsUtils;
+import org.springframework.jms.support.destination.DestinationResolver;
 import org.springframework.util.Assert;
 import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
@@ -55,38 +56,40 @@ public class JmsSenderConnection extends AbstractSenderConnection
 
     private final ConnectionFactory connectionFactory;
 
+    private final DestinationResolver destinationResolver;
+
     private final Connection connection;
 
     private final Session session;
 
     private final Destination requestDestination;
 
-    private Destination responseDestination;
-
     private final JmsUri uri;
+
+    private final long receiveTimeout;
+
+    private Destination responseDestination;
 
     private BytesMessage requestMessage;
 
     private BytesMessage responseMessage;
 
-    private long receiveTimeout;
-
     /**
      * Constructs a new JMS connection with the given parameters.
      */
-    protected JmsSenderConnection(JmsUri uri, ConnectionFactory connectionFactory, long receiveTimeout)
-            throws JMSException {
+    protected JmsSenderConnection(JmsUri uri,
+                                  ConnectionFactory connectionFactory,
+                                  DestinationResolver destinationResolver,
+                                  long receiveTimeout) throws JMSException {
         Assert.notNull(uri, "'uri' must not be null");
         Assert.notNull(connectionFactory, "'connectionFactory' must not be null");
+        Assert.notNull(destinationResolver, "destinationResolver must not be null");
         this.connectionFactory = connectionFactory;
+        this.destinationResolver = destinationResolver;
         connection = connectionFactory.createConnection();
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        if (uri.isPubSubDomain()) {
-            requestDestination = session.createTopic(uri.getDestination());
-        }
-        else {
-            requestDestination = session.createQueue(uri.getDestination());
-        }
+        requestDestination =
+                destinationResolver.resolveDestinationName(session, uri.getDestination(), uri.isPubSubDomain());
         this.uri = uri;
         this.receiveTimeout = receiveTimeout;
     }
@@ -154,13 +157,8 @@ public class JmsSenderConnection extends AbstractSenderConnection
             messageProducer.setTimeToLive(uri.getTimeToLive());
             messageProducer.setPriority(uri.getPriority());
             if (uri.hasReplyTo()) {
-                if (uri.isPubSubDomain()) {
-                    responseDestination = session.createTopic(uri.getReplyTo());
-                }
-                else {
-                    responseDestination = session.createQueue(uri.getReplyTo());
-                }
-
+                responseDestination =
+                        destinationResolver.resolveDestinationName(session, uri.getReplyTo(), uri.isPubSubDomain());
             }
             else {
                 responseDestination = session.createTemporaryQueue();
