@@ -26,6 +26,7 @@ import javax.jms.Session;
 import javax.naming.NamingException;
 
 import org.springframework.ejb.support.AbstractJmsMessageDrivenBean;
+import org.springframework.jms.connection.ConnectionFactoryUtils;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.jndi.JndiLookupFailureException;
 import org.springframework.ws.WebServiceMessageFactory;
@@ -39,37 +40,31 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
  * provided by {@link #getBeanFactory()} the super class.
  *
  * @author Arjen Poutsma
- * @see #createConnection()
+ * @see #createConnectionFactory()
  * @see #createMessageFactory()
  * @see #createMessageReceiver()
  */
 public class WebServiceMessageDrivenBean extends AbstractJmsMessageDrivenBean {
 
-    /**
-     * Well-known name for the {@link ConnectionFactory} object in the bean factory for this bean.
-     */
+    /** Well-known name for the {@link ConnectionFactory} object in the bean factory for this bean. */
     public static final String CONNECTION_FACTORY_BEAN_NAME = "connectionFactory";
 
-    /**
-     * Well-known name for the {@link WebServiceMessageFactory} bean in the bean factory for this bean.
-     */
+    /** Well-known name for the {@link WebServiceMessageFactory} bean in the bean factory for this bean. */
     public static final String MESSAGE_FACTORY_BEAN_NAME = "messageFactory";
 
-    /**
-     * Well-known name for the {@link WebServiceMessageReceiver} object in the bean factory for this bean.
-     */
+    /** Well-known name for the {@link WebServiceMessageReceiver} object in the bean factory for this bean. */
     public static final String MESSAGE_RECEIVER_BEAN_NAME = "messageReceiver";
 
     private JmsMessageReceiver delegate;
 
-    private Connection connection;
+    private ConnectionFactory connectionFactory;
 
-    /**
-     * Delegates to {@link JmsMessageReceiver#handleMessage(Message,Session)}.
-     */
+    /** Delegates to {@link JmsMessageReceiver#handleMessage(Message,Session)}. */
     public void onMessage(Message message) {
+        Connection connection = null;
         Session session = null;
         try {
+            connection = createConnection(connectionFactory);
             session = createSession(connection);
             delegate.handleMessage(message, session);
         }
@@ -84,19 +79,20 @@ public class WebServiceMessageDrivenBean extends AbstractJmsMessageDrivenBean {
         }
         finally {
             JmsUtils.closeSession(session);
+            ConnectionFactoryUtils.releaseConnection(connection, connectionFactory, true);
         }
     }
 
     /**
      * Creates a new {@link Connection}, {@link WebServiceMessageFactory}, and {@link WebServiceMessageReceiver}.
      *
-     * @see #createConnection()
+     * @see #createConnectionFactory()
      * @see #createMessageFactory()
      * @see #createMessageReceiver()
      */
     protected void onEjbCreate() {
         try {
-            connection = createConnection();
+            connectionFactory = createConnectionFactory();
             delegate = new JmsMessageReceiver();
             delegate.setMessageFactory(createMessageFactory());
             delegate.setMessageReceiver(createMessageReceiver());
@@ -112,43 +108,46 @@ public class WebServiceMessageDrivenBean extends AbstractJmsMessageDrivenBean {
         }
     }
 
-    /**
-     * Closes the connection.
-     */
-    protected void onEjbRemove() {
-        JmsUtils.closeConnection(connection);
+    /** Creates a connection factory. Default implemantion does a bean lookup for {@link #CONNECTION_FACTORY_BEAN_NAME}. */
+    protected ConnectionFactory createConnectionFactory() throws Exception {
+        return (ConnectionFactory) getBeanFactory().getBean(CONNECTION_FACTORY_BEAN_NAME, ConnectionFactory.class);
     }
 
-    /**
-     * Creates a connection factory. Default implemantion does a bean lookup for {@link #CONNECTION_FACTORY_BEAN_NAME}.
-     */
-    protected Connection createConnection() throws Exception {
-        // TODO: ask Juergen if we need one Connection per MDB, or create a new one for each onMessage()
-        ConnectionFactory connectionFactory =
-                (ConnectionFactory) getBeanFactory().getBean(CONNECTION_FACTORY_BEAN_NAME, ConnectionFactory.class);
-        return connectionFactory.createConnection();
-    }
-
-    /**
-     * Creates a message factory. Default implemantion does a bean lookup for {@link #MESSAGE_FACTORY_BEAN_NAME}.
-     */
+    /** Creates a message factory. Default implemantion does a bean lookup for {@link #MESSAGE_FACTORY_BEAN_NAME}. */
     protected WebServiceMessageFactory createMessageFactory() {
         return (WebServiceMessageFactory) getBeanFactory()
                 .getBean(MESSAGE_FACTORY_BEAN_NAME, WebServiceMessageFactory.class);
     }
 
-    /**
-     * Creates a connection factory. Default implemantion does a bean lookup for {@link #MESSAGE_RECEIVER_BEAN_NAME}.
-     */
+    /** Creates a connection factory. Default implemantion does a bean lookup for {@link #MESSAGE_RECEIVER_BEAN_NAME}. */
     protected WebServiceMessageReceiver createMessageReceiver() {
         return (WebServiceMessageReceiver) getBeanFactory()
                 .getBean(MESSAGE_RECEIVER_BEAN_NAME, WebServiceMessageReceiver.class);
     }
 
     /**
-     * Creates a session. Default implemantion creates a non-transactional, {@link Session#AUTO_ACKNOWLEDGE auto
-     * acknowledged} session.
+     * Create a JMS {@link Connection} using the given {@link ConnectionFactory}.
+     * <p/>
+     * This implementation uses JMS 1.1 API.
      *
+     * @param connectionFactory the JMS ConnectionFactory to create a Connection with
+     * @return the new JMS Connection
+     * @throws JMSException if thrown by JMS API methods
+     * @see ConnectionFactory#createConnection()
+     */
+    protected Connection createConnection(ConnectionFactory connectionFactory) throws JMSException {
+        return connectionFactory.createConnection();
+    }
+
+    /**
+     * Creates a JMS {@link Session}. Default implemantion creates a non-transactional, {@link Session#AUTO_ACKNOWLEDGE
+     * auto acknowledged} session.
+     * <p/>
+     * This implementation uses JMS 1.1 API.
+     *
+     * @param connection the JMS Connection to create a Session for
+     * @return the new JMS Session
+     * @throws JMSException if thrown by JMS API methods
      * @see Connection#createSession(boolean,int)
      */
     protected Session createSession(Connection connection) throws JMSException {
