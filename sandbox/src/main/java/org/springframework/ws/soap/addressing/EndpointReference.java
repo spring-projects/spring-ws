@@ -20,9 +20,18 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.util.Assert;
+import org.w3c.dom.Node;
 
-/** @author Arjen Poutsma */
-public class EndpointReference {
+/**
+ * Represents a set of Message Addressing Properties, as defined in the WS-Addressing specification.
+ * <p/>
+ * In earlier versions of the spec, these properties were called Message Information Headers.
+ *
+ * @author Arjen Poutsma
+ * @see <a href="http://www.w3.org/TR/ws-addr-core/#eprs">Endpoint References</a>
+ * @since 1.1.0
+ */
+public final class EndpointReference {
 
     private final String address;
 
@@ -30,12 +39,26 @@ public class EndpointReference {
 
     private final List referenceParameters;
 
+    /**
+     * Creates a new instance of the {@link EndpointReference} class with the given address. The reference parameters
+     * and properties are empty.
+     *
+     * @param address the endpoint address
+     */
     public EndpointReference(String address) {
         this.address = address;
         this.referenceParameters = Collections.EMPTY_LIST;
         this.referenceProperties = Collections.EMPTY_LIST;
     }
 
+    /**
+     * Creates a new instance of the {@link EndpointReference} class with the given address, reference properties, and
+     * reference paramters.
+     *
+     * @param address             the endpoint address
+     * @param referenceProperties the reference properties, as a list of {@link Node}
+     * @param referenceProperties the reference parameters, as a list of {@link Node}
+     */
     public EndpointReference(String address, List referenceProperties, List referenceParameters) {
         Assert.notNull(address, "address must not be null");
         Assert.notNull(referenceProperties, "referenceProperties must not be null");
@@ -45,14 +68,17 @@ public class EndpointReference {
         this.referenceParameters = referenceParameters;
     }
 
+    /** Returns the address of the endpoint. */
     public String getAddress() {
         return address;
     }
 
+    /** Returns the reference properties of the endpoint, as a list of {@link Node} objects. */
     public List getReferenceProperties() {
         return referenceProperties;
     }
 
+    /** Returns the reference parameters of the endpoint, as a list of {@link Node} objects. */
     public List getReferenceParameters() {
         return referenceParameters;
     }

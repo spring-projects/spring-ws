@@ -27,7 +27,6 @@ import org.springframework.ws.soap.SoapMessage;
  * Note that the {@link UUID} class is only available on Java 5 and above.
  *
  * @author Arjen Poutsma
- * @see java.util.UUID
  */
 public class UuidMessageIdProvider implements MessageIdProvider {
 

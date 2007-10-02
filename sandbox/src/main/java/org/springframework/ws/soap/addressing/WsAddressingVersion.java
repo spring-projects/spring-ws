@@ -31,11 +31,9 @@ public interface WsAddressingVersion {
     /** Returns the prefix associated with the WS-Addressing namespace handled by this specification. */
     String getNamespacePrefix();
 
-    /** Returns the anonymous URI. */
-    String getAnonymousUri();
-
-    /** Returns the none URI, or <code>null</code> if the spec does not define it. */
-    String getNoneUri();
+    /*
+     * Message addressing properties
+     */
 
     /** Returns the qualified name of the <code>To</code> addressing header. */
     QName getToName();
@@ -61,7 +59,7 @@ public interface WsAddressingVersion {
     /**
      * Returns the qualified name of the <code>Relationship</code> addressing attribute.
      *
-     * @see #getRelationshipReplyName()
+     * @see #getRelationshipReply()
      */
     QName getRelationshipTypeName();
 
@@ -70,7 +68,7 @@ public interface WsAddressingVersion {
      *
      * @see #getRelationshipTypeName()
      */
-    QName getRelationshipReplyName();
+    String getRelationshipReply();
 
     /**
      * Returns the qualified name of the <code>ReferenceProperties</code> in the endpoint reference. Returns
@@ -84,24 +82,34 @@ public interface WsAddressingVersion {
      */
     QName getReferenceParametersName();
 
+    /*
+     * Endpoint Reference
+     */
+
     /** The qualified name of the <code>Address</code> in <code>EndpointReference</code>. */
     QName getAddressName();
 
+    /** The qualified name of the <code>Metadata</code> in <code>EndpointReference</code>. */
+    QName getMetadataName();
+
+    /*
+     * Address URIs
+     */
+
+    /** Returns the anonymous URI. */
+    String getAnonymousUri();
+
+    /** Returns the none URI, or <code>null</code> if the spec does not define it. */
+    String getNoneUri();
+
+    /*
+     * Faults
+     */
+
     /** Returns the qualified name of the fault subcode that indicates that a header is missing. */
-    QName getMessageHeaderRequiredName();
+    QName getMessageAddressingHeaderRequiredFaultSubcode();
 
-    /** Returns the text of the fault that indicates that a header is missing. */
-    String getMessageHeaderRequiredText();
+    /** Returns the reason of the fault that indicates that a header is missing. */
+    String getMessageAddressingHeaderRequiredFaultReason();
 
-    /** Returns the qualified name of the <code>DestinationUnreachable</code> fault subcode. */
-    QName getDestinationUnreachableName();
-
-    /** Returns the text of the <code>DestinationUnreachable</code> fault. */
-    String getDestinationUnreachableText();
-
-    /** Returns the qualified name of the <code>ActionNotSupported</code> fault subcode. */
-    QName getActionNotSupportedName();
-
-    /** Returns the text of the <code>ActionNotSupported</code> fault. */
-    String getActionNotSupportedText(String action);
 }
