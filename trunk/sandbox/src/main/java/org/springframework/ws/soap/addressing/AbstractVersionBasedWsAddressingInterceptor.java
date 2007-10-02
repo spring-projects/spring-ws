@@ -35,37 +35,45 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.soap11.Soap11Body;
 import org.springframework.ws.soap.soap12.Soap12Body;
 import org.springframework.ws.soap.soap12.Soap12Fault;
-import org.springframework.xml.transform.TransformerObjectSupport;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-/** @author Arjen Poutsma */
-class AddressingHelper extends TransformerObjectSupport {
+/**
+ * Abstract extension of the {@link AbstractWsAddressingInterceptor} that uses a {@link WsAddressingVersion}.
+ *
+ * @author Arjen Poutsma
+ * @since 1.1.0
+ */
+abstract class AbstractVersionBasedWsAddressingInterceptor extends AbstractWsAddressingInterceptor {
 
     private final WsAddressingVersion version;
 
     private final XPathExpression toExpression;
 
-    private XPathExpression actionExpression;
+    private final XPathExpression actionExpression;
 
-    private XPathExpression messageIdExpression;
+    private final XPathExpression messageIdExpression;
 
-    private XPathExpression fromExpression;
+    private final XPathExpression fromExpression;
 
-    private XPathExpression replyToExpression;
+    private final XPathExpression replyToExpression;
 
-    private XPathExpression faultToExpression;
+    private final XPathExpression faultToExpression;
 
-    private XPathExpression addressExpression;
+    private final XPathExpression addressExpression;
 
     private XPathExpression referencePropertiesExpression;
 
     private XPathExpression referenceParametersExpression;
 
-    public AddressingHelper(WsAddressingVersion version) {
+    /**
+     * Creates a new instance of the {@link AbstractVersionBasedWsAddressingInterceptor} with the given {@link
+     * WsAddressingVersion}.
+     */
+    protected AbstractVersionBasedWsAddressingInterceptor(WsAddressingVersion version) {
         this.version = version;
         Properties namespaces = new Properties();
         namespaces.setProperty(version.getNamespacePrefix(), version.getNamespaceUri());
@@ -99,89 +107,13 @@ class AddressingHelper extends TransformerObjectSupport {
         return XPathExpressionFactory.createXPathExpression(expression, namespaces);
     }
 
-    public MessageAddressingProperties getMessageAddressingProperties(SoapMessage message) throws TransformerException {
-        Element headerElement = getSoapHeaderElement(message);
-        String to = toExpression.evaluateAsString(headerElement);
-        EndpointReference from = getEndpointReference(fromExpression.evaluateAsNode(headerElement));
-        EndpointReference replyTo = getEndpointReference(replyToExpression.evaluateAsNode(headerElement));
-        EndpointReference faultTo = getEndpointReference(faultToExpression.evaluateAsNode(headerElement));
-        String action = actionExpression.evaluateAsString(headerElement);
-        String messageId = messageIdExpression.evaluateAsString(headerElement);
-        return new MessageAddressingProperties(to, from, replyTo, faultTo, action, messageId);
+    public boolean understands(SoapHeaderElement header) {
+        return version.getNamespaceUri().equals(header.getName().getNamespaceURI());
     }
 
-    /** Given a ReplyTo, FaultTo, or From node, returns an endpoint reference. */
-    private EndpointReference getEndpointReference(Node node) {
-        if (node == null) {
-            return null;
-        }
-        String address = addressExpression.evaluateAsString(node);
-        if (!StringUtils.hasLength(address)) {
-            return null;
-        }
-        List referenceProperties = referencePropertiesExpression != null ?
-                referencePropertiesExpression.evaluateAsNodeList(node) : Collections.EMPTY_LIST;
-        List referenceParameters = referenceParametersExpression != null ?
-                referenceParametersExpression.evaluateAsNodeList(node) : Collections.EMPTY_LIST;
-        return new EndpointReference(address, referenceProperties, referenceParameters);
-    }
-
-    public SoapFault addMessageHeaderRequiredFault(SoapMessage message) {
-        return addAddressingFault(message, version.getMessageHeaderRequiredName(),
-                version.getMessageHeaderRequiredText());
-    }
-
-    public SoapFault addDestinationUnreachableFault(SoapMessage message) {
-        return addAddressingFault(message, version.getDestinationUnreachableName(),
-                version.getDestinationUnreachableText());
-    }
-
-    public SoapFault addActionNotSupportedFault(SoapMessage message, String action) {
-        return addAddressingFault(message, version.getActionNotSupportedName(),
-                version.getActionNotSupportedText(action));
-    }
-
-    private SoapFault addAddressingFault(SoapMessage message, QName subcode, String reason) {
-        if (message.getSoapBody() instanceof Soap11Body) {
-            Soap11Body soapBody = (Soap11Body) message.getSoapBody();
-            return soapBody.addFault(subcode, reason, Locale.ENGLISH);
-        }
-        else {
-            Soap12Body soapBody = (Soap12Body) message.getSoapBody();
-            Soap12Fault soapFault = (Soap12Fault) soapBody.addClientOrSenderFault(reason, Locale.ENGLISH);
-            soapFault.addFaultSubcode(subcode);
-            return soapFault;
-        }
-    }
-
-    private Element getSoapHeaderElement(SoapMessage message) throws TransformerException {
-        SoapHeader header = message.getSoapHeader();
-        if (header.getSource() instanceof DOMSource) {
-            DOMSource domSource = (DOMSource) header.getSource();
-            if (domSource.getNode() != null && domSource.getNode().getNodeType() == Node.ELEMENT_NODE) {
-                return (Element) domSource.getNode();
-            }
-        }
-        Transformer transformer = createTransformer();
-        DOMResult domResult = new DOMResult();
-        transformer.transform(message.getSoapHeader().getSource(), domResult);
-        Document document = (Document) domResult.getNode();
-        return document.getDocumentElement();
-    }
-
-    public boolean hasNoneAddress(EndpointReference reference) {
-        String none = version.getNoneUri();
-        return none != null && none.equals(reference.getAddress());
-    }
-
-    public boolean hasAnonymousAddress(EndpointReference reference) {
-        String anonymous = version.getAnonymousUri();
-        return anonymous != null && anonymous.equals(reference.getAddress());
-    }
-
-    public void addAddressingHeaders(SoapMessage response, MessageAddressingProperties map)
+    protected void addAddressingHeaders(SoapMessage message, MessageAddressingProperties map)
             throws TransformerException {
-        SoapHeader header = response.getSoapHeader();
+        SoapHeader header = message.getSoapHeader();
         SoapHeaderElement messageId = header.addHeaderElement(version.getMessageIdName());
         messageId.setText(map.getMessageId());
         SoapHeaderElement relatesTo = header.addHeaderElement(version.getRelatesToName());
@@ -202,6 +134,101 @@ class AddressingHelper extends TransformerObjectSupport {
         }
     }
 
+    /**
+     * Adds a Message Addressing Header Required fault to the given message.
+     *
+     * @see <a href="http://www.w3.org/TR/ws-addr-soap/#missingmapfault">Message Addressing Header Required</a>
+     */
+    protected SoapFault addMessageAddressingHeaderRequiredFault(SoapMessage message) {
+        return addAddressingFault(message, version.getMessageAddressingHeaderRequiredFaultSubcode(),
+                version.getMessageAddressingHeaderRequiredFaultReason());
+    }
+
+    private SoapFault addAddressingFault(SoapMessage message, QName subcode, String reason) {
+        if (message.getSoapBody() instanceof Soap11Body) {
+            Soap11Body soapBody = (Soap11Body) message.getSoapBody();
+            return soapBody.addFault(subcode, reason, Locale.ENGLISH);
+        }
+        else if (message.getSoapBody() instanceof Soap12Body) {
+            Soap12Body soapBody = (Soap12Body) message.getSoapBody();
+            Soap12Fault soapFault = (Soap12Fault) soapBody.addClientOrSenderFault(reason, Locale.ENGLISH);
+            soapFault.addFaultSubcode(subcode);
+            return soapFault;
+        }
+        return null;
+    }
+
+    /**
+     * Returns the {@link MessageAddressingProperties} for the given message.
+     *
+     * @param message the message to find the map for
+     * @return the message addressing properties
+     */
+    protected MessageAddressingProperties getMessageAddressingProperties(SoapMessage message)
+            throws TransformerException {
+        Element headerElement = getSoapHeaderElement(message);
+        String to = toExpression.evaluateAsString(headerElement);
+        EndpointReference from = getEndpointReference(fromExpression.evaluateAsNode(headerElement));
+        EndpointReference replyTo = getEndpointReference(replyToExpression.evaluateAsNode(headerElement));
+        EndpointReference faultTo = getEndpointReference(faultToExpression.evaluateAsNode(headerElement));
+        String action = actionExpression.evaluateAsString(headerElement);
+        String messageId = messageIdExpression.evaluateAsString(headerElement);
+        return new MessageAddressingProperties(to, from, replyTo, faultTo, action, messageId);
+    }
+
+    private Element getSoapHeaderElement(SoapMessage message) throws TransformerException {
+        SoapHeader header = message.getSoapHeader();
+        if (header.getSource() instanceof DOMSource) {
+            DOMSource domSource = (DOMSource) header.getSource();
+            if (domSource.getNode() != null && domSource.getNode().getNodeType() == Node.ELEMENT_NODE) {
+                return (Element) domSource.getNode();
+            }
+        }
+        Transformer transformer = createTransformer();
+        DOMResult domResult = new DOMResult();
+        transformer.transform(message.getSoapHeader().getSource(), domResult);
+        Document document = (Document) domResult.getNode();
+        return document.getDocumentElement();
+    }
+
+    /** Given a ReplyTo, FaultTo, or From node, returns an endpoint reference. */
+    private EndpointReference getEndpointReference(Node node) {
+        if (node == null) {
+            return null;
+        }
+        String address = addressExpression.evaluateAsString(node);
+        if (!StringUtils.hasLength(address)) {
+            return null;
+        }
+        List referenceProperties = referencePropertiesExpression != null ?
+                referencePropertiesExpression.evaluateAsNodeList(node) : Collections.EMPTY_LIST;
+        List referenceParameters = referenceParametersExpression != null ?
+                referenceParametersExpression.evaluateAsNodeList(node) : Collections.EMPTY_LIST;
+        return new EndpointReference(address, referenceProperties, referenceParameters);
+    }
+
+    /**
+     * Indicates whether the given endpoint reference has a Anonymous address. This address is used to indicate that a
+     * message should be sent in-band.
+     *
+     * @see <a href="http://www.w3.org/TR/ws-addr-core/#formreplymsg">Formulating a Reply Message</a>
+     */
+    protected boolean hasAnonymousAddress(EndpointReference epr) {
+        String anonymous = version.getAnonymousUri();
+        return anonymous != null && anonymous.equals(epr.getAddress());
+    }
+
+    /**
+     * Indicates whether the given endpoint reference has a None address. Messages to be sent to this address will not
+     * be sent.
+     *
+     * @see <a href="http://www.w3.org/TR/ws-addr-core/#sendmsgepr">Sending a Message to an EPR</a>
+     */
+    protected boolean hasNoneAddress(EndpointReference epr) {
+        String none = version.getNoneUri();
+        return none != null && none.equals(epr.getAddress());
+    }
+
     public boolean supports(SoapMessage message) {
         SoapHeader header = message.getSoapHeader();
         if (header != null) {
@@ -213,10 +240,5 @@ class AddressingHelper extends TransformerObjectSupport {
             }
         }
         return false;
-
-    }
-
-    public boolean understands(SoapHeaderElement header) {
-        return version.getNamespaceUri().equals(header.getName().getNamespaceURI());
     }
 }

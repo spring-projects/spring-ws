@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap.addressing;
 
+import java.util.Iterator;
 import javax.xml.transform.TransformerException;
 
 import org.springframework.core.JdkVersion;
@@ -23,6 +24,9 @@ import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.EndpointInvocationChain;
+import org.springframework.ws.server.EndpointMapping;
+import org.springframework.ws.soap.SoapHeader;
+import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.addressing.messageid.MessageIdProvider;
 import org.springframework.ws.soap.addressing.messageid.UidMessageIdProvider;
@@ -32,7 +36,10 @@ import org.springframework.ws.soap.server.SoapEndpointMapping;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
+ * Abstract base class for {@link EndpointMapping} implementations that implement WS-Addressing.
+ *
  * @author Arjen Poutsma
+ * @since 1.1.0
  */
 public abstract class AbstractWsAddressingMapping extends TransformerObjectSupport implements SoapEndpointMapping {
 
@@ -42,18 +49,16 @@ public abstract class AbstractWsAddressingMapping extends TransformerObjectSuppo
 
     private MessageIdProvider messageIdProvider;
 
-    private AddressingHelper[] helpers = new AddressingHelper[]{new AddressingHelper(new WsAddressing200408())};
+    private AbstractWsAddressingInterceptor[] addressingInterceptors;
 
     private EndpointInterceptor[] preInterceptors;
 
     private EndpointInterceptor[] postInterceptors;
 
-    private static final Object MISSING_HEADER_ENDPOINT = new Object();
-
-    /**
-     * Protected constructor
-     */
+    /** Protected constructor */
     protected AbstractWsAddressingMapping() {
+        addressingInterceptors = new AbstractWsAddressingInterceptor[]{new WsAddressing200408Interceptor(),
+                new WsAddressing200508Interceptor()};
         if (JdkVersion.getMajorJavaVersion() >= JdkVersion.JAVA_15) {
             messageIdProvider = new UuidMessageIdProvider();
         }
@@ -77,47 +82,100 @@ public abstract class AbstractWsAddressingMapping extends TransformerObjectSuppo
     }
 
     /**
-     * Sets the message id provider used for creating WS-Addressing MessageIds. By default, the {@link
-     * UuidMessageIdProvider} is used on Java 5 and higher, and the {@link UidMessageIdProvider} on Java 1.4 and lower.
+     * Set additional interceptors to be applied before the implicit WS-Addressing interceptor, e.g.
+     * <code>XwsSecurityInterceptor</code>.
+     */
+    public final void setPreInterceptors(EndpointInterceptor[] preInterceptors) {
+        this.preInterceptors = preInterceptors;
+    }
+
+    /**
+     * Set additional interceptors to be applied after the implicit WS-Addressing interceptor, e.g.
+     * <code>PayloadLoggingInterceptor</code>.
+     */
+    public final void setPostInterceptors(EndpointInterceptor[] postInterceptors) {
+        this.postInterceptors = postInterceptors;
+    }
+
+    /**
+     * Sets the message id provider used for creating WS-Addressing MessageIds.
+     * <p/>
+     * By default, the {@link UuidMessageIdProvider} is used on Java 5 and higher, and the {@link UidMessageIdProvider}
+     * on Java 1.4 and lower.
      */
     public final void setMessageIdProvider(MessageIdProvider messageIdProvider) {
         this.messageIdProvider = messageIdProvider;
     }
 
-    public final void setVersions(WsAddressingVersion[] versions) {
-        Assert.notEmpty(versions, "specifications must not be empty");
-        this.helpers = new AddressingHelper[versions.length];
-        for (int i = 0; i < versions.length; i++) {
-            this.helpers[i] = new AddressingHelper(versions[i]);
-        }
+    /**
+     * Sets the WS-Addressing interceptors to be supported by this mapping.
+     * <p/>
+     * By default, this includes the {@link WsAddressing200408Interceptor}, and the {@link
+     * WsAddressing200508Interceptor}.
+     */
+    public final void setAddressingInterceptors(AbstractWsAddressingInterceptor[] addressingInterceptors) {
+        Assert.notEmpty(addressingInterceptors, "'addressingInterceptors' must not be empty");
+        this.addressingInterceptors = addressingInterceptors;
     }
 
     public final EndpointInvocationChain getEndpoint(MessageContext messageContext) throws TransformerException {
         Assert.isTrue(messageContext.getResponse() instanceof SoapMessage,
                 "WsAddressingMapping requires a SoapMessage request");
         SoapMessage request = (SoapMessage) messageContext.getRequest();
-        for (int i = 0; i < helpers.length; i++) {
-            if (!helpers[i].supports(request)) {
+        for (int i = 0; i < addressingInterceptors.length; i++) {
+            AbstractWsAddressingInterceptor interceptor = addressingInterceptors[i];
+            if (!understands(interceptor, request)) {
                 continue;
             }
-            MessageAddressingProperties map = helpers[i].getMessageAddressingProperties(request);
-            Object endpoint;
-            if (map.isValid()) {
-                endpoint = getEndpointInternal(map);
+            MessageAddressingProperties requestMap = interceptor.getMessageAddressingProperties(request);
+            if (requestMap == null) {
+                return null;
             }
-            else {
-                // Set a 'fake' endpoint, so that the invocation will continue, but result in a MissingHeader fault
-                // returned by the interceptor
-                endpoint = MISSING_HEADER_ENDPOINT;
-            }
+            Object endpoint = getEndpointInternal(requestMap);
             if (endpoint == null) {
                 return null;
             }
-            return new SoapEndpointInvocationChain(endpoint, null, actorsOrRoles, isUltimateReceiver);
+            return new SoapEndpointInvocationChain(endpoint, getAllEndpointInterceptors(interceptor), actorsOrRoles,
+                    isUltimateReceiver);
         }
         return null;
     }
 
+    private boolean understands(AbstractWsAddressingInterceptor interceptor, SoapMessage request) {
+        SoapHeader header = request.getSoapHeader();
+        if (header != null) {
+            for (Iterator iterator = header.examineAllHeaderElements(); iterator.hasNext();) {
+                SoapHeaderElement headerElement = (SoapHeaderElement) iterator.next();
+                if (interceptor.understands(headerElement)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected EndpointInterceptor[] getAllEndpointInterceptors(AbstractWsAddressingInterceptor interceptor) {
+        if (preInterceptors == null) {
+            preInterceptors = new EndpointInterceptor[0];
+        }
+        if (postInterceptors == null) {
+            postInterceptors = new EndpointInterceptor[0];
+        }
+        EndpointInterceptor[] interceptors =
+                new EndpointInterceptor[preInterceptors.length + postInterceptors.length + 1];
+        System.arraycopy(preInterceptors, 0, interceptors, 0, preInterceptors.length);
+        interceptors[preInterceptors.length] = interceptor;
+        System.arraycopy(postInterceptors, 0, interceptors, preInterceptors.length + 1, postInterceptors.length);
+        return interceptors;
+    }
+
+    /**
+     * Lookup an endpoint for the given  {@link MessageAddressingProperties}, returning <code>null</code> if no specific
+     * one is found. This template method is called by {@link #getEndpoint(MessageContext)}.
+     *
+     * @param map the message addressing properties
+     * @return the endpoint, or <code>null</code>
+     */
     protected abstract Object getEndpointInternal(MessageAddressingProperties map);
 
 

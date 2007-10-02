@@ -28,8 +28,9 @@ import org.springframework.util.StringUtils;
  *
  * @author Arjen Poutsma
  * @see <a href="http://www.w3.org/TR/ws-addr-core/#msgaddrprops">Message Addressing Properties</a>
+ * @since 1.1.0
  */
-public class MessageAddressingProperties {
+public final class MessageAddressingProperties {
 
     private final String to;
 
@@ -49,6 +50,7 @@ public class MessageAddressingProperties {
 
     private final List referenceParameters;
 
+/*
     public MessageAddressingProperties(String to, EndpointReference replyTo, String action, String messageId) {
         this.to = to;
         this.replyTo = replyTo;
@@ -60,6 +62,7 @@ public class MessageAddressingProperties {
         this.referenceProperties = Collections.EMPTY_LIST;
         this.referenceParameters = Collections.EMPTY_LIST;
     }
+*/
 
     public MessageAddressingProperties(String to,
                                        EndpointReference from,
@@ -78,18 +81,32 @@ public class MessageAddressingProperties {
         this.referenceParameters = Collections.EMPTY_LIST;
     }
 
+/*
     private MessageAddressingProperties(String to,
-                                        String action,
-                                        String messageId,
-                                        String relatesTo,
-                                        List referenceProperties,
-                                        List referenceParameters) {
+                                       String action,
+                                       String messageId,
+                                       String relatesTo,
+                                       List referenceProperties,
+                                       List referenceParameters) {
         this.to = to;
         this.action = action;
         this.messageId = messageId;
         this.relatesTo = relatesTo;
         this.referenceProperties = referenceProperties;
         this.referenceParameters = referenceParameters;
+        this.from = null;
+        this.replyTo = null;
+        this.faultTo = null;
+    }
+*/
+
+    private MessageAddressingProperties(EndpointReference epr, String action, String messageId, String relatesTo) {
+        this.to = epr.getAddress();
+        this.action = action;
+        this.messageId = messageId;
+        this.relatesTo = relatesTo;
+        this.referenceParameters = epr.getReferenceParameters();
+        this.referenceProperties = epr.getReferenceProperties();
         this.from = null;
         this.replyTo = null;
         this.faultTo = null;
@@ -124,13 +141,17 @@ public class MessageAddressingProperties {
     }
 
     public List getReferenceProperties() {
-        return referenceProperties;
+        return Collections.unmodifiableList(referenceProperties);
     }
 
     public List getReferenceParameters() {
-        return referenceParameters;
+        return Collections.unmodifiableList(referenceParameters);
     }
 
+    /**
+     * Indicates whether the given {@link MessageAddressingProperties} are valid, i.e. whether all required elements are
+     * listed.
+     */
     public boolean isValid() {
         return StringUtils.hasLength(to) && StringUtils.hasLength(action) &&
                 !(replyTo != null && !StringUtils.hasLength(messageId)) &&
@@ -138,8 +159,8 @@ public class MessageAddressingProperties {
 
     }
 
-    public MessageAddressingProperties getReplyProperties(EndpointReference epr, String action, String messageId) {
-        return new MessageAddressingProperties(epr.getAddress(), action, messageId, this.messageId,
-                epr.getReferenceProperties(), epr.getReferenceParameters());
+    public MessageAddressingProperties getResponseProperties(EndpointReference epr, String action, String messageId) {
+        return new MessageAddressingProperties(epr, action, messageId, this.messageId);
     }
+
 }

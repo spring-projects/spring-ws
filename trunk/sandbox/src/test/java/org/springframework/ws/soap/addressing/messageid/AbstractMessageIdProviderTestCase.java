@@ -31,7 +31,6 @@ public abstract class AbstractMessageIdProviderTestCase extends TestCase {
 
     public void testProvider() {
         String messageId1 = provider.getMessageId(null);
-        System.out.println(messageId1);
         assertTrue("Empty messageId", StringUtils.hasLength(messageId1));
         String messageId2 = provider.getMessageId(null);
         assertTrue("Empty messageId", StringUtils.hasLength(messageId2));
