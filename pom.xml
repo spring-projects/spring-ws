@@ -135,12 +135,6 @@
             <layout>legacy</layout>
         </repository>
     </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>agilejava</id>
-            <url>http://agilejava.com/maven/</url>
-        </pluginRepository>
-    </pluginRepositories>
     <build>
         <extensions>
             <extension>
