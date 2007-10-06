@@ -94,6 +94,6 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
     }
 
     public String getFaultStringOrReason() {
-        return getFaultReasonText(Locale.getDefault());
+        return getImplementation().getFaultString(getSaajFault());
     }
 }
