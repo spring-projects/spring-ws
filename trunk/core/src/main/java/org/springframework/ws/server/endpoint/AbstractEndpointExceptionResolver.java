@@ -72,7 +72,7 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
      * Default implementation that checks whether the given <code>endpoint</code> is in the set of {@link
      * #setMappedEndpoints mapped endpoints}.
      *
-     * @see #resolveExceptionInternal(org.springframework.ws.context.MessageContext,Object,Exception)
+     * @see #resolveExceptionInternal(MessageContext,Object,Exception)
      */
     public final boolean resolveException(MessageContext messageContext, Object endpoint, Exception ex) {
         if (mappedEndpoints != null && !mappedEndpoints.contains(endpoint)) {
@@ -88,7 +88,7 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
      * @param endpoint       the executed endpoint, or <code>null</code> if none chosen at the time of the exception
      * @param ex             the exception that got thrown during endpoint execution
      * @return <code>true</code> if resolved; <code>false</code> otherwise
-     * @see #resolveException(org.springframework.ws.context.MessageContext,Object,Exception)
+     * @see #resolveException(MessageContext,Object,Exception)
      */
     protected abstract boolean resolveExceptionInternal(MessageContext messageContext, Object endpoint, Exception ex);
 

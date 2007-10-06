@@ -55,7 +55,7 @@ public abstract class AbstractSoapFaultDefinitionExceptionResolver extends Abstr
     protected abstract SoapFaultDefinition getFaultDefinition(Object endpoint, Exception ex);
 
     protected final boolean resolveExceptionInternal(MessageContext messageContext, Object endpoint, Exception ex) {
-        Assert.isTrue(messageContext.getResponse() instanceof SoapMessage,
+        Assert.isInstanceOf(SoapMessage.class, messageContext.getResponse(),
                 "AbstractSoapFaultDefinitionExceptionResolver requires a SoapMessage");
 
         SoapFaultDefinition definition = getFaultDefinition(endpoint, ex);
