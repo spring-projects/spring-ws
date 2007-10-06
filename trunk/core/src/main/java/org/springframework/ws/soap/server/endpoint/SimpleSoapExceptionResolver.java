@@ -22,13 +22,14 @@ import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.AbstractEndpointExceptionResolver;
 import org.springframework.ws.soap.SoapBody;
+import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapMessage;
 
 /**
  * Simple, SOAP-specific {@link org.springframework.ws.server.EndpointExceptionResolver EndpointExceptionResolver}
  * implementation that stores the exception's message as the fault string.
  * <p/>
- * <p>The fault code is always set to a Sender (in SOAP 1.1) or Receiver (SOAP 1.2).
+ * The fault code is always set to a Server (in SOAP 1.1) or Receiver (SOAP 1.2).
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -37,19 +38,45 @@ public class SimpleSoapExceptionResolver extends AbstractEndpointExceptionResolv
 
     private Locale locale = Locale.ENGLISH;
 
-    /** Sets the locale for the faultstring or reason of the SOAP Fault. <p>Defaults to {@link Locale#ENGLISH}. */
+    /**
+     * Returns the locale for the faultstring or reason of the SOAP Fault.
+     * <p/>
+     * Defaults to {@link Locale#ENGLISH}.
+     */
+    public Locale getLocale() {
+        return locale;
+    }
+
+    /**
+     * Sets the locale for the faultstring or reason of the SOAP Fault.
+     * <p/>
+     * Defaults to {@link Locale#ENGLISH}.
+     */
     public void setLocale(Locale locale) {
+        Assert.notNull(locale, "locale must not be null");
         this.locale = locale;
     }
 
-    protected boolean resolveExceptionInternal(MessageContext messageContext, Object endpoint, Exception ex) {
+    protected final boolean resolveExceptionInternal(MessageContext messageContext, Object endpoint, Exception ex) {
         Assert.isTrue(messageContext.getResponse() instanceof SoapMessage,
                 "SimpleSoapExceptionResolver requires a SoapMessage");
         SoapMessage response = (SoapMessage) messageContext.getResponse();
         String faultString = StringUtils.hasLength(ex.getMessage()) ? ex.getMessage() : ex.toString();
         SoapBody body = response.getSoapBody();
-        body.addServerOrReceiverFault(faultString, locale);
+        SoapFault fault = body.addServerOrReceiverFault(faultString, getLocale());
+        customizeFault(messageContext, endpoint, ex, fault);
         return true;
     }
 
+    /**
+     * Empty template method to allow subclasses an opportunity to customize the given {@link SoapFault}. Called from
+     * {@link #resolveExceptionInternal(MessageContext,Object,Exception)}.
+     *
+     * @param messageContext current message context
+     * @param endpoint       the executed endpoint, or <code>null</code> if none chosen at the time of the exception
+     * @param ex             the exception that got thrown during endpoint execution
+     * @param fault          the SOAP fault to be customized.
+     */
+    protected void customizeFault(MessageContext messageContext, Object endpoint, Exception ex, SoapFault fault) {
+    }
 }

@@ -20,8 +20,8 @@ import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.soap.SoapHeaderElement;
 
 /**
- * SOAP-specific extension of the <code>EndpointInterceptor</code> interface. Allows for handling of SOAP faults, which
- * are considered different from regular responses.
+ * SOAP-specific extension of the {@link EndpointInterceptor} interface. Allows for handling of SOAP faults, which are
+ * considered different from regular responses.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -29,8 +29,7 @@ import org.springframework.ws.soap.SoapHeaderElement;
 public interface SoapEndpointInterceptor extends EndpointInterceptor {
 
     /**
-     * Given a <code>SoapHeaderElement</code>, return whether or not this <code>SoapEndpointInterceptor</code>
-     * understands it.
+     * Given a {@link SoapHeaderElement}, return whether or not this {@link SoapEndpointInterceptor} understands it.
      *
      * @param header the header
      * @return <code>true</code> if understood, <code>false</code> otherwise
