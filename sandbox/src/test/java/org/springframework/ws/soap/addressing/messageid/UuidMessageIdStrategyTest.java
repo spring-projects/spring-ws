@@ -16,10 +16,10 @@
 
 package org.springframework.ws.soap.addressing.messageid;
 
-public class UuidMessageIdProviderTest extends AbstractMessageIdProviderTestCase {
+public class UuidMessageIdStrategyTest extends AbstractMessageIdStrategyTestCase {
 
-    protected MessageIdProvider createProvider() {
-        return new UuidMessageIdProvider();
+    protected MessageIdStrategy createProvider() {
+        return new UuidMessageIdStrategy();
     }
 
 }

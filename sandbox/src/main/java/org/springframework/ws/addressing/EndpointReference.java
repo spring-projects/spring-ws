@@ -46,7 +46,6 @@ public final class EndpointReference {
      * @param address the endpoint address
      */
     public EndpointReference(String address) {
-        Assert.notNull(address, "address must not be null");
         this.address = address;
         this.referenceParameters = Collections.EMPTY_LIST;
         this.referenceProperties = Collections.EMPTY_LIST;

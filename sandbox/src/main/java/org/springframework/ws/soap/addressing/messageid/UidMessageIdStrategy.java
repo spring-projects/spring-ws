@@ -16,16 +16,26 @@
 
 package org.springframework.ws.soap.addressing.messageid;
 
+import java.rmi.server.UID;
+
 import org.springframework.ws.soap.SoapMessage;
 
 /**
- * Declares the contract for classes that provide WS-Addressing MessageIds, either by generation or otherwise.
+ * Implementation of the {@link MessageIdStrategy} interface that uses a {@link UID} to generate a Message Id. The UID
+ * is prefixed by <code>uid:</code>.
  *
  * @author Arjen Poutsma
  */
-public interface MessageIdProvider {
+public class UidMessageIdStrategy implements MessageIdStrategy {
 
-    /** Returns a WS-Addressing Message Id for the given message. */
-    String getMessageId(SoapMessage message);
+    public static final String PREFIX = "uid:";
 
+    /** Returns <code>false</code>. */
+    public boolean isDuplicate(String messageId) {
+        return false;
+    }
+
+    public String newMessageId(SoapMessage message) {
+        return PREFIX + new UID().toString();
+    }
 }
