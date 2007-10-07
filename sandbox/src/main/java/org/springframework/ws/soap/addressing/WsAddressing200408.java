@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.addressing.version;
+package org.springframework.ws.soap.addressing;
 
 import javax.xml.namespace.QName;
 
