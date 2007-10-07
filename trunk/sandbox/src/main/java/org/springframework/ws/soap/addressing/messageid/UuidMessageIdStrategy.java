@@ -16,21 +16,28 @@
 
 package org.springframework.ws.soap.addressing.messageid;
 
-import java.rmi.server.UID;
+import java.util.UUID;
 
 import org.springframework.ws.soap.SoapMessage;
 
 /**
- * Implementation of the {@link MessageIdProvider} interface that uses a {@link UID} to generate a Message Id. The UID
- * is prefixed by <code>uid:</code>.
+ * Implementation of the {@link MessageIdStrategy} interface that uses a {@link UUID} to generate a Message Id. The UUID
+ * is prefixed by <code>uuid:</code>.
+ * <p/>
+ * Note that the {@link UUID} class is only available on Java 5 and above.
  *
  * @author Arjen Poutsma
  */
-public class UidMessageIdProvider implements MessageIdProvider {
+public class UuidMessageIdStrategy implements MessageIdStrategy {
 
-    public static final String PREFIX = "uid:";
+    public static final String PREFIX = "uuid:";
 
-    public String getMessageId(SoapMessage message) {
-        return PREFIX + new UID().toString();
+    /** Returns <code>false</code>. */
+    public boolean isDuplicate(String messageId) {
+        return false;
+    }
+
+    public String newMessageId(SoapMessage message) {
+        return PREFIX + UUID.randomUUID().toString();
     }
 }
