@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2007, Your Corporation. All Rights Reserved.
+ */
+
 package org.springframework.ws.soap.addressing;
 
 import java.util.Iterator;
@@ -7,7 +11,6 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.addressing.messageid.MessageIdStrategy;
-import org.springframework.ws.soap.addressing.version.WsAddressingVersion;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;

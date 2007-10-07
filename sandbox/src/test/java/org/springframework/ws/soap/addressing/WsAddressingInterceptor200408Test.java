@@ -1,7 +1,8 @@
-package org.springframework.ws.soap.addressing;
+/*
+ * Copyright (c) 2007, Your Corporation. All Rights Reserved.
+ */
 
-import org.springframework.ws.soap.addressing.version.WsAddressing200408;
-import org.springframework.ws.soap.addressing.version.WsAddressingVersion;
+package org.springframework.ws.soap.addressing;
 
 public class WsAddressingInterceptor200408Test extends AbstractWsAddressingInterceptorTestCase {
 
