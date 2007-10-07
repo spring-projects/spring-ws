@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.addressing.version;
+package org.springframework.ws.soap.addressing;
 
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.addressing.EndpointReference;
-import org.springframework.ws.soap.addressing.MessageAddressingProperties;
 
 /**
  * Defines the contract for a specific version of the WS-Addressing specification.
