@@ -20,7 +20,7 @@ import org.springframework.util.ClassUtils;
 
 /**
  * Helper class used to find the current version of JAXP. We cannot depend on the Java version, since JAXP can be
- * upgraded idenpendantly of the Java version.
+ * upgraded independently of the Java version.
  * <p/>
  * Only distinguishes between JAXP 1.0, 1.1, 1.3, and 1.4, since JAXP 1.2 was a maintenance release with no new
  * classes.
