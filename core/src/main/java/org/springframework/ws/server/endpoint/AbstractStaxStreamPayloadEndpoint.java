@@ -59,7 +59,6 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
         }
         XMLStreamReader streamReader = null;
         if (source instanceof StaxSource) {
-            streamReader = ((StaxSource) source).getXMLStreamReader();
             StaxSource staxSource = (StaxSource) source;
             streamReader = staxSource.getXMLStreamReader();
             if (streamReader == null && staxSource.getXMLEventReader() != null) {
