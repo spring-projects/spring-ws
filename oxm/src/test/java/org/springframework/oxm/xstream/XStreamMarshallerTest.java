@@ -19,8 +19,8 @@ package org.springframework.oxm.xstream;
 import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Properties;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLEventWriter;
@@ -34,14 +34,13 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.extended.EncodedByteArrayConverter;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.easymock.MockControl;
+import org.springframework.xml.transform.StaxResult;
+import org.springframework.xml.transform.StringResult;
+import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 import org.xml.sax.ContentHandler;
-
-import org.springframework.xml.transform.StaxResult;
-import org.springframework.xml.transform.StringResult;
-import org.springframework.xml.transform.StringSource;
 
 public class XStreamMarshallerTest extends XMLTestCase {
 
@@ -136,6 +135,30 @@ public class XStreamMarshallerTest extends XMLTestCase {
         StringSource source = new StringSource(result.toString());
         byte[] bufResult = (byte[]) marshaller.unmarshal(source);
         assertTrue("Invalid result", Arrays.equals(buf, bufResult));
+    }
+
+    public void testUseAttributesFor() throws Exception {
+        marshaller.setUseAttributeForTypes(new Class[]{Long.TYPE});
+        StringResult result = new StringResult();
+        marshaller.marshal(flight, result);
+        String expected = "<flight flightNumber=\"42\" />";
+        assertXMLEqual("Marshaller does not use attributes", expected, result.toString());
+    }
+
+    public void testUseAttributesForStringClassMap() throws Exception {
+        marshaller.setUseAttributeFor(Collections.singletonMap("flightNumber", Long.TYPE));
+        StringResult result = new StringResult();
+        marshaller.marshal(flight, result);
+        String expected = "<flight flightNumber=\"42\" />";
+        assertXMLEqual("Marshaller does not use attributes", expected, result.toString());
+    }
+
+    public void testUseAttributesForClassStringMap() throws Exception {
+        marshaller.setUseAttributeFor(Collections.singletonMap(Flight.class, "flightNumber"));
+        StringResult result = new StringResult();
+        marshaller.marshal(flight, result);
+        String expected = "<flight flightNumber=\"42\" />";
+        assertXMLEqual("Marshaller does not use attributes", expected, result.toString());
     }
 
 
