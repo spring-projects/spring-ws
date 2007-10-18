@@ -103,6 +103,11 @@ public class XStreamMarshaller extends AbstractMarshaller {
         this.encoding = encoding;
     }
 
+    /** Returns the XStream instance used by this marshaller. */
+    public XStream getXStream() {
+        return xstream;
+    }
+
     /**
      * Sets the XStream mode.
      *
@@ -111,7 +116,7 @@ public class XStreamMarshaller extends AbstractMarshaller {
      * @see XStream#NO_REFERENCES
      */
     public void setMode(int mode) {
-        xstream.setMode(mode);
+        getXStream().setMode(mode);
     }
 
     /**
@@ -124,10 +129,10 @@ public class XStreamMarshaller extends AbstractMarshaller {
     public void setConverters(ConverterMatcher[] converters) {
         for (int i = 0; i < converters.length; i++) {
             if (converters[i] instanceof Converter) {
-                xstream.registerConverter((Converter) converters[i], i);
+                getXStream().registerConverter((Converter) converters[i], i);
             }
             else if (converters[i] instanceof SingleValueConverter) {
-                xstream.registerConverter((SingleValueConverter) converters[i], i);
+                getXStream().registerConverter((SingleValueConverter) converters[i], i);
             }
             else {
                 throw new IllegalArgumentException("Invalid ConverterMatcher [" + converters[i] + "]");
@@ -145,7 +150,7 @@ public class XStreamMarshaller extends AbstractMarshaller {
         for (Iterator iterator = aliases.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
             // Check whether we need to convert from String to Class.
-            Class type = null;
+            Class type;
             if (entry.getValue() instanceof Class) {
                 type = (Class) entry.getValue();
             }
@@ -165,7 +170,39 @@ public class XStreamMarshaller extends AbstractMarshaller {
      * @param type the type to be aliased
      */
     public void addAlias(String name, Class type) {
-        xstream.alias(name, type);
+        getXStream().alias(name, type);
+    }
+
+    /**
+     * Sets types to use XML attributes for.
+     *
+     * @see XStream#useAttributeFor(Class)
+     */
+    public void setUseAttributeForTypes(Class[] types) {
+        for (int i = 0; i < types.length; i++) {
+            getXStream().useAttributeFor(types[i]);
+        }
+    }
+
+    /**
+     * Sets the types to use XML attributes for. The given map can contain either <code>&lt;String, Class&gt;</code>
+     * pairs, in which case {@link XStream#useAttributeFor(String,Class)} is called, or <code>&lt;Class,
+     * String&gt;</code> pairs, which results in {@link XStream#useAttributeFor(Class,String)}.
+     */
+    public void setUseAttributeFor(Map attributes) {
+        for (Iterator iterator = attributes.entrySet().iterator(); iterator.hasNext();) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            if (entry.getKey() instanceof String && entry.getValue() instanceof Class) {
+                getXStream().useAttributeFor((String) entry.getKey(), (Class) entry.getValue());
+            }
+            else if (entry.getKey() instanceof Class && entry.getValue() instanceof String) {
+                getXStream().useAttributeFor((Class) entry.getKey(), (String) entry.getValue());
+            }
+            else {
+                throw new IllegalArgumentException("Invalid attribute key and value pair. " +
+                        "'useAttributesFor' property takes either a <String, Class> map or a <Class, String> map");
+            }
+        }
     }
 
     public boolean supports(Class clazz) {
@@ -194,7 +231,7 @@ public class XStreamMarshaller extends AbstractMarshaller {
      */
     private void marshal(Object graph, HierarchicalStreamWriter streamWriter) {
         try {
-            xstream.marshal(graph, streamWriter);
+            getXStream().marshal(graph, streamWriter);
         }
         catch (Exception ex) {
             throw convertXStreamException(ex, true);
@@ -202,7 +239,7 @@ public class XStreamMarshaller extends AbstractMarshaller {
     }
 
     protected void marshalDomNode(Object graph, Node node) throws XmlMappingException {
-        HierarchicalStreamWriter streamWriter = null;
+        HierarchicalStreamWriter streamWriter;
         if (node instanceof Document) {
             streamWriter = new DomWriter((Document) node);
         }
@@ -247,7 +284,7 @@ public class XStreamMarshaller extends AbstractMarshaller {
 
     private Object unmarshal(HierarchicalStreamReader streamReader) {
         try {
-            return xstream.unmarshal(streamReader);
+            return getXStream().unmarshal(streamReader);
         }
         catch (Exception ex) {
             throw convertXStreamException(ex, false);
@@ -255,7 +292,7 @@ public class XStreamMarshaller extends AbstractMarshaller {
     }
 
     protected Object unmarshalDomNode(Node node) throws XmlMappingException {
-        HierarchicalStreamReader streamReader = null;
+        HierarchicalStreamReader streamReader;
         if (node instanceof Document) {
             streamReader = new DomReader((Document) node);
         }
