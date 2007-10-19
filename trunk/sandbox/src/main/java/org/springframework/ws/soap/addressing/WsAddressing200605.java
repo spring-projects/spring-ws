@@ -18,6 +18,8 @@ package org.springframework.ws.soap.addressing;
 
 import javax.xml.namespace.QName;
 
+import org.springframework.xml.namespace.QNameUtils;
+
 /**
  * Implements the May 2006 edition of the WS-Addressing specification. This version of the specification is used by
  * Microsoft's Windows Communication Foundation (WCF), and supported by Axis 1 and 2.
@@ -48,7 +50,7 @@ public class WsAddressing200605 extends AbstractWsAddressingVersion {
     }
 
     protected final QName getMessageAddressingHeaderRequiredFaultSubcode() {
-        return new QName(NAMESPACE_URI, "MessageAddressingHeaderRequired", getNamespacePrefix());
+        return QNameUtils.createQName(NAMESPACE_URI, "MessageAddressingHeaderRequired", getNamespacePrefix());
     }
 
     protected final String getMessageAddressingHeaderRequiredFaultReason() {
@@ -56,7 +58,7 @@ public class WsAddressing200605 extends AbstractWsAddressingVersion {
     }
 
     protected QName getInvalidAddressingHeaderFaultSubcode() {
-        return new QName(NAMESPACE_URI, "InvalidAddressingHeader", getNamespacePrefix());
+        return QNameUtils.createQName(NAMESPACE_URI, "InvalidAddressingHeader", getNamespacePrefix());
     }
 
     protected String getInvalidAddressingHeaderFaultReason() {

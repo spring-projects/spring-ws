@@ -118,8 +118,8 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
             detachAllBodyChildren();
             SOAPFault fault = getAxiomFactory().createSOAPFault(getAxiomBody());
             SOAPFaultCode faultCode = getAxiomFactory().createSOAPFaultCode(fault);
-            faultCode.setText(
-                    new QName(fault.getNamespace().getNamespaceURI(), localName, fault.getNamespace().getPrefix()));
+            faultCode.setText(QNameUtils.createQName(fault.getNamespace().getNamespaceURI(), localName,
+                    fault.getNamespace().getPrefix()));
             SOAPFaultReason faultReason = getAxiomFactory().createSOAPFaultReason(fault);
             if (locale != null) {
                 addLangAttribute(locale, faultReason);
