@@ -18,6 +18,8 @@ package org.springframework.ws.soap.addressing;
 
 import javax.xml.namespace.QName;
 
+import org.springframework.xml.namespace.QNameUtils;
+
 /**
  * Implements the August 2004 edition of the WS-Addressing specification. This version of the specification is used by
  * Microsoft's Web Services Enhancements (WSE) 3.0, and supported by Axis 1 and 2, and XFire.
@@ -39,7 +41,7 @@ public class WsAddressing200408 extends AbstractWsAddressingVersion {
     }
 
     protected final QName getInvalidAddressingHeaderFaultSubcode() {
-        return new QName(NAMESPACE_URI, "InvalidMessageInformationHeader", getNamespacePrefix());
+        return QNameUtils.createQName(NAMESPACE_URI, "InvalidMessageInformationHeader", getNamespacePrefix());
     }
 
     protected final String getMessageAddressingHeaderRequiredFaultReason() {
@@ -47,7 +49,7 @@ public class WsAddressing200408 extends AbstractWsAddressingVersion {
     }
 
     protected final QName getMessageAddressingHeaderRequiredFaultSubcode() {
-        return new QName(NAMESPACE_URI, "MessageInformationHeaderRequired", getNamespacePrefix());
+        return QNameUtils.createQName(NAMESPACE_URI, "MessageInformationHeaderRequired", getNamespacePrefix());
     }
 
     protected final String getNamespaceUri() {

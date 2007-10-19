@@ -35,6 +35,7 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.soap11.Soap11Body;
 import org.springframework.ws.soap.soap12.Soap12Body;
 import org.springframework.ws.soap.soap12.Soap12Fault;
+import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.TransformerObjectSupport;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
@@ -237,37 +238,37 @@ public abstract class AbstractWsAddressingVersion extends TransformerObjectSuppo
 
     /** Returns the qualified name of the <code>To</code> addressing header. */
     protected QName getToName() {
-        return new QName(getNamespaceUri(), "To", getNamespacePrefix());
+        return QNameUtils.createQName(getNamespaceUri(), "To", getNamespacePrefix());
     }
 
     /** Returns the qualified name of the <code>From</code> addressing header. */
     protected QName getFromName() {
-        return new QName(getNamespaceUri(), "From", getNamespacePrefix());
+        return QNameUtils.createQName(getNamespaceUri(), "From", getNamespacePrefix());
     }
 
     /** Returns the qualified name of the <code>ReplyTo</code> addressing header. */
     protected QName getReplyToName() {
-        return new QName(getNamespaceUri(), "ReplyTo", getNamespacePrefix());
+        return QNameUtils.createQName(getNamespaceUri(), "ReplyTo", getNamespacePrefix());
     }
 
     /** Returns the qualified name of the <code>FaultTo</code> addressing header. */
     protected QName getFaultToName() {
-        return new QName(getNamespaceUri(), "FaultTo", getNamespacePrefix());
+        return QNameUtils.createQName(getNamespaceUri(), "FaultTo", getNamespacePrefix());
     }
 
     /** Returns the qualified name of the <code>Action</code> addressing header. */
     protected QName getActionName() {
-        return new QName(getNamespaceUri(), "Action", getNamespacePrefix());
+        return QNameUtils.createQName(getNamespaceUri(), "Action", getNamespacePrefix());
     }
 
     /** Returns the qualified name of the <code>MessageID</code> addressing header. */
     protected QName getMessageIdName() {
-        return new QName(getNamespaceUri(), "MessageID", getNamespacePrefix());
+        return QNameUtils.createQName(getNamespaceUri(), "MessageID", getNamespacePrefix());
     }
 
     /** Returns the qualified name of the <code>RelatesTo</code> addressing header. */
     protected QName getRelatesToName() {
-        return new QName(getNamespaceUri(), "RelatesTo", getNamespacePrefix());
+        return QNameUtils.createQName(getNamespaceUri(), "RelatesTo", getNamespacePrefix());
     }
 
     /**
@@ -275,7 +276,7 @@ public abstract class AbstractWsAddressingVersion extends TransformerObjectSuppo
      * <code>null</code> when reference properties are not supported by this version of the spec.
      */
     protected QName getReferencePropertiesName() {
-        return new QName(getNamespaceUri(), "ReferenceProperties", getNamespacePrefix());
+        return QNameUtils.createQName(getNamespaceUri(), "ReferenceProperties", getNamespacePrefix());
     }
 
     /**
@@ -283,7 +284,7 @@ public abstract class AbstractWsAddressingVersion extends TransformerObjectSuppo
      * <code>null</code> when reference parameters are not supported by this version of the spec.
      */
     protected QName getReferenceParametersName() {
-        return new QName(getNamespaceUri(), "ReferenceParameters", getNamespacePrefix());
+        return QNameUtils.createQName(getNamespaceUri(), "ReferenceParameters", getNamespacePrefix());
     }
 
     /*
@@ -292,7 +293,7 @@ public abstract class AbstractWsAddressingVersion extends TransformerObjectSuppo
 
     /** The qualified name of the <code>Address</code> in <code>EndpointReference</code>. */
     protected QName getAddressName() {
-        return new QName(getNamespaceUri(), "Address", getNamespacePrefix());
+        return QNameUtils.createQName(getNamespaceUri(), "Address", getNamespacePrefix());
     }
 
     /*
