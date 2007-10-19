@@ -19,7 +19,7 @@ package org.springframework.xml.validation;
 import org.springframework.xml.XmlException;
 
 /**
- * Expection thrown when a validation error occurs
+ * Exception thrown when a validation error occurs
  *
  * @author Arjen Poutsma
  * @since 1.0.0
