@@ -42,7 +42,7 @@ import org.springframework.xml.transform.StaxSource;
  *
  * @author Arjen Poutsma
  * @see #invokeInternal(javax.xml.stream.XMLEventReader,javax.xml.stream.util.XMLEventConsumer,
- *javax.xml.stream.XMLEventFactory)
+ *      javax.xml.stream.XMLEventFactory)
  * @see XMLEventReader
  * @see XMLEventWriter
  * @since 1.0.0
@@ -90,6 +90,9 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
                     eventReader = getInputFactory().createXMLEventReader(staxSource.getXMLStreamReader());
                 }
                 catch (XMLStreamException ex) {
+                    // ignore
+                }
+                catch (UnsupportedOperationException ex) {
                     // ignore
                 }
             }

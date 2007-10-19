@@ -68,6 +68,9 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
                 catch (XMLStreamException ex) {
                     // ignore
                 }
+                catch (UnsupportedOperationException ex) {
+                    // ignore
+                }
             }
 
         }
