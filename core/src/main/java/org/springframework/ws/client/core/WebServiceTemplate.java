@@ -78,14 +78,14 @@ import org.springframework.ws.transport.support.DefaultStrategiesHelper;
  * WebServiceTransportException}.</li> <li>If the connection has no error, continue with the next step. </ul> <li>Invoke
  * {@link WebServiceConnection#receive(WebServiceMessageFactory) receive} on the connection to read the response
  * message, if any.</li> <ul> <li>If no response was received, return <code>null</code> or <code>false</code></li>
- * <li>Call {@link #hasFault(WebServiceConnection,WebServiceMessage) hasFault()} to determine whether the response has
- * a fault. If it has, call the {@link #handleFault handleFault()} method.</li> <li>Otherwise, invoke {@link
+ * <li>Call {@link #hasFault(WebServiceConnection,WebServiceMessage) hasFault()} to determine whether the response has a
+ * fault. If it has, call the {@link #handleFault handleFault()} method.</li> <li>Otherwise, invoke {@link
  * WebServiceMessageExtractor#extractData(WebServiceMessage) extractData()} on the response extractor, or {@link
  * WebServiceMessageCallback#doWithMessage(WebServiceMessage) doWithMessage} on the response callback.</li> </ul>
  * <li>Call to {@link WebServiceConnection#close() close} on the connection.</li> </ol>
  *
  * @author Arjen Poutsma
-* @since 1.0.0
+ * @since 1.0.0
  */
 public class WebServiceTemplate extends WebServiceAccessor implements WebServiceOperations {
 
@@ -110,9 +110,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      * @param messageFactory the message factory to use
      */
     public WebServiceTemplate(WebServiceMessageFactory messageFactory) {
-        this();
         setMessageFactory(messageFactory);
-        afterPropertiesSet();
+        initDefaultStrategies();
     }
 
     /** Returns the default URI to be used on operations that do not have a URI parameter. */
@@ -469,7 +468,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      * @param connection the erronous connection
      * @param request    the corresponding request message
      * @return the object to be returned from {@link #sendAndReceive(String,WebServiceMessageCallback,
-     *WebServiceMessageExtractor)}, if any
+     *         WebServiceMessageExtractor)}, if any
      */
     protected Object handleError(WebServiceConnection connection, WebServiceMessage request) throws IOException {
         throw new WebServiceTransportException(connection.getErrorMessage());
@@ -506,13 +505,13 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     /**
      * Handles an fault in the given response message. The default implementation invokes the {@link
      * FaultMessageResolver fault resolver} if registered, or invokes {@link #handleError(WebServiceConnection,
-     *WebServiceMessage)} otherwise.
+     * WebServiceMessage)} otherwise.
      *
      * @param connection the erronous connection
      * @param request    the corresponding request message
      * @param response   the fault response message
      * @return the object to be returned from {@link #sendAndReceive(String,WebServiceMessageCallback,
-     *WebServiceMessageExtractor)}, if any
+     *         WebServiceMessageExtractor)}, if any
      */
     protected Object handleFault(WebServiceConnection connection, WebServiceMessage request, WebServiceMessage response)
             throws IOException {
