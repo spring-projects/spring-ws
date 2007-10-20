@@ -49,6 +49,7 @@ import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.saaj.support.SaajContentHandler;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 import org.springframework.ws.soap.saaj.support.SaajXmlReader;
+import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportOutputStream;
 import org.springframework.xml.namespace.QNameUtils;
 import org.xml.sax.InputSource;
@@ -284,8 +285,8 @@ public class Saaj11Implementation implements SaajImplementation {
             TransportOutputStream transportOutputStream = (TransportOutputStream) outputStream;
             // some SAAJ implementations (Axis 1) do not have a Content-Type header by default
             MimeHeaders headers = message.getMimeHeaders();
-            if (ObjectUtils.isEmpty(headers.getHeader("Content-Type"))) {
-                headers.addHeader("Content-Type", SoapVersion.SOAP_11.getContentType());
+            if (ObjectUtils.isEmpty(headers.getHeader(TransportConstants.HEADER_CONTENT_TYPE))) {
+                headers.addHeader(TransportConstants.HEADER_CONTENT_TYPE, SoapVersion.SOAP_11.getContentType());
                 if (message.saveRequired()) {
                     message.saveChanges();
                 }

@@ -62,6 +62,10 @@ public class SaajSoapMessage extends AbstractSoapMessage {
      */
     public SaajSoapMessage(SOAPMessage soapMessage) {
         Assert.notNull(soapMessage, "soapMessage must not be null");
+        MimeHeaders headers = getImplementation().getMimeHeaders(soapMessage);
+        if (ObjectUtils.isEmpty(headers.getHeader(TransportConstants.HEADER_SOAP_ACTION))) {
+            headers.addHeader(TransportConstants.HEADER_SOAP_ACTION, "\"\"");
+        }
         saajMessage = soapMessage;
     }
 
@@ -92,11 +96,20 @@ public class SaajSoapMessage extends AbstractSoapMessage {
     public String getSoapAction() {
         MimeHeaders mimeHeaders = getImplementation().getMimeHeaders(getSaajMessage());
         String[] values = mimeHeaders.getHeader(TransportConstants.HEADER_SOAP_ACTION);
-        return ObjectUtils.isEmpty(values) ? null : values[0];
+        return ObjectUtils.isEmpty(values) ? "" : values[0];
     }
 
     public void setSoapAction(String soapAction) {
+        if (soapAction == null) {
+            soapAction = "";
+        }
         MimeHeaders mimeHeaders = getImplementation().getMimeHeaders(getSaajMessage());
+        if (!soapAction.startsWith("\"")) {
+            soapAction = "\"" + soapAction;
+        }
+        if (!soapAction.endsWith("\"")) {
+            soapAction = soapAction + "\"";
+        }
         mimeHeaders.setHeader(TransportConstants.HEADER_SOAP_ACTION, soapAction);
     }
 

@@ -45,9 +45,9 @@ public abstract class AbstractSoapMessageTestCase extends AbstractMimeMessageTes
     }
 
     public void testSoapAction() throws Exception {
-        String soapAction = "SoapAction";
-        soapMessage.setSoapAction(soapAction);
-        assertEquals("Invalid SOAP Action", soapAction, soapMessage.getSoapAction());
+        assertEquals("Invalid default SOAP Action", "\"\"", soapMessage.getSoapAction());
+        soapMessage.setSoapAction("SoapAction");
+        assertEquals("Invalid SOAP Action", "\"SoapAction\"", soapMessage.getSoapAction());
     }
 
     protected abstract Resource[] getSoapSchemas();

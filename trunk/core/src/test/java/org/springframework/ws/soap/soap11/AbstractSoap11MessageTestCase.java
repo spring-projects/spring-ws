@@ -48,7 +48,7 @@ public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageT
         String contentType = (String) tos.getHeaders().get("Content-Type");
         assertTrue("Invalid Content-Type set", contentType.indexOf(SoapVersion.SOAP_11.getContentType()) != -1);
         String resultSoapAction = (String) tos.getHeaders().get("SOAPAction");
-        assertEquals("Invalid soap action", soapAction, resultSoapAction);
+        assertEquals("Invalid soap action", "\"" + soapAction + "\"", resultSoapAction);
     }
 
     public void testWriteToTransportResponseAttachment() throws Exception {
