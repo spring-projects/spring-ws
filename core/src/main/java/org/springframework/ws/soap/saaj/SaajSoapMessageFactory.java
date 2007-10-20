@@ -34,6 +34,7 @@ import org.springframework.ws.soap.SoapMessageCreationException;
 import org.springframework.ws.soap.SoapMessageFactory;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
+import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportInputStream;
 
 /**
@@ -56,8 +57,6 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
     private MessageFactory messageFactory;
 
     private String messageFactoryProtocol;
-
-    private static final String CONTENT_TYPE = "Content-Type";
 
     /** Default, empty constructor. */
     public SaajSoapMessageFactory() {
@@ -166,10 +165,11 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
         catch (SOAPException ex) {
             // SAAJ 1.3 RI has a issue with handling multipart XOP content types which contain "startinfo" rather than
             // "start-info", so let's try and do something about it
-            String contentType = StringUtils.arrayToCommaDelimitedString(mimeHeaders.getHeader(CONTENT_TYPE));
+            String contentType = StringUtils
+                    .arrayToCommaDelimitedString(mimeHeaders.getHeader(TransportConstants.HEADER_CONTENT_TYPE));
             if (contentType.indexOf("startinfo") != -1) {
                 contentType = contentType.replace("startinfo", "start-info");
-                mimeHeaders.setHeader(CONTENT_TYPE, contentType);
+                mimeHeaders.setHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
                 try {
                     return new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, inputStream));
                 }

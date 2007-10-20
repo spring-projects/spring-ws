@@ -33,6 +33,7 @@ import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPMessage;
 import org.apache.axiom.soap.SOAPProcessingException;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.AbstractSoapMessage;
 import org.springframework.ws.soap.SoapEnvelope;
@@ -74,7 +75,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         axiomMessage = axiomFactory.createSOAPMessage(soapEnvelope, soapEnvelope.getBuilder());
         attachments = new Attachments();
         payloadCaching = true;
-        soapAction = "";
+        soapAction = "\"\"";
     }
 
     /**
@@ -105,6 +106,9 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         axiomMessage = soapMessage;
         axiomFactory = (SOAPFactory) soapMessage.getSOAPEnvelope().getOMFactory();
         this.attachments = attachments;
+        if (!StringUtils.hasLength(soapAction)) {
+            soapAction = "\"\"";
+        }
         this.soapAction = soapAction;
         this.payloadCaching = payloadCaching;
     }
@@ -132,11 +136,15 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
 
     public void setSoapAction(String soapAction) {
         if (soapAction == null) {
-            this.soapAction = "";
+            soapAction = "";
         }
-        else {
-            this.soapAction = soapAction;
+        if (!soapAction.startsWith("\"")) {
+            soapAction = "\"" + soapAction;
         }
+        if (!soapAction.endsWith("\"")) {
+            soapAction = soapAction + "\"";
+        }
+        this.soapAction = soapAction;
     }
 
     public boolean isXopPackage() {

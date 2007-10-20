@@ -43,6 +43,7 @@ import javax.xml.transform.dom.DOMSource;
 
 import org.springframework.util.ObjectUtils;
 import org.springframework.ws.soap.SoapVersion;
+import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportOutputStream;
 
 /**
@@ -262,14 +263,14 @@ public class Saaj13Implementation implements SaajImplementation {
             TransportOutputStream transportOutputStream = (TransportOutputStream) outputStream;
             // some SAAJ implementations (Axis 1) do not have a Content-Type header by default
             MimeHeaders headers = message.getMimeHeaders();
-            if (ObjectUtils.isEmpty(headers.getHeader("Content-Type"))) {
+            if (ObjectUtils.isEmpty(headers.getHeader(TransportConstants.HEADER_CONTENT_TYPE))) {
                 SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
                 if (envelope.getElementQName().getNamespaceURI()
                         .equals(SoapVersion.SOAP_11.getEnvelopeNamespaceUri())) {
-                    headers.addHeader("Content-Type", SoapVersion.SOAP_11.getContentType());
+                    headers.addHeader(TransportConstants.HEADER_CONTENT_TYPE, SoapVersion.SOAP_11.getContentType());
                 }
                 else {
-                    headers.addHeader("Content-Type", SoapVersion.SOAP_12.getContentType());
+                    headers.addHeader(TransportConstants.HEADER_CONTENT_TYPE, SoapVersion.SOAP_12.getContentType());
                 }
                 if (message.saveRequired()) {
                     message.saveChanges();

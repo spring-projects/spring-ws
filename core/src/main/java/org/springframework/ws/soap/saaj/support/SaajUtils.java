@@ -33,6 +33,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.ws.transport.TransportConstants;
 import org.springframework.xml.namespace.QNameUtils;
 import org.w3c.dom.Element;
 
@@ -216,8 +217,8 @@ public abstract class SaajUtils {
         InputStream is = resource.getInputStream();
         try {
             MimeHeaders mimeHeaders = new MimeHeaders();
-            mimeHeaders.addHeader("Content-Type", "text/xml");
-            mimeHeaders.addHeader("Content-Length", Long.toString(resource.getFile().length()));
+            mimeHeaders.addHeader(TransportConstants.HEADER_CONTENT_TYPE, "text/xml");
+            mimeHeaders.addHeader(TransportConstants.HEADER_CONTENT_LENGTH, Long.toString(resource.getFile().length()));
             return messageFactory.createMessage(mimeHeaders, is);
         }
         finally {
