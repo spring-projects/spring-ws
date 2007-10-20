@@ -16,8 +16,6 @@
 
 package org.springframework.ws.transport.http;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -160,25 +158,27 @@ public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport imple
      * This method is only called when the <code>transformLocations</code> property is true.
      */
     protected String transformLocation(String location, HttpServletRequest request) {
-        try {
-            if (location.startsWith("/")) {
-                // a relative path, prepend the context path
-                URL newLocation = new URL(request.getScheme(), request.getServerName(), request.getServerPort(),
-                        request.getContextPath() + location);
-                return newLocation.toString();
-            }
-            else {
+        StringBuffer url = new StringBuffer(request.getScheme());
+        url.append("://").append(request.getServerName()).append(':').append(request.getServerPort());
+        if (location.startsWith("/")) {
+            // a relative path, prepend the context path
+            url.append(request.getContextPath()).append(location);
+            return url.toString();
+        }
+        else {
+            int idx = location.indexOf("://");
+            if (idx != -1) {
                 // a full url
-                URL oldLocation = new URL(location);
-                URL newLocation = new URL(request.getScheme(), request.getServerName(), request.getServerPort(),
-                        oldLocation.getFile());
-                return newLocation.toString();
+                idx = location.indexOf('/', idx + 3);
+                if (idx != -1) {
+                    String path = location.substring(idx);
+                    url.append(path);
+                    return url.toString();
+                }
             }
         }
-        catch (MalformedURLException e) {
-            return location;
-            // fall though to the default return value
-        }
+        // unknown location, return the original
+        return location;
     }
 
     /**
@@ -198,7 +198,9 @@ public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport imple
             Attr location = (Attr) iterator.next();
             if (location != null && StringUtils.hasLength(location.getValue())) {
                 String newLocation = transformLocation(location.getValue(), request);
-                logger.debug("Transforming [" + location.getValue() + "] to [" + newLocation + "]");
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Transforming [" + location.getValue() + "] to [" + newLocation + "]");
+                }
                 location.setValue(newLocation);
             }
         }
