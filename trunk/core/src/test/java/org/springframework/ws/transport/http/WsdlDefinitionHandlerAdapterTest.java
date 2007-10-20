@@ -16,7 +16,7 @@
 
 package org.springframework.ws.transport.http;
 
-import java.net.URL;
+import java.net.URI;
 import javax.servlet.ServletException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -107,7 +107,7 @@ public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
 
         String result = adapter.transformLocation(oldLocation, request);
         assertNotNull("No result", result);
-        assertEquals("Invalid result", new URL("http://example.com:8080/context/service"), new URL(result));
+        assertEquals("Invalid result", new URI("http://example.com:8080/context/service"), new URI(result));
     }
 
     public void testTransformLocationEmptyContextFullUrl() throws Exception {
@@ -120,7 +120,7 @@ public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
 
         String result = adapter.transformLocation(oldLocation, request);
         assertNotNull("No result", result);
-        assertEquals("Invalid result", new URL("http://example.com:8080/service"), new URL(result));
+        assertEquals("Invalid result", new URI("http://example.com:8080/service"), new URI(result));
     }
 
     public void testTransformLocationRelativeUrl() throws Exception {
@@ -134,7 +134,7 @@ public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
 
         String result = adapter.transformLocation(oldLocation, request);
         assertNotNull("No result", result);
-        assertEquals("Invalid result", new URL("http://example.com:8080/context/service"), new URL(result));
+        assertEquals("Invalid result", new URI("http://example.com:8080/context/service"), new URI(result));
     }
 
     public void testTransformLocationEmptyContextRelativeUrl() throws Exception {
@@ -147,6 +147,6 @@ public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
 
         String result = adapter.transformLocation(oldLocation, request);
         assertNotNull("No result", result);
-        assertEquals("Invalid result", new URL("http://example.com:8080/service"), new URL(result));
+        assertEquals("Invalid result", new URI("http://example.com:8080/service"), new URI(result));
     }
 }
