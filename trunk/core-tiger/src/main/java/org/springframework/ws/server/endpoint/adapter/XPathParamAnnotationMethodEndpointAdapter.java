@@ -117,7 +117,7 @@ public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEnd
     }
 
     private Object[] getMethodArguments(Element payloadElement, Method method) throws XPathExpressionException {
-        Class[] parameterTypes = method.getParameterTypes();
+        Class<?>[] parameterTypes = method.getParameterTypes();
         XPath xpath = createXPath();
         Object[] args = new Object[parameterTypes.length];
         for (int i = 0; i < parameterTypes.length; i++) {
