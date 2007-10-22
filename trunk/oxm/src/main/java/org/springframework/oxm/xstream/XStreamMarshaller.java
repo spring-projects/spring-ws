@@ -48,6 +48,7 @@ import com.thoughtworks.xstream.io.xml.XppReader;
 import org.springframework.beans.propertyeditors.ClassEditor;
 import org.springframework.oxm.AbstractMarshaller;
 import org.springframework.oxm.XmlMappingException;
+import org.springframework.util.ObjectUtils;
 import org.springframework.xml.stream.StaxEventContentHandler;
 import org.springframework.xml.stream.XmlEventStreamReader;
 import org.w3c.dom.Document;
@@ -85,6 +86,8 @@ public class XStreamMarshaller extends AbstractMarshaller {
 
     private String encoding;
 
+    private Class[] supportedClasses;
+
     /**
      * Returns the encoding to be used for stream access. If this property is not set, the default encoding is used.
      *
@@ -117,6 +120,16 @@ public class XStreamMarshaller extends AbstractMarshaller {
      */
     public void setMode(int mode) {
         getXStream().setMode(mode);
+    }
+
+    /**
+     * Sets the classes supported by this marshaller. If this property is empty (the default), all classes are
+     * supported.
+     *
+     * @see #supports(Class)
+     */
+    public void setSupportedClasses(Class[] supportedClasses) {
+        this.supportedClasses = supportedClasses;
     }
 
     /**
@@ -206,7 +219,17 @@ public class XStreamMarshaller extends AbstractMarshaller {
     }
 
     public boolean supports(Class clazz) {
-        return true;
+        if (ObjectUtils.isEmpty(supportedClasses)) {
+            return true;
+        }
+        else {
+            for (int i = 0; i < supportedClasses.length; i++) {
+                if (supportedClasses[i].isAssignableFrom(clazz)) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     /**
