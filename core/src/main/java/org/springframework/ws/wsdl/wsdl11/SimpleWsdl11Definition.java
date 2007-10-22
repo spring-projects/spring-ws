@@ -18,13 +18,15 @@ package org.springframework.ws.wsdl.wsdl11;
 
 import java.io.IOException;
 import javax.xml.transform.Source;
-import javax.xml.transform.sax.SAXSource;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.ws.wsdl.WsdlDefinitionException;
-import org.springframework.xml.sax.SaxUtils;
+import org.springframework.xml.transform.ResourceSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * The default {@link Wsdl11Definition} implementation.
@@ -64,7 +66,12 @@ public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBea
 
     public Source getSource() {
         try {
-            return new SAXSource(SaxUtils.createInputSource(this.wsdlResource));
+            XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+            xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
+            return new ResourceSource(xmlReader, wsdlResource);
+        }
+        catch (SAXException ex) {
+            throw new WsdlDefinitionException("Could not create XMLReader", ex);
         }
         catch (IOException ex) {
             throw new WsdlDefinitionException("Could not create source from " + this.wsdlResource, ex);

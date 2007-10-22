@@ -30,6 +30,8 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.xml.transform.ResourceSource;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * Interceptor that transforms the payload of <code>WebServiceMessage</code>s using XSLT stylesheet. Allows for seperate
@@ -113,12 +115,14 @@ public class PayloadTransformingInterceptor implements EndpointInterceptor, Init
             throw new IllegalArgumentException("Setting either 'requestXslt' or 'responseXslt' is required");
         }
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+        xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
         if (requestXslt != null) {
             Assert.isTrue(requestXslt.exists(), "requestXslt \"" + requestXslt + "\" does not exit");
             if (logger.isInfoEnabled()) {
                 logger.info("Transforming request using " + requestXslt);
             }
-            Source requestSource = new ResourceSource(requestXslt);
+            Source requestSource = new ResourceSource(xmlReader, requestXslt);
             requestTemplates = transformerFactory.newTemplates(requestSource);
         }
         if (responseXslt != null) {
@@ -126,7 +130,7 @@ public class PayloadTransformingInterceptor implements EndpointInterceptor, Init
             if (logger.isInfoEnabled()) {
                 logger.info("Transforming response using " + responseXslt);
             }
-            Source responseSource = new ResourceSource(responseXslt);
+            Source responseSource = new ResourceSource(xmlReader, responseXslt);
             responseTemplates = transformerFactory.newTemplates(responseSource);
         }
     }
