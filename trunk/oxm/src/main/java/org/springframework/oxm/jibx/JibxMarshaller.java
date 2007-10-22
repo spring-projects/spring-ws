@@ -81,7 +81,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
 
     private IBindingFactory bindingFactory;
 
-    private TransformerFactory transfomerFactory;
+    private static TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
     private int indent = -1;
 
@@ -135,7 +135,6 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
         catch (JiBXException ex) {
             throw new JibxSystemException(ex);
         }
-        transfomerFactory = TransformerFactory.newInstance();
     }
 
     public boolean supports(Class clazz) {
@@ -208,7 +207,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             marshalOutputStream(graph, os);
             ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-            Transformer transformer = transfomerFactory.newTransformer();
+            Transformer transformer = transformerFactory.newTransformer();
             transformer.transform(new StreamSource(is), new DOMResult(node));
         }
         catch (IOException ex) {
@@ -226,7 +225,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             marshalOutputStream(graph, os);
             ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-            Transformer transformer = transfomerFactory.newTransformer();
+            Transformer transformer = transformerFactory.newTransformer();
             SAXResult saxResult = new SAXResult(contentHandler);
             saxResult.setLexicalHandler(lexicalHandler);
             transformer.transform(new StreamSource(is), saxResult);
@@ -296,7 +295,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
 
     protected Object unmarshalDomNode(Node node) throws XmlMappingException {
         try {
-            Transformer transformer = transfomerFactory.newTransformer();
+            Transformer transformer = transformerFactory.newTransformer();
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             transformer.transform(new DOMSource(node), new StreamResult(os));
             ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
@@ -313,7 +312,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
     protected Object unmarshalSaxReader(XMLReader xmlReader, InputSource inputSource)
             throws XmlMappingException, IOException {
         try {
-            Transformer transformer = transfomerFactory.newTransformer();
+            Transformer transformer = transformerFactory.newTransformer();
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             transformer.transform(new SAXSource(xmlReader, inputSource), new StreamResult(os));
             ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
