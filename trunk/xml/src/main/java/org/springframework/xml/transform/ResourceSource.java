@@ -21,6 +21,7 @@ import javax.xml.transform.sax.SAXSource;
 
 import org.springframework.core.io.Resource;
 import org.springframework.xml.sax.SaxUtils;
+import org.xml.sax.XMLReader;
 
 /**
  * Convenient subclass of {@link SAXSource} that reads from a Spring {@link Resource}. The resource to be read can be
@@ -40,4 +41,12 @@ public class ResourceSource extends SAXSource {
         super(SaxUtils.createInputSource(content));
     }
 
+    /**
+     * Initializes a new instance of the <code>ResourceSource</code> with the given {@link XMLReader} and resource.
+     *
+     * @param content the content
+     */
+    public ResourceSource(XMLReader reader, Resource content) throws IOException {
+        super(reader, SaxUtils.createInputSource(content));
+    }
 }

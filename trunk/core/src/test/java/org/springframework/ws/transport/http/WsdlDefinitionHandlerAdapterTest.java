@@ -16,18 +16,26 @@
 
 package org.springframework.ws.transport.http;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.net.URI;
 import javax.servlet.ServletException;
+import javax.wsdl.Definition;
+import javax.wsdl.factory.WSDLFactory;
+import javax.wsdl.xml.WSDLReader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.easymock.MockControl;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.ws.wsdl.WsdlDefinition;
+import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
 import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
 public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
 
@@ -149,4 +157,71 @@ public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
         assertNotNull("No result", result);
         assertEquals("Invalid result", new URI("http://example.com:8080/service"), new URI(result));
     }
+
+    public void testHandleSimpleWsdl11DefinitionWithoutTransformLocations() throws Exception {
+        adapter.setTransformLocations(false);
+        request.setMethod("GET");
+        request.setScheme("http");
+        request.setServerName("example.com");
+        request.setServerPort(8080);
+        request.setContextPath("/context");
+        request.setServletPath("/service.wsdl");
+        request.setPathInfo(null);
+        request.setRequestURI("/context/service.wsdl");
+
+        SimpleWsdl11Definition definition =
+                new SimpleWsdl11Definition(new ClassPathResource("echo-input.wsdl", getClass()));
+
+        adapter.handle(request, response, definition);
+        InputStream inputStream = new ByteArrayInputStream(response.getContentAsByteArray());
+
+        WSDLFactory factory = WSDLFactory.newInstance();
+        WSDLReader reader = factory.newWSDLReader();
+        Definition wsdl4jDefinition = reader.readWSDL(null, new InputSource(inputStream));
+        assertNotNull("No definition read", wsdl4jDefinition);
+
+        inputStream = new ByteArrayInputStream(response.getContentAsByteArray());
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(true);
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        Document resultingDocument = documentBuilder.parse(inputStream);
+
+        documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        Document expectedDocument = documentBuilder.parse(getClass().getResourceAsStream("echo-input.wsdl"));
+        assertXMLEqual("Invalid WSDL returned", expectedDocument, resultingDocument);
+    }
+
+    public void testHandleSimpleWsdl11DefinitionWithTransformLocation() throws Exception {
+        adapter.setTransformLocations(true);
+        request.setMethod("GET");
+        request.setScheme("http");
+        request.setServerName("example.com");
+        request.setServerPort(8080);
+        request.setContextPath("/context");
+        request.setServletPath("/service.wsdl");
+        request.setPathInfo(null);
+        request.setRequestURI("/context/service.wsdl");
+
+        SimpleWsdl11Definition definition =
+                new SimpleWsdl11Definition(new ClassPathResource("echo-input.wsdl", getClass()));
+
+        adapter.handle(request, response, definition);
+        InputStream inputStream = new ByteArrayInputStream(response.getContentAsByteArray());
+
+        WSDLFactory factory = WSDLFactory.newInstance();
+        WSDLReader reader = factory.newWSDLReader();
+        Definition wsdl4jDefinition = reader.readWSDL(null, new InputSource(inputStream));
+        assertNotNull("No definition read", wsdl4jDefinition);
+
+        inputStream = new ByteArrayInputStream(response.getContentAsByteArray());
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(true);
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        Document resultingDocument = documentBuilder.parse(inputStream);
+
+        documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        Document expectedDocument = documentBuilder.parse(getClass().getResourceAsStream("echo-expected.wsdl"));
+        assertXMLEqual("Invalid WSDL returned", expectedDocument, resultingDocument);
+    }
+
 }
