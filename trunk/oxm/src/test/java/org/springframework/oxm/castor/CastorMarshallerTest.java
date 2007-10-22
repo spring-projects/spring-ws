@@ -66,4 +66,10 @@ public class CastorMarshallerTest extends AbstractMarshallerTestCase {
         handlerControl.verify();
     }
 
+    public void testSupports() throws Exception {
+        assertTrue("CastorMarshaller does not support Flights", marshaller.supports(Flights.class));
+        assertTrue("CastorMarshaller does not support Flight", marshaller.supports(Flight.class));
+    }
+
+
 }
