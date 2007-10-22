@@ -34,6 +34,7 @@ import org.exolab.castor.mapping.MappingLoader;
 import org.exolab.castor.xml.ClassDescriptorResolverFactory;
 import org.exolab.castor.xml.MarshalException;
 import org.exolab.castor.xml.Marshaller;
+import org.exolab.castor.xml.ResolverException;
 import org.exolab.castor.xml.UnmarshalHandler;
 import org.exolab.castor.xml.Unmarshaller;
 import org.exolab.castor.xml.XMLClassDescriptorResolver;
@@ -200,7 +201,12 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
 
     /** Returns <code>true</code> for all classes, i.e. Castor supports arbitrary classes. */
     public boolean supports(Class clazz) {
-        return true;
+        try {
+            return classDescriptorResolver.resolve(clazz) != null;
+        }
+        catch (ResolverException e) {
+            return false;
+        }
     }
 
     protected final void marshalDomNode(Object graph, Node node) throws XmlMappingException {
