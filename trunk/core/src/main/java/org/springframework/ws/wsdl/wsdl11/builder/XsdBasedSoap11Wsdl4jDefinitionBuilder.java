@@ -84,10 +84,12 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
         implements InitializingBean {
 
     /** The schema qualified name. */
-    private static final QName SCHEMA_NAME = new QName("http://www.w3.org/2001/XMLSchema", "schema", "xsd");
+    private static final QName SCHEMA_NAME =
+            QNameUtils.createQName("http://www.w3.org/2001/XMLSchema", "schema", "xsd");
 
     /** The schema import qualified name. */
-    private static final QName IMPORT_NAME = new QName("http://www.w3.org/2001/XMLSchema", "import", "xsd");
+    private static final QName IMPORT_NAME =
+            QNameUtils.createQName("http://www.w3.org/2001/XMLSchema", "import", "xsd");
 
     /** The default suffix used to detect request elements in the schema. */
     public static final String DEFAULT_REQUEST_SUFFIX = "Request";
@@ -257,14 +259,14 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
      */
     protected void buildTypes(Definition definition) throws WSDLException {
         Types types = definition.createTypes();
-        Schema schema = null;
+        Schema schema;
         if (!StringUtils.hasLength(schemaLocation)) {
             schema = (Schema) createExtension(Types.class, QNameUtils.getQNameForNode(schemaElement));
             schema.setElement(schemaElement);
         }
         else {
             schema = (Schema) createExtension(Types.class, SCHEMA_NAME);
-            Document document = null;
+            Document document;
             try {
                 DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
                 document = documentBuilder.newDocument();
@@ -503,7 +505,6 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
             localPart = responseMessage.getQName().getLocalPart();
             if (localPart.endsWith(responseSuffix)) {
                 operationName = localPart.substring(0, localPart.length() - responseSuffix.length());
-                operationName = localPart;
             }
         }
         operation.setName(operationName);

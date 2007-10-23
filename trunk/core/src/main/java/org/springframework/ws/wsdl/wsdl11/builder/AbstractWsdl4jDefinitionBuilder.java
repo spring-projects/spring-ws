@@ -43,9 +43,6 @@ public abstract class AbstractWsdl4jDefinitionBuilder implements Wsdl11Definitio
     /** Logger available to subclasses. */
     protected final Log logger = LogFactory.getLog(getClass());
 
-    /** WSDL4J extension registry. Lazily created in <code>createExtension()</code>. */
-    private ExtensionRegistry extensionRegistry;
-
     /** The WSDL4J <code>Definition</code> created by <code>buildDefinition()</code>. */
     private Definition definition;
 
@@ -53,6 +50,11 @@ public abstract class AbstractWsdl4jDefinitionBuilder implements Wsdl11Definitio
         try {
             WSDLFactory wsdlFactory = WSDLFactory.newInstance();
             definition = wsdlFactory.newDefinition();
+            if (definition.getExtensionRegistry() == null) {
+                ExtensionRegistry extensionRegistry = wsdlFactory.newPopulatedExtensionRegistry();
+                definition.setExtensionRegistry(extensionRegistry);
+            }
+            populateExtensionRegistry(definition.getExtensionRegistry());
             populateDefinition(definition);
         }
         catch (WSDLException ex) {
@@ -187,11 +189,11 @@ public abstract class AbstractWsdl4jDefinitionBuilder implements Wsdl11Definitio
      * @see javax.wsdl.extensions.ExtensionRegistry#createExtension(Class,javax.xml.namespace.QName)
      */
     protected ExtensibilityElement createExtension(Class parentType, QName elementType) throws WSDLException {
-        if (extensionRegistry == null) {
-            WSDLFactory wsdlFactory = WSDLFactory.newInstance();
-            extensionRegistry = wsdlFactory.newPopulatedExtensionRegistry();
-        }
-        return extensionRegistry.createExtension(parentType, elementType);
+        return definition.getExtensionRegistry().createExtension(parentType, elementType);
+    }
+
+    /** Allows customization of the given {@link ExtensionRegistry}. Default implementation is empty. */
+    protected void populateExtensionRegistry(ExtensionRegistry extensionRegistry) {
     }
 
 }

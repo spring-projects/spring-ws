@@ -57,7 +57,6 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilderTest extends XMLTestCase {
 
     public void testInline() throws Exception {
         builder.buildDefinition();
-        builder.buildDefinition();
         builder.buildImports();
         builder.buildTypes();
         builder.buildMessages();
@@ -99,5 +98,6 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilderTest extends XMLTestCase {
         XMLUnit.setIgnoreWhitespace(true);
         assertXMLEqual("Invalid WSDL built", expected, result);
     }
+
 
 }
