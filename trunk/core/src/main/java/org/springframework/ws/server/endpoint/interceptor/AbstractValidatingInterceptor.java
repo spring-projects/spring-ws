@@ -196,11 +196,11 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 
     /**
      * Template method that is called when the response message contains validation errors. Default implementation logs
-     * all errors, and returns <code>false</code>, i.e. do not send the response.
+     * all errors, and returns <code>false</code>, i.e. do not cot continue to process the respone interceptor chain.
      *
      * @param messageContext the message context
-     * @param errors         the validation errors @return <code>true</code> to continue sending the response,
-     *                       <code>false</code> (the default) otherwise
+     * @param errors         the validation errors
+     * @return <code>true</code> to continue the reponse interceptor chain, <code>false</code> (the default) otherwise
      */
     protected boolean handleResponseValidationErrors(MessageContext messageContext, SAXParseException[] errors) {
         for (int i = 0; i < errors.length; i++) {
