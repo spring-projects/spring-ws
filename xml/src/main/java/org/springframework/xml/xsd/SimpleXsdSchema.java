@@ -30,6 +30,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.sax.SaxUtils;
+import org.springframework.xml.validation.XmlValidator;
+import org.springframework.xml.validation.XmlValidatorFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -61,6 +63,8 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
 
     private Element schemaElement;
 
+    private XmlValidator validator;
+
     /**
      * Create a new instance of the {@link SimpleXsdSchema} class.
      * <p/>
@@ -88,6 +92,10 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
         return schemaDocuments;
     }
 
+    public XmlValidator getValidator() {
+        return validator;
+    }
+
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(schemaResource, "'schema' is required");
         Assert.isTrue(schemaResource.exists(), "schema '" + schemaResource + "' does not exit");
@@ -100,6 +108,7 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
         Assert.isTrue(SCHEMA_NAME.equals(name),
                 "schema document has invalid qualified name: " + name + ". " + "Epected " + SCHEMA_NAME);
         Assert.hasLength(schemaElement.getAttribute("targetNamespace"), "schema does not define targetNamespace");
+        validator = XmlValidatorFactory.createValidator(schemaResource, XmlValidatorFactory.SCHEMA_W3C_XML);
     }
 
     /** Inner definition of {@link SimpleXsdSchemaDocument}. */

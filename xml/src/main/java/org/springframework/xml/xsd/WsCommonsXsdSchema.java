@@ -34,6 +34,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.sax.SaxUtils;
+import org.springframework.xml.validation.XmlValidator;
+import org.springframework.xml.validation.XmlValidatorFactory;
 
 /**
  * Implementation of the {@link XsdSchema} interface that uses <a href="http://ws.apache.org/commons/XmlSchema/">Apache
@@ -52,6 +54,8 @@ public class WsCommonsXsdSchema implements XsdSchema, InitializingBean {
     private Resource[] schemaResources;
 
     private XsdSchemaDocument[] schemaDocuments;
+
+    private XmlValidator validator;
 
     /**
      * Create a new instance of the {@link WsCommonsXsdSchema} class.
@@ -91,6 +95,10 @@ public class WsCommonsXsdSchema implements XsdSchema, InitializingBean {
         this.schemaResources = schemaResources;
     }
 
+    public XmlValidator getValidator() {
+        return validator;
+    }
+
     public void afterPropertiesSet() throws Exception {
         Assert.notEmpty(schemaResources, "'schemaResources' must not be empty");
         XmlSchemaCollection schemaCollection = new XmlSchemaCollection();
@@ -108,6 +116,7 @@ public class WsCommonsXsdSchema implements XsdSchema, InitializingBean {
             }
         }
         this.schemaDocuments = (XsdSchemaDocument[]) schemaList.toArray(new XsdSchemaDocument[schemaList.size()]);
+        validator = XmlValidatorFactory.createValidator(schemaResources, XmlValidatorFactory.SCHEMA_W3C_XML);
     }
 
     public XsdSchemaDocument[] getSchemaDocuments() {
