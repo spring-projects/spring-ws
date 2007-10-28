@@ -17,21 +17,22 @@
 package org.springframework.ws.soap.saaj.support;
 
 import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPMessage;
-import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 
 import org.custommonkey.xmlunit.XMLTestCase;
-import org.springframework.xml.transform.StringResult;
+import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 public class SaajXmlReaderTest extends XMLTestCase {
 
-    private SaajXmlReader reader;
+    private SaajXmlReader saajReader;
 
     private SOAPMessage message;
 
@@ -40,16 +41,30 @@ public class SaajXmlReaderTest extends XMLTestCase {
     protected void setUp() throws Exception {
         MessageFactory messageFactory = MessageFactory.newInstance();
         message = messageFactory.createMessage();
-        reader = new SaajXmlReader(message.getSOAPPart().getEnvelope());
+        SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
+        saajReader = new SaajXmlReader(envelope);
         transformer = TransformerFactory.newInstance().newTransformer();
     }
 
-    public void testIt() throws Exception {
-        Result result = new StringResult();
-        Source source = new SAXSource(reader, new InputSource());
+    public void testNamespacesPrefixes() throws Exception {
+        saajReader.setFeature("http://xml.org/sax/features/namespaces", true);
+        saajReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
+        DOMResult result = new DOMResult();
+        Source source = new SAXSource(saajReader, new InputSource());
         transformer.transform(source, result);
-        Result expected = new StringResult();
+        DOMResult expected = new DOMResult();
         transformer.transform(new DOMSource(message.getSOAPPart().getEnvelope()), expected);
-        assertXMLEqual(expected.toString(), result.toString());
+        assertXMLEqual((Document) expected.getNode(), (Document) result.getNode());
+    }
+
+    public void testNamespacesNoPrefixes() throws Exception {
+        saajReader.setFeature("http://xml.org/sax/features/namespaces", true);
+        saajReader.setFeature("http://xml.org/sax/features/namespace-prefixes", false);
+        DOMResult result = new DOMResult();
+        Source source = new SAXSource(saajReader, new InputSource());
+        transformer.transform(source, result);
+        DOMResult expected = new DOMResult();
+        transformer.transform(new DOMSource(message.getSOAPPart().getEnvelope()), expected);
+        assertXMLEqual((Document) expected.getNode(), (Document) result.getNode());
     }
 }

@@ -21,6 +21,7 @@ import org.xml.sax.DTDHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 
@@ -93,7 +94,7 @@ public abstract class AbstractXmlReader implements XMLReader {
      * @throws org.xml.sax.SAXNotRecognizedException
      *          always
      */
-    public boolean getFeature(String name) throws SAXNotRecognizedException {
+    public boolean getFeature(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
         throw new SAXNotRecognizedException(name);
     }
 
@@ -102,7 +103,7 @@ public abstract class AbstractXmlReader implements XMLReader {
      *
      * @throws SAXNotRecognizedException always
      */
-    public void setFeature(String name, boolean value) throws SAXNotRecognizedException {
+    public void setFeature(String name, boolean value) throws SAXNotRecognizedException, SAXNotSupportedException {
         throw new SAXNotRecognizedException(name);
     }
 
@@ -110,7 +111,7 @@ public abstract class AbstractXmlReader implements XMLReader {
      * Throws a <code>SAXNotRecognizedException</code> exception when the given property does not signify a lexical
      * handler. The property name for a lexical handler is <code>http://xml.org/sax/properties/lexical-handler</code>.
      */
-    public Object getProperty(String name) throws SAXNotRecognizedException {
+    public Object getProperty(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
         if ("http://xml.org/sax/properties/lexical-handler".equals(name)) {
             return lexicalHandler;
         }
@@ -123,7 +124,7 @@ public abstract class AbstractXmlReader implements XMLReader {
      * Throws a <code>SAXNotRecognizedException</code> exception when the given property does not signify a lexical
      * handler. The property name for a lexical handler is <code>http://xml.org/sax/properties/lexical-handler</code>.
      */
-    public void setProperty(String name, Object value) throws SAXNotRecognizedException {
+    public void setProperty(String name, Object value) throws SAXNotRecognizedException, SAXNotSupportedException {
         if ("http://xml.org/sax/properties/lexical-handler".equals(name)) {
             lexicalHandler = (LexicalHandler) value;
         }
