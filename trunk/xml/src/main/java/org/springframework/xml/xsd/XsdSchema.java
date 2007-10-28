@@ -16,6 +16,8 @@
 
 package org.springframework.xml.xsd;
 
+import org.springframework.xml.validation.XmlValidator;
+
 /**
  * Represents an abstraction for an XSD schema document. A schema is made up of one or more schema documents.
  *
@@ -27,5 +29,8 @@ public interface XsdSchema {
 
     /** Returns the {@link XsdSchemaDocument} objects this schema consists of. */
     XsdSchemaDocument[] getSchemaDocuments();
+
+    /** Returns the {@link XmlValidator} based on this schema. */
+    XmlValidator getValidator();
 
 }
