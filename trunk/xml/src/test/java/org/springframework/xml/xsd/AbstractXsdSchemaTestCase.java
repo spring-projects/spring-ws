@@ -31,6 +31,7 @@ import org.custommonkey.xmlunit.XMLUnit;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.xml.validation.XmlValidator;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -62,6 +63,8 @@ public abstract class AbstractXsdSchemaTestCase extends XMLTestCase {
     public void testSingleDocument() throws Exception {
         XsdSchema schema =
                 createSchema(new Resource[]{new ClassPathResource("single.xsd", AbstractXsdSchemaTestCase.class)});
+        XmlValidator validator = schema.getValidator();
+        assertNotNull("No validator returned", validator);
         XsdSchemaDocument[] documents = schema.getSchemaDocuments();
         assertEquals("Invalid amount of schema documents", 1, documents.length);
         XsdSchemaDocument document = documents[0];
@@ -79,46 +82,71 @@ public abstract class AbstractXsdSchemaTestCase extends XMLTestCase {
     public void testInclude() throws Exception {
         XsdSchema schema =
                 createSchema(new Resource[]{new ClassPathResource("including.xsd", AbstractXsdSchemaTestCase.class)});
+        XmlValidator validator = schema.getValidator();
+        assertNotNull("No validator returned", validator);
         XsdSchemaDocument[] documents = schema.getSchemaDocuments();
         assertEquals("Invalid amount of schema documents", 2, documents.length);
-        assertNotNull("Document is null", documents[0]);
-        assertEquals("Invalid target namespace", "http://www.springframework.org/spring-ws/include",
-                documents[0].getTargetNamespace());
-        verifyDocument("including.xsd", documents[0]);
-        assertEquals("Invalid amount of element declarations", 1, documents[0].getElementDeclarations().length);
-        assertEquals("Invalid element declaration name",
-                new QName("http://www.springframework.org/spring-ws/include", "customElement"),
-                documents[0].getElementDeclarations()[0].getName());
-        assertNotNull("Document is null", documents[1]);
-        assertEquals("Invalid target namespace", "http://www.springframework.org/spring-ws/include",
-                documents[1].getTargetNamespace());
-        verifyDocument("included.xsd", documents[1]);
-        assertEquals("Invalid amount of element declarations", 1, documents[1].getElementDeclarations().length);
-        assertEquals("Invalid element declaration name",
-                new QName("http://www.springframework.org/spring-ws/include", "stringElement"),
-                documents[1].getElementDeclarations()[0].getName());
+        for (int i = 0; i < documents.length; i++) {
+            XsdSchemaDocument document = documents[i];
+            assertNotNull("Document is null", document);
+            XsdElementDeclaration[] elementDeclarations = document.getElementDeclarations();
+            if ("including.xsd".equals(document.getFilename())) {
+                assertEquals("Invalid target namespace", "http://www.springframework.org/spring-ws/include",
+                        document.getTargetNamespace());
+                verifyDocument("including.xsd", document);
+                assertEquals("Invalid amount of element declarations", 1, elementDeclarations.length);
+                assertEquals("Invalid element declaration name",
+                        new QName("http://www.springframework.org/spring-ws/include", "customElement"),
+                        elementDeclarations[0].getName());
+            }
+            else if ("included.xsd".equals(document.getFilename())) {
+                assertEquals("Invalid target namespace", "http://www.springframework.org/spring-ws/include",
+                        document.getTargetNamespace());
+                verifyDocument("included.xsd", document);
+                assertEquals("Invalid amount of element declarations", 1, elementDeclarations.length);
+                assertEquals("Invalid element declaration name",
+                        new QName("http://www.springframework.org/spring-ws/include", "stringElement"),
+                        elementDeclarations[0].getName());
+            }
+            else {
+                fail("Invalid filename: " + document.getFilename());
+            }
+        }
     }
 
     public void testImport() throws Exception {
         XsdSchema schema =
                 createSchema(new Resource[]{new ClassPathResource("importing.xsd", AbstractXsdSchemaTestCase.class)});
+        XmlValidator validator = schema.getValidator();
+        assertNotNull("No validator returned", validator);
         XsdSchemaDocument[] documents = schema.getSchemaDocuments();
         assertEquals("Invalid amount of schema documents", 2, documents.length);
-        assertNotNull("Document is null", documents[0]);
-        assertEquals("Invalid target namespace", "http://www.springframework.org/spring-ws/importing",
-                documents[0].getTargetNamespace());
-        verifyDocument("importing.xsd", documents[0]);
-        assertEquals("Invalid amount of element declarations", 1, documents[0].getElementDeclarations().length);
-        assertEquals("Invalid element declaration name",
-                new QName("http://www.springframework.org/spring-ws/importing", "customElement"),
-                documents[0].getElementDeclarations()[0].getName());
-        assertNotNull("Document is null", documents[1]);
-        assertEquals("Invalid target namespace", "http://www.springframework.org/spring-ws/imported",
-                documents[1].getTargetNamespace());
-        assertEquals("Invalid amount of element declarations", 1, documents[1].getElementDeclarations().length);
-        assertEquals("Invalid element declaration name",
-                new QName("http://www.springframework.org/spring-ws/imported", "stringElement"),
-                documents[1].getElementDeclarations()[0].getName());
+        for (int i = 0; i < documents.length; i++) {
+            XsdSchemaDocument document = documents[i];
+            assertNotNull("Document is null", document);
+            XsdElementDeclaration[] elementDeclarations = document.getElementDeclarations();
+            if ("importing.xsd".equals(document.getFilename())) {
+                assertEquals("Invalid target namespace", "http://www.springframework.org/spring-ws/importing",
+                        document.getTargetNamespace());
+                verifyDocument("importing.xsd", document);
+                assertEquals("Invalid amount of element declarations", 1, elementDeclarations.length);
+                assertEquals("Invalid element declaration name",
+                        new QName("http://www.springframework.org/spring-ws/importing", "customElement"),
+                        elementDeclarations[0].getName());
+            }
+            else if ("imported.xsd".equals(document.getFilename())) {
+                assertEquals("Invalid target namespace", "http://www.springframework.org/spring-ws/imported",
+                        document.getTargetNamespace());
+                verifyDocument("imported.xsd", document);
+                assertEquals("Invalid amount of element declarations", 1, elementDeclarations.length);
+                assertEquals("Invalid element declaration name",
+                        new QName("http://www.springframework.org/spring-ws/imported", "stringElement"),
+                        elementDeclarations[0].getName());
+            }
+            else {
+                fail("Invalid filename: " + document.getFilename());
+            }
+        }
     }
 
     private void verifyDocument(String filename, XsdSchemaDocument document)
