@@ -19,7 +19,7 @@ package org.springframework.ws.transport.http;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
-import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 import javax.wsdl.Definition;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
@@ -71,14 +71,10 @@ public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
     public void testHandleNonGet() throws Exception {
         request.setMethod("POST");
         definitionControl.replay();
-        try {
-            adapter.handle(request, response, definitionMock);
-            fail("ServletException expected");
-        }
-        catch (ServletException ex) {
-            // expected
-        }
+        adapter.handle(request, response, definitionMock);
         definitionControl.verify();
+        assertEquals("METHOD_NOT_ALLOWED expected", HttpServletResponse.SC_METHOD_NOT_ALLOWED, response.getStatus());
+
     }
 
     public void testTransformLocations() throws Exception {

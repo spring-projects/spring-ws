@@ -16,6 +16,7 @@
 
 package org.springframework.ws.transport.http;
 
+import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -71,6 +72,15 @@ public class MessageDispatcherServlet extends FrameworkServlet {
     public static final String DEFAULT_MESSAGE_RECEIVER_BEAN_NAME = "messageReceiver";
 
     /**
+     * Well-known name for the {@link WebServiceMessageReceiverHandlerAdapter} object in the bean factory for this
+     * namespace.
+     */
+    public static final String DEFAULT_MESSAGE_RECEIVER_HANDLER_ADAPTER_BEAN_NAME = "messageReceiverHandlerAdapter";
+
+    /** Well-known name for the {@link WsdlDefinitionHandlerAdapter} object in the bean factory for this namespace. */
+    public static final String DEFAULT_WSDL_DEFINITION_HANDLER_ADAPTER_BEAN_NAME = "wsdlDefinitionHandlerAdapter";
+
+    /**
      * Name of the class path resource (relative to the {@link MessageDispatcherServlet} class) that defines
      * <code>MessageDispatcherServlet's</code> default strategy names.
      */
@@ -83,12 +93,15 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 
     private String messageFactoryBeanName = DEFAULT_MESSAGE_FACTORY_BEAN_NAME;
 
+    private String messageReceiverHandlerAdapterBeanName = DEFAULT_MESSAGE_RECEIVER_HANDLER_ADAPTER_BEAN_NAME;
+
     /** The {@link WebServiceMessageReceiverHandlerAdapter} used by this servlet. */
-    private WebServiceMessageReceiverHandlerAdapter messageReceiverHandlerAdapter =
-            new WebServiceMessageReceiverHandlerAdapter();
+    private WebServiceMessageReceiverHandlerAdapter messageReceiverHandlerAdapter;
+
+    private String wsdlDefinitionHandlerAdapterBeanName = DEFAULT_WSDL_DEFINITION_HANDLER_ADAPTER_BEAN_NAME;
 
     /** The {@link WsdlDefinitionHandlerAdapter} used by this servlet. */
-    private WsdlDefinitionHandlerAdapter wsdlDefinitionHandlerAdapter = new WsdlDefinitionHandlerAdapter();
+    private WsdlDefinitionHandlerAdapter wsdlDefinitionHandlerAdapter;
 
     private String messageReceiverBeanName = DEFAULT_MESSAGE_RECEIVER_BEAN_NAME;
 
@@ -140,6 +153,32 @@ public class MessageDispatcherServlet extends FrameworkServlet {
         return transformWsdlLocations;
     }
 
+    /** Returns the bean name used to lookup a {@link WebServiceMessageReceiverHandlerAdapter}. */
+    public String getMessageReceiverHandlerAdapterBeanName() {
+        return messageReceiverHandlerAdapterBeanName;
+    }
+
+    /**
+     * Sets the bean name used to lookup a {@link WebServiceMessageReceiverHandlerAdapter}. Defaults to {@link
+     * #DEFAULT_MESSAGE_RECEIVER_HANDLER_ADAPTER_BEAN_NAME}.
+     */
+    public void setMessageReceiverHandlerAdapterBeanName(String messageReceiverHandlerAdapterBeanName) {
+        this.messageReceiverHandlerAdapterBeanName = messageReceiverHandlerAdapterBeanName;
+    }
+
+    /** Returns the bean name used to lookup a {@link WsdlDefinitionHandlerAdapter}. */
+    public String getWsdlDefinitionHandlerAdapterBeanName() {
+        return wsdlDefinitionHandlerAdapterBeanName;
+    }
+
+    /**
+     * Sets the bean name used to lookup a {@link WsdlDefinitionHandlerAdapter}. Defaults to {@link
+     * #DEFAULT_WSDL_DEFINITION_HANDLER_ADAPTER_BEAN_NAME}.
+     */
+    public void setWsdlDefinitionHandlerAdapterBeanName(String wsdlDefinitionHandlerAdapterBeanName) {
+        this.wsdlDefinitionHandlerAdapterBeanName = wsdlDefinitionHandlerAdapterBeanName;
+    }
+
     /**
      * Sets whether relative address locations in the WSDL are to be transformed using the request URI of the incoming
      * {@link HttpServletRequest}. Defaults to <code>false</code>.
@@ -160,7 +199,8 @@ public class MessageDispatcherServlet extends FrameworkServlet {
     }
 
     protected void initFrameworkServlet() throws ServletException, BeansException {
-        initHandlerAdapters();
+        initMessageReceiverHandlerAdapter();
+        initWsdlDefinitionHandlerAdapter();
         initMessageReceiver();
         initWsdlDefinitions();
     }
@@ -200,23 +240,25 @@ public class MessageDispatcherServlet extends FrameworkServlet {
         }
     }
 
-    private void initHandlerAdapters() throws BeansException {
+    private void initMessageReceiverHandlerAdapter() {
         try {
-            // setup the receiver adapter
-            messageReceiverHandlerAdapter = new WebServiceMessageReceiverHandlerAdapter();
+            try {
+                messageReceiverHandlerAdapter = (WebServiceMessageReceiverHandlerAdapter) getWebApplicationContext()
+                        .getBean(getMessageReceiverHandlerAdapterBeanName(),
+                                WebServiceMessageReceiverHandlerAdapter.class);
+            }
+            catch (NoSuchBeanDefinitionException ignored) {
+                messageReceiverHandlerAdapter = new WebServiceMessageReceiverHandlerAdapter();
+            }
             initWebServiceMessageFactory();
             messageReceiverHandlerAdapter.afterPropertiesSet();
-            // setup the wsdl adapter
-            wsdlDefinitionHandlerAdapter = new WsdlDefinitionHandlerAdapter();
-            wsdlDefinitionHandlerAdapter.setTransformLocations(isTransformWsdlLocations());
-            wsdlDefinitionHandlerAdapter.afterPropertiesSet();
         }
         catch (Exception ex) {
-            throw new BeanInitializationException("Could not initialize handler adapters", ex);
+            throw new BeanInitializationException("Could not initialize WebServiceMessageReceiverHandlerAdapter", ex);
         }
     }
 
-    private void initWebServiceMessageFactory() throws Exception {
+    private void initWebServiceMessageFactory() {
         WebServiceMessageFactory messageFactory;
         try {
             messageFactory = (WebServiceMessageFactory) getWebApplicationContext()
@@ -230,6 +272,24 @@ public class MessageDispatcherServlet extends FrameworkServlet {
             }
         }
         messageReceiverHandlerAdapter.setMessageFactory(messageFactory);
+    }
+
+    private void initWsdlDefinitionHandlerAdapter() {
+        try {
+            try {
+                wsdlDefinitionHandlerAdapter = (WsdlDefinitionHandlerAdapter) getWebApplicationContext()
+                        .getBean(getWsdlDefinitionHandlerAdapterBeanName(), WsdlDefinitionHandlerAdapter.class);
+
+            }
+            catch (NoSuchBeanDefinitionException ignored) {
+                wsdlDefinitionHandlerAdapter = new WsdlDefinitionHandlerAdapter();
+            }
+            wsdlDefinitionHandlerAdapter.setTransformLocations(isTransformWsdlLocations());
+            wsdlDefinitionHandlerAdapter.afterPropertiesSet();
+        }
+        catch (Exception ex) {
+            throw new BeanInitializationException("Could not initialize WsdlDefinitionHandlerAdapter", ex);
+        }
     }
 
     private void initMessageReceiver() {
@@ -253,5 +313,13 @@ public class MessageDispatcherServlet extends FrameworkServlet {
     private void initWsdlDefinitions() {
         wsdlDefinitions = BeanFactoryUtils
                 .beansOfTypeIncludingAncestors(getWebApplicationContext(), WsdlDefinition.class, true, false);
+        if (logger.isDebugEnabled()) {
+            for (Iterator iterator = wsdlDefinitions.entrySet().iterator(); iterator.hasNext();) {
+                Map.Entry entry = (Map.Entry) iterator.next();
+                String beanName = (String) entry.getKey();
+                WsdlDefinition definition = (WsdlDefinition) entry.getValue();
+                logger.debug("Exposing [" + definition + "] as " + beanName + WSDL_SUFFIX_NAME);
+            }
+        }
     }
 }
