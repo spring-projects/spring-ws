@@ -26,6 +26,8 @@ import org.springframework.xml.sax.AbstractXmlReader;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
@@ -39,7 +41,15 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class SaajXmlReader extends AbstractXmlReader {
 
+    private static final String NAMESPACES_FEATURE_NAME = "http://xml.org/sax/features/namespaces";
+
+    private static final String NAMESPACE_PREFIXES_FEATURE_NAME = "http://xml.org/sax/features/namespace-prefixes";
+
     private final Node startNode;
+
+    private boolean namespacesFeature = true;
+
+    private boolean namespacePrefixesFeature = false;
 
     /**
      * Constructs a new instance of the <code>SaajXmlReader</code> that reads from the given <code>Node</code>.
@@ -48,6 +58,30 @@ public class SaajXmlReader extends AbstractXmlReader {
      */
     public SaajXmlReader(Node startNode) {
         this.startNode = startNode;
+    }
+
+    public boolean getFeature(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
+        if (NAMESPACES_FEATURE_NAME.equals(name)) {
+            return namespacesFeature;
+        }
+        else if (NAMESPACE_PREFIXES_FEATURE_NAME.equals(name)) {
+            return namespacePrefixesFeature;
+        }
+        else {
+            return super.getFeature(name);
+        }
+    }
+
+    public void setFeature(String name, boolean value) throws SAXNotRecognizedException, SAXNotSupportedException {
+        if (NAMESPACES_FEATURE_NAME.equals(name)) {
+            this.namespacesFeature = value;
+        }
+        else if (NAMESPACE_PREFIXES_FEATURE_NAME.equals(name)) {
+            this.namespacePrefixesFeature = value;
+        }
+        else {
+            super.setFeature(name, value);
+        }
     }
 
     /**
@@ -94,35 +128,38 @@ public class SaajXmlReader extends AbstractXmlReader {
         }
     }
 
-    private void handleText(Text text) throws SAXException {
-        if (getContentHandler() != null) {
-            char[] ch = text.getValue().toCharArray();
-            getContentHandler().characters(ch, 0, ch.length);
-        }
-    }
-
     private void handleElement(SOAPElement element) throws SAXException {
         Name elementName = element.getElementName();
         if (getContentHandler() != null) {
-            for (Iterator iterator = element.getNamespacePrefixes(); iterator.hasNext();) {
-                String prefix = (String) iterator.next();
-                String namespaceUri = element.getNamespaceURI(prefix);
-                getContentHandler().startPrefixMapping(prefix, namespaceUri);
+            if (namespacesFeature) {
+                for (Iterator iterator = element.getNamespacePrefixes(); iterator.hasNext();) {
+                    String prefix = (String) iterator.next();
+                    String namespaceUri = element.getNamespaceURI(prefix);
+                    getContentHandler().startPrefixMapping(prefix, namespaceUri);
+                }
+                getContentHandler()
+                        .startElement(elementName.getURI(), elementName.getLocalName(), elementName.getQualifiedName(),
+                                getAttributes(element));
             }
-            getContentHandler()
-                    .startElement(elementName.getURI(), elementName.getLocalName(), elementName.getQualifiedName(),
-                            getAttributes(element));
+            else {
+                getContentHandler().startElement("", "", elementName.getQualifiedName(), getAttributes(element));
+            }
         }
         for (Iterator iterator = element.getChildElements(); iterator.hasNext();) {
             Node child = (Node) iterator.next();
             handleNode(child);
         }
         if (getContentHandler() != null) {
-            getContentHandler()
-                    .endElement(elementName.getURI(), elementName.getLocalName(), elementName.getQualifiedName());
-            for (Iterator iterator = element.getNamespacePrefixes(); iterator.hasNext();) {
-                String prefix = (String) iterator.next();
-                getContentHandler().endPrefixMapping(prefix);
+            if (namespacesFeature) {
+                getContentHandler()
+                        .endElement(elementName.getURI(), elementName.getLocalName(), elementName.getQualifiedName());
+                for (Iterator iterator = element.getNamespacePrefixes(); iterator.hasNext();) {
+                    String prefix = (String) iterator.next();
+                    getContentHandler().endPrefixMapping(prefix);
+                }
+            }
+            else {
+                getContentHandler().endElement("", "", elementName.getQualifiedName());
             }
         }
     }
@@ -135,8 +172,20 @@ public class SaajXmlReader extends AbstractXmlReader {
             attributes.addAttribute(attributeName.getURI(), attributeName.getLocalName(),
                     attributeName.getQualifiedName(), "CDATA", attributeValue);
         }
+        if (namespacePrefixesFeature || !namespacesFeature) {
+            for (Iterator iterator = element.getNamespacePrefixes(); iterator.hasNext();) {
+                String prefix = (String) iterator.next();
+                String namespaceUri = element.getNamespaceURI(prefix);
+                attributes.addAttribute("", "", "xmlns:" + prefix, "CDATA", namespaceUri);
+            }
+        }
         return attributes;
     }
 
-
+    private void handleText(Text text) throws SAXException {
+        if (getContentHandler() != null) {
+            char[] ch = text.getValue().toCharArray();
+            getContentHandler().characters(ch, 0, ch.length);
+        }
+    }
 }
