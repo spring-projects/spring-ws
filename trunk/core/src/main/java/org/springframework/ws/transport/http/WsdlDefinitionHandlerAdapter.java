@@ -19,7 +19,6 @@ package org.springframework.ws.transport.http;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.Source;
@@ -114,22 +113,24 @@ public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport imple
 
     public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        if (!"GET".equals(request.getMethod())) {
-            throw new ServletException("Request method '" + request.getMethod() + "' not supported");
+        if ("GET".equals(request.getMethod())) {
+            response.setContentType(CONTENT_TYPE);
+            Transformer transformer = createTransformer();
+            WsdlDefinition definition = (WsdlDefinition) handler;
+            Source definitionSource = definition.getSource();
+            if (transformLocations) {
+                DOMResult domResult = new DOMResult();
+                transformer.transform(definitionSource, domResult);
+                Document definitionDocument = (Document) domResult.getNode();
+                transformLocations(definitionDocument, request);
+                definitionSource = new DOMSource(definitionDocument);
+            }
+            StreamResult responseResult = new StreamResult(response.getOutputStream());
+            transformer.transform(definitionSource, responseResult);
         }
-        response.setContentType(CONTENT_TYPE);
-        Transformer transformer = createTransformer();
-        WsdlDefinition definition = (WsdlDefinition) handler;
-        Source definitionSource = definition.getSource();
-        if (transformLocations) {
-            DOMResult domResult = new DOMResult();
-            transformer.transform(definitionSource, domResult);
-            Document definitionDocument = (Document) domResult.getNode();
-            transformLocations(definitionDocument, request);
-            definitionSource = new DOMSource(definitionDocument);
+        else {
+            response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
         }
-        StreamResult responseResult = new StreamResult(response.getOutputStream());
-        transformer.transform(definitionSource, responseResult);
         return null;
     }
 

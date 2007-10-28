@@ -55,12 +55,11 @@ public class WebServiceMessageReceiverHandlerAdapter extends WebServiceMessageRe
         if ("POST".equals(httpServletRequest.getMethod())) {
             WebServiceConnection connection = new HttpServletConnection(httpServletRequest, httpServletResponse);
             handleConnection(connection, (WebServiceMessageReceiver) handler);
-            return null;
         }
         else {
             httpServletResponse.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-            return null;
         }
+        return null;
     }
 
     public boolean supports(Object handler) {
