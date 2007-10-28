@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.xml.xsd;
+package org.springframework.xml.schema.xsd;
 
 import org.springframework.core.io.Resource;
 

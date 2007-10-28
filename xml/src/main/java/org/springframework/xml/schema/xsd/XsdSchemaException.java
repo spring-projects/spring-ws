@@ -1,5 +1,5 @@
 /*
- * Copyright ${YEAR} the original author or authors.
+ * Copyright 2006 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 
-package org.springframework.xml.xsd;
+package org.springframework.xml.schema.xsd;
 
-import java.io.IOException;
+import org.springframework.xml.schema.SchemaException;
 
-import org.springframework.core.io.Resource;
+/**
+ * Base class for all XSD schema exceptions.
+ *
+ * @author Arjen Poutsma
+ * @since 1.0.2
+ */
+public class XsdSchemaException extends SchemaException {
 
-public class WsCommonsXsdSchemaTest extends AbstractXsdSchemaTestCase {
-
-    protected XsdSchema createSchemaInternal(Resource[] schemaResources) throws IOException {
-        return new WsCommonsXsdSchema(schemaResources);
+    public XsdSchemaException(String reason) {
+        super(reason);
     }
 
+    public XsdSchemaException(String reason, Throwable throwable) {
+        super(reason, throwable);
+    }
 }
