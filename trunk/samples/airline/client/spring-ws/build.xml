@@ -48,11 +48,10 @@
         <delete dir="${gen.dir}"/>
     </target>
 
-    <target name="run" depends="echo"/>
+    <target name="run" depends="getFlights"/>
 
-    <target name="echo" depends="build">
-        <java classname="org.springframework.ws.samples.airline.client.sws.AirlineClient"
-              fork="true"
+    <target name="getFlights" depends="build">
+        <java classname="org.springframework.ws.samples.airline.client.sws.AirlineClient" fork="true"
               failonerror="true">
             <classpath refid="classpath"/>
             <classpath location="${bin.dir}"/>
