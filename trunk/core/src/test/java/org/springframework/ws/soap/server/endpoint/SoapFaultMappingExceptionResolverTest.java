@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap.server.endpoint;
 
+import java.io.IOException;
 import java.util.Locale;
 import java.util.Properties;
 import javax.xml.soap.MessageFactory;
@@ -164,6 +165,28 @@ public class SoapFaultMappingExceptionResolverTest extends XMLTestCase {
         assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getClientOrSenderFaultName(),
                 fault.getFaultCode());
         assertEquals("Invalid fault string on fault", "faultstring", fault.getFaultStringOrReason());
+        assertNull("Detail on fault", fault.getFaultDetail());
+    }
+
+    public void testResolveNoMessageException() throws Exception {
+        Properties mappings = new Properties();
+        mappings.setProperty(IOException.class.getName(), "SERVER");
+        resolver.setExceptionMappings(mappings);
+
+        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+        SOAPMessage message = messageFactory.createMessage();
+        SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
+        MessageContext context = new DefaultMessageContext(new SaajSoapMessage(message), factory);
+
+        boolean result = resolver.resolveException(context, null, new IOException());
+        assertTrue("resolveException returns false", result);
+        assertTrue("Context has no response", context.hasResponse());
+        SoapMessage response = (SoapMessage) context.getResponse();
+        assertTrue("Response has no fault", response.getSoapBody().hasFault());
+        Soap11Fault fault = (Soap11Fault) response.getSoapBody().getFault();
+        assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getServerOrReceiverFaultName(),
+                fault.getFaultCode());
+        assertEquals("Invalid fault string on fault", "java.io.IOException", fault.getFaultStringOrReason());
         assertNull("Detail on fault", fault.getFaultDetail());
     }
 

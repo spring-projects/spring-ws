@@ -24,6 +24,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.util.Assert;
+import org.springframework.validation.Validator;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.support.MarshallingUtils;
@@ -49,6 +50,8 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
     private Marshaller marshaller;
 
     private Unmarshaller unmarshaller;
+
+    private Validator[] validators;
 
     /**
      * Creates a new <code>AbstractMarshallingPayloadEndpoint</code>. The {@link Marshaller} and {@link Unmarshaller}
@@ -117,6 +120,30 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
     /** Sets the unmarshaller used for transforming XML into objects. */
     public final void setUnmarshaller(Unmarshaller unmarshaller) {
         this.unmarshaller = unmarshaller;
+    }
+
+    /**
+     * Set the primary {@link Validator} for this endpoint. The {@link Validator} is must support the specified command
+     * class. If there are one or more existing validators set already when this method is called, only the specified
+     * validator will be kept. Use {@link #setValidators(Validator[])} to set multiple validators.
+     */
+    public final void setValidator(Validator validator) {
+        this.validators = new Validator[]{validator};
+    }
+
+    /** Return the primary Validator for this controller. */
+    public final Validator getValidator() {
+        return (this.validators != null && this.validators.length > 0 ? this.validators[0] : null);
+    }
+
+    /** Set the Validators for this controller. The Validator must support the specified command class. */
+    public final void setValidators(Validator[] validators) {
+        this.validators = validators;
+    }
+
+    /** Return the Validators for this controller. */
+    public final Validator[] getValidators() {
+        return validators;
     }
 
     public final void afterPropertiesSet() throws Exception {
