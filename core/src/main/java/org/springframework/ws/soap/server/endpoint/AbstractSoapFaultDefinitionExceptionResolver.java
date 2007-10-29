@@ -66,7 +66,8 @@ public abstract class AbstractSoapFaultDefinitionExceptionResolver extends Abstr
             return false;
         }
         if (!StringUtils.hasLength(definition.getFaultStringOrReason())) {
-            definition.setFaultStringOrReason(ex.getMessage());
+            String faultString = StringUtils.hasLength(ex.getMessage()) ? ex.getMessage() : ex.toString();
+            definition.setFaultStringOrReason(faultString);
         }
         SoapBody soapBody = ((SoapMessage) messageContext.getResponse()).getSoapBody();
         SoapFault fault = null;
