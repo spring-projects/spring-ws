@@ -67,14 +67,17 @@ public interface AirlineService {
      * @param passengers    the list of passengers for the flight to book. Can be either {@link Passenger} objects with
      *                      a first and last name, or {@link FrequentFlyer} objects with a username.
      * @return the created ticket
-     * @throws NoSuchFlightException    if a flight with the specified flight number and departure time does not exist
-     * @throws NoSeatAvailableException if not enough seats are available for the flight
+     * @throws NoSuchFlightException        if a flight with the specified flight number and departure time does not
+     *                                      exist
+     * @throws NoSeatAvailableException     if not enough seats are available for the flight
+     * @throws NoSuchFrequentFlyerException if a specified {@link FrequentFlyer} cannot be found
      * @see org.springframework.ws.samples.airline.domain.Passenger
      * @see org.springframework.ws.samples.airline.domain.FrequentFlyer
      */
-    @Transactional(rollbackFor = {NoSuchFlightException.class, NoSeatAvailableException.class})
+    @Transactional(readOnly = false,
+            rollbackFor = {NoSuchFlightException.class, NoSeatAvailableException.class, NoSuchFrequentFlyerException.class})
     Ticket bookFlight(String flightNumber, DateTime departureTime, List<Passenger> passengers)
-            throws NoSuchFlightException, NoSeatAvailableException;
+            throws NoSuchFlightException, NoSeatAvailableException, NoSuchFrequentFlyerException;
 
     /**
      * Returns the amount of frequent flyer award miles for the currently logged in frequent flyer.

@@ -17,6 +17,7 @@
 package org.springframework.ws.samples.airline.security;
 
 import org.springframework.ws.samples.airline.domain.FrequentFlyer;
+import org.springframework.ws.samples.airline.service.NoSuchFrequentFlyerException;
 
 /**
  * Stub implementation of <code>FrequentFlyerSecurityService</code>. This implementation is used by default by {@link
@@ -34,12 +35,12 @@ public class StubFrequentFlyerSecurityService implements FrequentFlyerSecuritySe
         john.setMiles(10);
     }
 
-    public FrequentFlyer getFrequentFlyer(String username) {
+    public FrequentFlyer getFrequentFlyer(String username) throws NoSuchFrequentFlyerException {
         if (john.getUsername().equals(username)) {
             return john;
         }
         else {
-            return null;
+            throw new NoSuchFrequentFlyerException(username);
         }
     }
 

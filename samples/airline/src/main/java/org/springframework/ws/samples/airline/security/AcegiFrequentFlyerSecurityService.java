@@ -26,6 +26,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ws.samples.airline.dao.FrequentFlyerDao;
 import org.springframework.ws.samples.airline.domain.FrequentFlyer;
+import org.springframework.ws.samples.airline.service.NoSuchFrequentFlyerException;
 
 /**
  * Implementation of the <code>FrequentFlyerSecurityService</code> that uses Acegi.
@@ -59,8 +60,14 @@ public class AcegiFrequentFlyerSecurityService implements FrequentFlyerSecurityS
     }
 
     @Transactional
-    public FrequentFlyer getFrequentFlyer(String username) {
-        return frequentFlyerDao.get(username);
+    public FrequentFlyer getFrequentFlyer(String username) throws NoSuchFrequentFlyerException {
+        FrequentFlyer frequentFlyer = frequentFlyerDao.get(username);
+        if (frequentFlyer != null) {
+            return frequentFlyer;
+        }
+        else {
+            throw new NoSuchFrequentFlyerException(username);
+        }
     }
 
     @Transactional

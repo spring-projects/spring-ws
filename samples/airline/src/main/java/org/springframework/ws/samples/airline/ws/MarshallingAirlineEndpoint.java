@@ -42,6 +42,7 @@ import org.springframework.ws.samples.airline.schema.support.SchemaConversionUti
 import org.springframework.ws.samples.airline.service.AirlineService;
 import org.springframework.ws.samples.airline.service.NoSeatAvailableException;
 import org.springframework.ws.samples.airline.service.NoSuchFlightException;
+import org.springframework.ws.samples.airline.service.NoSuchFrequentFlyerException;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 
@@ -107,8 +108,8 @@ public class MarshallingAirlineEndpoint implements AirlineWebServiceConstants {
      * @return the JAXB2 representation of a <code>&lt;BookFlightResponse&gt;</code>
      */
     @PayloadRoot(localPart = BOOK_FLIGHT_REQUEST, namespace = NAMESPACE)
-    public JAXBElement<Ticket> bookFlight(BookFlightRequest request)
-            throws NoSeatAvailableException, DatatypeConfigurationException, NoSuchFlightException {
+    public JAXBElement<Ticket> bookFlight(BookFlightRequest request) throws NoSeatAvailableException,
+            DatatypeConfigurationException, NoSuchFlightException, NoSuchFrequentFlyerException {
         if (logger.isDebugEnabled()) {
             logger.debug("Received BookingFlightRequest '" + request.getFlightNumber() + "' on '" +
                     request.getDepartureTime() + "' for " + request.getPassengers().getPassengerOrUsername());
@@ -121,8 +122,8 @@ public class MarshallingAirlineEndpoint implements AirlineWebServiceConstants {
     /** Converts between the domain and schema types. */
     private Ticket bookSchemaFlight(String flightNumber,
                                     XMLGregorianCalendar xmlDepartureTime,
-                                    List<Object> passengerOrUsernameList)
-            throws NoSeatAvailableException, NoSuchFlightException, DatatypeConfigurationException {
+                                    List<Object> passengerOrUsernameList) throws NoSeatAvailableException,
+            NoSuchFlightException, NoSuchFrequentFlyerException, DatatypeConfigurationException {
         DateTime departureTime = SchemaConversionUtils.toDateTime(xmlDepartureTime);
         List<Passenger> passengers = new ArrayList<Passenger>(passengerOrUsernameList.size());
         for (Iterator<Object> iterator = passengerOrUsernameList.iterator(); iterator.hasNext();) {

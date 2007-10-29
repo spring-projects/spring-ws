@@ -42,6 +42,7 @@ import org.springframework.ws.samples.airline.schema.support.SchemaConversionUti
 import org.springframework.ws.samples.airline.service.AirlineService;
 import org.springframework.ws.samples.airline.service.NoSeatAvailableException;
 import org.springframework.ws.samples.airline.service.NoSuchFlightException;
+import org.springframework.ws.samples.airline.service.NoSuchFrequentFlyerException;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.XPathParam;
@@ -119,8 +120,9 @@ public class XPathAirlineEndpoint implements AirlineWebServiceConstants {
     public Source bookFlight(@XPathParam("//tns:flightNumber")String flightNumber,
                              @XPathParam("//tns:departureTime")String departureTimeString,
                              @XPathParam("//tns:passengers/tns:passenger")NodeList passengerNodes,
-                             @XPathParam("//tns:passengers/tns:username")NodeList frequentFlyerNodes)
-            throws NoSeatAvailableException, NoSuchFlightException, DatatypeConfigurationException, JAXBException {
+                             @XPathParam("//tns:passengers/tns:username")NodeList frequentFlyerNodes) throws
+            NoSeatAvailableException, NoSuchFlightException, NoSuchFrequentFlyerException,
+            DatatypeConfigurationException, JAXBException {
         if (logger.isDebugEnabled()) {
             logger.debug("Received BookingFlightRequest '" + flightNumber + "' on '" + departureTimeString + "' for " +
                     passengerNodes.getLength() + " passengers and " + frequentFlyerNodes.getLength() +
