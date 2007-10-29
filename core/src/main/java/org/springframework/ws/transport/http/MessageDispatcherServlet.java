@@ -318,7 +318,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
                 Map.Entry entry = (Map.Entry) iterator.next();
                 String beanName = (String) entry.getKey();
                 WsdlDefinition definition = (WsdlDefinition) entry.getValue();
-                logger.debug("Exposing [" + definition + "] as " + beanName + WSDL_SUFFIX_NAME);
+                logger.debug("Published [" + definition + "] as " + beanName + WSDL_SUFFIX_NAME);
             }
         }
     }
