@@ -33,8 +33,6 @@ import javax.wsdl.Service;
 import javax.wsdl.WSDLException;
 import javax.xml.namespace.QName;
 
-import org.springframework.ws.wsdl.wsdl11.Wsdl4jDefinitionException;
-
 /**
  * Abstract base class for <code>Wsdl11DefinitionBuilder</code> implementations that use WSDL4J and contain a concrete
  * part. Creates a <code>binding</code> that matches any present <code>portType</code>, and a service containing
@@ -73,19 +71,14 @@ public abstract class AbstractBindingWsdl4jDefinitionBuilder extends AbstractWsd
      * @see #populateBindingFault(javax.wsdl.BindingFault,javax.wsdl.Fault)
      */
     public void buildBindings(Definition definition) throws WSDLException {
-        try {
-            for (Iterator iterator = definition.getPortTypes().values().iterator(); iterator.hasNext();) {
-                PortType portType = (PortType) iterator.next();
-                Binding binding = definition.createBinding();
-                binding.setPortType(portType);
-                populateBinding(binding, portType);
-                createBindingOperations(definition, binding, portType);
-                binding.setUndefined(false);
-                definition.addBinding(binding);
-            }
-        }
-        catch (WSDLException ex) {
-            throw new Wsdl4jDefinitionException(ex);
+        for (Iterator iterator = definition.getPortTypes().values().iterator(); iterator.hasNext();) {
+            PortType portType = (PortType) iterator.next();
+            Binding binding = definition.createBinding();
+            binding.setPortType(portType);
+            populateBinding(binding, portType);
+            createBindingOperations(definition, binding, portType);
+            binding.setUndefined(false);
+            definition.addBinding(binding);
         }
     }
 

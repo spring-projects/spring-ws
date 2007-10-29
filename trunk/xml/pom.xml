@@ -74,12 +74,6 @@
             <artifactId>wstx-asl</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- XSD dependencies -->
-        <dependency>
-            <groupId>org.apache.ws.commons.schema</groupId>
-            <artifactId>XmlSchema</artifactId>
-            <optional>true</optional>
-        </dependency>
         <!-- Test dependencies -->
         <dependency>
             <groupId>easymock</groupId>

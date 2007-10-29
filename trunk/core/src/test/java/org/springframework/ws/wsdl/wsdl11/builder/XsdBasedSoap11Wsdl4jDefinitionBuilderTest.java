@@ -34,15 +34,17 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilderTest extends XMLTestCase {
 
     private Transformer transformer;
 
+    private DocumentBuilder documentBuilder;
+
     protected void setUp() throws Exception {
         builder = new XsdBasedSoap11Wsdl4jDefinitionBuilder();
-        builder.setSchema(new ClassPathResource("schema.xsd", getClass()));
-        builder.setPortTypeName("Airline");
-        builder.setTargetNamespace("http://www.springframework.org/spring-ws/wsdl/definitions");
         builder.setLocationUri("http://localhost:8080/");
-        builder.afterPropertiesSet();
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         transformer = transformerFactory.newTransformer();
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(true);
+        documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        XMLUnit.setIgnoreWhitespace(true);
     }
 
     public void testNonExistingSchema() throws Exception {
@@ -55,30 +57,94 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilderTest extends XMLTestCase {
         }
     }
 
-    public void testInline() throws Exception {
-        builder.buildDefinition();
-        builder.buildImports();
-        builder.buildTypes();
-        builder.buildMessages();
-        builder.buildPortTypes();
-        builder.buildBindings();
-        builder.buildServices();
+    public void testSingle() throws Exception {
+        builder.setSchema(new ClassPathResource("single.xsd", getClass()));
+        builder.setPortTypeName("Order");
+        builder.setTargetNamespace("http://www.springframework.org/spring-ws/single/definitions");
+        builder.afterPropertiesSet();
+
+        buildAll();
+
         Wsdl11Definition definition = builder.getDefinition();
         DOMResult domResult = new DOMResult();
         transformer.transform(definition.getSource(), domResult);
 
         Document result = (Document) domResult.getNode();
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        documentBuilderFactory.setNamespaceAware(true);
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document expected = documentBuilder.parse(getClass().getResourceAsStream("inline.wsdl"));
+        Document expected = documentBuilder.parse(getClass().getResourceAsStream("single-inline.wsdl"));
+        assertXMLEqual("Invalid WSDL built", expected, result);
+    }
+
+    public void testSingleImport() throws Exception {
+        builder.setSchema(new ClassPathResource("single.xsd", getClass()));
+        builder.setSchemaLocation("single.xsd");
+        builder.setPortTypeName("Order");
+        builder.setTargetNamespace("http://www.springframework.org/spring-ws/single/definitions");
+        builder.afterPropertiesSet();
+
+        buildAll();
+
+        Wsdl11Definition definition = builder.getDefinition();
+        DOMResult domResult = new DOMResult();
+        transformer.transform(definition.getSource(), domResult);
+
+        Document result = (Document) domResult.getNode();
+        Document expected = documentBuilder.parse(getClass().getResourceAsStream("single-import.wsdl"));
+        assertXMLEqual("Invalid WSDL built", expected, result);
+    }
+
+    public void testFollowIncluding() throws Exception {
+        builder.setSchema(new ClassPathResource("including.xsd", getClass()));
+        builder.setPortTypeName("Order");
+        builder.setTargetNamespace("http://www.springframework.org/spring-ws/include/definitions");
+        builder.setFollowIncludeImport(true);
+        builder.afterPropertiesSet();
+
+        buildAll();
+
+        Wsdl11Definition definition = builder.getDefinition();
+        DOMResult domResult = new DOMResult();
+        transformer.transform(definition.getSource(), domResult);
+
+        Document result = (Document) domResult.getNode();
+        Document expected = documentBuilder.parse(getClass().getResourceAsStream("include-inline.wsdl"));
+        assertXMLEqual("Invalid WSDL built", expected, result);
+    }
+
+    public void testFollowImport() throws Exception {
+        builder.setSchema(new ClassPathResource("importing.xsd", getClass()));
+        builder.setPortTypeName("Order");
+        builder.setTargetNamespace("http://www.springframework.org/spring-ws/import/definitions");
+        builder.setFollowIncludeImport(true);
+        builder.afterPropertiesSet();
+
+        buildAll();
+
+        Wsdl11Definition definition = builder.getDefinition();
+        DOMResult domResult = new DOMResult();
+        transformer.transform(definition.getSource(), domResult);
+
+        Document result = (Document) domResult.getNode();
+        Document expected = documentBuilder.parse(getClass().getResourceAsStream("import-inline.wsdl"));
+        assertXMLEqual("Invalid WSDL built", expected, result);
+    }
+
+    public void testAirline() throws Exception {
+        builder.setSchema(new ClassPathResource("airline.xsd", getClass()));
+        builder.setPortTypeName("Airline");
+        builder.setTargetNamespace("http://www.springframework.org/spring-ws/samples/airline/definitions");
+        builder.afterPropertiesSet();
+        buildAll();
+        Wsdl11Definition definition = builder.getDefinition();
+        DOMResult domResult = new DOMResult();
+        transformer.transform(definition.getSource(), domResult);
+
+        Document result = (Document) domResult.getNode();
+        Document expected = documentBuilder.parse(getClass().getResourceAsStream("airline.wsdl"));
         XMLUnit.setIgnoreWhitespace(true);
         assertXMLEqual("Invalid WSDL built", expected, result);
     }
 
-    public void testImport() throws Exception {
-        builder.setSchemaLocation("schema.xsd");
-        builder.buildDefinition();
+    private void buildAll() {
         builder.buildDefinition();
         builder.buildImports();
         builder.buildTypes();
@@ -86,17 +152,6 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilderTest extends XMLTestCase {
         builder.buildPortTypes();
         builder.buildBindings();
         builder.buildServices();
-        Wsdl11Definition definition = builder.getDefinition();
-        DOMResult domResult = new DOMResult();
-        transformer.transform(definition.getSource(), domResult);
-
-        Document result = (Document) domResult.getNode();
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        documentBuilderFactory.setNamespaceAware(true);
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document expected = documentBuilder.parse(getClass().getResourceAsStream("import.wsdl"));
-        XMLUnit.setIgnoreWhitespace(true);
-        assertXMLEqual("Invalid WSDL built", expected, result);
     }
 
 
