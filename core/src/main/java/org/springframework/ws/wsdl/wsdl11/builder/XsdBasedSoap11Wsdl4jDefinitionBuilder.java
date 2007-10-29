@@ -57,6 +57,9 @@ import org.xml.sax.SAXException;
  * property is set, an XSD <code>import</code> is used instead. As such, the imported schema file can contain further
  * imports, which will be resolved correctly in accordance with the schema location.
  * <p/>
+ * To create messages from imported and included schemas, set the <code>followIncludeImport</code> property to
+ * <code>true</code>.
+ * <p/>
  * Typically used within a {@link DynamicWsdl11Definition}, like so:
  * <pre>
  * &lt;bean id=&quot;airline&quot; class=&quot;org.springframework.ws.wsdl.wsdl11.DynamicWsdl11Definition&quot;&gt;
@@ -195,7 +198,7 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
 
     /**
      * Indicates whether schema <code>&lt;xsd:include/&gt;</code> and <code>&lt;xsd:import/&gt;</code> should be
-     * followed.
+     * followed. Default is <code>false</code>.
      */
     public void setFollowIncludeImport(boolean followIncludeImport) {
         this.followIncludeImport = followIncludeImport;
