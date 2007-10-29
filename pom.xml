@@ -566,12 +566,6 @@
                 <artifactId>wsdl4j</artifactId>
                 <version>1.6.1</version>
             </dependency>
-            <!-- XSD dependencies -->
-            <dependency>
-                <groupId>org.apache.ws.commons.schema</groupId>
-                <artifactId>XmlSchema</artifactId>
-                <version>1.3.2</version>
-            </dependency>
             <!-- WS-Security dependencies -->
             <dependency>
                 <groupId>com.sun.xml.wss</groupId>
