@@ -31,8 +31,8 @@ import org.xml.sax.helpers.XMLReaderFactory;
 /**
  * The default {@link Wsdl11Definition} implementation.
  * <p/>
- * <p>Allows a WSDL to be set by the {@link #setWsdl wsdl} property, or directly in the {@link
- * #SimpleWsdl11Definition(org.springframework.core.io.Resource) constructor}.
+ * Allows a WSDL to be set by the {@link #setWsdl wsdl} property, or directly in the {@link
+ * #SimpleWsdl11Definition(Resource) constructor}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -42,14 +42,15 @@ public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBea
     private Resource wsdlResource;
 
     /**
-     * Create a new instance of the <code>SimpleWsdl11Definition</code> class. <p>A subsequent call to the {@link
-     * #setWsdl(org.springframework.core.io.Resource)} method is required.
+     * Create a new instance of the {@link SimpleWsdl11Definition} class.
+     * <p/>
+     * A subsequent call to the {@link #setWsdl(Resource)} method is required.
      */
     public SimpleWsdl11Definition() {
     }
 
     /**
-     * Create a new instance of the <code>SimpleWsdl11Definition</code> class.
+     * Create a new instance of the  {@link SimpleWsdl11Definition} class with the specified resource.
      *
      * @param wsdlResource the WSDL resource; must not be <code>null</code>
      * @throws IllegalArgumentException if the supplied <code>wsdlResource</code> is <code>null</code>
