@@ -51,5 +51,8 @@ public class JpaFrequentFlyerDaoTest extends AbstractJpaTests {
         assertEquals("Invalid last name", "Poutsma", flyer.getLastName());
     }
 
-
+    public void testNoSuchUsername() {
+        FrequentFlyer flyer = frequentFlyerDao.get("invalid");
+        assertNull("FrequentFlyer returned", flyer);
+    }
 }

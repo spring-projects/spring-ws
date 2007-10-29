@@ -34,6 +34,7 @@ import org.springframework.ws.samples.airline.security.StubFrequentFlyerSecurity
 import org.springframework.ws.samples.airline.service.AirlineService;
 import org.springframework.ws.samples.airline.service.NoSeatAvailableException;
 import org.springframework.ws.samples.airline.service.NoSuchFlightException;
+import org.springframework.ws.samples.airline.service.NoSuchFrequentFlyerException;
 
 /**
  * Default implementation of the <code>AirlineService</code> interface.
@@ -60,7 +61,7 @@ public class AirlineServiceImpl implements AirlineService {
     }
 
     public Ticket bookFlight(String flightNumber, DateTime departureTime, List<Passenger> passengers)
-            throws NoSuchFlightException, NoSeatAvailableException {
+            throws NoSuchFlightException, NoSeatAvailableException, NoSuchFrequentFlyerException {
         Assert.notEmpty(passengers, "No passengers given");
         if (logger.isDebugEnabled()) {
             logger.debug("Booking flight '" + flightNumber + "' on '" + departureTime + "' for " + passengers);

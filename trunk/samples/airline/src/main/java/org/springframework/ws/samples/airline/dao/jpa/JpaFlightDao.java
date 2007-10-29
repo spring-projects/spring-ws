@@ -18,6 +18,7 @@ package org.springframework.ws.samples.airline.dao.jpa;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -39,7 +40,7 @@ public class JpaFlightDao implements FlightDao {
                                     String toAirportCode,
                                     Interval interval,
                                     ServiceClass serviceClass) throws DataAccessException {
-        Query query = entityManager.createQuery("FROM Flight f WHERE f.from.code = :from " +
+        Query query = entityManager.createQuery("SELECT f FROM Flight f WHERE f.from.code = :from " +
                 "AND f.to.code = :to AND f.departureTime >= :start AND f.departureTime <= :end AND " +
                 "f.serviceClass = :class");
         query.setParameter("from", fromAirportCode);
@@ -56,10 +57,15 @@ public class JpaFlightDao implements FlightDao {
 
     public Flight getFlight(String flightNumber, DateTime departureTime) {
         Query query = entityManager
-                .createQuery("FROM Flight f WHERE f.number = :number AND f.departureTime = :departureTime");
+                .createQuery("SELECT f FROM Flight f WHERE f.number = :number AND f.departureTime = :departureTime");
         query.setParameter("number", flightNumber);
         query.setParameter("departureTime", departureTime);
-        return (Flight) query.getSingleResult();
+        try {
+            return (Flight) query.getSingleResult();
+        }
+        catch (NoResultException e) {
+            return null;
+        }
     }
 
     public Flight update(Flight flight) {

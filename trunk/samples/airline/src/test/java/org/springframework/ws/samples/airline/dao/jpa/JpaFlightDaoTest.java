@@ -111,4 +111,9 @@ public class JpaFlightDaoTest extends AbstractJpaTests {
         assertEquals("Flight not updated", 0, count);
     }
 
+    public void testNoSuchFlight() {
+        Flight flight = flightDao.getFlight("INVALID", departureTime);
+        assertNull("Flight returned", flight);
+    }
+
 }

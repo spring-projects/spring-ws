@@ -17,6 +17,7 @@
 package org.springframework.ws.samples.airline.dao.jpa;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -32,9 +33,14 @@ public class JpaFrequentFlyerDao implements FrequentFlyerDao {
     private EntityManager entityManager;
 
     public FrequentFlyer get(String username) throws DataAccessException {
-        Query query = entityManager.createQuery("FROM FrequentFlyer f WHERE f.username = :username");
+        Query query = entityManager.createQuery("SELECT f FROM FrequentFlyer f WHERE f.username = :username");
         query.setParameter("username", username);
-        return (FrequentFlyer) query.getSingleResult();
+        try {
+            return (FrequentFlyer) query.getSingleResult();
+        }
+        catch (NoResultException e) {
+            return null;
+        }
     }
 
 }
