@@ -116,7 +116,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
     }
 
     public WebServiceMessage createWebServiceMessage() {
-        return new AxiomSoapMessage(soapFactory);
+        return new AxiomSoapMessage(soapFactory, payloadCaching);
     }
 
     public WebServiceMessage createWebServiceMessage(InputStream inputStream) throws IOException {
@@ -175,7 +175,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
         Attachments attachments = new Attachments(inputStream, contentType);
         XMLStreamReader reader = inputFactory.createXMLStreamReader(attachments.getSOAPPartInputStream(),
                 getCharSetEncoding(attachments.getSOAPPartContentType()));
-        StAXSOAPModelBuilder builder = null;
+        StAXSOAPModelBuilder builder;
         String envelopeNamespace = getSoapEnvelopeNamespace(contentType);
         if (MTOMConstants.SWA_TYPE.equals(attachments.getAttachmentSpecType()) ||
                 MTOMConstants.SWA_TYPE_12.equals(attachments.getAttachmentSpecType())) {
