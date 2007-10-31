@@ -58,7 +58,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
 
     private final Attachments attachments;
 
-    private boolean payloadCaching;
+    private final boolean payloadCaching;
 
     private AxiomSoapEnvelope envelope;
 
@@ -70,11 +70,20 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
      * @param soapFactory the AXIOM SOAPFactory
      */
     public AxiomSoapMessage(SOAPFactory soapFactory) {
+        this(soapFactory, true);
+    }
+
+    /**
+     * Create a new, empty <code>AxiomSoapMessage</code>.
+     *
+     * @param soapFactory the AXIOM SOAPFactory
+     */
+    public AxiomSoapMessage(SOAPFactory soapFactory, boolean payloadCaching) {
         SOAPEnvelope soapEnvelope = soapFactory.getDefaultEnvelope();
         axiomFactory = soapFactory;
         axiomMessage = axiomFactory.createSOAPMessage(soapEnvelope, soapEnvelope.getBuilder());
         attachments = new Attachments();
-        payloadCaching = true;
+        this.payloadCaching = payloadCaching;
         soapAction = "\"\"";
     }
 
@@ -198,7 +207,12 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
                 transportOutputStream.addHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
                 transportOutputStream.addHeader(TransportConstants.HEADER_SOAP_ACTION, soapAction);
             }
-            axiomMessage.serializeAndConsume(outputStream, format);
+            if (payloadCaching) {
+                axiomMessage.serialize(outputStream, format);
+            }
+            else {
+                axiomMessage.serializeAndConsume(outputStream, format);
+            }
             outputStream.flush();
         }
         catch (XMLStreamException ex) {
@@ -211,21 +225,23 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
 
     public String toString() {
         StringBuffer buffer = new StringBuffer("AxiomSoapMessage");
-        try {
-            SOAPEnvelope envelope = axiomMessage.getSOAPEnvelope();
-            if (envelope != null) {
-                SOAPBody body = envelope.getBody();
-                if (body != null) {
-                    OMElement bodyElement = body.getFirstElement();
-                    if (bodyElement != null) {
-                        buffer.append(' ');
-                        buffer.append(bodyElement.getQName());
+        if (payloadCaching) {
+            try {
+                SOAPEnvelope envelope = axiomMessage.getSOAPEnvelope();
+                if (envelope != null) {
+                    SOAPBody body = envelope.getBody();
+                    if (body != null) {
+                        OMElement bodyElement = body.getFirstElement();
+                        if (bodyElement != null) {
+                            buffer.append(' ');
+                            buffer.append(bodyElement.getQName());
+                        }
                     }
                 }
             }
-        }
-        catch (OMException ex) {
-            // ignore
+            catch (OMException ex) {
+                // ignore
+            }
         }
         return buffer.toString();
     }

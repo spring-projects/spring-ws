@@ -25,6 +25,8 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -88,6 +90,13 @@ import org.springframework.ws.transport.support.DefaultStrategiesHelper;
  * @since 1.0.0
  */
 public class WebServiceTemplate extends WebServiceAccessor implements WebServiceOperations {
+
+    /** Log category to use for message tracing. */
+    public static final String MESSAGE_TRACING_LOG_CATEGORY = "org.springframework.ws.client.MessageTracing";
+
+    /** Additional logger to use for message tracing. */
+    protected static final Log messageTracingLogger =
+            LogFactory.getLog(WebServiceTemplate.MESSAGE_TRACING_LOG_CATEGORY);
 
     private Marshaller marshaller;
 
@@ -527,28 +536,28 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
     /** Sends the request in the given message context over the connection. */
     private void sendRequest(WebServiceConnection connection, WebServiceMessage request) throws IOException {
-        if (logger.isTraceEnabled()) {
+        if (messageTracingLogger.isTraceEnabled()) {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             request.writeTo(os);
-            logger.trace("WebServiceTemplate sends request [" + os.toString("UTF-8") + "]");
+            messageTracingLogger.trace("Sent request [" + os.toString("UTF-8") + "]");
         }
-        else if (logger.isDebugEnabled()) {
-            logger.debug("WebServiceTemplate sends request [" + request + "]");
+        else if (messageTracingLogger.isDebugEnabled()) {
+            messageTracingLogger.debug("Sent request [" + request + "]");
         }
         connection.send(request);
     }
 
     private void logResponse(WebServiceMessage request, WebServiceMessage response) throws IOException {
-        if (logger.isTraceEnabled()) {
+        if (messageTracingLogger.isTraceEnabled()) {
             ByteArrayOutputStream requestStream = new ByteArrayOutputStream();
             request.writeTo(requestStream);
             ByteArrayOutputStream responseStream = new ByteArrayOutputStream();
             response.writeTo(responseStream);
-            logger.trace("Received response [" + responseStream.toString("UTF-8") + "] for request [" +
+            messageTracingLogger.trace("Received response [" + responseStream.toString("UTF-8") + "] for request [" +
                     requestStream.toString("UTF-8") + "]");
         }
-        else if (logger.isDebugEnabled()) {
-            logger.debug("Received response [" + response + "] for request [" + request + "]");
+        else if (messageTracingLogger.isDebugEnabled()) {
+            messageTracingLogger.debug("Received response [" + response + "] for request [" + request + "]");
         }
     }
 

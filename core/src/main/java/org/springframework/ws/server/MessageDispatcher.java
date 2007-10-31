@@ -74,15 +74,21 @@ import org.springframework.ws.transport.support.DefaultStrategiesHelper;
  */
 public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAware, ApplicationContextAware {
 
+    /** Logger available to subclasses. */
+    protected final Log logger = LogFactory.getLog(getClass());
+
     /** Log category to use when no mapped endpoint is found for a request. */
-    public static final String ENDPOINT_NOT_FOUND_LOG_CATEGORY = "org.springframework.ws.EndpointNotFound";
+    public static final String ENDPOINT_NOT_FOUND_LOG_CATEGORY = "org.springframework.ws.server.EndpointNotFound";
 
     /** Additional logger to use when no mapped endpoint is found for a request. */
     protected static final Log endpointNotFoundLogger =
             LogFactory.getLog(MessageDispatcher.ENDPOINT_NOT_FOUND_LOG_CATEGORY);
 
-    /** Logger available to subclasses. */
-    protected final Log logger = LogFactory.getLog(getClass());
+    /** Log category to use for message tracing. */
+    public static final String MESSAGE_TRACING_LOG_CATEGORY = "org.springframework.ws.server.MessageTracing";
+
+    /** Additional logger to use for message tracing. */
+    protected static final Log messageTracingLogger = LogFactory.getLog(MessageDispatcher.MESSAGE_TRACING_LOG_CATEGORY);
 
     private final DefaultStrategiesHelper defaultStrategiesHelper;
 
@@ -145,34 +151,32 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
     }
 
     public void receive(MessageContext messageContext) throws Exception {
-        if (logger.isTraceEnabled()) {
+        if (messageTracingLogger.isTraceEnabled()) {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             messageContext.getRequest().writeTo(os);
-            logger.trace(
-                    "MessageDispatcher with name '" + beanName + "' received request [" + os.toString("UTF-8") + "]");
+            messageTracingLogger.trace("Received request [" + os.toString("UTF-8") + "]");
         }
-        else if (logger.isDebugEnabled()) {
-            logger.debug("MessageDispatcher with name '" + beanName + "' received request [" +
-                    messageContext.getRequest() + "]");
+        else if (messageTracingLogger.isDebugEnabled()) {
+            messageTracingLogger.debug("Received request [" + messageContext.getRequest() + "]");
         }
         dispatch(messageContext);
         if (messageContext.hasResponse()) {
-            if (logger.isTraceEnabled()) {
+            if (messageTracingLogger.isTraceEnabled()) {
                 ByteArrayOutputStream requestStream = new ByteArrayOutputStream();
                 messageContext.getRequest().writeTo(requestStream);
                 ByteArrayOutputStream responseStream = new ByteArrayOutputStream();
                 messageContext.getResponse().writeTo(responseStream);
-                logger.trace("MessageDispatcher with name '" + beanName + "' sends response [" +
-                        responseStream.toString("UTF-8") + "] for request [" + requestStream.toString("UTF-8") + "]");
+                messageTracingLogger.trace("Sent response [" + responseStream.toString("UTF-8") + "] for request [" +
+                        requestStream.toString("UTF-8") + "]");
             }
-            else if (logger.isDebugEnabled()) {
-                logger.debug("MessageDispatcher with name '" + beanName + "' sends response [" +
-                        messageContext.getResponse() + "] for request [" + messageContext.getRequest() + "]");
+            else if (messageTracingLogger.isDebugEnabled()) {
+                messageTracingLogger.debug("Sendt response [" + messageContext.getResponse() + "] for request [" +
+                        messageContext.getRequest() + "]");
             }
         }
-        else if (logger.isDebugEnabled()) {
-            logger.debug("MessageDispatcher with name '" + beanName + "' sends no response for request [" +
-                    messageContext.getRequest() + "]");
+        else if (messageTracingLogger.isDebugEnabled()) {
+            messageTracingLogger.debug("MessageDispatcher with name '" + beanName +
+                    "' sends no response for request [" + messageContext.getRequest() + "]");
         }
     }
 
