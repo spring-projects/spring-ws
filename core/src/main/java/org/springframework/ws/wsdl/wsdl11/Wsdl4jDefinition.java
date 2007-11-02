@@ -24,6 +24,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.ws.wsdl.WsdlDefinitionException;
 import org.w3c.dom.Document;
 
@@ -91,5 +92,15 @@ public class Wsdl4jDefinition implements Wsdl11Definition {
             }
         }
         return new DOMSource(document);
+    }
+
+    public String toString() {
+        StringBuffer buffer = new StringBuffer("Wsdl4jDefinition");
+        if (definition != null && StringUtils.hasLength(definition.getTargetNamespace())) {
+            buffer.append('{');
+            buffer.append(definition.getTargetNamespace());
+            buffer.append('}');
+        }
+        return buffer.toString();
     }
 }
