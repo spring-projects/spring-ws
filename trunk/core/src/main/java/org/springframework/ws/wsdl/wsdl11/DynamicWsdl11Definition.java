@@ -81,4 +81,13 @@ public class DynamicWsdl11Definition implements Wsdl11Definition, InitializingBe
     public Source getSource() {
         return definition.getSource();
     }
+
+    public String toString() {
+        if (definition != null) {
+            return definition.toString();
+        }
+        else {
+            return "DynamicWsdl11Definition";
+        }
+    }
 }
