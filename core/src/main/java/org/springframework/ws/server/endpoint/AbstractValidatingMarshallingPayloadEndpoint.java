@@ -16,7 +16,7 @@
 
 package org.springframework.ws.server.endpoint;
 
-import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -75,7 +75,7 @@ public abstract class AbstractValidatingMarshallingPayloadEndpoint extends Abstr
 
     protected final boolean onUnmarshalRequest(MessageContext messageContext, Object requestObject) throws Exception {
         if (validators != null) {
-            Errors errors = new BeanPropertyBindingResult(requestObject, getRequestName());
+            Errors errors = new BindException(requestObject, getRequestName());
             for (int i = 0; i < validators.length; i++) {
                 ValidationUtils.invokeValidator(validators[i], requestObject, errors);
             }
