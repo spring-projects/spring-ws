@@ -861,7 +861,8 @@ public class AnnotationOrderEndpoint {
                 <para>
                     Here is an example that uses the <classname>PayloadValidatingInterceptor</classname>; in this
                     example, we use the schema in <filename>/WEB-INF/orders.xsd</filename> to validate the response, but
-                    not the request.
+                    not the request. Note that the <classname>PayloadValidatingInterceptor</classname> can also accept
+                    multiple schemas using the <property>schemas</property> property.
                 </para>
                 <programlisting><![CDATA[<bean id="validatingInterceptor"
         class="org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor">
