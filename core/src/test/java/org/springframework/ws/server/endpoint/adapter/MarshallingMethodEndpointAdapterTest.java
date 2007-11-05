@@ -160,7 +160,8 @@ public class MarshallingMethodEndpointAdapterTest extends TestCase {
         return s;
     }
 
-    public static class MyType {
+    private static class MyType {
 
     }
+
 }

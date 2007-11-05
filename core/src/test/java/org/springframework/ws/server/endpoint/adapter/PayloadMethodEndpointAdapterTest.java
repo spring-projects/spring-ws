@@ -17,6 +17,8 @@
 package org.springframework.ws.server.endpoint.adapter;
 
 import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.TestCase;
 import org.springframework.ws.MockWebServiceMessage;
@@ -42,12 +44,12 @@ public class PayloadMethodEndpointAdapterTest extends TestCase {
     }
 
     public void testSupportedNoResponse() throws NoSuchMethodException {
-        MethodEndpoint methodEndpoint = new MethodEndpoint(this, "noResponse", new Class[]{Source.class});
+        MethodEndpoint methodEndpoint = new MethodEndpoint(this, "noResponse", new Class[]{DOMSource.class});
         assertTrue("Method unsupported", adapter.supportsInternal(methodEndpoint));
     }
 
     public void testSupportedResponse() throws NoSuchMethodException {
-        MethodEndpoint methodEndpoint = new MethodEndpoint(this, "response", new Class[]{Source.class});
+        MethodEndpoint methodEndpoint = new MethodEndpoint(this, "response", new Class[]{StreamSource.class});
         assertTrue("Method unsupported", adapter.supportsInternal(methodEndpoint));
     }
 
@@ -67,7 +69,7 @@ public class PayloadMethodEndpointAdapterTest extends TestCase {
     }
 
     public void testNoResponse() throws Exception {
-        MethodEndpoint methodEndpoint = new MethodEndpoint(this, "noResponse", new Class[]{Source.class});
+        MethodEndpoint methodEndpoint = new MethodEndpoint(this, "noResponse", new Class[]{DOMSource.class});
         assertFalse("Method invoked", noResponseInvoked);
         adapter.invoke(messageContext, methodEndpoint);
         assertTrue("Method not invoked", noResponseInvoked);
@@ -76,17 +78,17 @@ public class PayloadMethodEndpointAdapterTest extends TestCase {
     public void testResponse() throws Exception {
         WebServiceMessage request = new MockWebServiceMessage("<request/>");
         messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
-        MethodEndpoint methodEndpoint = new MethodEndpoint(this, "response", new Class[]{Source.class});
+        MethodEndpoint methodEndpoint = new MethodEndpoint(this, "response", new Class[]{StreamSource.class});
         assertFalse("Method invoked", responseInvoked);
         adapter.invoke(messageContext, methodEndpoint);
         assertTrue("Method not invoked", responseInvoked);
     }
 
-    public void noResponse(Source request) {
+    public void noResponse(DOMSource request) {
         noResponseInvoked = true;
     }
 
-    public Source response(Source request) {
+    public Source response(StreamSource request) {
         responseInvoked = true;
         return request;
     }

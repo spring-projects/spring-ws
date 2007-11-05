@@ -18,10 +18,12 @@ package org.springframework.oxm.jaxb;
 
 import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.xml.bind.JAXBElement;
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLEventWriter;
@@ -39,6 +41,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.oxm.jaxb2.FlightType;
 import org.springframework.oxm.jaxb2.Flights;
+import org.springframework.oxm.jaxb2.ObjectFactory;
 import org.springframework.oxm.mime.MimeContainer;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.xml.transform.StaxResult;
@@ -192,8 +195,16 @@ public class Jaxb2MarshallerTest extends XMLTestCase {
     }
 
     public void testSupports() throws Exception {
-        assertTrue("Jaxb2Marshaller does not support Flights", marshaller.supports(Flights.class));
-        assertTrue("Jaxb2Marshaller does not support JAXBElement", marshaller.supports(JAXBElement.class));
+        Method createFlights = ObjectFactory.class.getDeclaredMethod("createFlights");
+        assertTrue("Jaxb2Marshaller does not support Flights",
+                marshaller.supports(createFlights.getGenericReturnType()));
+        Method createFlight = ObjectFactory.class.getDeclaredMethod("createFlight", FlightType.class);
+        assertTrue("Jaxb2Marshaller does not support JAXBElement<FlightsType>",
+                marshaller.supports(createFlight.getGenericReturnType()));
+        assertFalse("Jaxb2Marshaller supports non-parameterized JAXBElement", marshaller.supports(JAXBElement.class));
+        JAXBElement<Jaxb2MarshallerTest> testElement =
+                new JAXBElement<Jaxb2MarshallerTest>(new QName("something"), Jaxb2MarshallerTest.class, null, this);
+        assertFalse("Jaxb2Marshaller supports wrong JAXBElement", marshaller.supports(testElement.getClass()));
     }
 
     public void testMarshalAttachments() throws Exception {

@@ -21,11 +21,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 import javax.activation.DataHandler;
@@ -34,9 +36,10 @@ import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.JAXBIntrospector;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.attachment.AttachmentMarshaller;
 import javax.xml.bind.attachment.AttachmentUnmarshaller;
@@ -45,6 +48,8 @@ import javax.xml.transform.Source;
 import javax.xml.validation.Schema;
 
 import org.springframework.core.io.Resource;
+import org.springframework.oxm.GenericMarshaller;
+import org.springframework.oxm.GenericUnmarshaller;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.oxm.mime.MimeContainer;
 import org.springframework.oxm.mime.MimeMarshaller;
@@ -77,7 +82,8 @@ import org.springframework.xml.validation.SchemaLoaderUtils;
  * @see #setAdapters(javax.xml.bind.annotation.adapters.XmlAdapter[])
  * @since 1.0.0
  */
-public class Jaxb2Marshaller extends AbstractJaxbMarshaller implements MimeMarshaller, MimeUnmarshaller {
+public class Jaxb2Marshaller extends AbstractJaxbMarshaller
+        implements MimeMarshaller, MimeUnmarshaller, GenericMarshaller, GenericUnmarshaller {
 
     private Resource[] schemaResources;
 
@@ -96,8 +102,6 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller implements MimeMarsh
     private Map<String, ?> jaxbContextProperties;
 
     private boolean mtomEnabled = false;
-
-    private Map<Class, Boolean> supportedClasses = new HashMap<Class, Boolean>();
 
     /**
      * Sets the <code>XmlAdapter</code>s to be registered with the JAXB <code>Marshaller</code> and
@@ -163,28 +167,56 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller implements MimeMarsh
         this.unmarshallerListener = unmarshallerListener;
     }
 
-    public boolean supports(Class clazz) {
-        if (JAXBElement.class.isAssignableFrom(clazz)) {
-            return true;
+    public boolean supports(Type type) {
+        if (type instanceof Class) {
+            return supportsInternal((Class) type, true);
         }
-        else if (!supportedClasses.containsKey(clazz)) {
-            boolean supported = false;
-            Object instance = null;
-            try {
-                instance = clazz.newInstance();
+        else if (type instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) type;
+            if (JAXBElement.class.equals(parameterizedType.getRawType())) {
+                Type[] typeArguments = parameterizedType.getActualTypeArguments();
+                for (int i = 0; i < typeArguments.length; i++) {
+                    if (typeArguments[i] instanceof Class) {
+                        if (!supportsInternal((Class) typeArguments[i], false)) {
+                            return false;
+                        }
+                    }
+                    else if (!supports(typeArguments[i])) {
+                        return false;
+                    }
+                }
+                return true;
             }
-            catch (InstantiationException e) {
-                // not supported
-            }
-            catch (IllegalAccessException e) {
-                // not supported
-            }
-            JAXBIntrospector introspector = getJaxbContext().createJAXBIntrospector();
-            supported = introspector.isElement(instance);
-            supportedClasses.put(clazz, supported);
         }
-        return supportedClasses.get(clazz);
+        return false;
     }
+
+    public boolean supports(Class clazz) {
+        return supportsInternal(clazz, true);
+    }
+
+    private boolean supportsInternal(Class<?> clazz, boolean checkForXmlRootElement) {
+        if (checkForXmlRootElement && clazz.getAnnotation(XmlRootElement.class) == null) {
+            return false;
+        }
+        if (clazz.getAnnotation(XmlType.class) == null) {
+            return false;
+        }
+        if (StringUtils.hasLength(getContextPath())) {
+            String className = ClassUtils.getQualifiedName(clazz);
+            int lastDotIndex = className.lastIndexOf('.');
+            if (lastDotIndex == -1) {
+                return false;
+            }
+            String packageName = className.substring(0, lastDotIndex);
+            return getContextPath().startsWith(packageName);
+        }
+        else if (!ObjectUtils.isEmpty(classesToBeBound)) {
+            return Arrays.asList(classesToBeBound).contains(clazz);
+        }
+        return false;
+    }
+
     /*
      * JAXBContext
      */
