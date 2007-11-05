@@ -30,8 +30,8 @@ import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
 
 /**
  * Simple subclass of {@link AbstractMethodEndpointMapping} that maps from the local name of the request payload to
- * methods.Endpoint beans are registered using the <code>endpoints</code> property; the endpoint methods that start with
- * <code>methodPrefix</code> and end with <code>methodSuffix</code> will be registered.
+ * methods. Endpoint beans are registered using the <code>endpoints</code> property; the endpoint methods that start
+ * with <code>methodPrefix</code> and end with <code>methodSuffix</code> will be registered.
  * <p/>
  * Endpoints typically have the following form:
  * <pre>
