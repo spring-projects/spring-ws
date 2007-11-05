@@ -35,10 +35,7 @@ public abstract class AbstractAnnotationMethodEndpointMapping extends AbstractMe
         implements BeanPostProcessor {
 
     public final Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        if (getEndpointClass(bean).getAnnotation(getEndpointAnnotationType()) != null) {
-            registerMethods(bean);
-        }
-        return bean;
+        return null;
     }
 
     /** Returns the 'endpoint' annotation type. Default is {@link Endpoint}. */
@@ -47,6 +44,9 @@ public abstract class AbstractAnnotationMethodEndpointMapping extends AbstractMe
     }
 
     public final Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        if (getEndpointClass(bean).getAnnotation(getEndpointAnnotationType()) != null) {
+            registerMethods(bean);
+        }
         return bean;
     }
 
