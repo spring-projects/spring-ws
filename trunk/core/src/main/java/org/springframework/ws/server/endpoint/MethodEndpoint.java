@@ -19,6 +19,7 @@ package org.springframework.ws.server.endpoint;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.springframework.core.JdkVersion;
 import org.springframework.util.Assert;
 
 /**
@@ -120,6 +121,19 @@ public final class MethodEndpoint {
     }
 
     public String toString() {
-        return this.method.toString();
+        if (JdkVersion.getMajorJavaVersion() <= JdkVersion.JAVA_14) {
+            return this.method.toString();
+        }
+        else {
+            return GenericToStringProvider.toString(method);
+        }
+    }
+
+    /** Inner class to avoid a static JDK 1.5 dependency for generic string generation. */
+    private static class GenericToStringProvider {
+
+        public static String toString(Method method) {
+            return method.toGenericString();
+        }
     }
 }

@@ -56,14 +56,6 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
 
     private Unmarshaller unmarshaller;
 
-    public void setMarshaller(Marshaller marshaller) {
-        this.marshaller = marshaller;
-    }
-
-    public void setUnmarshaller(Unmarshaller unmarshaller) {
-        this.unmarshaller = unmarshaller;
-    }
-
     /**
      * Creates a new <code>MarshallingMethodEndpointAdapter</code>. The {@link Marshaller} and {@link Unmarshaller} must
      * be injected using properties.
@@ -94,8 +86,8 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
                     "MarshallingMethodEndpointAdapter(Marshaller, Unmarshaller) constructor.");
         }
         else {
-            this.marshaller = marshaller;
-            this.unmarshaller = (Unmarshaller) marshaller;
+            this.setMarshaller(marshaller);
+            this.setUnmarshaller((Unmarshaller) marshaller);
         }
     }
 
@@ -108,13 +100,58 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
     public MarshallingMethodEndpointAdapter(Marshaller marshaller, Unmarshaller unmarshaller) {
         Assert.notNull(marshaller, "marshaller must not be null");
         Assert.notNull(unmarshaller, "unmarshaller must not be null");
+        this.setMarshaller(marshaller);
+        this.setUnmarshaller(unmarshaller);
+    }
+
+    /** Returns the marshaller used for transforming objects into XML. */
+    public Marshaller getMarshaller() {
+        return marshaller;
+    }
+
+    /** Sets the marshaller used for transforming objects into XML. */
+    public final void setMarshaller(Marshaller marshaller) {
         this.marshaller = marshaller;
+    }
+
+    /** Returns the unmarshaller used for transforming XML into objects. */
+    public Unmarshaller getUnmarshaller() {
+        return unmarshaller;
+    }
+
+    /** Sets the unmarshaller used for transforming XML into objects. */
+    public final void setUnmarshaller(Unmarshaller unmarshaller) {
         this.unmarshaller = unmarshaller;
     }
 
     public void afterPropertiesSet() throws Exception {
-        Assert.notNull(marshaller, "marshaller is required");
-        Assert.notNull(unmarshaller, "unmarshaller is required");
+        Assert.notNull(getMarshaller(), "marshaller is required");
+        Assert.notNull(getUnmarshaller(), "unmarshaller is required");
+    }
+
+    protected void invokeInternal(MessageContext messageContext, MethodEndpoint methodEndpoint) throws Exception {
+        WebServiceMessage request = messageContext.getRequest();
+        Object requestObject = unmarshalRequest(request);
+        Object responseObject = methodEndpoint.invoke(new Object[]{requestObject});
+        if (responseObject != null) {
+            WebServiceMessage response = messageContext.getResponse();
+            marshalResponse(responseObject, response);
+        }
+    }
+
+    private Object unmarshalRequest(WebServiceMessage request) throws IOException {
+        Object requestObject = MarshallingUtils.unmarshal(getUnmarshaller(), request);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Unmarshalled payload request to [" + requestObject + "]");
+        }
+        return requestObject;
+    }
+
+    private void marshalResponse(Object responseObject, WebServiceMessage response) throws IOException {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Marshalling [" + responseObject + "] to response payload");
+        }
+        MarshallingUtils.marshal(getMarshaller(), responseObject, response);
     }
 
     /**
@@ -126,34 +163,19 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
      */
     protected boolean supportsInternal(MethodEndpoint methodEndpoint) {
         Method method = methodEndpoint.getMethod();
-        return (Void.TYPE.isAssignableFrom(method.getReturnType()) || marshaller.supports(method.getReturnType())) &&
-                method.getParameterTypes().length == 1 && unmarshaller.supports(method.getParameterTypes()[0]);
+        return supportsReturnType(method) && supportsParameters(method);
     }
 
-    protected void invokeInternal(MessageContext messageContext, MethodEndpoint methodEndpoint) throws Exception {
-        WebServiceMessage request = messageContext.getRequest();
-        Object requestObject = unmarshalRequest(request);
-        Object responseObject = methodEndpoint.invoke(new Object[]{requestObject});
-        if (responseObject != null) {
-            WebServiceMessage response = messageContext.getResponse();
-            marshalResponse(responseObject, response);
+    private boolean supportsReturnType(Method method) {
+        return (Void.TYPE.equals(method.getReturnType()) || getMarshaller().supports(method.getReturnType()));
+    }
+
+    private boolean supportsParameters(Method method) {
+        if (method.getParameterTypes().length != 1) {
+            return false;
         }
-
-    }
-
-    private Object unmarshalRequest(WebServiceMessage request) throws IOException {
-        Object requestObject = MarshallingUtils.unmarshal(unmarshaller, request);
-        if (logger.isDebugEnabled()) {
-            logger.debug("Unmarshalled payload request to [" + requestObject + "]");
+        else {
+            return getUnmarshaller().supports(method.getParameterTypes()[0]);
         }
-        return requestObject;
     }
-
-    private void marshalResponse(Object responseObject, WebServiceMessage response) throws IOException {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Marshalling [" + responseObject + "] to response payload");
-        }
-        MarshallingUtils.marshal(marshaller, responseObject, response);
-    }
-
 }
