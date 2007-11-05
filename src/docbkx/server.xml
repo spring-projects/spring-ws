@@ -545,7 +545,7 @@ public class AnnotationOrderEndpoint {
 
     <bean id="orderService" class="samples.DefaultOrderService"/>
 
-    <bean class="org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter">
+    <bean class="org.springframework.ws.server.endpoint.adapter.GenericMarshallingMethodEndpointAdapter">
         <constructor-arg ref="marshaller"/>
     </bean>
 
@@ -562,7 +562,7 @@ public class AnnotationOrderEndpoint {
 
 </beans>]]></programlisting>
             <para>
-                The <classname>MarshallingMethodEndpointAdapter</classname> converts the incoming
+                The <classname>GenericMarshallingMethodEndpointAdapter</classname> converts the incoming
                 XML messages to marshalled objects used as parameters and return value; the
                 <classname>PayloadRootAnnotationMethodEndpointMapping</classname> is the mapping that detects and
                 handles the <interfacename>@PayloadRoot</interfacename> annotations.
