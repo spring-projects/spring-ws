@@ -16,37 +16,6 @@
 
 package org.springframework.oxm.jaxb;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.UUID;
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
-import javax.xml.bind.attachment.AttachmentMarshaller;
-import javax.xml.bind.attachment.AttachmentUnmarshaller;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.validation.Schema;
-
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.GenericMarshaller;
 import org.springframework.oxm.GenericUnmarshaller;
@@ -54,13 +23,38 @@ import org.springframework.oxm.XmlMappingException;
 import org.springframework.oxm.mime.MimeContainer;
 import org.springframework.oxm.mime.MimeMarshaller;
 import org.springframework.oxm.mime.MimeUnmarshaller;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
 import org.springframework.xml.transform.StaxResult;
 import org.springframework.xml.transform.StaxSource;
 import org.springframework.xml.validation.SchemaLoaderUtils;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.xml.XMLConstants;
+import javax.xml.bind.*;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.attachment.AttachmentMarshaller;
+import javax.xml.bind.attachment.AttachmentUnmarshaller;
+import javax.xml.datatype.Duration;
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.namespace.QName;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.validation.Schema;
+import java.awt.*;
+import java.io.*;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.*;
 
 /**
  * Implementation of the <code>Marshaller</code> interface for JAXB 2.0.
@@ -129,7 +123,9 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
         this.jaxbContextProperties = jaxbContextProperties;
     }
 
-    /** Sets the <code>Marshaller.Listener</code> to be registered with the JAXB <code>Marshaller</code>. */
+    /**
+     * Sets the <code>Marshaller.Listener</code> to be registered with the JAXB <code>Marshaller</code>.
+     */
     public void setMarshallerListener(Marshaller.Listener marshallerListener) {
         this.marshallerListener = marshallerListener;
     }
@@ -152,17 +148,23 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
         this.schemaLanguage = schemaLanguage;
     }
 
-    /** Sets the schema resource to use for validation. */
+    /**
+     * Sets the schema resource to use for validation.
+     */
     public void setSchema(Resource schemaResource) {
         schemaResources = new Resource[]{schemaResource};
     }
 
-    /** Sets the schema resources to use for validation. */
+    /**
+     * Sets the schema resources to use for validation.
+     */
     public void setSchemas(Resource[] schemaResources) {
         this.schemaResources = schemaResources;
     }
 
-    /** Sets the <code>Unmarshaller.Listener</code> to be registered with the JAXB <code>Unmarshaller</code>. */
+    /**
+     * Sets the <code>Unmarshaller.Listener</code> to be registered with the JAXB <code>Unmarshaller</code>.
+     */
     public void setUnmarshallerListener(Unmarshaller.Listener unmarshallerListener) {
         this.unmarshallerListener = unmarshallerListener;
     }
@@ -170,25 +172,56 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
     public boolean supports(Type type) {
         if (type instanceof Class) {
             return supportsInternal((Class) type, true);
-        }
-        else if (type instanceof ParameterizedType) {
+        } else if (type instanceof ParameterizedType) {
             ParameterizedType parameterizedType = (ParameterizedType) type;
             if (JAXBElement.class.equals(parameterizedType.getRawType())) {
-                Type[] typeArguments = parameterizedType.getActualTypeArguments();
-                for (int i = 0; i < typeArguments.length; i++) {
-                    if (typeArguments[i] instanceof Class) {
-                        if (!supportsInternal((Class) typeArguments[i], false)) {
-                            return false;
-                        }
-                    }
-                    else if (!supports(typeArguments[i])) {
+                Assert.isTrue(parameterizedType.getActualTypeArguments().length == 1,
+                        "Invalid amount of parameterized types in JAXBElement");
+                Type typeArgument = parameterizedType.getActualTypeArguments()[0];
+                if (typeArgument instanceof Class) {
+                    Class clazz = (Class) typeArgument;
+                    if (!isPrimitiveType(clazz) && !isStandardType(clazz) && !supportsInternal(clazz, false)) {
                         return false;
                     }
+                }
+                else if (typeArgument instanceof GenericArrayType) {
+                    GenericArrayType genericArrayType = (GenericArrayType) typeArgument;
+                    return genericArrayType.getGenericComponentType().equals(Byte.TYPE);
+                } else if (!supports(typeArgument)) {
+                    return false;
                 }
                 return true;
             }
         }
         return false;
+    }
+
+    private boolean isPrimitiveType(Class clazz) {
+        return (Boolean.class.equals(clazz) ||
+                Byte.class.equals(clazz) ||
+                Short.class.equals(clazz) ||
+                Integer.class.equals(clazz) ||
+                Long.class.equals(clazz) ||
+                Float.class.equals(clazz) ||
+                Double.class.equals(clazz) ||
+                byte[].class.equals(clazz));
+    }
+
+    private boolean isStandardType(Class clazz) {
+        return (String.class.equals(clazz) ||
+                BigInteger.class.equals(clazz) ||
+                BigDecimal.class.equals(clazz) ||
+                Calendar.class.isAssignableFrom(clazz) ||
+                Date.class.isAssignableFrom(clazz) ||
+                QName.class.equals(clazz) ||
+                URI.class.equals(clazz) ||
+                XMLGregorianCalendar.class.isAssignableFrom(clazz) ||
+                Duration.class.isAssignableFrom(clazz) ||
+                Object.class.equals(clazz) ||
+                Image.class.isAssignableFrom(clazz) ||
+                DataHandler.class.equals(clazz) ||
+                Source.class.isAssignableFrom(clazz) ||
+                UUID.class.equals(clazz));
     }
 
     public boolean supports(Class clazz) {
@@ -216,8 +249,7 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
                 }
             }
             return false;
-        }
-        else if (!ObjectUtils.isEmpty(classesToBeBound)) {
+        } else if (!ObjectUtils.isEmpty(classesToBeBound)) {
             return Arrays.asList(classesToBeBound).contains(clazz);
         }
         return false;
@@ -244,11 +276,9 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
         }
         if (StringUtils.hasLength(getContextPath())) {
             return createJaxbContextFromContextPath();
-        }
-        else if (!ObjectUtils.isEmpty(classesToBeBound)) {
+        } else if (!ObjectUtils.isEmpty(classesToBeBound)) {
             return createJaxbContextFromClasses();
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("setting either contextPath or classesToBeBound is required");
         }
     }
@@ -260,8 +290,7 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
         if (jaxbContextProperties != null) {
             return JAXBContext
                     .newInstance(getContextPath(), ClassUtils.getDefaultClassLoader(), jaxbContextProperties);
-        }
-        else {
+        } else {
             return JAXBContext.newInstance(getContextPath());
         }
     }
@@ -273,8 +302,7 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
         }
         if (jaxbContextProperties != null) {
             return JAXBContext.newInstance(classesToBeBound, jaxbContextProperties);
-        }
-        else {
+        } else {
             return JAXBContext.newInstance(classesToBeBound);
         }
     }
@@ -327,8 +355,7 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
             }
             if (result instanceof StaxResult) {
                 marshalStaxResult(marshaller, graph, (StaxResult) result);
-            }
-            else {
+            } else {
                 marshaller.marshal(graph, result);
             }
         }
@@ -341,11 +368,9 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
             throws JAXBException {
         if (staxResult.getXMLStreamWriter() != null) {
             jaxbMarshaller.marshal(graph, staxResult.getXMLStreamWriter());
-        }
-        else if (staxResult.getXMLEventWriter() != null) {
+        } else if (staxResult.getXMLEventWriter() != null) {
             jaxbMarshaller.marshal(graph, staxResult.getXMLEventWriter());
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("StaxResult contains neither XMLStreamWriter nor XMLEventConsumer");
         }
     }
@@ -366,8 +391,7 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
             }
             if (source instanceof StaxSource) {
                 return unmarshalStaxSource(unmarshaller, (StaxSource) source);
-            }
-            else {
+            } else {
                 return unmarshaller.unmarshal(source);
             }
         }
@@ -379,11 +403,9 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
     private Object unmarshalStaxSource(Unmarshaller jaxbUnmarshaller, StaxSource staxSource) throws JAXBException {
         if (staxSource.getXMLStreamReader() != null) {
             return jaxbUnmarshaller.unmarshal(staxSource.getXMLStreamReader());
-        }
-        else if (staxSource.getXMLEventReader() != null) {
+        } else if (staxSource.getXMLEventReader() != null) {
             return jaxbUnmarshaller.unmarshal(staxSource.getXMLEventReader());
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("StaxSource contains neither XMLStreamReader nor XMLEventReader");
         }
     }
