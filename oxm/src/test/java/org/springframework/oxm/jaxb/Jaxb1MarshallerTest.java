@@ -31,7 +31,7 @@ public class Jaxb1MarshallerTest extends AbstractJaxbMarshallerTestCase {
 
     protected final Marshaller createMarshaller() throws Exception {
         Jaxb1Marshaller marshaller = new Jaxb1Marshaller();
-        marshaller.setContextPath(CONTEXT_PATH);
+        marshaller.setContextPaths(new String[]{CONTEXT_PATH});
         marshaller.afterPropertiesSet();
         return marshaller;
     }

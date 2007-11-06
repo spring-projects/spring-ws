@@ -28,6 +28,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.oxm.XmlMappingException;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * Abstract base class for implementations of the <code>Marshaller</code> and <code>Unmarshaller</code> interfaces that
@@ -64,7 +66,17 @@ public abstract class AbstractJaxbMarshaller
 
     /** Sets the JAXB Context path. */
     public void setContextPath(String contextPath) {
+        Assert.notNull(contextPath, "'contextPath' must not be null");
         this.contextPath = contextPath;
+    }
+
+    /**
+     * Sets multiple JAXB Context paths. The given array of context paths is converted to a colon-delimited string, as
+     * supported by JAXB.
+     */
+    public void setContextPaths(String[] contextPaths) {
+        Assert.notEmpty(contextPaths, "'contextPaths' must not be empty");
+        this.contextPath = StringUtils.arrayToDelimitedString(contextPaths, ":");
     }
 
     /**
