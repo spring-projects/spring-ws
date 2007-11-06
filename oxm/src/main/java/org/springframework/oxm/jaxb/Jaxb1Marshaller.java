@@ -22,7 +22,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -38,7 +38,7 @@ import org.springframework.util.StringUtils;
  * @see #setValidating(boolean)
  * @since 1.0.0
  */
-public class Jaxb1Marshaller extends AbstractJaxbMarshaller implements InitializingBean {
+public class Jaxb1Marshaller extends AbstractJaxbMarshaller {
 
     private boolean validating = false;
 
@@ -48,7 +48,26 @@ public class Jaxb1Marshaller extends AbstractJaxbMarshaller implements Initializ
     }
 
     public boolean supports(Class clazz) {
-        return Element.class.isAssignableFrom(clazz);
+        if (!Element.class.isAssignableFrom(clazz)) {
+            return false;
+        }
+        if (StringUtils.hasLength(getContextPath())) {
+            String className = ClassUtils.getQualifiedName(clazz);
+            int lastDotIndex = className.lastIndexOf('.');
+            if (lastDotIndex == -1) {
+                return false;
+            }
+            String packageName = className.substring(0, lastDotIndex);
+            String[] contextPaths = StringUtils.tokenizeToStringArray(getContextPath(), ":");
+            for (int i = 0; i < contextPaths.length; i++) {
+                if (contextPaths[i].equals(packageName)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return false;
+
     }
 
     protected final JAXBContext createJaxbContext() throws JAXBException {

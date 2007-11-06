@@ -194,7 +194,23 @@ public class Jaxb2MarshallerTest extends XMLTestCase {
         verify(handlerMock);
     }
 
-    public void testSupports() throws Exception {
+    public void testSupportsContextPath() throws Exception {
+        Method createFlights = ObjectFactory.class.getDeclaredMethod("createFlights");
+        assertTrue("Jaxb2Marshaller does not support Flights",
+                marshaller.supports(createFlights.getGenericReturnType()));
+        Method createFlight = ObjectFactory.class.getDeclaredMethod("createFlight", FlightType.class);
+        assertTrue("Jaxb2Marshaller does not support JAXBElement<FlightsType>",
+                marshaller.supports(createFlight.getGenericReturnType()));
+        assertFalse("Jaxb2Marshaller supports non-parameterized JAXBElement", marshaller.supports(JAXBElement.class));
+        JAXBElement<Jaxb2MarshallerTest> testElement =
+                new JAXBElement<Jaxb2MarshallerTest>(new QName("something"), Jaxb2MarshallerTest.class, null, this);
+        assertFalse("Jaxb2Marshaller supports wrong JAXBElement", marshaller.supports(testElement.getClass()));
+    }
+
+    public void testSupportsClassesToBeBound() throws Exception {
+        marshaller = new Jaxb2Marshaller();
+        marshaller.setClassesToBeBound(new Class[]{Flights.class, FlightType.class});
+        marshaller.afterPropertiesSet();
         Method createFlights = ObjectFactory.class.getDeclaredMethod("createFlights");
         assertTrue("Jaxb2Marshaller does not support Flights",
                 marshaller.supports(createFlights.getGenericReturnType()));
