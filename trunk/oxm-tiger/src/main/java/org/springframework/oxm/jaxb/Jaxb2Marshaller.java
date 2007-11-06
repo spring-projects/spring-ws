@@ -209,7 +209,13 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
                 return false;
             }
             String packageName = className.substring(0, lastDotIndex);
-            return getContextPath().startsWith(packageName);
+            String[] contextPaths = StringUtils.tokenizeToStringArray(getContextPath(), ":");
+            for (int i = 0; i < contextPaths.length; i++) {
+                if (contextPaths[i].equals(packageName)) {
+                    return true;
+                }
+            }
+            return false;
         }
         else if (!ObjectUtils.isEmpty(classesToBeBound)) {
             return Arrays.asList(classesToBeBound).contains(clazz);
