@@ -16,24 +16,6 @@
 
 package org.springframework.oxm.jaxb;
 
-import java.io.ByteArrayOutputStream;
-import java.io.StringWriter;
-import java.lang.reflect.Method;
-import java.util.Collections;
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-import javax.xml.bind.JAXBElement;
-import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.stream.XMLEventWriter;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
-import javax.xml.transform.Result;
-import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.sax.SAXResult;
-import javax.xml.transform.stream.StreamResult;
-
 import org.custommonkey.xmlunit.XMLTestCase;
 import static org.easymock.EasyMock.*;
 import org.springframework.core.io.ClassPathResource;
@@ -52,6 +34,36 @@ import org.w3c.dom.Text;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
+
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.xml.bind.JAXBElement;
+import javax.xml.datatype.Duration;
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.stream.XMLEventWriter;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.stream.StreamResult;
+import java.awt.*;
+import java.io.ByteArrayOutputStream;
+import java.io.StringWriter;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.URI;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.UUID;
 
 public class Jaxb2MarshallerTest extends XMLTestCase {
 
@@ -223,6 +235,27 @@ public class Jaxb2MarshallerTest extends XMLTestCase {
         assertFalse("Jaxb2Marshaller supports wrong JAXBElement", marshaller.supports(testElement.getClass()));
     }
 
+    public void testSupportsPrimitives() throws Exception {
+        Method primitives = getClass().getDeclaredMethod("primitives", JAXBElement.class, JAXBElement.class, JAXBElement.class,
+                JAXBElement.class, JAXBElement.class, JAXBElement.class, JAXBElement.class, JAXBElement.class);
+        Type[] types = primitives.getGenericParameterTypes();
+        for (int i = 0; i < types.length; i++) {
+            ParameterizedType type = (ParameterizedType) types[i];
+            assertTrue("Jaxb2Marshaller does not support " + type, marshaller.supports(types[i]));
+        }
+    }
+
+    public void testSupportsStandards() throws Exception {
+        Method standards = getClass().getDeclaredMethod("standards", JAXBElement.class, JAXBElement.class, JAXBElement.class,
+                JAXBElement.class, JAXBElement.class, JAXBElement.class, JAXBElement.class, JAXBElement.class, JAXBElement.class, JAXBElement.class,
+                JAXBElement.class, JAXBElement.class, JAXBElement.class, JAXBElement.class);
+        Type[] types = standards.getGenericParameterTypes();
+        for (int i = 0; i < types.length; i++) {
+            ParameterizedType type = (ParameterizedType) types[i];
+            assertTrue("Jaxb2Marshaller does not support " + type, marshaller.supports(types[i]));
+        }
+    }
+
     public void testMarshalAttachments() throws Exception {
         marshaller = new Jaxb2Marshaller();
         marshaller.setClassesToBeBound(new Class[]{BinaryObject.class});
@@ -244,5 +277,17 @@ public class Jaxb2MarshallerTest extends XMLTestCase {
         marshaller.marshal(object, result, mimeContainer);
         verify(mimeContainer);
         assertTrue("No XML written", result.toString().length() > 0);
+    }
+
+    private void primitives(JAXBElement<Boolean> bool, JAXBElement<Byte> aByte, JAXBElement<Short> aShort,
+                            JAXBElement<Integer> anInteger, JAXBElement<Long> aLong, JAXBElement<Float> aFloat,
+                            JAXBElement<Double> aDouble, JAXBElement<byte[]> byteArray) {
+    }
+
+    private void standards(JAXBElement<String> string, JAXBElement<BigInteger> integer, JAXBElement<BigDecimal> decimal,
+                           JAXBElement<Calendar> calendar, JAXBElement<Date> date, JAXBElement<QName> qName,
+                           JAXBElement<URI> uri, JAXBElement<XMLGregorianCalendar> xmlGregorianCalendar,
+                           JAXBElement<Duration> duration, JAXBElement<Object> object, JAXBElement<Image> image,
+                           JAXBElement<DataHandler> dataHandler, JAXBElement<Source> source, JAXBElement<UUID> uuid) {
     }
 }
