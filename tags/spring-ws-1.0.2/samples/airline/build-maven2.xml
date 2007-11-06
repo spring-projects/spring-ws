@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<project name="spring-oxm-maven2-targets" default="generate-sources">
+
+    <property name="schema" value="${basedir}/src/main/webapp/airline.xsd"/>
+    <property name="generate.target.directory" value="${basedir}/target/generated-sources/main/java"/>
+
+    <target name="generate-sources">
+        <mkdir dir="${generate.target.directory}"/>
+        <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask"
+                 classpathref="maven.runtime.classpath"/>
+        <xjc target="${generate.target.directory}"
+             package="org.springframework.ws.samples.airline.schema"
+             schema="${schema}">
+            <produces dir="${generate.target.directory}" includes="**/*.java"/>
+        </xjc>
+        <copy todir="${basedir}/target/classes">
+            <fileset dir="${generate.target.directory}">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+</project>

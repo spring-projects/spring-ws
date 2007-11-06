@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:tns="http://www.springframework.org/spring-ws/wsdl/definitions"
+             xmlns:xsd="http://www.springframework.org/spring-ws/wsdl/schemas"
+             targetNamespace="http://www.springframework.org/spring-ws/wsdl/definitions">
+
+    <import namespace="http://www.springframework.org/spring-ws/wsdl/schemas" location="types.xsd"/>
+
+    <message name="responseMessage">
+        <part name="body" element="tns:response"/>
+    </message>
+
+    <message name="requestMessage">
+        <part name="body" element="tns:request"/>
+    </message>
+
+    <portType name="portType">
+        <operation name="operation">
+            <input message="tns:requestMessage" name="request"/>
+            <output message="tns:responseMessage" name="response"/>
+        </operation>
+    </portType>
+
+</definitions>
+

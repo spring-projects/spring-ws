@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+
+<project name="spring-ws-airline-sample-jax-ws-client" default="build" xmlns:artifact="urn:maven-artifact-ant">
+    <property name="bin.dir" value="bin"/>
+    <property name="src.dir" value="src"/>
+    <property name="gen.dir" value="gen"/>
+    <property name="lib.dir" value="lib"/>
+
+    <target name="init">
+        <mkdir dir="${bin.dir}"/>
+        <typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant">
+            <classpath>
+                <pathelement location="${basedir}/../../../maven-artifact-ant-2.0.4-dep.jar"/>
+            </classpath>
+        </typedef>
+
+        <artifact:remoteRepository id="java.net" url="https://maven-repository.dev.java.net/nonav/repository"
+                                   layout="legacy"/>
+
+        <artifact:dependencies pathId="generate.classpath">
+            <remoteRepository refid="java.net"/>
+            <dependency groupId="com.sun.xml.ws" artifactId="jaxws-tools" version="EA3"/>
+            <dependency groupId="com.sun.xml.bind" artifactId="jaxb-xjc" version="2.1-EA2"/>
+            <dependency groupId="com.sun.xml.stream.buffer" artifactId="streambuffer" version="0.3"/>
+            <dependency groupId="com.sun.xml.stream" artifactId="sjsxp" version="1.0"/>
+            <dependency groupId="org.jvnet.staxex" artifactId="stax-ex" version="1.0"/>
+            <dependency groupId="com.sun.xml.messaging.saaj" artifactId="saaj-impl" version="1.3"/>
+        </artifact:dependencies>
+
+        <artifact:dependencies pathId="compile.classpath">
+            <remoteRepository refid="java.net"/>
+            <dependency groupId="javax.xml.ws" artifactId="jaxws-api" version="2.1-SNAPSHOT"/>
+            <dependency groupId="org.springframework" artifactId="spring-core" version="2.0.5"/>
+        </artifact:dependencies>
+
+        <artifact:dependencies pathId="runtime.classpath">
+            <remoteRepository refid="java.net"/>
+            <dependency groupId="com.sun.xml.ws" artifactId="jaxws-rt" version="EA3"/>
+            <dependency groupId="com.sun.xml.bind" artifactId="jaxb-impl" version="2.1-EA2"/>
+            <dependency groupId="com.sun.xml.bind" artifactId="jaxb-xjc" version="2.1-EA2"/>
+            <dependency groupId="com.sun.xml.stream.buffer" artifactId="streambuffer" version="0.3"/>
+            <dependency groupId="com.sun.xml.stream" artifactId="sjsxp" version="1.0"/>
+            <dependency groupId="org.jvnet.staxex" artifactId="stax-ex" version="1.0"/>
+            <dependency groupId="com.sun.xml.messaging.saaj" artifactId="saaj-impl" version="1.3"/>
+        </artifact:dependencies>
+
+    </target>
+
+    <target name="generate" depends="init">
+        <taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport" classpathref="generate.classpath"/>
+        <wsimport wsdl="http://localhost:8080/mtom/mtom.wsdl" destdir="${bin.dir}"
+                  package="org.springframework.ws.samples.mtom.client.jaxws">
+            <produces dir="${bin.dir}/org/springframework/ws/samples/mtom/client/jaxws" includes="**/*" />
+        </wsimport>
+    </target>
+
+    <target name="build" depends="generate">
+        <javac srcdir="${src.dir}" destdir="${bin.dir}" debug="true">
+            <classpath refid="compile.classpath"/>
+            <classpath location="${bin.dir}"/>
+        </javac>
+    </target>
+
+    <target name="clean">
+        <delete dir="${bin.dir}"/>
+    </target>
+
+    <target name="run" depends="build">
+        <java classname="org.springframework.ws.samples.mtom.client.jaxws.Main" fork="true" failonerror="true">
+            <jvmarg value="-Djava.awt.headless=true"/>
+            <arg path="../spring-ws-logo.png"/>
+            <classpath refid="compile.classpath"/>
+            <classpath refid="runtime.classpath"/>
+            <classpath location="${bin.dir}"/>
+    </java>
+</target></project>
