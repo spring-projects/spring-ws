@@ -1,0 +1,67 @@
+/*
+ * Copyright 2007 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.springframework.ws.soap.addressing;
+
+import javax.xml.namespace.QName;
+
+import org.springframework.xml.namespace.QNameUtils;
+
+/**
+ * Implements the May 2006 edition of the WS-Addressing specification. This version of the specification is used by
+ * Microsoft's Windows Communication Foundation (WCF), and supported by Axis 1 and 2.
+ *
+ * @author Arjen Poutsma
+ * @see <a href="http://www.w3.org/TR/2006/REC-ws-addr-core-20060509">Web Services Addressing, August 2004</a>
+ * @since 1.1.0
+ */
+
+public class WsAddressing200605 extends AbstractWsAddressingVersion {
+
+    private static final String NAMESPACE_URI = "http://www.w3.org/2005/08/addressing";
+
+    protected String getNamespaceUri() {
+        return NAMESPACE_URI;
+    }
+
+    protected QName getReferencePropertiesName() {
+        return null;
+    }
+
+    protected final String getAnonymousUri() {
+        return NAMESPACE_URI + "/anonymous";
+    }
+
+    protected final String getNoneUri() {
+        return NAMESPACE_URI + "/none";
+    }
+
+    protected final QName getMessageAddressingHeaderRequiredFaultSubcode() {
+        return QNameUtils.createQName(NAMESPACE_URI, "MessageAddressingHeaderRequired", getNamespacePrefix());
+    }
+
+    protected final String getMessageAddressingHeaderRequiredFaultReason() {
+        return "A required header representing a Message Addressing Property is not present";
+    }
+
+    protected QName getInvalidAddressingHeaderFaultSubcode() {
+        return QNameUtils.createQName(NAMESPACE_URI, "InvalidAddressingHeader", getNamespacePrefix());
+    }
+
+    protected String getInvalidAddressingHeaderFaultReason() {
+        return "A header representing a Message Addressing Property is not valid and the message cannot be processed";
+    }
+}
