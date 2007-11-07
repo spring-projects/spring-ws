@@ -60,10 +60,4 @@
             <scope>runtime</scope>
         </dependency>
     </dependencies>
-    <profiles>
-        <profile>
-            <id>app</id>
-        </profile>
-    </profiles>
-
 </project>
