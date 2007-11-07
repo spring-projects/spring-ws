@@ -55,7 +55,7 @@ import org.springframework.ws.transport.TransportOutputStream;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
-public class Saaj12Implementation implements SaajImplementation {
+class Saaj12Implementation extends SaajImplementation {
 
     private static final Saaj12Implementation INSTANCE = new Saaj12Implementation();
 
