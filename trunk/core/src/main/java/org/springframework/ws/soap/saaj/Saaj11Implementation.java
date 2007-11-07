@@ -60,7 +60,7 @@ import org.xml.sax.InputSource;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
-public class Saaj11Implementation implements SaajImplementation {
+class Saaj11Implementation extends SaajImplementation {
 
     private static final Saaj11Implementation INSTANCE = new Saaj11Implementation();
 

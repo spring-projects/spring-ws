@@ -52,7 +52,7 @@ import org.springframework.ws.transport.TransportOutputStream;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
-public class Saaj13Implementation implements SaajImplementation {
+class Saaj13Implementation extends SaajImplementation {
 
     private static final Saaj13Implementation INSTANCE = new Saaj13Implementation();
 
