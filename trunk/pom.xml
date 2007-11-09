@@ -580,7 +580,12 @@
             <dependency>
                 <groupId>org.acegisecurity</groupId>
                 <artifactId>acegi-security</artifactId>
-                <version>1.0.3</version>
+                <version>1.0.5</version>
+            </dependency>
+            <dependency>
+                <groupId>org.acegisecurity</groupId>
+                <artifactId>acegi-security-tiger</artifactId>
+                <version>1.0.5</version>
             </dependency>
             <!-- JEE dependencies -->
             <dependency>
