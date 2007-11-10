@@ -21,7 +21,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
-import org.easymock.IAnswer;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.springframework.ws.samples.airline.dao.FlightDao;
@@ -68,11 +67,7 @@ public class AirlineServiceImplTest extends TestCase {
         expect(flightDaoMock.update(flight)).andReturn(flight);
         Ticket ticket = new Ticket();
         ticket.setFlight(flight);
-        expect(ticketDaoMock.save(isA(Ticket.class))).andAnswer(new IAnswer<Ticket>() {
-            public Ticket answer() throws Throwable {
-                return (Ticket) getCurrentArguments()[0];
-            }
-        });
+        ticketDaoMock.save(isA(Ticket.class));
 
         replay(flightDaoMock, ticketDaoMock, securityServiceMock);
 
@@ -97,11 +92,7 @@ public class AirlineServiceImplTest extends TestCase {
         expect(securityServiceMock.getFrequentFlyer("john")).andReturn(frequentFlyer);
         expect(flightDaoMock.getFlight(flightNumber, departureTime)).andReturn(flight);
         expect(flightDaoMock.update(flight)).andReturn(flight);
-        expect(ticketDaoMock.save(isA(Ticket.class))).andAnswer(new IAnswer<Ticket>() {
-            public Ticket answer() throws Throwable {
-                return (Ticket) getCurrentArguments()[0];
-            }
-        });
+        ticketDaoMock.save(isA(Ticket.class));
 
         replay(flightDaoMock, ticketDaoMock, securityServiceMock);
 

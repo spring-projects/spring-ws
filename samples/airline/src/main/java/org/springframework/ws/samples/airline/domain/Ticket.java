@@ -31,7 +31,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Type;
+import org.apache.openjpa.persistence.Persistent;
 import org.joda.time.LocalDate;
 
 @Entity
@@ -43,7 +43,7 @@ public class Ticket implements Serializable {
     private Long id;
 
     @Column(name = "ISSUE_DATE")
-    @Type(type = "org.springframework.ws.samples.airline.domain.hibernate.LocalDateUserType")
+    @Persistent
     private LocalDate issueDate;
 
     @ManyToOne

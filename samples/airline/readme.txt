@@ -12,28 +12,11 @@ Multiple clients are available, showing interoperability with Axis 1, SAAJ, C#, 
 
 2. INSTALLATION
 
-The Airline sample is a normal web application that connects to a database of your choice. By using Maven2 profiles, it
-supports three databases: HSQLDB (the easiest to setup), MySQL, or PostgreSQL.
+The Airline sample is a normal web application that connects to a HSQLDB database.
 
-To execute the sample with the supplied HSQLDB:
+To execute the sample, run "mvn jetty:run" to run the sample in the Jetty6 Web container.
 
-1. Start a command shell in the subdirectory hsqldb, and run "ant". This starts a HSQLDB server with a database named
-   airline.
-2. Run "mvn -P hsqldb sql:execute" to create the schema and insert data into the database.
-3. Run "mvn -P hsqldb jetty:run" to run the sample in the Jetty6 Web container.
-
-To execute the sample with MySQL or PostgreSQL:
-
-1. Change the properties in the pom.xml file to reflect your database connection settings. There are three profiles
-   (one for each supported database), so make sure to edit the right section. The areas to change are indicated with
-   comments.
-2. Run "mvn -P <database> sql:execute", where <database> is "mysql" or "postgresql", to create the schema and insert
-   data into the database.
-3. Run "mvn -P <database> jetty:run", where <database> is "mysql" or "postgresql", to run the sample in the Jetty6
-   Web container.
-
-To create a war file instead of running in Jetty, follow the steps above, but replace the "jetty:run" with "package" in
-the last step.
+To create a war file instead of running in Jetty, use "mvn package".
 
 3. THE CLIENTS
 

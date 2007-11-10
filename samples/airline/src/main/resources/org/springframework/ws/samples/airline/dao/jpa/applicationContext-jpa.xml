@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
 
     <bean id="flightDao" class="org.springframework.ws.samples.airline.dao.jpa.JpaFlightDao">
@@ -25,13 +22,26 @@
         </description>
     </bean>
 
+    <bean class="org.springframework.ws.samples.airline.dao.jpa.DatabaseInitializer">
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="airline"/>
         <property name="dataSource" ref="dataSource"/>
-        <property name="jpaVendorAdapter">
-            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+        <property name="jpaDialect">
+            <bean class="org.springframework.orm.jpa.vendor.OpenJpaDialect"/>
         </property>
         <property name="jpaProperties">
-            <util:properties location="classpath:org/springframework/ws/samples/airline/dao/jpa/hibernate.properties"/>
+            <props>
+                <prop key="openjpa.Log">commons</prop>
+                <prop key="openjpa.jdbc.SynchronizeMappings">buildSchema</prop>
+                <prop key="openjpa.jdbc.MappingDefaults">
+                    FieldStrategies='org.joda.time.DateTime=org.springframework.ws.samples.airline.domain.openjpa.DateTimeValueHandler,
+                    org.joda.time.LocalDate=org.springframework.ws.samples.airline.domain.openjpa.LocalDateValueHandler'
+                </prop>
+                <prop key="openjpa.jdbc.DBDictionary">org.apache.openjpa.jdbc.sql.HSQLDictionary</prop>
+            </props>
         </property>
     </bean>
 
@@ -40,14 +50,10 @@
     </bean>
 
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
-        <property name="driverClassName" value="${jdbc.driverClassName}"/>
-        <property name="url" value="${jdbc.url}"/>
-        <property name="username" value="${jdbc.username}"/>
-        <property name="password" value="${jdbc.password}"/>
-    </bean>
-
-    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations" value="classpath:org/springframework/ws/samples/airline/dao/jdbc.properties"/>
+        <property name="driverClassName" value="org.hsqldb.jdbcDriver"/>
+        <property name="url" value="jdbc:hsqldb:mem:airline"/>
+        <property name="username" value="sa"/>
+        <property name="password" value=""/>
     </bean>
 
     <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor">

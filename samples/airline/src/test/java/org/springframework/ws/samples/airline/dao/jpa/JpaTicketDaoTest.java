@@ -16,24 +16,16 @@
 
 package org.springframework.ws.samples.airline.dao.jpa;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 import org.springframework.test.jpa.AbstractJpaTests;
 import org.springframework.ws.samples.airline.dao.TicketDao;
-import org.springframework.ws.samples.airline.domain.Airport;
 import org.springframework.ws.samples.airline.domain.Flight;
 import org.springframework.ws.samples.airline.domain.Passenger;
-import org.springframework.ws.samples.airline.domain.ServiceClass;
 import org.springframework.ws.samples.airline.domain.Ticket;
 
 public class JpaTicketDaoTest extends AbstractJpaTests {
 
     private TicketDao ticketDao;
-
-    private Flight flight;
-
-    private Passenger passenger;
 
     public void setTicketDao(TicketDao ticketDao) {
         this.ticketDao = ticketDao;
@@ -42,23 +34,6 @@ public class JpaTicketDaoTest extends AbstractJpaTests {
     @Override
     protected String[] getConfigPaths() {
         return new String[]{"applicationContext-jpa.xml"};
-    }
-
-    @Override
-    protected void onSetUpBeforeTransaction() throws Exception {
-        DateTime departureTime = new DateTime(2006, 1, 31, 10, 5, 0, 0, DateTimeZone.UTC);
-        DateTime arrivalTime = new DateTime(2006, 1, 31, 12, 25, 0, 0, DateTimeZone.UTC);
-        Airport fromAirport = new Airport("RTM", "Rotterdam Airport", "Rotterdam");
-        Airport toAirport = new Airport("OSL", "Gardermoen", "Oslo");
-        flight = new Flight(42L);
-        flight.setNumber("KL1653");
-        flight.setDepartureTime(departureTime);
-        flight.setFrom(fromAirport);
-        flight.setArrivalTime(arrivalTime);
-        flight.setTo(toAirport);
-        flight.setServiceClass(ServiceClass.BUSINESS);
-        flight.setSeatsAvailable(90);
-        passenger = new Passenger(42L, "Arjen", "Poutsma");
     }
 
     @Override
@@ -71,13 +46,15 @@ public class JpaTicketDaoTest extends AbstractJpaTests {
     }
 
     public void testSave() throws Exception {
+        Passenger passenger = new Passenger("Arjen", "Poutsma");
+        Flight flight = sharedEntityManager.find(Flight.class, 42L);
         Ticket ticket = new Ticket();
         ticket.addPassenger(passenger);
         ticket.setFlight(flight);
         ticket.setIssueDate(new LocalDate());
         int startTicketCount = jdbcTemplate.queryForInt("SELECT COUNT(0) FROM TICKET");
         int startPassengerCount = jdbcTemplate.queryForInt("SELECT COUNT(0) FROM PASSENGER");
-        ticket = ticketDao.save(ticket);
+        ticketDao.save(ticket);
         sharedEntityManager.flush();
         assertNotNull("No Id generated", ticket.getId());
         int endTicketCount = jdbcTemplate.queryForInt("SELECT COUNT(0) FROM TICKET");
