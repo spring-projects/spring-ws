@@ -134,6 +134,11 @@
             <url>http://download.java.net/maven/1/</url>
             <layout>legacy</layout>
         </repository>
+        <repository>
+            <id>spring-milestone</id>
+            <name>Springframework Maven Milestone Repository</name>
+            <url>http://s3.amazonaws.com/maven.springframework.org/milestone</url>
+        </repository>
     </repositories>
     <build>
         <extensions>
@@ -444,6 +449,11 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
                 <artifactId>spring-jms</artifactId>
                 <version>${spring.version}</version>
             </dependency>
@@ -455,6 +465,12 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-mock</artifactId>
+                <version>${spring.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
                 <version>${spring.version}</version>
                 <scope>test</scope>
             </dependency>

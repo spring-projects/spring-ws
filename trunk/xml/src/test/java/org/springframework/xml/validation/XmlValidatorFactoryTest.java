@@ -19,6 +19,7 @@ package org.springframework.xml.validation;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 
 import junit.framework.TestCase;
@@ -78,6 +79,10 @@ public class XmlValidatorFactoryTest extends TestCase {
         }
 
         public URL getURL() throws IOException {
+            throw new IOException();
+        }
+
+        public URI getURI() throws IOException {
             throw new IOException();
         }
 
