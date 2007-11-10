@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
  * @author Arjen Poutsma
  * @since 1.1.0
  */
-public class Jaxb2MarshallerBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
+class Jaxb2MarshallerBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
     public static final String JAXB2_MARSHALLER_BEAN_NAME = "org.springframework.oxm.jaxb.Jaxb2Marshaller";
 
