@@ -22,6 +22,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
@@ -38,9 +39,15 @@ import org.springframework.util.StringUtils;
  * @see #setValidating(boolean)
  * @since 1.0.0
  */
-public class Jaxb1Marshaller extends AbstractJaxbMarshaller {
+public class Jaxb1Marshaller extends AbstractJaxbMarshaller implements BeanClassLoaderAware {
 
     private boolean validating = false;
+
+    private ClassLoader classLoader;
+
+    public void setBeanClassLoader(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+    }
 
     /** Set if the JAXB <code>Unmarshaller</code> should validate the incoming document. Default is <code>false</code>. */
     public void setValidating(boolean validating) {
@@ -77,7 +84,8 @@ public class Jaxb1Marshaller extends AbstractJaxbMarshaller {
         if (logger.isInfoEnabled()) {
             logger.info("Creating JAXBContext with context path [" + getContextPath() + "]");
         }
-        return JAXBContext.newInstance(getContextPath());
+        return classLoader != null ? JAXBContext.newInstance(getContextPath(), classLoader) :
+                JAXBContext.newInstance(getContextPath());
     }
 
     protected void initJaxbUnmarshaller(Unmarshaller unmarshaller) throws JAXBException {
