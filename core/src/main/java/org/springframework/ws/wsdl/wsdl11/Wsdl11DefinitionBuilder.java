@@ -21,8 +21,7 @@ import org.springframework.ws.wsdl.WsdlDefinitionException;
 /**
  * Defines the contract for classes that can create a {@link Wsdl11Definition} at runtime.
  * <p/>
- * Used by {@link org.springframework.ws.wsdl.wsdl11.DynamicWsdl11Definition} to generate the WSDL based on a schema, a
- * class, etc.
+ * Used by {@link DynamicWsdl11Definition} to generate the WSDL based on a schema, a class, etc.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
