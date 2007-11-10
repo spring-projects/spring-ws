@@ -91,7 +91,8 @@ public class AirlineServiceImpl implements AirlineService {
         }
         flight.substractSeats(passengers.size());
         flightDao.update(flight);
-        return ticketDao.save(ticket);
+        ticketDao.save(ticket);
+        return ticket;
     }
 
     public Flight getFlight(Long id) throws NoSuchFlightException {

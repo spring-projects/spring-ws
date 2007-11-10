@@ -27,7 +27,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Type;
+import org.apache.openjpa.persistence.Persistent;
 import org.joda.time.DateTime;
 
 @Entity
@@ -43,7 +43,7 @@ public class Flight implements Serializable {
     private String number;
 
     @Column(name = "DEPARTURE_TIME")
-    @Type(type = "org.springframework.ws.samples.airline.domain.hibernate.DateTimeUserType")
+    @Persistent
     private DateTime departureTime;
 
     @ManyToOne
@@ -51,7 +51,7 @@ public class Flight implements Serializable {
     private Airport from;
 
     @Column(name = "ARRIVAL_TIME")
-    @Type(type = "org.springframework.ws.samples.airline.domain.hibernate.DateTimeUserType")
+    @Persistent
     private DateTime arrivalTime;
 
     @ManyToOne
@@ -160,11 +160,7 @@ public class Flight implements Serializable {
         if (!departureTime.equals(flight.departureTime)) {
             return false;
         }
-        if (!number.equals(flight.number)) {
-            return false;
-        }
-
-        return true;
+        return number.equals(flight.number);
     }
 
     public int hashCode() {

@@ -30,7 +30,7 @@ public class JpaTicketDao implements TicketDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public Ticket save(Ticket ticket) throws DataAccessException {
-        return entityManager.merge(ticket);
+    public void save(Ticket ticket) throws DataAccessException {
+        entityManager.persist(ticket);
     }
 }

@@ -40,11 +40,11 @@ public class JpaFlightDao implements FlightDao {
                                     String toAirportCode,
                                     Interval interval,
                                     ServiceClass serviceClass) throws DataAccessException {
-        Query query = entityManager.createQuery("SELECT f FROM Flight f WHERE f.from.code = :from " +
-                "AND f.to.code = :to AND f.departureTime >= :start AND f.departureTime <= :end AND " +
+        Query query = entityManager.createQuery("SELECT f FROM Flight f WHERE f.from.code = :fromParam " +
+                "AND f.to.code = :toParam AND f.departureTime >= :start AND f.departureTime <= :end AND " +
                 "f.serviceClass = :class");
-        query.setParameter("from", fromAirportCode);
-        query.setParameter("to", toAirportCode);
+        query.setParameter("fromParam", fromAirportCode);
+        query.setParameter("toParam", toAirportCode);
         query.setParameter("start", interval.getStart());
         query.setParameter("end", interval.getEnd());
         query.setParameter("class", serviceClass);
