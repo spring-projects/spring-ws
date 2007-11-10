@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 /**
- * Builds a <code>WsdlDefinition</code> with a SOAP 1.1 binding based on an XSD schema. This builder iterates over all
+ * Builds a <code>WsdlDefinition</code> with a SOAP 1.2 binding based on an XSD schema. This builder iterates over all
  * <code>element</code>s found in the schema, and creates a <code>message</code> for those elements that end with the
  * request or response suffix. It combines these messages into <code>operation</code>s, and builds a
  * <code>portType</code> based on the operations.
@@ -76,13 +76,14 @@ import org.xml.sax.SAXException;
  * Requires the <code>schema</code> and <code>portTypeName</code> properties to be set.
  *
  * @author Arjen Poutsma
+ * @author Alex Marshall
  * @see #setSchema(org.springframework.core.io.Resource)
  * @see #setPortTypeName(String)
  * @see #setRequestSuffix(String)
  * @see #setResponseSuffix(String)
- * @since 1.0.0
+ * @since 1.1.0
  */
-public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jDefinitionBuilder
+public class XsdBasedSoap12Wsdl4jDefinitionBuilder extends AbstractSoap12Wsdl4jDefinitionBuilder
         implements InitializingBean {
 
     /** The default suffix used to detect request elements in the schema. */
@@ -498,4 +499,5 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
     protected void populateService(Service service) throws WSDLException {
         service.setQName(new QName(targetNamespace, portTypeName + SERVICE_SUFFIX));
     }
+
 }

@@ -139,7 +139,7 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilderTest extends XMLTestCase {
         transformer.transform(definition.getSource(), domResult);
 
         Document result = (Document) domResult.getNode();
-        Document expected = documentBuilder.parse(getClass().getResourceAsStream("airline.wsdl"));
+        Document expected = documentBuilder.parse(getClass().getResourceAsStream("airline-soap11.wsdl"));
         XMLUnit.setIgnoreWhitespace(true);
         assertXMLEqual("Invalid WSDL built", expected, result);
     }
