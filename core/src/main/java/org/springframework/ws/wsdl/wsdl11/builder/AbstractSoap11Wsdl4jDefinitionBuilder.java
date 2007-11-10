@@ -80,14 +80,12 @@ public abstract class AbstractSoap11Wsdl4jDefinitionBuilder extends AbstractBind
     }
 
     /**
-     * Calls <code>populateBindingInternal()</code>, creates <code>SOAPBinding</code>, and calls
-     * <code>populateSoapBinding()</code>.
+     * Calls {@link AbstractBindingWsdl4jDefinitionBuilder#populateBinding(Binding, PortType)}, creates {@link
+     * SOAPBinding}, and calls {@link #populateSoapBinding(SOAPBinding)}.
      *
      * @param binding  the WSDL4J <code>Binding</code>
      * @param portType the corresponding <code>PortType</code>
      * @throws WSDLException in case of errors
-     * @see SOAPBinding
-     * @see #populateSoapBinding(SOAPBinding)
      */
     protected void populateBinding(Binding binding, PortType portType) throws WSDLException {
         super.populateBinding(binding, portType);
@@ -97,7 +95,7 @@ public abstract class AbstractSoap11Wsdl4jDefinitionBuilder extends AbstractBind
     }
 
     /**
-     * Called after the <code>SOAPBinding</code> has been created. Default implementation sets the binding style to
+     * Called after the {@link SOAPBinding} has been created. Default implementation sets the binding style to
      * <code>"document"</code>, and set the transport URI to the value set on this builder. Subclasses can override this
      * behavior.
      *
@@ -114,13 +112,11 @@ public abstract class AbstractSoap11Wsdl4jDefinitionBuilder extends AbstractBind
     }
 
     /**
-     * Calls <code>getBindingOperationName()</code>, creates a <code>SOAPOperation</code>, and calls
-     * <code>populateSoapOperation()</code>.
+     * Calls {@link AbstractBindingWsdl4jDefinitionBuilder#populateBindingOperation(BindingOperation, Operation)},
+     * creates a {@link SOAPOperation}, and calls {@link #populateSoapOperation(SOAPOperation)}.
      *
      * @param bindingOperation the WSDL4J <code>BindingOperation</code>
      * @throws WSDLException in case of errors
-     * @see SOAPOperation
-     * @see #populateSoapOperation(SOAPOperation)
      */
     protected void populateBindingOperation(BindingOperation bindingOperation, Operation operation)
             throws WSDLException {
@@ -131,7 +127,7 @@ public abstract class AbstractSoap11Wsdl4jDefinitionBuilder extends AbstractBind
     }
 
     /**
-     * Called after the <code>SOAPOperation</code> has been created.
+     * Called after the {@link SOAPOperation} has been created.
      * <p/>
      * Default implementation set the <code>SOAPAction</code> uri to an empty string.
      *
@@ -144,12 +140,10 @@ public abstract class AbstractSoap11Wsdl4jDefinitionBuilder extends AbstractBind
     }
 
     /**
-     * Creates a <code>SOAPBody</code>, and calls <code>populateSoapBody()</code>.
+     * Creates a {@link SOAPBody}, and calls {@link #populateSoapBody(SOAPBody)}.
      *
      * @param bindingInput the WSDL4J <code>BindingInput</code>
      * @throws WSDLException in case of errors
-     * @see SOAPOperation
-     * @see #populateSoapBody(SOAPBody)
      */
     protected void populateBindingInput(BindingInput bindingInput, Input input) throws WSDLException {
         super.populateBindingInput(bindingInput, input);
@@ -159,12 +153,10 @@ public abstract class AbstractSoap11Wsdl4jDefinitionBuilder extends AbstractBind
     }
 
     /**
-     * Creates a <code>SOAPBody</code>, and calls <code>populateSoapBody()</code>.
+     * Creates a {@link SOAPBody}, and calls {@link #populateSoapBody(SOAPBody)}.
      *
      * @param bindingOutput the WSDL4J <code>BindingOutput</code>
-     * @throws javax.wsdl.WSDLException in case of errors
-     * @see SOAPOperation
-     * @see #populateSoapBody(SOAPBody)
+     * @throws WSDLException in case of errors
      */
     protected void populateBindingOutput(BindingOutput bindingOutput, Output output) throws WSDLException {
         super.populateBindingOutput(bindingOutput, output);
@@ -174,12 +166,10 @@ public abstract class AbstractSoap11Wsdl4jDefinitionBuilder extends AbstractBind
     }
 
     /**
-     * Creates a <code>SOAPBody</code>, and calls <code>populateSoapBody()</code>.
+     * Creates a {@link SOAPBody}, and calls {@link #populateSoapBody(SOAPBody)}.
      *
      * @param bindingFault the WSDL4J <code>BindingFault</code>
-     * @throws javax.wsdl.WSDLException in case of errors
-     * @see SOAPOperation
-     * @see #populateSoapBody(SOAPBody)
+     * @throws WSDLException in case of errors
      */
     protected void populateBindingFault(BindingFault bindingFault, Fault fault) throws WSDLException {
         super.populateBindingFault(bindingFault, fault);
@@ -189,7 +179,7 @@ public abstract class AbstractSoap11Wsdl4jDefinitionBuilder extends AbstractBind
     }
 
     /**
-     * Called after the <code>SOAPBody</code> has been created. Default implementation sets the use style to
+     * Called after the {@link SOAPBody} has been created. Default implementation sets the use style to
      * <code>"literal"</code>. Subclasses can override this behavior.
      *
      * @param soapBody the WSDL4J <code>SOAPBody</code>
@@ -201,13 +191,13 @@ public abstract class AbstractSoap11Wsdl4jDefinitionBuilder extends AbstractBind
     }
 
     /**
-     * Called after the <code>SOAPFault</code> has been created. Default implementation sets the use style to
+     * Called after the {@link SOAPFault} has been created. Default implementation sets the use style to
      * <code>"literal"</code>, and sets the name equal to the binding fault. Subclasses can override this behavior.
      *
      * @param bindingFault the WSDL4J <code>BindingFault</code>
      * @param soapFault    the WSDL4J <code>SOAPFault</code>
      * @throws WSDLException in case of errors
-     * @see SOAPBody#setUse(String)
+     * @see SOAPFault#setUse(String)
      */
     protected void populateSoapFault(BindingFault bindingFault, SOAPFault soapFault) throws WSDLException {
         soapFault.setName(bindingFault.getName());
@@ -215,12 +205,10 @@ public abstract class AbstractSoap11Wsdl4jDefinitionBuilder extends AbstractBind
     }
 
     /**
-     * Creates a <code>SOAPAddress</code>, and calls <code>populateSoapAddress()</code>.
+     * Creates a {@link SOAPAddress}, and calls {@link #populateSoapAddress(SOAPAddress)}.
      *
      * @param port the WSDL4J <code>Port</code>
-     * @throws javax.wsdl.WSDLException in case of errors
-     * @see SOAPAddress
-     * @see #populateSoapBody(SOAPBody)
+     * @throws WSDLException in case of errors
      */
     protected void populatePort(Port port, Binding binding) throws WSDLException {
         super.populatePort(port, binding);
@@ -230,8 +218,8 @@ public abstract class AbstractSoap11Wsdl4jDefinitionBuilder extends AbstractBind
     }
 
     /**
-     * Called after the <code>SOAPAddress</code> has been created. Default implementation sets the location URI to the
-     * value set on this builder. Subclasses can override this behavior.
+     * Called after the {@link SOAPAddress} has been created. Default implementation sets the location URI to the value
+     * set on this builder. Subclasses can override this behavior.
      *
      * @param soapAddress the WSDL4J <code>SOAPAddress</code>
      * @throws WSDLException in case of errors
