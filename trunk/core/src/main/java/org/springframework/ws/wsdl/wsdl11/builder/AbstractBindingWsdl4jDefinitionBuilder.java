@@ -50,25 +50,19 @@ public abstract class AbstractBindingWsdl4jDefinitionBuilder extends AbstractWsd
     private static final String PORT_SUFFIX = "Port";
 
     /**
-     * Creates a <code>Binding</code> for each <code>PortType</code> in the definition, and calls
-     * <code>populateBinding</code> with it. Creates a <code>BindingOperation</code> for each <code>Operation</code> in
-     * the port type, a <code>BindingInput</code> for each <code>Input</code> in the operation, etc.
+     * Creates a {@link Binding} for each {@link PortType} in the definition, and calls {@link #populateBinding(Binding,
+     * PortType)} with it. Creates a {@link BindingOperation} for each {@link Operation} in the port type, a {@link
+     * BindingInput} for each {@link Input} in the operation, etc.
      * <p/>
      * Calls the various <code>populate</code> methods with the created WSDL4J objects.
      *
      * @param definition the WSDL4J <code>Definition</code>
      * @throws WSDLException in case of errors
-     * @see javax.wsdl.Binding
-     * @see javax.wsdl.extensions.soap.SOAPBinding
-     * @see #populateBinding(javax.wsdl.Binding,javax.wsdl.PortType)
-     * @see javax.wsdl.BindingOperation
-     * @see #populateBindingOperation(javax.wsdl.BindingOperation,javax.wsdl.Operation)
-     * @see javax.wsdl.BindingInput
-     * @see #populateBindingInput(javax.wsdl.BindingInput,javax.wsdl.Input)
-     * @see javax.wsdl.BindingOutput
-     * @see #populateBindingOutput(javax.wsdl.BindingOutput,javax.wsdl.Output)
-     * @see javax.wsdl.BindingFault
-     * @see #populateBindingFault(javax.wsdl.BindingFault,javax.wsdl.Fault)
+     * @see #populateBinding(Binding, PortType)
+     * @see #populateBindingOperation(BindingOperation, Operation)
+     * @see #populateBindingInput(BindingInput, Input)
+     * @see #populateBindingOutput(BindingOutput, Output)
+     * @see #populateBindingFault(BindingFault, Fault)
      */
     public void buildBindings(Definition definition) throws WSDLException {
         for (Iterator iterator = definition.getPortTypes().values().iterator(); iterator.hasNext();) {
@@ -83,11 +77,11 @@ public abstract class AbstractBindingWsdl4jDefinitionBuilder extends AbstractWsd
     }
 
     /**
-     * Called after the <code>Binding</code> has been created, but before any sub-elements are added. Subclasses can
+     * Called after the {@link Binding} has been created, but before any sub-elements are added. Subclasses can
      * implement this method to define the binding name, or add extensions to it.
      * <p/>
-     * Default implementation sets the binding name to the port type name with the suffix <code>Binding</code> appended
-     * to it.
+     * Default implementation sets the binding name to the port type name with the suffix {@link Binding} appended to
+     * it.
      *
      * @param binding  the WSDL4J <code>Binding</code>
      * @param portType the corresponding <code>PortType</code>
@@ -128,8 +122,8 @@ public abstract class AbstractBindingWsdl4jDefinitionBuilder extends AbstractWsd
     }
 
     /**
-     * Called after the <code>BindingOperation</code> has been created, but before any sub-elements are added.
-     * Subclasses can implement this method to define the binding name, or add extensions to it.
+     * Called after the {@link BindingOperation} has been created, but before any sub-elements are added. Subclasses can
+     * implement this method to define the binding name, or add extensions to it.
      * <p/>
      * Default implementation sets the name of the binding operation to the name of the operation.
      *
@@ -143,8 +137,8 @@ public abstract class AbstractBindingWsdl4jDefinitionBuilder extends AbstractWsd
     }
 
     /**
-     * Called after the <code>BindingInput</code> has been created. Subclasses can implement this method to define the
-     * name, or add extensions to it.
+     * Called after the {@link BindingInput} has been created. Subclasses can implement this method to define the name,
+     * or add extensions to it.
      * <p/>
      * Default implementation set the name of the binding input to the name of the input.
      *
@@ -157,8 +151,8 @@ public abstract class AbstractBindingWsdl4jDefinitionBuilder extends AbstractWsd
     }
 
     /**
-     * Called after the <code>BindingOutput</code> has been created. Subclasses can implement this method to define the
-     * name, or add extensions to it.
+     * Called after the {@link BindingOutput} has been created. Subclasses can implement this method to define the name,
+     * or add extensions to it.
      * <p/>
      * Default implementation set the name of the binding output to the name of the output.
      *
@@ -171,8 +165,8 @@ public abstract class AbstractBindingWsdl4jDefinitionBuilder extends AbstractWsd
     }
 
     /**
-     * Called after the <code>BindingFault</code> has been created. Subclasses can implement this method to define the
-     * name, or add extensions to it.
+     * Called after the {@link BindingFault} has been created. Subclasses can implement this method to define the name,
+     * or add extensions to it.
      * <p/>
      * Default implementation set the name of the binding fault to the name of the fault.
      *
@@ -185,14 +179,12 @@ public abstract class AbstractBindingWsdl4jDefinitionBuilder extends AbstractWsd
     }
 
     /**
-     * Creates a single <code>Service</code>, and calls <code>populateService()</code> with it. Creates a corresponding
-     * <code>Port</code> for each <code>Binding</code>, which is passed to <code>populatePort()</code>.
+     * Creates a single {@link Service}, and calls {@link #populateService(Service)} with it. Creates a corresponding
+     * {@link Port} for each {@link Binding}, which is passed to {@link #populatePort(Port, Binding)}.
      *
      * @param definition the WSDL4J <code>Definition</code>
      * @throws WSDLException in case of errors
-     * @see javax.wsdl.Service
-     * @see javax.wsdl.Port
-     * @see #populatePort(javax.wsdl.Port,javax.wsdl.Binding)
+     * @see #populatePort(Port, Binding)
      */
     public void buildServices(Definition definition) throws WSDLException {
         Service service = definition.createService();
@@ -202,7 +194,7 @@ public abstract class AbstractBindingWsdl4jDefinitionBuilder extends AbstractWsd
     }
 
     /**
-     * Called after the <code>Binding</code> has been created, but before any sub-elements are added. Subclasses can
+     * Called after the {@link Binding} has been created, but before any sub-elements are added. Subclasses can
      * implement this method to define the binding name, or add extensions to it.
      * <p/>
      * Default implementation is empty.
@@ -224,12 +216,10 @@ public abstract class AbstractBindingWsdl4jDefinitionBuilder extends AbstractWsd
     }
 
     /**
-     * Called after the <code>Port</code> has been created, but before any sub-elements are added. Subclasses can
-     * implement this method to define the port name, or add extensions to it.
+     * Called after the {@link Port} has been created, but before any sub-elements are added. Subclasses can implement
+     * this method to define the port name, or add extensions to it.
      * <p/>
-     * <p/>
-     * Default implementation sets the port name to the port type name with the suffix <code>Port</code> appended to
-     * it.
+     * Default implementation sets the port name to the port type name with the suffix {@link Port} appended to it.
      *
      * @param port    the WSDL4J <code>Port</code>
      * @param binding the corresponding WSDL4J <code>Binding</code>
