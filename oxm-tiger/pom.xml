@@ -79,6 +79,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- Spring dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <scope>test</scope>
+        </dependency>
         <!-- XML handling dependencies -->
         <dependency>
             <groupId>stax</groupId>
