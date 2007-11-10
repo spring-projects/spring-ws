@@ -149,7 +149,6 @@ public class SoapFaultMappingExceptionResolverTest extends XMLTestCase {
         resolver.setExceptionMappings(mappings);
         SoapFaultDefinition defaultFault = new SoapFaultDefinition();
         defaultFault.setFaultCode(SoapFaultDefinition.CLIENT);
-        defaultFault.setFaultStringOrReason("faultstring");
         resolver.setDefaultFault(defaultFault);
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
         SOAPMessage message = messageFactory.createMessage();
@@ -164,7 +163,20 @@ public class SoapFaultMappingExceptionResolverTest extends XMLTestCase {
         Soap11Fault fault = (Soap11Fault) response.getSoapBody().getFault();
         assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getClientOrSenderFaultName(),
                 fault.getFaultCode());
-        assertEquals("Invalid fault string on fault", "faultstring", fault.getFaultStringOrReason());
+        assertEquals("Invalid fault string on fault", "bla", fault.getFaultStringOrReason());
+        assertNull("Detail on fault", fault.getFaultDetail());
+
+        // SWS-226
+        result = resolver.resolveException(context, null, new IllegalArgumentException());
+        assertTrue("resolveException returns false", result);
+        assertTrue("Context has no response", context.hasResponse());
+        response = (SoapMessage) context.getResponse();
+        assertTrue("Response has no fault", response.getSoapBody().hasFault());
+        fault = (Soap11Fault) response.getSoapBody().getFault();
+        assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getClientOrSenderFaultName(),
+                fault.getFaultCode());
+        assertEquals("Invalid fault string on fault", "java.lang.IllegalArgumentException",
+                fault.getFaultStringOrReason());
         assertNull("Detail on fault", fault.getFaultDetail());
     }
 
