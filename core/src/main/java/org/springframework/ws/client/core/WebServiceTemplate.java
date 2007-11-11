@@ -42,6 +42,7 @@ import org.springframework.ws.client.WebServiceTransformerException;
 import org.springframework.ws.client.WebServiceTransportException;
 import org.springframework.ws.client.support.WebServiceAccessor;
 import org.springframework.ws.soap.client.core.SoapFaultMessageResolver;
+import org.springframework.ws.support.DefaultStrategiesHelper;
 import org.springframework.ws.support.MarshallingUtils;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.TransportException;
@@ -51,7 +52,6 @@ import org.springframework.ws.transport.context.DefaultTransportContext;
 import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
 import org.springframework.ws.transport.http.HttpUrlConnectionMessageSender;
-import org.springframework.ws.transport.support.DefaultStrategiesHelper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

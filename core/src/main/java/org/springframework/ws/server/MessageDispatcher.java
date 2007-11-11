@@ -45,8 +45,8 @@ import org.springframework.ws.server.endpoint.adapter.MessageMethodEndpointAdapt
 import org.springframework.ws.server.endpoint.adapter.PayloadEndpointAdapter;
 import org.springframework.ws.server.endpoint.adapter.PayloadMethodEndpointAdapter;
 import org.springframework.ws.soap.server.SoapMessageDispatcher;
+import org.springframework.ws.support.DefaultStrategiesHelper;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
-import org.springframework.ws.transport.support.DefaultStrategiesHelper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

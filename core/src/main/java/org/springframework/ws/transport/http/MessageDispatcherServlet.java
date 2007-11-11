@@ -36,8 +36,8 @@ import org.springframework.ws.server.EndpointAdapter;
 import org.springframework.ws.server.EndpointExceptionResolver;
 import org.springframework.ws.server.EndpointMapping;
 import org.springframework.ws.server.MessageDispatcher;
+import org.springframework.ws.support.DefaultStrategiesHelper;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
-import org.springframework.ws.transport.support.DefaultStrategiesHelper;
 import org.springframework.ws.wsdl.WsdlDefinition;
 
 /**
