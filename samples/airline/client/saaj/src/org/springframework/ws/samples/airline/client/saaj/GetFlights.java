@@ -45,7 +45,7 @@ import javax.xml.transform.stream.StreamResult;
  */
 public class GetFlights {
 
-    public static final String NAMESPACE_URI = "http://www.springframework.org/spring-ws/samples/airline/schemas";
+    public static final String NAMESPACE_URI = "http://www.springframework.org/spring-ws/samples/airline/schemas/messages";
 
     public static final String PREFIX = "airline";
 

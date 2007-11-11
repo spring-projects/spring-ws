@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+        xmlns:util="http://www.springframework.org/schema/util" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
     <!-- ===================== ENDPOINTS  ===================================== -->
@@ -29,7 +29,7 @@
     -->
 
     <bean id="getFrequentFlyerMileageEndpoint"
-          class="org.springframework.ws.samples.airline.ws.GetFrequentFlyerMileageEndpoint">
+            class="org.springframework.ws.samples.airline.ws.GetFrequentFlyerMileageEndpoint">
         <description>
             This endpoint handles get frequent flyer mileage requests.
         </description>
@@ -61,7 +61,7 @@
             <list>
                 <bean class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor"/>
                 <bean class="org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor">
-                    <property name="schema" value="/WEB-INF/xsd/airline.xsd"/>
+                    <property name="schemas" value="/messages.xsd"/>
                     <property name="validateRequest" value="true"/>
                     <property name="validateResponse" value="true"/>
                 </bean>
@@ -77,7 +77,7 @@
         </description>
         <property name="mappings">
             <props>
-                <prop key="{http://www.springframework.org/spring-ws/samples/airline/schemas}GetFrequentFlyerMileageRequest">
+                <prop key="{http://www.springframework.org/spring-ws/samples/airline/schemas/messages}GetFrequentFlyerMileageRequest">
                     getFrequentFlyerMileageEndpoint
                 </prop>
             </props>
@@ -115,7 +115,7 @@
         </description>
         <property name="namespaces">
             <props>
-                <prop key="tns">http://www.springframework.org/spring-ws/samples/airline/schemas</prop>
+                <prop key="messages">http://www.springframework.org/spring-ws/samples/airline/schemas/messages</prop>
             </props>
         </property>
     </bean>
@@ -170,11 +170,12 @@
         </description>
         <property name="builder">
             <bean class="org.springframework.ws.wsdl.wsdl11.builder.XsdBasedSoap11Wsdl4jDefinitionBuilder">
-                <property name="schema" value="/WEB-INF/xsd/airline.xsd"/>
+                <property name="schema" value="/messages.xsd"/>
+                <property name="schemaLocation" value="messages.xsd"/>
                 <property name="portTypeName" value="Airline"/>
                 <property name="locationUri" value="http://localhost:8080/airline/services"/>
                 <property name="targetNamespace"
-                          value="http://www.springframework.org/spring-ws/samples/airline/definitions"/>
+                        value="http://www.springframework.org/spring-ws/samples/airline/definitions"/>
             </bean>
         </property>
     </bean>

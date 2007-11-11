@@ -25,7 +25,7 @@ public interface AirlineWebServiceConstants {
 
     String GET_FREQUENT_FLYER_MILEAGE_RESPONSE = "GetFrequentFlyerMileageResponse";
 
-    String NAMESPACE = "http://www.springframework.org/spring-ws/samples/airline/schemas";
+    String MESSAGES_NAMESPACE = "http://www.springframework.org/spring-ws/samples/airline/schemas/messages";
 
     String GET_FREQUENT_FLYER_MILEAGE_REQUEST = "GetFrequentFlyerMileageRequest";
 }

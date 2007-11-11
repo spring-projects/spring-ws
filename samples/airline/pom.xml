@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <artifactId>spring-ws-samples</artifactId>
         <groupId>org.springframework.ws</groupId>
@@ -79,7 +79,7 @@
                 </executions>
                 <configuration>
                     <generatePackage>org.springframework.ws.samples.airline.schema</generatePackage>
-                    <schemaDirectory>src/main/webapp/WEB-INF/xsd</schemaDirectory>
+                    <schemaDirectory>src/main/webapp/</schemaDirectory>
                 </configuration>
             </plugin>
             <plugin>
@@ -90,7 +90,7 @@
                         <configuration>
                             <tasks>
                                 <java classname="org.apache.openjpa.enhance.PCEnhancer"
-                                      classpathref="maven.runtime.classpath" dir="target/classes" fork="true"/>
+                                        classpathref="maven.runtime.classpath" dir="target/classes" fork="true"/>
                             </tasks>
                         </configuration>
                         <goals>

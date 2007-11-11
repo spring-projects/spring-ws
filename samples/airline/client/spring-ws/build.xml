@@ -4,7 +4,7 @@
     <property name="bin.dir" value="bin"/>
     <property name="src.dir" value="src"/>
     <property name="gen.dir" value="gen"/>
-    <property name="schema" value="../../src/main/webapp/WEB-INF/xsd/airline.xsd"/>
+    <property name="schema" value="../../src/main/webapp/messages.xsd"/>
 
     <target name="init">
         <typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant">
@@ -52,7 +52,7 @@
 
     <target name="getFlights" depends="build">
         <java classname="org.springframework.ws.samples.airline.client.sws.AirlineClient" fork="true"
-              failonerror="true">
+                failonerror="true">
             <classpath refid="classpath"/>
             <classpath location="${bin.dir}"/>
         </java>

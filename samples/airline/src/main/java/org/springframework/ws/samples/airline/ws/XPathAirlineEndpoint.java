@@ -23,10 +23,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.transform.Source;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.support.MarshallingSource;
 import org.springframework.util.Assert;
@@ -46,6 +42,11 @@ import org.springframework.ws.samples.airline.service.NoSuchFrequentFlyerExcepti
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.XPathParam;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -85,11 +86,11 @@ public class XPathAirlineEndpoint implements AirlineWebServiceConstants {
      * @param departureDateString the string representation of the departure date
      * @param serviceClassString  the string representation of the service class
      */
-    @PayloadRoot(localPart = GET_FLIGHTS_REQUEST, namespace = NAMESPACE)
-    public Source getFlights(@XPathParam("//tns:from")String from,
-                             @XPathParam("//tns:to")String to,
-                             @XPathParam("//tns:departureDate")String departureDateString,
-                             @XPathParam("//tns:serviceClass")String serviceClassString)
+    @PayloadRoot(localPart = GET_FLIGHTS_REQUEST, namespace = MESSAGES_NAMESPACE)
+    public Source getFlights(@XPathParam("//messages:from")String from,
+                             @XPathParam("//messages:to")String to,
+                             @XPathParam("//messages:departureDate")String departureDateString,
+                             @XPathParam("//messages:serviceClass")String serviceClassString)
             throws DatatypeConfigurationException {
         if (logger.isDebugEnabled()) {
             logger.debug("Received GetFlightsRequest '" + from + "' to '" + to + "' on " + departureDateString);
@@ -116,11 +117,11 @@ public class XPathAirlineEndpoint implements AirlineWebServiceConstants {
      * @param passengerNodes      the passenger nodes
      * @param frequentFlyerNodes  the frequent flyer nodes
      */
-    @PayloadRoot(localPart = BOOK_FLIGHT_REQUEST, namespace = NAMESPACE)
-    public Source bookFlight(@XPathParam("//tns:flightNumber")String flightNumber,
-                             @XPathParam("//tns:departureTime")String departureTimeString,
-                             @XPathParam("//tns:passengers/tns:passenger")NodeList passengerNodes,
-                             @XPathParam("//tns:passengers/tns:username")NodeList frequentFlyerNodes) throws
+    @PayloadRoot(localPart = BOOK_FLIGHT_REQUEST, namespace = MESSAGES_NAMESPACE)
+    public Source bookFlight(@XPathParam("//messages:flightNumber")String flightNumber,
+                             @XPathParam("//messages:departureTime")String departureTimeString,
+                             @XPathParam("//messages:passengers/messages:passenger")NodeList passengerNodes,
+                             @XPathParam("//messages:passengers/messages:username")NodeList frequentFlyerNodes) throws
             NoSeatAvailableException, NoSuchFlightException, NoSuchFrequentFlyerException,
             DatatypeConfigurationException, JAXBException {
         if (logger.isDebugEnabled()) {
@@ -145,8 +146,10 @@ public class XPathAirlineEndpoint implements AirlineWebServiceConstants {
                 continue;
             }
             Element passengerElement = (Element) passengerNodes.item(i);
-            Element firstNameElement = (Element) passengerElement.getElementsByTagNameNS(NAMESPACE, "first").item(0);
-            Element lastNameElement = (Element) passengerElement.getElementsByTagNameNS(NAMESPACE, "last").item(0);
+            Element firstNameElement =
+                    (Element) passengerElement.getElementsByTagNameNS(MESSAGES_NAMESPACE, "first").item(0);
+            Element lastNameElement =
+                    (Element) passengerElement.getElementsByTagNameNS(MESSAGES_NAMESPACE, "last").item(0);
             Passenger passenger = new Passenger(firstNameElement.getTextContent(), lastNameElement.getTextContent());
             passengers.add(passenger);
         }
