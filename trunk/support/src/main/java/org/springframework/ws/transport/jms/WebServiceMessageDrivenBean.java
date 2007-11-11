@@ -35,7 +35,7 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
 /**
  * EJB {@link MessageDrivenBean} that can be used to handleMessage incoming JMS messages.
  * <p/>
- * This class needs a JMS {@link ConnectionFactory}, and a {@link WebServiceMessageFactory} and {@link
+ * This class needs a JMS {@link ConnectionFactory}, a {@link WebServiceMessageFactory} and {@link
  * WebServiceMessageReceiver} to operate. By default, these are obtained by doing a bean lookup on the bean factory
  * provided by {@link #getBeanFactory()} the super class.
  *
