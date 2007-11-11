@@ -3,6 +3,7 @@
 
     <target name="clean-all">
         <ant dir="axis1" target="clean"/>
+        <ant dir="dotnet" target="clean"/>
         <ant dir="jax-ws" target="clean"/>
         <ant dir="jms" target="clean"/>
         <ant dir="saaj" target="clean"/>
@@ -11,6 +12,7 @@
 
     <target name="run-all">
         <ant dir="axis1" target="run"/>
+        <ant dir="dotnet" target="run"/>
         <ant dir="jax-ws" target="run"/>
         <ant dir="jms" target="run"/>
         <ant dir="saaj" target="run"/>
