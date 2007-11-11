@@ -178,7 +178,7 @@
                     Both the <classname>SaajSoapMessageFactory</classname> and the
                     <classname>AxiomSoapMessageFactory</classname> have a <property>soapVersion</property> property,
                     where you can inject a <interfacename>SoapVersion</interfacename> constant. By default, the version
-                    is 1.1, but you an set it to 1.2 like so:
+                    is 1.1, but you can set it to 1.2 like so:
                 </para>
                 <programlisting><![CDATA[
 <beans xmlns="http://www.springframework.org/schema/beans"
