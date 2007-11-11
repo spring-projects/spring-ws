@@ -18,6 +18,7 @@ package org.springframework.ws.transport.http;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -39,8 +40,8 @@ public class HttpUrlConnectionMessageSender extends AbstractHttpWebServiceMessag
 
     private static final String HTTP_METHOD_POST = "POST";
 
-    public WebServiceConnection createConnection(String uri) throws IOException {
-        URL url = new URL(uri);
+    public WebServiceConnection createConnection(URI uri) throws IOException {
+        URL url = uri.toURL();
         URLConnection connection = url.openConnection();
         if (!(connection instanceof HttpURLConnection)) {
             throw new HttpTransportException("URI [" + uri + "] is not an HTTP URL");
@@ -52,7 +53,8 @@ public class HttpUrlConnectionMessageSender extends AbstractHttpWebServiceMessag
             httpURLConnection.setDoInput(true);
             httpURLConnection.setDoOutput(true);
             if (isAcceptGzipEncoding()) {
-                httpURLConnection.setRequestProperty(HTTP_HEADER_ACCEPT_ENCODING, ENCODING_GZIP);
+                httpURLConnection.setRequestProperty(HttpTransportConstants.HEADER_ACCEPT_ENCODING,
+                        HttpTransportConstants.CONTENT_ENCODING_GZIP);
             }
             return new HttpUrlConnection(httpURLConnection);
         }

@@ -17,20 +17,21 @@
 package org.springframework.ws.client.core;
 
 import java.io.IOException;
+import java.net.URI;
 
-import org.custommonkey.xmlunit.XMLTestCase;
-import org.easymock.MockControl;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
-import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.WebServiceTransportException;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
+
+import org.custommonkey.xmlunit.XMLTestCase;
+import org.easymock.MockControl;
 
 public class WebServiceTemplateTest extends XMLTestCase {
 
@@ -42,27 +43,25 @@ public class WebServiceTemplateTest extends XMLTestCase {
 
     private MockWebServiceMessageFactory messageFactory;
 
-    private static final String URI = "uri";
-
     protected void setUp() throws Exception {
         template = new WebServiceTemplate();
         messageFactory = new MockWebServiceMessageFactory();
         template.setMessageFactory(messageFactory);
         connectionControl = MockControl.createStrictControl(FaultAwareWebServiceConnection.class);
         connectionMock = (FaultAwareWebServiceConnection) connectionControl.getMock();
+        final URI expectedUri = new URI("http://www.springframework.org/spring-ws");
         template.setMessageSender(new WebServiceMessageSender() {
 
-            public WebServiceConnection createConnection(String uri) throws IOException {
+            public WebServiceConnection createConnection(URI uri) throws IOException {
                 return connectionMock;
             }
 
-            public boolean supports(String uri) {
-                assertEquals("Invalid uri", URI, uri);
+            public boolean supports(URI uri) {
+                assertEquals("Invalid uri", expectedUri, uri);
                 return true;
             }
         });
-
-        template.setDefaultUri(URI);
+        template.setDefaultUri(expectedUri.toString());
     }
 
     public void testMarshalAndSendNoMarshallerSet() throws Exception {
@@ -131,7 +130,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
         connectionMock.close();
         connectionControl.replay();
 
-        Object result = (WebServiceMessage) template.sendAndReceive(null, extractorMock);
+        Object result = template.sendAndReceive(null, extractorMock);
         assertNull("Invalid response", result);
         extractorControl.verify();
         connectionControl.verify();
@@ -340,14 +339,14 @@ public class WebServiceTemplateTest extends XMLTestCase {
     }
 
     public void testSendAndReceiveCustomUri() throws Exception {
-        final String customUri = "customUri";
+        final URI customUri = new URI("http://www.springframework.org/spring-ws/custom");
         template.setMessageSender(new WebServiceMessageSender() {
 
-            public WebServiceConnection createConnection(String uri) throws IOException {
+            public WebServiceConnection createConnection(URI uri) throws IOException {
                 return connectionMock;
             }
 
-            public boolean supports(String uri) {
+            public boolean supports(URI uri) {
                 assertEquals("Invalid uri", customUri, uri);
                 return true;
             }
@@ -375,7 +374,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
         connectionMock.close();
         connectionControl.replay();
 
-        Object result = template.sendAndReceive(customUri, requestCallback, extractorMock);
+        Object result = template.sendAndReceive(customUri.toString(), requestCallback, extractorMock);
         assertEquals("Invalid response", extracted, result);
 
         callbackControl.verify();

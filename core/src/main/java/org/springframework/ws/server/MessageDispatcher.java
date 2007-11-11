@@ -23,8 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.BeanNameAware;
@@ -49,6 +47,9 @@ import org.springframework.ws.server.endpoint.adapter.PayloadMethodEndpointAdapt
 import org.springframework.ws.soap.server.SoapMessageDispatcher;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
 import org.springframework.ws.transport.support.DefaultStrategiesHelper;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Central dispatcher for use within Spring-WS, dispatching Web service messages to registered endpoints.
@@ -170,7 +171,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
                         requestStream.toString("UTF-8") + "]");
             }
             else if (messageTracingLogger.isDebugEnabled()) {
-                messageTracingLogger.debug("Sendt response [" + messageContext.getResponse() + "] for request [" +
+                messageTracingLogger.debug("Sent response [" + messageContext.getResponse() + "] for request [" +
                         messageContext.getRequest() + "]");
             }
         }

@@ -16,7 +16,8 @@
 
 package org.springframework.ws.transport.http;
 
-import org.springframework.util.StringUtils;
+import java.net.URI;
+
 import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
@@ -29,14 +30,6 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 public abstract class AbstractHttpWebServiceMessageSender implements WebServiceMessageSender {
 
     private boolean acceptGzipEncoding = true;
-
-    protected static final String HTTP_HEADER_ACCEPT_ENCODING = "Accept-Encoding";
-
-    protected static final String ENCODING_GZIP = "gzip";
-
-    protected static final String HTTP_SCHEME = "http://";
-
-    protected static final String HTTPS_SCHEME = "https://";
 
     /**
      * Return whether to accept GZIP encoding, that is, whether to send the HTTP <code>Accept-Encoding</code> header
@@ -57,7 +50,8 @@ public abstract class AbstractHttpWebServiceMessageSender implements WebServiceM
         this.acceptGzipEncoding = acceptGzipEncoding;
     }
 
-    public boolean supports(String uri) {
-        return StringUtils.hasLength(uri) && (uri.startsWith(HTTP_SCHEME) || uri.startsWith(HTTPS_SCHEME));
+    public boolean supports(URI uri) {
+        return uri.getScheme().equals(HttpTransportConstants.HTTP_URI_SCHEME) ||
+                uri.getScheme().equals(HttpTransportConstants.HTTPS_URI_SCHEME);
     }
 }

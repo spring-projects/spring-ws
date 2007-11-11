@@ -17,84 +17,108 @@
 package org.springframework.ws.transport.jms;
 
 import java.io.IOException;
+import java.net.URI;
 import javax.jms.BytesMessage;
 import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
 import javax.jms.JMSException;
+import javax.jms.MessageConsumer;
+import javax.jms.MessageProducer;
+import javax.jms.Queue;
+import javax.jms.Session;
+import javax.jms.Topic;
 
-import org.springframework.jms.support.destination.DestinationResolver;
-import org.springframework.jms.support.destination.DynamicDestinationResolver;
-import org.springframework.util.Assert;
+import org.springframework.jms.connection.ConnectionFactoryUtils;
+import org.springframework.jms.support.JmsUtils;
+import org.springframework.jms.support.destination.JmsDestinationAccessor;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
+import org.springframework.ws.transport.jms.support.JmsTransportUtils;
 
 /**
- * {@link WebServiceMessageSender} implementation that uses JMS.
+ * {@link WebServiceMessageSender} implementation that uses JMS {@link BytesMessage}.
  * <p/>
- * This message sender sends the request message of the queue configured with either the <code>queue</code> or
- * <code>queueName</code> property. It creates a temporary queue for the response message. For both request and response
- * {@link BytesMessage}s are used.
+ * This message sender supports URI's of the following format: <blockquote> <tt><b>jms:</b></tt><i>destination</i>[<tt><b>?</b></tt><i>param-name</i><tt><b>=</b></tt><i>param-value</i>][<tt><b>&amp;</b></tt><i>param-name</i><tt><b>=</b></tt><i>param-value</i>]*
+ * </blockquote> where the characters <tt><b>:</b></tt>, <tt><b>?</b></tt>, and <tt><b>&amp;</b></tt> stand for
+ * themselves. The <i>destination</i> represents the name of the {@link Queue} or {@link Topic} that will be resolved by
+ * the {@link #getDestinationResolver() destination resolver}. Valid <i>param-name</i> include:
+ * <p/>
+ * <blockquote><table> <tr><th><i>param-name</i></th><th><i>Description</i></th></tr>
+ * <tr><td><tt>deliveryMode</tt></td><td>Indicates whether the request message is persistent or not. This may be
+ * <tt>PERSISTENT</tt> or <tt>NON_PERSISTENT</tt>. See {@link MessageProducer#setDeliveryMode(int)}</td></tr>
+ * <tr><td><tt>timeToLive</tt></td><td>The lifetime, in milliseconds, of the request message. See {@link
+ * MessageProducer#setTimeToLive(long)}</td></tr> <tr><td><tt>priority</tt></td><td>The JMS priority (0-9) associated
+ * with the request message. See {@link MessageProducer#setPriority(int)}</td></tr>
+ * <tr><td><tt>replyToName</tt></td><td>The name of the destination to which the response message must be sent, that
+ * will be resolved by the {@link #getDestinationResolver() destination resolver}.</td></tr> </table></blockquote>
+ * <p/>
+ * If the <tt>replyToName</tt> is not set, a {@link Session#createTemporaryQueue() temporary queue} is used.
+ * <p/>
+ * Some examples of JMS URIs are:
+ * <p/>
+ * <blockquote> <tt>jms:SomeQueue</tt><br> <tt>jms:SomeTopic?priority=3&deliveryMode=NON_PERSISTENT</tt><br>
+ * <tt>jms:RequestQueue?replyToName=ResponseName</tt><br> </blockquote>
  *
  * @author Arjen Poutsma
+ * @see <a href="http://www.ietf.org/internet-drafts/draft-merrick-jms-iri-00.txt">IRI Scheme for Java(tm) Message
+ *      Service 1.0</a>
  * @since 1.1.0
  */
-public class JmsMessageSender implements WebServiceMessageSender, JmsTransportConstants {
+public class JmsMessageSender extends JmsDestinationAccessor implements WebServiceMessageSender {
 
-    /**
-     * Default timeout for receive operations: -1 indicates a blocking receive without timeout.
-     */
+    /** Default timeout for receive operations: -1 indicates a blocking receive without timeout. */
     public static final long DEFAULT_RECEIVE_TIMEOUT = -1;
-
-    private ConnectionFactory connectionFactory;
-
-    private DestinationResolver destinationResolver = new DynamicDestinationResolver();
 
     private long receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;
 
     public JmsMessageSender() {
     }
 
-    public JmsMessageSender(ConnectionFactory connectionFactory) {
-        this.connectionFactory = connectionFactory;
-    }
-
     /**
-     * Set the ConnectionFactory to use for obtaining JMS {@link Connection}s.
-     */
-    public void setConnectionFactory(ConnectionFactory connectionFactory) {
-        this.connectionFactory = connectionFactory;
-    }
-
-    public void setDestinationResolver(DestinationResolver destinationResolver) {
-        this.destinationResolver = destinationResolver;
-    }
-
-    /**
-     * Set the timeout to use for receive calls. The default is 0, which means no timeout.
+     * Set the timeout to use for receive calls. The default is -1, which means no timeout.
+     *
+     * @see MessageConsumer#receive(long)
      */
     public void setReceiveTimeout(long receiveTimeout) {
         this.receiveTimeout = receiveTimeout;
     }
 
-    public WebServiceConnection createConnection(String uriString) throws IOException {
-        Assert.notNull(connectionFactory, "connectionFactory must not be null");
-        JmsSenderConnection connection = null;
+    public WebServiceConnection createConnection(URI uri) throws IOException {
+        Connection jmsConnection = null;
+        Session jmsSession = null;
         try {
-            JmsUri uri = new JmsUri(uriString);
-            connection = new JmsSenderConnection(uri, connectionFactory, destinationResolver, receiveTimeout);
-            return connection;
+            jmsConnection = createConnection();
+            jmsSession = createSession(jmsConnection);
+            Destination requestDestination = resolveRequestDestination(jmsSession, uri);
+            JmsSenderConnection wsConnection =
+                    new JmsSenderConnection(getConnectionFactory(), jmsConnection, jmsSession, requestDestination);
+            wsConnection.setDeliveryMode(JmsTransportUtils.getDeliveryMode(uri));
+            wsConnection.setPriority(JmsTransportUtils.getPriority(uri));
+            wsConnection.setReceiveTimeout(receiveTimeout);
+            wsConnection.setResponseDestination(resolveResponseDestination(jmsSession, uri));
+            wsConnection.setTimeToLive(JmsTransportUtils.getTimeToLive(uri));
+            return wsConnection;
         }
         catch (JMSException ex) {
-            if (connection != null) {
-                connection.close();
-            }
+            JmsUtils.closeSession(jmsSession);
+            ConnectionFactoryUtils.releaseConnection(jmsConnection, getConnectionFactory(), true);
             throw new JmsTransportException(ex);
         }
     }
 
-    public boolean supports(String uri) {
-        return StringUtils.hasLength(uri) && uri.startsWith(URI_SCHEME + ":");
+    public boolean supports(URI uri) {
+        return uri.getScheme().equals(JmsTransportConstants.JMS_URI_SCHEME);
     }
+
+    private Destination resolveRequestDestination(Session session, URI uri) throws JMSException {
+        return resolveDestinationName(session, JmsTransportUtils.getDestinationName(uri));
+    }
+
+    private Destination resolveResponseDestination(Session session, URI uri) throws JMSException {
+        String destinationName = JmsTransportUtils.getReplyToName(uri);
+        return StringUtils.hasLength(destinationName) ? resolveDestinationName(session, destinationName) : null;
+    }
+
 
 }

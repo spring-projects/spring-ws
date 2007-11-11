@@ -51,6 +51,5 @@ public class JmsMessageReceiver extends SimpleWebServiceMessageReceiverObjectSup
             throw new IllegalArgumentException(
                     "Wrong message type: [" + request.getClass() + "]. Only BytesMessages can be handled.");
         }
-
     }
 }

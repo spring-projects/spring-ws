@@ -16,13 +16,70 @@
 
 package org.springframework.ws.transport.jms.support;
 
+import java.net.URI;
+import javax.jms.DeliveryMode;
+import javax.jms.Message;
+
 import junit.framework.TestCase;
-import org.springframework.ws.transport.jms.support.JmsTransportUtils;
 
 public class JmsTransportUtilsTest extends TestCase {
 
     public void testHeaderToJmsProperty() throws Exception {
         String result = JmsTransportUtils.headerToJmsProperty("SOAPAction");
         assertEquals("Invalid result", "SOAPJMS_soapAction", result);
+    }
+
+    public void testGetDeliveryMode() throws Exception {
+        URI uri = new URI("jms:RequestQueue?deliveryMode=NON_PERSISTENT");
+        int deliveryMode = JmsTransportUtils.getDeliveryMode(uri);
+        assertEquals("Invalid deliveryMode", DeliveryMode.NON_PERSISTENT, deliveryMode);
+
+        uri = new URI("jms:RequestQueue?deliveryMode=PERSISTENT");
+        deliveryMode = JmsTransportUtils.getDeliveryMode(uri);
+        assertEquals("Invalid deliveryMode", DeliveryMode.PERSISTENT, deliveryMode);
+
+        uri = new URI("jms:RequestQueue?replyToName=RESP_QUEUE");
+        deliveryMode = JmsTransportUtils.getDeliveryMode(uri);
+        assertEquals("Invalid deliveryMode", Message.DEFAULT_DELIVERY_MODE, deliveryMode);
+    }
+
+    public void testGetTimeToLive() throws Exception {
+        URI uri = new URI("jms:RequestQueue?timeToLive=100");
+        long timeToLive = JmsTransportUtils.getTimeToLive(uri);
+        assertEquals("Invalid timeToLive", 100, timeToLive);
+
+        uri = new URI("jms:RequestQueue?replyToName=RESP_QUEUE");
+        timeToLive = JmsTransportUtils.getTimeToLive(uri);
+        assertEquals("Invalid timeToLive", Message.DEFAULT_TIME_TO_LIVE, timeToLive);
+    }
+
+    public void testGetPriority() throws Exception {
+        URI uri = new URI("jms:RequestQueue?priority=5");
+        int priority = JmsTransportUtils.getPriority(uri);
+        assertEquals("Invalid priority", 5, priority);
+
+        uri = new URI("jms:RequestQueue?replyToName=RESP_QUEUE");
+        priority = JmsTransportUtils.getPriority(uri);
+        assertEquals("Invalid priority", Message.DEFAULT_PRIORITY, priority);
+    }
+
+    public void testGetReplyToName() throws Exception {
+        URI uri = new URI("jms:RequestQueue?replyToName=RESP_QUEUE");
+        String replyToName = JmsTransportUtils.getReplyToName(uri);
+        assertEquals("Invalid replyToName", "RESP_QUEUE", replyToName);
+
+        uri = new URI("jms:RequestQueue?priority=5");
+        replyToName = JmsTransportUtils.getReplyToName(uri);
+        assertNull("Invalid replyToName", replyToName);
+    }
+
+    public void testGetDestinationName() throws Exception {
+        URI uri = new URI("jms:RequestQueue?replyToName=RESP_QUEUE");
+        String destinationName = JmsTransportUtils.getDestinationName(uri);
+        assertEquals("Invalid destination", "RequestQueue", destinationName);
+
+        uri = new URI("jms:RequestQueue");
+        destinationName = JmsTransportUtils.getDestinationName(uri);
+        assertEquals("Invalid destination", "RequestQueue", destinationName);
     }
 }

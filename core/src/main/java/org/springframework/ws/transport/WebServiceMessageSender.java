@@ -17,6 +17,7 @@
 package org.springframework.ws.transport;
 
 import java.io.IOException;
+import java.net.URI;
 
 import org.springframework.ws.WebServiceMessage;
 
@@ -39,7 +40,7 @@ public interface WebServiceMessageSender {
      * @return the new connection
      * @throws IOException in case of I/O errors
      */
-    WebServiceConnection createConnection(String uri) throws IOException;
+    WebServiceConnection createConnection(URI uri) throws IOException;
 
     /**
      * Does this {@link WebServiceMessageSender} support the supplied URI?
@@ -47,6 +48,6 @@ public interface WebServiceMessageSender {
      * @param uri the URI to be checked
      * @return <code>true</code> if this <code>WebServiceMessageSender</code> supports the supplied URI
      */
-    boolean supports(String uri);
+    boolean supports(URI uri);
 
 }

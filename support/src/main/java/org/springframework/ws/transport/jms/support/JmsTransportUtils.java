@@ -16,6 +16,13 @@
 
 package org.springframework.ws.transport.jms.support;
 
+import java.net.URI;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.jms.DeliveryMode;
+import javax.jms.Destination;
+import javax.jms.Message;
+
 import org.springframework.ws.transport.jms.JmsTransportConstants;
 
 /**
@@ -26,6 +33,16 @@ import org.springframework.ws.transport.jms.JmsTransportConstants;
  * @since 1.1.0
  */
 public class JmsTransportUtils {
+
+    private static final Pattern DESTINATION_NAME_PATTERN = Pattern.compile("^jms:(\\w+)\\&?");
+
+    private static final Pattern DELIVERY_MODE_PATTERN = Pattern.compile("deliveryMode=(PERSISTENT|NON_PERSISTENT)");
+
+    private static final Pattern TIME_TO_LIVE_PATTERN = Pattern.compile("timeToLive=(\\d+)");
+
+    private static final Pattern PRIORITY_PATTERN = Pattern.compile("priority=(\\d)");
+
+    private static final Pattern REPLY_TO_NAME_PATTERN = Pattern.compile("replyToName=(\\w+)");
 
     private static final String[] CONVERSION_TABLE = new String[]{JmsTransportConstants.HEADER_CONTENT_TYPE,
             JmsTransportConstants.PROPERTY_CONTENT_TYPE, JmsTransportConstants.HEADER_CONTENT_LENGTH,
@@ -64,6 +81,91 @@ public class JmsTransportUtils {
             }
         }
         return propertyName;
+    }
+
+    public static String getDestinationName(URI uri) {
+        return getStringParameter(DESTINATION_NAME_PATTERN, uri);
+    }
+
+    /**
+     * Returns the delivery mode of the given URI.
+     *
+     * @see DeliveryMode#NON_PERSISTENT
+     * @see DeliveryMode#PERSISTENT
+     * @see Message#DEFAULT_DELIVERY_MODE
+     */
+    public static int getDeliveryMode(URI uri) {
+        String deliveryMode = getStringParameter(DELIVERY_MODE_PATTERN, uri);
+        if ("NON_PERSISTENT".equals(deliveryMode)) {
+            return DeliveryMode.NON_PERSISTENT;
+        }
+        else if ("PERSISTENT".equals(deliveryMode)) {
+            return DeliveryMode.PERSISTENT;
+        }
+        else {
+            return Message.DEFAULT_DELIVERY_MODE;
+        }
+    }
+
+    /**
+     * Returns the lifetime, in milliseconds, of the given URI.
+     *
+     * @see Message#DEFAULT_TIME_TO_LIVE
+     */
+    public static long getTimeToLive(URI uri) {
+        return getLongParameter(TIME_TO_LIVE_PATTERN, uri, Message.DEFAULT_TIME_TO_LIVE);
+    }
+
+    /**
+     * Returns the priority of the given URI.
+     *
+     * @see Message#DEFAULT_PRIORITY
+     */
+    public static int getPriority(URI uri) {
+        return getIntParameter(PRIORITY_PATTERN, uri, Message.DEFAULT_PRIORITY);
+    }
+
+    /**
+     * Returns the reply-to name of the given URI.
+     *
+     * @see Message#setJMSReplyTo(Destination)
+     */
+    public static String getReplyToName(URI uri) {
+        return getStringParameter(REPLY_TO_NAME_PATTERN, uri);
+    }
+
+    private static String getStringParameter(Pattern pattern, URI uri) {
+        Matcher matcher = pattern.matcher(uri.toString());
+        if (matcher.find() && matcher.groupCount() == 1) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+
+    private static int getIntParameter(Pattern pattern, URI uri, int defaultValue) {
+        Matcher matcher = pattern.matcher(uri.toString());
+        if (matcher.find() && matcher.groupCount() == 1) {
+            try {
+                return Integer.parseInt(matcher.group(1));
+            }
+            catch (NumberFormatException ex) {
+                // fall through to default value
+            }
+        }
+        return defaultValue;
+    }
+
+    private static long getLongParameter(Pattern pattern, URI uri, long defaultValue) {
+        Matcher matcher = pattern.matcher(uri.toString());
+        if (matcher.find() && matcher.groupCount() == 1) {
+            try {
+                return Long.parseLong(matcher.group(1));
+            }
+            catch (NumberFormatException ex) {
+                // fall through to default value
+            }
+        }
+        return defaultValue;
     }
 
 }

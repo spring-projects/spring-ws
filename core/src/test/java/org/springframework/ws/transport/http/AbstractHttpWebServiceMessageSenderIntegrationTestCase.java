@@ -18,6 +18,7 @@ package org.springframework.ws.transport.http;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URI;
 import java.util.zip.GZIPOutputStream;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
@@ -34,11 +35,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
-import org.custommonkey.xmlunit.XMLTestCase;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.Context;
-import org.mortbay.jetty.servlet.ServletHolder;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
@@ -48,6 +44,12 @@ import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
+
+import org.custommonkey.xmlunit.XMLTestCase;
+import org.custommonkey.xmlunit.XMLUnit;
+import org.mortbay.jetty.Server;
+import org.mortbay.jetty.servlet.Context;
+import org.mortbay.jetty.servlet.ServletHolder;
 
 public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase extends XMLTestCase {
 
@@ -77,7 +79,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
 
     private Context jettyContext;
 
-    private static final String URI = "http://localhost:8888/";
+    private static final String URI_STRING = "http://localhost:8888/";
 
     private MessageFactory saajMessageFactory;
 
@@ -147,7 +149,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
         jettyContext.addServlet(new ServletHolder(servlet), "/");
         jettyServer.start();
         FaultAwareWebServiceConnection connection =
-                (FaultAwareWebServiceConnection) messageSender.createConnection(URI);
+                (FaultAwareWebServiceConnection) messageSender.createConnection(new URI(URI_STRING));
         SOAPMessage request = createRequest();
         try {
             connection.send(new SaajSoapMessage(request));
@@ -163,7 +165,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
         jettyContext.addServlet(new ServletHolder(servlet), "/");
         jettyServer.start();
         FaultAwareWebServiceConnection connection =
-                (FaultAwareWebServiceConnection) messageSender.createConnection(URI);
+                (FaultAwareWebServiceConnection) messageSender.createConnection(new URI(URI_STRING));
         SOAPMessage request = createRequest();
         try {
             connection.send(new SaajSoapMessage(request));
@@ -189,7 +191,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
         jettyContext.addServlet(new ServletHolder(servlet), "/");
         jettyServer.start();
 
-        WebServiceConnection connection = messageSender.createConnection(URI);
+        WebServiceConnection connection = messageSender.createConnection(new URI(URI_STRING));
         SOAPMessage request = createRequest();
         try {
             connection.send(new SaajSoapMessage(request));

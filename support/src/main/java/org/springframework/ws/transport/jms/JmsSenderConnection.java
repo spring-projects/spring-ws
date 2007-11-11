@@ -36,7 +36,6 @@ import javax.jms.TemporaryQueue;
 
 import org.springframework.jms.connection.ConnectionFactoryUtils;
 import org.springframework.jms.support.JmsUtils;
-import org.springframework.jms.support.destination.DestinationResolver;
 import org.springframework.util.Assert;
 import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
@@ -56,17 +55,11 @@ public class JmsSenderConnection extends AbstractSenderConnection
 
     private final ConnectionFactory connectionFactory;
 
-    private final DestinationResolver destinationResolver;
-
     private final Connection connection;
 
     private final Session session;
 
     private final Destination requestDestination;
-
-    private final JmsUri uri;
-
-    private final long receiveTimeout;
 
     private Destination responseDestination;
 
@@ -74,39 +67,65 @@ public class JmsSenderConnection extends AbstractSenderConnection
 
     private BytesMessage responseMessage;
 
-    /**
-     * Constructs a new JMS connection with the given parameters.
-     */
-    protected JmsSenderConnection(JmsUri uri,
-                                  ConnectionFactory connectionFactory,
-                                  DestinationResolver destinationResolver,
-                                  long receiveTimeout) throws JMSException {
-        Assert.notNull(uri, "'uri' must not be null");
+    private long receiveTimeout;
+
+    private int deliveryMode;
+
+    private long timeToLive;
+
+    private int priority;
+
+    /** Constructs a new JMS connection with the given parameters. */
+    protected JmsSenderConnection(ConnectionFactory connectionFactory,
+                                  Connection connection,
+                                  Session session,
+                                  Destination requestDestination) throws JMSException {
         Assert.notNull(connectionFactory, "'connectionFactory' must not be null");
-        Assert.notNull(destinationResolver, "destinationResolver must not be null");
+        Assert.notNull(connection, "'connection' must not be null");
+        Assert.notNull(session, "'session' must not be null");
         this.connectionFactory = connectionFactory;
-        this.destinationResolver = destinationResolver;
-        connection = connectionFactory.createConnection();
-        session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        requestDestination =
-                destinationResolver.resolveDestinationName(session, uri.getDestination(), uri.isPubSubDomain());
-        this.uri = uri;
-        this.receiveTimeout = receiveTimeout;
+        this.connection = connection;
+        this.session = session;
+        this.requestDestination = requestDestination;
     }
 
-    /**
-     * Returns the request message for this connection.
-     */
+    /** Returns the request message for this connection. */
     public BytesMessage getRequestMessage() {
         return requestMessage;
     }
 
-    /**
-     * Returns the response message, if any, for this connection.
-     */
+    /** Returns the response message, if any, for this connection. */
     public BytesMessage getResponseMessage() {
         return responseMessage;
     }
+
+    /*
+    * Package-friendly setters
+    */
+
+    void setResponseDestination(Destination responseDestination) {
+        this.responseDestination = responseDestination;
+    }
+
+    void setTimeToLive(long timeToLive) {
+        this.timeToLive = timeToLive;
+    }
+
+    void setDeliveryMode(int deliveryMode) {
+        this.deliveryMode = deliveryMode;
+    }
+
+    void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    void setReceiveTimeout(long receiveTimeout) {
+        this.receiveTimeout = receiveTimeout;
+    }
+
+    /*
+     * Errors
+     */
 
     public boolean hasError() throws IOException {
         return false;
@@ -128,7 +147,7 @@ public class JmsSenderConnection extends AbstractSenderConnection
                 FaultAwareWebServiceMessage faultMessage = (FaultAwareWebServiceMessage) message;
                 requestMessage.setBooleanProperty(PROPERTY_IS_FAULT, faultMessage.hasFault());
             }
-            requestMessage.setStringProperty(PROPERTY_REQUEST_IRI, uri.toString());
+//            requestMessage.setStringProperty(PROPERTY_REQUEST_IRI, uri.toString());
         }
         catch (JMSException ex) {
             throw new JmsTransportException(ex);
@@ -153,14 +172,10 @@ public class JmsSenderConnection extends AbstractSenderConnection
         MessageProducer messageProducer = null;
         try {
             messageProducer = session.createProducer(requestDestination);
-            messageProducer.setDeliveryMode(uri.getDeliveryMode());
-            messageProducer.setTimeToLive(uri.getTimeToLive());
-            messageProducer.setPriority(uri.getPriority());
-            if (uri.hasReplyTo()) {
-                responseDestination =
-                        destinationResolver.resolveDestinationName(session, uri.getReplyTo(), uri.isPubSubDomain());
-            }
-            else {
+            messageProducer.setDeliveryMode(deliveryMode);
+            messageProducer.setTimeToLive(timeToLive);
+            messageProducer.setPriority(priority);
+            if (responseDestination == null) {
                 responseDestination = session.createTemporaryQueue();
             }
             requestMessage.setJMSReplyTo(responseDestination);
