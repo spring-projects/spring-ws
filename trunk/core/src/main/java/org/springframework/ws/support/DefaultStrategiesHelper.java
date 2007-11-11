@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.transport.support;
+package org.springframework.ws.support;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +26,7 @@ import javax.servlet.ServletContext;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -111,7 +112,7 @@ public class DefaultStrategiesHelper {
             throws BeanInitializationException {
         String key = strategyInterface.getName();
         try {
-            List result = null;
+            List result;
             String value = defaultStrategies.getProperty(key);
             if (value != null) {
                 String[] classNames = StringUtils.commaDelimitedListToStringArray(value);
@@ -142,6 +143,9 @@ public class DefaultStrategiesHelper {
             beanNameAware.setBeanName(clazz.getName());
         }
         if (applicationContext != null) {
+            if (strategy instanceof BeanClassLoaderAware) {
+                ((BeanClassLoaderAware) strategy).setBeanClassLoader(applicationContext.getClassLoader());
+            }
             if (strategy instanceof BeanFactoryAware) {
                 ((BeanFactoryAware) strategy).setBeanFactory(applicationContext);
             }

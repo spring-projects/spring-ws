@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.transport.support;
+package org.springframework.ws.support;
 
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.TestCase;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.ApplicationContext;
@@ -27,6 +26,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+
+import junit.framework.TestCase;
 
 public class DefaultStrategiesHelperTest extends TestCase {
 
