@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+
+<project name="spring-ws-airline-sample-saaj-client" default="build">
+
+    <property name="bin.dir" value="bin"/>
+    <property name="src.dir" value="src"/>
+    <property name="gen.dir" value="gen"/>
+    <property name="wsdl" value="http://localhost:8080/airline/airline.wsdl"/>
+    <property name="exe" value="bin/airline.exe"/>
+
+    <condition property="windows">
+        <os family="windows"/>
+    </condition>
+
+    <target name="generate" >
+        <mkdir dir="${gen.dir}"/>
+
+        <wsdltodotnet url="${wsdl}" destfile="${gen.dir}/AirlineService.cs"/>
+    </target>
+
+
+    <target name="build" depends="generate">
+        <mkdir dir="${bin.dir}"/>
+        <csc targettype="exe" destfile="${bin.dir}/airline.exe" references="System.Web.Services">
+            <src dir="${src.dir}"/>
+            <src dir="${gen.dir}"/>
+        </csc>
+    </target>
+
+    <target name="clean">
+        <delete dir="${bin.dir}"/>
+        <delete dir="${gen.dir}"/>
+    </target>
+
+    <target name="run-windows" if="windows">
+        <exec executable="${exe}"/>
+    </target>
+
+    <target name="run-non-windows" unless="windows">
+        <exec executable="mono">
+            <arg path="${exe}"/>
+        </exec>
+    </target>
+
+    <target name="run" depends="build">
+        <antcall target="run-windows"/>
+        <antcall target="run-non-windows"/>
+    </target>
+
+</project>

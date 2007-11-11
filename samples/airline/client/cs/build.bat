@@ -1,2 +1,0 @@
-wsdl -out:src\AirlineService.cs ..\..\src\webapp\airline.wsdl ..\..\src\webapp\airline.xsd
-csc -out:bin\airline.exe src\main.cs src\AirlineService.cse.csosoft WSE\v2.0\Microsoft.Web.Services2.dll" -define:WSE src\main.cs src\AirlineService.cs
