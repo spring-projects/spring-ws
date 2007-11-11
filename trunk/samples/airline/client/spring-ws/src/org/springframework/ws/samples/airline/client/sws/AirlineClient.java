@@ -21,13 +21,13 @@ import java.util.Calendar;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.springWs.samples.airline.schemas.BookFlightRequestDocument;
-import org.springframework.springWs.samples.airline.schemas.BookFlightResponseDocument;
-import org.springframework.springWs.samples.airline.schemas.Flight;
-import org.springframework.springWs.samples.airline.schemas.GetFlightsRequestDocument;
-import org.springframework.springWs.samples.airline.schemas.GetFlightsResponseDocument;
-import org.springframework.springWs.samples.airline.schemas.Name;
-import org.springframework.springWs.samples.airline.schemas.Ticket;
+import org.springframework.springWs.samples.airline.schemas.messages.BookFlightRequestDocument;
+import org.springframework.springWs.samples.airline.schemas.messages.BookFlightResponseDocument;
+import org.springframework.springWs.samples.airline.schemas.messages.GetFlightsRequestDocument;
+import org.springframework.springWs.samples.airline.schemas.messages.GetFlightsResponseDocument;
+import org.springframework.springWs.samples.airline.schemas.types.Flight;
+import org.springframework.springWs.samples.airline.schemas.types.Name;
+import org.springframework.springWs.samples.airline.schemas.types.Ticket;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 
 public class AirlineClient extends WebServiceGatewaySupport {

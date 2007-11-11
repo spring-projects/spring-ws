@@ -18,6 +18,7 @@ package org.springframework.ws.samples.airline.ws;
 
 import org.springframework.ws.samples.airline.service.AirlineService;
 import org.springframework.ws.server.endpoint.AbstractDomPayloadEndpoint;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -37,7 +38,7 @@ public class GetFrequentFlyerMileageEndpoint extends AbstractDomPayloadEndpoint 
 
     protected Element invokeInternal(Element ignored, Document responseDocument) throws Exception {
         int mileage = airlineService.getFrequentFlyerMileage();
-        Element response = responseDocument.createElementNS(NAMESPACE, GET_FREQUENT_FLYER_MILEAGE_RESPONSE);
+        Element response = responseDocument.createElementNS(MESSAGES_NAMESPACE, GET_FREQUENT_FLYER_MILEAGE_RESPONSE);
         response.setTextContent(Integer.toString(mileage));
         return response;
     }

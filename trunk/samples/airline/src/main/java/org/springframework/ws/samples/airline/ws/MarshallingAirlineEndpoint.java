@@ -23,10 +23,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.springframework.util.Assert;
 import org.springframework.ws.samples.airline.domain.FrequentFlyer;
 import org.springframework.ws.samples.airline.domain.Passenger;
@@ -45,6 +41,11 @@ import org.springframework.ws.samples.airline.service.NoSuchFlightException;
 import org.springframework.ws.samples.airline.service.NoSuchFrequentFlyerException;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 /**
  * Endpoint that handles the Airline Web Service messages using JAXB2 marshalling.
@@ -73,7 +74,7 @@ public class MarshallingAirlineEndpoint implements AirlineWebServiceConstants {
      *
      * @param request the JAXB2 representation of a <code>&lt;GetFlightsRequest&gt;</code>
      */
-    @PayloadRoot(localPart = GET_FLIGHTS_REQUEST, namespace = NAMESPACE)
+    @PayloadRoot(localPart = GET_FLIGHTS_REQUEST, namespace = MESSAGES_NAMESPACE)
     public GetFlightsResponse getFlights(GetFlightsRequest request) throws DatatypeConfigurationException {
         if (logger.isDebugEnabled()) {
             logger.debug("Received GetFlightsRequest '" + request.getFrom() + "' to '" + request.getTo() + "' on " +
@@ -107,7 +108,7 @@ public class MarshallingAirlineEndpoint implements AirlineWebServiceConstants {
      * @param request the JAXB2 representation of a <code>&lt;BookFlightRequest&gt;</code>
      * @return the JAXB2 representation of a <code>&lt;BookFlightResponse&gt;</code>
      */
-    @PayloadRoot(localPart = BOOK_FLIGHT_REQUEST, namespace = NAMESPACE)
+    @PayloadRoot(localPart = BOOK_FLIGHT_REQUEST, namespace = MESSAGES_NAMESPACE)
     public JAXBElement<Ticket> bookFlight(BookFlightRequest request) throws NoSeatAvailableException,
             DatatypeConfigurationException, NoSuchFlightException, NoSuchFrequentFlyerException {
         if (logger.isDebugEnabled()) {

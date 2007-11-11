@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <project name="spring-ws-airline-sample-saaj-client" default="build"
-         xmlns:artifact="urn:maven-artifact-ant">
+        xmlns:artifact="urn:maven-artifact-ant">
     <property name="bin.dir" value="bin"/>
     <property name="src.dir" value="src"/>
     <property name="gen.dir" value="gen"/>
@@ -33,7 +33,10 @@
                 output="${gen.dir}"
                 url="${wsdl}">
             <mapping
-                    namespace="http://www.springframework.org/spring-ws/samples/airline/schemas"
+                    namespace="http://www.springframework.org/spring-ws/samples/airline/schemas/messages"
+                    package="org.springframework.ws.samples.airline.client.axis1"/>
+            <mapping
+                    namespace="http://www.springframework.org/spring-ws/samples/airline/schemas/types"
                     package="org.springframework.ws.samples.airline.client.axis1"/>
             <mapping
                     namespace="http://www.springframework.org/spring-ws/samples/airline/definitions"
