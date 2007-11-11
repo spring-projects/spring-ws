@@ -26,7 +26,8 @@ import org.springframework.ws.transport.TransportConstants;
  */
 public interface JmsTransportConstants extends TransportConstants {
 
-    String URI_SCHEME = "jms";
+    /** The "jms" URI scheme" */
+    String JMS_URI_SCHEME = "jms";
 
     String PARAM_DELIVERY_MODE = "deliveryMode";
 

@@ -18,6 +18,7 @@ package org.springframework.ws.client.core;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -25,8 +26,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -54,6 +53,9 @@ import org.springframework.ws.transport.context.TransportContextHolder;
 import org.springframework.ws.transport.http.HttpUrlConnectionMessageSender;
 import org.springframework.ws.transport.support.DefaultStrategiesHelper;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * <strong>The central class for client-side Web services.</strong> It provides a message-driven approach to sending and
  * receiving {@link WebServiceMessage} instances.
@@ -67,8 +69,8 @@ import org.springframework.ws.transport.support.DefaultStrategiesHelper;
  * FaultMessageResolver} can be defined with with {@link #setFaultMessageResolver(FaultMessageResolver)
  * faultMessageResolver} property. If this property is set to <code>null</code>, no fault resolving is performed.
  * <p/>
- * This template uses the following algorithm for sending and receiving. <ol> <li>Call to {@link
- * #createConnection(String) createConnection()}.</li> <li>Call to {@link WebServiceMessageFactory#createWebServiceMessage()
+ * This template uses the following algorithm for sending and receiving. <ol> <li>Call to {@link #createConnection(URI)
+ * createConnection()}.</li> <li>Call to {@link WebServiceMessageFactory#createWebServiceMessage()
  * createWebServiceMessage()} on the registered message factory to create a request message.</li> <li>Invoke {@link
  * WebServiceMessageCallback#doWithMessage(WebServiceMessage) doWithMessage()} on the request callback, if any. This
  * step stores content in the request message, based on <code>Source</code>, marshalling, etc.</li> <li>Call {@link
@@ -396,7 +398,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
         TransportContext previousTransportContext = TransportContextHolder.getTransportContext();
         WebServiceConnection connection = null;
         try {
-            connection = createConnection(uri);
+            URI theUri = URI.create(uri);
+            connection = createConnection(theUri);
             TransportContextHolder.setTransportContext(new DefaultTransportContext(connection));
             WebServiceMessage request = getMessageFactory().createWebServiceMessage();
             if (requestCallback != null) {
@@ -418,7 +421,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
             }
             else {
                 if (logger.isDebugEnabled()) {
-                    logger.debug("Received no response for request [" + request + "]");
+                    messageTracingLogger.debug("Received no response for request [" + request + "]");
                 }
                 return null;
             }

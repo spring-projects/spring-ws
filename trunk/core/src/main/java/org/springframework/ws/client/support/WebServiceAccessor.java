@@ -17,6 +17,7 @@
 package org.springframework.ws.client.support;
 
 import java.io.IOException;
+import java.net.URI;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
@@ -61,7 +62,7 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
      * <p/>
      * This message sender will be used to resolve an URI to a {@link WebServiceConnection}.
      *
-     * @see #createConnection(String)
+     * @see #createConnection(URI)
      */
     public void setMessageSender(WebServiceMessageSender messageSender) {
         Assert.notNull(messageSender, "'messageSender' must not be null");
@@ -73,7 +74,7 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
      * <p/>
      * These message senders will be used to resolve an URI to a {@link WebServiceConnection}.
      *
-     * @see #createConnection(String)
+     * @see #createConnection(URI)
      */
     public void setMessageSenders(WebServiceMessageSender[] messageSenders) {
         Assert.notEmpty(messageSenders, "'messageSenders' must not be empty");
@@ -89,15 +90,15 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
      * Creates a connection to the given URI, or throws an exception when it cannot be resolved.
      * <p/>
      * Default implementation iterates over all configured {@link WebServiceMessageSender} objects, and calls {@link
-     * WebServiceMessageSender#supports(String)} for each of them. If the sender supports the parameter URI, it creates
-     * a connection using {@link WebServiceMessageSender#createConnection(String)} .
+     * WebServiceMessageSender#supports(URI)} for each of them. If the sender supports the parameter URI, it creates a
+     * connection using {@link WebServiceMessageSender#createConnection(URI)} .
      *
      * @param uri the URI to open a connection to
      * @return the created connection
      * @throws IllegalArgumentException when the uri cannot be resolved
      * @throws IOException              when an I/O error occurs
      */
-    protected WebServiceConnection createConnection(String uri) throws IOException {
+    protected WebServiceConnection createConnection(URI uri) throws IOException {
         Assert.notEmpty(getMessageSenders(), "Property 'messageSenders' is required");
         WebServiceMessageSender[] messageSenders = getMessageSenders();
         for (int i = 0; i < messageSenders.length; i++) {

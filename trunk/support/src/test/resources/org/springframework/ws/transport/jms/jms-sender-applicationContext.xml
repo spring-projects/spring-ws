@@ -17,7 +17,6 @@
 
     <bean id="messageSender" class="org.springframework.ws.transport.jms.JmsMessageSender">
         <property name="connectionFactory" ref="connectionFactory"/>
-        <property name="receiveTimeout" value="10"/>
     </bean>
 
 </beans>

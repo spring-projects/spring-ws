@@ -18,6 +18,7 @@ package org.springframework.ws.transport.jms;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -41,11 +42,12 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
 
     private MessageFactory messageFactory;
 
-    private static final String REQUEST_QUEUE_URI = "jms:RequestQueue";
+    private URI requestQueueUri;
 
     private static final String SOAP_ACTION = "\"http://springframework.org/DoIt\"";
 
     protected void onSetUp() throws Exception {
+        requestQueueUri = new URI("jms:RequestQueue?deliveryMode=NON_PERSISTENT");
         messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
     }
 
@@ -64,7 +66,7 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
     public void testSendAndReceiveQueue() throws Exception {
         WebServiceConnection connection = null;
         try {
-            connection = messageSender.createConnection(REQUEST_QUEUE_URI);
+            connection = messageSender.createConnection(requestQueueUri);
             SoapMessage soapRequest = new SaajSoapMessage(messageFactory.createMessage());
             soapRequest.setSoapAction(SOAP_ACTION);
             connection.send(soapRequest);
@@ -82,7 +84,7 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
                     response.setIntProperty(JmsTransportConstants.PROPERTY_CONTENT_LENGTH, buf.length);
                     response.setStringProperty(JmsTransportConstants.PROPERTY_CONTENT_TYPE, "text/xml");
                     response.setBooleanProperty(JmsTransportConstants.PROPERTY_IS_FAULT, false);
-                    response.setStringProperty(JmsTransportConstants.PROPERTY_REQUEST_IRI, REQUEST_QUEUE_URI);
+                    response.setStringProperty(JmsTransportConstants.PROPERTY_REQUEST_IRI, requestQueueUri.toString());
                     response.setStringProperty(JmsTransportConstants.PROPERTY_SOAP_ACTION, SOAP_ACTION);
 
                     response.writeBytes(buf);
@@ -106,8 +108,6 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
                 message.getStringProperty(JmsTransportConstants.PROPERTY_SOAP_ACTION));
         assertEquals("Invalid binding version", "1.0",
                 message.getStringProperty(JmsTransportConstants.PROPERTY_BINDING_VERSION));
-        assertEquals("Invalid service IRI", REQUEST_QUEUE_URI,
-                message.getStringProperty(JmsTransportConstants.PROPERTY_REQUEST_IRI));
         assertFalse("Message is Fault", message.getBooleanProperty(JmsTransportConstants.PROPERTY_IS_FAULT));
         assertTrue("Invalid Content Type",
                 message.getStringProperty(JmsTransportConstants.PROPERTY_CONTENT_TYPE).indexOf("text/xml") != -1);

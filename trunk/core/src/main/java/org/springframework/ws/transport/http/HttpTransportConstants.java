@@ -29,6 +29,9 @@ public interface HttpTransportConstants extends TransportConstants {
     /** The "Content-Encoding" header. */
     String HEADER_CONTENT_ENCODING = "Content-Encoding";
 
+    /** The "Accept-Encoding" header. */
+    String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
+
     /** Header value that indicates a compressed "Content-Encoding". */
     String CONTENT_ENCODING_GZIP = "gzip";
 
@@ -43,4 +46,10 @@ public interface HttpTransportConstants extends TransportConstants {
 
     /** The "500 Server Error" status code. */
     int STATUS_INTERNAL_SERVER_ERROR = 500;
+
+    /** The "http" URI scheme. */
+    String HTTP_URI_SCHEME = "http";
+
+    /** The "https" URI scheme. */
+    String HTTPS_URI_SCHEME = "https";
 }

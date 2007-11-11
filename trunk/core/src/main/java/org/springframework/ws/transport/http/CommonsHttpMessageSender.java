@@ -17,6 +17,12 @@
 package org.springframework.ws.transport.http;
 
 import java.io.IOException;
+import java.net.URI;
+
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.Assert;
+import org.springframework.ws.transport.WebServiceConnection;
 
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
@@ -26,10 +32,6 @@ import org.apache.commons.httpclient.NTCredentials;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.Assert;
-import org.springframework.ws.transport.WebServiceConnection;
 
 /**
  * <code>WebServiceMessageSender</code> implementation that uses <a href="http://jakarta.apache.org/commons/httpclient">Jakarta
@@ -130,10 +132,11 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
         }
     }
 
-    public WebServiceConnection createConnection(String uri) throws IOException {
-        PostMethod postMethod = new PostMethod(uri);
+    public WebServiceConnection createConnection(URI uri) throws IOException {
+        PostMethod postMethod = new PostMethod(uri.toString());
         if (isAcceptGzipEncoding()) {
-            postMethod.addRequestHeader(HTTP_HEADER_ACCEPT_ENCODING, ENCODING_GZIP);
+            postMethod.addRequestHeader(HttpTransportConstants.HEADER_ACCEPT_ENCODING,
+                    HttpTransportConstants.CONTENT_ENCODING_GZIP);
         }
         return new CommonsHttpConnection(getHttpClient(), postMethod);
     }
