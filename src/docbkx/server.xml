@@ -100,9 +100,16 @@
             <classname>WebServiceMessageReceiverHandlerAdapter</classname>, which is a Spring Web
             <interfacename>HandlerInterceptor</interfacename>, so that the <classname>MessageDispatcher</classname>
             can be wired in a standard <classname>DispatcherServlet</classname>. There is a more convenient way to do
-            this, however, which is shown in the next section.
+            this, however, which is shown in <xref linkend="message-dispatcher-servlet"/>.
         </para>
-        <section>
+    </section>
+    <section>
+        <title>Transports</title>
+        <para>
+            Spring Web Services supports multiple transport protocols. The most common is the HTTP transport, for which
+            a custom servlet is supplied, but it is also possible to send messages over JMS, and even email.
+        </para>
+        <section id="message-dispatcher-servlet">
             <title><classname>MessageDispatcherServlet</classname></title>
             <para>
                 The <classname>MessageDispatcherServlet</classname> is a standard <interfacename>Servlet</interfacename>
@@ -200,23 +207,13 @@
                     Consult the class-level Javadoc on the <classname>WsdlDefinitionHandlerAdapter</classname> class
                     which explains the whole transformation process in more detail.
                 </para>
-                <section>
-                    <title>Exposing a static WSDL</title>
-                    <para>
-                        As indicated above, a static WSDL file can be exposed by using the
-                        <classname>SimpleWsdl11Definition</classname>. Simply wire it up, and give it a
-                        <interfacename>Resource</interfacename> for the <property>wsdl</property> property, or use the
-                        contructor, as shown in the example above.
-                    </para>
-                </section>
-                <section>
-                    <title>Dynamically creating a WSDL from an XSD</title>
-                    <para>
-                        As shown in <xref linkend="tutorial-publishing-wsdl"/>, Spring Web Services can generate a WSDL
-                        file from a XSD schema, using conventions. The next application context snippet shows how to
-                        create such a dynamic WSDL file:
-                    </para>
-                    <programlisting><![CDATA[
+                <para>
+                    As an alternative to writing the WSDL by hand, and exposing it with the
+                    <classname>SimpleWsdl11Definition</classname>, Spring Web Services can also generate a WSDL
+                    from an XSD schema. This is the approach shown in <xref linkend="tutorial-publishing-wsdl"/>.
+                    The next application context snippet shows how to create such a dynamic WSDL file:
+                </para>
+                <programlisting><![CDATA[
 <bean id="holiday" class="org.springframework.ws.wsdl.wsdl11.DynamicWsdl11Definition">
   <property name="builder">
     <bean class="org.springframework.ws.wsdl.wsdl11.builder.XsdBasedSoap11Wsdl4jDefinitionBuilder">
@@ -226,28 +223,27 @@
     </bean>
   </property>
 </bean>]]></programlisting>
-                    <para>
-                        The <classname>DynamicWsdl11Definition</classname> uses a
-                        <interfacename>Wsdl11DefinitionBuilder</interfacename> implementation
-                        to generate a WSDL the first time it is requested.
-                        Typically, we use a <classname>XsdBasedSoap11Wsdl4jDefinitionBuilder</classname>, which builds
-                        a WSDL from a XSD schema.  This builder iterates over all <literal>element</literal> elements
-                        found in the schema, and creates a <literal>message</literal> for elements that end with the
-                        defined request or response suffix. The default request suffix is <literal>Request</literal>;
-                        the default response suffix is <literal>Response</literal>, though these can be changed by
-                        setting the <property>requestSuffix</property> and <property>responseSuffix</property>
-                        properties, respectively.
-                        Next, the builder combines the request and response messages into a WSDL
-                        <literal>operation</literal>s, and builds a <literal>portType</literal> based on the operations.
-                    </para>
-                    <para>
-                        For instance, if our <filename>Orders.xsd</filename> schema defines the
-                        <literal>GetOrdersRequest</literal> and <literal>GetOrdersResponse</literal> elements, the
-                        <classname>XsdBasedSoap11Wsdl4jDefinitionBuilder</classname> will create a
-                        <literal>GetOrdersRequest</literal> and <literal>GetOrdersResponse</literal> message, and a
-                        <literal>GetOrders</literal> operation, which is put in a <literal>Orders</literal> port type.
-                    </para>
-                </section>
+                <para>
+                    The <classname>DynamicWsdl11Definition</classname> uses a
+                    <interfacename>Wsdl11DefinitionBuilder</interfacename> implementation
+                    to generate a WSDL the first time it is requested.
+                    Typically, we use a <classname>XsdBasedSoap11Wsdl4jDefinitionBuilder</classname>, which builds
+                    a WSDL from a XSD schema.  This builder iterates over all <literal>element</literal> elements
+                    found in the schema, and creates a <literal>message</literal> for elements that end with the
+                    defined request or response suffix. The default request suffix is <literal>Request</literal>;
+                    the default response suffix is <literal>Response</literal>, though these can be changed by
+                    setting the <property>requestSuffix</property> and <property>responseSuffix</property>
+                    properties, respectively.
+                    Next, the builder combines the request and response messages into a WSDL
+                    <literal>operation</literal>s, and builds a <literal>portType</literal> based on the operations.
+                </para>
+                <para>
+                    For instance, if our <filename>Orders.xsd</filename> schema defines the
+                    <literal>GetOrdersRequest</literal> and <literal>GetOrdersResponse</literal> elements, the
+                    <classname>XsdBasedSoap11Wsdl4jDefinitionBuilder</classname> will create a
+                    <literal>GetOrdersRequest</literal> and <literal>GetOrdersResponse</literal> message, and a
+                    <literal>GetOrders</literal> operation, which is put in a <literal>Orders</literal> port type.
+                </para>
             </section>
         </section>
         <section>
@@ -261,7 +257,7 @@
                 <classname>MessageDispatcher</classname> by adding a
                 <classname>WebServiceMessageReceiverHandlerAdapter</classname> to the servlet's web application
                 context:
-            <programlisting><![CDATA[<beans>
+                <programlisting><![CDATA[<beans>
 
     <bean class="org.springframework.ws.transport.http.WebServiceMessageReceiverHandlerAdapter"/>
 
@@ -269,15 +265,61 @@
         <property name="defaultHandler" ref="messageDispatcher"/>
     </bean
 
-    <bean id="messageDispatcher" class="org.springframework.ws.server.MessageDispatcher"/>
+    <bean id="messageDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher"/>
 
     ...
 
-    <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>]]></programlisting>
+    <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
+</beans>]]></programlisting>
                 Note that by explicitely adding the <classname>WebServiceMessageReceiverHandlerAdapter</classname>,
                 the dispatcher servlet does not load the default adapters, and is unable to handle standard Spring-MVC
                 <interfacename>Controllers</interfacename>. Therefore, we add the
                 <classname>SimpleControllerHandlerAdapter</classname> at the end.
+            </para>
+        </section>
+        <section>
+            <title>JMS transport</title>
+            <para>
+                Spring Web Services supports server-side JMS handling through the JMS functionality provided in the
+                Spring framework. Spring Web Services provides the <classname>WebServiceMessageListener</classname>
+                to plug in to a <classname>MessageListenerContainer</classname>. The following piece of configuration
+                shows this:
+                <programlisting><![CDATA[<beans>
+
+    <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="vm://localhost?broker.persistent=false"/>
+    </bean>
+
+    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+
+    <bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="destinationName" value="RequestQueue"/>
+        <property name="messageListener">
+            <bean class="org.springframework.ws.transport.jms.WebServiceMessageListener">
+                <property name="messageFactory" ref="messageFactory"/>
+                <property name="messageReceiver" ref="messageDispatcher"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="messageDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+        <property name="endpointMappings">
+            <bean
+              class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
+                <property name="defaultEndpoint">
+                    <bean class="com.example.MyEndpoint"/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+</beans>]]></programlisting>
+            </para>
+            <para>
+                As an alternative to the <classname>WebServiceMessageListener</classname>, Spring Web Services provides
+                a <classname>WebServiceMessageDrivenBean</classname>, an EJB
+                <interfacename>MessageDrivenBean</interfacename>. For more information on EJB, refer to the class level
+                Javadocs of the <classname>WebServiceMessageDrivenBean</classname>.
             </para>
         </section>
     </section>
