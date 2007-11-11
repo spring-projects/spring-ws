@@ -275,7 +275,8 @@ public class Application {
     }
 
     public static void main(String[] args) throws IOException {
-        ApplicationContext appContext = new ClassPathXmlApplicationContext("applicationContext.xml");
+        ApplicationContext appContext =
+            new ClassPathXmlApplicationContext("applicationContext.xml");
         Application application = (Application) appContext.getBean("application");
         application.saveSettings();
         application.loadSettings();

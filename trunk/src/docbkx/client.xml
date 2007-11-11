@@ -117,7 +117,8 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 
 public class WebServiceClient {
 
-    private static final String MESSAGE = "<message xmlns=\"http://tempuri.org\">Hello Web Service World</message>";
+    private static final String MESSAGE =
+        "<message xmlns=\"http://tempuri.org\">Hello Web Service World</message>";
 
     private final WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
 
@@ -136,7 +137,8 @@ public class WebServiceClient {
     public void customSendAndReceive() {
         StreamSource source = new StreamSource(new StringReader(MESSAGE));
         StreamResult result = new StreamResult(System.out);
-        webServiceTemplate.sendSourceAndReceiveToResult("http://localhost:8080/AnotherWebService", source, result);
+        webServiceTemplate.sendSourceAndReceiveToResult("http://localhost:8080/AnotherWebService",
+            source, result);
     }
 
 }]]></programlisting>
