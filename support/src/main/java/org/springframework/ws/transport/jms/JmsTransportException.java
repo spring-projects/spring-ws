@@ -26,7 +26,6 @@ import org.springframework.ws.transport.TransportException;
  * @author Arjen Poutsma
  * @since 1.1.0
  */
-
 public class JmsTransportException extends TransportException {
 
     private final JMSException jmsException;
