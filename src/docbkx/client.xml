@@ -44,21 +44,50 @@
                     <property>messageSenders</property> properties of the
                     <classname>WebServiceTemplate</classname> class.
                 </para>
-                <para>
-                    There are two implementations of the <classname>WebServiceMessageSender</classname>
-                    interface for sending messages via HTTP. The default implementation is the
-                    <classname>HttpUrlConnectionMessageSender</classname>, which uses the facilities provided
-                    by Java itself. The alternative is the <classname>CommonsHttpMessageSender</classname>,
-                    which uses the
-                    <link linkend="http://jakarta.apache.org/commons/httpclient/">Jakarta Commons HttpClient</link>.
-                    Use the latter if you need more advanced and easy-to-use functionality (such as authentication,
-                    HTTP connection pooling, and so forth).
-                </para>
+                <section>
+                    <title>HTTP transports</title>
+                    <para>
+                        There are two implementations of the <classname>WebServiceMessageSender</classname>
+                        interface for sending messages via HTTP. The default implementation is the
+                        <classname>HttpUrlConnectionMessageSender</classname>, which uses the facilities provided
+                        by Java itself. The alternative is the <classname>CommonsHttpMessageSender</classname>,
+                        which uses the
+                        <ulink url="http://jakarta.apache.org/commons/httpclient/">Jakarta Commons HttpClient</ulink>.
+                        Use the latter if you need more advanced and easy-to-use functionality (such as authentication,
+                        HTTP connection pooling, and so forth).
+                    </para>
+                    <para>
+                        To use the HTTP transport, either set the <property>defaultUri</property> to something like
+                        <uri>http://example.com/services</uri>, or supply the <parameter>uri</parameter> parameter
+                        for one of the methods.
+                    </para>
+                </section>
+                <section>
+                    <title>JMS transport</title>
+                    <para>
+                        For sending messages over JMS, Spring Web Services provides the
+                        <classname>JmsMessageSender</classname>. This class uses the facilities of the Spring framework
+                        to transform the <interfacename>WebServiceMessage</interfacename> into a JMS
+                        <interfacename>BytesMessages</interfacename>, send it on its way on a
+                        <interfacename>Queue</interfacename> or <interfacename>Topic</interfacename>, and receive a
+                        response (if any).
+                    </para>
+                    <para>
+                        To use the <classname>JmsMessageSender</classname>, you need to set the
+                        <property>defaultUri</property> or <parameter>uri</parameter> to a JMS URI, which - at a
+                        minimum - consists of the <literal>jms:</literal> prefix and a destination name. Some examples of
+                        JMS URIs are: <uri>jms:SomeQueue</uri>,
+                        <uri>jms:SomeTopic?priority=3&amp;deliveryMode=NON_PERSISTENT</uri>, and
+                        <uri>jms:RequestQueue?replyToName=ResponseName</uri>.
+                        For more information on this URI syntax, refer to the class level Javadocs of the
+                        <classname>JmsMessageSender</classname>.
+                    </para>
+                </section>
             </section>
             <section>
                 <title>Message factories</title>
                 <para>
-                    In addition to a message sender, the <classname>WebServiceTemplate</classname> requires a Web 
+                    In addition to a message sender, the <classname>WebServiceTemplate</classname> requires a Web
                     service message factory. There are two message factories for SOAP:
                     <classname>SaajSoapMessageFactory</classname> and <classname>AxiomSoapMessageFactory</classname>.
                     If no message factory is specified (via the '<literal>messageFactory</literal>' property),
