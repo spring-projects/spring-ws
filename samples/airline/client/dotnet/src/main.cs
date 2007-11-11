@@ -2,7 +2,7 @@ using System;
 using System.Web;
 using System.Web.Services.Protocols;
 
-namespace Spring.Ws.Samples.Airline.Client.CSharp {
+namespace Spring.Ws.Samples.Airline.Client.DotNet {
 
 	public class Client {
 		public static void Main(string[] args) {

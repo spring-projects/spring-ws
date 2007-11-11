@@ -15,7 +15,7 @@
     <target name="generate" >
         <mkdir dir="${gen.dir}"/>
 
-        <wsdltodotnet url="${wsdl}" destfile="${gen.dir}/AirlineService.cs"/>
+        <wsdltodotnet url="${wsdl}" destfile="${gen.dir}/AirlineService.cs" namespace="Spring.Ws.Samples.Airline.Client.DotNet"/>
     </target>
 
 
