@@ -24,11 +24,6 @@ import junit.framework.TestCase;
 
 public class JmsTransportUtilsTest extends TestCase {
 
-    public void testHeaderToJmsProperty() throws Exception {
-        String result = JmsTransportUtils.headerToJmsProperty("SOAPAction");
-        assertEquals("Invalid result", "SOAPJMS_soapAction", result);
-    }
-
     public void testGetDeliveryMode() throws Exception {
         URI uri = new URI("jms:RequestQueue?deliveryMode=NON_PERSISTENT");
         int deliveryMode = JmsTransportUtils.getDeliveryMode(uri);

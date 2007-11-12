@@ -17,7 +17,6 @@
 package org.springframework.ws.transport.jms;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.net.URI;
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
@@ -30,8 +29,10 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
+import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.WebServiceConnection;
 
 public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjectionSpringContextTests {
@@ -72,7 +73,6 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
             connection.send(soapRequest);
 
             BytesMessage request = (BytesMessage) jmsTemplate.receive();
-            validateMessage(request);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             messageFactory.createMessage().writeTo(bos);
             final byte[] buf = bos.toByteArray();
@@ -80,13 +80,9 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
 
                 public Message createMessage(Session session) throws JMSException {
                     BytesMessage response = session.createBytesMessage();
-                    response.setStringProperty(JmsTransportConstants.PROPERTY_BINDING_VERSION, "1.0");
-                    response.setIntProperty(JmsTransportConstants.PROPERTY_CONTENT_LENGTH, buf.length);
-                    response.setStringProperty(JmsTransportConstants.PROPERTY_CONTENT_TYPE, "text/xml");
-                    response.setBooleanProperty(JmsTransportConstants.PROPERTY_IS_FAULT, false);
-                    response.setStringProperty(JmsTransportConstants.PROPERTY_REQUEST_IRI, requestQueueUri.toString());
-                    response.setStringProperty(JmsTransportConstants.PROPERTY_SOAP_ACTION, SOAP_ACTION);
-
+                    response.setStringProperty(TransportConstants.HEADER_SOAP_ACTION, SOAP_ACTION);
+                    response.setStringProperty(TransportConstants.HEADER_CONTENT_TYPE,
+                            SoapVersion.SOAP_11.getContentType());
                     response.writeBytes(buf);
                     return response;
                 }
@@ -103,28 +99,4 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
         }
     }
 
-    private void validateMessage(BytesMessage message) throws JMSException, IOException {
-        assertEquals("Invalid SOAPAction", SOAP_ACTION,
-                message.getStringProperty(JmsTransportConstants.PROPERTY_SOAP_ACTION));
-        assertEquals("Invalid binding version", "1.0",
-                message.getStringProperty(JmsTransportConstants.PROPERTY_BINDING_VERSION));
-        assertFalse("Message is Fault", message.getBooleanProperty(JmsTransportConstants.PROPERTY_IS_FAULT));
-        assertTrue("Invalid Content Type",
-                message.getStringProperty(JmsTransportConstants.PROPERTY_CONTENT_TYPE).indexOf("text/xml") != -1);
-        assertTrue("No Content Length", message.getIntProperty(JmsTransportConstants.PROPERTY_CONTENT_LENGTH) > 0);
-
-        assertTrue("Message has no contents", getMessageContents(message).length() > 0);
-
-    }
-
-    private String getMessageContents(BytesMessage message) throws JMSException, IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int bytesRead;
-        while ((bytesRead = message.readBytes(buffer)) != -1) {
-            out.write(buffer, 0, bytesRead);
-        }
-        out.flush();
-        return out.toString("UTF-8");
-    }
 }

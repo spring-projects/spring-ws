@@ -19,11 +19,8 @@ package org.springframework.ws.transport.jms;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.List;
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.MessageProducer;
@@ -31,21 +28,19 @@ import javax.jms.Session;
 
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.util.Assert;
-import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractReceiverConnection;
-import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
-import org.springframework.ws.transport.jms.support.JmsTransportUtils;
+import org.springframework.ws.transport.support.EnumerationIterator;
 
 /**
- * Implementation of {@link WebServiceConnection} that is used for server-side JMS access.
+ * Implementation of {@link WebServiceConnection} that is used for server-side JMS access. Exposes a {@link
+ * BytesMessage} request and response message.
  *
  * @author Arjen Poutsma
  * @since 1.1.0
  */
-public class JmsReceiverConnection extends AbstractReceiverConnection
-        implements JmsTransportConstants, FaultAwareWebServiceConnection {
+public class JmsReceiverConnection extends AbstractReceiverConnection implements WebServiceConnection {
 
     private final BytesMessage requestMessage;
 
@@ -53,9 +48,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection
 
     private BytesMessage responseMessage;
 
-    /**
-     * Constructs a new JMS connection with the given parameters.
-     */
+    /** Constructs a new JMS connection with the given parameters. */
     protected JmsReceiverConnection(BytesMessage requestMessage, Session session) {
         Assert.notNull(requestMessage, "requestMessage must not be null");
         Assert.notNull(session, "session must not be null");
@@ -63,16 +56,12 @@ public class JmsReceiverConnection extends AbstractReceiverConnection
         this.session = session;
     }
 
-    /**
-     * Returns the request message for this connection.
-     */
+    /** Returns the request message for this connection. */
     public BytesMessage getRequestMessage() {
         return requestMessage;
     }
 
-    /**
-     * Returns the response message, if any, for this connection.
-     */
+    /** Returns the response message, if any, for this connection. */
     public BytesMessage getResponseMessage() {
         return responseMessage;
     }
@@ -91,15 +80,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection
 
     protected Iterator getRequestHeaderNames() throws IOException {
         try {
-            Enumeration headers = requestMessage.getPropertyNames();
-            List results = new ArrayList();
-            while (headers.hasMoreElements()) {
-                String header = (String) headers.nextElement();
-                if (header.startsWith(JmsTransportConstants.PROPERTY_PREFIX)) {
-                    results.add(header);
-                }
-            }
-            return results.iterator();
+            return new EnumerationIterator(requestMessage.getPropertyNames());
         }
         catch (JMSException ex) {
             throw new JmsTransportException("Could not get property names", ex);
@@ -128,11 +109,6 @@ public class JmsReceiverConnection extends AbstractReceiverConnection
         try {
             responseMessage = session.createBytesMessage();
             responseMessage.setJMSCorrelationID(requestMessage.getJMSMessageID());
-            responseMessage.setStringProperty(PROPERTY_BINDING_VERSION, "1.0");
-            if (message instanceof FaultAwareWebServiceMessage) {
-                FaultAwareWebServiceMessage faultMessage = (FaultAwareWebServiceMessage) message;
-                responseMessage.setBooleanProperty(PROPERTY_IS_FAULT, faultMessage.hasFault());
-            }
         }
         catch (JMSException ex) {
             throw new JmsTransportException("Could not create response message", ex);
@@ -141,8 +117,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection
 
     protected void addResponseHeader(String name, String value) throws IOException {
         try {
-            String property = JmsTransportUtils.headerToJmsProperty(name);
-            responseMessage.setStringProperty(property, value);
+            responseMessage.setStringProperty(name, value);
         }
         catch (JMSException ex) {
             throw new JmsTransportException("Could not set property", ex);
@@ -173,30 +148,5 @@ public class JmsReceiverConnection extends AbstractReceiverConnection
 
     public void close() throws IOException {
     }
-
-    /*
-     * Faults
-     */
-
-    public boolean hasFault() throws IOException {
-        try {
-            return requestMessage.getBooleanProperty(JmsTransportConstants.PROPERTY_IS_FAULT);
-        }
-        catch (JMSException ex) {
-            throw new JmsTransportException(ex);
-        }
-    }
-
-    public void setFault(boolean fault) throws IOException {
-        if (responseMessage != null) {
-            try {
-                responseMessage.setBooleanProperty(JmsTransportConstants.PROPERTY_IS_FAULT, fault);
-            }
-            catch (JMSException ex) {
-                throw new JmsTransportException(ex);
-            }
-        }
-    }
-
 
 }
