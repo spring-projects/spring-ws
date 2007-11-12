@@ -19,11 +19,8 @@ package org.springframework.ws.transport.jms;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.List;
 import javax.jms.BytesMessage;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -37,12 +34,10 @@ import javax.jms.TemporaryQueue;
 import org.springframework.jms.connection.ConnectionFactoryUtils;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.util.Assert;
-import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractSenderConnection;
-import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
-import org.springframework.ws.transport.jms.support.JmsTransportUtils;
+import org.springframework.ws.transport.support.EnumerationIterator;
 
 /**
  * Implementation of {@link WebServiceConnection} that is used for client-side JMS access.
@@ -50,8 +45,7 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * @author Arjen Poutsma
  * @since 1.1.0
  */
-public class JmsSenderConnection extends AbstractSenderConnection
-        implements FaultAwareWebServiceConnection, JmsTransportConstants {
+public class JmsSenderConnection extends AbstractSenderConnection implements WebServiceConnection {
 
     private final ConnectionFactory connectionFactory;
 
@@ -142,12 +136,6 @@ public class JmsSenderConnection extends AbstractSenderConnection
     protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
         try {
             requestMessage = session.createBytesMessage();
-            requestMessage.setStringProperty(PROPERTY_BINDING_VERSION, "1.0");
-            if (message instanceof FaultAwareWebServiceMessage) {
-                FaultAwareWebServiceMessage faultMessage = (FaultAwareWebServiceMessage) message;
-                requestMessage.setBooleanProperty(PROPERTY_IS_FAULT, faultMessage.hasFault());
-            }
-//            requestMessage.setStringProperty(PROPERTY_REQUEST_IRI, uri.toString());
         }
         catch (JMSException ex) {
             throw new JmsTransportException(ex);
@@ -156,8 +144,7 @@ public class JmsSenderConnection extends AbstractSenderConnection
 
     protected void addRequestHeader(String name, String value) throws IOException {
         try {
-            String property = JmsTransportUtils.headerToJmsProperty(name);
-            requestMessage.setStringProperty(property, value);
+            requestMessage.setStringProperty(name, value);
         }
         catch (JMSException ex) {
             throw new JmsTransportException("Could not set property", ex);
@@ -223,13 +210,7 @@ public class JmsSenderConnection extends AbstractSenderConnection
 
     protected Iterator getResponseHeaderNames() throws IOException {
         try {
-            List headerNames = new ArrayList();
-            Enumeration propertyNames = responseMessage.getPropertyNames();
-            while (propertyNames.hasMoreElements()) {
-                String propertyName = (String) propertyNames.nextElement();
-                headerNames.add(JmsTransportUtils.jmsPropertyToHeader(propertyName));
-            }
-            return headerNames.iterator();
+            return new EnumerationIterator(responseMessage.getPropertyNames());
         }
         catch (JMSException ex) {
             throw new JmsTransportException("Could not get property names", ex);
@@ -238,8 +219,7 @@ public class JmsSenderConnection extends AbstractSenderConnection
 
     protected Iterator getResponseHeaders(String name) throws IOException {
         try {
-            String propertyName = JmsTransportUtils.headerToJmsProperty(name);
-            String value = responseMessage.getStringProperty(propertyName);
+            String value = responseMessage.getStringProperty(name);
             if (value != null) {
                 return Collections.singletonList(value).iterator();
             }
@@ -261,31 +241,5 @@ public class JmsSenderConnection extends AbstractSenderConnection
         ConnectionFactoryUtils.releaseConnection(connection, connectionFactory, true);
     }
 
-    /*
-     * Faults
-     */
-
-    public boolean hasFault() throws IOException {
-        if (responseMessage != null) {
-            try {
-                return responseMessage.getBooleanProperty(JmsTransportConstants.PROPERTY_IS_FAULT);
-            }
-            catch (JMSException ex) {
-                throw new JmsTransportException(ex);
-            }
-        }
-        else {
-            return false;
-        }
-    }
-
-    public void setFault(boolean fault) throws IOException {
-        try {
-            requestMessage.setBooleanProperty(JmsTransportConstants.PROPERTY_IS_FAULT, fault);
-        }
-        catch (JMSException ex) {
-            throw new JmsTransportException(ex);
-        }
-    }
 
 }

@@ -36,7 +36,7 @@ import org.springframework.ws.transport.support.SimpleWebServiceMessageReceiverO
 public class JmsMessageReceiver extends SimpleWebServiceMessageReceiverObjectSupport {
 
     /**
-     * Handles an incoming messages. Uses the given session to create a response message.
+     * Handles an incoming message. Uses the given session to create a response message.
      *
      * @param request the incoming message
      * @param session the JMS session used to create a response
