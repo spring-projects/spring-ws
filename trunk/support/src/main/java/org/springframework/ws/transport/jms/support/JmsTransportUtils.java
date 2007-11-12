@@ -32,7 +32,7 @@ import javax.jms.Message;
  */
 public class JmsTransportUtils {
 
-    private static final Pattern DESTINATION_NAME_PATTERN = Pattern.compile("^jms:(\\w+)\\&?");
+    private static final Pattern DESTINATION_NAME_PATTERN = Pattern.compile("^([^\\?]+)");
 
     private static final Pattern DELIVERY_MODE_PATTERN = Pattern.compile("deliveryMode=(PERSISTENT|NON_PERSISTENT)");
 
@@ -97,7 +97,7 @@ public class JmsTransportUtils {
     }
 
     private static String getStringParameter(Pattern pattern, URI uri) {
-        Matcher matcher = pattern.matcher(uri.toString());
+        Matcher matcher = pattern.matcher(uri.getSchemeSpecificPart());
         if (matcher.find() && matcher.groupCount() == 1) {
             return matcher.group(1);
         }
@@ -105,7 +105,7 @@ public class JmsTransportUtils {
     }
 
     private static int getIntParameter(Pattern pattern, URI uri, int defaultValue) {
-        Matcher matcher = pattern.matcher(uri.toString());
+        Matcher matcher = pattern.matcher(uri.getSchemeSpecificPart());
         if (matcher.find() && matcher.groupCount() == 1) {
             try {
                 return Integer.parseInt(matcher.group(1));
@@ -118,7 +118,7 @@ public class JmsTransportUtils {
     }
 
     private static long getLongParameter(Pattern pattern, URI uri, long defaultValue) {
-        Matcher matcher = pattern.matcher(uri.toString());
+        Matcher matcher = pattern.matcher(uri.getSchemeSpecificPart());
         if (matcher.find() && matcher.groupCount() == 1) {
             try {
                 return Long.parseLong(matcher.group(1));

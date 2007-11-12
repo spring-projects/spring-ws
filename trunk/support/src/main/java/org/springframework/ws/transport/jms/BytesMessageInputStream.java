@@ -22,6 +22,8 @@ import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.MessageEOFException;
 
+import org.springframework.util.Assert;
+
 /**
  * Input stream that wraps a {@link BytesMessage}.
  *
@@ -30,9 +32,10 @@ import javax.jms.MessageEOFException;
  */
 class BytesMessageInputStream extends InputStream {
 
-    private BytesMessage message;
+    private final BytesMessage message;
 
     BytesMessageInputStream(BytesMessage message) {
+        Assert.notNull(message, "'message' must not be null");
         this.message = message;
     }
 

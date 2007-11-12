@@ -21,6 +21,8 @@ import java.io.OutputStream;
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 
+import org.springframework.util.Assert;
+
 /**
  * Output stream that wraps a {@link BytesMessage}.
  *
@@ -29,9 +31,10 @@ import javax.jms.JMSException;
  */
 class BytesMessageOutputStream extends OutputStream {
 
-    private BytesMessage message;
+    private final BytesMessage message;
 
     BytesMessageOutputStream(BytesMessage message) {
+        Assert.notNull(message, "'message' must not be null");
         this.message = message;
     }
 
