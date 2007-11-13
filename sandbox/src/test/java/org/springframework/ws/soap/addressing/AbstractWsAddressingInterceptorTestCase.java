@@ -4,9 +4,9 @@
 
 package org.springframework.ws.soap.addressing;
 
+import java.net.URI;
 import java.util.Iterator;
 
-import org.easymock.MockControl;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapHeaderElement;
@@ -15,6 +15,8 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
+
+import org.easymock.MockControl;
 
 public abstract class AbstractWsAddressingInterceptorTestCase extends AbstractWsAddressingTestCase {
 
@@ -107,7 +109,7 @@ public abstract class AbstractWsAddressingInterceptorTestCase extends AbstractWs
         String messageId = "uid:1234";
         strategyControl.expectAndReturn(strategyMock.newMessageId(response), messageId);
 
-        String uri = "http://example.com/business/client1";
+        URI uri = new URI("http://example.com/business/client1");
         senderControl.expectAndReturn(senderMock.supports(uri), true);
         senderControl.expectAndReturn(senderMock.createConnection(uri), connectionMock);
         connectionMock.send(response);
