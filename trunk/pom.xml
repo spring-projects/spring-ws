@@ -1,14 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <parent>
-        <artifactId>spring-ws-parent</artifactId>
-        <groupId>org.springframework.ws</groupId>
-        <version>1.1-SNAPSHOT</version>
-    </parent>
     <modelVersion>4.0.0</modelVersion>
+    <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws</artifactId>
     <packaging>pom</packaging>
+    <version>1.1-SNAPSHOT</version>
     <name>Spring Web Services</name>
+    <description>
+        Spring Web Services is a product of the Spring community focused on creating document-driven Web services. It
+        aims to facilitate contract-first SOAP service development, allowing for the creation of flexible web services
+        using one of the many ways to manipulate XML payloads.
+    </description>
+    <url>http://static.springframework.org/spring-ws/site/index.html</url>
+    <issueManagement>
+        <system>JIRA</system>
+        <url>http://opensource2.atlassian.com/projects/spring/browse/SWS/</url>
+    </issueManagement>
+    <ciManagement>
+        <system>bamboo</system>
+        <url>http://build.springframework.org:8085/bamboo/</url>
+    </ciManagement>
+    <inceptionYear>2005</inceptionYear>
+    <developers>
+        <developer>
+            <id>poutsma</id>
+            <name>Arjen Poutsma</name>
+            <email>apoutsma@interface21.com</email>
+            <organization>Interface21</organization>
+            <organizationUrl>http://www.interface21.com</organizationUrl>
+            <roles>
+                <role>Project Admin</role>
+                <role>Developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <id>springboy</id>
+            <name>Rick Evans</name>
+            <email>revans@interface21.com</email>
+            <organization>Interface21</organization>
+            <organizationUrl>http://www.interface21.com</organizationUrl>
+            <roles>
+                <role>Developer</role>
+                <role>Documentalist</role>
+            </roles>
+        </developer>
+    </developers>
+    <contributors>
+        <contributor>
+            <name>Ingo Siebert</name>
+        </contributor>
+        <contributor>
+            <name>Ben Ethridge</name>
+        </contributor>
+        <contributor>
+            <name>Kristoffer Moum</name>
+        </contributor>
+    </contributors>
+    <organization>
+        <name>The Spring Web Services Framework</name>
+        <url>http://www.springframework.org/spring-ws</url>
+    </organization>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <distributionManagement>
+        <downloadUrl>http://static.springframework.org/spring-ws/site/downloads/releases.html</downloadUrl>
+        <repository>
+            <id>local</id>
+            <url>file:///Users/arjen/Projects/Spring/repos/repo</url>
+        </repository>
+        <snapshotRepository>
+            <id>spring-snapshot</id>
+            <name>Spring Snapshot Repository</name>
+            <url>s3://maven.springframework.org/snapshot</url>
+        </snapshotRepository>
+        <site>
+            <id>static.springframework.org</id>
+            <url>scp://static.springframework.org/var/www/domains/springframework.org/static/htdocs/spring-ws/site</url>
+        </site>
+    </distributionManagement>
+    <scm>
+        <connection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk</connection>
+        <developerConnection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk</developerConnection>
+        <url>http://fisheye3.cenqua.com/browse/springframework/spring-ws/trunk</url>
+    </scm>
     <modules>
         <module>parent</module>
         <module>xml</module>
