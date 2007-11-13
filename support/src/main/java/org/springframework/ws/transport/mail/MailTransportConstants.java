@@ -16,21 +16,19 @@
 
 package org.springframework.ws.transport.mail;
 
-import java.io.IOException;
-
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.ws.transport.TransportConstants;
 
 /**
+ * Declares Mail-specific transport constants.
+ *
  * @author Arjen Poutsma
+ * @since 1.1.0
  */
-public class Driver {
+public interface MailTransportConstants extends TransportConstants {
 
-    public static void main(String[] args) throws IOException {
-        ClassPathXmlApplicationContext context =
-                new ClassPathXmlApplicationContext("applicationContext.xml", Driver.class);
-        context.registerShutdownHook();
-        System.out.println("Started....");
-        System.in.read();
-    }
+    /** The "mail" URI scheme. */
+    String MAIL_URI_SCHEME = "mailto";
 
+    /** The "In-Reply-To" header. */
+    String HEADER_IN_REPLY_TO = "In-Reply-To";
 }
