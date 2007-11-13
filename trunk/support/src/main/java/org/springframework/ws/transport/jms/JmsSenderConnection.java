@@ -40,7 +40,8 @@ import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.support.EnumerationIterator;
 
 /**
- * Implementation of {@link WebServiceConnection} that is used for client-side JMS access.
+ * Implementation of {@link WebServiceConnection} that is used for client-side JMS access. Exposes a {@link
+ * BytesMessage} request and response message.
  *
  * @author Arjen Poutsma
  * @since 1.1.0

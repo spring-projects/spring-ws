@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.URI;
 import javax.jms.BytesMessage;
 import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
@@ -37,7 +38,8 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.ws.transport.jms.support.JmsTransportUtils;
 
 /**
- * {@link WebServiceMessageSender} implementation that uses JMS {@link BytesMessage}.
+ * {@link WebServiceMessageSender} implementation that uses JMS {@link BytesMessage}s. Requires a JMS {@link
+ * ConnectionFactory} to operate.
  * <p/>
  * This message sender supports URI's of the following format: <blockquote> <tt><b>jms:</b></tt><i>destination</i>[<tt><b>?</b></tt><i>param-name</i><tt><b>=</b></tt><i>param-value</i>][<tt><b>&amp;</b></tt><i>param-name</i><tt><b>=</b></tt><i>param-value</i>]*
  * </blockquote> where the characters <tt><b>:</b></tt>, <tt><b>?</b></tt>, and <tt><b>&amp;</b></tt> stand for
@@ -58,7 +60,7 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * Some examples of JMS URIs are:
  * <p/>
  * <blockquote> <tt>jms:SomeQueue</tt><br> <tt>jms:SomeTopic?priority=3&deliveryMode=NON_PERSISTENT</tt><br>
- * <tt>jms:RequestQueue?replyToName=ResponseName</tt><br> </blockquote>
+ * <tt>jms:RequestQueue?replyToName=ResponseQueueName</tt></blockquote>
  *
  * @author Arjen Poutsma
  * @see <a href="http://www.ietf.org/internet-drafts/draft-merrick-jms-iri-00.txt">IRI Scheme for Java(tm) Message
@@ -72,7 +74,24 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 
     private long receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;
 
+    /**
+     * Create a new <code>JmsMessageSender</code>
+     * <p/>
+     * <b>Note</b>: The ConnectionFactory has to be set before using the instance. This constructor can be used to
+     * prepare a JmsTemplate via a BeanFactory, typically setting the ConnectionFactory via setConnectionFactory.
+     *
+     * @see #setConnectionFactory(ConnectionFactory)
+     */
     public JmsMessageSender() {
+    }
+
+    /**
+     * Create a new <code>JmsMessageSender</code>, given a ConnectionFactory.
+     *
+     * @param connectionFactory the ConnectionFactory to obtain Connections from
+     */
+    public JmsMessageSender(ConnectionFactory connectionFactory) {
+        setConnectionFactory(connectionFactory);
     }
 
     /**

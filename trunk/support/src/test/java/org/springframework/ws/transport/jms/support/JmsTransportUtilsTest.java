@@ -24,6 +24,16 @@ import junit.framework.TestCase;
 
 public class JmsTransportUtilsTest extends TestCase {
 
+    public void testGetDestinationName() throws Exception {
+        URI uri = new URI("jms:RequestQueue?replyToName=RESP_QUEUE");
+        String destinationName = JmsTransportUtils.getDestinationName(uri);
+        assertEquals("Invalid destination", "RequestQueue", destinationName);
+
+        uri = new URI("jms:RequestQueue");
+        destinationName = JmsTransportUtils.getDestinationName(uri);
+        assertEquals("Invalid destination", "RequestQueue", destinationName);
+    }
+
     public void testGetDeliveryMode() throws Exception {
         URI uri = new URI("jms:RequestQueue?deliveryMode=NON_PERSISTENT");
         int deliveryMode = JmsTransportUtils.getDeliveryMode(uri);
@@ -66,15 +76,5 @@ public class JmsTransportUtilsTest extends TestCase {
         uri = new URI("jms:RequestQueue?priority=5");
         replyToName = JmsTransportUtils.getReplyToName(uri);
         assertNull("Invalid replyToName", replyToName);
-    }
-
-    public void testGetDestinationName() throws Exception {
-        URI uri = new URI("jms:RequestQueue?replyToName=RESP_QUEUE");
-        String destinationName = JmsTransportUtils.getDestinationName(uri);
-        assertEquals("Invalid destination", "RequestQueue", destinationName);
-
-        uri = new URI("jms:RequestQueue");
-        destinationName = JmsTransportUtils.getDestinationName(uri);
-        assertEquals("Invalid destination", "RequestQueue", destinationName);
     }
 }
