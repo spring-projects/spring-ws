@@ -16,6 +16,7 @@
                 <include>org.springframework.ws:spring-oxm-tiger</include>
                 <include>org.springframework.ws:spring-ws-core</include>
                 <include>org.springframework.ws:spring-ws-core-tiger</include>
+                <include>org.springframework.ws:spring-ws-support</include>
                 <include>org.springframework.ws:spring-ws-security</include>
             </includes>
             <binaries>
@@ -43,6 +44,7 @@
                 <include>oxm-tiger/**/*</include>
                 <include>core/**/*</include>
                 <include>core-tiger/**/*</include>
+                <include>support/**/*</include>
                 <include>security/**/*</include>
                 <include>archetype/**/*</include>
                 <include>pom.xml</include>
@@ -76,12 +78,13 @@
                 <include>**/*.bat</include>
                 <include>**/pom.xml</include>
                 <include>**/Makefile</include>
-                <include>airline/hsqldb/**</include>
                 <include>mtom/**/spring-ws-logo.png</include>
                 <include>maven-artifact-ant-2.0.4-dep.jar</include>
                 <includes>**/*.exe</includes>
             </includes>
             <excludes>
+                <exclude>airline/activemq-data</exclude>
+                <exclude>airline/activemq-data/**</exclude>
                 <exclude>**/target</exclude>
                 <exclude>**/target/**</exclude>
                 <exclude>**/bin</exclude>

@@ -13,11 +13,10 @@
                 <include>org.springframework.ws:spring-oxm-tiger</include>
                 <include>org.springframework.ws:spring-ws-core</include>
                 <include>org.springframework.ws:spring-ws-core-tiger</include>
+                <include>org.springframework.ws:spring-ws-support</include>
                 <include>org.springframework.ws:spring-ws-security</include>
             </includes>
             <binaries>
-                <outputDirectory></outputDirectory>
-                <outputFileNameMapping></outputFileNameMapping>
                 <includeDependencies>false</includeDependencies>
                 <unpack>true</unpack>
             </binaries>
