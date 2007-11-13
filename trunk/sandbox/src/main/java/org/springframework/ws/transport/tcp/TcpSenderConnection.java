@@ -27,20 +27,35 @@ import java.util.Iterator;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.transport.AbstractSenderConnection;
+import org.springframework.ws.transport.WebServiceConnection;
 
-/** @author Arjen Poutsma */
+/**
+ * Implementation of {@link WebServiceConnection} that is used for client-side TCP/IP access. Exposes a {@link Socket}.
+ *
+ * @author Arjen Poutsma
+ */
 public class TcpSenderConnection extends AbstractSenderConnection {
 
     private final Socket socket;
 
+    /** Constructs a new TCP/IP connection with the given socket. */
     protected TcpSenderConnection(Socket socket) {
         Assert.notNull(socket, "socket must not be null");
         this.socket = socket;
     }
 
+    /** Returns the socket for this connection. */
+    public Socket getSocket() {
+        return socket;
+    }
+
     public void close() throws IOException {
         socket.close();
     }
+
+    /*
+     * Errors
+     */
 
     public boolean hasError() throws IOException {
         return false;

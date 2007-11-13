@@ -17,9 +17,8 @@
 package org.springframework.ws.soap.addressing;
 
 import java.io.IOException;
+import java.net.URI;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapHeaderElement;
@@ -28,6 +27,9 @@ import org.springframework.ws.soap.addressing.messageid.MessageIdStrategy;
 import org.springframework.ws.soap.server.SoapEndpointInterceptor;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * {@link SoapEndpointInterceptor} implementation that u
@@ -111,8 +113,9 @@ class WsAddressingInterceptor implements SoapEndpointInterceptor {
         }
     }
 
-    private void sendOutOfBand(String uri, SoapMessage message) throws IOException {
+    private void sendOutOfBand(String uriString, SoapMessage message) throws IOException {
         boolean supported = false;
+        URI uri = URI.create(uriString);
         for (int i = 0; i < messageSenders.length; i++) {
             if (messageSenders[i].supports(uri)) {
                 supported = true;

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.net.URI;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -28,8 +29,6 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 
 /** @author Arjen Poutsma */
 public class TcpMessageSender implements WebServiceMessageSender {
-
-    private static final String TCP_SCHEME = "tcp://";
 
     public static final int DEFAULT_PORT = 8081;
 
@@ -40,26 +39,18 @@ public class TcpMessageSender implements WebServiceMessageSender {
         this.timeOut = timeOut;
     }
 
-    public boolean supports(String uri) {
-        return StringUtils.hasLength(uri) && uri.startsWith(TCP_SCHEME);
-    }
-
-    public WebServiceConnection createConnection(String uri) throws IOException {
-        Assert.isTrue(uri.startsWith(TCP_SCHEME), "Invalid uri: " + uri);
-        uri = uri.substring(TCP_SCHEME.length());
-        int idx = uri.indexOf(':');
-        String hostname;
-        int port;
-        if (idx != -1) {
-            hostname = uri.substring(0, idx);
-            port = Integer.parseInt(uri.substring(idx + 1));
-        } else {
-            hostname = uri;
+    public WebServiceConnection createConnection(URI theUri) throws IOException {
+        int port = theUri.getPort();
+        if (port == -1) {
             port = DEFAULT_PORT;
         }
         Socket socket = new Socket();
-        SocketAddress socketAddress = new InetSocketAddress(hostname, port);
+        SocketAddress socketAddress = new InetSocketAddress(theUri.getHost(), port);
         socket.connect(socketAddress, timeOut);
         return new TcpSenderConnection(socket);
+    }
+
+    public boolean supports(URI uri) {
+        return uri.getScheme().equals(TcpTransportConstants.TCP_URI_SCHEME);
     }
 }
