@@ -19,16 +19,16 @@ package org.springframework.ws.transport.support;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.util.ClassUtils;
 import org.springframework.scheduling.commonj.WorkManagerTaskExecutor;
+import org.springframework.util.ClassUtils;
 
 /**
- * Abstract base class for standalone, server-side transport objects. Contains a Spring {@link TaskExecutor}, and
- * various lifecycle callbacks.
+ * Abstract base class for asynchronous standalone, server-side transport objects. Contains a Spring {@link
+ * TaskExecutor}, and various lifecycle callbacks.
  *
  * @author Arjen Poutsma
  */
-public abstract class AbstractMultiThreadedMessageReceiver extends AbstractStandaloneMessagingReceiver
+public abstract class AbstractAsyncStandaloneMessageReceiver extends AbstractStandaloneMessageReceiver
         implements BeanNameAware {
 
     /** Default thread name prefix. */
@@ -37,11 +37,6 @@ public abstract class AbstractMultiThreadedMessageReceiver extends AbstractStand
     private TaskExecutor taskExecutor;
 
     private String beanName;
-
-    /** Returns the task executor. */
-    public TaskExecutor getTaskExecutor() {
-        return taskExecutor;
-    }
 
     /**
      * Set the Spring {@link TaskExecutor} to use for running the listener threads. Default is {@link
@@ -76,5 +71,14 @@ public abstract class AbstractMultiThreadedMessageReceiver extends AbstractStand
     protected TaskExecutor createDefaultTaskExecutor() {
         String threadNamePrefix = beanName != null ? beanName + "-" : DEFAULT_THREAD_NAME_PREFIX;
         return new SimpleAsyncTaskExecutor(threadNamePrefix);
+    }
+
+    /**
+     * Executes the given {@link Runnable} via this receiver's {@link TaskExecutor}.
+     *
+     * @see #setTaskExecutor(TaskExecutor)
+     */
+    protected void execute(Runnable runnable) {
+        taskExecutor.execute(runnable);
     }
 }

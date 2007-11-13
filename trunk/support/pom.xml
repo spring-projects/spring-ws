@@ -98,12 +98,16 @@
         <dependency>
             <groupId>javax.jms</groupId>
             <artifactId>jms</artifactId>
-            <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>javax.ejb</groupId>
             <artifactId>ejb</artifactId>
-            <version>2.1</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
             <optional>true</optional>
         </dependency>
         <!-- Other dependencies -->

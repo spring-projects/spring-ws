@@ -40,10 +40,15 @@ import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractReceiverConnection;
 import org.springframework.ws.transport.TransportConstants;
-import org.springframework.ws.transport.mail.support.MailUtils;
+import org.springframework.ws.transport.WebServiceConnection;
+import org.springframework.ws.transport.mail.support.MailTransportUtils;
 
 /**
+ * Implementation of {@link WebServiceConnection} that is used for server-side Mail access. Exposes a {@link Message}
+ * request and response message.
+ *
  * @author Arjen Poutsma
+ * @since 1.1.0
  */
 public class MailReceiverConnection extends AbstractReceiverConnection {
 
@@ -61,12 +66,38 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 
     private InternetAddress from;
 
-    public MailReceiverConnection(Message requestMessage, Session session) {
+    /** Constructs a new Mail connection with the given parameters. */
+    protected MailReceiverConnection(Message requestMessage, Session session) {
         Assert.notNull(requestMessage, "'requestMessage' must not be null");
         Assert.notNull(session, "'session' must not be null");
         this.requestMessage = requestMessage;
         this.session = session;
     }
+
+    /** Returns the request message for this connection. */
+    public Message getRequestMessage() {
+        return requestMessage;
+    }
+
+    /** Returns the response message, if any, for this connection. */
+    public Message getResponseMessage() {
+        return responseMessage;
+    }
+
+    /*
+     * Package-friendly setters
+     */
+    void setTransportUri(URLName transportUri) {
+        this.transportUri = transportUri;
+    }
+
+    void setFrom(InternetAddress from) {
+        this.from = from;
+    }
+
+    /*
+     * Errors
+     */
 
     public String getErrorMessage() throws IOException {
         return null;
@@ -74,10 +105,6 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 
     public boolean hasError() throws IOException {
         return false;
-    }
-
-    public void setTransportUri(URLName transportUri) {
-        this.transportUri = transportUri;
     }
 
     public void close() throws IOException {
@@ -167,12 +194,8 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
             throw new MailTransportException(ex);
         }
         finally {
-            MailUtils.closeService(transport);
+            MailTransportUtils.closeService(transport);
         }
-    }
-
-    public void setFrom(InternetAddress from) {
-        this.from = from;
     }
 
     private class ByteArrayDataSource implements DataSource {
