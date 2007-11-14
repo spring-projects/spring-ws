@@ -4,7 +4,7 @@
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws</artifactId>
     <packaging>pom</packaging>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.5-m1-SNAPSHOT</version>
     <name>Spring Web Services</name>
     <description>
         Spring Web Services is a product of the Spring community focused on creating document-driven Web services. It

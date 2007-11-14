@@ -3,20 +3,13 @@
     <parent>
         <artifactId>spring-ws-parent</artifactId>
         <groupId>org.springframework.ws</groupId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.5-m1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>spring-oxm</artifactId>
     <packaging>jar</packaging>
     <name>Spring O/X Mapping</name>
     <description>Spring Object/XML Mapping abstraction</description>
-    <repositories>
-        <repository>
-            <id>jibx</id>
-            <name>JiBX Maven Repository</name>
-            <url>http://jibx.sourceforge.net/maven2/</url>
-        </repository>
-    </repositories>
     <build>
         <plugins>
             <plugin>
