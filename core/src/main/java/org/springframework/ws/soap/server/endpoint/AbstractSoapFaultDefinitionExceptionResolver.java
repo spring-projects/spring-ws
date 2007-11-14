@@ -65,27 +65,27 @@ public abstract class AbstractSoapFaultDefinitionExceptionResolver extends Abstr
         if (definition == null) {
             return false;
         }
-        if (!StringUtils.hasLength(definition.getFaultStringOrReason())) {
-            String faultString = StringUtils.hasLength(ex.getMessage()) ? ex.getMessage() : ex.toString();
-            definition.setFaultStringOrReason(faultString);
+
+        String faultStringOrReason = definition.getFaultStringOrReason();
+        if (!StringUtils.hasLength(faultStringOrReason)) {
+            faultStringOrReason = StringUtils.hasLength(ex.getMessage()) ? ex.getMessage() : ex.toString();
         }
         SoapBody soapBody = ((SoapMessage) messageContext.getResponse()).getSoapBody();
         SoapFault fault = null;
 
         if (SoapFaultDefinition.SERVER.equals(definition.getFaultCode()) ||
                 SoapFaultDefinition.RECEIVER.equals(definition.getFaultCode())) {
-            fault = soapBody.addServerOrReceiverFault(definition.getFaultStringOrReason(), definition.getLocale());
+            fault = soapBody.addServerOrReceiverFault(faultStringOrReason, definition.getLocale());
         }
         else if (SoapFaultDefinition.CLIENT.equals(definition.getFaultCode()) ||
                 SoapFaultDefinition.SENDER.equals(definition.getFaultCode())) {
-            fault = soapBody.addClientOrSenderFault(definition.getFaultStringOrReason(), definition.getLocale());
+            fault = soapBody.addClientOrSenderFault(faultStringOrReason, definition.getLocale());
         }
         else {
             // custom code, only supported for SOAP 1.1
             if (soapBody instanceof Soap11Body) {
                 Soap11Body soap11Body = (Soap11Body) soapBody;
-                fault = soap11Body.addFault(definition.getFaultCode(), definition.getFaultStringOrReason(),
-                        definition.getLocale());
+                fault = soap11Body.addFault(definition.getFaultCode(), faultStringOrReason, definition.getLocale());
             }
             else {
                 logger.warn("SOAP 1.2 does not allow custom FaultCodes, only SENDER or RECEIVER.");
