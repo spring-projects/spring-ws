@@ -124,7 +124,27 @@
                 <inherited>false</inherited>
                 <executions>
                     <execution>
-                        <id>make-assembly</id>
+                        <id>make-all-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                </manifest>
+                                <manifestEntries>
+                                    <Spring-WS-Version>${version}</Spring-WS-Version>
+                                </manifestEntries>
+                            </archive>
+                            <descriptors>
+                                <descriptor>src/assembly/all.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>make-minimal-zip</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
@@ -132,7 +152,6 @@
                         <configuration>
                             <descriptors>
                                 <descriptor>src/assembly/minimal.xml</descriptor>
-                                <descriptor>src/assembly/all.xml</descriptor>
                             </descriptors>
                         </configuration>
                     </execution>

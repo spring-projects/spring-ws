@@ -21,7 +21,22 @@
                 <outputFileNameMapping/>
                 <includeDependencies>false</includeDependencies>
                 <unpack>true</unpack>
+                <unpackOptions>
+                    <includes>
+                        <include>**/oxm/*</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/spring.handlers</exclude>
+                        <exclude>**/spring.schemas</exclude>
+                    </excludes>
+                </unpackOptions>
             </binaries>
         </moduleSet>
     </moduleSets>
+    <fileSets>
+        <fileSet>
+            <directory>src/main/resources/META-INF</directory>
+            <outputDirectory>META-INF</outputDirectory>
+        </fileSet>
+    </fileSets>
 </assembly>
