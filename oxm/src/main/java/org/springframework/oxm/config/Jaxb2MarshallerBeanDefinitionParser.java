@@ -47,7 +47,7 @@ class Jaxb2MarshallerBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
         if (StringUtils.hasText(contextPath)) {
             beanDefinitionBuilder.addPropertyValue("contextPath", contextPath);
         }
-        List classes = DomUtils.getChildElementsByTagName(element, "class");
+        List classes = DomUtils.getChildElementsByTagName(element, "class-to-be-bound");
         if (!classes.isEmpty()) {
             ManagedList classesToBeBound = new ManagedList();
             for (Iterator iterator = classes.iterator(); iterator.hasNext();) {
