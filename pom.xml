@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws</artifactId>
@@ -86,8 +87,10 @@
         </site>
     </distributionManagement>
     <scm>
-        <connection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk</connection>
-        <developerConnection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk</developerConnection>
+        <connection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk
+        </connection>
+        <developerConnection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk
+        </developerConnection>
         <url>http://fisheye3.cenqua.com/browse/springframework/spring-ws/trunk</url>
     </scm>
     <modules>
@@ -136,7 +139,7 @@
                                     <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                                 </manifest>
                                 <manifestEntries>
-                                    <Spring-WS-Version>${version}</Spring-WS-Version>
+                                    <Spring-WS-Version>${pom.version}</Spring-WS-Version>
                                 </manifestEntries>
                             </archive>
                             <descriptors>
@@ -189,7 +192,7 @@
                     <entities>
                         <entity>
                             <name>version</name>
-                            <value>${version}</value>
+                            <value>${pom.version}</value>
                         </entity>
                     </entities>
                     <postProcess>
@@ -207,7 +210,8 @@
                                 <include name="**/*.jpg"/>
                             </fileset>
                         </copy>
-                        <move file="target/site/reference/pdf/index.pdf" tofile="target/site/reference/pdf/spring-ws-reference.pdf" failonerror="false"/>
+                        <move file="target/site/reference/pdf/index.pdf"
+                              tofile="target/site/reference/pdf/spring-ws-reference.pdf" failonerror="false"/>
                     </postProcess>
                 </configuration>
             </plugin>

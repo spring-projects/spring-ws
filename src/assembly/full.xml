@@ -79,7 +79,7 @@
                 <include>**/pom.xml</include>
                 <include>**/Makefile</include>
                 <include>mtom/**/spring-ws-logo.png</include>
-                <include>maven-artifact-ant-2.0.4-dep.jar</include>
+                <include>maven-ant-tasks-*.jar</include>
                 <includes>**/*.exe</includes>
             </includes>
             <excludes>
