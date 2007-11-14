@@ -18,8 +18,6 @@ package org.springframework.ws.transport.support;
 
 import java.io.IOException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.FaultAwareWebServiceMessage;
@@ -35,6 +33,9 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
 import org.springframework.ws.transport.context.DefaultTransportContext;
 import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Convenience base class for server-side transport objects. Contains a {@link WebServiceMessageFactory}, and has
@@ -70,11 +71,10 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
      * message from it, passing it to the {@link WebServiceMessageReceiver#receive(MessageContext) receiver}, and {@link
      * WebServiceConnection#send(WebServiceMessage) sending} the response (if any).
      * <p/>
-     * Stores the given connection in the transport context.
+     * Stores the given connection in the {@link TransportContext}.
      *
      * @param connection the incoming connection
      * @param receiver   the handler of the message, typically a {@link org.springframework.ws.server.MessageDispatcher}
-     * @see org.springframework.ws.transport.context.TransportContext
      */
     protected final void handleConnection(WebServiceConnection connection, WebServiceMessageReceiver receiver)
             throws Exception {
