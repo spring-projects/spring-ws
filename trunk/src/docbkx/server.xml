@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
-                 "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+        "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
 <chapter id="server">
     <title>Creating a Web service with Spring-WS</title>
     <section id="ws-introduction">
@@ -42,10 +42,10 @@
             following sequence diagram.
             <mediaobject>
                 <imageobject role="fo">
-                    <imagedata fileref="src/docbkx/resources/images/sequence.png" format="PNG" align="center" />
+                    <imagedata fileref="src/docbkx/resources/images/sequence.png" format="PNG" align="center"/>
                 </imageobject>
                 <imageobject role="html">
-                    <imagedata fileref="images/sequence.png" format="PNG" align="center" />
+                    <imagedata fileref="images/sequence.png" format="PNG" align="center"/>
                 </imageobject>
                 <caption>
                     <para>The request processing workflow in Spring Web Services</para>
@@ -282,9 +282,10 @@
             <para>
                 Spring Web Services supports server-side JMS handling through the JMS functionality provided in the
                 Spring framework. Spring Web Services provides the <classname>WebServiceMessageListener</classname>
-                to plug in to a <classname>MessageListenerContainer</classname>. The following piece of configuration
-                shows this:
-                <programlisting><![CDATA[<beans>
+                to plug in to a <classname>MessageListenerContainer</classname>. This message listener requires a
+                <interfacename>WebServiceMessageFactory</interfacename> to and
+                <interfacename>MessageDispatcher</interfacename> to operate. The following piece of configuration
+                shows this:<programlisting><![CDATA[<beans>
 
     <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
         <property name="brokerURL" value="vm://localhost?broker.persistent=false"/>
@@ -320,6 +321,66 @@
                 a <classname>WebServiceMessageDrivenBean</classname>, an EJB
                 <interfacename>MessageDrivenBean</interfacename>. For more information on EJB, refer to the class level
                 Javadocs of the <classname>WebServiceMessageDrivenBean</classname>.
+            </para>
+        </section>
+        <section>
+            <title>Email transport</title>
+            <para>
+                In addition to HTTP and JMS, Spring Web Services also provides server-side email handling. This
+                functionality is provided through the <classname>MailMessageReceiver</classname> class. This class
+                monitors a POP3 or IMAP folder, converts the email to a <interfacename>WebServiceMessage</interfacename>,
+                sends any response using SMTP. The host names can be configured through the
+                <property>storeUri</property>, which indicates the mail folder to monitor for requests (typically a POP3 or IMAP folder),
+                and a <property>transportUri</property>, which indicates the server to use for sending responses (typically a SMTP server).
+            </para>
+            <para>
+                How the <classname>MailMessageReceiver</classname> monitors incoming messages can be configured with
+                a pluggable strategy: the <interfacename>MonitoringStrategy</interfacename>. By default, a polling
+                strategy is used, where the incoming folder is polled for new messages every five minutes. This interval
+                can be changed by setting the <property>pollingInterval</property> property on the strategy.
+                By default, all <interfacename>MonitoringStrategy</interfacename> implementations delete the handled
+                messages; this can be changed by setting the <property>deleteMessages</property> property. 
+            </para>
+            <para>
+                As an alternative to the polling approaches, which are quite inefficient, there is a monitoring strategy
+                that uses IMAP <command>IDLE</command>. The <command>IDLE</command> command is an optional
+                expansion of the IMAP email protocol that allows the mail server to send new message updates to the
+                <classname>MailMessageReceiver</classname> asynchronously. If you use a IMAP server that supports the
+                <command>IDLE</command> command, you can plug in the <classname>ImapIdleMonitoringStrategy</classname>
+                into the <property>monitoringStrategy</property> property.
+                In addition to a supporting server, you will need to use JavaMail version 1.4.1 or higher.
+            </para>
+            <para>
+                The following piece of configuration shows how to use the server-side email support, overiding the
+                default polling interval to a value which checks every 30 seconds
+                (30.000 milliseconds):<programlisting><![CDATA[<beans>
+
+    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+
+    <bean id="messagingReceiver" class="org.springframework.ws.transport.mail.MailMessageReceiver">
+        <property name="messageFactory" ref="messageFactory"/>
+        <property name="from" value="Spring-WS SOAP Server &lt;server@example.com&gt;"/>
+        <property name="storeUri" value="imap://server:s04p@imap.example.com/INBOX"/>
+        <property name="transportUri" value="smtp://smtp.example.com"/>
+        <property name="messageReceiver" ref="messageDispatcher"/>
+        <property name="monitoringStrategy">
+            <bean class="org.springframework.ws.transport.mail.monitor.PollingMonitoringStrategy">
+                <property name="pollingInterval" value="30000"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="messageDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+        <property name="endpointMappings">
+            <bean
+              class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
+                <property name="defaultEndpoint">
+                    <bean class="com.example.MyEndpoint"/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+</beans>]]></programlisting>
             </para>
         </section>
     </section>
@@ -399,7 +460,7 @@ public class SampleEndpoint extends AbstractDomPayloadEndpoint {
 </bean>]]></programlisting>
             <para>
                 The above class and the declaration in the application context are all you need besides setting up an
-                endpoint mapping (see the section entitled <xref linkend="server-endpoint-mapping" />) to get this very
+                endpoint mapping (see the section entitled <xref linkend="server-endpoint-mapping"/>) to get this very
                 simple endpoint working. The SOAP message handled by this endpoint will look something like:
             </para>
             <programlisting><![CDATA[<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">

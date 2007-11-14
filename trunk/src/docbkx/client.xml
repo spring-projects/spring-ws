@@ -151,8 +151,8 @@
                         <parameter>uri</parameter> parameter to a <literal>mailto</literal> URI. Here are some URI
                         examples: <uri>mailto:john@example.com</uri>, and
                         <uri>mailto:server@localhost?subject=SOAP%20Test</uri>. Make sure that the message sender is
-                        properly configured with a <property>transportUri</property>, which indicates the server to
-                        send requests (typically a SMTP server), and a <property>storeUri</property>, which indicates
+                        properly configured with a <property>transportUri</property>, which indicates the server to use for
+                        sending requests (typically a SMTP server), and a <property>storeUri</property>, which indicates
                         the server to poll for responses (typically a POP3 or IMAP server).
                     </para>
                     <para>
