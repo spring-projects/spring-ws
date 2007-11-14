@@ -9,13 +9,6 @@
     <packaging>jar</packaging>
     <name>Spring O/X Mapping</name>
     <description>Spring Object/XML Mapping abstraction</description>
-    <repositories>
-        <repository>
-            <id>jibx</id>
-            <name>JiBX Maven Repository</name>
-            <url>http://jibx.sourceforge.net/maven2/</url>
-        </repository>
-    </repositories>
     <build>
         <plugins>
             <plugin>
