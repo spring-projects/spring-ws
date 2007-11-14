@@ -24,8 +24,6 @@ import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
 
-import junit.framework.TestCase;
-import org.easymock.MockControl;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapBody;
@@ -37,6 +35,9 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 import org.springframework.ws.soap.soap12.Soap12Fault;
+
+import junit.framework.TestCase;
+import org.easymock.MockControl;
 
 public class SoapMessageDispatcherTest extends TestCase {
 
@@ -225,4 +226,23 @@ public class SoapMessageDispatcherTest extends TestCase {
         assertTrue("Invalid result", result);
         interceptorControl.verify();
     }
+
+    public void testProcessMustUnderstandHeadersNoInterceptors() throws Exception {
+        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+        SOAPMessage request = messageFactory.createMessage();
+        SOAPHeaderElement header =
+                request.getSOAPHeader().addHeaderElement(new QName("http://www.springframework.org", "Header"));
+        header.setActor(SOAPConstants.URI_SOAP_ACTOR_NEXT);
+        header.setMustUnderstand(true);
+        SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
+        MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
+        interceptorControl.replay();
+
+        SoapEndpointInvocationChain chain = new SoapEndpointInvocationChain(new Object(), null);
+
+        boolean result = dispatcher.handleRequest(chain, context);
+        assertFalse("Header understood", result);
+        interceptorControl.verify();
+    }
+
 }
