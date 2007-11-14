@@ -33,7 +33,7 @@ import org.springframework.ws.transport.mail.support.MailTransportUtils;
  * deleted.
  *
  * @author Arjen Poutsma
- * @since 1.1.0
+ * @since 1.5.0
  */
 public class Pop3PollingMonitoringStrategy extends PollingMonitoringStrategy {
 
@@ -44,14 +44,18 @@ public class Pop3PollingMonitoringStrategy extends PollingMonitoringStrategy {
     public void setDeleteMessages(boolean deleteMessages) {
     }
 
-    /** Re-opens the folder, if it closed. */
+    /**
+     * Re-opens the folder, if it closed.
+     */
     protected void afterSleep(Folder folder) throws MessagingException {
         if (!folder.isOpen()) {
             folder.open(Folder.READ_WRITE);
         }
     }
 
-    /** Simply returns {@link Folder#getMessages()}. */
+    /**
+     * Simply returns {@link Folder#getMessages()}.
+     */
     protected Message[] searchForNewMessages(Folder folder) throws MessagingException {
         return folder.getMessages();
     }

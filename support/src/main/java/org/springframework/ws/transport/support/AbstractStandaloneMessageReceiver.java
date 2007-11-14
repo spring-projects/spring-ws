@@ -24,7 +24,7 @@ import org.springframework.context.Lifecycle;
  * the {@link Lifecycle} interface, and various template methods to be implemented by concrete sub classes.
  *
  * @author Arjen Poutsma
- * @since 1.1.0
+ * @since 1.5.0
  */
 public abstract class AbstractStandaloneMessageReceiver extends SimpleWebServiceMessageReceiverObjectSupport
         implements Lifecycle, DisposableBean {
@@ -37,14 +37,18 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
 
     private final Object lifecycleMonitor = new Object();
 
-    /** Return whether this server is currently active, that is, whether it has been set up but not shut down yet. */
+    /**
+     * Return whether this server is currently active, that is, whether it has been set up but not shut down yet.
+     */
     public final boolean isActive() {
         synchronized (lifecycleMonitor) {
             return active;
         }
     }
 
-    /** Return whether this server is currently running, that is, whether it has been started and not stopped yet. */
+    /**
+     * Return whether this server is currently running, that is, whether it has been started and not stopped yet.
+     */
     public final boolean isRunning() {
         synchronized (lifecycleMonitor) {
             return running;
@@ -60,12 +64,16 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
         this.autoStartup = autoStartup;
     }
 
-    /** Calls {@link #activate()} when the BeanFactory initializes the receiver instance. */
+    /**
+     * Calls {@link #activate()} when the BeanFactory initializes the receiver instance.
+     */
     public void afterPropertiesSet() throws Exception {
         activate();
     }
 
-    /** Calls {@link #shutdown()} when the BeanFactory destroys the receiver instance. */
+    /**
+     * Calls {@link #shutdown()} when the BeanFactory destroys the receiver instance.
+     */
     public void destroy() {
         shutdown();
     }
@@ -85,7 +93,9 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
         }
     }
 
-    /** Start this server. */
+    /**
+     * Start this server.
+     */
     public final void start() {
         synchronized (lifecycleMonitor) {
             running = true;
@@ -94,7 +104,9 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
         onStart();
     }
 
-    /** Stop this server. */
+    /**
+     * Stop this server.
+     */
     public final void stop() {
         synchronized (lifecycleMonitor) {
             running = false;
@@ -103,7 +115,9 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
         onStop();
     }
 
-    /** Shut down this server. */
+    /**
+     * Shut down this server.
+     */
     public final void shutdown() {
         synchronized (lifecycleMonitor) {
             running = false;
@@ -120,12 +134,18 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
      */
     protected abstract void onActivate() throws Exception;
 
-    /** Template method invoked when {@link #start()} is invoked. */
+    /**
+     * Template method invoked when {@link #start()} is invoked.
+     */
     protected abstract void onStart();
 
-    /** Template method invoked when {@link #stop()} is invoked. */
+    /**
+     * Template method invoked when {@link #stop()} is invoked.
+     */
     protected abstract void onStop();
 
-    /** Template method invoked when {@link #shutdown()} is invoked. */
+    /**
+     * Template method invoked when {@link #shutdown()} is invoked.
+     */
     protected abstract void onShutdown();
 }

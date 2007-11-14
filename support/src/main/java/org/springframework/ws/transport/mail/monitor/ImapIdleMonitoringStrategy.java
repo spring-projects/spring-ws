@@ -23,9 +23,8 @@ import javax.mail.event.MessageCountAdapter;
 import javax.mail.event.MessageCountEvent;
 import javax.mail.event.MessageCountListener;
 
-import org.springframework.util.Assert;
-
 import com.sun.mail.imap.IMAPFolder;
+import org.springframework.util.Assert;
 
 /**
  * Implementation of the {@link MonitoringStrategy} interface that uses the IMAP IDLE command for asynchronous message
@@ -35,7 +34,7 @@ import com.sun.mail.imap.IMAPFolder;
  * Additionally, this strategy requires JavaMail version 1.4.1.
  *
  * @author Arjen Poutsma
- * @since 1.1.0
+ * @since 1.5.0
  */
 public class ImapIdleMonitoringStrategy extends AbstractMonitoringStrategy {
 

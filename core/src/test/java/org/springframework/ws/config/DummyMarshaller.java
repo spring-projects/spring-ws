@@ -24,10 +24,6 @@ import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
 
-/**
- * @author Arjen Poutsma
- * @since 1.1.0
- */
 public class DummyMarshaller implements Marshaller, Unmarshaller {
 
     public void marshal(Object graph, Result result) throws XmlMappingException, IOException {

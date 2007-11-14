@@ -28,16 +28,15 @@ import javax.mail.URLName;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
-import org.springframework.util.StringUtils;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.util.StringUtils;
 
 /**
  * Collection of utility methods to work with Mail transports.
  *
  * @author Arjen Poutsma
- * @since 1.1.0
+ * @since 1.5.0
  */
 public abstract class MailTransportUtils {
 
@@ -124,7 +123,9 @@ public abstract class MailTransportUtils {
         }
     }
 
-    /** Returns a string representation of the given {@link URLName}, where the password has been protected. */
+    /**
+     * Returns a string representation of the given {@link URLName}, where the password has been protected.
+     */
     public static String toPasswordProtectedString(URLName name) {
         String protocol = name.getProtocol();
         String username = name.getUsername();

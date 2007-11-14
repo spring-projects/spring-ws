@@ -28,7 +28,7 @@ import javax.jms.Message;
  * URI}.
  *
  * @author Arjen Poutsma
- * @since 1.1.0
+ * @since 1.5.0
  */
 public class JmsTransportUtils {
 

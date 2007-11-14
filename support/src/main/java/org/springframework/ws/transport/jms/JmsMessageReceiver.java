@@ -31,7 +31,7 @@ import org.springframework.ws.transport.support.SimpleWebServiceMessageReceiverO
  * Used by {@link WebServiceMessageListener} and {@link WebServiceMessageDrivenBean}.
  *
  * @author Arjen Poutsma
- * @since 1.1.0
+ * @since 1.5.0
  */
 public class JmsMessageReceiver extends SimpleWebServiceMessageReceiverObjectSupport {
 

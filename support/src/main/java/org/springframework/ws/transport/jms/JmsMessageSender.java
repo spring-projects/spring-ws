@@ -65,11 +65,13 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * @author Arjen Poutsma
  * @see <a href="http://www.ietf.org/internet-drafts/draft-merrick-jms-iri-00.txt">IRI Scheme for Java(tm) Message
  *      Service 1.0</a>
- * @since 1.1.0
+ * @since 1.5.0
  */
 public class JmsMessageSender extends JmsDestinationAccessor implements WebServiceMessageSender {
 
-    /** Default timeout for receive operations: -1 indicates a blocking receive without timeout. */
+    /**
+     * Default timeout for receive operations: -1 indicates a blocking receive without timeout.
+     */
     public static final long DEFAULT_RECEIVE_TIMEOUT = -1;
 
     private long receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;

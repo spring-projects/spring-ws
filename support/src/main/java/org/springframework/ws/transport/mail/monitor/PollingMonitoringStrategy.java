@@ -27,11 +27,13 @@ import javax.mail.MessagingException;
  * Pop3PollingMonitoringStrategy} instead.
  *
  * @author Arjen Poutsma
- * @since 1.1.0
+ * @since 1.5.0
  */
 public class PollingMonitoringStrategy extends AbstractMonitoringStrategy {
 
-    /** Defines the default polling frequency. Set to 1000 * 60 milliseconds (i.e. 1 minute). */
+    /**
+     * Defines the default polling frequency. Set to 1000 * 60 milliseconds (i.e. 1 minute).
+     */
     public static final long DEFAULT_POLLING_FREQUENCY = 1000 * 60;
 
     private long pollingInterval = DEFAULT_POLLING_FREQUENCY;

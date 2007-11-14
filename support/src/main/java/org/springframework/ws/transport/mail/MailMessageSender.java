@@ -57,11 +57,13 @@ import org.springframework.ws.transport.mail.support.MailTransportUtils;
  *
  * @author Arjen Poutsma
  * @see <a href="http://www.ietf.org/rfc/rfc2368.txt">The mailto URL scheme</a>
- * @since 1.1.0
+ * @since 1.5.0
  */
 public class MailMessageSender implements WebServiceMessageSender, InitializingBean {
 
-    /** Default timeout for receive operations. Set to 1000 * 60 milliseconds (i.e. 1 minute). */
+    /**
+     * Default timeout for receive operations. Set to 1000 * 60 milliseconds (i.e. 1 minute).
+     */
     public static final long DEFAULT_RECEIVE_TIMEOUT = 1000 * 60;
 
     private long receiveSleepTime = DEFAULT_RECEIVE_TIMEOUT;
@@ -74,7 +76,9 @@ public class MailMessageSender implements WebServiceMessageSender, InitializingB
 
     private InternetAddress from;
 
-    /** Sets the from address to use when sending request messages. */
+    /**
+     * Sets the from address to use when sending request messages.
+     */
     public void setFrom(String from) throws AddressException {
         this.from = new InternetAddress(from);
     }

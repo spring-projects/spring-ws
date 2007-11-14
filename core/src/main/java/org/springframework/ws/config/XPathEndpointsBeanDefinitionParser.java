@@ -24,14 +24,13 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractSimpleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
-
 import org.w3c.dom.Element;
 
 /**
  * Parser for the <code>&lt;sws:xpath-endpoints/&gt; element.
  *
  * @author Arjen Poutsma
- * @since 1.1.0
+ * @since 1.5.0
  */
 class XPathEndpointsBeanDefinitionParser extends AbstractSimpleBeanDefinitionParser {
 

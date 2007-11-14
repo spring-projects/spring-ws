@@ -48,7 +48,7 @@ import org.springframework.ws.transport.mail.support.MailTransportUtils;
  * request and response message.
  *
  * @author Arjen Poutsma
- * @since 1.1.0
+ * @since 1.5.0
  */
 public class MailReceiverConnection extends AbstractReceiverConnection {
 
@@ -66,7 +66,9 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 
     private InternetAddress from;
 
-    /** Constructs a new Mail connection with the given parameters. */
+    /**
+     * Constructs a new Mail connection with the given parameters.
+     */
     protected MailReceiverConnection(Message requestMessage, Session session) {
         Assert.notNull(requestMessage, "'requestMessage' must not be null");
         Assert.notNull(session, "'session' must not be null");
@@ -74,12 +76,16 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
         this.session = session;
     }
 
-    /** Returns the request message for this connection. */
+    /**
+     * Returns the request message for this connection.
+     */
     public Message getRequestMessage() {
         return requestMessage;
     }
 
-    /** Returns the response message, if any, for this connection. */
+    /**
+     * Returns the response message, if any, for this connection.
+     */
     public Message getResponseMessage() {
         return responseMessage;
     }

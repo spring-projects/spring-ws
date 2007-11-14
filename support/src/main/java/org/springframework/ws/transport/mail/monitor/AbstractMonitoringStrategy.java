@@ -33,11 +33,13 @@ import org.apache.commons.logging.LogFactory;
  * deleteMessages} property, and includes a basic workflow for message monitoring.
  *
  * @author Arjen Poutsma
- * @since 1.1.0
+ * @since 1.5.0
  */
 public abstract class AbstractMonitoringStrategy implements MonitoringStrategy {
 
-    /** Logger available to subclasses. */
+    /**
+     * Logger available to subclasses.
+     */
     protected final Log logger = LogFactory.getLog(getClass());
 
     private boolean deleteMessages = true;
