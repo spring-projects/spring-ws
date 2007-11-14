@@ -147,6 +147,9 @@ public class SoapMessageDispatcher extends MessageDispatcher {
      */
     private boolean headerUnderstood(EndpointInvocationChain mappedEndpoint, SoapHeaderElement headerElement) {
         EndpointInterceptor[] interceptors = mappedEndpoint.getInterceptors();
+        if (ObjectUtils.isEmpty(interceptors)) {
+            return false;
+        }
         for (int i = 0; i < interceptors.length; i++) {
             EndpointInterceptor interceptor = interceptors[i];
             if (interceptor instanceof SoapEndpointInterceptor &&
