@@ -28,7 +28,7 @@ import org.springframework.util.Assert;
  * Input stream that wraps a {@link BytesMessage}.
  *
  * @author Arjen Poutsma
- * @since 1.1.0
+ * @since 1.5.0
  */
 class BytesMessageInputStream extends InputStream {
 

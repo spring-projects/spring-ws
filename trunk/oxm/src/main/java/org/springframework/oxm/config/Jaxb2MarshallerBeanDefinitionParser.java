@@ -25,14 +25,13 @@ import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
-
 import org.w3c.dom.Element;
 
 /**
  * Parser for the <code>&lt;oxm:jaxb2-marshaller/&gt; element.
  *
  * @author Arjen Poutsma
- * @since 1.1.0
+ * @since 1.5.0
  */
 class Jaxb2MarshallerBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 

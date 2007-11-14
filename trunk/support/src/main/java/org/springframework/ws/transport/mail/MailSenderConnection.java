@@ -43,6 +43,8 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.search.HeaderTerm;
 import javax.mail.search.SearchTerm;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractSenderConnection;
@@ -50,15 +52,12 @@ import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.mail.support.MailTransportUtils;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * Implementation of {@link WebServiceConnection} that is used for client-side Mail access. Exposes a {@link Message}
  * request and response message.
  *
  * @author Arjen Poutsma
- * @since 1.1.0
+ * @since 1.5.0
  */
 
 public class MailSenderConnection extends AbstractSenderConnection {
@@ -93,7 +92,9 @@ public class MailSenderConnection extends AbstractSenderConnection {
 
     private Folder folder;
 
-    /** Constructs a new Mail connection with the given parameters. */
+    /**
+     * Constructs a new Mail connection with the given parameters.
+     */
     protected MailSenderConnection(Session session,
                                    URLName transportUri,
                                    URLName storeUri,
@@ -110,12 +111,16 @@ public class MailSenderConnection extends AbstractSenderConnection {
         this.receiveTimeout = receiveTimeout;
     }
 
-    /** Returns the request message for this connection. */
+    /**
+     * Returns the request message for this connection.
+     */
     public Message getRequestMessage() {
         return requestMessage;
     }
 
-    /** Returns the response message, if any, for this connection. */
+    /**
+     * Returns the response message, if any, for this connection.
+     */
     public Message getResponseMessage() {
         return responseMessage;
     }

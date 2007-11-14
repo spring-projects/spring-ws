@@ -44,7 +44,7 @@ import org.springframework.ws.transport.support.EnumerationIterator;
  * BytesMessage} request and response message.
  *
  * @author Arjen Poutsma
- * @since 1.1.0
+ * @since 1.5.0
  */
 public class JmsSenderConnection extends AbstractSenderConnection implements WebServiceConnection {
 
@@ -70,7 +70,9 @@ public class JmsSenderConnection extends AbstractSenderConnection implements Web
 
     private int priority;
 
-    /** Constructs a new JMS connection with the given parameters. */
+    /**
+     * Constructs a new JMS connection with the given parameters.
+     */
     protected JmsSenderConnection(ConnectionFactory connectionFactory,
                                   Connection connection,
                                   Session session,
@@ -84,12 +86,16 @@ public class JmsSenderConnection extends AbstractSenderConnection implements Web
         this.requestDestination = requestDestination;
     }
 
-    /** Returns the request message for this connection. */
+    /**
+     * Returns the request message for this connection.
+     */
     public BytesMessage getRequestMessage() {
         return requestMessage;
     }
 
-    /** Returns the response message, if any, for this connection. */
+    /**
+     * Returns the response message, if any, for this connection.
+     */
     public BytesMessage getResponseMessage() {
         return responseMessage;
     }

@@ -81,27 +81,39 @@ import org.xml.sax.SAXException;
  * @see #setPortTypeName(String)
  * @see #setRequestSuffix(String)
  * @see #setResponseSuffix(String)
- * @since 1.1.0
+ * @since 1.5.0
  */
 public class XsdBasedSoap12Wsdl4jDefinitionBuilder extends AbstractSoap12Wsdl4jDefinitionBuilder
         implements InitializingBean {
 
-    /** The default suffix used to detect request elements in the schema. */
+    /**
+     * The default suffix used to detect request elements in the schema.
+     */
     public static final String DEFAULT_REQUEST_SUFFIX = "Request";
 
-    /** The default suffix used to detect response elements in the schema. */
+    /**
+     * The default suffix used to detect response elements in the schema.
+     */
     public static final String DEFAULT_RESPONSE_SUFFIX = "Response";
 
-    /** The default suffix used to detect fault elements in the schema. */
+    /**
+     * The default suffix used to detect fault elements in the schema.
+     */
     public static final String DEFAULT_FAULT_SUFFIX = "Fault";
 
-    /** The default prefix used to register the schema namespace in the WSDL. */
+    /**
+     * The default prefix used to register the schema namespace in the WSDL.
+     */
     public static final String DEFAULT_SCHEMA_PREFIX = "schema";
 
-    /** The default prefix used to register the target namespace in the WSDL. */
+    /**
+     * The default prefix used to register the target namespace in the WSDL.
+     */
     public static final String DEFAULT_PREFIX = "tns";
 
-    /** The suffix used to create a service name from a port type name. */
+    /**
+     * The suffix used to create a service name from a port type name.
+     */
     public static final String SERVICE_SUFFIX = "Service";
 
     private Resource schemaResource;
@@ -153,12 +165,16 @@ public class XsdBasedSoap12Wsdl4jDefinitionBuilder extends AbstractSoap12Wsdl4jD
         this.faultSuffix = faultSuffix;
     }
 
-    /** Sets the port type name used for this definition. Required. */
+    /**
+     * Sets the port type name used for this definition. Required.
+     */
     public void setPortTypeName(String portTypeName) {
         this.portTypeName = portTypeName;
     }
 
-    /** Sets the target namespace used for this definition. */
+    /**
+     * Sets the target namespace used for this definition.
+     */
     public void setTargetNamespace(String targetNamespace) {
         this.targetNamespace = targetNamespace;
     }
@@ -181,7 +197,9 @@ public class XsdBasedSoap12Wsdl4jDefinitionBuilder extends AbstractSoap12Wsdl4jD
         this.prefix = prefix;
     }
 
-    /** Sets the XSD schema to use for generating the WSDL. */
+    /**
+     * Sets the XSD schema to use for generating the WSDL.
+     */
     public void setSchema(Resource schemaResource) {
         Assert.notNull(schemaResource, "'schema' must not be null");
         Assert.isTrue(schemaResource.exists(), "schema \"" + schemaResource + "\" does not exit");
@@ -214,7 +232,9 @@ public class XsdBasedSoap12Wsdl4jDefinitionBuilder extends AbstractSoap12Wsdl4jD
         }
     }
 
-    /** Adds the target namespace and schema namespace to the definition. */
+    /**
+     * Adds the target namespace and schema namespace to the definition.
+     */
     protected void populateDefinition(Definition definition) throws WSDLException {
         super.populateDefinition(definition);
         definition.setTargetNamespace(targetNamespace);
@@ -224,7 +244,9 @@ public class XsdBasedSoap12Wsdl4jDefinitionBuilder extends AbstractSoap12Wsdl4jD
         }
     }
 
-    /** Does nothing. */
+    /**
+     * Does nothing.
+     */
     protected void buildImports(Definition definition) throws WSDLException {
     }
 
@@ -495,7 +517,9 @@ public class XsdBasedSoap12Wsdl4jDefinitionBuilder extends AbstractSoap12Wsdl4jD
         operation.setName(operationName);
     }
 
-    /** Sets the name of the service to the name of the port type, with "Service" appended to it. */
+    /**
+     * Sets the name of the service to the name of the port type, with "Service" appended to it.
+     */
     protected void populateService(Service service) throws WSDLException {
         service.setQName(new QName(targetNamespace, portTypeName + SERVICE_SUFFIX));
     }

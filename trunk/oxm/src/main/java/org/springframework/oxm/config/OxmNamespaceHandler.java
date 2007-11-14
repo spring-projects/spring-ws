@@ -11,7 +11,7 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
  * {@link NamespaceHandler} for the '<code>oxm</code>' namespace.
  *
  * @author Arjen Poutsma
- * @since 1.1.0
+ * @since 1.5.0
  */
 public class OxmNamespaceHandler extends NamespaceHandlerSupport {
 

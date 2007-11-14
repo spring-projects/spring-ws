@@ -24,7 +24,7 @@ import org.springframework.ws.transport.TransportException;
  * Exception that is thrown when an error occurs in the Mail transport.
  *
  * @author Arjen Poutsma
- * @since 1.1.0
+ * @since 1.5.0
  */
 public class MailTransportException extends TransportException {
 

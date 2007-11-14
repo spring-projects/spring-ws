@@ -49,7 +49,7 @@ import org.springframework.ws.transport.support.AbstractAsyncStandaloneMessageRe
  * {@link PollingMonitoringStrategy} for IMAP servers.
  *
  * @author Arjen Poutsma
- * @since 1.1.0
+ * @since 1.5.0
  */
 public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver {
 
@@ -67,7 +67,9 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
 
     private MonitoringStrategy monitoringStrategy;
 
-    /** Sets the from address to use when sending reponse messages. */
+    /**
+     * Sets the from address to use when sending reponse messages.
+     */
     public void setFrom(String from) throws AddressException {
         this.from = new InternetAddress(from);
     }
