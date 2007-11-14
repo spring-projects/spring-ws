@@ -17,6 +17,7 @@
 package org.springframework.ws.transport;
 
 import java.io.IOException;
+import java.net.URI;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
@@ -28,7 +29,7 @@ import org.springframework.ws.WebServiceMessageFactory;
  * A <code>WebServiceConnection</code> can be obtained using a {@link WebServiceMessageSender}.
  *
  * @author Arjen Poutsma
- * @see WebServiceMessageSender#createConnection(String)
+ * @see WebServiceMessageSender#createConnection(URI)
  * @since 1.0.0
  */
 public interface WebServiceConnection {
