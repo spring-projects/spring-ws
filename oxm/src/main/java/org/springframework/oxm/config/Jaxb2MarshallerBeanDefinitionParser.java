@@ -36,10 +36,10 @@ import org.w3c.dom.Element;
  */
 class Jaxb2MarshallerBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
-    public static final String JAXB2_MARSHALLER_BEAN_NAME = "org.springframework.oxm.jaxb.Jaxb2Marshaller";
+    public static final String JAXB2_MARSHALLER_CLASS_NAME = "org.springframework.oxm.jaxb.Jaxb2Marshaller";
 
     protected String getBeanClassName(Element element) {
-        return JAXB2_MARSHALLER_BEAN_NAME;
+        return JAXB2_MARSHALLER_CLASS_NAME;
     }
 
     protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder beanDefinitionBuilder) {
@@ -49,7 +49,7 @@ class Jaxb2MarshallerBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
         }
         List classes = DomUtils.getChildElementsByTagName(element, "class-to-be-bound");
         if (!classes.isEmpty()) {
-            ManagedList classesToBeBound = new ManagedList();
+            ManagedList classesToBeBound = new ManagedList(classes.size());
             for (Iterator iterator = classes.iterator(); iterator.hasNext();) {
                 Element classToBeBound = (Element) iterator.next();
                 String className = classToBeBound.getAttribute("name");
