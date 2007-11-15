@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <artifactId>spring-ws-parent</artifactId>
         <groupId>org.springframework.ws</groupId>
@@ -26,6 +26,11 @@
             <id>spring-ext</id>
             <name>Spring External Dependencies Repository</name>
             <url>https://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo-ext/</url>
+        </repository>
+        <repository>
+            <id>java.net-maven-2</id>
+            <name>Java.net Repository for Maven</name>
+            <url>http://download.java.net/maven/2/</url>
         </repository>
     </repositories>
     <profiles>
@@ -119,6 +124,12 @@
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jvnet.mock-javamail</groupId>
+            <artifactId>mock-javamail</artifactId>
+            <version>1.6</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
