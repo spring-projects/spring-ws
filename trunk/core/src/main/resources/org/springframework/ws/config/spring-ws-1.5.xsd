@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <xsd:schema xmlns="http://www.springframework.org/spring-ws/schema/sws" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-        xmlns:beans="http://www.springframework.org/schema/beans"
-        xmlns:tool="http://www.springframework.org/schema/tool"
-        targetNamespace="http://www.springframework.org/spring-ws/schema/sws" elementFormDefault="qualified"
-        attributeFormDefault="unqualified">
+            xmlns:beans="http://www.springframework.org/schema/beans"
+            xmlns:tool="http://www.springframework.org/schema/tool"
+            targetNamespace="http://www.springframework.org/spring-ws/schema/sws" elementFormDefault="qualified"
+            attributeFormDefault="unqualified">
 
     <xsd:import namespace="http://www.springframework.org/schema/beans"/>
     <xsd:import namespace="http://www.springframework.org/schema/tool"/>
@@ -16,7 +16,8 @@
     
     <xsd:element name="marshalling-endpoints">
         <xsd:annotation>
-            <xsd:documentation source="java:org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter">
+            <xsd:documentation
+                    source="java:org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter">
                 Indicates that a unmarshaller should be used to convert incoming request
                 messages into method parameters, and return values marshalled into a response message.
             </xsd:documentation>
@@ -59,7 +60,8 @@
 
     <xsd:element name="xpath-endpoints">
         <xsd:annotation>
-            <xsd:documentation source="java:org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter">
+            <xsd:documentation
+                    source="java:org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter">
                 Indicates that a endpoints using @XPathParam annotations should be detected.
             </xsd:documentation>
         </xsd:annotation>
