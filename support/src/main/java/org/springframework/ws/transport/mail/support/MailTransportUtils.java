@@ -123,9 +123,7 @@ public abstract class MailTransportUtils {
         }
     }
 
-    /**
-     * Returns a string representation of the given {@link URLName}, where the password has been protected.
-     */
+    /** Returns a string representation of the given {@link URLName}, where the password has been protected. */
     public static String toPasswordProtectedString(URLName name) {
         String protocol = name.getProtocol();
         String username = name.getUsername();
@@ -139,7 +137,7 @@ public abstract class MailTransportUtils {
             tempURL.append(protocol).append(':');
         }
 
-        if (StringUtils.hasLength(username) || StringUtils.hasLength(null)) {
+        if (StringUtils.hasLength(username) || StringUtils.hasLength(host)) {
             tempURL.append("//");
             if (StringUtils.hasLength(username)) {
                 tempURL.append(username);

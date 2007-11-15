@@ -37,9 +37,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class AbstractMonitoringStrategy implements MonitoringStrategy {
 
-    /**
-     * Logger available to subclasses.
-     */
+    /** Logger available to subclasses. */
     protected final Log logger = LogFactory.getLog(getClass());
 
     private boolean deleteMessages = true;
@@ -108,25 +106,27 @@ public abstract class AbstractMonitoringStrategy implements MonitoringStrategy {
         }
         Flags supportedFlags = folder.getPermanentFlags();
         SearchTerm searchTerm = null;
-        if (supportedFlags.contains(Flags.Flag.RECENT)) {
-            searchTerm = new FlagTerm(new Flags(Flags.Flag.RECENT), true);
-        }
-        if (supportedFlags.contains(Flags.Flag.ANSWERED)) {
-            FlagTerm answeredTerm = new FlagTerm(new Flags(Flags.Flag.ANSWERED), false);
-            if (searchTerm == null) {
-                searchTerm = answeredTerm;
+        if (supportedFlags != null) {
+            if (supportedFlags.contains(Flags.Flag.RECENT)) {
+                searchTerm = new FlagTerm(new Flags(Flags.Flag.RECENT), true);
             }
-            else {
-                searchTerm = new AndTerm(searchTerm, answeredTerm);
+            if (supportedFlags.contains(Flags.Flag.ANSWERED)) {
+                FlagTerm answeredTerm = new FlagTerm(new Flags(Flags.Flag.ANSWERED), false);
+                if (searchTerm == null) {
+                    searchTerm = answeredTerm;
+                }
+                else {
+                    searchTerm = new AndTerm(searchTerm, answeredTerm);
+                }
             }
-        }
-        if (supportedFlags.contains(Flags.Flag.DELETED)) {
-            FlagTerm deletedTerm = new FlagTerm(new Flags(Flags.Flag.DELETED), false);
-            if (searchTerm == null) {
-                searchTerm = deletedTerm;
-            }
-            else {
-                searchTerm = new AndTerm(searchTerm, deletedTerm);
+            if (supportedFlags.contains(Flags.Flag.DELETED)) {
+                FlagTerm deletedTerm = new FlagTerm(new Flags(Flags.Flag.DELETED), false);
+                if (searchTerm == null) {
+                    searchTerm = deletedTerm;
+                }
+                else {
+                    searchTerm = new AndTerm(searchTerm, deletedTerm);
+                }
             }
         }
         return searchTerm != null ? folder.search(searchTerm) : folder.getMessages();
