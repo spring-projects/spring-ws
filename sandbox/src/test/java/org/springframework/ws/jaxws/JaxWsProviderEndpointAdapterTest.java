@@ -16,6 +16,7 @@
 
 package org.springframework.ws.jaxws;
 
+import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
@@ -25,9 +26,6 @@ import javax.xml.ws.ServiceMode;
 import javax.xml.ws.WebServiceProvider;
 
 import junit.framework.TestCase;
-import org.springframework.ws.MockWebServiceMessage;
-import org.springframework.ws.MockWebServiceMessageFactory;
-import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
@@ -37,8 +35,15 @@ public class JaxWsProviderEndpointAdapterTest extends TestCase {
 
     private JaxWsProviderEndpointAdapter adapter;
 
+    private MessageContext messageContext;
+
     protected void setUp() throws Exception {
         adapter = new JaxWsProviderEndpointAdapter();
+        MessageFactory messageFactory = MessageFactory.newInstance();
+        SOAPMessage request = messageFactory.createMessage();
+        request.getSOAPBody().addBodyElement(new QName("http://springframework.org/spring-ws", "content"));
+        messageContext =
+                new DefaultMessageContext(new SaajSoapMessage(request), new SaajSoapMessageFactory(messageFactory));
     }
 
     public void testSupports() throws Exception {
@@ -52,8 +57,6 @@ public class JaxWsProviderEndpointAdapterTest extends TestCase {
 
     public void testInvokeMessageProvider() throws Exception {
         MyMessageProvider provider = new MyMessageProvider();
-        MessageContext messageContext =
-                new DefaultMessageContext(new SaajSoapMessageFactory(MessageFactory.newInstance()));
         adapter.invoke(messageContext, provider);
         assertTrue("No response", messageContext.hasResponse());
         SaajSoapMessage request = (SaajSoapMessage) messageContext.getRequest();
@@ -63,16 +66,12 @@ public class JaxWsProviderEndpointAdapterTest extends TestCase {
 
     public void testInvokeSourceProvider() throws Exception {
         MySourceProvider provider = new MySourceProvider();
-        WebServiceMessage request = new MockWebServiceMessage("<contents/>");
-        MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
         adapter.invoke(messageContext, provider);
         assertTrue("No response", messageContext.hasResponse());
     }
 
     public void testInvokeDefaultProvider() throws Exception {
         MyDefaultProvider provider = new MyDefaultProvider();
-        WebServiceMessage request = new MockWebServiceMessage("<contents/>");
-        MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
         adapter.invoke(messageContext, provider);
         assertTrue("No response", messageContext.hasResponse());
     }
