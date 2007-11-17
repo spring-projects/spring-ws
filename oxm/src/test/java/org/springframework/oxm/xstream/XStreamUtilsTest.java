@@ -16,8 +16,9 @@
 
 package org.springframework.oxm.xstream;
 
-import com.thoughtworks.xstream.alias.CannotResolveClassException;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.mapper.CannotResolveClassException;
+
 import junit.framework.TestCase;
 
 public class XStreamUtilsTest extends TestCase {
