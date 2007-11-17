@@ -20,6 +20,8 @@ import javax.xml.bind.MarshalException;
 import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.ValidationException;
 
+import org.springframework.core.JdkVersion;
+
 import junit.framework.TestCase;
 
 public class JaxbUtilsTest extends TestCase {
@@ -45,6 +47,8 @@ public class JaxbUtilsTest extends TestCase {
     }
 
     public void testGetJaxbVersion() throws Exception {
-        assertEquals("Invalid JAXB version", JaxbUtils.JAXB_1, JaxbUtils.getJaxbVersion());
+    	if (!JdkVersion.isAtLeastJava16()) {
+    		assertEquals("Invalid JAXB version", JaxbUtils.JAXB_1, JaxbUtils.getJaxbVersion());
+    	}
     }
 }
