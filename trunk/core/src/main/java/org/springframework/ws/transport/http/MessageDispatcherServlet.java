@@ -18,7 +18,6 @@ package org.springframework.ws.transport.http;
 
 import java.util.Iterator;
 import java.util.Map;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -114,9 +113,6 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 
     private boolean transformWsdlLocations = false;
 
-    /** Indicates whether {@link ServletContext#getContextPath()} exists. This method was introduced in Servlet 2.5. */
-    private boolean servletContextHasGetContextPath;
-
     /** Public constructor, necessary for some Web application servers. */
     public MessageDispatcherServlet() {
         defaultStrategiesHelper = new DefaultStrategiesHelper(
@@ -203,8 +199,6 @@ public class MessageDispatcherServlet extends FrameworkServlet {
     }
 
     protected void initFrameworkServlet() throws ServletException, BeansException {
-        servletContextHasGetContextPath =
-                getServletContext().getMajorVersion() == 2 && getServletContext().getMinorVersion() >= 5;
         initMessageReceiverHandlerAdapter();
         initWsdlDefinitionHandlerAdapter();
         initMessageReceiver();
@@ -319,30 +313,13 @@ public class MessageDispatcherServlet extends FrameworkServlet {
     private void initWsdlDefinitions() {
         wsdlDefinitions = BeanFactoryUtils
                 .beansOfTypeIncludingAncestors(getWebApplicationContext(), WsdlDefinition.class, true, false);
-        if (logger.isInfoEnabled()) {
+        if (logger.isDebugEnabled()) {
             for (Iterator iterator = wsdlDefinitions.entrySet().iterator(); iterator.hasNext();) {
                 Map.Entry entry = (Map.Entry) iterator.next();
                 String beanName = (String) entry.getKey();
                 WsdlDefinition definition = (WsdlDefinition) entry.getValue();
-                StringBuffer message = new StringBuffer("Published [");
-                message.append(definition);
-                message.append("] as ");
-                if (servletContextHasGetContextPath) {
-                    message.append(Servlet25ContextPathRetriever.getContextPath(getServletContext()));
-                    message.append('/');
-                }
-                message.append(beanName);
-                message.append(WSDL_SUFFIX_NAME);
-                logger.info(message);
+                logger.debug("Published [" + definition + "] as " + beanName + WSDL_SUFFIX_NAME);
             }
-        }
-    }
-
-    /** Inner class to remove Servlet 2.5 dependency. */
-    private static class Servlet25ContextPathRetriever {
-
-        private static String getContextPath(ServletContext servletContext) {
-            return servletContext.getContextPath();
         }
     }
 }
