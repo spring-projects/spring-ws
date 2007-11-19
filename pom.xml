@@ -26,25 +26,14 @@
         <developer>
             <id>poutsma</id>
             <name>Arjen Poutsma</name>
-            <email>apoutsma@interface21.com</email>
-            <organization>Interface21</organization>
-            <organizationUrl>http://www.interface21.com</organizationUrl>
+            <email>arjen.poutsma@springsource.com</email>
+            <organization>SpringSource</organization>
+            <organizationUrl>http://www.springsource.com</organizationUrl>
             <roles>
                 <role>Project Admin</role>
                 <role>Developer</role>
             </roles>
             <timezone>+1</timezone>
-        </developer>
-        <developer>
-            <id>springboy</id>
-            <name>Rick Evans</name>
-            <email>revans@interface21.com</email>
-            <organization>Interface21</organization>
-            <organizationUrl>http://www.interface21.com</organizationUrl>
-            <roles>
-                <role>Developer</role>
-                <role>Documentalist</role>
-            </roles>
         </developer>
     </developers>
     <contributors>
@@ -57,6 +46,9 @@
         <contributor>
             <name>Kristoffer Moum</name>
         </contributor>
+        <contributor>
+            <name>Rick Evans</name>
+        <contributor>
     </contributors>
     <organization>
         <name>The Spring Web Services Framework</name>
