@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.core.JdkVersion;
@@ -136,17 +137,13 @@ public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapp
     /**
      * Return the class or interface to use for method reflection.
      * <p/>
-     * Default implementation returns the target class for a CGLIB proxy, and the class of the given bean else (for a
-     * JDK proxy or a plain bean class).
+     * Default implementation delegates to {@link AopUtils#getTargetClass(Object)}.
      *
      * @param endpoint the bean instance (might be an AOP proxy)
      * @return the bean class to expose
      */
     protected Class getEndpointClass(Object endpoint) {
-        Class clazz = endpoint.getClass();
-        // The following is actually in Spring 2 ClassUtils.getUserClass, but since Spring-WS is Spring 1.2.9 upwards,
-        // we can't use it
-        return clazz != null && clazz.getName().indexOf("$$") != -1 ? clazz.getSuperclass() : clazz;
+        return AopUtils.getTargetClass(endpoint);
     }
 
 }
