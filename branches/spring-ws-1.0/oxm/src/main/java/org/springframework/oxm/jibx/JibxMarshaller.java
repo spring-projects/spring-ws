@@ -49,6 +49,12 @@ import org.jibx.runtime.impl.MarshallingContext;
 import org.jibx.runtime.impl.StAXReaderWrapper;
 import org.jibx.runtime.impl.StAXWriter;
 import org.jibx.runtime.impl.UnmarshallingContext;
+import org.w3c.dom.Node;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+import org.xml.sax.ext.LexicalHandler;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.oxm.AbstractMarshaller;
 import org.springframework.oxm.XmlMappingException;
@@ -56,11 +62,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.stream.StaxEventContentHandler;
 import org.springframework.xml.stream.XmlEventStreamReader;
-import org.w3c.dom.Node;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
-import org.xml.sax.ext.LexicalHandler;
 
 /**
  * Implementation of the <code>Marshaller</code> and <code>Unmarshaller</code> interfaces for JiBX.
@@ -138,7 +139,15 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
     }
 
     public boolean supports(Class clazz) {
-        return targetClass.isAssignableFrom(clazz);
+        Assert.notNull(clazz, "'clazz' must not be null");
+        String[] mappedClasses = bindingFactory.getMappedClasses();
+        String className = clazz.getName();
+        for (int i = 0; i < mappedClasses.length; i++) {
+            if (className.equals(mappedClasses[i])) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
