@@ -19,12 +19,13 @@ package org.springframework.xml.stream;
 import javax.xml.stream.Location;
 import javax.xml.stream.XMLStreamException;
 
-import org.springframework.xml.sax.AbstractXmlReader;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+
+import org.springframework.xml.sax.AbstractXmlReader;
 
 /**
  * Abstract base class for SAX <code>XMLReader</code> implementations that use StAX as a basis.
@@ -67,8 +68,11 @@ public abstract class AbstractStaxXmlReader extends AbstractXmlReader {
             parseInternal();
         }
         catch (XMLStreamException ex) {
-            SAXParseException saxException = new SAXParseException(ex.getMessage(), null, null,
-                    ex.getLocation().getLineNumber(), ex.getLocation().getColumnNumber(), ex);
+            Locator locator = null;
+            if (ex.getLocation() != null) {
+                locator = new StaxLocator(ex.getLocation());
+            }
+            SAXParseException saxException = new SAXParseException(ex.getMessage(), locator, ex);
             if (getErrorHandler() != null) {
                 getErrorHandler().fatalError(saxException);
             }
