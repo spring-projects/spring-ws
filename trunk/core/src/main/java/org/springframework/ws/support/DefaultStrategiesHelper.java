@@ -17,7 +17,6 @@
 package org.springframework.ws.support;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,6 +39,7 @@ import org.springframework.context.MessageSourceAware;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.OrderComparator;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
@@ -71,14 +71,7 @@ public class DefaultStrategiesHelper {
     /** Initializes a new instance of the <code>DefaultStrategiesHelper</code> based on the given resource. */
     public DefaultStrategiesHelper(Resource resource) throws IllegalStateException {
         try {
-            InputStream is = resource.getInputStream();
-            defaultStrategies = new Properties();
-            try {
-                defaultStrategies.load(is);
-            }
-            finally {
-                is.close();
-            }
+            defaultStrategies = PropertiesLoaderUtils.loadProperties(resource);
         }
         catch (IOException ex) {
             throw new IllegalStateException("Could not load '" + resource + "': " + ex.getMessage());
