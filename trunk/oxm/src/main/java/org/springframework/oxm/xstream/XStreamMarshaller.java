@@ -35,6 +35,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterMatcher;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
+import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
@@ -45,12 +46,6 @@ import com.thoughtworks.xstream.io.xml.SaxWriter;
 import com.thoughtworks.xstream.io.xml.StaxReader;
 import com.thoughtworks.xstream.io.xml.StaxWriter;
 import com.thoughtworks.xstream.io.xml.XppReader;
-import org.springframework.beans.propertyeditors.ClassEditor;
-import org.springframework.oxm.AbstractMarshaller;
-import org.springframework.oxm.XmlMappingException;
-import org.springframework.util.ObjectUtils;
-import org.springframework.xml.stream.StaxEventContentHandler;
-import org.springframework.xml.stream.XmlEventStreamReader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -58,6 +53,13 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
+
+import org.springframework.beans.propertyeditors.ClassEditor;
+import org.springframework.oxm.AbstractMarshaller;
+import org.springframework.oxm.XmlMappingException;
+import org.springframework.util.ObjectUtils;
+import org.springframework.xml.stream.StaxEventContentHandler;
+import org.springframework.xml.stream.XmlEventStreamReader;
 
 /**
  * Implementation of the <code>Marshaller</code> interface for XStream. By default, XStream does not require any further
@@ -87,6 +89,9 @@ public class XStreamMarshaller extends AbstractMarshaller {
     private String encoding;
 
     private Class[] supportedClasses;
+
+    /** Specialized driver to be used with stream readers and writers */
+    private HierarchicalStreamDriver streamDriver;
 
     /**
      * Returns the encoding to be used for stream access. If this property is not set, the default encoding is used.
@@ -151,6 +156,11 @@ public class XStreamMarshaller extends AbstractMarshaller {
                 throw new IllegalArgumentException("Invalid ConverterMatcher [" + converters[i] + "]");
             }
         }
+    }
+
+    /** Sets the XStream hierarchical stream driver to be used with stream readers and writers */
+    public void setStreamDriver(HierarchicalStreamDriver streamDriver) {
+        this.streamDriver = streamDriver;
     }
 
     /**
@@ -302,7 +312,12 @@ public class XStreamMarshaller extends AbstractMarshaller {
     }
 
     protected void marshalWriter(Object graph, Writer writer) throws XmlMappingException, IOException {
-        marshal(graph, new CompactWriter(writer));
+        if (streamDriver != null) {
+            marshal(graph, streamDriver.createWriter(writer));
+        }
+        else {
+            marshal(graph, new CompactWriter(writer));
+        }
     }
 
     private Object unmarshal(HierarchicalStreamReader streamReader) {
@@ -347,7 +362,12 @@ public class XStreamMarshaller extends AbstractMarshaller {
     }
 
     protected Object unmarshalReader(Reader reader) throws XmlMappingException, IOException {
-        return unmarshal(new XppReader(reader));
+        if (streamDriver != null) {
+            return unmarshal(streamDriver.createReader(reader));
+        }
+        else {
+            return unmarshal(new XppReader(reader));
+        }
     }
 
     protected Object unmarshalSaxReader(XMLReader xmlReader, InputSource inputSource)
@@ -355,4 +375,6 @@ public class XStreamMarshaller extends AbstractMarshaller {
         throw new UnsupportedOperationException(
                 "XStreamMarshaller does not support unmarshalling using SAX XMLReaders");
     }
+
+
 }
