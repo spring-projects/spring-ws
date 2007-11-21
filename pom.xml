@@ -111,21 +111,46 @@
                 <module>samples</module>
             </modules>
         </profile>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <id>with-dependencies</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <configuration>
+                                    <descriptors>
+                                        <descriptor>src/assembly/with-dependencies.xml</descriptor>
+                                    </descriptors>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
     <build>
         <plugins>
-            <!-- Building -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <inherited>false</inherited>
                 <executions>
                     <execution>
-                        <id>make-all-jar</id>
+                        <id>all-jar</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
                         <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
                             <archive>
                                 <manifest>
                                     <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
@@ -140,12 +165,13 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>make-minimal-zip</id>
+                        <id>minimal-zip</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
                         <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
                             <descriptors>
                                 <descriptor>src/assembly/minimal.xml</descriptor>
                             </descriptors>
@@ -230,6 +256,7 @@
                     <breakiterator>true</breakiterator>
                     <header>Spring Web Services Framework</header>
                     <source>1.5</source>
+                    <quiet>true</quiet>
                     <stylesheetfile>${basedir}/src/main/javadoc/javadoc.css</stylesheetfile>
                     <overview>${basedir}/src/main/javadoc/overview.html</overview>
                     <groups>
@@ -266,6 +293,16 @@
                         <link>http://jakarta.apache.org/commons/httpclient/apidocs/</link>
                     </links>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-changes-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>jira-report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
             <plugin>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
