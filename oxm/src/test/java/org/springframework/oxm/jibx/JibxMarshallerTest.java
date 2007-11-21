@@ -17,6 +17,7 @@
 package org.springframework.oxm.jibx;
 
 import org.custommonkey.xmlunit.XMLUnit;
+
 import org.springframework.oxm.AbstractMarshallerTestCase;
 import org.springframework.oxm.Marshaller;
 import org.springframework.xml.transform.StringResult;
@@ -69,7 +70,9 @@ public class JibxMarshallerTest extends AbstractMarshallerTestCase {
     }
 
     public void testSupports() throws Exception {
-        assertTrue("Jaxb2Marshaller does not support Flights", marshaller.supports(Flights.class));
+        assertTrue("JibxMarshaller does not support Flights", marshaller.supports(Flights.class));
+        assertTrue("JibxMarshaller does not support FlightType", marshaller.supports(FlightType.class));
+        assertFalse("JibxMarshaller supports illegal type", marshaller.supports(getClass()));
     }
 
 
