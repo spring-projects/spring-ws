@@ -32,15 +32,17 @@ import javax.xml.transform.stream.StreamResult;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.extended.EncodedByteArrayConverter;
+import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.easymock.MockControl;
-import org.springframework.xml.transform.StaxResult;
-import org.springframework.xml.transform.StringResult;
-import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 import org.xml.sax.ContentHandler;
+
+import org.springframework.xml.transform.StaxResult;
+import org.springframework.xml.transform.StringResult;
+import org.springframework.xml.transform.StringSource;
 
 public class XStreamMarshallerTest extends XMLTestCase {
 
@@ -161,5 +163,16 @@ public class XStreamMarshallerTest extends XMLTestCase {
         assertXMLEqual("Marshaller does not use attributes", expected, result.toString());
     }
 
+    public void testDriver() throws Exception {
+        marshaller.setStreamDriver(new JettisonMappedXmlDriver());
+        StringResult result = new StringResult();
+        marshaller.marshal(flight, result);
+        assertEquals("Invalid result", "{\"flight\":{\"flightNumber\":\"42\"}}", result.toString());
+        Object o = marshaller.unmarshal(new StringSource(result.toString()));
+        assertTrue("Unmarshalled object is not Flights", o instanceof Flight);
+        Flight unflight = (Flight) o;
+        assertNotNull("Flight is null", unflight);
+        assertEquals("Number is invalid", 42L, unflight.getFlightNumber());
+    }
 
 }
