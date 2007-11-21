@@ -22,7 +22,14 @@
             <binaries>
                 <includeDependencies>false</includeDependencies>
                 <unpack>false</unpack>
+                <outputFileNameMapping>dist/modules/${artifactId}-${version}.${extension}</outputFileNameMapping>
             </binaries>
         </moduleSet>
     </moduleSets>
+    <files>
+        <file>
+            <source>target/${artifactId}-${version}.jar</source>
+            <outputDirectory>dist</outputDirectory>
+        </file>
+    </files>
 </assembly>

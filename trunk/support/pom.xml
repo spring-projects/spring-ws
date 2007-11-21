@@ -11,16 +11,6 @@
     <packaging>jar</packaging>
     <name>Spring WS Support</name>
     <description>Spring Web Services Support package.</description>
-    <reporting>
-        <plugins>
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <stylesheetfile>${basedir}/../src/main/javadoc/javadoc.css</stylesheetfile>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
     <repositories>
         <repository>
             <id>spring-ext</id>
@@ -109,6 +99,10 @@
             <groupId>javax.ejb</groupId>
             <artifactId>ejb</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
         </dependency>
         <dependency>
             <groupId>javax.mail</groupId>

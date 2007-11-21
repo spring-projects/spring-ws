@@ -5,6 +5,7 @@
             <includes>
                 <include>readme.txt</include>
                 <include>license.txt</include>
+                <include>notice.txt</include>
             </includes>
         </fileSet>
         <lineEnding>dos</lineEnding>

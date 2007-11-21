@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <assembly>
-    <id>full</id>
+    <id>with-dependencies</id>
     <formats>
         <format>zip</format>
     </formats>
@@ -11,6 +10,7 @@
     <moduleSets>
         <moduleSet>
             <includes>
+                <include>org.springframework.ws:spring-ws-parent</include>
                 <include>org.springframework.ws:spring-xml</include>
                 <include>org.springframework.ws:spring-oxm</include>
                 <include>org.springframework.ws:spring-oxm-tiger</include>
@@ -22,9 +22,34 @@
             <binaries>
                 <includeDependencies>false</includeDependencies>
                 <unpack>false</unpack>
+                <outputFileNameMapping>dist/modules/${artifactId}-${version}.${extension}</outputFileNameMapping>
+                <dependencySets>
+                    <dependencySet>
+                        <outputFileNameMapping>lib/${groupId}/${artifactId}-${version}.${extension}</outputFileNameMapping>
+                        <scope>runtime</scope>
+                        <excludes>
+                            <exclude>org.springframework.ws:spring-ws-parent</exclude>
+                            <exclude>org.springframework.ws:spring-xml</exclude>
+                            <exclude>org.springframework.ws:spring-oxm</exclude>
+                            <exclude>org.springframework.ws:spring-oxm-tiger</exclude>
+                            <exclude>org.springframework.ws:spring-ws-core</exclude>
+                            <exclude>org.springframework.ws:spring-ws-core-tiger</exclude>
+                        </excludes>
+                    </dependencySet>
+                    <dependencySet>
+                        <outputFileNameMapping>lib/${groupId}/${artifactId}-${version}.${extension}</outputFileNameMapping>
+                        <scope>provided</scope>
+                    </dependencySet>
+                </dependencySets>
             </binaries>
         </moduleSet>
     </moduleSets>
+    <files>
+        <file>
+            <source>target/${artifactId}-${version}.jar</source>
+            <outputDirectory>dist</outputDirectory>
+        </file>
+    </files>
     <fileSets>
         <!-- Documentation -->
         <fileSet>
@@ -37,7 +62,7 @@
         </fileSet>
         <!-- Modules sources-->
         <fileSet>
-            <outputDirectory>modules</outputDirectory>
+            <outputDirectory>dist/module-sources</outputDirectory>
             <includes>
                 <include>xml/**/*</include>
                 <include>oxm/**/*</include>
@@ -90,6 +115,6 @@
                 <exclude>**/bin</exclude>
                 <exclude>**/bin/**</exclude>
             </excludes>
-        </fileSet>
+        </fileSet>        
     </fileSets>
 </assembly>
