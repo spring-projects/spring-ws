@@ -41,13 +41,6 @@
             <url>http://download.java.net/maven/1/</url>
             <layout>legacy</layout>
         </repository>
-        <!--
-                <repository>
-                    <id>spring-milestone</id>
-                    <name>Springframework Maven Milestone Repository</name>
-                    <url>http://s3.amazonaws.com/maven.springframework.org/milestone</url>
-                </repository>
-        -->
     </repositories>
     <build>
         <extensions>
@@ -556,6 +549,16 @@
                 <groupId>com.sun.org.apache.xml.security</groupId>
                 <artifactId>xmlsec</artifactId>
                 <version>2.0</version>
+            </dependency>
+            <dependency>
+                <groupId>xml-security</groupId>
+                <artifactId>xmlsec</artifactId>
+                <version>1.3.0</version>
+            </dependency>
+            <dependency>
+                <groupId>wss4j</groupId>
+                <artifactId>wss4j</artifactId>
+                <version>1.5.1</version>
             </dependency>
             <dependency>
                 <groupId>org.acegisecurity</groupId>
