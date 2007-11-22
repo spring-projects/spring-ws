@@ -14,10 +14,12 @@
             </classpath>
         </typedef>
 
+	<artifact:remoteRepository id="main" url="http://repo1.maven.org/maven2/"/>
         <artifact:remoteRepository id="java.net" url="https://maven-repository.dev.java.net/nonav/repository"
                                    layout="legacy"/>
 
         <artifact:dependencies pathId="generate.classpath">
+            <remoteRepository refid="main"/>
             <remoteRepository refid="java.net"/>
             <dependency groupId="com.sun.xml.ws" artifactId="jaxws-tools" version="EA3"/>
             <dependency groupId="com.sun.xml.bind" artifactId="jaxb-xjc" version="2.1-EA2"/>
@@ -28,12 +30,14 @@
         </artifact:dependencies>
 
         <artifact:dependencies pathId="compile.classpath">
+            <remoteRepository refid="main"/>
             <remoteRepository refid="java.net"/>
             <dependency groupId="javax.xml.ws" artifactId="jaxws-api" version="2.1-SNAPSHOT"/>
             <dependency groupId="org.springframework" artifactId="spring-core" version="2.0.5"/>
         </artifact:dependencies>
 
         <artifact:dependencies pathId="runtime.classpath">
+            <remoteRepository refid="main"/>
             <remoteRepository refid="java.net"/>
             <dependency groupId="com.sun.xml.ws" artifactId="jaxws-rt" version="EA3"/>
             <dependency groupId="com.sun.xml.bind" artifactId="jaxb-impl" version="2.1-EA2"/>
