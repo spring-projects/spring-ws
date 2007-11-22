@@ -27,10 +27,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
-import org.springframework.xml.namespace.QNameUtils;
-import org.springframework.xml.transform.StaxSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+
+import org.springframework.xml.namespace.QNameUtils;
+import org.springframework.xml.transform.StaxSource;
 
 /**
  * Helper class for determining the root qualified name of a Web Service payload.
@@ -49,11 +50,14 @@ public abstract class PayloadRootUtils {
      *
      * @param source             the source to get the root element from
      * @param transformerFactory a transformer factory, necessary if the given source is not a <code>DOMSource</code>
-     * @return the root element
+     * @return the root element, or <code>null</code> if <code>source</code> is <code>null</code>
      */
     public static QName getPayloadRootQName(Source source, TransformerFactory transformerFactory)
             throws TransformerException, XMLStreamException {
-        if (source instanceof DOMSource) {
+        if (source == null) {
+            return null;
+        }
+        else if (source instanceof DOMSource) {
             DOMSource domSource = (DOMSource) source;
             Node node = domSource.getNode();
             if (node.getNodeType() == Node.ELEMENT_NODE) {

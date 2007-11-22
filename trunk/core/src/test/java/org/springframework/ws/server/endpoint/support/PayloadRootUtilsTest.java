@@ -29,10 +29,11 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.TestCase;
-import org.springframework.xml.transform.StaxSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
+
+import org.springframework.xml.transform.StaxSource;
 
 public class PayloadRootUtilsTest extends TestCase {
 
@@ -80,5 +81,10 @@ public class PayloadRootUtilsTest extends TestCase {
         assertEquals("QName has invalid localname", "localname", qName.getLocalPart());
         assertEquals("Qname has invalid namespace", "namespace", qName.getNamespaceURI());
         assertEquals("Qname has invalid prefix", "prefix", qName.getPrefix());
+    }
+
+    public void testGetQNameForNullSource() throws Exception {
+        QName qName = PayloadRootUtils.getPayloadRootQName(null, TransformerFactory.newInstance());
+        assertNull("Qname returned", qName);
     }
 }
