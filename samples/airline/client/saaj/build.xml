@@ -11,6 +11,7 @@
             </classpath>
         </typedef>
 
+        <artifact:remoteRepository id="main" url="http://repo1.maven.org/maven2/"/>
         <artifact:remoteRepository id="java.net" url="https://maven-repository.dev.java.net/nonav/repository"
                                    layout="legacy"/>
 
@@ -18,6 +19,7 @@
                                    url="https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/"/>
 
         <artifact:dependencies pathId="compile.classpath">
+            <remoteRepository refid="main"/>
             <remoteRepository refid="java.net"/>
             <remoteRepository refid="spring-ext"/>
             <dependency groupId="javax.xml.soap" artifactId="saaj-api" version="1.3"/>
