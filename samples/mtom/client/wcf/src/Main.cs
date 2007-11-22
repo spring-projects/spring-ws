@@ -25,6 +25,11 @@ namespace Spring.Ws.Samples.Mtom.Client.Wcf {
                 wcfClient.StoreImage(image);
                 TimeSpan interval = DateTime.Now - start;
                 Console.WriteLine("StoreImage took: {0,4:N0} ms.", interval.TotalMilliseconds);
+
+                start = DateTime.Now;
+		image = wcfClient.LoadImage(file.Name);
+                interval = DateTime.Now - start;
+                Console.WriteLine("LoadImage took: {0,4:N0} ms.", interval.TotalMilliseconds);
                                 
                 wcfClient.Close();
 
