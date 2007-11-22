@@ -27,13 +27,15 @@ public interface TransportConstants {
     /** The "Content-Id" header. */
     String HEADER_CONTENT_ID = "Content-Id";
 
-    /** The "Content-Type" header. */
-    String HEADER_CONTENT_TYPE = "Content-Type";
-
     /** The "Content-Length" header. */
     String HEADER_CONTENT_LENGTH = "Content-Length";
 
+    /** The "Content-Transfer-Encoding" header. */
+    String HEADER_CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding";
+
+    /** The "Content-Type" header. */
+    String HEADER_CONTENT_TYPE = "Content-Type";
+
     /** The "SOAPAction" header. */
     String HEADER_SOAP_ACTION = "SOAPAction";
-
 }
