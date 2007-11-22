@@ -13,7 +13,13 @@
             </classpath>
         </typedef>
 
+        <artifact:remoteRepository id="main" url="http://repo1.maven.org/maven2/"/>
+        <artifact:remoteRepository id="java.net" url="https://maven-repository.dev.java.net/nonav/repository"
+                                   layout="legacy"/>
+
         <artifact:dependencies pathId="classpath">
+            <remoteRepository refid="main"/>
+            <remoteRepository refid="java.net"/>
             <dependency groupId="org.springframework.ws" artifactId="spring-ws-core" version="1.0.2"/>
             <dependency groupId="com.sun.xml.messaging.saaj" artifactId="saaj-impl" version="1.3"/>
             <dependency groupId="commons-httpclient" artifactId="commons-httpclient" version="3.0.1"/>

@@ -13,6 +13,7 @@
             </classpath>
         </typedef>
 
+        <artifact:remoteRepository id="main" url="http://repo1.maven.org/maven2/"/>
         <artifact:remoteRepository id="java.net" url="https://maven-repository.dev.java.net/nonav/repository"
                                    layout="legacy"/>
 
@@ -23,11 +24,13 @@
         </artifact:dependencies>
 
         <artifact:dependencies pathId="compile.classpath">
+            <remoteRepository refid="main"/>
             <remoteRepository refid="java.net"/>
             <dependency groupId="javax.xml.ws" artifactId="jaxws-api" version="2.1"/>
         </artifact:dependencies>
 
         <artifact:dependencies pathId="runtime.classpath">
+            <remoteRepository refid="main"/>
             <remoteRepository refid="java.net"/>
             <dependency groupId="com.sun.xml.ws" artifactId="jaxws-rt" version="2.1.2"/>
             <dependency groupId="org.jvnet.staxex" artifactId="stax-ex" version="1.0"/>
