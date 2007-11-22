@@ -195,6 +195,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         Assert.notNull(dataHandler, "dataHandler must not be null");
         AttachmentPart saajAttachment = getImplementation().addAttachmentPart(getSaajMessage(), dataHandler);
         saajAttachment.setContentId(contentId);
+        saajAttachment.setMimeHeader(TransportConstants.HEADER_CONTENT_TRANSFER_ENCODING, "binary");
         return new SaajAttachment(saajAttachment);
     }
 
