@@ -32,6 +32,7 @@ import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPMessage;
 import org.apache.axiom.soap.SOAPProcessingException;
+
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.mime.Attachment;
@@ -52,7 +53,7 @@ import org.springframework.ws.transport.TransportOutputStream;
  */
 public class AxiomSoapMessage extends AbstractSoapMessage {
 
-    private final SOAPMessage axiomMessage;
+    private SOAPMessage axiomMessage;
 
     private final SOAPFactory axiomFactory;
 
@@ -125,6 +126,12 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
     /** Return the AXIOM <code>SOAPMessage</code> that this <code>AxiomSoapMessage</code> is based on. */
     public final SOAPMessage getAxiomMessage() {
         return axiomMessage;
+    }
+
+    /** Sets the AXIOM <code>SOAPMessage</code> that this <code>AxiomSoapMessage</code> is based on. */
+    public final void setAxiomMessage(SOAPMessage axiomMessage) {
+        Assert.notNull(axiomMessage, "'axiomMessage' must not be null");
+        this.axiomMessage = axiomMessage;
     }
 
     public SoapEnvelope getEnvelope() {
