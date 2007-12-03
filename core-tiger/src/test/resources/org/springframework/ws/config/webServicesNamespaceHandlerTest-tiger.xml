@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:sws="http://www.springframework.org/spring-ws/schema/sws" xsi:schemaLocation="
+       xmlns:sws="http://www.springframework.org/schema/web-services" xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-       http://www.springframework.org/schema/tx http://www.springframework.org/schema/beans/spring-tx-2.0.xsd
-       http://www.springframework.org/spring-ws/schema/sws http://www.springframework.org/spring-ws/schema/sws/spring-ws-1.5.xsd">
+       http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-1.5.xsd">
 
     <sws:marshalling-endpoints/>
 
@@ -13,7 +12,7 @@
     <sws:xpath-endpoints>
         <sws:namespace prefix="sws" uri="http://www.springframework.org/spring-ws"/>
     </sws:xpath-endpoints>
-    
+
 </beans>
 
 
