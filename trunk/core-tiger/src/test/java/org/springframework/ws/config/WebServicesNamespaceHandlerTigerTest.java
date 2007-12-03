@@ -18,22 +18,29 @@ package org.springframework.ws.config;
 
 import java.util.Map;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter;
-
 import junit.framework.TestCase;
 
-public class SwsNamespaceHandlerTest extends TestCase {
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.ws.server.endpoint.adapter.GenericMarshallingMethodEndpointAdapter;
+import org.springframework.ws.server.endpoint.adapter.XPathParamAnnotationMethodEndpointAdapter;
+
+public class WebServicesNamespaceHandlerTigerTest extends TestCase {
 
     private ApplicationContext applicationContext;
 
     protected void setUp() throws Exception {
-        applicationContext = new ClassPathXmlApplicationContext("swsNamespaceHandlerTest.xml", getClass());
+        applicationContext =
+                new ClassPathXmlApplicationContext("webServicesNamespaceHandlerTest-tiger.xml", getClass());
     }
 
-    public void testMarshallingMethods() throws Exception {
-        Map result = applicationContext.getBeansOfType(MarshallingMethodEndpointAdapter.class);
+    public void testMarshallingEndpoints() throws Exception {
+        Map result = applicationContext.getBeansOfType(GenericMarshallingMethodEndpointAdapter.class);
         assertFalse("no MarshallingMethodEndpointAdapter found", result.isEmpty());
+    }
+
+    public void testXpathEndpoints() throws Exception {
+        Map result = applicationContext.getBeansOfType(XPathParamAnnotationMethodEndpointAdapter.class);
+        assertFalse("no XPathParamAnnotationMethodEndpointAdapter found", result.isEmpty());
     }
 }

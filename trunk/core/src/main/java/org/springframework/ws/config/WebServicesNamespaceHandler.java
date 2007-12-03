@@ -20,12 +20,12 @@ import org.springframework.beans.factory.xml.NamespaceHandler;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * {@link NamespaceHandler} for the '<code>sws</code>' namespace.
+ * {@link NamespaceHandler} for the '<code>web-services</code>' namespace.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
  */
-public class SwsNamespaceHandler extends NamespaceHandlerSupport {
+public class WebServicesNamespaceHandler extends NamespaceHandlerSupport {
 
     public void init() {
         registerBeanDefinitionParser("marshalling-endpoints", new MarshallingEndpointsBeanDefinitionParser());
