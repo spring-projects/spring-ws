@@ -26,6 +26,7 @@ import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
+import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
@@ -70,9 +71,7 @@ public class JmsSenderConnection extends AbstractSenderConnection implements Web
 
     private int priority;
 
-    /**
-     * Constructs a new JMS connection with the given parameters.
-     */
+    /** Constructs a new JMS connection with the given parameters. */
     protected JmsSenderConnection(ConnectionFactory connectionFactory,
                                   Connection connection,
                                   Session session,
@@ -86,16 +85,12 @@ public class JmsSenderConnection extends AbstractSenderConnection implements Web
         this.requestDestination = requestDestination;
     }
 
-    /**
-     * Returns the request message for this connection.
-     */
+    /** Returns the request message for this connection. */
     public BytesMessage getRequestMessage() {
         return requestMessage;
     }
 
-    /**
-     * Returns the response message, if any, for this connection.
-     */
+    /** Returns the response message, if any, for this connection. */
     public BytesMessage getResponseMessage() {
         return responseMessage;
     }
@@ -192,8 +187,12 @@ public class JmsSenderConnection extends AbstractSenderConnection implements Web
         MessageConsumer messageConsumer = null;
         try {
             messageConsumer = session.createConsumer(responseDestination);
-            responseMessage = (BytesMessage) (receiveTimeout >= 0 ? messageConsumer.receive(receiveTimeout) :
-                    messageConsumer.receive());
+            Message message = receiveTimeout >= 0 ? messageConsumer.receive(receiveTimeout) : messageConsumer.receive();
+            if (!(message instanceof BytesMessage)) {
+                throw new IllegalArgumentException(
+                        "Wrong message type: [" + message.getClass() + "]. Only BytesMessages can be handled.");
+            }
+            responseMessage = (BytesMessage) message;
         }
         catch (JMSException ex) {
             throw new JmsTransportException(ex);
