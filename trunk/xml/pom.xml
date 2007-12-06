@@ -7,9 +7,39 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>spring-xml</artifactId>
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
     <name>Spring XML</name>
     <description>Various XML support classes for Spring Web Services</description>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>1.0.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${artifactId}</Bundle-SymbolicName>
+                        <Export-Package>org.springframework.xml*</Export-Package>
+                        <Import-Package>
+                            org.apache.commons.logging*,
+                            javax.xml.parsers*,
+                            javax.xml.transform*,
+                            org.xml.sax*,
+                            org.w3c.dom*,
+                            org.springframework.beans*,
+                            org.springframework.core*,
+                            org.springframework.util*,
+                            *;resolution:=optional
+                        </Import-Package>
+                        <Implementation-Title>${pom.name}</Implementation-Title>
+                        <Implementation-Version>${pom.version}</Implementation-Version>
+                        <Spring-WS-Version>${pom.version}</Spring-WS-Version>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <!-- XML handling dependencies -->
         <dependency>
