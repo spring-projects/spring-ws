@@ -1,2 +1,2 @@
 http\://www.springframework.org/spring-ws/schema/oxm=org.springframework.oxm.config.OxmNamespaceHandler
-http\://www.springframework.org/spring-ws/schema/sws=org.springframework.ws.config.SwsNamespaceHandler
+http\://www.springframework.org/spring-ws/schema/sws=org.springframework.ws.config.WebServicesNamespaceHandler

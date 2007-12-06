@@ -7,7 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>spring-ws-core</artifactId>
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
     <name>Spring WS Core</name>
     <description>Spring Web Services Core package.</description>
     <profiles>
@@ -39,6 +39,43 @@
             </dependencies>
         </profile>
     </profiles>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>1.0.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${artifactId}</Bundle-SymbolicName>
+                        <Export-Package>org.springframework.ws*</Export-Package>
+                        <Import-Package>
+                            org.apache.commons.logging*,
+                            javax.activation*,
+                            javax.servlet*,
+                            javax.wsdl*,
+                            javax.xml.namespace*,
+                            javax.xml.parsers*,
+                            javax.xml.stream*,
+                            javax.xml.transform*,
+                            org.xml.sax*,
+                            org.w3c.dom*,
+                            org.springframework.beans*,
+                            org.springframework.core*,
+                            org.springframework.util*,
+                            org.springframework.oxm*,
+                            org.springframework.xml*,
+                            *;resolution:=optional
+                        </Import-Package>
+                        <Implementation-Title>${pom.name}</Implementation-Title>
+                        <Implementation-Version>${pom.version}</Implementation-Version>
+                        <Spring-WS-Version>${pom.version}</Spring-WS-Version>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <!-- Spring-WS dependencies -->
         <dependency>

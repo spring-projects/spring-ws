@@ -33,6 +33,7 @@
     </scm>
     <properties>
         <spring.version>2.0.7</spring.version>
+        <osgi.version>1.5.0.m1</osgi.version>
     </properties>
     <repositories>
         <repository>
@@ -311,7 +312,7 @@
                         <groupId>xerces</groupId>
                         <artifactId>xercesImpl</artifactId>
                     </exclusion>
-                </exclusions>                
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.woodstox</groupId>
@@ -542,7 +543,7 @@
                     <exclusion>
                         <groupId>javax.mail</groupId>
                         <artifactId>mail</artifactId>
-                    </exclusion>                    
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -635,7 +636,7 @@
                 <exclusions>
                     <exclusion>
                         <groupId>javax.activation</groupId>
-                        <artifactId>activation</artifactId>                        
+                        <artifactId>activation</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -683,7 +684,7 @@
             <dependency>
                 <groupId>commons-logging</groupId>
                 <artifactId>commons-logging</artifactId>
-                <version>1.1</version>
+                <version>1.1.1</version>
                 <exclusions>
                     <exclusion>
                         <groupId>log4j</groupId>
