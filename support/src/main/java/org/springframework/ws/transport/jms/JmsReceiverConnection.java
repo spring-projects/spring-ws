@@ -40,7 +40,7 @@ import org.springframework.ws.transport.support.EnumerationIterator;
  * @author Arjen Poutsma
  * @since 1.5.0
  */
-public class JmsReceiverConnection extends AbstractReceiverConnection implements WebServiceConnection {
+public class JmsReceiverConnection extends AbstractReceiverConnection {
 
     private final BytesMessage requestMessage;
 
@@ -48,9 +48,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection implements
 
     private BytesMessage responseMessage;
 
-    /**
-     * Constructs a new JMS connection with the given parameters.
-     */
+    /** Constructs a new JMS connection with the given parameters. */
     protected JmsReceiverConnection(BytesMessage requestMessage, Session session) {
         Assert.notNull(requestMessage, "requestMessage must not be null");
         Assert.notNull(session, "session must not be null");
@@ -58,16 +56,12 @@ public class JmsReceiverConnection extends AbstractReceiverConnection implements
         this.session = session;
     }
 
-    /**
-     * Returns the request message for this connection.
-     */
+    /** Returns the request message for this connection. */
     public BytesMessage getRequestMessage() {
         return requestMessage;
     }
 
-    /**
-     * Returns the response message, if any, for this connection.
-     */
+    /** Returns the response message, if any, for this connection. */
     public BytesMessage getResponseMessage() {
         return responseMessage;
     }
@@ -150,9 +144,6 @@ public class JmsReceiverConnection extends AbstractReceiverConnection implements
         finally {
             JmsUtils.closeMessageProducer(messageProducer);
         }
-    }
-
-    public void close() throws IOException {
     }
 
 }

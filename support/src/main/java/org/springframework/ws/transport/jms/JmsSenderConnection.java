@@ -242,7 +242,7 @@ public class JmsSenderConnection extends AbstractSenderConnection implements Web
         return new BytesMessageInputStream(responseMessage);
     }
 
-    public void close() throws IOException {
+    protected void onClose() throws IOException {
         JmsUtils.closeSession(session);
         ConnectionFactoryUtils.releaseConnection(connection, connectionFactory, true);
     }
