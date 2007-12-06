@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.xml.namespace.QName;
+import javax.xml.soap.Node;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
@@ -70,10 +71,13 @@ class SaajSoap12Header extends SaajSoapHeader implements Soap12Header {
         List result = new ArrayList();
         Iterator iterator = getImplementation().examineAllHeaderElements(getSaajHeader());
         while (iterator.hasNext()) {
-            SOAPHeaderElement saajHeaderElement = (SOAPHeaderElement) iterator.next();
-            String headerRole = saajHeaderElement.getRole();
-            if (shouldProcess(headerRole, roles, isUltimateDestination)) {
-                result.add(saajHeaderElement);
+            Node node = (Node) iterator.next();
+            if (node instanceof SOAPHeaderElement) {
+                SOAPHeaderElement saajHeaderElement = (SOAPHeaderElement) node;
+                String headerRole = saajHeaderElement.getRole();
+                if (shouldProcess(headerRole, roles, isUltimateDestination)) {
+                    result.add(saajHeaderElement);
+                }
             }
         }
         return new SaajSoapHeaderElementIterator(result.iterator());
