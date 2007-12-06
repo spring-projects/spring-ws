@@ -27,6 +27,7 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.PostMethod;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.WebServiceConnection;
@@ -57,7 +58,7 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
         return postMethod;
     }
 
-    public void close() throws IOException {
+    public void onClose() throws IOException {
         postMethod.releaseConnection();
     }
 
