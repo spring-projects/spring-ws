@@ -46,7 +46,7 @@ public class TcpReceiverConnection extends AbstractReceiverConnection {
         return null;
     }
 
-    public void close() throws IOException {
+    public void onClose() throws IOException {
         socket.close();
     }
 

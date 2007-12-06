@@ -415,9 +415,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                     return handleFault(connection, request, response);
                 }
                 else {
-                    Object extracted = responseExtractor.extractData(response);
                     logResponse(request, response);
-                    return extracted;
+                    return responseExtractor.extractData(response);
                 }
             }
             else {

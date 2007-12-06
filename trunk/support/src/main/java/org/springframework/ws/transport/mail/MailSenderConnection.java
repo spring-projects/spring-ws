@@ -45,6 +45,7 @@ import javax.mail.search.SearchTerm;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractSenderConnection;
@@ -92,9 +93,7 @@ public class MailSenderConnection extends AbstractSenderConnection {
 
     private Folder folder;
 
-    /**
-     * Constructs a new Mail connection with the given parameters.
-     */
+    /** Constructs a new Mail connection with the given parameters. */
     protected MailSenderConnection(Session session,
                                    URLName transportUri,
                                    URLName storeUri,
@@ -111,16 +110,12 @@ public class MailSenderConnection extends AbstractSenderConnection {
         this.receiveTimeout = receiveTimeout;
     }
 
-    /**
-     * Returns the request message for this connection.
-     */
+    /** Returns the request message for this connection. */
     public Message getRequestMessage() {
         return requestMessage;
     }
 
-    /**
-     * Returns the response message, if any, for this connection.
-     */
+    /** Returns the response message, if any, for this connection. */
     public Message getResponseMessage() {
         return responseMessage;
     }
@@ -287,7 +282,7 @@ public class MailSenderConnection extends AbstractSenderConnection {
         return null;
     }
 
-    public void close() throws IOException {
+    public void onClose() throws IOException {
         MailTransportUtils.closeFolder(folder, deleteAfterReceive);
         MailTransportUtils.closeService(store);
     }

@@ -49,7 +49,7 @@ public class TcpSenderConnection extends AbstractSenderConnection {
         return socket;
     }
 
-    public void close() throws IOException {
+    public void onClose() throws IOException {
         socket.close();
     }
 
