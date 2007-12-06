@@ -23,6 +23,7 @@
                         <Export-Package>org.springframework.xml*</Export-Package>
                         <Import-Package>
                             org.apache.commons.logging*,
+                            javax.xml.namespace*,
                             javax.xml.parsers*,
                             javax.xml.transform*,
                             org.xml.sax*,

@@ -7,7 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>spring-ws-security</artifactId>
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
     <name>Spring WS Security</name>
     <description>Spring-WS WS-Security implementation</description>
     <repositories>
@@ -52,6 +52,36 @@
             </dependencies>
         </profile>
     </profiles>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>1.0.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${artifactId}</Bundle-SymbolicName>
+                        <Export-Package>org.springframework.ws*</Export-Package>
+                        <Import-Package>
+                            org.apache.commons.logging*,
+                            javax.xml.crypto*,
+                            javax.xml.soap*,
+                            com.sun.xml.wss*,
+                            org.springframework.beans*,
+                            org.springframework.core*,
+                            org.springframework.util*,
+                            org.springframework.ws*,
+                            *;resolution:=optional
+                        </Import-Package>
+                        <Implementation-Title>${pom.name}</Implementation-Title>
+                        <Implementation-Version>${pom.version}</Implementation-Version>
+                        <Spring-WS-Version>${pom.version}</Spring-WS-Version>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <!-- Spring-WS dependencies -->
         <dependency>
@@ -94,7 +124,6 @@
         <dependency>
             <groupId>xml-security</groupId>
             <artifactId>xmlsec</artifactId>
-            <version>1.3.0</version>
         </dependency>
         <dependency>
             <groupId>org.acegisecurity</groupId>

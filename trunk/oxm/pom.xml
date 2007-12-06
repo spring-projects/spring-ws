@@ -7,7 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>spring-oxm</artifactId>
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
     <name>Spring O/X Mapping</name>
     <description>Spring Object/XML Mapping abstraction</description>
     <build>
@@ -55,6 +55,35 @@
                         <version>1.1</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>1.0.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${artifactId}</Bundle-SymbolicName>
+                        <Export-Package>org.springframework.oxm*</Export-Package>
+                        <Import-Package>
+                            org.apache.commons.logging*,
+                            javax.xml.namespace*,
+                            javax.xml.parsers*,
+                            javax.xml.stream*,
+                            javax.xml.transform*,
+                            org.xml.sax*,
+                            org.w3c.dom*,
+                            org.springframework.beans*,
+                            org.springframework.core*,
+                            org.springframework.util*,
+                            org.springframework.xml*,
+                            *;resolution:=optional
+                        </Import-Package>
+                        <Implementation-Title>${pom.name}</Implementation-Title>
+                        <Implementation-Version>${pom.version}</Implementation-Version>
+                        <Spring-WS-Version>${pom.version}</Spring-WS-Version>
+                    </instructions>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -185,6 +214,6 @@
             <artifactId>jettison</artifactId>
             <version>1.0-RC2</version>
             <scope>test</scope>
-        </dependency>        
+        </dependency>
     </dependencies>
 </project>
