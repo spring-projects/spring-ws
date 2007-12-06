@@ -47,6 +47,25 @@ public abstract class AbstractReceiverConnection extends AbstractWebServiceConne
         return responseOutputStream;
     }
 
+    public final void close() throws IOException {
+        try {
+            if (requestInputStream != null) {
+                requestInputStream.close();
+            }
+        }
+        finally {
+            onClose();
+        }
+    }
+
+    /**
+     * Template method invoked from {@link #close()}. Default implementation is empty.
+     *
+     * @throws IOException if an I/O error occurs when closing this connection
+     */
+    protected void onClose() throws IOException {
+    }
+
     /**
      * Returns an iteration over all the header names this request contains. Returns an empty <code>Iterator</code> if
      * there areno headers.
@@ -88,6 +107,11 @@ public abstract class AbstractReceiverConnection extends AbstractWebServiceConne
         public Iterator getHeaders(String name) throws IOException {
             return getRequestHeaders(name);
         }
+
+        public void close() throws IOException {
+            // defer close, some SoapMessage implementations (Axis) lazy-initialize the SOAPMessage
+        }
+
 
     }
 

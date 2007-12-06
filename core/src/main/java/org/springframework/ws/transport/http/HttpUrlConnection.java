@@ -55,7 +55,7 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
         return connection;
     }
 
-    public void close() {
+    public void onClose() {
         connection.disconnect();
     }
 
