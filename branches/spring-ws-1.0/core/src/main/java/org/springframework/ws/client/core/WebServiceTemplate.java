@@ -27,6 +27,7 @@ import javax.xml.transform.TransformerException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -412,8 +413,9 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                     return handleFault(connection, request, response);
                 }
                 else {
+                    Object extracted = responseExtractor.extractData(response);
                     logResponse(request, response);
-                    return responseExtractor.extractData(response);
+                    return extracted;
                 }
             }
             else {
