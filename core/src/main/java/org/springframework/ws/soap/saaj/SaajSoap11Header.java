@@ -19,6 +19,7 @@ package org.springframework.ws.soap.saaj;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import javax.xml.soap.Node;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
@@ -43,10 +44,13 @@ class SaajSoap11Header extends SaajSoapHeader implements Soap11Header {
         List result = new ArrayList();
         Iterator iterator = getImplementation().examineAllHeaderElements(getSaajHeader());
         while (iterator.hasNext()) {
-            SOAPHeaderElement saajHeaderElement = (SOAPHeaderElement) iterator.next();
-            String headerActor = saajHeaderElement.getActor();
-            if (shouldProcess(headerActor, actors)) {
-                result.add(saajHeaderElement);
+            Node node = (Node) iterator.next();
+            if (node instanceof SOAPHeaderElement) {
+                SOAPHeaderElement saajHeaderElement = (SOAPHeaderElement) node;
+                String headerActor = saajHeaderElement.getActor();
+                if (shouldProcess(headerActor, actors)) {
+                    result.add(saajHeaderElement);
+                }
             }
         }
         return new SaajSoapHeaderElementIterator(result.iterator());
