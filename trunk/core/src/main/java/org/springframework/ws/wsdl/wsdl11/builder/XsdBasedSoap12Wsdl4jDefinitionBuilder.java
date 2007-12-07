@@ -37,15 +37,16 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.wsdl.wsdl11.DynamicWsdl11Definition;
 import org.springframework.xml.namespace.QNameUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 /**
  * Builds a <code>WsdlDefinition</code> with a SOAP 1.2 binding based on an XSD schema. This builder iterates over all
@@ -86,34 +87,22 @@ import org.xml.sax.SAXException;
 public class XsdBasedSoap12Wsdl4jDefinitionBuilder extends AbstractSoap12Wsdl4jDefinitionBuilder
         implements InitializingBean {
 
-    /**
-     * The default suffix used to detect request elements in the schema.
-     */
+    /** The default suffix used to detect request elements in the schema. */
     public static final String DEFAULT_REQUEST_SUFFIX = "Request";
 
-    /**
-     * The default suffix used to detect response elements in the schema.
-     */
+    /** The default suffix used to detect response elements in the schema. */
     public static final String DEFAULT_RESPONSE_SUFFIX = "Response";
 
-    /**
-     * The default suffix used to detect fault elements in the schema.
-     */
+    /** The default suffix used to detect fault elements in the schema. */
     public static final String DEFAULT_FAULT_SUFFIX = "Fault";
 
-    /**
-     * The default prefix used to register the schema namespace in the WSDL.
-     */
+    /** The default prefix used to register the schema namespace in the WSDL. */
     public static final String DEFAULT_SCHEMA_PREFIX = "schema";
 
-    /**
-     * The default prefix used to register the target namespace in the WSDL.
-     */
+    /** The default prefix used to register the target namespace in the WSDL. */
     public static final String DEFAULT_PREFIX = "tns";
 
-    /**
-     * The suffix used to create a service name from a port type name.
-     */
+    /** The suffix used to create a service name from a port type name. */
     public static final String SERVICE_SUFFIX = "Service";
 
     private Resource schemaResource;
@@ -165,16 +154,12 @@ public class XsdBasedSoap12Wsdl4jDefinitionBuilder extends AbstractSoap12Wsdl4jD
         this.faultSuffix = faultSuffix;
     }
 
-    /**
-     * Sets the port type name used for this definition. Required.
-     */
+    /** Sets the port type name used for this definition. Required. */
     public void setPortTypeName(String portTypeName) {
         this.portTypeName = portTypeName;
     }
 
-    /**
-     * Sets the target namespace used for this definition.
-     */
+    /** Sets the target namespace used for this definition. */
     public void setTargetNamespace(String targetNamespace) {
         this.targetNamespace = targetNamespace;
     }
@@ -197,9 +182,7 @@ public class XsdBasedSoap12Wsdl4jDefinitionBuilder extends AbstractSoap12Wsdl4jD
         this.prefix = prefix;
     }
 
-    /**
-     * Sets the XSD schema to use for generating the WSDL.
-     */
+    /** Sets the XSD schema to use for generating the WSDL. */
     public void setSchema(Resource schemaResource) {
         Assert.notNull(schemaResource, "'schema' must not be null");
         Assert.isTrue(schemaResource.exists(), "schema \"" + schemaResource + "\" does not exit");
@@ -232,9 +215,7 @@ public class XsdBasedSoap12Wsdl4jDefinitionBuilder extends AbstractSoap12Wsdl4jD
         }
     }
 
-    /**
-     * Adds the target namespace and schema namespace to the definition.
-     */
+    /** Adds the target namespace and schema namespace to the definition. */
     protected void populateDefinition(Definition definition) throws WSDLException {
         super.populateDefinition(definition);
         definition.setTargetNamespace(targetNamespace);
@@ -244,9 +225,7 @@ public class XsdBasedSoap12Wsdl4jDefinitionBuilder extends AbstractSoap12Wsdl4jD
         }
     }
 
-    /**
-     * Does nothing.
-     */
+    /** Does nothing. */
     protected void buildImports(Definition definition) throws WSDLException {
     }
 
@@ -301,7 +280,7 @@ public class XsdBasedSoap12Wsdl4jDefinitionBuilder extends AbstractSoap12Wsdl4jD
             QName elementName = (QName) iterator.next();
             if (elementName != null &&
                     (isRequestMessage(elementName) || isResponseMessage(elementName) || isFaultMessage(elementName))) {
-                if (!StringUtils.hasLength(definition.getPrefix(elementName.getNamespaceURI()))) {
+                if (definition.getPrefix(elementName.getNamespaceURI()) == null) {
                     int i = 0;
                     while (true) {
                         String prefix = schemaPrefix + Integer.toString(i);
@@ -517,9 +496,7 @@ public class XsdBasedSoap12Wsdl4jDefinitionBuilder extends AbstractSoap12Wsdl4jD
         operation.setName(operationName);
     }
 
-    /**
-     * Sets the name of the service to the name of the port type, with "Service" appended to it.
-     */
+    /** Sets the name of the service to the name of the port type, with "Service" appended to it. */
     protected void populateService(Service service) throws WSDLException {
         service.setQName(new QName(targetNamespace, portTypeName + SERVICE_SUFFIX));
     }
