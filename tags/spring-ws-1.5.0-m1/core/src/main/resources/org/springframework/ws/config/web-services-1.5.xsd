@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns="http://www.springframework.org/schema/web-services" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:beans="http://www.springframework.org/schema/beans"
+            xmlns:tool="http://www.springframework.org/schema/tool"
+            targetNamespace="http://www.springframework.org/schema/web-services" elementFormDefault="qualified"
+            attributeFormDefault="unqualified">
+
+    <xsd:import namespace="http://www.springframework.org/schema/beans"/>
+    <xsd:import namespace="http://www.springframework.org/schema/tool"/>
+
+    <xsd:annotation>
+        <xsd:documentation>
+            Defines the configuration elements for Spring Web Services.
+        </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:element name="marshalling-endpoints">
+        <xsd:annotation>
+            <xsd:documentation
+                    source="java:org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter">
+                Indicates that a unmarshaller should be used to convert incoming request
+                messages into method parameters, and return values marshalled into a response message.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:attribute name="unmarshaller" type="xsd:string" default="marshaller">
+                <xsd:annotation>
+                    <xsd:documentation source="java:org.springframework.oxm.Unmarshaller">
+                        The bean name of the Unmarshaller that is to be used to convert XML into objects.
+
+                        This attribute is not required, and only needs to be specified
+                        explicitly if the bean name of the desired Unmarshaller
+                        is not 'marshaller'.
+                    </xsd:documentation>
+                    <xsd:appinfo>
+                        <tool:annotation kind="ref">
+                            <tool:expected-type type="org.springframework.oxm.Unmarshaller"/>
+                        </tool:annotation>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="marshaller" type="xsd:string" default="marshaller">
+                <xsd:annotation>
+                    <xsd:documentation source="java:org.springframework.oxm.Marshaller">
+                        The bean name of the Marshaller that is to be used to convert objects into XML.
+
+                        This attribute is not required, and only needs to be specified
+                        explicitly if the bean name of the desired Marshaller
+                        is not 'marshaller'.
+                    </xsd:documentation>
+                    <xsd:appinfo>
+                        <tool:annotation kind="ref">
+                            <tool:expected-type type="org.springframework.oxm.Marshaller"/>
+                        </tool:annotation>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="xpath-endpoints">
+        <xsd:annotation>
+            <xsd:documentation
+                    source="java:org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter">
+                Indicates that a endpoints using @XPathParam annotations should be detected.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="namespace" minOccurs="0" maxOccurs="unbounded">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Bind a namespace URI to a prefix
+                        </xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:complexType>
+                        <xsd:attribute name="prefix" type="xsd:string" use="required"/>
+                        <xsd:attribute name="uri" type="xsd:string" use="required"/>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+
+</xsd:schema>

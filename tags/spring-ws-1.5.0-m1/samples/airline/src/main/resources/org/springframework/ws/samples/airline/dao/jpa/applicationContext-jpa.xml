@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+
+    <bean id="flightDao" class="org.springframework.ws.samples.airline.dao.jpa.JpaFlightDao">
+        <description>
+            A DAO for Flights.
+        </description>
+    </bean>
+
+    <bean id="ticketDao" class="org.springframework.ws.samples.airline.dao.jpa.JpaTicketDao">
+        <description>
+            A DAO for Tickets.
+        </description>
+    </bean>
+
+
+    <bean id="frequentFlyerDao" class="org.springframework.ws.samples.airline.dao.jpa.JpaFrequentFlyerDao">
+        <description>
+            A DAO for FrequentFlyers.
+        </description>
+    </bean>
+
+    <bean class="org.springframework.ws.samples.airline.dao.jpa.DatabaseInitializer">
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="airline"/>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="jpaDialect">
+            <bean class="org.springframework.orm.jpa.vendor.OpenJpaDialect"/>
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="openjpa.Log">commons</prop>
+                <prop key="openjpa.jdbc.SynchronizeMappings">buildSchema</prop>
+                <prop key="openjpa.jdbc.MappingDefaults">
+                    FieldStrategies='org.joda.time.DateTime=org.springframework.ws.samples.airline.domain.openjpa.DateTimeValueHandler,
+                    org.joda.time.LocalDate=org.springframework.ws.samples.airline.domain.openjpa.LocalDateValueHandler'
+                </prop>
+                <prop key="openjpa.jdbc.DBDictionary">org.apache.openjpa.jdbc.sql.HSQLDictionary</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="org.hsqldb.jdbcDriver"/>
+        <property name="url" value="jdbc:hsqldb:mem:airline"/>
+        <property name="username" value="sa"/>
+        <property name="password" value=""/>
+    </bean>
+
+    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor">
+        <description>
+            Handles the @Repository annotation used on the JPA Dao's, and translates from the JPA
+            exceptions to Spring's richer DataAccessException hierarchy.
+        </description>
+    </bean>
+
+    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor">
+        <description>
+            Injects the JPA PersistenceContext into the JPA Dao's.
+        </description>
+    </bean>
+
+
+</beans>

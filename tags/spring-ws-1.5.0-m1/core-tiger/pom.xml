@@ -1,0 +1,102 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>spring-ws-parent</artifactId>
+        <groupId>org.springframework.ws</groupId>
+        <version>1.5.0-m1</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>spring-ws-core-tiger</artifactId>
+    <packaging>bundle</packaging>
+    <name>Spring WS Core - Java 5</name>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>1.0.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${artifactId}</Bundle-SymbolicName>
+                        <Export-Package>org.springframework.ws*</Export-Package>
+                        <Import-Package>
+                            org.apache.commons.logging*,
+                            javax.xml.namespace*,
+                            javax.xml.parsers*,
+                            javax.xml.stream*,
+                            javax.xml.transform*,
+                            org.xml.sax*,
+                            org.w3c.dom*,
+                            org.springframework.beans*,
+                            org.springframework.core*,
+                            org.springframework.util*,
+                            org.springframework.oxm*,
+                            org.springframework.ws*,
+                            org.springframework.xml*,
+                            *;resolution:=optional
+                        </Import-Package>
+                        <Implementation-Title>${pom.name}</Implementation-Title>
+                        <Implementation-Version>${pom.version}</Implementation-Version>
+                        <Spring-WS-Version>${pom.version}</Spring-WS-Version>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencies>
+        <!-- Spring-WS dependencies -->
+        <dependency>
+            <groupId>org.springframework.ws</groupId>
+            <artifactId>spring-xml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ws</groupId>
+            <artifactId>spring-ws-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ws</groupId>
+            <artifactId>spring-oxm-tiger</artifactId>
+        </dependency>
+        <!-- Spring dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <!-- XML handling dependencies -->
+        <dependency>
+            <groupId>stax</groupId>
+            <artifactId>stax-api</artifactId>
+        </dependency>
+        <!-- JEE dependencies -->
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.soap</groupId>
+            <artifactId>saaj-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- SOAP dependencies -->
+        <dependency>
+            <groupId>com.sun.xml.messaging.saaj</groupId>
+            <artifactId>saaj-impl</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <scope>test</scope>
+            <version>2.2</version>
+        </dependency>
+    </dependencies>
+</project>
