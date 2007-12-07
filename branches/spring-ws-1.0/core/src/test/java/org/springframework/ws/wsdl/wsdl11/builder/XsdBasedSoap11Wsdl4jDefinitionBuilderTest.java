@@ -24,9 +24,11 @@ import javax.xml.transform.dom.DOMResult;
 
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.w3c.dom.Document;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.wsdl.wsdl11.Wsdl11Definition;
-import org.w3c.dom.Document;
+import org.springframework.xml.transform.StringResult;
 
 public class XsdBasedSoap11Wsdl4jDefinitionBuilderTest extends XMLTestCase {
 
@@ -142,6 +144,20 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilderTest extends XMLTestCase {
         Document expected = documentBuilder.parse(getClass().getResourceAsStream("airline.wsdl"));
         XMLUnit.setIgnoreWhitespace(true);
         assertXMLEqual("Invalid WSDL built", expected, result);
+    }
+
+    public void testNoSchemaPrefix() throws Exception {
+        builder.setSchema(new ClassPathResource("single.xsd", getClass()));
+        builder.setPortTypeName("Order");
+        builder.setTargetNamespace("http://www.springframework.org/spring-ws/single/definitions");
+        builder.setSchemaPrefix("");
+        builder.afterPropertiesSet();
+
+        buildAll();
+
+        Wsdl11Definition definition = builder.getDefinition();
+
+        transformer.transform(definition.getSource(), new StringResult());
     }
 
     private void buildAll() {

@@ -37,15 +37,16 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.wsdl.wsdl11.DynamicWsdl11Definition;
 import org.springframework.xml.namespace.QNameUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 /**
  * Builds a <code>WsdlDefinition</code> with a SOAP 1.1 binding based on an XSD schema. This builder iterates over all
@@ -281,7 +282,7 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
             QName elementName = (QName) iterator.next();
             if (elementName != null &&
                     (isRequestMessage(elementName) || isResponseMessage(elementName) || isFaultMessage(elementName))) {
-                if (!StringUtils.hasLength(definition.getPrefix(elementName.getNamespaceURI()))) {
+                if (definition.getPrefix(elementName.getNamespaceURI()) == null) {
                     int i = 0;
                     while (true) {
                         String prefix = schemaPrefix + Integer.toString(i);
