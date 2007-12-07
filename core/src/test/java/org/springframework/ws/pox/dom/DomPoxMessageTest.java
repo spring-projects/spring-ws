@@ -23,9 +23,10 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 
 import org.custommonkey.xmlunit.XMLTestCase;
+import org.w3c.dom.Document;
+
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-import org.w3c.dom.Document;
 
 public class DomPoxMessageTest extends XMLTestCase {
 
@@ -48,6 +49,15 @@ public class DomPoxMessageTest extends XMLTestCase {
         String content = "<root xmlns='http://www.springframework.org/spring-ws'>" + "<child/></root>";
         StringSource source = new StringSource(content);
         transformer.transform(source, message.getPayloadResult());
+        StringResult stringResult = new StringResult();
+        transformer.transform(message.getPayloadSource(), stringResult);
+        assertXMLEqual(content, stringResult.toString());
+    }
+
+    public void testGetPayloadResultTwice() throws Exception {
+        String content = "<element xmlns=\"http://www.springframework.org/spring-ws\" />";
+        transformer.transform(new StringSource(content), message.getPayloadResult());
+        transformer.transform(new StringSource(content), message.getPayloadResult());
         StringResult stringResult = new StringResult();
         transformer.transform(message.getPayloadSource(), stringResult);
         assertXMLEqual(content, stringResult.toString());
