@@ -15,6 +15,13 @@
         <module>mtom</module>
         <module>airline</module>
     </modules>
+    <repositories>
+        <repository>
+            <id>spring-milestone</id>
+            <name>Spring Milestone Repository</name>
+            <url>http://s3.amazonaws.com/maven.springframework.org/milestone</url>
+        </repository>        
+    </repositories>
     <build>
         <plugins>
             <plugin>

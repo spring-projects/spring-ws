@@ -9,7 +9,7 @@
     <distributionManagement>
         <downloadUrl>http://static.springframework.org/spring-ws/site/downloads/releases.html</downloadUrl>
         <repository>
-            <id>spring-snapshot</id>
+            <id>spring-milestone</id>
             <name>Spring Milestone Repository</name>
             <url>s3://maven.springframework.org/milestone</url>
         </repository>
@@ -20,7 +20,7 @@
         </snapshotRepository>
         <site>
             <id>static.springframework.org</id>
-            <url>scp://static.springframework.org/var/www/domains/springframework.org/static/htdocs/spring-ws/site</url>
+            <url>scp://static.springframework.org/var/www/domains/springframework.org/static/htdocs/spring-ws/sites/1.5</url>
         </site>
     </distributionManagement>
     <scm>
