@@ -42,6 +42,14 @@
                     </dependencySet>
                 </dependencySets>
             </binaries>
+            <sources>
+                <fileSets>
+                    <fileSet>
+                        <directory>src/main/java</directory>
+                    </fileSet>
+                </fileSets>
+                <outputDirectoryMapping>dist/module-sources/${artifactId}</outputDirectoryMapping>
+            </sources>
         </moduleSet>
     </moduleSets>
     <files>
@@ -59,31 +67,6 @@
         <fileSet>
             <directory>target/site/reference</directory>
             <outputDirectory>docs/reference</outputDirectory>
-        </fileSet>
-        <!-- Modules sources-->
-        <fileSet>
-            <outputDirectory>dist/module-sources</outputDirectory>
-            <includes>
-                <include>xml/**/*</include>
-                <include>oxm/**/*</include>
-                <include>oxm-tiger/**/*</include>
-                <include>core/**/*</include>
-                <include>core-tiger/**/*</include>
-                <include>support/**/*</include>
-                <include>security/**/*</include>
-                <include>archetype/**/*</include>
-                <include>pom.xml</include>
-            </includes>
-            <excludes>
-                <exclude>**/target/**</exclude>
-                <exclude>**/target</exclude>
-                <exclude>**/*.iml</exclude>
-                <exclude>**/*.ipr</exclude>
-                <exclude>**/.classpath</exclude>
-                <exclude>**/.project</exclude>
-                <exclude>**/.settings</exclude>
-                <exclude>**/.settings/**</exclude>
-            </excludes>
         </fileSet>
         <!-- Samples -->
         <fileSet>
