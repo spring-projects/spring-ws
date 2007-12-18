@@ -16,6 +16,8 @@
 
 package org.springframework.ws.transport.jms;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,6 +33,7 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TemporaryQueue;
+import javax.jms.TextMessage;
 
 import org.springframework.jms.connection.ConnectionFactoryUtils;
 import org.springframework.jms.support.JmsUtils;
@@ -59,9 +62,9 @@ public class JmsSenderConnection extends AbstractSenderConnection implements Web
 
     private Destination responseDestination;
 
-    private BytesMessage requestMessage;
+    private Message requestMessage;
 
-    private BytesMessage responseMessage;
+    private Message responseMessage;
 
     private long receiveTimeout;
 
@@ -70,6 +73,10 @@ public class JmsSenderConnection extends AbstractSenderConnection implements Web
     private long timeToLive;
 
     private int priority;
+
+    private String textMessageEncoding;
+
+    private int messageType;
 
     /** Constructs a new JMS connection with the given parameters. */
     protected JmsSenderConnection(ConnectionFactory connectionFactory,
@@ -85,19 +92,22 @@ public class JmsSenderConnection extends AbstractSenderConnection implements Web
         this.requestDestination = requestDestination;
     }
 
-    /** Returns the request message for this connection. */
-    public BytesMessage getRequestMessage() {
+    /** Returns the request message for this connection. Returns either a {@link BytesMessage} or a {@link TextMessage}. */
+    public Message getRequestMessage() {
         return requestMessage;
     }
 
-    /** Returns the response message, if any, for this connection. */
-    public BytesMessage getResponseMessage() {
+    /**
+     * Returns the response message, if any, for this connection. Returns either a {@link BytesMessage} or a {@link
+     * TextMessage}.
+     */
+    public Message getResponseMessage() {
         return responseMessage;
     }
 
     /*
-    * Package-friendly setters
-    */
+     * Package-friendly setters
+     */
 
     void setResponseDestination(Destination responseDestination) {
         this.responseDestination = responseDestination;
@@ -119,6 +129,14 @@ public class JmsSenderConnection extends AbstractSenderConnection implements Web
         this.receiveTimeout = receiveTimeout;
     }
 
+    void setTextMessageEncoding(String textMessageEncoding) {
+        this.textMessageEncoding = textMessageEncoding;
+    }
+
+    void setMessageType(int messageType) {
+        this.messageType = messageType;
+    }
+
     /*
      * Errors
      */
@@ -137,7 +155,12 @@ public class JmsSenderConnection extends AbstractSenderConnection implements Web
 
     protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
         try {
-            requestMessage = session.createBytesMessage();
+            if (messageType == JmsTransportConstants.BYTES_MESSAGE_TYPE) {
+                requestMessage = session.createBytesMessage();
+            }
+            else {
+                requestMessage = session.createTextMessage();
+            }
         }
         catch (JMSException ex) {
             throw new JmsTransportException(ex);
@@ -154,7 +177,23 @@ public class JmsSenderConnection extends AbstractSenderConnection implements Web
     }
 
     protected OutputStream getRequestOutputStream() throws IOException {
-        return new BytesMessageOutputStream(requestMessage);
+        if (requestMessage instanceof BytesMessage) {
+            return new BytesMessageOutputStream((BytesMessage) requestMessage);
+        }
+        else {
+            return new ByteArrayOutputStream() {
+
+                public void close() throws IOException {
+                    String text = new String(toByteArray(), textMessageEncoding);
+                    try {
+                        ((TextMessage) requestMessage).setText(text);
+                    }
+                    catch (JMSException ex) {
+                        throw new JmsTransportException(ex);
+                    }
+                }
+            };
+        }
     }
 
     protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
@@ -188,11 +227,13 @@ public class JmsSenderConnection extends AbstractSenderConnection implements Web
         try {
             messageConsumer = session.createConsumer(responseDestination);
             Message message = receiveTimeout >= 0 ? messageConsumer.receive(receiveTimeout) : messageConsumer.receive();
-            if (!(message instanceof BytesMessage)) {
+            if (message instanceof BytesMessage || message instanceof TextMessage) {
+                responseMessage = message;
+            }
+            else {
                 throw new IllegalArgumentException(
                         "Wrong message type: [" + message.getClass() + "]. Only BytesMessages can be handled.");
             }
-            responseMessage = (BytesMessage) message;
         }
         catch (JMSException ex) {
             throw new JmsTransportException(ex);
@@ -239,13 +280,25 @@ public class JmsSenderConnection extends AbstractSenderConnection implements Web
     }
 
     protected InputStream getResponseInputStream() throws IOException {
-        return new BytesMessageInputStream(responseMessage);
+        if (responseMessage instanceof BytesMessage) {
+            return new BytesMessageInputStream((BytesMessage) responseMessage);
+        }
+        else {
+            TextMessage textMessage = (TextMessage) responseMessage;
+            try {
+                String text = textMessage.getText();
+                byte[] contents = text != null ? text.getBytes(textMessageEncoding) : new byte[0];
+                return new ByteArrayInputStream(contents);
+            }
+            catch (JMSException ex) {
+                throw new JmsTransportException(ex);
+            }
+        }
     }
 
     protected void onClose() throws IOException {
         JmsUtils.closeSession(session);
         ConnectionFactoryUtils.releaseConnection(connection, connectionFactory, true);
     }
-
 
 }

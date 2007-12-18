@@ -23,10 +23,12 @@ import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
+import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Queue;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 import javax.jms.Topic;
 
 import org.springframework.jms.connection.ConnectionFactoryUtils;
@@ -38,7 +40,7 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.ws.transport.jms.support.JmsTransportUtils;
 
 /**
- * {@link WebServiceMessageSender} implementation that uses JMS {@link BytesMessage}s. Requires a JMS {@link
+ * {@link WebServiceMessageSender} implementation that uses JMS {@link Message}s. Requires a JMS {@link
  * ConnectionFactory} to operate.
  * <p/>
  * This message sender supports URI's of the following format: <blockquote> <tt><b>jms:</b></tt><i>destination</i>[<tt><b>?</b></tt><i>param-name</i><tt><b>=</b></tt><i>param-value</i>][<tt><b>&amp;</b></tt><i>param-name</i><tt><b>=</b></tt><i>param-value</i>]*
@@ -49,18 +51,23 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * <blockquote><table> <tr><th><i>param-name</i></th><th><i>Description</i></th></tr>
  * <tr><td><tt>deliveryMode</tt></td><td>Indicates whether the request message is persistent or not. This may be
  * <tt>PERSISTENT</tt> or <tt>NON_PERSISTENT</tt>. See {@link MessageProducer#setDeliveryMode(int)}</td></tr>
- * <tr><td><tt>timeToLive</tt></td><td>The lifetime, in milliseconds, of the request message. See {@link
- * MessageProducer#setTimeToLive(long)}</td></tr> <tr><td><tt>priority</tt></td><td>The JMS priority (0-9) associated
- * with the request message. See {@link MessageProducer#setPriority(int)}</td></tr>
- * <tr><td><tt>replyToName</tt></td><td>The name of the destination to which the response message must be sent, that
- * will be resolved by the {@link #getDestinationResolver() destination resolver}.</td></tr> </table></blockquote>
+ * <tr><td><tt>messageType</tt></td><td>The message type. This may be <tt>BINARY_MESSAGE</tt> (the default) or
+ * <tt>TEXT_MESSAGE</tt></td></tr> <tr><td><tt>priority</tt></td><td>The JMS priority (0-9) associated with the request
+ * message. See {@link MessageProducer#setPriority(int)}</td></tr> <tr><td><tt>replyToName</tt></td><td>The name of the
+ * destination to which the response message must be sent, that will be resolved by the {@link #getDestinationResolver()
+ * destination resolver}.</td></tr> <tr><td><tt>timeToLive</tt></td><td>The lifetime, in milliseconds, of the request
+ * message. See {@link MessageProducer#setTimeToLive(long)}</td></tr> </table></blockquote>
  * <p/>
  * If the <tt>replyToName</tt> is not set, a {@link Session#createTemporaryQueue() temporary queue} is used.
+ * <p/>
+ * This class uses {@link BytesMessage} messages by default, but can be configured to send {@link TextMessage} messages
+ * instead. <b>Note</b> that <code>BytesMessages</code> are prefered, since <code>TextMessages</code> do not support
+ * attachments and charactering encodings reliably.
  * <p/>
  * Some examples of JMS URIs are:
  * <p/>
  * <blockquote> <tt>jms:SomeQueue</tt><br> <tt>jms:SomeTopic?priority=3&deliveryMode=NON_PERSISTENT</tt><br>
- * <tt>jms:RequestQueue?replyToName=ResponseQueueName</tt></blockquote>
+ * <tt>jms:RequestQueue?replyToName=ResponseQueueName</tt><br> <tt>jms:Queue?messageType=TEXT_MESSAGE</blockquote>
  *
  * @author Arjen Poutsma
  * @see <a href="http://www.ietf.org/internet-drafts/draft-merrick-jms-iri-00.txt">IRI Scheme for Java(tm) Message
@@ -69,18 +76,27 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  */
 public class JmsMessageSender extends JmsDestinationAccessor implements WebServiceMessageSender {
 
-    /**
-     * Default timeout for receive operations: -1 indicates a blocking receive without timeout.
-     */
+    /** Default timeout for receive operations: -1 indicates a blocking receive without timeout. */
     public static final long DEFAULT_RECEIVE_TIMEOUT = -1;
 
+    /** Default encoding used to read fromn and write to {@link TextMessage} messages. */
+    public static final String DEFAULT_TEXT_MESSAGE_ENCODING = "UTF-8";
+
     private long receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;
+
+    private String textMessageEncoding = DEFAULT_TEXT_MESSAGE_ENCODING;
+
+    /** Sets the encoding used to read from {@link TextMessage} messages. Defaults to <code>UTF-8</code>. */
+    public void setTextMessageEncoding(String textMessageEncoding) {
+        this.textMessageEncoding = textMessageEncoding;
+    }
 
     /**
      * Create a new <code>JmsMessageSender</code>
      * <p/>
      * <b>Note</b>: The ConnectionFactory has to be set before using the instance. This constructor can be used to
-     * prepare a JmsTemplate via a BeanFactory, typically setting the ConnectionFactory via setConnectionFactory.
+     * prepare a JmsTemplate via a BeanFactory, typically setting the ConnectionFactory via {@link
+     * #setConnectionFactory(ConnectionFactory)}.
      *
      * @see #setConnectionFactory(ConnectionFactory)
      */
@@ -119,6 +135,8 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
             wsConnection.setReceiveTimeout(receiveTimeout);
             wsConnection.setResponseDestination(resolveResponseDestination(jmsSession, uri));
             wsConnection.setTimeToLive(JmsTransportUtils.getTimeToLive(uri));
+            wsConnection.setMessageType(JmsTransportUtils.getMessageType(uri));
+            wsConnection.setTextMessageEncoding(textMessageEncoding);
             return wsConnection;
         }
         catch (JMSException ex) {
