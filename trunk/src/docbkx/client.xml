@@ -99,7 +99,7 @@
                         For sending messages over JMS, Spring Web Services provides the
                         <classname>JmsMessageSender</classname>. This class uses the facilities of the Spring framework
                         to transform the <interfacename>WebServiceMessage</interfacename> into a JMS
-                        <interfacename>BytesMessages</interfacename>, send it on its way on a
+                        <interfacename>Message</interfacename>, send it on its way on a
                         <interfacename>Queue</interfacename> or <interfacename>Topic</interfacename>, and receive a
                         response (if any).
                     </para>
@@ -112,6 +112,16 @@
                         <uri>jms:RequestQueue?replyToName=ResponseName</uri>.
                         For more information on this URI syntax, refer to the class level Javadocs of the
                         <classname>JmsMessageSender</classname>.
+                    </para>
+                    <para>
+                        By default, the <classname>JmsMessageSender</classname> send JMS
+                        <interfacename>BytesMessage</interfacename>, but
+                        this can be overriden to use <interfacename>TextMessages</interfacename> by using the
+                        <literal>messageType</literal> parameter on the JMS URI. For example:
+                        <uri>jms:Queue?messageType=TEXT_MESSAGE</uri>.
+                        Note that <interfacename>BytesMessages</interfacename> are the prefered type, because 
+                        <interfacename>TextMessages</interfacename> do not support attachments and charactering
+                        encodings reliably.
                     </para>
                     <para>
                         The following example shows how to use the JMS transport in combination with an ActiceMQ
