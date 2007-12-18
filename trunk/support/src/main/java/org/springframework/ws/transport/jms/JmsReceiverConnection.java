@@ -16,6 +16,8 @@
 
 package org.springframework.ws.transport.jms;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,8 +25,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
+import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.util.Assert;
@@ -35,36 +39,69 @@ import org.springframework.ws.transport.support.EnumerationIterator;
 
 /**
  * Implementation of {@link WebServiceConnection} that is used for server-side JMS access. Exposes a {@link
- * BytesMessage} request and response message.
+ * BytesMessage} or {@link TextMessage} request and response message.
+ * <p/>
+ * The response message type is equal to the request message type, i.e. if a <code>BytesMessage</code> is received as
+ * request, a <code>BytesMessage</code> is created as response, and if a <code>TextMessage</code> is received, a
+ * <code>TextMessage</code> response is created.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
  */
 public class JmsReceiverConnection extends AbstractReceiverConnection {
 
-    private final BytesMessage requestMessage;
+    private final Message requestMessage;
 
     private final Session session;
 
-    private BytesMessage responseMessage;
+    private Message responseMessage;
 
-    /** Constructs a new JMS connection with the given parameters. */
-    protected JmsReceiverConnection(BytesMessage requestMessage, Session session) {
+    private String textMessageEncoding;
+
+    private JmsReceiverConnection(Message requestMessage, Session session) {
         Assert.notNull(requestMessage, "requestMessage must not be null");
         Assert.notNull(session, "session must not be null");
         this.requestMessage = requestMessage;
         this.session = session;
     }
 
-    /** Returns the request message for this connection. */
-    public BytesMessage getRequestMessage() {
+    /**
+     * Constructs a new JMS connection with the given {@link BytesMessage}.
+     *
+     * @param requestMessage the JMS request message
+     * @param session        the JMS session
+     */
+    protected JmsReceiverConnection(BytesMessage requestMessage, Session session) {
+        this((Message) requestMessage, session);
+    }
+
+    /**
+     * Constructs a new JMS connection with the given {@link TextMessage}.
+     *
+     * @param requestMessage the JMS request message
+     * @param session        the JMS session
+     */
+    protected JmsReceiverConnection(TextMessage requestMessage, String encoding, Session session) {
+        this(requestMessage, session);
+        this.textMessageEncoding = encoding;
+    }
+
+    /** Returns the request message for this connection. Returns either a {@link BytesMessage} or a {@link TextMessage}. */
+    public Message getRequestMessage() {
         return requestMessage;
     }
 
-    /** Returns the response message, if any, for this connection. */
-    public BytesMessage getResponseMessage() {
+    /**
+     * Returns the response message, if any, for this connection. Returns either a {@link BytesMessage} or a {@link
+     * TextMessage}.
+     */
+    public Message getResponseMessage() {
         return responseMessage;
     }
+
+    /*
+     * Errors
+     */
 
     public String getErrorMessage() throws IOException {
         return null;
@@ -98,7 +135,20 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
     }
 
     protected InputStream getRequestInputStream() throws IOException {
-        return new BytesMessageInputStream(requestMessage);
+        if (requestMessage instanceof BytesMessage) {
+            return new BytesMessageInputStream((BytesMessage) requestMessage);
+        }
+        else {
+            TextMessage textMessage = (TextMessage) requestMessage;
+            try {
+                String text = textMessage.getText();
+                byte[] contents = text != null ? text.getBytes(textMessageEncoding) : new byte[0];
+                return new ByteArrayInputStream(contents);
+            }
+            catch (JMSException ex) {
+                throw new JmsTransportException(ex);
+            }
+        }
     }
 
     /*
@@ -107,7 +157,12 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 
     protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
         try {
-            responseMessage = session.createBytesMessage();
+            if (requestMessage instanceof BytesMessage) {
+                responseMessage = session.createBytesMessage();
+            }
+            else {
+                responseMessage = session.createTextMessage();
+            }
             responseMessage.setJMSCorrelationID(requestMessage.getJMSMessageID());
         }
         catch (JMSException ex) {
@@ -125,7 +180,23 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
     }
 
     protected OutputStream getResponseOutputStream() throws IOException {
-        return new BytesMessageOutputStream(responseMessage);
+        if (responseMessage instanceof BytesMessage) {
+            return new BytesMessageOutputStream((BytesMessage) responseMessage);
+        }
+        else {
+            return new ByteArrayOutputStream() {
+
+                public void close() throws IOException {
+                    String text = new String(toByteArray(), textMessageEncoding);
+                    try {
+                        ((TextMessage) responseMessage).setText(text);
+                    }
+                    catch (JMSException ex) {
+                        throw new JmsTransportException(ex);
+                    }
+                }
+            };
+        }
     }
 
     protected void onSendAfterWrite(WebServiceMessage message) throws IOException {

@@ -23,6 +23,8 @@ import javax.jms.DeliveryMode;
 import javax.jms.Destination;
 import javax.jms.Message;
 
+import org.springframework.ws.transport.jms.JmsTransportConstants;
+
 /**
  * Collection of utility methods to work with JMS transports. Includes methods to retrieve JMS properties from an {@link
  * URI}.
@@ -35,6 +37,8 @@ public class JmsTransportUtils {
     private static final Pattern DESTINATION_NAME_PATTERN = Pattern.compile("^([^\\?]+)");
 
     private static final Pattern DELIVERY_MODE_PATTERN = Pattern.compile("deliveryMode=(PERSISTENT|NON_PERSISTENT)");
+
+    private static final Pattern MESSAGE_TYPE_PATTERN = Pattern.compile("messageType=(BYTES_MESSAGE|TEXT_MESSAGE)");
 
     private static final Pattern TIME_TO_LIVE_PATTERN = Pattern.compile("timeToLive=(\\d+)");
 
@@ -66,6 +70,22 @@ public class JmsTransportUtils {
         }
         else {
             return Message.DEFAULT_DELIVERY_MODE;
+        }
+    }
+
+    /**
+     * Returns the message type of the given URI. Defaults to {@link JmsTransportConstants#BYTES_MESSAGE_TYPE}.
+     *
+     * @see JmsTransportConstants#BYTES_MESSAGE_TYPE
+     * @see JmsTransportConstants#TEXT_MESSAGE_TYPE
+     */
+    public static int getMessageType(URI uri) {
+        String deliveryMode = getStringParameter(MESSAGE_TYPE_PATTERN, uri);
+        if ("TEXT_MESSAGE".equals(deliveryMode)) {
+            return JmsTransportConstants.TEXT_MESSAGE_TYPE;
+        }
+        else {
+            return JmsTransportConstants.BYTES_MESSAGE_TYPE;
         }
     }
 

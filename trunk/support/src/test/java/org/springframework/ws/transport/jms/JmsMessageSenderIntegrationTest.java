@@ -22,6 +22,7 @@ import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
 
@@ -43,12 +44,9 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
 
     private MessageFactory messageFactory;
 
-    private URI requestQueueUri;
-
     private static final String SOAP_ACTION = "\"http://springframework.org/DoIt\"";
 
     protected void onSetUp() throws Exception {
-        requestQueueUri = new URI("jms:RequestQueue?deliveryMode=NON_PERSISTENT");
         messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
     }
 
@@ -64,10 +62,11 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
         this.messageSender = messageSender;
     }
 
-    public void testSendAndReceiveQueue() throws Exception {
+    public void testSendAndReceiveQueueBytesMessage() throws Exception {
         WebServiceConnection connection = null;
         try {
-            connection = messageSender.createConnection(requestQueueUri);
+            URI uri = new URI("jms:RequestQueue?deliveryMode=NON_PERSISTENT");
+            connection = messageSender.createConnection(uri);
             SoapMessage soapRequest = new SaajSoapMessage(messageFactory.createMessage());
             soapRequest.setSoapAction(SOAP_ACTION);
             connection.send(soapRequest);
@@ -84,6 +83,42 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
                     response.setStringProperty(TransportConstants.HEADER_CONTENT_TYPE,
                             SoapVersion.SOAP_11.getContentType());
                     response.writeBytes(buf);
+                    return response;
+                }
+            });
+            SoapMessage response = (SoapMessage) connection.receive(new SaajSoapMessageFactory(messageFactory));
+            assertNotNull("No response received", response);
+            assertEquals("Invalid SOAPAction", SOAP_ACTION, response.getSoapAction());
+            assertFalse("Message is fault", response.hasFault());
+        }
+        finally {
+            if (connection != null) {
+                connection.close();
+            }
+        }
+    }
+
+    public void testSendAndReceiveQueueTextMessage() throws Exception {
+        WebServiceConnection connection = null;
+        try {
+            URI uri = new URI("jms:RequestQueue?deliveryMode=NON_PERSISTENT&messageType=TEXT_MESSAGE");
+            connection = messageSender.createConnection(uri);
+            SoapMessage soapRequest = new SaajSoapMessage(messageFactory.createMessage());
+            soapRequest.setSoapAction(SOAP_ACTION);
+            connection.send(soapRequest);
+
+            TextMessage request = (TextMessage) jmsTemplate.receive();
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            messageFactory.createMessage().writeTo(bos);
+            final String text = new String(bos.toByteArray(), "UTF-8");
+            jmsTemplate.send(request.getJMSReplyTo(), new MessageCreator() {
+
+                public Message createMessage(Session session) throws JMSException {
+                    TextMessage response = session.createTextMessage();
+                    response.setStringProperty(TransportConstants.HEADER_SOAP_ACTION, SOAP_ACTION);
+                    response.setStringProperty(TransportConstants.HEADER_CONTENT_TYPE,
+                            SoapVersion.SOAP_11.getContentType());
+                    response.setText(text);
                     return response;
                 }
             });

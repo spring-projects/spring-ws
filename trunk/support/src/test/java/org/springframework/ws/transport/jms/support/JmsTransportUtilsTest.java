@@ -22,6 +22,8 @@ import javax.jms.Message;
 
 import junit.framework.TestCase;
 
+import org.springframework.ws.transport.jms.JmsTransportConstants;
+
 public class JmsTransportUtilsTest extends TestCase {
 
     public void testGetDestinationName() throws Exception {
@@ -46,6 +48,20 @@ public class JmsTransportUtilsTest extends TestCase {
         uri = new URI("jms:RequestQueue?replyToName=RESP_QUEUE");
         deliveryMode = JmsTransportUtils.getDeliveryMode(uri);
         assertEquals("Invalid deliveryMode", Message.DEFAULT_DELIVERY_MODE, deliveryMode);
+    }
+
+    public void testGetMessageType() throws Exception {
+        URI uri = new URI("jms:RequestQueue?messageType=BYTESMESSAGE");
+        int messageType = JmsTransportUtils.getMessageType(uri);
+        assertEquals("Invalid messageType", JmsTransportConstants.BYTES_MESSAGE_TYPE, messageType);
+
+        uri = new URI("jms:RequestQueue?messageType=TEXT_MESSAGE");
+        messageType = JmsTransportUtils.getMessageType(uri);
+        assertEquals("Invalid messageType", JmsTransportConstants.TEXT_MESSAGE_TYPE, messageType);
+
+        uri = new URI("jms:RequestQueue?replyToName=RESP_QUEUE");
+        messageType = JmsTransportUtils.getMessageType(uri);
+        assertEquals("Invalid messageType", JmsTransportConstants.BYTES_MESSAGE_TYPE, messageType);
     }
 
     public void testGetTimeToLive() throws Exception {

@@ -21,6 +21,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Queue;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 import javax.jms.Topic;
 
 import org.springframework.jms.core.JmsTemplate;
@@ -66,7 +67,7 @@ public class WebServiceMessageListenerIntegrationTest extends AbstractDependency
         return new String[]{"classpath:org/springframework/ws/transport/jms/jms-receiver-applicationContext.xml"};
     }
 
-    public void testReceiveQueue() throws Exception {
+    public void testReceiveQueueBytesMessage() throws Exception {
         final byte[] b = CONTENT.getBytes("UTF-8");
         jmsTemplate.send(requestQueue, new MessageCreator() {
             public Message createMessage(Session session) throws JMSException {
@@ -77,6 +78,18 @@ public class WebServiceMessageListenerIntegrationTest extends AbstractDependency
             }
         });
         BytesMessage response = (BytesMessage) jmsTemplate.receive(responseQueue);
+        assertNotNull("No response received", response);
+    }
+
+    public void testReceiveQueueTextMessage() throws Exception {
+        jmsTemplate.send(requestQueue, new MessageCreator() {
+            public Message createMessage(Session session) throws JMSException {
+                TextMessage request = session.createTextMessage(CONTENT);
+                request.setJMSReplyTo(responseQueue);
+                return request;
+            }
+        });
+        TextMessage response = (TextMessage) jmsTemplate.receive(responseQueue);
         assertNotNull("No response received", response);
     }
 

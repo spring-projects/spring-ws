@@ -16,6 +16,9 @@
 
 package org.springframework.ws.transport.jms;
 
+import javax.jms.BytesMessage;
+import javax.jms.TextMessage;
+
 import org.springframework.ws.transport.TransportConstants;
 
 /**
@@ -26,9 +29,14 @@ import org.springframework.ws.transport.TransportConstants;
  */
 public interface JmsTransportConstants extends TransportConstants {
 
-    /**
-     * The "jms" URI scheme"
-     */
+    /** The "jms" URI scheme" */
     String JMS_URI_SCHEME = "jms";
+
+    /** Indicates a {@link BytesMessage} type. */
+    int BYTES_MESSAGE_TYPE = 1;
+
+    /** Indicates a {@link TextMessage} type. */
+    int TEXT_MESSAGE_TYPE = 2;
+
 
 }
