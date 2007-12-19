@@ -21,17 +21,18 @@ import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.sax.SAXResult;
 
+import org.xml.sax.ContentHandler;
+
 import org.springframework.xml.stream.StaxEventContentHandler;
 import org.springframework.xml.stream.StaxStreamContentHandler;
-import org.xml.sax.ContentHandler;
 
 /**
  * Implementation of the <code>Result</code> tagging interface for StAX writers. Can be constructed with a
  * <code>XMLEventConsumer</code> or a <code>XMLStreamWriter</code>.
  * <p/>
  * This class is necessary because there is no implementation of <code>Source</code> for StaxReaders in JAXP 1.3. There
- * will be a <code>StaxResult</code> in JAXP 1.4 (JDK 1.6), and by the time that version is available, this class will
- * probably be deprecated.
+ * is a <code>StAXResult</code> in JAXP 1.4 (JDK 1.6), but this class is kept around for back-ward compatibility
+ * reasons.
  * <p/>
  * Even though <code>StaxResult</code> extends from <code>SAXResult</code>, calling the methods of
  * <code>SAXResult</code> is <strong>not supported</strong>. In general, the only supported operation on this class is
