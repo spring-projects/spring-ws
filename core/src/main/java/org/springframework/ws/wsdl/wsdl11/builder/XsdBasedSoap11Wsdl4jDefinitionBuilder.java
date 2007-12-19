@@ -290,6 +290,7 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilder extends AbstractSoap11Wsdl4jD
                             definition.addNamespace(prefix, elementName.getNamespaceURI());
                             break;
                         }
+                        i++;
                     }
                 }
                 Message message = definition.createMessage();
