@@ -27,13 +27,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Convenient base class for objects that use a <code>Transformer</code>. Subclasses can call
- * <code>createTransformer</code> to obtain a transformer. This should be done per thread (i.e. per incoming request),
- * because <code>Transformer</code> instances are not thread-safe.
+ * Convenient base class for objects that use a <code>Transformer</code>. Subclasses can call {@link
+ * #createTransformer()} or {@link #transform(Source, Result)}. This should be done per thread (i.e. per incoming
+ * request), because <code>Transformer</code> instances are not thread-safe.
  *
  * @author Arjen Poutsma
  * @see Transformer
- * @see #createTransformer()
  * @since 1.0.0
  */
 public abstract class TransformerObjectSupport {
