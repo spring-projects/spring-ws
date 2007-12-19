@@ -20,18 +20,19 @@ import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.sax.SAXSource;
 
-import org.springframework.xml.stream.StaxEventXmlReader;
-import org.springframework.xml.stream.StaxStreamXmlReader;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
+
+import org.springframework.xml.stream.StaxEventXmlReader;
+import org.springframework.xml.stream.StaxStreamXmlReader;
 
 /**
  * Implementation of the <code>Source</code> tagging interface for StAX readers. Can be constructed with a
  * <code>XMLEventReader</code> or a <code>XMLStreamReader</code>.
  * <p/>
- * This class is necessary because there is no implementation of <code>Source</code> for StaxReaders in JAXP 1.3. There
- * will be a <code>StaxSource</code> in JAXP 1.4 (JDK 1.6), and by the time that version is available, this class will
- * probably be deprecated.
+ * This class is necessary because there is no implementation of <code>Source</code> for StAX Readers in JAXP 1.3. There
+ * is a <code>StAXSource</code> in JAXP 1.4 (JDK 1.6), but this class is kept around for back-ward compatibility
+ * reasons.
  * <p/>
  * Even though <code>StaxSource</code> extends from <code>SAXSource</code>, calling the methods of
  * <code>SAXSource</code> is <strong>not supported</strong>. In general, the only supported operation on this class is
