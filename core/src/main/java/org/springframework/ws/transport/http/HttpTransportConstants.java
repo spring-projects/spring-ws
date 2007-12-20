@@ -44,6 +44,9 @@ public interface HttpTransportConstants extends TransportConstants {
     /** The "404 Not Found" status code. */
     int STATUS_NOT_FOUND = 404;
 
+    /** The "405 Method Not Allowed" status code. */
+    int STATUS_METHOD_NOT_ALLOWED = 405;
+
     /** The "500 Server Error" status code. */
     int STATUS_INTERNAL_SERVER_ERROR = 500;
 
