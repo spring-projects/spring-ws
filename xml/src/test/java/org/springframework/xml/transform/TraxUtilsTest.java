@@ -16,16 +16,8 @@
 
 package org.springframework.xml.transform;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.io.Writer;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLInputFactory;
@@ -45,31 +37,53 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.custommonkey.xmlunit.XMLTestCase;
-import org.easymock.MockControl;
-import org.w3c.dom.Document;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
-import org.xml.sax.ext.DefaultHandler2;
-import org.xml.sax.ext.LexicalHandler;
-import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 public class TraxUtilsTest extends XMLTestCase {
 
-    private SourceHandler sourceHandlerMock;
+    public void testIsStaxSourceInvalid() throws Exception {
+        assertFalse("A StAX Source", TraxUtils.isStaxSource(new DOMSource()));
+        assertFalse("A StAX Source", TraxUtils.isStaxSource(new SAXSource()));
+        assertFalse("A StAX Source", TraxUtils.isStaxSource(new StreamSource()));
+    }
 
-    private MockControl sourceHandlerControl;
+    public void testIsStaxSource() throws Exception {
+        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        String expected = "<element/>";
+        XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(expected));
+        StaxSource source = new StaxSource(streamReader);
 
-    private MockControl resultHandlerControl;
+        assertTrue("Not a StAX Source", TraxUtils.isStaxSource(source));
+    }
 
-    private ResultHandler resultHandlerMock;
+    public void testIsStaxSourceJaxp14() throws Exception {
+        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        String expected = "<element/>";
+        XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(expected));
+        StAXSource source = new StAXSource(streamReader);
 
-    protected void setUp() throws Exception {
-        sourceHandlerControl = MockControl.createControl(SourceHandler.class);
-        sourceHandlerMock = (SourceHandler) sourceHandlerControl.getMock();
-        resultHandlerControl = MockControl.createControl(ResultHandler.class);
-        resultHandlerMock = (ResultHandler) resultHandlerControl.getMock();
+        assertTrue("Not a StAX Source", TraxUtils.isStaxSource(source));
+    }
+
+    public void testIsStaxResultInvalid() throws Exception {
+        assertFalse("A StAX Result", TraxUtils.isStaxResult(new DOMResult()));
+        assertFalse("A StAX Result", TraxUtils.isStaxResult(new SAXResult()));
+        assertFalse("A StAX Result", TraxUtils.isStaxResult(new StreamResult()));
+    }
+
+    public void testIsStaxResult() throws Exception {
+        XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+        XMLStreamWriter streamWriter = outputFactory.createXMLStreamWriter(new StringWriter());
+        StaxResult result = new StaxResult(streamWriter);
+
+        assertTrue("Not a StAX Result", TraxUtils.isStaxResult(result));
+    }
+
+    public void testIsStaxResultJaxp14() throws Exception {
+        XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+        XMLStreamWriter streamWriter = outputFactory.createXMLStreamWriter(new StringWriter());
+        StAXResult result = new StAXResult(streamWriter);
+
+        assertTrue("Not a StAX Result", TraxUtils.isStaxResult(result));
     }
 
     public void testCreateStaxSourceStreamReader() throws Exception {
@@ -100,255 +114,79 @@ public class TraxUtilsTest extends XMLTestCase {
         assertXMLEqual(expected, result.toString());
     }
 
-    public void testHandleDomSource() throws Exception {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.newDocument();
-
-        DOMSource domSource = new DOMSource(document);
-        sourceHandlerMock.domSource(domSource.getNode());
-        sourceHandlerControl.replay();
-
-        TraxUtils.handleSource(domSource, sourceHandlerMock);
-
-        sourceHandlerControl.verify();
-    }
-
-    public void testHandleEmptyDomSource() throws Exception {
-        DOMSource domSource = new DOMSource();
-        sourceHandlerMock.domSource(domSource.getNode());
-        sourceHandlerControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        sourceHandlerControl.replay();
-
-        TraxUtils.handleSource(domSource, sourceHandlerMock);
-
-        sourceHandlerControl.verify();
-    }
-
-    public void testHandlerJaxp14StaxSourceStreamReader() throws Exception {
+    public void testGetXMLStreamReader() throws Exception {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader("<element/>"));
+        String expected = "<element/>";
+        XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(expected));
 
-        StAXSource staxSource = new StAXSource(streamReader);
-        sourceHandlerMock.staxSource(streamReader);
-        sourceHandlerControl.replay();
+        StaxSource source = new StaxSource(streamReader);
 
-        TraxUtils.handleSource(staxSource, sourceHandlerMock);
-
-        sourceHandlerControl.verify();
+        assertEquals("Invalid XMLStreamReader", streamReader, TraxUtils.getXMLStreamReader(source));
     }
 
-    public void testHandlerJaxp14StaxSourceEventReader() throws Exception {
+    public void testGetXMLStreamReaderJaxp14() throws Exception {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader("<element/>"));
+        String expected = "<element/>";
+        XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(expected));
 
-        StAXSource staxSource = new StAXSource(eventReader);
-        sourceHandlerMock.staxSource(eventReader);
-        sourceHandlerControl.replay();
+        StAXSource source = new StAXSource(streamReader);
 
-        TraxUtils.handleSource(staxSource, sourceHandlerMock);
-
-        sourceHandlerControl.verify();
+        assertEquals("Invalid XMLStreamReader", streamReader, TraxUtils.getXMLStreamReader(source));
     }
 
-    public void testHandlerStaxSourceStreamReader() throws Exception {
+    public void testGetXMLEventReader() throws Exception {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader("<element/>"));
+        String expected = "<element/>";
+        XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader(expected));
 
-        StaxSource staxSource = new StaxSource(streamReader);
-        sourceHandlerMock.staxSource(streamReader);
-        sourceHandlerControl.replay();
+        StaxSource source = new StaxSource(eventReader);
 
-        TraxUtils.handleSource(staxSource, sourceHandlerMock);
-
-        sourceHandlerControl.verify();
+        assertEquals("Invalid XMLEventReader", eventReader, TraxUtils.getXMLEventReader(source));
     }
 
-    public void testHandlerStaxSourceEventReader() throws Exception {
+    public void testGetXMLEventReaderJaxp14() throws Exception {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader("<element/>"));
+        String expected = "<element/>";
+        XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader(expected));
 
-        StaxSource staxSource = new StaxSource(eventReader);
-        sourceHandlerMock.staxSource(eventReader);
-        sourceHandlerControl.replay();
+        StAXSource source = new StAXSource(eventReader);
 
-        TraxUtils.handleSource(staxSource, sourceHandlerMock);
-
-        sourceHandlerControl.verify();
+        assertEquals("Invalid XMLEventReader", eventReader, TraxUtils.getXMLEventReader(source));
     }
 
-    public void testHandlerSaxSource() throws Exception {
-        XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-        InputSource inputSource = new InputSource(new StringReader("<element/>"));
-
-        SAXSource saxSource = new SAXSource(xmlReader, inputSource);
-        sourceHandlerMock.saxSource(xmlReader, inputSource);
-        sourceHandlerControl.replay();
-
-        TraxUtils.handleSource(saxSource, sourceHandlerMock);
-
-        sourceHandlerControl.verify();
-    }
-
-    public void testHandlerEmptySaxSource() throws Exception {
-        SAXSource saxSource = new SAXSource();
-        sourceHandlerMock.saxSource(null, null);
-        sourceHandlerControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        sourceHandlerControl.replay();
-
-        TraxUtils.handleSource(saxSource, sourceHandlerMock);
-
-        sourceHandlerControl.verify();
-    }
-
-    public void testHandleStreamSourceInputStream() throws Exception {
-        InputStream inputStream = new ByteArrayInputStream("<element/>".getBytes("UTF-8"));
-
-        StreamSource streamSource = new StreamSource(inputStream);
-        sourceHandlerMock.streamSource(inputStream);
-        sourceHandlerControl.replay();
-
-        TraxUtils.handleSource(streamSource, sourceHandlerMock);
-
-        sourceHandlerControl.verify();
-    }
-
-    public void testHandleStreamSourceReader() throws Exception {
-        Reader reader = new StringReader("<element/>");
-
-        StreamSource streamSource = new StreamSource(reader);
-        sourceHandlerMock.streamSource(reader);
-        sourceHandlerControl.replay();
-
-        TraxUtils.handleSource(streamSource, sourceHandlerMock);
-
-        sourceHandlerControl.verify();
-    }
-
-    public void testHandleDomResult() throws Exception {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.newDocument();
-
-        DOMResult domResult = new DOMResult(document);
-        resultHandlerMock.domResult(domResult.getNode());
-        resultHandlerControl.replay();
-
-        TraxUtils.handleResult(domResult, resultHandlerMock);
-
-        resultHandlerControl.verify();
-    }
-
-    public void testHandleEmptyDomResult() throws Exception {
-        DOMResult domResult = new DOMResult();
-        resultHandlerMock.domResult(domResult.getNode());
-        resultHandlerControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        resultHandlerControl.replay();
-
-        TraxUtils.handleResult(domResult, resultHandlerMock);
-
-        resultHandlerControl.verify();
-    }
-
-    public void testHandlerJaxp14StaxResultStreamReader() throws Exception {
+    public void testGetXMLStreamWriter() throws Exception {
         XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
         XMLStreamWriter streamWriter = outputFactory.createXMLStreamWriter(new StringWriter());
 
-        StAXResult stAXResult = new StAXResult(streamWriter);
-        resultHandlerMock.staxResult(streamWriter);
-        resultHandlerControl.replay();
+        StaxResult result = new StaxResult(streamWriter);
 
-        TraxUtils.handleResult(stAXResult, resultHandlerMock);
-
-        resultHandlerControl.verify();
+        assertEquals("Invalid XMLStreamWriter", streamWriter, TraxUtils.getXMLStreamWriter(result));
     }
 
-    public void testHandlerJaxp14StaxResultEventReader() throws Exception {
-        XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-        XMLEventWriter eventWriter = outputFactory.createXMLEventWriter(new StringWriter());
-
-        StAXResult stAXResult = new StAXResult(eventWriter);
-        resultHandlerMock.staxResult(eventWriter);
-        resultHandlerControl.replay();
-
-        TraxUtils.handleResult(stAXResult, resultHandlerMock);
-
-        resultHandlerControl.verify();
-    }
-
-    public void testHandlerStaxResultStreamReader() throws Exception {
+    public void testGetXMLStreamWriterJaxp14() throws Exception {
         XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
         XMLStreamWriter streamWriter = outputFactory.createXMLStreamWriter(new StringWriter());
 
-        StaxResult staxResult = new StaxResult(streamWriter);
-        resultHandlerMock.staxResult(streamWriter);
-        resultHandlerControl.replay();
+        StAXResult result = new StAXResult(streamWriter);
 
-        TraxUtils.handleResult(staxResult, resultHandlerMock);
-
-        resultHandlerControl.verify();
+        assertEquals("Invalid XMLStreamWriter", streamWriter, TraxUtils.getXMLStreamWriter(result));
     }
 
-    public void testHandlerStaxResultEventReader() throws Exception {
+    public void testGetXMLEventWriter() throws Exception {
         XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
         XMLEventWriter eventWriter = outputFactory.createXMLEventWriter(new StringWriter());
 
-        StaxResult staxResult = new StaxResult(eventWriter);
-        resultHandlerMock.staxResult(eventWriter);
-        resultHandlerControl.replay();
+        StaxResult result = new StaxResult(eventWriter);
 
-        TraxUtils.handleResult(staxResult, resultHandlerMock);
-
-        resultHandlerControl.verify();
+        assertEquals("Invalid XMLStreamWriter", eventWriter, TraxUtils.getXMLEventWriter(result));
     }
 
-    public void testHandlerSaxResult() throws Exception {
-        ContentHandler contentHandler = new DefaultHandler();
-        LexicalHandler lexicalHandler = new DefaultHandler2();
+    public void testGetXMLEventWriterJaxp14() throws Exception {
+        XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+        XMLEventWriter eventWriter = outputFactory.createXMLEventWriter(new StringWriter());
 
-        SAXResult saxResult = new SAXResult(contentHandler);
-        saxResult.setLexicalHandler(lexicalHandler);
-        resultHandlerMock.saxResult(contentHandler, lexicalHandler);
-        resultHandlerControl.replay();
+        StAXResult result = new StAXResult(eventWriter);
 
-        TraxUtils.handleResult(saxResult, resultHandlerMock);
-
-        resultHandlerControl.verify();
+        assertEquals("Invalid XMLEventWriter", eventWriter, TraxUtils.getXMLEventWriter(result));
     }
-
-    public void testHandlerEmptySaxResult() throws Exception {
-        SAXResult saxResult = new SAXResult();
-        resultHandlerMock.saxResult(null, null);
-        resultHandlerControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        resultHandlerControl.replay();
-
-        TraxUtils.handleResult(saxResult, resultHandlerMock);
-
-        resultHandlerControl.verify();
-    }
-
-    public void testHandleStreamResultOutputStream() throws Exception {
-        OutputStream outputStream = new ByteArrayOutputStream();
-
-        StreamResult streamResult = new StreamResult(outputStream);
-        resultHandlerMock.streamResult(outputStream);
-        resultHandlerControl.replay();
-
-        TraxUtils.handleResult(streamResult, resultHandlerMock);
-
-        resultHandlerControl.verify();
-    }
-
-    public void testHandleStreamResultWriter() throws Exception {
-        Writer writer = new StringWriter();
-
-        StreamResult streamResult = new StreamResult(writer);
-        resultHandlerMock.streamResult(writer);
-        resultHandlerControl.replay();
-
-        TraxUtils.handleResult(streamResult, resultHandlerMock);
-
-        resultHandlerControl.verify();
-    }
-
 }
