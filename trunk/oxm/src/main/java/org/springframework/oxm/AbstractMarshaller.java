@@ -34,14 +34,12 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.util.Assert;
-import org.springframework.xml.transform.StaxResult;
-import org.springframework.xml.transform.StaxSource;
 import org.w3c.dom.Node;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -49,6 +47,10 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
+
+import org.springframework.util.Assert;
+import org.springframework.xml.transform.StaxSource;
+import org.springframework.xml.transform.TraxUtils;
 
 /**
  * Abstract implementation of the <code>Marshaller</code> and <code>Unmarshaller</code> interface. This implementation
@@ -60,9 +62,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public abstract class AbstractMarshaller implements Marshaller, Unmarshaller {
 
-    /**
-     * Logger available to subclasses.
-     */
+    /** Logger available to subclasses. */
     protected final Log logger = LogFactory.getLog(getClass());
 
     private DocumentBuilderFactory documentBuilderFactory;
@@ -87,8 +87,8 @@ public abstract class AbstractMarshaller implements Marshaller, Unmarshaller {
         if (result instanceof DOMResult) {
             marshalDomResult(graph, (DOMResult) result);
         }
-        else if (result instanceof StaxResult) {
-            marshalStaxResult(graph, (StaxResult) result);
+        else if (TraxUtils.isStaxResult(result)) {
+            marshalStaxResult(graph, result);
         }
         else if (result instanceof SAXResult) {
             marshalSaxResult(graph, (SAXResult) result);
@@ -121,8 +121,8 @@ public abstract class AbstractMarshaller implements Marshaller, Unmarshaller {
         if (source instanceof DOMSource) {
             return unmarshalDomSource((DOMSource) source);
         }
-        else if (source instanceof StaxSource) {
-            return unmarshalStaxSource((StaxSource) source);
+        else if (TraxUtils.isStaxSource(source)) {
+            return unmarshalStaxSource(source);
         }
         else if (source instanceof SAXSource) {
             return unmarshalSaxSource((SAXSource) source);
@@ -198,20 +198,24 @@ public abstract class AbstractMarshaller implements Marshaller, Unmarshaller {
      * the <code>StaxResult</code>.
      *
      * @param graph      the root of the object graph to marshal
-     * @param staxResult the <code>StaxResult</code>
+     * @param staxResult a Spring-WS {@link StaxSource} or JAXP 1.4 {@link StAXSource}
      * @throws XmlMappingException      if the given object cannot be marshalled to the result
      * @throws IllegalArgumentException if the <code>domResult</code> is empty
      * @see #marshalDomNode(Object,org.w3c.dom.Node)
      */
-    protected void marshalStaxResult(Object graph, StaxResult staxResult) throws XmlMappingException {
-        if (staxResult.getXMLStreamWriter() != null) {
-            marshalXmlStreamWriter(graph, staxResult.getXMLStreamWriter());
-        }
-        else if (staxResult.getXMLEventWriter() != null) {
-            marshalXmlEventWriter(graph, staxResult.getXMLEventWriter());
+    protected void marshalStaxResult(Object graph, Result staxResult) throws XmlMappingException {
+        XMLStreamWriter streamWriter = TraxUtils.getXMLStreamWriter(staxResult);
+        if (streamWriter != null) {
+            marshalXmlStreamWriter(graph, streamWriter);
         }
         else {
-            throw new IllegalArgumentException("StaxResult contains neither XMLStreamWriter nor XMLEventConsumer");
+            XMLEventWriter eventWriter = TraxUtils.getXMLEventWriter(staxResult);
+            if (eventWriter != null) {
+                marshalXmlEventWriter(graph, eventWriter);
+            }
+            else {
+                throw new IllegalArgumentException("StaxResult contains neither XMLStreamWriter nor XMLEventConsumer");
+            }
         }
     }
 
@@ -296,15 +300,19 @@ public abstract class AbstractMarshaller implements Marshaller, Unmarshaller {
      * @return the object graph
      * @throws XmlMappingException if the given source cannot be mapped to an object
      */
-    protected Object unmarshalStaxSource(StaxSource staxSource) throws XmlMappingException {
-        if (staxSource.getXMLStreamReader() != null) {
-            return unmarshalXmlStreamReader(staxSource.getXMLStreamReader());
-        }
-        else if (staxSource.getXMLEventReader() != null) {
-            return unmarshalXmlEventReader(staxSource.getXMLEventReader());
+    protected Object unmarshalStaxSource(Source staxSource) throws XmlMappingException {
+        XMLStreamReader streamReader = TraxUtils.getXMLStreamReader(staxSource);
+        if (streamReader != null) {
+            return unmarshalXmlStreamReader(streamReader);
         }
         else {
-            throw new IllegalArgumentException("StaxSource contains neither XMLStreamReader nor XMLEventReader");
+            XMLEventReader eventReader = TraxUtils.getXMLEventReader(staxSource);
+            if (eventReader != null) {
+                return unmarshalXmlEventReader(eventReader);
+            }
+            else {
+                throw new IllegalArgumentException("StaxSource contains neither XMLStreamReader nor XMLEventReader");
+            }
         }
     }
 

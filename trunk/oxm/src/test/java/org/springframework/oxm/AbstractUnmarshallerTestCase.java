@@ -25,16 +25,18 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.TestCase;
-import org.springframework.xml.transform.StaxSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
+
+import org.springframework.xml.transform.StaxSource;
 
 public abstract class AbstractUnmarshallerTestCase extends TestCase {
 
@@ -101,6 +103,22 @@ public abstract class AbstractUnmarshallerTestCase extends TestCase {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader(INPUT_STRING));
         StaxSource source = new StaxSource(eventReader);
+        Object flights = unmarshaller.unmarshal(source);
+        testFlights(flights);
+    }
+
+    public void testUnmarshalJaxp14StaxSourceXmlStreamReader() throws Exception {
+        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(INPUT_STRING));
+        StAXSource source = new StAXSource(streamReader);
+        Object flights = unmarshaller.unmarshal(source);
+        testFlights(flights);
+    }
+
+    public void testUnmarshalJaxp14StaxSourceXmlEventReader() throws Exception {
+        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader(INPUT_STRING));
+        StAXSource source = new StAXSource(eventReader);
         Object flights = unmarshaller.unmarshal(source);
         testFlights(flights);
     }

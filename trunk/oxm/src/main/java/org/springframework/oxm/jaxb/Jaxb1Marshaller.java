@@ -19,12 +19,19 @@ import javax.xml.bind.Element;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLEventWriter;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.xml.transform.StaxResult;
+import org.springframework.xml.transform.StaxSource;
+import org.springframework.xml.transform.TraxUtils;
 
 /**
  * Implementation of the <code>Marshaller</code> interface for JAXB 1.0.
@@ -93,6 +100,22 @@ public class Jaxb1Marshaller extends AbstractJaxbMarshaller implements BeanClass
     }
 
     public void marshal(Object graph, Result result) {
+        if (TraxUtils.isStaxResult(result)) {
+            XMLStreamWriter streamWriter = TraxUtils.getXMLStreamWriter(result);
+            if (streamWriter != null) {
+                result = new StaxResult(streamWriter);
+            }
+            else {
+                XMLEventWriter eventWriter = TraxUtils.getXMLEventWriter(result);
+                if (eventWriter != null) {
+                    result = new StaxResult(eventWriter);
+                }
+                else {
+                    throw new IllegalArgumentException(
+                            "StAXResult contains neither XMLStreamWriter nor XMLEventWriter");
+                }
+            }
+        }
         try {
             createMarshaller().marshal(graph, result);
         }
@@ -102,6 +125,22 @@ public class Jaxb1Marshaller extends AbstractJaxbMarshaller implements BeanClass
     }
 
     public Object unmarshal(Source source) {
+        if (TraxUtils.isStaxSource(source)) {
+            XMLStreamReader streamReader = TraxUtils.getXMLStreamReader(source);
+            if (streamReader != null) {
+                source = new StaxSource(streamReader);
+            }
+            else {
+                XMLEventReader eventReader = TraxUtils.getXMLEventReader(source);
+                if (eventReader != null) {
+                    source = new StaxSource(eventReader);
+                }
+                else {
+                    throw new IllegalArgumentException(
+                            "StAXSource contains neither XMLStreamReader nor XMLEventReader");
+                }
+            }
+        }
         try {
             return createUnmarshaller().unmarshal(source);
         }
@@ -109,4 +148,5 @@ public class Jaxb1Marshaller extends AbstractJaxbMarshaller implements BeanClass
             throw convertJaxbException(ex);
         }
     }
+
 }

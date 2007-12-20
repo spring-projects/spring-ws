@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <artifactId>spring-ws-parent</artifactId>
         <groupId>org.springframework.ws</groupId>
@@ -21,8 +22,8 @@
                         <configuration>
                             <tasks>
                                 <ant antfile="${basedir}/build-maven2.xml" inheritRefs="true">
-                                    <property name="maven.test.skip" value="${maven.test.skip}" />
-                                    <target name="generate-test-sources" />
+                                    <property name="maven.test.skip" value="${maven.test.skip}"/>
+                                    <target name="generate-test-sources"/>
                                 </ant>
                             </tasks>
                             <testSourceRoot>${project.build.directory}/generated-sources/test/java</testSourceRoot>
@@ -37,8 +38,8 @@
                         <configuration>
                             <tasks>
                                 <ant antfile="${basedir}/build-maven2.xml" inheritRefs="true">
-                                    <property name="maven.test.skip" value="${maven.test.skip}" />
-                                    <target name="test-compile" />
+                                    <property name="maven.test.skip" value="${maven.test.skip}"/>
+                                    <target name="test-compile"/>
                                 </ant>
                             </tasks>
                         </configuration>
@@ -100,23 +101,15 @@
         </dependency>
         <!-- XML handling dependencies -->
         <dependency>
-            <groupId>xml-apis</groupId>
-            <artifactId>xml-apis</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>stax</groupId>
-            <artifactId>stax-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>wstx-asl</artifactId>
-            <scope>provided</scope>
+            <scope>test</scope>
         </dependency>
         <dependency>
+            <!-- Xerces required for Castor -->
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
-            <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- O/X Mapping dependencies -->
         <!-- Castor -->
