@@ -16,57 +16,56 @@
 
 package org.springframework.ws.transport.http;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collections;
 import java.util.Iterator;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
+import com.sun.net.httpserver.HttpExchange;
+
+import org.springframework.util.Assert;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractReceiverConnection;
 import org.springframework.ws.transport.EndpointAwareWebServiceConnection;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
-import org.springframework.ws.transport.support.EnumerationIterator;
 
 /**
- * Implementation of {@link WebServiceConnection} that is based on the Servlet API.
+ * Implementation of {@link WebServiceConnection} that is based on the Java 6 HttpServer {@link HttpExchange}.
  *
  * @author Arjen Poutsma
- * @since 1.0.0
+ * @since 1.5.0
  */
-public class HttpServletConnection extends AbstractReceiverConnection
+public class HttpExchangeConnection extends AbstractReceiverConnection
         implements EndpointAwareWebServiceConnection, FaultAwareWebServiceConnection {
 
-    private final HttpServletRequest httpServletRequest;
+    private final HttpExchange httpExchange;
 
-    private final HttpServletResponse httpServletResponse;
+    private ByteArrayOutputStream responseBuffer;
 
-    private boolean statusCodeSet = false;
+    private int responseStatusCode = HttpTransportConstants.STATUS_ACCEPTED;
 
-    /**
-     * Constructs a new servlet connection with the given <code>HttpServletRequest</code> and
-     * <code>HttpServletResponse</code>.
-     */
-    protected HttpServletConnection(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        this.httpServletRequest = httpServletRequest;
-        this.httpServletResponse = httpServletResponse;
+    /** Constructs a new exchange connection with the given <code>HttpExchange</code>. */
+    protected HttpExchangeConnection(HttpExchange httpExchange) {
+        Assert.notNull(httpExchange, "'httpExchange' must not be null");
+        this.httpExchange = httpExchange;
     }
 
-    /** Returns the <code>HttpServletRequest</code> for this connection. */
-    public HttpServletRequest getHttpServletRequest() {
-        return httpServletRequest;
-    }
-
-    /** Returns the <code>HttpServletResponse</code> for this connection. */
-    public HttpServletResponse getHttpServletResponse() {
-        return httpServletResponse;
+    /** Returns the <code>HttpExchange</code> for this connection. */
+    public HttpExchange getHttpExchange() {
+        return httpExchange;
     }
 
     public void endpointNotFound() {
-        getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_NOT_FOUND);
-        statusCodeSet = true;
+        responseStatusCode = HttpTransportConstants.STATUS_NOT_FOUND;
+    }
+
+    protected void onClose() throws IOException {
+        httpExchange.close();
     }
 
     /*
@@ -86,37 +85,38 @@ public class HttpServletConnection extends AbstractReceiverConnection
      */
 
     protected Iterator getRequestHeaderNames() throws IOException {
-        return new EnumerationIterator(getHttpServletRequest().getHeaderNames());
+        return httpExchange.getRequestHeaders().keySet().iterator();
     }
 
     protected Iterator getRequestHeaders(String name) throws IOException {
-        return new EnumerationIterator(getHttpServletRequest().getHeaders(name));
+        List headers = httpExchange.getRequestHeaders().get(name);
+        return headers != null ? headers.iterator() : Collections.EMPTY_LIST.iterator();
     }
 
     protected InputStream getRequestInputStream() throws IOException {
-        return getHttpServletRequest().getInputStream();
+        return httpExchange.getRequestBody();
     }
 
     /*
-    * Sending response
-    */
+     * Sending response
+     */
 
     protected void addResponseHeader(String name, String value) throws IOException {
-        getHttpServletResponse().addHeader(name, value);
+        httpExchange.getResponseHeaders().add(name, value);
     }
 
     protected OutputStream getResponseOutputStream() throws IOException {
-        return getHttpServletResponse().getOutputStream();
+        if (responseBuffer == null) {
+            responseBuffer = new ByteArrayOutputStream();
+        }
+        return responseBuffer;
     }
 
     protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-        statusCodeSet = true;
-    }
-
-    public void onClose() throws IOException {
-        if (!statusCodeSet) {
-            getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_ACCEPTED);
-        }
+        byte[] buf = responseBuffer.toByteArray();
+        httpExchange.sendResponseHeaders(responseStatusCode, buf.length);
+        OutputStream responseBody = httpExchange.getResponseBody();
+        FileCopyUtils.copy(buf, responseBody);
     }
 
     /*
@@ -124,16 +124,16 @@ public class HttpServletConnection extends AbstractReceiverConnection
      */
 
     public boolean hasFault() throws IOException {
-        return false;
+        return responseStatusCode == HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR;
     }
 
     public void setFault(boolean fault) throws IOException {
         if (fault) {
-            getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR);
+            responseStatusCode = HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR;
         }
         else {
-            getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_OK);
+            responseStatusCode = HttpTransportConstants.STATUS_OK;
         }
-        statusCodeSet = true;
     }
+
 }
