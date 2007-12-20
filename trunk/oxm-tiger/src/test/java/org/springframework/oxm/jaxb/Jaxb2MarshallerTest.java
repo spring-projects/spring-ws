@@ -16,25 +16,19 @@
 
 package org.springframework.oxm.jaxb;
 
-import org.custommonkey.xmlunit.XMLTestCase;
-import static org.easymock.EasyMock.*;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.oxm.XmlMappingException;
-import org.springframework.oxm.jaxb2.FlightType;
-import org.springframework.oxm.jaxb2.Flights;
-import org.springframework.oxm.jaxb2.ObjectFactory;
-import org.springframework.oxm.mime.MimeContainer;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.xml.transform.StaxResult;
-import org.springframework.xml.transform.StringResult;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Text;
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.Locator;
-
+import java.awt.*;
+import java.io.ByteArrayOutputStream;
+import java.io.StringWriter;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.URI;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.UUID;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.xml.bind.JAXBElement;
@@ -50,20 +44,28 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.stax.StAXResult;
 import javax.xml.transform.stream.StreamResult;
-import java.awt.*;
-import java.io.ByteArrayOutputStream;
-import java.io.StringWriter;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.net.URI;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.UUID;
+
+import org.custommonkey.xmlunit.XMLTestCase;
+import static org.easymock.EasyMock.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.Locator;
+
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.oxm.XmlMappingException;
+import org.springframework.oxm.jaxb2.FlightType;
+import org.springframework.oxm.jaxb2.Flights;
+import org.springframework.oxm.jaxb2.ObjectFactory;
+import org.springframework.oxm.mime.MimeContainer;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.xml.transform.StaxResult;
+import org.springframework.xml.transform.StringResult;
 
 public class Jaxb2MarshallerTest extends XMLTestCase {
 
@@ -134,6 +136,24 @@ public class Jaxb2MarshallerTest extends XMLTestCase {
         StringWriter writer = new StringWriter();
         XMLEventWriter eventWriter = outputFactory.createXMLEventWriter(writer);
         StaxResult result = new StaxResult(eventWriter);
+        marshaller.marshal(flights, result);
+        assertXMLEqual("Marshaller writes invalid StreamResult", EXPECTED_STRING, writer.toString());
+    }
+
+    public void testMarshalStaxResultXMLStreamWriterJaxp14() throws Exception {
+        XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+        StringWriter writer = new StringWriter();
+        XMLStreamWriter streamWriter = outputFactory.createXMLStreamWriter(writer);
+        StAXResult result = new StAXResult(streamWriter);
+        marshaller.marshal(flights, result);
+        assertXMLEqual("Marshaller writes invalid StreamResult", EXPECTED_STRING, writer.toString());
+    }
+
+    public void testMarshalStaxResultXMLEventWriterJaxp14() throws Exception {
+        XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+        StringWriter writer = new StringWriter();
+        XMLEventWriter eventWriter = outputFactory.createXMLEventWriter(writer);
+        StAXResult result = new StAXResult(eventWriter);
         marshaller.marshal(flights, result);
         assertXMLEqual("Marshaller writes invalid StreamResult", EXPECTED_STRING, writer.toString());
     }
@@ -236,8 +256,9 @@ public class Jaxb2MarshallerTest extends XMLTestCase {
     }
 
     public void testSupportsPrimitives() throws Exception {
-        Method primitives = getClass().getDeclaredMethod("primitives", JAXBElement.class, JAXBElement.class, JAXBElement.class,
-                JAXBElement.class, JAXBElement.class, JAXBElement.class, JAXBElement.class, JAXBElement.class);
+        Method primitives = getClass().getDeclaredMethod("primitives", JAXBElement.class, JAXBElement.class,
+                JAXBElement.class, JAXBElement.class, JAXBElement.class, JAXBElement.class, JAXBElement.class,
+                JAXBElement.class);
         Type[] types = primitives.getGenericParameterTypes();
         for (int i = 0; i < types.length; i++) {
             ParameterizedType type = (ParameterizedType) types[i];
@@ -246,9 +267,10 @@ public class Jaxb2MarshallerTest extends XMLTestCase {
     }
 
     public void testSupportsStandards() throws Exception {
-        Method standards = getClass().getDeclaredMethod("standards", JAXBElement.class, JAXBElement.class, JAXBElement.class,
-                JAXBElement.class, JAXBElement.class, JAXBElement.class, JAXBElement.class, JAXBElement.class, JAXBElement.class, JAXBElement.class,
-                JAXBElement.class, JAXBElement.class, JAXBElement.class, JAXBElement.class);
+        Method standards = getClass().getDeclaredMethod("standards", JAXBElement.class, JAXBElement.class,
+                JAXBElement.class, JAXBElement.class, JAXBElement.class, JAXBElement.class, JAXBElement.class,
+                JAXBElement.class, JAXBElement.class, JAXBElement.class, JAXBElement.class, JAXBElement.class,
+                JAXBElement.class, JAXBElement.class);
         Type[] types = standards.getGenericParameterTypes();
         for (int i = 0; i < types.length; i++) {
             ParameterizedType type = (ParameterizedType) types[i];
@@ -279,15 +301,29 @@ public class Jaxb2MarshallerTest extends XMLTestCase {
         assertTrue("No XML written", result.toString().length() > 0);
     }
 
-    private void primitives(JAXBElement<Boolean> bool, JAXBElement<Byte> aByte, JAXBElement<Short> aShort,
-                            JAXBElement<Integer> anInteger, JAXBElement<Long> aLong, JAXBElement<Float> aFloat,
-                            JAXBElement<Double> aDouble, JAXBElement<byte[]> byteArray) {
+    private void primitives(JAXBElement<Boolean> bool,
+                            JAXBElement<Byte> aByte,
+                            JAXBElement<Short> aShort,
+                            JAXBElement<Integer> anInteger,
+                            JAXBElement<Long> aLong,
+                            JAXBElement<Float> aFloat,
+                            JAXBElement<Double> aDouble,
+                            JAXBElement<byte[]> byteArray) {
     }
 
-    private void standards(JAXBElement<String> string, JAXBElement<BigInteger> integer, JAXBElement<BigDecimal> decimal,
-                           JAXBElement<Calendar> calendar, JAXBElement<Date> date, JAXBElement<QName> qName,
-                           JAXBElement<URI> uri, JAXBElement<XMLGregorianCalendar> xmlGregorianCalendar,
-                           JAXBElement<Duration> duration, JAXBElement<Object> object, JAXBElement<Image> image,
-                           JAXBElement<DataHandler> dataHandler, JAXBElement<Source> source, JAXBElement<UUID> uuid) {
+    private void standards(JAXBElement<String> string,
+                           JAXBElement<BigInteger> integer,
+                           JAXBElement<BigDecimal> decimal,
+                           JAXBElement<Calendar> calendar,
+                           JAXBElement<Date> date,
+                           JAXBElement<QName> qName,
+                           JAXBElement<URI> uri,
+                           JAXBElement<XMLGregorianCalendar> xmlGregorianCalendar,
+                           JAXBElement<Duration> duration,
+                           JAXBElement<Object> object,
+                           JAXBElement<Image> image,
+                           JAXBElement<DataHandler> dataHandler,
+                           JAXBElement<Source> source,
+                           JAXBElement<UUID> uuid) {
     }
 }
