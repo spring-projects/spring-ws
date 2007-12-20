@@ -16,7 +16,6 @@
 
 package org.springframework.xml.transform;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
@@ -37,12 +36,6 @@ import org.springframework.xml.JaxpVersion;
  * @since 1.5.0
  */
 public abstract class TraxUtils {
-
-    private static DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-
-    static {
-        documentBuilderFactory.setNamespaceAware(true);
-    }
 
     /**
      * Indicates whether the given {@link Source} is a StAX Source.
