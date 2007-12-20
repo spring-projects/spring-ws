@@ -16,7 +16,7 @@
 
 package org.springframework.oxm.jaxb;
 
-import java.awt.Image;
+import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,6 +52,10 @@ import javax.xml.bind.attachment.AttachmentUnmarshaller;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLEventWriter;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.validation.Schema;
@@ -69,8 +73,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.xml.transform.StaxResult;
-import org.springframework.xml.transform.StaxSource;
+import org.springframework.xml.transform.TraxUtils;
 import org.springframework.xml.validation.SchemaLoaderUtils;
 
 /**
@@ -369,8 +372,8 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
             if (mtomEnabled && mimeContainer != null) {
                 marshaller.setAttachmentMarshaller(new Jaxb2AttachmentMarshaller(mimeContainer));
             }
-            if (result instanceof StaxResult) {
-                marshalStaxResult(marshaller, graph, (StaxResult) result);
+            if (TraxUtils.isStaxResult(result)) {
+                marshalStaxResult(marshaller, graph, result);
             }
             else {
                 marshaller.marshal(graph, result);
@@ -381,16 +384,19 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
         }
     }
 
-    private void marshalStaxResult(Marshaller jaxbMarshaller, Object graph, StaxResult staxResult)
-            throws JAXBException {
-        if (staxResult.getXMLStreamWriter() != null) {
-            jaxbMarshaller.marshal(graph, staxResult.getXMLStreamWriter());
-        }
-        else if (staxResult.getXMLEventWriter() != null) {
-            jaxbMarshaller.marshal(graph, staxResult.getXMLEventWriter());
+    private void marshalStaxResult(Marshaller jaxbMarshaller, Object graph, Result staxResult) throws JAXBException {
+        XMLStreamWriter streamWriter = TraxUtils.getXMLStreamWriter(staxResult);
+        if (streamWriter != null) {
+            jaxbMarshaller.marshal(graph, streamWriter);
         }
         else {
-            throw new IllegalArgumentException("StaxResult contains neither XMLStreamWriter nor XMLEventConsumer");
+            XMLEventWriter eventWriter = TraxUtils.getXMLEventWriter(staxResult);
+            if (eventWriter != null) {
+                jaxbMarshaller.marshal(graph, eventWriter);
+            }
+            else {
+                throw new IllegalArgumentException("StAX Result contains neither XMLStreamWriter nor XMLEventConsumer");
+            }
         }
     }
 
@@ -408,8 +414,8 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
             if (mtomEnabled && mimeContainer != null) {
                 unmarshaller.setAttachmentUnmarshaller(new Jaxb2AttachmentUnmarshaller(mimeContainer));
             }
-            if (source instanceof StaxSource) {
-                return unmarshalStaxSource(unmarshaller, (StaxSource) source);
+            if (TraxUtils.isStaxSource(source)) {
+                return unmarshalStaxSource(unmarshaller, source);
             }
             else {
                 return unmarshaller.unmarshal(source);
@@ -420,15 +426,19 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
         }
     }
 
-    private Object unmarshalStaxSource(Unmarshaller jaxbUnmarshaller, StaxSource staxSource) throws JAXBException {
-        if (staxSource.getXMLStreamReader() != null) {
-            return jaxbUnmarshaller.unmarshal(staxSource.getXMLStreamReader());
-        }
-        else if (staxSource.getXMLEventReader() != null) {
-            return jaxbUnmarshaller.unmarshal(staxSource.getXMLEventReader());
+    private Object unmarshalStaxSource(Unmarshaller jaxbUnmarshaller, Source staxSource) throws JAXBException {
+        XMLStreamReader streamReader = TraxUtils.getXMLStreamReader(staxSource);
+        if (streamReader != null) {
+            return jaxbUnmarshaller.unmarshal(streamReader);
         }
         else {
-            throw new IllegalArgumentException("StaxSource contains neither XMLStreamReader nor XMLEventReader");
+            XMLEventReader eventReader = TraxUtils.getXMLEventReader(staxSource);
+            if (eventReader != null) {
+                return jaxbUnmarshaller.unmarshal(eventReader);
+            }
+            else {
+                throw new IllegalArgumentException("StaxSource contains neither XMLStreamReader nor XMLEventReader");
+            }
         }
     }
 

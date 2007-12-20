@@ -29,10 +29,18 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.jaxb2.FlightType;
@@ -40,12 +48,6 @@ import org.springframework.oxm.jaxb2.Flights;
 import org.springframework.oxm.mime.MimeContainer;
 import org.springframework.xml.transform.StaxSource;
 import org.springframework.xml.transform.StringSource;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Text;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 public class Jaxb2UnmarshallerTest extends TestCase {
 
@@ -108,6 +110,22 @@ public class Jaxb2UnmarshallerTest extends TestCase {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader(INPUT_STRING));
         StaxSource source = new StaxSource(eventReader);
+        Object flights = unmarshaller.unmarshal(source);
+        testFlights(flights);
+    }
+
+    public void testUnmarshalStaxSourceXmlStreamReaderJaxp14() throws Exception {
+        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(INPUT_STRING));
+        StAXSource source = new StAXSource(streamReader);
+        Object flights = unmarshaller.unmarshal(source);
+        testFlights(flights);
+    }
+
+    public void testUnmarshalStaxSourceXmlEventReaderJaxp14() throws Exception {
+        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader(INPUT_STRING));
+        StAXSource source = new StAXSource(eventReader);
         Object flights = unmarshaller.unmarshal(source);
         testFlights(flights);
     }
