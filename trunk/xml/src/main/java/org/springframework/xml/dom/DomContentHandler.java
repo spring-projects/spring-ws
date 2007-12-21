@@ -25,8 +25,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
 import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 import org.springframework.util.Assert;
 
@@ -37,7 +38,7 @@ import org.springframework.util.Assert;
  * @see org.w3c.dom.Node
  * @since 1.0.0
  */
-public class DomContentHandler extends DefaultHandler {
+public class DomContentHandler implements ContentHandler {
 
     private final Document document;
 
@@ -109,4 +110,28 @@ public class DomContentHandler extends DefaultHandler {
         elements.add(element);
     }
 
+    /*
+     * Unsupported
+     */
+
+    public void setDocumentLocator(Locator locator) {
+    }
+
+    public void startDocument() throws SAXException {
+    }
+
+    public void endDocument() throws SAXException {
+    }
+
+    public void startPrefixMapping(String prefix, String uri) throws SAXException {
+    }
+
+    public void endPrefixMapping(String prefix) throws SAXException {
+    }
+
+    public void ignorableWhitespace(char ch[], int start, int length) throws SAXException {
+    }
+
+    public void skippedEntity(String name) throws SAXException {
+    }
 }

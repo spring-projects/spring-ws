@@ -51,15 +51,23 @@ public class DomContentHandlerTest extends XMLTestCase {
     private DocumentBuilder documentBuilder;
 
     protected void setUp() throws Exception {
-        xmlReader = XMLReaderFactory.createXMLReader();
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
         documentBuilder = documentBuilderFactory.newDocumentBuilder();
         result = documentBuilder.newDocument();
-        xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
+        xmlReader = XMLReaderFactory.createXMLReader();
     }
 
-    public void testContentHandlerDocument() throws Exception {
+    public void testContentHandlerDocumentNamespacePrefixes() throws Exception {
+        xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
+        handler = new DomContentHandler(result);
+        expected = documentBuilder.parse(new InputSource(new StringReader(XML_1)));
+        xmlReader.setContentHandler(handler);
+        xmlReader.parse(new InputSource(new StringReader(XML_1)));
+        assertXMLEqual("Invalid result", expected, result);
+    }
+
+    public void testContentHandlerDocumentNoNamespacePrefixes() throws Exception {
         handler = new DomContentHandler(result);
         expected = documentBuilder.parse(new InputSource(new StringReader(XML_1)));
         xmlReader.setContentHandler(handler);
