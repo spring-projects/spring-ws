@@ -18,15 +18,15 @@ package org.springframework.ws.transport;
 
 import javax.xml.transform.Transformer;
 
+import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.xml.transform.TransformerObjectSupport;
-import org.springframework.util.Assert;
 
 public class SimpleTestingMessageReceiver extends TransformerObjectSupport implements WebServiceMessageReceiver {
 
     public void receive(MessageContext messageContext) throws Exception {
         Assert.notNull(messageContext, "MessageContext is null");
-        logger.info("Received message");
+        logger.info("Received " + messageContext.getRequest());
         Transformer transformer = createTransformer();
         transformer.transform(messageContext.getRequest().getPayloadSource(),
                 messageContext.getResponse().getPayloadResult());

@@ -31,9 +31,7 @@ import javax.mail.MessagingException;
  */
 public class PollingMonitoringStrategy extends AbstractMonitoringStrategy {
 
-    /**
-     * Defines the default polling frequency. Set to 1000 * 60 milliseconds (i.e. 1 minute).
-     */
+    /** Defines the default polling frequency. Set to 1000 * 60 milliseconds (i.e. 1 minute). */
     public static final long DEFAULT_POLLING_FREQUENCY = 1000 * 60;
 
     private long pollingInterval = DEFAULT_POLLING_FREQUENCY;
@@ -53,7 +51,7 @@ public class PollingMonitoringStrategy extends AbstractMonitoringStrategy {
 
     /**
      * Invoked after the {@link Thread#sleep(long)} method has been invoked. This implementation calls {@link
-     * Folder#getMessageCount(), to force new messages to be seen.
+     * Folder#getMessageCount()}, to force new messages to be seen.
      *
      * @param folder the folder to check for new messages
      * @throws MessagingException in case of JavaMail errors

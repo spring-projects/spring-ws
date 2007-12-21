@@ -7,7 +7,7 @@
     </bean>
 
     <bean id="requestQueue" class="org.apache.activemq.command.ActiveMQQueue">
-        <property name="physicalName" value="RequestQueue"/>
+        <property name="physicalName" value="SenderRequestQueue"/>
     </bean>
 
     <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
