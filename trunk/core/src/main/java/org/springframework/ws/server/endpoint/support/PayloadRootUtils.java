@@ -31,7 +31,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import org.springframework.xml.namespace.QNameUtils;
-import org.springframework.xml.transform.StaxSource;
+import org.springframework.xml.transform.TraxUtils;
 
 /**
  * Helper class for determining the root qualified name of a Web Service payload.
@@ -68,10 +68,9 @@ public abstract class PayloadRootUtils {
                 return QNameUtils.getQNameForNode(document.getDocumentElement());
             }
         }
-        else if (source instanceof StaxSource) {
-            StaxSource staxSource = (StaxSource) source;
-            if (staxSource.getXMLStreamReader() != null) {
-                XMLStreamReader streamReader = staxSource.getXMLStreamReader();
+        else if (TraxUtils.isStaxSource(source)) {
+            XMLStreamReader streamReader = TraxUtils.getXMLStreamReader(source);
+            if (streamReader != null) {
                 if (streamReader.getEventType() == XMLStreamConstants.START_DOCUMENT) {
                     streamReader.nextTag();
                 }
