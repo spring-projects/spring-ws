@@ -72,29 +72,6 @@ public class DomContentHandler implements ContentHandler {
         }
     }
 
-    public void characters(char ch[], int start, int length) throws SAXException {
-        String data = new String(ch, start, length);
-        Node parent = getParent();
-        Node lastChild = parent.getLastChild();
-        if (lastChild != null && lastChild.getNodeType() == Node.TEXT_NODE) {
-            ((Text) lastChild).appendData(data);
-        }
-        else {
-            Text text = document.createTextNode(data);
-            parent.appendChild(text);
-        }
-    }
-
-    public void endElement(String uri, String localName, String qName) throws SAXException {
-        elements.remove(elements.size() - 1);
-    }
-
-    public void processingInstruction(String target, String data) throws SAXException {
-        Node parent = getParent();
-        ProcessingInstruction pi = document.createProcessingInstruction(target, data);
-        parent.appendChild(pi);
-    }
-
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         Node parent = getParent();
         Element element = document.createElementNS(uri, qName);
@@ -108,6 +85,29 @@ public class DomContentHandler implements ContentHandler {
         }
         parent.appendChild(element);
         elements.add(element);
+    }
+
+    public void endElement(String uri, String localName, String qName) throws SAXException {
+        elements.remove(elements.size() - 1);
+    }
+
+    public void characters(char ch[], int start, int length) throws SAXException {
+        String data = new String(ch, start, length);
+        Node parent = getParent();
+        Node lastChild = parent.getLastChild();
+        if (lastChild != null && lastChild.getNodeType() == Node.TEXT_NODE) {
+            ((Text) lastChild).appendData(data);
+        }
+        else {
+            Text text = document.createTextNode(data);
+            parent.appendChild(text);
+        }
+    }
+
+    public void processingInstruction(String target, String data) throws SAXException {
+        Node parent = getParent();
+        ProcessingInstruction pi = document.createProcessingInstruction(target, data);
+        parent.appendChild(pi);
     }
 
     /*
