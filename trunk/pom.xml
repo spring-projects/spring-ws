@@ -272,11 +272,11 @@
                     <javadocDirectory>${basedir}/src/main/javadoc</javadocDirectory>
                     <excludePackageNames>org.springframework.ws.samples</excludePackageNames>
                     <links>
-                        <link>http://java.sun.com/j2se/1.4.2/docs/api</link>
-                        <link>http://java.sun.com/j2ee/1.4/docs/api</link>
+                        <link>http://java.sun.com/javase/6/docs/api/</link>
+                        <link>http://java.sun.com/javaee/5/docs/api/</link>
                         <link>http://java.sun.com/webservices/docs/2.0/api</link>
                         <link>http://java.sun.com/webservices/docs/2.0/xws-security/api/</link>
-                        <link>http://static.springframework.org/spring/docs/2.0.x/api</link>
+                        <link>http://static.springframework.org/spring/docs/2.5.x/api</link>
                         <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
                         <link>http://xmlbeans.apache.org/docs/2.0.0/reference</link>
                         <link>http://jibx.sourceforge.net/api</link>
@@ -284,7 +284,7 @@
                         <link>http://dom4j.org/apidocs/</link>
                         <link>http://jdom.org/docs/apidocs/</link>
                         <link>http://www.xom.nu/apidocs/</link>
-                        <link>http://acegisecurity.org/multiproject/acegi-security/apidocs/</link>
+                        <link>http://www.acegisecurity.org/acegi-security/apidocs/</link>
                         <link>http://www.extreme.indiana.edu/apis/wsdl4j/</link>
                         <link>http://jakarta.apache.org/commons/httpclient/apidocs/</link>
                     </links>
