@@ -65,13 +65,14 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
     public void testSendAndReceiveQueueBytesMessage() throws Exception {
         WebServiceConnection connection = null;
         try {
-            URI uri = new URI("jms:RequestQueue?deliveryMode=NON_PERSISTENT");
+            URI uri = new URI("jms:SenderRequestQueue?deliveryMode=NON_PERSISTENT");
             connection = messageSender.createConnection(uri);
             SoapMessage soapRequest = new SaajSoapMessage(messageFactory.createMessage());
             soapRequest.setSoapAction(SOAP_ACTION);
             connection.send(soapRequest);
 
             BytesMessage request = (BytesMessage) jmsTemplate.receive();
+            assertNotNull("No message received", request);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             messageFactory.createMessage().writeTo(bos);
             final byte[] buf = bos.toByteArray();
@@ -101,13 +102,14 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
     public void testSendAndReceiveQueueTextMessage() throws Exception {
         WebServiceConnection connection = null;
         try {
-            URI uri = new URI("jms:RequestQueue?deliveryMode=NON_PERSISTENT&messageType=TEXT_MESSAGE");
+            URI uri = new URI("jms:SenderRequestQueue?deliveryMode=NON_PERSISTENT&messageType=TEXT_MESSAGE");
             connection = messageSender.createConnection(uri);
             SoapMessage soapRequest = new SaajSoapMessage(messageFactory.createMessage());
             soapRequest.setSoapAction(SOAP_ACTION);
             connection.send(soapRequest);
 
             TextMessage request = (TextMessage) jmsTemplate.receive();
+            assertNotNull("No message received", request);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             messageFactory.createMessage().writeTo(bos);
             final String text = new String(bos.toByteArray(), "UTF-8");

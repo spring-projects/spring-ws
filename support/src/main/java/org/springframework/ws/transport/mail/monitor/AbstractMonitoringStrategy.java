@@ -43,8 +43,8 @@ public abstract class AbstractMonitoringStrategy implements MonitoringStrategy {
     private boolean deleteMessages = true;
 
     /**
-     * Sets whether messages should be marked as {@link Flags.Flag#DELETED DELETED} after they have been read. Default
-     * is <code>true</code>.
+     * Sets whether messages should be marked as {@link javax.mail.Flags.Flag#DELETED DELETED} after they have been
+     * read. Default is <code>true</code>.
      */
     public void setDeleteMessages(boolean deleteMessages) {
         this.deleteMessages = deleteMessages;
@@ -92,9 +92,9 @@ public abstract class AbstractMonitoringStrategy implements MonitoringStrategy {
 
     /**
      * Retrieves new messages from the given folder. This implementation creates a {@link SearchTerm} that searches for
-     * all messages in the folder that are {@link Flags.Flag#RECENT RECENT}, not {@link Flags.Flag#ANSWERED ANSWERED},
-     * and not {@link Flags.Flag#DELETED DELETED}. The search term is used to {@link Folder#search(SearchTerm) search}
-     * for new messages.
+     * all messages in the folder that are {@link javax.mail.Flags.Flag#RECENT RECENT}, not {@link
+     * javax.mail.Flags.Flag#ANSWERED ANSWERED}, and not {@link javax.mail.Flags.Flag#DELETED DELETED}. The search term
+     * is used to {@link Folder#search(SearchTerm) search} for new messages.
      *
      * @param folder the folder to retrieve new messages from
      * @return the new messages
@@ -134,7 +134,7 @@ public abstract class AbstractMonitoringStrategy implements MonitoringStrategy {
 
     /**
      * Fetches the specified messages from the specified folder. Default implementation {@link Folder#fetch(Message[],
-     * FetchProfile) fetches} every {@link FetchProfile.Item}.
+     * FetchProfile) fetches} every {@link javax.mail.FetchProfile.Item}.
      *
      * @param folder   the folder to fetch messages from
      * @param messages the messages to fetch
