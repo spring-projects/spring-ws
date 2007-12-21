@@ -27,6 +27,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAPFactory;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapElement;
 import org.springframework.xml.transform.StaxSource;
@@ -62,7 +63,6 @@ class AxiomSoapElement implements SoapElement {
     public final Source getSource() {
         try {
             return new StaxSource(axiomElement.getXMLStreamReader());
-
         }
         catch (OMException ex) {
             throw new AxiomSoapElementException(ex);

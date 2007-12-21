@@ -31,11 +31,12 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
 import org.custommonkey.xmlunit.XMLTestCase;
-import org.springframework.xml.transform.StaxSource;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
+
+import org.springframework.xml.transform.StaxSource;
 
 public abstract class AbstractEndpointTestCase extends XMLTestCase {
 

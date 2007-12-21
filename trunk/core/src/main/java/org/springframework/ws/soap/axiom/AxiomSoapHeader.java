@@ -26,6 +26,7 @@ import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axiom.soap.SOAPHeaderBlock;
+
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapHeaderException;
@@ -44,7 +45,7 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
     }
 
     public Result getResult() {
-        return new SAXResult(new AxiomContentHandler(getAxiomHeader()));
+        return new SAXResult(new AxiomContentHandler(getAxiomHeader(), getAxiomFactory()));
     }
 
     public SoapHeaderElement addHeaderElement(QName name) {

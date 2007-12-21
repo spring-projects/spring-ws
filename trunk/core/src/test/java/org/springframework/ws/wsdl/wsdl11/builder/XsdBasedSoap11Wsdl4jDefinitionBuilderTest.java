@@ -73,6 +73,7 @@ public class XsdBasedSoap11Wsdl4jDefinitionBuilderTest extends XMLTestCase {
 
         Document result = (Document) domResult.getNode();
         Document expected = documentBuilder.parse(getClass().getResourceAsStream("single-inline.wsdl"));
+
         assertXMLEqual("Invalid WSDL built", expected, result);
     }
 
