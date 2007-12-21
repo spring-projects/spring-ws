@@ -1,0 +1,22 @@
+SPRING WEB SERVICES CHANGELOG
+=============================
+http://www.springframework.org/spring-ws
+
+Changes in version 1.0.3
+-------------------------
+
+** Bug
+    * [SWS-225] - Spring-WS doesn't send "Content-Transfer-Encoding: binary" with MTOM part and this creates interoperability issue with .NET 3.0
+    * [SWS-226] - Exception mapping corrupts the 'defaultFault' instance
+    * [SWS-227] - NPE when "mustUnderstand" attribute is in SOAP header and no Interceptors have been defined 
+    * [SWS-229] - JibxMarshaller should support marshalling/unmarshalling of all mapped classes
+    * [SWS-230] - AxiomSoapMessageFactory throws NPE
+    * [SWS-232] - PayloadValidatingInterceptor refuses to validate correct message with a top-level attribute
+    * [SWS-238] - AbstractMethodEndpointMapping does not support JDK Proxies
+    * [SWS-239] - Marshalling with Castor and Axiom results in a XMLStreamException
+    * [SWS-241] - NullPointerException during processing message with empty body
+    * [SWS-244] - Soap headers with whitespace cause java.lang.ClassCastException: com.sun.xml.messaging.saaj.soap.impl.TextImpl
+    * [SWS-245] - SAXParseException when using HttpURLConnection
+    * [SWS-247] - Exception thrown when schemaPrefix is empty in XsdBasedSoap11Wsdl4jDefinitionBuilder
+    * [SWS-248] - DomPoxMessage not clearing DOM on setting the result
+    * [SWS-257] - Infinite loop in XsdBasedSoap11Wsdl4jDefinitionBuilder#buildMessages method
