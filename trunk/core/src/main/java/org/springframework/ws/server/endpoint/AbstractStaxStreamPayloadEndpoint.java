@@ -19,6 +19,7 @@ package org.springframework.ws.server.endpoint;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import javax.xml.namespace.NamespaceContext;
+import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
@@ -31,8 +32,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.xml.stream.XmlEventStreamReader;
-import org.springframework.xml.transform.StaxResult;
-import org.springframework.xml.transform.StaxSource;
+import org.springframework.xml.transform.TraxUtils;
 
 /**
  * Abstract base class for endpoints that handle the message payload with streaming StAX. Allows subclasses to read the
@@ -58,18 +58,17 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
             return null;
         }
         XMLStreamReader streamReader = null;
-        if (source instanceof StaxSource) {
-            StaxSource staxSource = (StaxSource) source;
-            streamReader = staxSource.getXMLStreamReader();
-            if (streamReader == null && staxSource.getXMLEventReader() != null) {
-                try {
-                    streamReader = new XmlEventStreamReader(staxSource.getXMLEventReader());
-                }
-                catch (XMLStreamException ex) {
-                    // ignore
-                }
-                catch (UnsupportedOperationException ex) {
-                    // ignore
+        if (TraxUtils.isStaxSource(source)) {
+            streamReader = TraxUtils.getXMLStreamReader(source);
+            if (streamReader == null) {
+                XMLEventReader eventReader = TraxUtils.getXMLEventReader(source);
+                if (eventReader != null) {
+                    try {
+                        streamReader = new XmlEventStreamReader(eventReader);
+                    }
+                    catch (XMLStreamException ex) {
+                        streamReader = null;
+                    }
                 }
             }
 
@@ -79,7 +78,10 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
                 streamReader = getInputFactory().createXMLStreamReader(source);
             }
             catch (XMLStreamException ex) {
-                // ignore
+                streamReader = null;
+            }
+            catch (UnsupportedOperationException ex) {
+                streamReader = null;
             }
         }
         if (streamReader == null) {
@@ -94,9 +96,8 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
 
     private XMLStreamWriter getStreamWriter(Result result) {
         XMLStreamWriter streamWriter = null;
-        if (result instanceof StaxResult) {
-            StaxResult staxResult = (StaxResult) result;
-            streamWriter = staxResult.getXMLStreamWriter();
+        if (TraxUtils.isStaxResult(result)) {
+            streamWriter = TraxUtils.getXMLStreamWriter(result);
         }
         if (streamWriter == null) {
             try {
