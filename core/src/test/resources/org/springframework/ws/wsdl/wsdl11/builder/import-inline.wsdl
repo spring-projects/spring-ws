@@ -25,11 +25,11 @@
 
         </xsd:schema>
     </wsdl:types>
-    <wsdl:message name="GetOrderResponse">
-        <wsdl:part name="GetOrderResponse" element="schema0:GetOrderResponse"/>
-    </wsdl:message>
     <wsdl:message name="GetOrderRequest">
         <wsdl:part name="GetOrderRequest" element="schema:GetOrderRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetOrderResponse">
+        <wsdl:part name="GetOrderResponse" element="schema0:GetOrderResponse"/>
     </wsdl:message>
     <wsdl:portType name="Order">
         <wsdl:operation name="GetOrder">

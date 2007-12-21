@@ -25,6 +25,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPFaultDetail;
+
 import org.springframework.ws.soap.SoapFaultDetail;
 import org.springframework.ws.soap.SoapFaultDetailElement;
 
@@ -56,7 +57,7 @@ class AxiomSoapFaultDetail extends AxiomSoapElement implements SoapFaultDetail {
     }
 
     public Result getResult() {
-        return new SAXResult(new AxiomContentHandler(getAxiomFaultDetail()));
+        return new SAXResult(new AxiomContentHandler(getAxiomFaultDetail(), getAxiomFactory()));
     }
 
     protected SOAPFaultDetail getAxiomFaultDetail() {

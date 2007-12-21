@@ -16,10 +16,25 @@
 
 package org.springframework.ws.soap.axiom;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import javax.xml.namespace.QName;
+
+import org.apache.axiom.om.OMAttribute;
+import org.apache.axiom.om.OMContainer;
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.impl.builder.SAXOMBuilder;
-import org.springframework.util.Assert;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+
+import org.springframework.util.Assert;
+import org.springframework.xml.namespace.QNameUtils;
 
 /**
  * Specific SAX ContentHandler that adds the resulting AXIOM OMElement to a specified parent element when
@@ -28,17 +43,101 @@ import org.xml.sax.SAXException;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
-class AxiomContentHandler extends SAXOMBuilder {
+class AxiomContentHandler implements ContentHandler {
 
-    private OMElement parentElement = null;
+    private final OMFactory factory;
 
-    public AxiomContentHandler(OMElement parentElement) {
-        Assert.notNull(parentElement, "No parentElement given");
-        this.parentElement = parentElement;
+    private final List elements = new ArrayList();
+
+    private Map namespaces = new HashMap();
+
+    private final OMContainer container;
+
+    AxiomContentHandler(OMContainer container, OMFactory factory) {
+        Assert.notNull(container, "'container' must not be null");
+        Assert.notNull(factory, "'factory' must not be null");
+        this.factory = factory;
+        this.container = container;
+    }
+
+    private OMContainer getParent() {
+        if (!elements.isEmpty()) {
+            return (OMContainer) elements.get(elements.size() - 1);
+        }
+        else {
+            return container;
+        }
+    }
+
+    public void startPrefixMapping(String prefix, String uri) throws SAXException {
+        namespaces.put(prefix, uri);
+    }
+
+    public void endPrefixMapping(String prefix) throws SAXException {
+        namespaces.remove(prefix);
+    }
+
+    public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+        OMContainer parent = getParent();
+        OMElement element = factory.createOMElement(localName, null, parent);
+        for (Iterator iterator = namespaces.entrySet().iterator(); iterator.hasNext();) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            String prefix = (String) entry.getKey();
+            if (prefix.length() == 0) {
+                element.declareDefaultNamespace((String) entry.getValue());
+            }
+            else {
+                element.declareNamespace((String) entry.getValue(), prefix);
+            }
+        }
+        QName qname = QNameUtils.toQName(uri, qName);
+        element.setLocalName(qname.getLocalPart());
+        element.setNamespace(element.findNamespace(qname.getNamespaceURI(), qname.getPrefix()));
+        for (int i = 0; i < atts.getLength(); i++) {
+            QName attrName = QNameUtils.toQName(atts.getURI(i), atts.getQName(i));
+            String value = atts.getValue(i);
+            if (!atts.getQName(i).startsWith("xmlns")) {
+                OMNamespace namespace = factory.createOMNamespace(attrName.getNamespaceURI(), attrName.getPrefix());
+                OMAttribute attribute = factory.createOMAttribute(attrName.getLocalPart(), namespace, value);
+                element.addAttribute(attribute);
+            }
+        }
+
+        elements.add(element);
+    }
+
+    public void endElement(String uri, String localName, String qName) throws SAXException {
+        elements.remove(elements.size() - 1);
+    }
+
+    public void characters(char ch[], int start, int length) throws SAXException {
+        String data = new String(ch, start, length);
+        OMContainer parent = getParent();
+        factory.createOMText(parent, data);
+    }
+
+    public void processingInstruction(String target, String data) throws SAXException {
+        OMContainer parent = getParent();
+        factory.createOMProcessingInstruction(parent, target, data);
+    }
+
+    /*
+    * Unsupported
+    */
+
+    public void setDocumentLocator(Locator locator) {
+    }
+
+    public void startDocument() throws SAXException {
     }
 
     public void endDocument() throws SAXException {
-        super.endDocument();
-        parentElement.addChild(super.getRootElement());
     }
+
+    public void ignorableWhitespace(char ch[], int start, int length) throws SAXException {
+    }
+
+    public void skippedEntity(String name) throws SAXException {
+    }
+
 }

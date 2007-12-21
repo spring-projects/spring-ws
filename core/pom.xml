@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <artifactId>spring-ws-parent</artifactId>
         <groupId>org.springframework.ws</groupId>
@@ -110,11 +111,6 @@
         </dependency>
         <!-- XML handling dependencies -->
         <dependency>
-            <groupId>xml-apis</groupId>
-            <artifactId>xml-apis</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>jdom</groupId>
             <artifactId>jdom</artifactId>
             <optional>true</optional>
@@ -130,23 +126,9 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>stax</groupId>
-            <artifactId>stax-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>xalan</groupId>
-            <artifactId>xalan</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>wstx-asl</artifactId>
-            <scope>provided</scope>
+            <scope>test</scope>
         </dependency>
         <!-- SOAP dependencies -->
         <dependency>

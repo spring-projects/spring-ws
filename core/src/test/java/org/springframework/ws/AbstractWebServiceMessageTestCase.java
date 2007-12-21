@@ -40,6 +40,12 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.helpers.XMLReaderFactory;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
@@ -47,11 +53,6 @@ import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.transform.StaxResult;
 import org.springframework.xml.transform.StaxSource;
 import org.springframework.xml.transform.StringResult;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 public abstract class AbstractWebServiceMessageTestCase extends XMLTestCase {
 

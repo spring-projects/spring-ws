@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.axiom;
 
 import java.util.Iterator;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.sax.SAXResult;
@@ -26,6 +27,7 @@ import org.apache.axiom.om.OMException;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPFault;
+
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.xml.transform.StaxSource;
@@ -48,15 +50,17 @@ abstract class AxiomSoapBody extends AxiomSoapElement implements SoapBody {
     public Source getPayloadSource() {
         try {
             OMElement payloadElement = getPayloadElement();
+            XMLStreamReader streamReader;
             if (payloadElement == null) {
                 return null;
             }
             else if (payloadCaching) {
-                return new StaxSource(payloadElement.getXMLStreamReader());
+                streamReader = payloadElement.getXMLStreamReader();
             }
             else {
-                return new StaxSource(payloadElement.getXMLStreamReaderWithoutCaching());
+                streamReader = payloadElement.getXMLStreamReaderWithoutCaching();
             }
+            return new StaxSource(streamReader);
         }
         catch (OMException ex) {
             throw new AxiomSoapBodyException(ex);
@@ -64,7 +68,7 @@ abstract class AxiomSoapBody extends AxiomSoapElement implements SoapBody {
     }
 
     public Result getPayloadResult() {
-        return new SAXResult(new AxiomContentHandler(getAxiomBody()));
+        return new SAXResult(new AxiomContentHandler(getAxiomBody(), getAxiomFactory()));
     }
 
     public boolean hasFault() {

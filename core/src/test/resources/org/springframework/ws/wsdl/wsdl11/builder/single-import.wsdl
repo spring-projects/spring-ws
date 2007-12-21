@@ -10,14 +10,14 @@
             <xsd:import namespace="http://www.springframework.org/spring-ws/single/schema" schemaLocation="single.xsd"/>
         </xsd:schema>
     </wsdl:types>
-    <wsdl:message name="GetOrderResponse">
-        <wsdl:part name="GetOrderResponse" element="schema:GetOrderResponse"/>
-    </wsdl:message>
     <wsdl:message name="GetOrderRequest">
         <wsdl:part name="GetOrderRequest" element="schema:GetOrderRequest"/>
     </wsdl:message>
     <wsdl:message name="GetOrderFault">
         <wsdl:part name="GetOrderFault" element="schema:GetOrderFault"/>
+    </wsdl:message>
+    <wsdl:message name="GetOrderResponse">
+        <wsdl:part name="GetOrderResponse" element="schema:GetOrderResponse"/>
     </wsdl:message>
     <wsdl:portType name="Order">
         <wsdl:operation name="GetOrder">
