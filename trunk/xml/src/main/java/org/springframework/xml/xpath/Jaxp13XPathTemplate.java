@@ -29,13 +29,14 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import javax.xml.xpath.XPathFactoryConfigurationException;
 
-import org.springframework.xml.namespace.SimpleNamespaceContext;
-import org.springframework.xml.transform.StaxSource;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+
+import org.springframework.xml.namespace.SimpleNamespaceContext;
+import org.springframework.xml.transform.TraxUtils;
 
 /**
  * Implementation of {@link XPathOperations} that uses JAXP 1.3. JAXP 1.3 is part of Java SE since 1.5.
@@ -127,8 +128,7 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
             xpath.setNamespaceContext(namespaceContext);
         }
         try {
-            if (context instanceof StaxSource) {
-                // StaxSource is a subclass of SAXSource, but it has no InputSource, therefore we handle it differently
+            if (TraxUtils.isStaxSource(context)) {
                 Element element = getRootElement(context);
                 return xpath.evaluate(expression, element, returnType);
             }
@@ -142,7 +142,7 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
             }
             else if (context instanceof StreamSource) {
                 StreamSource streamSource = (StreamSource) context;
-                InputSource inputSource = null;
+                InputSource inputSource;
                 if (streamSource.getInputStream() != null) {
                     inputSource = new InputSource(streamSource.getInputStream());
                 }
