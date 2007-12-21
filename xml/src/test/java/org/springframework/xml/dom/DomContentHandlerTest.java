@@ -56,7 +56,7 @@ public class DomContentHandlerTest extends XMLTestCase {
         documentBuilderFactory.setNamespaceAware(true);
         documentBuilder = documentBuilderFactory.newDocumentBuilder();
         result = documentBuilder.newDocument();
-        xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", false);
+        xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
     }
 
     public void testContentHandlerDocument() throws Exception {

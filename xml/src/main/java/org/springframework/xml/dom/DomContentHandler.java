@@ -19,7 +19,6 @@ package org.springframework.xml.dom;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.util.Assert;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -28,6 +27,8 @@ import org.w3c.dom.Text;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import org.springframework.util.Assert;
 
 /**
  * SAX <code>ContentHandler</code> that transforms callback calls to DOM <code>Node</code>s.
@@ -100,7 +101,9 @@ public class DomContentHandler extends DefaultHandler {
             String attrUri = attributes.getURI(i);
             String attrQname = attributes.getQName(i);
             String value = attributes.getValue(i);
-            element.setAttributeNS(attrUri, attrQname, value);
+            if (!attrQname.startsWith("xmlns")) {
+                element.setAttributeNS(attrUri, attrQname, value);
+            }
         }
         parent.appendChild(element);
         elements.add(element);
