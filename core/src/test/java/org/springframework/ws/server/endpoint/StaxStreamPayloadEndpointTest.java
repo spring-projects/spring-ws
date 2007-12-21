@@ -25,6 +25,7 @@ import javax.xml.transform.TransformerFactory;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.soap.SOAPFactory;
+
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.axiom.AxiomSoapMessage;
@@ -67,6 +68,7 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
                 assertEquals("Not a end element", XMLStreamConstants.END_ELEMENT, streamReader.next());
                 assertEquals("Invalid end event local name", REQUEST_ELEMENT, streamReader.getLocalName());
                 assertEquals("Invalid end event namespace", NAMESPACE_URI, streamReader.getNamespaceURI());
+                streamWriter.setDefaultNamespace(NAMESPACE_URI);
                 streamWriter.writeEmptyElement(NAMESPACE_URI, RESPONSE_ELEMENT);
                 streamWriter.flush();
                 streamWriter.close();
