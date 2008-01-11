@@ -10,6 +10,20 @@
     <packaging>bundle</packaging>
     <name>Spring XML</name>
     <description>Various XML support classes for Spring Web Services</description>
+    <profiles>
+        <profile>
+            <id>jdk14-jdk15</id>
+            <activation>
+                <jdk>!1.6</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>stax</groupId>
+                    <artifactId>stax-api</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
     <build>
         <plugins>
             <plugin>

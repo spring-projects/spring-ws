@@ -56,6 +56,27 @@
                 </dependency>
             </dependencies>
         </profile>
+        <profile>
+            <id>jdk14-jdk15</id>
+            <activation>
+                <jdk>!1.6</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>javax.xml.soap</groupId>
+                    <artifactId>saaj-api</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>com.sun.xml.messaging.saaj</groupId>
+                    <artifactId>saaj-impl</artifactId>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>activation</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
     </profiles>
     <build>
         <plugins>
@@ -100,11 +121,6 @@
         </dependency>
         <!-- Java EE dependencies -->
         <dependency>
-            <groupId>javax.xml.soap</groupId>
-            <artifactId>saaj-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>javax.jms</groupId>
             <artifactId>jms</artifactId>
             <optional>true</optional>
@@ -115,20 +131,11 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-        </dependency>
-        <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <optional>true</optional>
         </dependency>
         <!-- Other dependencies -->
-        <dependency>
-            <groupId>com.sun.xml.messaging.saaj</groupId>
-            <artifactId>saaj-impl</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-core</artifactId>

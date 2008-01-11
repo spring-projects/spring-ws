@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws-parent</artifactId>
@@ -315,6 +316,12 @@
                 <groupId>org.codehaus.woodstox</groupId>
                 <artifactId>wstx-asl</artifactId>
                 <version>3.2.3</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>stax</groupId>
+                        <artifactId>stax-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>jdom</groupId>
@@ -365,7 +372,7 @@
             <dependency>
                 <groupId>org.codehaus.castor</groupId>
                 <artifactId>castor</artifactId>
-                <version>1.1.1</version>
+                <version>1.1.2</version>
                 <exclusions>
                     <exclusion>
                         <groupId>adaptx</groupId>
@@ -417,7 +424,7 @@
             <dependency>
                 <groupId>xmlbeans</groupId>
                 <artifactId>xbean</artifactId>
-                <version>2.1.0</version>
+                <version>2.2.0</version>
             </dependency>
             <!-- JiBX -->
             <dependency>
@@ -446,6 +453,16 @@
                 <groupId>com.thoughtworks.xstream</groupId>
                 <artifactId>xstream</artifactId>
                 <version>1.2.2</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>stax</groupId>
+                        <artifactId>stax</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>stax</groupId>
+                        <artifactId>stax-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <!-- SOAP dependencies -->
             <dependency>

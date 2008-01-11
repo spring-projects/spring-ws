@@ -10,6 +10,24 @@
     <packaging>bundle</packaging>
     <name>Spring O/X Mapping</name>
     <description>Spring Object/XML Mapping abstraction</description>
+    <profiles>
+        <profile>
+            <id>jdk14-jdk15</id>
+            <activation>
+                <jdk>!1.6</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>stax</groupId>
+                    <artifactId>stax-api</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>activation</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
     <build>
         <plugins>
             <plugin>
@@ -67,7 +85,6 @@
                         <Export-Package>org.springframework.oxm*</Export-Package>
                         <Import-Package>
                             org.apache.commons.logging*,
-                            javax.xml.namespace*,
                             javax.xml.parsers*,
                             javax.xml.stream*,
                             javax.xml.transform*,
@@ -109,6 +126,7 @@
             <!-- Xerces required for Castor -->
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
+            <scope>test</scope>
             <optional>true</optional>
         </dependency>
         <!-- O/X Mapping dependencies -->
@@ -188,11 +206,6 @@
             <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
             <optional>true</optional>
-        </dependency>
-        <!-- JEE dependencies -->
-        <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
         </dependency>
         <!-- Test dependencies -->
         <dependency>
