@@ -76,18 +76,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.sun.xml.bind</groupId>
-                        <artifactId>jaxb-impl</artifactId>
-                        <version>2.1.5</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.sun.xml.bind</groupId>
-                        <artifactId>jaxb-xjc</artifactId>
-                        <version>2.0.3</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
@@ -161,6 +149,20 @@
             <scope>test</scope>
         </dependency>
         <!-- O/X Mapping dependencies -->
+        <!-- JAXB2 -->
+        <!-- set to 2.0.3, the same version as shipped in JDK 1.6 -->
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.0.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-xjc</artifactId>
+            <version>2.0.3</version>
+            <scope>test</scope>
+        </dependency>
         <!-- XStream -->
         <dependency>
             <groupId>com.thoughtworks.xstream</groupId>

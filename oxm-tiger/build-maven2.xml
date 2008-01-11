@@ -22,7 +22,7 @@
 
     <target name="generate-test-jaxb" depends="generate-test-init" unless="skip">
         <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask"
-                 classpathref="maven.plugin.classpath"/>
+                 classpathref="maven.test.classpath"/>
         <xjc destdir="${generate.target.directory}"
              package="org.springframework.oxm.jaxb2"
              schema="${schema}">
