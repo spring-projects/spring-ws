@@ -14,7 +14,7 @@ XMLBeans, Castor, JiBX and XStream; and a Web service framework that resembles S
 
 2. RELEASE INFO
 
-Spring-WS requires J2SE 1.4 and J2EE 1.4.  J2SE 1.5 is required for building. J2SE 1.6 is not yet supported.
+Spring-WS requires J2SE 1.4 or higher and J2EE 1.4 or higher.  J2SE 1.6 is required for building.
 
 Release contents:
 
