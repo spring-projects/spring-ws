@@ -45,7 +45,7 @@
             <activation>
                 <property>
                     <name>spring.version</name>
-                    <value>2.5-rc2</value>
+                    <value>2.5.1</value>
                 </property>
             </activation>
             <dependencies>
