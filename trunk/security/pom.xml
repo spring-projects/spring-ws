@@ -86,10 +86,9 @@
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${artifactId}</Bundle-SymbolicName>
-                        <Export-Package>org.springframework.ws*</Export-Package>
+                        <Export-Package>org.springframework.ws.soap.security*</Export-Package>
                         <Import-Package>
                             org.apache.commons.logging*,
-                            javax.xml.crypto*,
                             javax.xml.soap*,
                             com.sun.xml.wss*,
                             org.springframework.beans*,
