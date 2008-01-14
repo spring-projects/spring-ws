@@ -34,17 +34,17 @@
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${artifactId}</Bundle-SymbolicName>
-                        <Export-Package>org.springframework.xml*;version=${pom.version}</Export-Package>
+                        <Export-Package>org.springframework.xml*</Export-Package>
                         <Import-Package>
                             org.apache.commons.logging*,
                             javax.xml.namespace*,
                             javax.xml.parsers*,
+                            javax.xml.transform.stax;resolution:=optional,
                             javax.xml.transform*,
                             org.xml.sax*,
                             org.w3c.dom*,
-                            org.springframework.beans*;version="[2.0,2.5)",
-                            org.springframework.core*,
-                            org.springframework.util*,
+                            org.springframework.xml*,
+                            org.springframework*;version="[2.0,2.5]",
                             *;resolution:=optional
                         </Import-Package>
                         <Implementation-Title>${pom.name}</Implementation-Title>
