@@ -81,7 +81,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>1.0.0</version>
+                <version>1.1.0-SNAPSHOT</version>
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
@@ -89,12 +89,13 @@
                         <Export-Package>org.springframework.ws.soap.security*</Export-Package>
                         <Import-Package>
                             org.apache.commons.logging*,
+                            javax.crypto*,
+                            javax.security*,
+                            javax.xml.namespace*,
                             javax.xml.soap*,
                             com.sun.xml.wss*,
-                            org.springframework.beans*,
-                            org.springframework.core*,
-                            org.springframework.util*,
                             org.springframework.ws*,
+                            org.springframework*;version="[2.0,2.5]",
                             *;resolution:=optional
                         </Import-Package>
                         <Implementation-Title>${pom.name}</Implementation-Title>
