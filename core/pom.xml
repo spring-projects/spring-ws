@@ -73,7 +73,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>1.0.0</version>
+                <version>1.1.0-SNAPSHOT</version>
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
@@ -90,11 +90,10 @@
                             javax.xml.transform*,
                             org.xml.sax*,
                             org.w3c.dom*,
-                            org.springframework.beans*,
-                            org.springframework.core*,
-                            org.springframework.util*,
-                            org.springframework.oxm*,
                             org.springframework.xml*,
+                            org.springframework.oxm*,
+                            org.springframework.ws*,
+                            org.springframework*;version="[2.0,2.5]",
                             *;resolution:=optional
                         </Import-Package>
                         <Implementation-Title>${pom.name}</Implementation-Title>
