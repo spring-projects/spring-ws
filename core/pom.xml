@@ -77,7 +77,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Bundle-SymbolicName>${artifactId}</Bundle-SymbolicName>
+                        <Bundle-SymbolicName>org.springframework.bundle.ws.core</Bundle-SymbolicName>
                         <Export-Package>org.springframework.ws*</Export-Package>
                         <Import-Package>
                             org.apache.commons.logging*,

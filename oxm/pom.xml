@@ -81,7 +81,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Bundle-SymbolicName>${artifactId}</Bundle-SymbolicName>
+                        <Bundle-SymbolicName>org.springframework.bundle.ws.oxm</Bundle-SymbolicName>
                         <Export-Package>org.springframework.oxm*</Export-Package>
                         <Import-Package>
                             org.apache.commons.logging*,
