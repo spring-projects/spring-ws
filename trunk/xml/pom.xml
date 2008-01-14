@@ -33,7 +33,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Bundle-SymbolicName>${artifactId}</Bundle-SymbolicName>
+                        <Bundle-SymbolicName>org.springframework.bundle.ws.xml</Bundle-SymbolicName>
                         <Export-Package>org.springframework.xml*</Export-Package>
                         <Import-Package>
                             org.apache.commons.logging*,

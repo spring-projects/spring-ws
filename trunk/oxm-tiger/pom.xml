@@ -85,7 +85,7 @@
                 <configuration>
                     <excludeDependencies>true</excludeDependencies>
                     <instructions>
-                        <Bundle-SymbolicName>${artifactId}</Bundle-SymbolicName>
+                        <Bundle-SymbolicName>org.springframework.bundle.ws.oxm-tiger</Bundle-SymbolicName>
                         <Export-Package>
                             org.springframework.oxm*
                         </Export-Package>

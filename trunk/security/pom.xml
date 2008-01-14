@@ -85,7 +85,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Bundle-SymbolicName>${artifactId}</Bundle-SymbolicName>
+                        <Bundle-SymbolicName>org.springframework.bundle.ws.security</Bundle-SymbolicName>
                         <Export-Package>org.springframework.ws.soap.security*</Export-Package>
                         <Import-Package>
                             org.apache.commons.logging*,
