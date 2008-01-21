@@ -21,6 +21,12 @@
                 Indicates that a unmarshaller should be used to convert incoming request
                 messages into method parameters, and return values marshalled into a response message.
             </xsd:documentation>
+            <xsd:appinfo>
+                <tool:annotation>
+                    <tool:exports
+                            type="org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter"/>
+                </tool:annotation>
+            </xsd:appinfo>
         </xsd:annotation>
         <xsd:complexType>
             <xsd:attribute name="unmarshaller" type="xsd:string" default="marshaller">
@@ -61,9 +67,15 @@
     <xsd:element name="xpath-endpoints">
         <xsd:annotation>
             <xsd:documentation
-                    source="java:org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter">
+                    source="java:org.springframework.ws.server.endpoint.adapter.XPathParamAnnotationMethodEndpointAdapter">
                 Indicates that a endpoints using @XPathParam annotations should be detected.
             </xsd:documentation>
+            <xsd:appinfo>
+                <tool:annotation>
+                    <tool:exports
+                            type="org.springframework.ws.server.endpoint.adapter.XPathParamAnnotationMethodEndpointAdapter"/>
+                </tool:annotation>
+            </xsd:appinfo>
         </xsd:annotation>
         <xsd:complexType>
             <xsd:sequence>
