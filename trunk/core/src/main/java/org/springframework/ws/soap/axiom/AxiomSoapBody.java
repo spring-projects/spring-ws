@@ -30,6 +30,7 @@ import org.apache.axiom.soap.SOAPFault;
 
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapFault;
+import org.springframework.ws.soap.axiom.support.AxiomUtils;
 import org.springframework.xml.transform.StaxSource;
 
 /**
@@ -68,6 +69,7 @@ abstract class AxiomSoapBody extends AxiomSoapElement implements SoapBody {
     }
 
     public Result getPayloadResult() {
+        AxiomUtils.removeContents(getAxiomBody());
         return new SAXResult(new AxiomContentHandler(getAxiomBody(), getAxiomFactory()));
     }
 
