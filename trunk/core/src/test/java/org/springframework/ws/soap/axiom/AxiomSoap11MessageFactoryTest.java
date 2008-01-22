@@ -27,31 +27,4 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
         return factory;
     }
 
-/*
-    public void testCreateMtom() throws Exception {
-        SOAP11Factory factory = new SOAP11Factory();
-        SOAPEnvelope envelope = factory.getDefaultEnvelope();
-
-        OMNamespace namespace = factory.createOMNamespace("http://springframework.org/spring-ws/mtom", "sws");
-        OMElement element = factory.createOMElement("image", namespace);
-        envelope.getBody().addChild(element);
-        DataHandler dataHandler = new javax.activation.DataHandler(new FileDataSource("/Users/arjen/spring-ws/src/site/resources/images/spring-ws.png"));
-
-        //create an OMText node with the above DataHandler and set optimized to true
-        OMText textData = factory.createOMText(dataHandler, true);
-
-        element.addChild(textData);
-
-        OMOutputFormat format = new OMOutputFormat();
-        format.setDoOptimize(true);
-        format.setSOAP11(true);
-        format.setCharSetEncoding("UTF-8");
-        assertTrue(format.isOptimized());
-        OutputStream os = new BufferedOutputStream(new FileOutputStream(
-                "/Users/arjen/Projects/Spring/spring-ws/core/src/test/resources/org/springframework/ws/soap/soap11/soap11-mtom.bin"));
-        try {
-        envelope.serialize(os, format);
-        } finally {
-            os.close();
-            */
 }
