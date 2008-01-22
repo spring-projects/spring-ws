@@ -72,6 +72,6 @@ public interface SoapElement {
      *
      * @return an iterator over all the attribute names
      */
-    Iterator getAllAttibutes();
+    Iterator getAllAttributes();
 
 }

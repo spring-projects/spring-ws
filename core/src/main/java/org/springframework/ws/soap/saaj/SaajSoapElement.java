@@ -76,7 +76,7 @@ class SaajSoapElement implements SoapElement {
         }
     }
 
-    public Iterator getAllAttibutes() {
+    public Iterator getAllAttributes() {
         return getImplementation().getAllAttibutes(element);
     }
 
