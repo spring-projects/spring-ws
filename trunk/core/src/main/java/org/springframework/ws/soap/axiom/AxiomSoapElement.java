@@ -101,7 +101,7 @@ class AxiomSoapElement implements SoapElement {
         }
     }
 
-    public final Iterator getAllAttibutes() {
+    public final Iterator getAllAttributes() {
         try {
             List results = new ArrayList();
             for (Iterator iterator = getAxiomElement().getAllAttributes(); iterator.hasNext();) {

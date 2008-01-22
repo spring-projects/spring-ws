@@ -42,7 +42,7 @@ public abstract class AbstractSoapElementTestCase extends XMLTestCase {
         String value = "value";
         soapElement.addAttribute(name, value);
         assertEquals("Invalid attribute value", value, soapElement.getAttributeValue(name));
-        Iterator allAttributes = soapElement.getAllAttibutes();
+        Iterator allAttributes = soapElement.getAllAttributes();
         assertTrue("Iterator is empty", allAttributes.hasNext());
 
     }
