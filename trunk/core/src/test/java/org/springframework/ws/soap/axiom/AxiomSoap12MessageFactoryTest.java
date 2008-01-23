@@ -25,6 +25,7 @@ public class AxiomSoap12MessageFactoryTest extends AbstractSoap12MessageFactoryT
     protected WebServiceMessageFactory createMessageFactory() throws Exception {
         AxiomSoapMessageFactory factory = new AxiomSoapMessageFactory();
         factory.setSoapVersion(SoapVersion.SOAP_12);
+        factory.afterPropertiesSet();
         return factory;
     }
 

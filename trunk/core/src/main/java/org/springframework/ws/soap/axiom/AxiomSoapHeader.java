@@ -21,6 +21,7 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 import javax.xml.transform.sax.SAXResult;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAPFactory;
@@ -54,6 +55,18 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
                     getAxiomFactory().createOMNamespace(name.getNamespaceURI(), QNameUtils.getPrefix(name));
             SOAPHeaderBlock axiomHeaderBlock = getAxiomHeader().addHeaderBlock(name.getLocalPart(), namespace);
             return new AxiomSoapHeaderElement(axiomHeaderBlock, getAxiomFactory());
+        }
+        catch (OMException ex) {
+            throw new AxiomSoapHeaderException(ex);
+        }
+    }
+
+    public void removeHeaderElement(QName name) throws SoapHeaderException {
+        try {
+            OMElement element = getAxiomHeader().getFirstChildWithName(name);
+            if (element != null) {
+                element.detach();
+            }
         }
         catch (OMException ex) {
             throw new AxiomSoapHeaderException(ex);

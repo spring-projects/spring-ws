@@ -50,6 +50,17 @@ public interface SoapHeader extends SoapElement {
     SoapHeaderElement addHeaderElement(QName name) throws SoapHeaderException;
 
     /**
+     * Removes the <code>SoapHeaderElement</code> with the specified qualified name from this header.
+     * <p/>
+     * This method will only remove the first child element with the specified name. If no element is found with the
+     * specified name, this method has no effect.
+     *
+     * @param name the qualified name of the header element to be removed
+     * @throws SoapHeaderException if the header cannot be removed
+     */
+    void removeHeaderElement(QName name) throws SoapHeaderException;
+
+    /**
      * Returns an <code>Iterator</code> over all the <code>SoapHeaderElement</code>s that have the specified actor or
      * role and that have a <code>MustUnderstand</code> attribute whose value is equivalent to <code>true</code>.
      *

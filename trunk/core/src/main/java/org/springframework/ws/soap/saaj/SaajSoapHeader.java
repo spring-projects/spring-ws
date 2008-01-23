@@ -18,6 +18,7 @@ package org.springframework.ws.soap.saaj;
 
 import java.util.Iterator;
 import javax.xml.namespace.QName;
+import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
@@ -54,6 +55,19 @@ abstract class SaajSoapHeader extends SaajSoapElement implements SoapHeader {
         try {
             SOAPHeaderElement headerElement = getImplementation().addHeaderElement(getSaajHeader(), name);
             return new SaajSoapHeaderElement(headerElement);
+        }
+        catch (SOAPException ex) {
+            throw new SaajSoapHeaderException(ex);
+        }
+    }
+
+    public void removeHeaderElement(QName name) throws SoapHeaderException {
+        try {
+            Iterator iterator = getImplementation().getChildElements(getSaajHeader(), name);
+            if (iterator.hasNext()) {
+                SOAPElement element = (SOAPElement) iterator.next();
+                element.detachNode();
+            }
         }
         catch (SOAPException ex) {
             throw new SaajSoapHeaderException(ex);
