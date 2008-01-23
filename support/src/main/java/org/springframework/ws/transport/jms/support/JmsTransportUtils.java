@@ -17,10 +17,16 @@
 package org.springframework.ws.transport.jms.support;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.jms.DeliveryMode;
 import javax.jms.Destination;
+import javax.jms.JMSException;
 import javax.jms.Message;
 
 import org.springframework.ws.transport.jms.JmsTransportConstants;
@@ -33,6 +39,11 @@ import org.springframework.ws.transport.jms.JmsTransportConstants;
  * @since 1.5.0
  */
 public class JmsTransportUtils {
+
+    private static final String[] CONVERSION_TABLE = new String[]{JmsTransportConstants.HEADER_CONTENT_TYPE,
+            JmsTransportConstants.PROPERTY_CONTENT_TYPE, JmsTransportConstants.HEADER_CONTENT_LENGTH,
+            JmsTransportConstants.PROPERTY_CONTENT_LENGTH, JmsTransportConstants.HEADER_SOAP_ACTION,
+            JmsTransportConstants.PROPERTY_SOAP_ACTION};
 
     private static final Pattern DESTINATION_NAME_PATTERN = Pattern.compile("^([^\\?]+)");
 
@@ -49,8 +60,78 @@ public class JmsTransportUtils {
     private JmsTransportUtils() {
     }
 
+    /**
+     * Converts the given transport header to a JMS property name. Returns the given header name if no match is found.
+     *
+     * @param headerName the header name to transform
+     * @return the JMS property name
+     */
+    public static String headerToJmsProperty(String headerName) {
+        for (int i = 0; i < CONVERSION_TABLE.length; i = i + 2) {
+            if (CONVERSION_TABLE[i].equals(headerName)) {
+                return CONVERSION_TABLE[i + 1];
+            }
+        }
+        return headerName;
+    }
+
+    /**
+     * Converts the given JMS property name to a transport header name. Returns the given property name if no match is
+     * found.
+     *
+     * @param propertyName the JMS property name to transform
+     * @return the transport header name
+     */
+    public static String jmsPropertyToHeader(String propertyName) {
+        for (int i = 1; i < CONVERSION_TABLE.length; i = i + 2) {
+            if (CONVERSION_TABLE[i].equals(propertyName)) {
+                return CONVERSION_TABLE[i - 1];
+            }
+        }
+        return propertyName;
+    }
+
+    /** Returns the destination name of the given URI. */
     public static String getDestinationName(URI uri) {
         return getStringParameter(DESTINATION_NAME_PATTERN, uri);
+    }
+
+    /** Adds the given header to the specified message. */
+    public static void addHeader(Message message, String name, String value) throws JMSException {
+        String propertyName = JmsTransportUtils.headerToJmsProperty(name);
+        message.setStringProperty(propertyName, value);
+    }
+
+    /**
+     * Returns an iterator over all header names in the given message. Delegates to {@link
+     * #jmsPropertyToHeader(String)}.
+     */
+    public static Iterator getHeaderNames(Message message) throws JMSException {
+        Enumeration properties = message.getPropertyNames();
+        List results = new ArrayList();
+        while (properties.hasMoreElements()) {
+            String property = (String) properties.nextElement();
+            if (property.startsWith(JmsTransportConstants.PROPERTY_PREFIX)) {
+                String header = jmsPropertyToHeader(property);
+                results.add(header);
+            }
+        }
+        return results.iterator();
+    }
+
+    /**
+     * Returns an iterator over all the header values of the given message and header name. Delegates to {@link
+     * #headerToJmsProperty(String)}.
+     */
+    public static Iterator getHeaders(Message message, String name) throws JMSException {
+        String propertyName = headerToJmsProperty(name);
+        String value = message.getStringProperty(propertyName);
+        if (value != null) {
+            return Collections.singletonList(value).iterator();
+        }
+        else {
+            return Collections.EMPTY_LIST.iterator();
+        }
     }
 
     /**

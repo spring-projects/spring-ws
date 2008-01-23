@@ -21,7 +21,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Collections;
 import java.util.Iterator;
 import javax.jms.BytesMessage;
 import javax.jms.Connection;
@@ -41,7 +40,7 @@ import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractSenderConnection;
 import org.springframework.ws.transport.WebServiceConnection;
-import org.springframework.ws.transport.support.EnumerationIterator;
+import org.springframework.ws.transport.jms.support.JmsTransportUtils;
 
 /**
  * Implementation of {@link WebServiceConnection} that is used for client-side JMS access. Exposes a {@link
@@ -169,7 +168,7 @@ public class JmsSenderConnection extends AbstractSenderConnection implements Web
 
     protected void addRequestHeader(String name, String value) throws IOException {
         try {
-            requestMessage.setStringProperty(name, value);
+            JmsTransportUtils.addHeader(requestMessage, name, value);
         }
         catch (JMSException ex) {
             throw new JmsTransportException("Could not set property", ex);
@@ -257,7 +256,7 @@ public class JmsSenderConnection extends AbstractSenderConnection implements Web
 
     protected Iterator getResponseHeaderNames() throws IOException {
         try {
-            return new EnumerationIterator(responseMessage.getPropertyNames());
+            return JmsTransportUtils.getHeaderNames(responseMessage);
         }
         catch (JMSException ex) {
             throw new JmsTransportException("Could not get property names", ex);
@@ -266,13 +265,7 @@ public class JmsSenderConnection extends AbstractSenderConnection implements Web
 
     protected Iterator getResponseHeaders(String name) throws IOException {
         try {
-            String value = responseMessage.getStringProperty(name);
-            if (value != null) {
-                return Collections.singletonList(value).iterator();
-            }
-            else {
-                return Collections.EMPTY_LIST.iterator();
-            }
+            return JmsTransportUtils.getHeaders(responseMessage, name);
         }
         catch (JMSException ex) {
             throw new JmsTransportException("Could not get property value", ex);
