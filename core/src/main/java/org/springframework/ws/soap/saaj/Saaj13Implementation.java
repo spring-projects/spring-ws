@@ -255,6 +255,10 @@ class Saaj13Implementation extends SaajImplementation {
         element.removeContents();
     }
 
+    Iterator getChildElements(SOAPElement element, QName name) throws SOAPException {
+        return element.getChildElements(name);
+    }
+
     public void writeTo(SOAPMessage message, OutputStream outputStream) throws SOAPException, IOException {
         if (message.saveRequired()) {
             message.saveChanges();

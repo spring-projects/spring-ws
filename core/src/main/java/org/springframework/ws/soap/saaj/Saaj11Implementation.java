@@ -43,6 +43,8 @@ import javax.xml.transform.Source;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.SAXSource;
 
+import org.xml.sax.InputSource;
+
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.SoapVersion;
@@ -52,7 +54,6 @@ import org.springframework.ws.soap.saaj.support.SaajXmlReader;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportOutputStream;
 import org.springframework.xml.namespace.QNameUtils;
-import org.xml.sax.InputSource;
 
 /**
  * SAAJ 1.1 specific implementation of the <code>SaajImplementation</code> interface.
@@ -275,6 +276,11 @@ class Saaj11Implementation extends SaajImplementation {
             iterator.next();
             iterator.remove();
         }
+    }
+
+    Iterator getChildElements(SOAPElement element, QName name) throws SOAPException {
+        Name elementName = SaajUtils.toName(name, element);
+        return element.getChildElements(elementName);
     }
 
     public void writeTo(SOAPMessage message, OutputStream outputStream) throws SOAPException, IOException {

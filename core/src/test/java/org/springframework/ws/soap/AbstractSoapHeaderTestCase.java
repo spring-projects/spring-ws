@@ -42,10 +42,21 @@ public abstract class AbstractSoapHeaderTestCase extends AbstractSoapElementTest
         SoapHeaderElement headerElement = soapHeader.addHeaderElement(qName);
         assertNotNull("No SoapHeaderElement returned", headerElement);
         assertEquals("Invalid qName for element", qName, headerElement.getName());
+        Iterator iterator = soapHeader.examineAllHeaderElements();
+        assertTrue("SoapHeader has no elements", iterator.hasNext());
         String payload = "<content xmlns='http://www.springframework.org'/>";
         transformer.transform(new StringSource(payload), headerElement.getResult());
         assertHeaderElementEqual(headerElement,
                 "<spring:localName xmlns:spring='http://www.springframework.org'><spring:content/></spring:localName>");
+    }
+
+    public void testRemoveHeaderElement() throws Exception {
+        QName qName = new QName(NAMESPACE, "localName", PREFIX);
+        soapHeader.removeHeaderElement(qName);
+        soapHeader.addHeaderElement(qName);
+        soapHeader.removeHeaderElement(qName);
+        Iterator iterator = soapHeader.examineAllHeaderElements();
+        assertFalse("SoapHeader has elements", iterator.hasNext());
     }
 
     public void testExamineAllHeaderElement() throws Exception {

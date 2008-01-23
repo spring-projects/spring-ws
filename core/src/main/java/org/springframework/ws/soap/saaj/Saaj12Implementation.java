@@ -228,6 +228,11 @@ class Saaj12Implementation extends SaajImplementation {
         element.removeContents();
     }
 
+    Iterator getChildElements(SOAPElement element, QName name) throws SOAPException {
+        Name elementName = SaajUtils.toName(name, element);
+        return element.getChildElements(elementName);
+    }
+
     public void writeTo(SOAPMessage message, OutputStream outputStream) throws SOAPException, IOException {
         if (message.saveRequired()) {
             message.saveChanges();
