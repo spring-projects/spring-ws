@@ -33,7 +33,6 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
-import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.WebServiceConnection;
 
 public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjectionSpringContextTests {
@@ -80,8 +79,8 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
 
                 public Message createMessage(Session session) throws JMSException {
                     BytesMessage response = session.createBytesMessage();
-                    response.setStringProperty(TransportConstants.HEADER_SOAP_ACTION, SOAP_ACTION);
-                    response.setStringProperty(TransportConstants.HEADER_CONTENT_TYPE,
+                    response.setStringProperty(JmsTransportConstants.PROPERTY_SOAP_ACTION, SOAP_ACTION);
+                    response.setStringProperty(JmsTransportConstants.PROPERTY_CONTENT_TYPE,
                             SoapVersion.SOAP_11.getContentType());
                     response.writeBytes(buf);
                     return response;
@@ -117,8 +116,8 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
 
                 public Message createMessage(Session session) throws JMSException {
                     TextMessage response = session.createTextMessage();
-                    response.setStringProperty(TransportConstants.HEADER_SOAP_ACTION, SOAP_ACTION);
-                    response.setStringProperty(TransportConstants.HEADER_CONTENT_TYPE,
+                    response.setStringProperty(JmsTransportConstants.PROPERTY_SOAP_ACTION, SOAP_ACTION);
+                    response.setStringProperty(JmsTransportConstants.PROPERTY_CONTENT_TYPE,
                             SoapVersion.SOAP_11.getContentType());
                     response.setText(text);
                     return response;

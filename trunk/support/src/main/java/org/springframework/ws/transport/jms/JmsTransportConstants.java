@@ -38,5 +38,16 @@ public interface JmsTransportConstants extends TransportConstants {
     /** Indicates a {@link TextMessage} type. */
     int TEXT_MESSAGE_TYPE = 2;
 
+    /** Prefix for JMS properties that map to transport headers. */
+    String PROPERTY_PREFIX = "SOAPJMS_";
+
+    /** JMS property used for storing {@link #HEADER_SOAP_ACTION}. */
+    String PROPERTY_SOAP_ACTION = PROPERTY_PREFIX + "soapAction";
+
+    /** JMS property used for storing {@link #HEADER_CONTENT_LENGTH}. */
+    String PROPERTY_CONTENT_LENGTH = PROPERTY_PREFIX + "contentLength";
+
+    /** JMS property used for storing {@link #HEADER_CONTENT_TYPE}. */
+    String PROPERTY_CONTENT_TYPE = PROPERTY_PREFIX + "contentType";
 
 }

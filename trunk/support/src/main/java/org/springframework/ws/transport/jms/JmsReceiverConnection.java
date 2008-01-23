@@ -21,7 +21,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Collections;
 import java.util.Iterator;
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
@@ -35,7 +34,7 @@ import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractReceiverConnection;
 import org.springframework.ws.transport.WebServiceConnection;
-import org.springframework.ws.transport.support.EnumerationIterator;
+import org.springframework.ws.transport.jms.support.JmsTransportUtils;
 
 /**
  * Implementation of {@link WebServiceConnection} that is used for server-side JMS access. Exposes a {@link
@@ -117,7 +116,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 
     protected Iterator getRequestHeaderNames() throws IOException {
         try {
-            return new EnumerationIterator(requestMessage.getPropertyNames());
+            return JmsTransportUtils.getHeaderNames(requestMessage);
         }
         catch (JMSException ex) {
             throw new JmsTransportException("Could not get property names", ex);
@@ -126,8 +125,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 
     protected Iterator getRequestHeaders(String name) throws IOException {
         try {
-            String value = requestMessage.getStringProperty(name);
-            return Collections.singletonList(value).iterator();
+            return JmsTransportUtils.getHeaders(requestMessage, name);
         }
         catch (JMSException ex) {
             throw new JmsTransportException("Could not get property value", ex);
@@ -138,7 +136,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
         if (requestMessage instanceof BytesMessage) {
             return new BytesMessageInputStream((BytesMessage) requestMessage);
         }
-        else {
+        else if (requestMessage instanceof TextMessage) {
             TextMessage textMessage = (TextMessage) requestMessage;
             try {
                 String text = textMessage.getText();
@@ -148,6 +146,9 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
             catch (JMSException ex) {
                 throw new JmsTransportException(ex);
             }
+        }
+        else {
+            throw new IllegalStateException("Unknown request message type [" + requestMessage + "]");
         }
     }
 
@@ -160,8 +161,11 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
             if (requestMessage instanceof BytesMessage) {
                 responseMessage = session.createBytesMessage();
             }
-            else {
+            else if (requestMessage instanceof TextMessage) {
                 responseMessage = session.createTextMessage();
+            }
+            else {
+                throw new IllegalStateException("Unknown request message type [" + requestMessage + "]");
             }
             responseMessage.setJMSCorrelationID(requestMessage.getJMSMessageID());
         }
@@ -172,7 +176,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 
     protected void addResponseHeader(String name, String value) throws IOException {
         try {
-            responseMessage.setStringProperty(name, value);
+            JmsTransportUtils.addHeader(responseMessage, name, value);
         }
         catch (JMSException ex) {
             throw new JmsTransportException("Could not set property", ex);
@@ -183,7 +187,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
         if (responseMessage instanceof BytesMessage) {
             return new BytesMessageOutputStream((BytesMessage) responseMessage);
         }
-        else {
+        else if (responseMessage instanceof TextMessage) {
             return new ByteArrayOutputStream() {
 
                 public void close() throws IOException {
@@ -196,6 +200,9 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
                     }
                 }
             };
+        }
+        else {
+            throw new IllegalStateException("Unknown request message type [" + responseMessage + "]");
         }
     }
 
