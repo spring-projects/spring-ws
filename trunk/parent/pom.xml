@@ -30,20 +30,19 @@
         <url>http://fisheye3.cenqua.com/browse/springframework/spring-ws/trunk</url>
     </scm>
     <properties>
-        <spring.version>2.0.7</spring.version>
-        <osgi.version>1.5.0.m1</osgi.version>
+        <spring.version>2.5.1</spring.version>
     </properties>
     <repositories>
-		<repository>
-			<id>spring-release</id>
-			<name>Spring Portfolio Release Repository</name>
-			<url>http://s3.amazonaws.com/maven.springframework.org/release</url>
-		</repository>
-		<repository>
-			<id>spring-external</id>
-			<name>Spring Portfolio Release Repository</name>
-			<url>http://s3.amazonaws.com/maven.springframework.org/external</url>
-		</repository>
+        <repository>
+            <id>spring-release</id>
+            <name>Spring Portfolio Release Repository</name>
+            <url>http://s3.amazonaws.com/maven.springframework.org/release</url>
+        </repository>
+        <repository>
+            <id>spring-external</id>
+            <name>Spring Portfolio Release Repository</name>
+            <url>http://s3.amazonaws.com/maven.springframework.org/external</url>
+        </repository>
         <repository>
             <id>java.net</id>
             <name>Java.net Repository for Maven</name>
@@ -270,12 +269,6 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-remoting</artifactId>
                 <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-mock</artifactId>
-                <version>${spring.version}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
