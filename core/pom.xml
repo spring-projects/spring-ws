@@ -12,37 +12,6 @@
     <description>Spring Web Services Core package.</description>
     <profiles>
         <profile>
-            <id>spring-2.0</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-                <property>
-                    <name>spring.version</name>
-                    <value>2.0.7</value>
-                </property>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-mock</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>spring-2.5</id>
-            <activation>
-                <property>
-                    <name>spring.version</name>
-                    <value>2.5.1</value>
-                </property>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-test</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
             <id>jdk14-jdk15</id>
             <activation>
                 <jdk>!1.6</jdk>
@@ -136,6 +105,10 @@
                     <artifactId>spring-support</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
         </dependency>
         <!-- XML handling dependencies -->
         <dependency>
