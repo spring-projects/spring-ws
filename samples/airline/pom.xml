@@ -148,12 +148,12 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-jpa</artifactId>
+            <artifactId>spring-orm</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-dao</artifactId>
+            <artifactId>spring-tx</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -174,8 +174,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-mock</artifactId>
-            <scope>test</scope>
+            <artifactId>spring-test</artifactId>
         </dependency>
         <!-- JEE dependencies -->
         <dependency>

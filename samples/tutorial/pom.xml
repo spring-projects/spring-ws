@@ -59,10 +59,6 @@
         </dependency>
         <!-- Test dependencies -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-mock</artifactId>
-        </dependency>
-        <dependency>
             <groupId>easymock</groupId>
             <artifactId>easymock</artifactId>
             <version>1.2_Java1.3</version>
