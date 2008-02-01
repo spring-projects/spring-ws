@@ -19,8 +19,10 @@ package org.springframework.ws.context;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.util.StringUtils;
+
 /**
- * Abstract base class for {@link MessageContext instances}.
+ * Abstract base class for {@link MessageContext} instances.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -42,7 +44,7 @@ public abstract class AbstractMessageContext implements MessageContext {
     }
 
     public String[] getPropertyNames() {
-        return (String[]) getProperties().keySet().toArray(new String[getProperties().size()]);
+        return StringUtils.toStringArray(getProperties().keySet());
     }
 
     public void removeProperty(String name) {
