@@ -20,12 +20,16 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.server.EndpointInterceptor;
 
 /**
  * Context holder for message requests.
  * <p/>
- * <p>Contains both the message request as well as the response. Response message are usually lazily created (but do not
+ * Contains both the message request as well as the response. Response message are usually lazily created (but do not
  * have to be).
+ * <p/>
+ * Also contains properties, which can be used to by {@link EndpointInterceptor interceptors} to pass information on to
+ * endpoints.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -40,6 +44,13 @@ public interface MessageContext {
     WebServiceMessage getRequest();
 
     /**
+     * Indicates whether this context has a response.
+     *
+     * @return <code>true</code> if this context has a response; <code>false</code> otherwise
+     */
+    boolean hasResponse();
+
+    /**
      * Returns the response message. Creates a new response if no response is present.
      *
      * @return the response message
@@ -48,11 +59,12 @@ public interface MessageContext {
     WebServiceMessage getResponse();
 
     /**
-     * Indicates whether this context has a response.
+     * Sets the response message.
      *
-     * @return <code>true</code> if this context has a response; <code>false</code> otherwise
+     * @param response the response message
+     * @throws IllegalStateException if a response has already been created
      */
-    boolean hasResponse();
+    void setResponse(WebServiceMessage response);
 
     /**
      * Reads a response message from the given input stream.
