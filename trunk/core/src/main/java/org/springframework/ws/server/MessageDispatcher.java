@@ -23,6 +23,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.BeanNameAware;
@@ -47,9 +50,6 @@ import org.springframework.ws.server.endpoint.adapter.PayloadMethodEndpointAdapt
 import org.springframework.ws.soap.server.SoapMessageDispatcher;
 import org.springframework.ws.support.DefaultStrategiesHelper;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Central dispatcher for use within Spring-WS, dispatching Web service messages to registered endpoints.
@@ -211,7 +211,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
                     }
                 }
             }
-            // Acutally invoke the endpoint
+            // Actually invoke the endpoint
             EndpointAdapter endpointAdapter = getEndpointAdapter(mappedEndpoint.getEndpoint());
             endpointAdapter.invoke(messageContext, mappedEndpoint.getEndpoint());
 
@@ -324,6 +324,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
      * @param interceptorIndex index of last interceptor that was called
      * @param messageContext   the message context, whose request and response are filled
      * @see EndpointInterceptor#handleResponse(MessageContext,Object)
+     * @see EndpointInterceptor#handleFault(MessageContext, Object)
      */
     private void triggerHandleResponse(EndpointInvocationChain mappedEndpoint,
                                        int interceptorIndex,

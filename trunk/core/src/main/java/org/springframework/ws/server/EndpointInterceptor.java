@@ -23,13 +23,14 @@ import org.springframework.ws.context.MessageContext;
  * existing or custom interceptors for certain groups of endpoints, to add common preprocessing behavior without needing
  * to modify each endpoint implementation.
  * <p/>
- * A <code>EndpointInterceptor</code> gets called before the appropriate {@link EndpointAdapter} triggers the invocation
- * of the endpoint itself. This mechanism can be used for a large field of preprocessing aspects, e.g. for authorization
- * checks, or message header checks. Its main purpose is to allow for factoring out repetitive endpoint code.
+ * An <code>EndpointInterceptor</code> gets called before the appropriate {@link EndpointAdapter} triggers the
+ * invocation of the endpoint itself. This mechanism can be used for a large field of preprocessing aspects, e.g. for
+ * authorization checks, or message header checks. Its main purpose is to allow for factoring out repetitive endpoint
+ * code.
  * <p/>
  * Typically an interceptor chain is defined per {@link EndpointMapping} bean, sharing its granularity. To be able to
  * apply a certain interceptor chain to a group of handlers, one needs to map the desired handlers via one
- * <code>EndpointMapping</code> bean.The interceptors themselves are defined as beans in the application context,
+ * <code>EndpointMapping</code> bean. The interceptors themselves are defined as beans in the application context,
  * referenced by the mapping bean definition via its <code>interceptors</code> property (in XML: a &lt;list&gt; of
  * &lt;ref&gt;).
  *
@@ -54,7 +55,7 @@ public interface EndpointInterceptor {
      * @return <code>true</code> to continue processing of the request interceptor chain; <code>false</code> to indicate
      *         blocking of the request endpoint chain, <em>without invoking the endpoint</em>
      * @throws Exception in case of errors
-     * @see org.springframework.ws.context.MessageContext#getRequest()
+     * @see MessageContext#getRequest()
      */
     boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception;
 
@@ -73,9 +74,9 @@ public interface EndpointInterceptor {
      * @return <code>true</code> to continue processing of the reponse interceptor chain; <code>false</code> to indicate
      *         blocking of the response endpoint chain.
      * @throws Exception in case of errors
-     * @see org.springframework.ws.context.MessageContext#getRequest()
-     * @see org.springframework.ws.context.MessageContext#hasResponse()
-     * @see org.springframework.ws.context.MessageContext#getResponse()
+     * @see MessageContext#getRequest()
+     * @see MessageContext#hasResponse()
+     * @see MessageContext#getResponse()
      */
     boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception;
 
