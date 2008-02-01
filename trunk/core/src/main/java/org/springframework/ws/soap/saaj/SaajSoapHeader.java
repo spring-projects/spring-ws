@@ -16,7 +16,9 @@
 
 package org.springframework.ws.soap.saaj;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
@@ -43,12 +45,12 @@ abstract class SaajSoapHeader extends SaajSoapElement implements SoapHeader {
 
     public Iterator examineAllHeaderElements() throws SoapHeaderException {
         Iterator iterator = getImplementation().examineAllHeaderElements(getSaajHeader());
-        return new SaajSoapHeaderElementIterator(iterator);
+        return createSaajSoapHeaderElementIterator(iterator);
     }
 
     public Iterator examineMustUnderstandHeaderElements(String actorOrRole) throws SoapHeaderException {
         Iterator iterator = getImplementation().examineMustUnderstandHeaderElements(getSaajHeader(), actorOrRole);
-        return new SaajSoapHeaderElementIterator(iterator);
+        return createSaajSoapHeaderElementIterator(iterator);
     }
 
     public SoapHeaderElement addHeaderElement(QName name) throws SoapHeaderException {
@@ -80,6 +82,17 @@ abstract class SaajSoapHeader extends SaajSoapElement implements SoapHeader {
 
     public Result getResult() {
         return getImplementation().getResult(getSaajHeader());
+    }
+
+    private Iterator createSaajSoapHeaderElementIterator(Iterator iterator) {
+        List result = new ArrayList();
+        while (iterator.hasNext()) {
+            Object o = iterator.next();
+            if (o instanceof SOAPHeaderElement) {
+                result.add(o);
+            }
+        }
+        return new SaajSoapHeaderElementIterator(result.iterator());
     }
 
     protected static class SaajSoapHeaderElementIterator implements Iterator {
