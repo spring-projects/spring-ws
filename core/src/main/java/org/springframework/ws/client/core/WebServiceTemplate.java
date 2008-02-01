@@ -40,10 +40,14 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
+import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.WebServiceIOException;
 import org.springframework.ws.client.WebServiceTransformerException;
 import org.springframework.ws.client.WebServiceTransportException;
 import org.springframework.ws.client.support.WebServiceAccessor;
+import org.springframework.ws.client.support.interceptor.ClientInterceptor;
+import org.springframework.ws.context.DefaultMessageContext;
+import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.client.core.SoapFaultMessageResolver;
 import org.springframework.ws.support.DefaultStrategiesHelper;
 import org.springframework.ws.support.MarshallingUtils;
@@ -55,6 +59,7 @@ import org.springframework.ws.transport.context.DefaultTransportContext;
 import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
 import org.springframework.ws.transport.http.HttpUrlConnectionMessageSender;
+import org.springframework.ws.transport.support.TransportUtils;
 
 /**
  * <strong>The central class for client-side Web services.</strong> It provides a message-driven approach to sending and
@@ -109,6 +114,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     private String defaultUri;
 
     private boolean checkConnectionForFault = true;
+
+    private ClientInterceptor[] interceptors;
 
     /** Creates a new <code>WebServiceTemplate</code> using default settings. */
     public WebServiceTemplate() {
@@ -195,6 +202,24 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      */
     public void setCheckConnectionForFault(boolean checkConnectionForFault) {
         this.checkConnectionForFault = checkConnectionForFault;
+    }
+
+    /**
+     * Returns the client interceptors to apply to all web service invocations made by this template.
+     *
+     * @return array of endpoint interceptors, or <code>null</code> if none
+     */
+    public ClientInterceptor[] getInterceptors() {
+        return interceptors;
+    }
+
+    /**
+     * Sets the client interceptors to apply to all web service invocations made by this template.
+     *
+     * @param interceptors array of endpoint interceptors, or <code>null</code> if none
+     */
+    public final void setInterceptors(ClientInterceptor[] interceptors) {
+        this.interceptors = interceptors;
     }
 
     /**
@@ -390,61 +415,88 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
         return sendAndReceive(getDefaultUri(), requestCallback, responseExtractor);
     }
 
-    public Object sendAndReceive(String uri,
+    public Object sendAndReceive(String uriString,
                                  WebServiceMessageCallback requestCallback,
                                  WebServiceMessageExtractor responseExtractor) {
         Assert.notNull(responseExtractor, "'responseExtractor' must not be null");
-        Assert.hasLength(uri, "'uri' must not be empty");
+        Assert.hasLength(uriString, "'uri' must not be empty");
         TransportContext previousTransportContext = TransportContextHolder.getTransportContext();
         WebServiceConnection connection = null;
         try {
-            URI theUri = URI.create(uri);
-            connection = createConnection(theUri);
+            connection = createConnection(URI.create(uriString));
             TransportContextHolder.setTransportContext(new DefaultTransportContext(connection));
-            WebServiceMessage request = getMessageFactory().createWebServiceMessage();
-            if (requestCallback != null) {
-                requestCallback.doWithMessage(request);
-            }
-            sendRequest(connection, request);
-            if (hasError(connection, request)) {
-                return handleError(connection, request);
-            }
-            WebServiceMessage response = connection.receive(getMessageFactory());
-            if (response != null) {
-                if (hasFault(connection, response)) {
-                    return handleFault(connection, request, response);
-                }
-                else {
-                    logResponse(request, response);
-                    return responseExtractor.extractData(response);
-                }
-            }
-            else {
-                if (logger.isDebugEnabled()) {
-                    messageTracingLogger.debug("Received no response for request [" + request + "]");
-                }
-                return null;
-            }
+            MessageContext messageContext = new DefaultMessageContext(getMessageFactory());
+
+            return doSendAndReceive(messageContext, connection, requestCallback, responseExtractor);
         }
         catch (TransportException ex) {
             throw new WebServiceTransportException("Could not use transport: " + ex.getMessage(), ex);
-        }
-        catch (TransformerException ex) {
-            throw new WebServiceTransformerException("Transformation error: " + ex.getMessage(), ex);
         }
         catch (IOException ex) {
             throw new WebServiceIOException("I/O error: " + ex.getMessage(), ex);
         }
         finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                }
-                catch (IOException ex) {
-                    logger.debug("Could not close WebServiceConnection", ex);
+            TransportUtils.closeConnection(connection);
+            TransportContextHolder.setTransportContext(previousTransportContext);
+        }
+    }
+
+    /**
+     * Sends and receives a {@link MessageContext}. Sends the {@link MessageContext#getRequest() request message}, and
+     * received to the {@link MessageContext#getResponse() repsonse message}. Invocates the defined {@link
+     * #setInterceptors(ClientInterceptor[]) interceptors} as part of the process.
+     *
+     * @param messageContext    the message context
+     * @param connection        the connection to use
+     * @param requestCallback   the requestCallback to be used for manipulating the request message
+     * @param responseExtractor object that will extract results
+     * @return an arbitrary result object, as returned by the <code>WebServiceMessageExtractor</code>
+     * @throws WebServiceClientException if there is a problem sending or receiving the message
+     * @throws IOException               in case of I/O errors
+     */
+    protected Object doSendAndReceive(MessageContext messageContext,
+                                      WebServiceConnection connection,
+                                      WebServiceMessageCallback requestCallback,
+                                      WebServiceMessageExtractor responseExtractor) throws IOException {
+        try {
+            if (requestCallback != null) {
+                requestCallback.doWithMessage(messageContext.getRequest());
+            }
+            // Apply handleRequest of registered interceptors
+            int interceptorIndex = -1;
+            if (interceptors != null) {
+                for (int i = 0; i < interceptors.length; i++) {
+                    interceptorIndex = i;
+                    if (!interceptors[i].handleRequest(messageContext)) {
+                        break;
+                    }
                 }
             }
-            TransportContextHolder.setTransportContext(previousTransportContext);
+            // if an interceptor has set a response, we don't send/receive
+            if (!messageContext.hasResponse()) {
+                sendRequest(connection, messageContext.getRequest());
+                if (hasError(connection, messageContext.getRequest())) {
+                    return handleError(connection, messageContext.getRequest());
+                }
+                WebServiceMessage response = connection.receive(getMessageFactory());
+                messageContext.setResponse(response);
+            }
+            logResponse(messageContext);
+            triggerHandleResponse(interceptorIndex, messageContext);
+            if (messageContext.hasResponse()) {
+                if (hasFault(connection, messageContext.getResponse())) {
+                    return handleFault(connection, messageContext.getRequest(), messageContext.getResponse());
+                }
+                else {
+                    return responseExtractor.extractData(messageContext.getResponse());
+                }
+            }
+            else {
+                return null;
+            }
+        }
+        catch (TransformerException ex) {
+            throw new WebServiceTransformerException("Transformation error: " + ex.getMessage(), ex);
         }
     }
 
@@ -550,17 +602,55 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
         connection.send(request);
     }
 
-    private void logResponse(WebServiceMessage request, WebServiceMessage response) throws IOException {
-        if (messageTracingLogger.isTraceEnabled()) {
-            ByteArrayOutputStream requestStream = new ByteArrayOutputStream();
-            request.writeTo(requestStream);
-            ByteArrayOutputStream responseStream = new ByteArrayOutputStream();
-            response.writeTo(responseStream);
-            messageTracingLogger.trace("Received response [" + responseStream.toString("UTF-8") + "] for request [" +
-                    requestStream.toString("UTF-8") + "]");
+    private void logResponse(MessageContext messageContext) throws IOException {
+        if (messageContext.hasResponse()) {
+            if (messageTracingLogger.isTraceEnabled()) {
+                ByteArrayOutputStream requestStream = new ByteArrayOutputStream();
+                messageContext.getRequest().writeTo(requestStream);
+                ByteArrayOutputStream responseStream = new ByteArrayOutputStream();
+                messageContext.getResponse().writeTo(responseStream);
+                messageTracingLogger.trace("Received response [" + responseStream.toString("UTF-8") +
+                        "] for request [" + requestStream.toString("UTF-8") + "]");
+            }
+            else if (messageTracingLogger.isDebugEnabled()) {
+                messageTracingLogger.debug("Received response [" + messageContext.getResponse() + "] for request [" +
+                        messageContext.getRequest() + "]");
+            }
         }
-        else if (messageTracingLogger.isDebugEnabled()) {
-            messageTracingLogger.debug("Received response [" + response + "] for request [" + request + "]");
+        else {
+            if (logger.isDebugEnabled()) {
+                messageTracingLogger
+                        .debug("Received no response for request [" + messageContext.getRequest() + "]");
+            }
+        }
+    }
+
+    /**
+     * Trigger handleResponse or handleFault on the defined ClientInterceptors. Will just invoke said method on all
+     * interceptors whose handleRequest invocation returned <code>true</code>, in addition to the last interceptor who
+     * returned <code>false</code>.
+     *
+     * @param interceptorIndex index of last interceptor that was called
+     * @param messageContext   the message context, whose request and response are filled
+     * @see ClientInterceptor#handleResponse(MessageContext)
+     * @see ClientInterceptor#handleFault(MessageContext)
+     */
+    private void triggerHandleResponse(int interceptorIndex, MessageContext messageContext) {
+        if (messageContext.hasResponse() && !ObjectUtils.isEmpty(interceptors)) {
+            boolean hasFault = false;
+            WebServiceMessage response = messageContext.getResponse();
+            if (response instanceof FaultAwareWebServiceMessage) {
+                hasFault = ((FaultAwareWebServiceMessage) response).hasFault();
+            }
+            boolean resume = true;
+            for (int i = interceptorIndex; resume && i >= 0; i--) {
+                if (!hasFault) {
+                    resume = interceptors[i].handleResponse(messageContext);
+                }
+                else {
+                    resume = interceptors[i].handleFault(messageContext);
+                }
+            }
         }
     }
 

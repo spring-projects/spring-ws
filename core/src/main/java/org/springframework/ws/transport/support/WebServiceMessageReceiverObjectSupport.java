@@ -16,7 +16,8 @@
 
 package org.springframework.ws.transport.support;
 
-import java.io.IOException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
@@ -33,9 +34,6 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
 import org.springframework.ws.transport.context.DefaultTransportContext;
 import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Convenience base class for server-side transport objects. Contains a {@link WebServiceMessageFactory}, and has
@@ -102,12 +100,7 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
             }
         }
         finally {
-            try {
-                connection.close();
-            }
-            catch (IOException ex) {
-                logger.debug("Could not close connection", ex);
-            }
+            TransportUtils.closeConnection(connection);
             TransportContextHolder.setTransportContext(previousTransportContext);
         }
     }

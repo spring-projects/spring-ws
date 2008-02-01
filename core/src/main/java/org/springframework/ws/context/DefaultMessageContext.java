@@ -33,7 +33,7 @@ public class DefaultMessageContext extends AbstractMessageContext {
 
     private final WebServiceMessageFactory messageFactory;
 
-    private WebServiceMessage request;
+    private final WebServiceMessage request;
 
     private WebServiceMessage response;
 
@@ -57,6 +57,10 @@ public class DefaultMessageContext extends AbstractMessageContext {
         return request;
     }
 
+    public boolean hasResponse() {
+        return response != null;
+    }
+
     public WebServiceMessage getResponse() {
         if (response == null) {
             response = messageFactory.createWebServiceMessage();
@@ -64,17 +68,19 @@ public class DefaultMessageContext extends AbstractMessageContext {
         return response;
     }
 
-    public boolean hasResponse() {
-        return response != null;
+    public void setResponse(WebServiceMessage response) {
+        checkForResponse();
+        this.response = response;
     }
 
     public void readResponse(InputStream inputStream) throws IOException {
+        checkForResponse();
+        response = messageFactory.createWebServiceMessage(inputStream);
+    }
+
+    private void checkForResponse() throws IllegalStateException {
         if (response != null) {
             throw new IllegalStateException("Response message already created");
         }
-        else {
-            response = messageFactory.createWebServiceMessage(inputStream);
-        }
     }
-
 }

@@ -19,19 +19,22 @@ package org.springframework.ws.client.core;
 import java.io.IOException;
 import java.net.URI;
 
+import org.custommonkey.xmlunit.XMLTestCase;
+import org.easymock.MockControl;
+
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.client.WebServiceTransportException;
+import org.springframework.ws.client.support.interceptor.ClientInterceptor;
+import org.springframework.ws.context.DefaultMessageContext;
+import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-
-import org.custommonkey.xmlunit.XMLTestCase;
-import org.easymock.MockControl;
 
 public class WebServiceTemplateTest extends XMLTestCase {
 
@@ -325,8 +328,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
         connectionMock.send(null);
         connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
         connectionControl.expectAndReturn(connectionMock.hasError(), false);
-        connectionControl
-                .expectAndReturn(connectionMock.receive(messageFactory), null);
+        connectionControl.expectAndReturn(connectionMock.receive(messageFactory), null);
         connectionMock.close();
         connectionControl.replay();
 
@@ -380,6 +382,126 @@ public class WebServiceTemplateTest extends XMLTestCase {
         callbackControl.verify();
         extractorControl.verify();
         connectionControl.verify();
+    }
+
+    public void testInterceptors() throws Exception {
+        MockControl interceptorControl = MockControl.createControl(ClientInterceptor.class);
+        interceptorControl.setDefaultMatcher(MockControl.ALWAYS_MATCHER);
+        ClientInterceptor interceptorMock1 = (ClientInterceptor) interceptorControl.getMock();
+        ClientInterceptor interceptorMock2 = (ClientInterceptor) interceptorControl.getMock();
+        template.setInterceptors(new ClientInterceptor[]{interceptorMock1, interceptorMock2});
+        interceptorControl.expectAndReturn(interceptorMock1.handleRequest(null), true);
+        interceptorControl.expectAndReturn(interceptorMock2.handleRequest(null), true);
+        interceptorControl.expectAndReturn(interceptorMock2.handleResponse(null), true);
+        interceptorControl.expectAndReturn(interceptorMock1.handleResponse(null), true);
+        interceptorControl.replay();
+
+        MockControl callbackControl = MockControl.createControl(WebServiceMessageCallback.class);
+        WebServiceMessageCallback requestCallback = (WebServiceMessageCallback) callbackControl.getMock();
+        requestCallback.doWithMessage(null);
+        callbackControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        callbackControl.replay();
+
+        MockControl extractorControl = MockControl.createControl(WebServiceMessageExtractor.class);
+        WebServiceMessageExtractor extractorMock = (WebServiceMessageExtractor) extractorControl.getMock();
+        extractorMock.extractData(null);
+        extractorControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        Object extracted = new Object();
+        extractorControl.setReturnValue(extracted);
+        extractorControl.replay();
+
+        connectionMock.send(null);
+        connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        connectionControl.expectAndReturn(connectionMock.hasError(), false);
+        connectionControl
+                .expectAndReturn(connectionMock.receive(messageFactory), new MockWebServiceMessage("<response/>"));
+        connectionControl.expectAndReturn(connectionMock.hasFault(), false);
+        connectionMock.close();
+        connectionControl.replay();
+
+        Object result = template.sendAndReceive(requestCallback, extractorMock);
+        assertEquals("Invalid response", extracted, result);
+
+        callbackControl.verify();
+        extractorControl.verify();
+        connectionControl.verify();
+        interceptorControl.verify();
+    }
+
+    public void testInterceptorsIntercepted() throws Exception {
+        MessageContext messageContext = new DefaultMessageContext(messageFactory);
+
+        MockControl interceptorControl = MockControl.createControl(ClientInterceptor.class);
+        ClientInterceptor interceptorMock1 = (ClientInterceptor) interceptorControl.getMock();
+        ClientInterceptor interceptorMock2 = (ClientInterceptor) interceptorControl.getMock();
+        template.setInterceptors(new ClientInterceptor[]{interceptorMock1, interceptorMock2});
+        interceptorControl.expectAndReturn(interceptorMock1.handleRequest(messageContext), false);
+        interceptorControl.expectAndReturn(interceptorMock1.handleResponse(messageContext), true);
+        interceptorControl.replay();
+
+        MockControl callbackControl = MockControl.createControl(WebServiceMessageCallback.class);
+        WebServiceMessageCallback requestCallback = (WebServiceMessageCallback) callbackControl.getMock();
+        requestCallback.doWithMessage(messageContext.getRequest());
+        callbackControl.replay();
+
+        MockControl extractorControl = MockControl.createControl(WebServiceMessageExtractor.class);
+        WebServiceMessageExtractor extractorMock = (WebServiceMessageExtractor) extractorControl.getMock();
+        extractorMock.extractData(null);
+        extractorControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        Object extracted = new Object();
+        extractorControl.setReturnValue(extracted);
+        extractorControl.replay();
+
+        connectionMock.send(messageContext.getRequest());
+        connectionControl.expectAndReturn(connectionMock.hasError(), false);
+        connectionControl
+                .expectAndReturn(connectionMock.receive(messageFactory), new MockWebServiceMessage("<response/>"));
+        connectionControl.expectAndReturn(connectionMock.hasFault(), false);
+        connectionControl.replay();
+
+        Object result = template.doSendAndReceive(messageContext, connectionMock, requestCallback, extractorMock);
+        assertEquals("Invalid response", extracted, result);
+
+        callbackControl.verify();
+        extractorControl.verify();
+        connectionControl.verify();
+        interceptorControl.verify();
+    }
+
+    public void testInterceptorsInterceptedCreateResponse() throws Exception {
+        MessageContext messageContext = new DefaultMessageContext(messageFactory);
+        // force creation of response
+        messageContext.getResponse();
+
+        MockControl interceptorControl = MockControl.createControl(ClientInterceptor.class);
+        ClientInterceptor interceptorMock1 = (ClientInterceptor) interceptorControl.getMock();
+        ClientInterceptor interceptorMock2 = (ClientInterceptor) interceptorControl.getMock();
+        template.setInterceptors(new ClientInterceptor[]{interceptorMock1, interceptorMock2});
+        interceptorControl.expectAndReturn(interceptorMock1.handleRequest(messageContext), false);
+        interceptorControl.expectAndReturn(interceptorMock1.handleResponse(messageContext), true);
+        interceptorControl.replay();
+
+        MockControl callbackControl = MockControl.createControl(WebServiceMessageCallback.class);
+        WebServiceMessageCallback requestCallback = (WebServiceMessageCallback) callbackControl.getMock();
+        requestCallback.doWithMessage(messageContext.getRequest());
+        callbackControl.replay();
+
+        MockControl extractorControl = MockControl.createControl(WebServiceMessageExtractor.class);
+        WebServiceMessageExtractor extractorMock = (WebServiceMessageExtractor) extractorControl.getMock();
+        Object extracted = new Object();
+        extractorControl.expectAndReturn(extractorMock.extractData(messageContext.getResponse()), extracted);
+        extractorControl.replay();
+
+        connectionControl.expectAndReturn(connectionMock.hasFault(), false);
+        connectionControl.replay();
+
+        Object result = template.doSendAndReceive(messageContext, connectionMock, requestCallback, extractorMock);
+        assertEquals("Invalid response", extracted, result);
+
+        callbackControl.verify();
+        extractorControl.verify();
+        connectionControl.verify();
+        interceptorControl.verify();
     }
 
 }
