@@ -9,6 +9,20 @@
     <packaging>war</packaging>
     <name>Spring WS Echo Sample</name>
     <description>A minimal Spring-WS sample that uses W3C DOM to echo back an incoming string.</description>
+    <profiles>
+        <profile>
+            <id>jdk14-jdk15</id>
+            <activation>
+                <jdk>!1.6</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>stax</groupId>
+                    <artifactId>stax-api</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
     <reporting>
         <plugins>
             <plugin>
