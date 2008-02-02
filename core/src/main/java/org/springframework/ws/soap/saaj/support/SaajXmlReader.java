@@ -22,13 +22,15 @@ import javax.xml.soap.Node;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.Text;
 
-import org.springframework.xml.sax.AbstractXmlReader;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.helpers.AttributesImpl;
+
+import org.springframework.util.StringUtils;
+import org.springframework.xml.sax.AbstractXmlReader;
 
 /**
  * SAX <code>XMLReader</code> that reads from a SAAJ <code>Node</code>. Consumes <code>XMLEvents</code> from an
@@ -176,9 +178,17 @@ public class SaajXmlReader extends AbstractXmlReader {
             for (Iterator iterator = element.getNamespacePrefixes(); iterator.hasNext();) {
                 String prefix = (String) iterator.next();
                 String namespaceUri = element.getNamespaceURI(prefix);
-                attributes.addAttribute("", "", "xmlns:" + prefix, "CDATA", namespaceUri);
+                String qName;
+                if (StringUtils.hasLength(prefix)) {
+                    qName = "xmlns:" + prefix;
+                }
+                else {
+                    qName = "xmlns";
+                }
+                attributes.addAttribute("", "", qName, "CDATA", namespaceUri);
             }
         }
+
         return attributes;
     }
 
