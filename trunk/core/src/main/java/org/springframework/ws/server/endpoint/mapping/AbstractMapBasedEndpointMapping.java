@@ -90,9 +90,9 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
     protected abstract boolean validateLookupKey(String key);
 
     /**
-     * Returns the the endpoint keys for the given message context.
+     * Returns the the endpoint key for the given message context. Returns <code>null</code> if a key cannot be found.
      *
-     * @return the registration keys
+     * @return the registration key; or <code>null</code>
      */
     protected abstract String getLookupKeyForMessage(MessageContext messageContext) throws Exception;
 
