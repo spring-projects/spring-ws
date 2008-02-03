@@ -16,8 +16,11 @@
 
 package org.springframework.ws.transport.support;
 
+import java.net.URI;
+
 import junit.framework.TestCase;
 import org.easymock.MockControl;
+
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.MessageContext;
@@ -46,6 +49,7 @@ public class WebServiceMessageReceiverObjectSupportTest extends TestCase {
     }
 
     public void testHandleConnectionResponse() throws Exception {
+        connectionControl.expectAndReturn(connectionMock.getUri(), new URI("http://example.com"));
         connectionControl.expectAndReturn(connectionMock.receive(messageFactory), request);
         connectionMock.send(new MockWebServiceMessage());
         connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
@@ -67,6 +71,7 @@ public class WebServiceMessageReceiverObjectSupportTest extends TestCase {
     }
 
     public void testHandleConnectionNoResponse() throws Exception {
+        connectionControl.expectAndReturn(connectionMock.getUri(), new URI("http://example.com"));
         connectionControl.expectAndReturn(connectionMock.receive(messageFactory), request);
         connectionMock.close();
 

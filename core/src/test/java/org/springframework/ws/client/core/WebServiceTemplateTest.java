@@ -52,6 +52,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
         template.setMessageFactory(messageFactory);
         connectionControl = MockControl.createStrictControl(FaultAwareWebServiceConnection.class);
         connectionMock = (FaultAwareWebServiceConnection) connectionControl.getMock();
+        connectionControl.expectAndDefaultReturn(connectionMock.getUri(), new URI("mock"));
         final URI expectedUri = new URI("http://www.springframework.org/spring-ws");
         template.setMessageSender(new WebServiceMessageSender() {
 

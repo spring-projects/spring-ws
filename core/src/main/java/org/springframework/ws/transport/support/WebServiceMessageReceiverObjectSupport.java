@@ -16,6 +16,8 @@
 
 package org.springframework.ws.transport.support;
 
+import java.net.URISyntaxException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -76,6 +78,7 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
      */
     protected final void handleConnection(WebServiceConnection connection, WebServiceMessageReceiver receiver)
             throws Exception {
+        logUri(connection);
         TransportContext previousTransportContext = TransportContextHolder.getTransportContext();
         TransportContextHolder.setTransportContext(new DefaultTransportContext(connection));
 
@@ -102,6 +105,17 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
         finally {
             TransportUtils.closeConnection(connection);
             TransportContextHolder.setTransportContext(previousTransportContext);
+        }
+    }
+
+    private void logUri(WebServiceConnection connection) {
+        if (logger.isDebugEnabled()) {
+            try {
+                logger.debug("Regestering incoming connection [" + connection.getUri() + "]");
+            }
+            catch (URISyntaxException e) {
+                // ignore
+            }
         }
     }
 

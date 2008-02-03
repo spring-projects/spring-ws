@@ -21,6 +21,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -28,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
+import javax.mail.Address;
 import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -37,6 +40,7 @@ import javax.mail.URLName;
 import javax.mail.internet.InternetAddress;
 
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractReceiverConnection;
 import org.springframework.ws.transport.TransportConstants;
@@ -96,6 +100,24 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
     }
 
     /*
+     * URI
+     */
+
+    public URI getUri() throws URISyntaxException {
+        try {
+            Address[] recipients = requestMessage.getRecipients(Message.RecipientType.TO);
+            if (!ObjectUtils.isEmpty(recipients) && recipients[0] instanceof InternetAddress) {
+                return MailTransportUtils.toUri((InternetAddress) recipients[0], requestMessage.getSubject());
+            }
+            else {
+                throw new URISyntaxException("", "Could not determine To header");
+            }
+        }
+        catch (MessagingException ex) {
+            throw new URISyntaxException("", ex.getMessage());
+        }
+    }
+/*
      * Errors
      */
 

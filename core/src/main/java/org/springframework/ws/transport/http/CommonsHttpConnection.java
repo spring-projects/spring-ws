@@ -20,11 +20,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Iterator;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.PostMethod;
 
@@ -63,6 +66,18 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
     }
 
     /*
+     * URI
+     */
+
+    public URI getUri() throws URISyntaxException {
+        try {
+            return new URI(postMethod.getURI().toString());
+        }
+        catch (URIException ex) {
+            throw new URISyntaxException("", ex.getMessage());
+        }
+    }
+/*
      * Sending request
      */
 

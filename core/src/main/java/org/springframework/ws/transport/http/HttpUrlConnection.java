@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -57,6 +59,14 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
 
     public void onClose() {
         connection.disconnect();
+    }
+
+    /*
+     * URI
+     */
+
+    public URI getUri() throws URISyntaxException {
+        return connection.getURL().toURI();
     }
 
     /*

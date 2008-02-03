@@ -18,6 +18,7 @@ package org.springframework.ws.transport;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
@@ -51,6 +52,9 @@ public interface WebServiceConnection {
      * @throws IOException in case of I/O errors
      */
     WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException;
+
+    /** Returns the URI for this connection. */
+    URI getUri() throws URISyntaxException;
 
     /**
      * Indicates whether this connection has an error. Typically, error detection is done by inspecting connection error
