@@ -17,6 +17,7 @@
 package org.springframework.ws.transport.mail.support;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.mail.Folder;
@@ -30,7 +31,9 @@ import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.util.StringUtils;
+import org.springframework.ws.transport.mail.MailTransportConstants;
 
 /**
  * Collection of utility methods to work with Mail transports.
@@ -163,6 +166,22 @@ public abstract class MailTransportUtils {
             tempURL.append('#').append(ref);
         }
         return tempURL.toString();
+    }
+
+    /**
+     * Converts the given internet address into a <code>mailto</code> URI.
+     *
+     * @param to      the To: address
+     * @param subject the subject, may be <code>null</code>
+     * @return a mailto URI
+     */
+    public static URI toUri(InternetAddress to, String subject) throws URISyntaxException {
+        if (StringUtils.hasLength(subject)) {
+            return new URI(MailTransportConstants.MAIL_URI_SCHEME, to.getAddress() + "?subject=" + subject, null);
+        }
+        else {
+            return new URI(MailTransportConstants.MAIL_URI_SCHEME, to.getAddress(), null);
+        }
     }
 
 

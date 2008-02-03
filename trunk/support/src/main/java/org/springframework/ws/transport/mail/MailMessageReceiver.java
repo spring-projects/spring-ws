@@ -26,7 +26,6 @@ import javax.mail.Store;
 import javax.mail.URLName;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.scheduling.SchedulingAwareRunnable;
 import org.springframework.util.Assert;
@@ -67,9 +66,7 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
 
     private MonitoringStrategy monitoringStrategy;
 
-    /**
-     * Sets the from address to use when sending reponse messages.
-     */
+    /** Sets the from address to use when sending reponse messages. */
     public void setFrom(String from) throws AddressException {
         this.from = new InternetAddress(from);
     }
@@ -219,12 +216,6 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
                     try {
                         Message[] messages = monitoringStrategy.monitor(folder);
                         for (int i = 0; i < messages.length; i++) {
-                            if (logger.isDebugEnabled()) {
-                                if (messages[i] instanceof MimeMessage) {
-                                    MimeMessage mimeMessage = (MimeMessage) messages[i];
-                                    logger.debug("Received email message with MessageID " + mimeMessage.getMessageID());
-                                }
-                            }
                             MessageHandler handler = new MessageHandler(messages[i]);
                             execute(handler);
                         }

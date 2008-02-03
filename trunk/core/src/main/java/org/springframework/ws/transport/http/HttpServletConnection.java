@@ -19,6 +19,8 @@ package org.springframework.ws.transport.http;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -82,8 +84,18 @@ public class HttpServletConnection extends AbstractReceiverConnection
     }
 
     /*
-     * Receiving request
+     * URI
      */
+
+    public URI getUri() throws URISyntaxException {
+        return new URI(httpServletRequest.getScheme(), null, httpServletRequest.getServerName(),
+                httpServletRequest.getServerPort(), httpServletRequest.getRequestURI(),
+                httpServletRequest.getQueryString(), null);
+    }
+
+    /*
+    * Receiving request
+    */
 
     protected Iterator getRequestHeaderNames() throws IOException {
         return new EnumerationIterator(getHttpServletRequest().getHeaderNames());

@@ -21,6 +21,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Iterator;
 import javax.jms.BytesMessage;
 import javax.jms.Connection;
@@ -134,6 +136,19 @@ public class JmsSenderConnection extends AbstractSenderConnection implements Web
 
     void setMessageType(int messageType) {
         this.messageType = messageType;
+    }
+
+    /*
+     * URI
+     */
+
+    public URI getUri() throws URISyntaxException {
+        try {
+            return JmsTransportUtils.toUri(requestDestination);
+        }
+        catch (JMSException ex) {
+            throw new URISyntaxException("", ex.getMessage());
+        }
     }
 
     /*

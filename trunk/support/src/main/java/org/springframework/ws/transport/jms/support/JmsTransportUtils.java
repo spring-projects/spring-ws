@@ -17,6 +17,7 @@
 package org.springframework.ws.transport.jms.support;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -28,6 +29,8 @@ import javax.jms.DeliveryMode;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
+import javax.jms.Queue;
+import javax.jms.Topic;
 
 import org.springframework.ws.transport.jms.JmsTransportConstants;
 
@@ -89,6 +92,27 @@ public class JmsTransportUtils {
             }
         }
         return propertyName;
+    }
+
+    /**
+     * Converts the given JMS destination a <code>jms</code> URI.
+     *
+     * @param destination the destination
+     * @return a jms URI
+     */
+    public static URI toUri(Destination destination) throws URISyntaxException, JMSException {
+        String destinationName;
+        if (destination instanceof Queue) {
+            destinationName = ((Queue) destination).getQueueName();
+        }
+        else if (destination instanceof Topic) {
+            Topic topic = (Topic) destination;
+            destinationName = topic.getTopicName();
+        }
+        else {
+            throw new IllegalArgumentException("Destination [ " + destination + "] is neither Queue nor Topic");
+        }
+        return new URI(JmsTransportConstants.JMS_URI_SCHEME, destinationName, null);
     }
 
     /** Returns the destination name of the given URI. */
