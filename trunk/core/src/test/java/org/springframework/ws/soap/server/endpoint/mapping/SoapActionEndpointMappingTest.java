@@ -19,6 +19,7 @@ package org.springframework.ws.soap.server.endpoint.mapping;
 import javax.xml.soap.MessageFactory;
 
 import junit.framework.TestCase;
+
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
@@ -48,6 +49,6 @@ public class SoapActionEndpointMappingTest extends TestCase {
     }
 
     public void testValidateLookupKey() throws Exception {
-        mapping.validateLookupKey("SoapAction");
+        assertTrue("Soapaction not valid", mapping.validateLookupKey("SoapAction"));
     }
 }
