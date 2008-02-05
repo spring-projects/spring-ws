@@ -20,6 +20,7 @@ import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPMessage;
 
 import junit.framework.TestCase;
+
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
@@ -35,7 +36,7 @@ public class XwsSecurityInterceptorTest extends TestCase {
         messageFactory = MessageFactory.newInstance();
     }
 
-    public void testhandleRequest() throws Exception {
+    public void testhandleServerRequest() throws Exception {
         final SOAPMessage request = messageFactory.createMessage();
         final SOAPMessage validatedRequest = messageFactory.createMessage();
         XwsSecurityInterceptor interceptor = new XwsSecurityInterceptor() {
@@ -57,7 +58,7 @@ public class XwsSecurityInterceptorTest extends TestCase {
         assertEquals("Invalid request", validatedRequest, ((SaajSoapMessage) context.getRequest()).getSaajMessage());
     }
 
-    public void testhandleResponse() throws Exception {
+    public void testhandleServerResponse() throws Exception {
         final SOAPMessage securedResponse = messageFactory.createMessage();
         XwsSecurityInterceptor interceptor = new XwsSecurityInterceptor() {
 
@@ -74,8 +75,53 @@ public class XwsSecurityInterceptorTest extends TestCase {
         SOAPMessage request = messageFactory.createMessage();
         MessageContext context =
                 new DefaultMessageContext(new SaajSoapMessage(request), new SaajSoapMessageFactory(messageFactory));
+        context.getResponse();
         interceptor.handleResponse(context, null);
         assertEquals("Invalid response", securedResponse, ((SaajSoapMessage) context.getResponse()).getSaajMessage());
+    }
+
+    public void testhandleClientRequest() throws Exception {
+        final SOAPMessage request = messageFactory.createMessage();
+        final SOAPMessage securedRequest = messageFactory.createMessage();
+        XwsSecurityInterceptor interceptor = new XwsSecurityInterceptor() {
+
+            protected void secureMessage(SoapMessage soapMessage) throws XwsSecuritySecurementException {
+                SaajSoapMessage saajSoapMessage = (SaajSoapMessage) soapMessage;
+                assertEquals("Invalid message", request, saajSoapMessage.getSaajMessage());
+                saajSoapMessage.setSaajMessage(securedRequest);
+            }
+
+            protected void validateMessage(SoapMessage message) throws WsSecurityValidationException {
+                fail("validate not expected");
+            }
+
+        };
+        MessageContext context =
+                new DefaultMessageContext(new SaajSoapMessage(request), new SaajSoapMessageFactory(messageFactory));
+        interceptor.handleRequest(context);
+        assertEquals("Invalid request", securedRequest, ((SaajSoapMessage) context.getRequest()).getSaajMessage());
+    }
+
+    public void testhandleClientResponse() throws Exception {
+        final SOAPMessage validatedResponse = messageFactory.createMessage();
+        XwsSecurityInterceptor interceptor = new XwsSecurityInterceptor() {
+
+            protected void secureMessage(SoapMessage message) throws XwsSecuritySecurementException {
+                fail("secure not expected");
+            }
+
+            protected void validateMessage(SoapMessage soapMessage) throws WsSecurityValidationException {
+                SaajSoapMessage saajSoapMessage = (SaajSoapMessage) soapMessage;
+                saajSoapMessage.setSaajMessage(validatedResponse);
+            }
+
+        };
+        SOAPMessage request = messageFactory.createMessage();
+        MessageContext context =
+                new DefaultMessageContext(new SaajSoapMessage(request), new SaajSoapMessageFactory(messageFactory));
+        context.getResponse();
+        interceptor.handleResponse(context);
+        assertEquals("Invalid response", validatedResponse, ((SaajSoapMessage) context.getResponse()).getSaajMessage());
     }
 
 }
