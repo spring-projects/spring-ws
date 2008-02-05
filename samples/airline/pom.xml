@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <artifactId>spring-ws-samples</artifactId>
         <groupId>org.springframework.ws</groupId>
@@ -8,6 +9,43 @@
     <artifactId>airline</artifactId>
     <packaging>war</packaging>
     <name>Spring WS Airline Sample</name>
+    <profiles>
+        <profile>
+            <id>jdk14-jdk15</id>
+            <activation>
+                <jdk>!1.6</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jaxb-api</artifactId>
+                    <scope>provided</scope>
+                    <optional>true</optional>
+                    <version>2.1</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>javax.xml.stream</groupId>
+                            <artifactId>stax-api</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>javax.activation</groupId>
+                            <artifactId>activation</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+                <dependency>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-impl</artifactId>
+                    <version>2.1.5</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>activation</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
     <repositories>
         <repository>
             <id>java.net</id>
@@ -88,7 +126,8 @@
                         <phase>process-classes</phase>
                         <configuration>
                             <tasks>
-                                <java classname="org.apache.openjpa.enhance.PCEnhancer" classpathref="maven.runtime.classpath" dir="target/classes" fork="true" />
+                                <java classname="org.apache.openjpa.enhance.PCEnhancer"
+                                      classpathref="maven.runtime.classpath" dir="target/classes" fork="true"/>
                             </tasks>
                         </configuration>
                         <goals>
@@ -203,18 +242,6 @@
             <artifactId>stax-api</artifactId>
             <scope>compile</scope>
         </dependency>
-        <!-- O/X Mapping dependencies -->
-        <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>2.1.5</version>
-            <scope>runtime</scope>
-        </dependency>
         <!-- O/R Mapping dependencies -->
         <dependency>
             <groupId>org.apache.openjpa</groupId>
@@ -225,12 +252,6 @@
             <groupId>org.apache.openjpa</groupId>
             <artifactId>openjpa-persistence-jdbc</artifactId>
             <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-            <version>1.1</version>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>commons-dbcp</groupId>
