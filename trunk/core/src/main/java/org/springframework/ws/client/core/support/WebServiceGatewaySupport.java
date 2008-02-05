@@ -18,12 +18,14 @@ package org.springframework.ws.client.core.support;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.client.core.WebServiceTemplate;
+import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
@@ -152,6 +154,16 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
      */
     public final void setUnmarshaller(Unmarshaller unmarshaller) {
         webServiceTemplate.setUnmarshaller(unmarshaller);
+    }
+
+    /** Returns the <code>ClientInterceptors</code> used by the template. */
+    public final ClientInterceptor[] getInterceptors() {
+        return webServiceTemplate.getInterceptors();
+    }
+
+    /** Sets the <code>ClientInterceptors</code> used by the gateway. */
+    public final void setInterceptors(ClientInterceptor[] interceptors) {
+        webServiceTemplate.setInterceptors(interceptors);
     }
 
     public final void afterPropertiesSet() throws Exception {
