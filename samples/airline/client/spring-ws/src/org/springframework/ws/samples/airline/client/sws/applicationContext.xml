@@ -2,12 +2,36 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-    <bean id="airlineClient" class="org.springframework.ws.samples.airline.client.sws.AirlineClient">
-        <property name="marshaller" ref="marshaller"/>
-        <property name="unmarshaller" ref="marshaller"/>
+    <bean id="messagFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+
+    <bean id="abstractClient" abstract="true">
+        <constructor-arg ref="messagFactory"/>
         <property name="defaultUri" value="http://localhost:8080/airline/services"/>
     </bean>
 
     <bean id="marshaller" class="org.springframework.oxm.xmlbeans.XmlBeansMarshaller"/>
+
+    <bean id="getFlights" parent="abstractClient" class="org.springframework.ws.samples.airline.client.sws.GetFlights">
+        <property name="marshaller" ref="marshaller"/>
+        <property name="unmarshaller" ref="marshaller"/>
+    </bean>
+
+    <bean id="getFrequentFlyerMileage" parent="abstractClient"
+          class="org.springframework.ws.samples.airline.client.sws.GetFrequentFlyerMileage">
+        <property name="interceptors" ref="securityInterceptor"/>
+    </bean>
+
+
+    <bean id="securityInterceptor" class="org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor">
+        <property name="policyConfiguration"
+                  value="classpath:org/springframework/ws/samples/airline/client/sws/securityPolicy.xml"/>
+        <property name="callbackHandler">
+            <bean class="org.springframework.ws.soap.security.xwss.callback.SimpleUsernamePasswordCallbackHandler">
+                <property name="username" value="john"/>
+                <property name="password" value="changeme"/>
+            </bean>
+        </property>
+    </bean>
+
 
 </beans>

@@ -20,11 +20,12 @@
         <artifact:dependencies pathId="classpath">
             <remoteRepository refid="main"/>
             <remoteRepository refid="java.net"/>
-            <dependency groupId="org.springframework.ws" artifactId="spring-ws-core" version="1.5.0-m1"/>
+            <dependency groupId="org.springframework.ws" artifactId="spring-ws-core" version="1.5.0-m2-SNAPSHOT"/>
+            <dependency groupId="org.springframework.ws" artifactId="spring-ws-security" version="1.5.0-m2-SNAPSHOT"/>
             <dependency groupId="com.sun.xml.messaging.saaj" artifactId="saaj-impl" version="1.3"/>
             <dependency groupId="commons-httpclient" artifactId="commons-httpclient" version="3.0.1"/>
-            <dependency groupId="commons-httpclient" artifactId="commons-httpclient" version="3.0.1"/>
             <dependency groupId="xmlbeans" artifactId="xbean" version="2.2.0"/>
+            <dependency groupId="log4j" artifactId="log4j" version="1.2.13"/>
         </artifact:dependencies>
 
     </target>
@@ -54,11 +55,19 @@
         <delete dir="${gen.dir}"/>
     </target>
 
-    <target name="run" depends="getFlights"/>
+    <target name="run" depends="getFlights, getFrequentFlyerMileage"/>
 
     <target name="getFlights" depends="build">
-        <java classname="org.springframework.ws.samples.airline.client.sws.AirlineClient" fork="true"
-                failonerror="true">
+        <java classname="org.springframework.ws.samples.airline.client.sws.GetFlights" fork="true"
+              failonerror="true">
+            <classpath refid="classpath"/>
+            <classpath location="${bin.dir}"/>
+        </java>
+    </target>
+
+    <target name="getFrequentFlyerMileage" depends="build">
+        <java classname="org.springframework.ws.samples.airline.client.sws.GetFrequentFlyerMileage" fork="true"
+              failonerror="true">
             <classpath refid="classpath"/>
             <classpath location="${bin.dir}"/>
         </java>
