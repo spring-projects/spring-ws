@@ -23,24 +23,6 @@
                 <includeDependencies>false</includeDependencies>
                 <unpack>false</unpack>
                 <outputFileNameMapping>dist/modules/${artifactId}-${version}.${extension}</outputFileNameMapping>
-                <dependencySets>
-                    <dependencySet>
-                        <outputFileNameMapping>lib/${groupId}/${artifactId}-${version}.${extension}</outputFileNameMapping>
-                        <scope>runtime</scope>
-                        <excludes>
-                            <exclude>org.springframework.ws:spring-ws-parent</exclude>
-                            <exclude>org.springframework.ws:spring-xml</exclude>
-                            <exclude>org.springframework.ws:spring-oxm</exclude>
-                            <exclude>org.springframework.ws:spring-oxm-tiger</exclude>
-                            <exclude>org.springframework.ws:spring-ws-core</exclude>
-                            <exclude>org.springframework.ws:spring-ws-core-tiger</exclude>
-                        </excludes>
-                    </dependencySet>
-                    <dependencySet>
-                        <outputFileNameMapping>lib/${groupId}/${artifactId}-${version}.${extension}</outputFileNameMapping>
-                        <scope>provided</scope>
-                    </dependencySet>
-                </dependencySets>
             </binaries>
             <sources>
                 <fileSets>
@@ -67,6 +49,14 @@
         <fileSet>
             <directory>target/site/reference</directory>
             <outputDirectory>docs/reference</outputDirectory>
+        </fileSet>
+        <!-- Dependencies -->
+        <fileSet>
+            <directory>target/dependency</directory>
+            <outputDirectory>lib</outputDirectory>
+            <includes>
+                <include>**/*.jar</include>
+            </includes>
         </fileSet>
         <!-- Samples -->
         <fileSet>
@@ -98,6 +88,6 @@
                 <exclude>**/bin</exclude>
                 <exclude>**/bin/**</exclude>
             </excludes>
-        </fileSet>        
+        </fileSet>
     </fileSets>
 </assembly>
