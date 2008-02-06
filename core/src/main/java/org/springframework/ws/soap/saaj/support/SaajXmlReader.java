@@ -166,15 +166,27 @@ public class SaajXmlReader extends AbstractXmlReader {
         }
     }
 
+    private void handleText(Text text) throws SAXException {
+        if (getContentHandler() != null) {
+            char[] ch = text.getValue().toCharArray();
+            getContentHandler().characters(ch, 0, ch.length);
+        }
+    }
+
     private Attributes getAttributes(SOAPElement element) {
         AttributesImpl attributes = new AttributesImpl();
+
         for (Iterator iterator = element.getAllAttributes(); iterator.hasNext();) {
             Name attributeName = (Name) iterator.next();
+            String namespace = attributeName.getURI();
+            if (namespace == null || !namespacesFeature) {
+                namespace = "";
+            }
             String attributeValue = element.getAttributeValue(attributeName);
-            attributes.addAttribute(attributeName.getURI(), attributeName.getLocalName(),
-                    attributeName.getQualifiedName(), "CDATA", attributeValue);
+            attributes.addAttribute(namespace, attributeName.getLocalName(), attributeName.getQualifiedName(), "CDATA",
+                    attributeValue);
         }
-        if (namespacePrefixesFeature || !namespacesFeature) {
+        if (namespacePrefixesFeature) {
             for (Iterator iterator = element.getNamespacePrefixes(); iterator.hasNext();) {
                 String prefix = (String) iterator.next();
                 String namespaceUri = element.getNamespaceURI(prefix);
@@ -188,14 +200,7 @@ public class SaajXmlReader extends AbstractXmlReader {
                 attributes.addAttribute("", "", qName, "CDATA", namespaceUri);
             }
         }
-
         return attributes;
     }
 
-    private void handleText(Text text) throws SAXException {
-        if (getContentHandler() != null) {
-            char[] ch = text.getValue().toCharArray();
-            getContentHandler().characters(ch, 0, ch.length);
-        }
-    }
 }
