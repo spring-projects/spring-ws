@@ -23,6 +23,8 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.SAXParseException;
 
 import org.springframework.xml.sax.AbstractXmlReader;
@@ -38,6 +40,64 @@ import org.springframework.xml.sax.AbstractXmlReader;
  * @since 1.0.0
  */
 public abstract class AbstractStaxXmlReader extends AbstractXmlReader {
+
+    private static final String NAMESPACES_FEATURE_NAME = "http://xml.org/sax/features/namespaces";
+
+    private static final String NAMESPACE_PREFIXES_FEATURE_NAME = "http://xml.org/sax/features/namespace-prefixes";
+
+    private static final String IS_STANDALONE_FEATURE_NAME = "http://xml.org/sax/features/is-standalone";
+
+    private boolean namespacesFeature = true;
+
+    private boolean namespacePrefixesFeature = false;
+
+    private Boolean isStandalone;
+
+    public boolean getFeature(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
+        if (NAMESPACES_FEATURE_NAME.equals(name)) {
+            return namespacesFeature;
+        }
+        else if (NAMESPACE_PREFIXES_FEATURE_NAME.equals(name)) {
+            return namespacePrefixesFeature;
+        }
+        else if (IS_STANDALONE_FEATURE_NAME.equals(name)) {
+            if (isStandalone != null) {
+                return isStandalone.booleanValue();
+            }
+            else {
+                throw new SAXNotSupportedException("startDocument() callback not completed yet");
+            }
+        }
+        else {
+            return super.getFeature(name);
+        }
+    }
+
+    public void setFeature(String name, boolean value) throws SAXNotRecognizedException, SAXNotSupportedException {
+        if (NAMESPACES_FEATURE_NAME.equals(name)) {
+            this.namespacesFeature = value;
+        }
+        else if (NAMESPACE_PREFIXES_FEATURE_NAME.equals(name)) {
+            this.namespacePrefixesFeature = value;
+        }
+        else {
+            super.setFeature(name, value);
+        }
+    }
+
+    /** Indicates whether the SAX feature <code>http://xml.org/sax/features/namespaces</code> is turned on. */
+    protected boolean hasNamespacesFeature() {
+        return namespacesFeature;
+    }
+
+    /** Indicates whether the SAX feature <code>http://xml.org/sax/features/namespaces-prefixes</code> is turned on. */
+    protected boolean hasNamespacePrefixesFeature() {
+        return namespacePrefixesFeature;
+    }
+
+    protected void setStandalone(boolean standalone) {
+        isStandalone = (standalone) ? Boolean.TRUE : Boolean.FALSE;
+    }
 
     /**
      * Parses the StAX XML reader passed at construction-time.

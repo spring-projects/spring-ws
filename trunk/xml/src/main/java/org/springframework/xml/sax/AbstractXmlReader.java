@@ -80,12 +80,8 @@ public abstract class AbstractXmlReader implements XMLReader {
         this.errorHandler = errorHandler;
     }
 
-    public LexicalHandler getLexicalHandler() {
+    protected LexicalHandler getLexicalHandler() {
         return lexicalHandler;
-    }
-
-    public void setLexicalHandler(LexicalHandler lexicalHandler) {
-        this.lexicalHandler = lexicalHandler;
     }
 
     /**

@@ -21,10 +21,12 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.springframework.xml.namespace.QNameUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
+
+import org.springframework.util.StringUtils;
+import org.springframework.xml.namespace.QNameUtils;
 
 /**
  * SAX <code>XMLReader</code> that reads from a StAX <code>XMLStreamReader</code>.  Reads from an
@@ -111,6 +113,55 @@ public class StaxStreamXmlReader extends AbstractStaxXmlReader {
 
     }
 
+    private void handleStartDocument() throws SAXException {
+        if (getContentHandler() != null) {
+            getContentHandler().startDocument();
+            if (reader.standaloneSet()) {
+                setStandalone(reader.isStandalone());
+            }
+        }
+    }
+
+    private void handleStartElement() throws SAXException {
+        if (getContentHandler() != null) {
+            QName qName = reader.getName();
+            if (hasNamespacesFeature()) {
+                for (int i = 0; i < reader.getNamespaceCount(); i++) {
+                    String prefix = reader.getNamespacePrefix(i);
+                    if (prefix == null) {
+                        prefix = "";
+                    }
+                    getContentHandler().startPrefixMapping(prefix, reader.getNamespaceURI(i));
+                }
+                getContentHandler().startElement(qName.getNamespaceURI(), qName.getLocalPart(),
+                        QNameUtils.toQualifiedName(qName), getAttributes());
+            }
+            else {
+                getContentHandler().startElement("", "", QNameUtils.toQualifiedName(qName), getAttributes());
+            }
+        }
+    }
+
+    private void handleEndElement() throws SAXException {
+        if (getContentHandler() != null) {
+            QName qName = reader.getName();
+            if (hasNamespacesFeature()) {
+                getContentHandler()
+                        .endElement(qName.getNamespaceURI(), qName.getLocalPart(), QNameUtils.toQualifiedName(qName));
+                for (int i = 0; i < reader.getNamespaceCount(); i++) {
+                    String prefix = reader.getNamespacePrefix(i);
+                    if (prefix == null) {
+                        prefix = "";
+                    }
+                    getContentHandler().endPrefixMapping(prefix);
+                }
+            }
+            else {
+                getContentHandler().endElement("", "", QNameUtils.toQualifiedName(qName));
+            }
+        }
+    }
+
     private void handleCharacters() throws SAXException {
         if (getContentHandler() != null) {
             if (reader.isWhiteSpace()) {
@@ -130,46 +181,9 @@ public class StaxStreamXmlReader extends AbstractStaxXmlReader {
         }
     }
 
-    private void handleEndElement() throws SAXException {
-        if (getContentHandler() != null) {
-            QName qName = reader.getName();
-            getContentHandler()
-                    .endElement(qName.getNamespaceURI(), qName.getLocalPart(), QNameUtils.toQualifiedName(qName));
-            for (int i = 0; i < reader.getNamespaceCount(); i++) {
-                String prefix = reader.getNamespacePrefix(i);
-                if (prefix == null) {
-                    prefix = "";
-                }
-                getContentHandler().endPrefixMapping(prefix);
-            }
-        }
-    }
-
     private void handleProcessingInstruction() throws SAXException {
         if (getContentHandler() != null) {
             getContentHandler().processingInstruction(reader.getPITarget(), reader.getPIData());
-        }
-    }
-
-    private void handleStartDocument() throws SAXException {
-        if (getContentHandler() != null) {
-            getContentHandler().startDocument();
-        }
-    }
-
-    private void handleStartElement() throws SAXException {
-        if (getContentHandler() != null) {
-            for (int i = 0; i < reader.getNamespaceCount(); i++) {
-                String prefix = reader.getNamespacePrefix(i);
-                if (prefix == null) {
-                    prefix = "";
-                }
-                getContentHandler().startPrefixMapping(prefix, reader.getNamespaceURI(i));
-            }
-
-            QName qName = reader.getName();
-            getContentHandler().startElement(qName.getNamespaceURI(), qName.getLocalPart(),
-                    QNameUtils.toQualifiedName(qName), getAttributes());
         }
     }
 
@@ -178,19 +192,29 @@ public class StaxStreamXmlReader extends AbstractStaxXmlReader {
 
         for (int i = 0; i < reader.getAttributeCount(); i++) {
             String namespace = reader.getAttributeNamespace(i);
-            if (namespace == null) {
+            if (namespace == null || !hasNamespacesFeature()) {
                 namespace = "";
             }
             String type = reader.getAttributeType(i);
-            if (type == null) {
-                type = "";
-            }
             attributes.addAttribute(namespace, reader.getAttributeLocalName(i),
                     QNameUtils.toQualifiedName(reader.getAttributeName(i)), type, reader.getAttributeValue(i));
+        }
+        if (hasNamespacePrefixesFeature()) {
+            for (int i = 0; i < reader.getNamespaceCount(); i++) {
+                String prefix = reader.getNamespacePrefix(i);
+                String namespaceUri = reader.getNamespaceURI(i);
+                String qName;
+                if (StringUtils.hasLength(prefix)) {
+                    qName = "xmlns:" + prefix;
+                }
+                else {
+                    qName = "xmlns";
+                }
+                attributes.addAttribute("", "", qName, "CDATA", namespaceUri);
+            }
         }
 
         return attributes;
     }
-
 
 }
