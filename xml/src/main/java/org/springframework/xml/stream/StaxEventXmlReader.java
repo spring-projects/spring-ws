@@ -223,8 +223,12 @@ public class StaxEventXmlReader extends AbstractStaxXmlReader {
             if (namespace == null || !hasNamespacesFeature()) {
                 namespace = "";
             }
-            attributes.addAttribute(namespace, qName.getLocalPart(), QNameUtils.toQualifiedName(qName),
-                    attribute.getDTDType(), attribute.getValue());
+            String type = attribute.getDTDType();
+            if (type == null) {
+                type = "CDATA";
+            }
+            attributes.addAttribute(namespace, qName.getLocalPart(), QNameUtils.toQualifiedName(qName), type,
+                    attribute.getValue());
         }
         if (hasNamespacePrefixesFeature()) {
             for (Iterator i = event.getNamespaces(); i.hasNext();) {

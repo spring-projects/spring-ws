@@ -196,6 +196,9 @@ public class StaxStreamXmlReader extends AbstractStaxXmlReader {
                 namespace = "";
             }
             String type = reader.getAttributeType(i);
+            if (type == null) {
+                type = "CDATA";
+            }
             attributes.addAttribute(namespace, reader.getAttributeLocalName(i),
                     QNameUtils.toQualifiedName(reader.getAttributeName(i)), type, reader.getAttributeValue(i));
         }
