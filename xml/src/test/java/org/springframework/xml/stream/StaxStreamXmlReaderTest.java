@@ -16,7 +16,7 @@
 
 package org.springframework.xml.stream;
 
-import java.io.Reader;
+import java.io.InputStream;
 import java.io.StringReader;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -32,8 +32,8 @@ public class StaxStreamXmlReaderTest extends AbstractStaxXmlReaderTestCase {
 
     public static final String CONTENT = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
 
-    protected AbstractStaxXmlReader createStaxXmlReader(Reader reader) throws XMLStreamException {
-        return new StaxStreamXmlReader(inputFactory.createXMLStreamReader(reader));
+    protected AbstractStaxXmlReader createStaxXmlReader(InputStream inputStream) throws XMLStreamException {
+        return new StaxStreamXmlReader(inputFactory.createXMLStreamReader(inputStream));
     }
 
     public void testPartial() throws Exception {

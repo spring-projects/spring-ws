@@ -17,6 +17,7 @@
 package org.springframework.xml.stream;
 
 import java.util.Iterator;
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -30,10 +31,12 @@ import javax.xml.stream.events.ProcessingInstruction;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
-import org.springframework.xml.namespace.QNameUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
+
+import org.springframework.util.StringUtils;
+import org.springframework.xml.namespace.QNameUtils;
 
 /**
  * SAX <code>XMLReader</code> that reads from a StAX <code>XMLEventReader</code>. Consumes <code>XMLEvents</code> from
@@ -77,9 +80,8 @@ public class StaxEventXmlReader extends AbstractStaxXmlReader {
         boolean documentStarted = false;
         boolean documentEnded = false;
         int elementDepth = 0;
-        XMLEvent event = null;
         while (reader.hasNext() && elementDepth >= 0) {
-            event = reader.nextEvent();
+            XMLEvent event = reader.nextEvent();
             if (!event.isStartDocument() && !event.isEndDocument() && !documentStarted) {
                 handleStartDocument();
                 documentStarted = true;
@@ -133,7 +135,13 @@ public class StaxEventXmlReader extends AbstractStaxXmlReader {
                         .ignorableWhitespace(characters.getData().toCharArray(), 0, characters.getData().length());
             }
             else {
+                if (characters.isCData() && getLexicalHandler() != null) {
+                    getLexicalHandler().startCDATA();
+                }
                 getContentHandler().characters(characters.getData().toCharArray(), 0, characters.getData().length());
+                if (characters.isCData() && getLexicalHandler() != null) {
+                    getLexicalHandler().endCDATA();
+                }
             }
         }
     }
@@ -146,13 +154,19 @@ public class StaxEventXmlReader extends AbstractStaxXmlReader {
 
     private void handleEndElement(EndElement endElement) throws SAXException {
         if (getContentHandler() != null) {
-            getContentHandler().endElement(endElement.getName().getNamespaceURI(), endElement.getName().getLocalPart(),
-                    QNameUtils.toQualifiedName(endElement.getName()));
-
-            for (Iterator i = endElement.getNamespaces(); i.hasNext();) {
-                Namespace namespace = (Namespace) i.next();
-                getContentHandler().endPrefixMapping(namespace.getPrefix());
+            QName qName = endElement.getName();
+            if (hasNamespacesFeature()) {
+                getContentHandler()
+                        .endElement(qName.getNamespaceURI(), qName.getLocalPart(), QNameUtils.toQualifiedName(qName));
+                for (Iterator i = endElement.getNamespaces(); i.hasNext();) {
+                    Namespace namespace = (Namespace) i.next();
+                    getContentHandler().endPrefixMapping(namespace.getPrefix());
+                }
             }
+            else {
+                getContentHandler().endElement("", "", QNameUtils.toQualifiedName(qName));
+            }
+
         }
     }
 
@@ -183,14 +197,19 @@ public class StaxEventXmlReader extends AbstractStaxXmlReader {
 
     private void handleStartElement(StartElement startElement) throws SAXException {
         if (getContentHandler() != null) {
-            for (Iterator i = startElement.getNamespaces(); i.hasNext();) {
-                Namespace namespace = (Namespace) i.next();
-                getContentHandler().startPrefixMapping(namespace.getPrefix(), namespace.getNamespaceURI());
+            QName qName = startElement.getName();
+            if (hasNamespacesFeature()) {
+                for (Iterator i = startElement.getNamespaces(); i.hasNext();) {
+                    Namespace namespace = (Namespace) i.next();
+                    getContentHandler().startPrefixMapping(namespace.getPrefix(), namespace.getNamespaceURI());
+                }
+                getContentHandler().startElement(qName.getNamespaceURI(), qName.getLocalPart(),
+                        QNameUtils.toQualifiedName(qName), getAttributes(startElement));
             }
-
-            getContentHandler().startElement(startElement.getName().getNamespaceURI(),
-                    startElement.getName().getLocalPart(), QNameUtils.toQualifiedName(startElement.getName()),
-                    getAttributes(startElement));
+            else {
+                getContentHandler()
+                        .startElement("", "", QNameUtils.toQualifiedName(qName), getAttributes(startElement));
+            }
         }
     }
 
@@ -199,11 +218,32 @@ public class StaxEventXmlReader extends AbstractStaxXmlReader {
 
         for (Iterator i = event.getAttributes(); i.hasNext();) {
             Attribute attribute = (Attribute) i.next();
-            attributes.addAttribute(attribute.getName().getNamespaceURI(), attribute.getName().getLocalPart(),
-                    QNameUtils.toQualifiedName(attribute.getName()), attribute.getDTDType(), attribute.getValue());
+            QName qName = attribute.getName();
+            String namespace = qName.getNamespaceURI();
+            if (namespace == null || !hasNamespacesFeature()) {
+                namespace = "";
+            }
+            attributes.addAttribute(namespace, qName.getLocalPart(), QNameUtils.toQualifiedName(qName),
+                    attribute.getDTDType(), attribute.getValue());
+        }
+        if (hasNamespacePrefixesFeature()) {
+            for (Iterator i = event.getNamespaces(); i.hasNext();) {
+                Namespace namespace = (Namespace) i.next();
+                String prefix = namespace.getPrefix();
+                String namespaceUri = namespace.getNamespaceURI();
+                String qName;
+                if (StringUtils.hasLength(prefix)) {
+                    qName = "xmlns:" + prefix;
+                }
+                else {
+                    qName = "xmlns";
+                }
+                attributes.addAttribute("", "", qName, "CDATA", namespaceUri);
+            }
         }
 
         return attributes;
     }
+
 
 }
