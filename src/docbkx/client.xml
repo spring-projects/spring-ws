@@ -308,7 +308,7 @@ public void marshalWithSoapActionHeader(MyObject o) {
 
     webServiceTemplate.marshalSendAndReceive(o, new WebServiceMessageCallback() {
 
-        public void doInMessage(WebServiceMessage message) {
+        public void doWithMessage(WebServiceMessage message) {
             ((SoapMessage)message).setSoapAction("http://tempuri.org/Action");
         }
     });
@@ -332,16 +332,15 @@ public void marshalWithSoapActionHeader(MyObject o) {
 public void marshalWithSoapActionHeader(final Source s) {
     final Transformer transformer = transformerFactory.newTransformer();
     webServiceTemplate.sendAndReceive(new WebServiceMessageCallback() {
-
-        public void doInMessage(WebServiceMessage message) {
+        public void doWithMessage(WebServiceMessage message) {
             transformer.transform(s, message.getPayloadResult());
-        }, new WebServiceMessageExtractor() {
-
-        public Object extractData(WebServiceMessage message) throws IOException
-            ]]><lineannotation>// do your own transforms with message.getPayloadResult()</lineannotation><![CDATA[
-                    ]]><lineannotation>//     or message.getPayloadSource()</lineannotation><![CDATA[
-        }
-    });
+        },
+        new WebServiceMessageExtractor() {
+            public Object extractData(WebServiceMessage message) throws IOException
+                ]]><lineannotation>// do your own transforms with message.getPayloadResult()</lineannotation><![CDATA[
+                ]]><lineannotation>//     or message.getPayloadSource()</lineannotation><![CDATA[
+            }
+        });
 }]]></programlisting>
         </section>
     </section>
