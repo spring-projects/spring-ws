@@ -48,6 +48,7 @@ import org.springframework.xml.namespace.QNameUtils;
  * <code>QName</code>s.
  *
  * @author Arjen Poutsma
+ * @author Tareq Abed Rabbo
  * @see org.apache.axiom.om.OMNamespace
  * @see javax.xml.namespace.QName
  * @since 1.0.0
@@ -110,7 +111,7 @@ public abstract class AxiomUtils {
     /**
      * Converts a given AXIOM {@link org.apache.axiom.soap.SOAPEnvelope} to a {@link Document}.
      *
-     * @param envelope the SOAP envelope
+     * @param envelope the SOAP envelope to be converted
      * @return the converted document
      * @throws AxiomSoapEnvelopeException in case of errors
      * @see org.apache.rampart.util.Axis2Util.getDocumentFromSOAPEnvelope(SOAPEnvelope, boolean)
@@ -136,6 +137,14 @@ public abstract class AxiomUtils {
         }
     }
 
+    /**
+     * Converts a given {@link Document} to an AXIOM {@link org.apache.axiom.soap.SOAPEnvelope}.
+     *
+     * @param document the document to be converted
+     * @return the converted envelope
+     * @throws AxiomSoapEnvelopeException in case of errors
+     * @see org.apache.rampart.util.Axis2Util.getSOAPEnvelopeFromDOMDocument(Document, boolean)
+     */
     public static SOAPEnvelope toEnvelope(Document document) {
         try {
             DOMImplementation implementation = document.getImplementation();
@@ -156,9 +165,8 @@ public abstract class AxiomUtils {
             return stAXSOAPModelBuilder.getSOAPEnvelope();
         }
         catch (Exception ex) {
-            throw new AxiomSoapEnvelopeException("Error in converting SOAP Envelope to Document", ex);
+            throw new AxiomSoapEnvelopeException("Error in converting Document to SOAP Envelope", ex);
         }
     }
-
 
 }
