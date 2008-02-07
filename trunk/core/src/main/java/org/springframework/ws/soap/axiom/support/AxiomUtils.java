@@ -16,17 +16,31 @@
 
 package org.springframework.ws.soap.axiom.support;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
 import java.util.Locale;
 import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.stream.XMLInputFactory;
 
 import org.apache.axiom.om.OMContainer;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.OMNode;
+import org.apache.axiom.soap.SOAPEnvelope;
+import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSOutput;
+import org.w3c.dom.ls.LSSerializer;
 
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import org.springframework.ws.soap.axiom.AxiomSoapEnvelopeException;
 import org.springframework.xml.namespace.QNameUtils;
 
 /**
@@ -90,6 +104,59 @@ public abstract class AxiomUtils {
         for (Iterator iterator = container.getChildren(); iterator.hasNext();) {
             OMNode child = (OMNode) iterator.next();
             child.detach();
+        }
+    }
+
+    /**
+     * Converts a given AXIOM {@link org.apache.axiom.soap.SOAPEnvelope} to a {@link Document}.
+     *
+     * @param envelope the SOAP envelope
+     * @return the converted document
+     * @throws AxiomSoapEnvelopeException in case of errors
+     * @see org.apache.rampart.util.Axis2Util.getDocumentFromSOAPEnvelope(SOAPEnvelope, boolean)
+     */
+    public static Document toDocument(SOAPEnvelope envelope) {
+        try {
+            if (envelope instanceof Element) {
+                return ((Element) envelope).getOwnerDocument();
+            }
+            else {
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                envelope.build();
+                envelope.serialize(bos);
+
+                ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+                DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+                documentBuilderFactory.setNamespaceAware(true);
+                return documentBuilderFactory.newDocumentBuilder().parse(bis);
+            }
+        }
+        catch (Exception ex) {
+            throw new AxiomSoapEnvelopeException("Error in converting SOAP Envelope to Document", ex);
+        }
+    }
+
+    public static SOAPEnvelope toEnvelope(Document document) {
+        try {
+            DOMImplementation implementation = document.getImplementation();
+            Assert.isInstanceOf(DOMImplementationLS.class, implementation);
+
+            DOMImplementationLS loadSaveImplementation = (DOMImplementationLS) implementation;
+            LSOutput output = loadSaveImplementation.createLSOutput();
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            output.setByteStream(bos);
+
+            LSSerializer serializer = loadSaveImplementation.createLSSerializer();
+            serializer.write(document, output);
+
+            ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+
+            StAXSOAPModelBuilder stAXSOAPModelBuilder =
+                    new StAXSOAPModelBuilder(XMLInputFactory.newInstance().createXMLStreamReader(bis), null);
+            return stAXSOAPModelBuilder.getSOAPEnvelope();
+        }
+        catch (Exception ex) {
+            throw new AxiomSoapEnvelopeException("Error in converting SOAP Envelope to Document", ex);
         }
     }
 
