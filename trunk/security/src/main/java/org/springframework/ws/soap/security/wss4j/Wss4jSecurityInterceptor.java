@@ -37,6 +37,7 @@ import org.w3c.dom.Document;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.axiom.AxiomSoapMessage;
@@ -47,27 +48,41 @@ import org.springframework.ws.soap.security.WsSecuritySecurementException;
 import org.springframework.ws.soap.security.WsSecurityValidationException;
 
 /**
- * A WS-Security endpoint interceptor based on Apache Wss4j. The inteceptor supports both Axiom and Saaj messages. The
- * interceptor's configuration does not rely on an external configuration files and thus is set using the various
- * attributes.
+ * A WS-Security endpoint interceptor based on Apache's WSS4J. This inteceptor supports messages created by the {@link
+ * org.springframework.ws.soap.axiom.AxiomSoapMessageFactory} and the {@link org.springframework.ws.soap.saaj.SaajSoapMessageFactory}.
  * <p/>
- * The actions executed by the interceptor are configured via <code>validationActions</code> and
- * <code>securementActions</code> attributes. Actions are passed as a space separated string.
+ * The validation and securement actions executed by this interceptor are configured via <code>validationActions</code> and
+ * <code>securementActions</code> properties, respectively. Actions should be passed as a space-separated strings.
  * <p/>
- * Validation actions are: <ul> <li><strong>UsernameToken</strong>: validates username token</li>
- * <li><strong>Timestamp</strong>: validates the timestamp</li> <li><strong>Encrypt</strong>: decrypts the message</li>
- * <li><strong>Signature</strong>: validates the signature</li> <li><strong>NoSecurity</strong>: no action
- * performed</li> </ul> The order of the actions that the client performed to secure the messages is significant and is
+ * Valid <strong>validation</strong> actions are:
+ *
+ * <blockquote><table>
+ * <tr><th>Validation action</th><th>Description</th></tr>
+ * <tr><td><code>UsernameToken</code></td><td>Validates username token</td></tr>
+ * <tr><td><code>Timestamp</code></td><td>Validates the timestamp</td></tr>
+ * <tr><td><code>Encrypt</code></td><td>Decrypts the message</td></tr>
+ * <tr><td><code>Signature</code></td><td>Validates the signature</td></tr>
+ * <tr><td><code>NoSecurity</code></td><td>No action performed</td></tr>
+ * </table></blockquote>
+ * <p/>
+ * <strong>Securement</strong> actions are:
+ * <blockquote><table>
+ * <tr><th>Securement action</th><th>Description</th></tr>
+ * <tr><td><code>UsernameToken</td></code><td>Adds a username token</td></tr>
+ * <tr><td><code>UsernameTokenSignature</td></code><td>Adds a username token and a signature username token secrect key</td></tr>
+ * <tr><td><code>Timestamp</td></code><td>Adds a timestamp</td></tr>
+ * <tr><td><code>Encrypt</td></code><td>Encrypts the response</td></tr>
+ * <tr><td><code>Signature</td></code><td>Signs the response</td></tr>
+ * <tr><td><code>NoSecurity</td></code><td>No action performed</td></tr>
+ * </table></blockquote>
+ * <p/>
+ * The order of the actions that the client performed to secure the messages is significant and is
  * enforced by the interceptor.
- * <p/>
- * Securement actions are: <ul> <li><strong>UsernameToken</strong>: adds a username token</li>
- * <li><strong>UsernameTokenSignature</strong>: adds a username token and a sinagture username token secrect key</li>
- * <li><strong>Timestamp</strong>: adds a timestamp</li> <li><strong>Encrypt</strong>: encrypts the response</li>
- * <li><strong>Signature</strong>: signs the response</li> <li><strong>NoSecurity</strong>: no action performed</li>
- * </ul>
+ *
  *
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
+ * @see <a href="http://ws.apache.org/wss4j/">Apache WSS4J</a>
  * @since 1.5.0
  */
 public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor implements InitializingBean {
@@ -397,7 +412,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         }
         RequestData requestData = initializeRequestData(messageContext);
 
-        Document envelopeAsDocument = getEnvelopeAsDocument(soapMessage);
+        Document envelopeAsDocument = toDocument(soapMessage);
         try {
             // In case on signature confirmation with no other securement
             // action, we need to pass an empty securementActionsVector to avoid
@@ -412,7 +427,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
             throw new Wss4jSecuritySecurementException(ex.getMessage(), ex);
         }
 
-        replaceMessageIfNecessary(soapMessage, envelopeAsDocument);
+        replaceMessage(soapMessage, envelopeAsDocument);
     }
 
     /** Creates and initializes a request data */
@@ -422,31 +437,27 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
         // reads securementUsername first from the context then from the
         // property
-        String su = (String) messageContext
-                .getProperty(SECUREMENT_USER_PROPERTY_NAME);
-        if (su != null && !su.equals("")) {
-            requestData.setUsername(su);
+        String contextUsername = (String) messageContext.getProperty(SECUREMENT_USER_PROPERTY_NAME);
+        if (StringUtils.hasLength(contextUsername)) {
+            requestData.setUsername(contextUsername);
         }
         else {
             requestData.setUsername(securementUsername);
-
         }
-
-        requestData.setUsername(securementUsername);
         return requestData;
     }
 
     protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
             throws WsSecurityValidationException {
         if (logger.isDebugEnabled()) {
-            logger.debug("validating message: " + soapMessage + " with actions: " + validationActions);
+            logger.debug("Validating message [" + soapMessage + "] with actions " + validationActions);
         }
 
         if (validationAction == WSConstants.NO_SECURITY) {
             return;
         }
 
-        Document envelopeAsDocument = getEnvelopeAsDocument(soapMessage);
+        Document envelopeAsDocument = toDocument(soapMessage);
 
         // Header processing
         WSSecurityEngine securityEngine = WSSecurityEngine.getInstance();
@@ -476,34 +487,14 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
             throw new Wss4jSecurityValidationException(ex.getMessage(), ex);
         }
 
-        replaceMessageIfNecessary(soapMessage, envelopeAsDocument);
+        replaceMessage(soapMessage, envelopeAsDocument);
 
         soapMessage.getEnvelope().getHeader().removeHeaderElement(WS_SECURITY_NAME);
     }
 
     /**
-     * Transforms a soap message to a DOM document.
-     *
-     * @param soapMessage the message to transform
-     * @return a DOM document representing the message
-     */
-    private Document getEnvelopeAsDocument(SoapMessage soapMessage) {
-        if (soapMessage instanceof SaajSoapMessage) {
-            SaajSoapMessage saajMessage = (SaajSoapMessage) soapMessage;
-            return saajMessage.getSaajMessage().getSOAPPart();
-        }
-
-        if (soapMessage instanceof AxiomSoapMessage) {
-            AxiomSoapMessage axiomMessage = (AxiomSoapMessage) soapMessage;
-            return AxiomUtils.toDocument(axiomMessage.getAxiomMessage().getSOAPEnvelope());
-        }
-
-        throw new UnsupportedOperationException("Message type not supported: " + soapMessage);
-    }
-
-    /**
      * Puts the results of WS-Security headers processing in the message context. Some actions like Signature
-     * Confirmation
+     * Confirmation require this.
      */
     private void updateContextWithResults(MessageContext messageContext, Vector results) {
         Vector handlerResults;
@@ -518,7 +509,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
     }
 
     /**
-     *
+     * Verifies the trust of a certificate.
      * @param results
      * @throws WSSecurityException
      */
@@ -555,13 +546,27 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     }
 
+    /** Converts the given {@link SoapMessage} into a {@link Document}. */
+    private Document toDocument(SoapMessage soapMessage) {
+        if (soapMessage instanceof SaajSoapMessage) {
+            SaajSoapMessage saajMessage = (SaajSoapMessage) soapMessage;
+            return saajMessage.getSaajMessage().getSOAPPart();
+        }
+        else if (soapMessage instanceof AxiomSoapMessage) {
+            AxiomSoapMessage axiomMessage = (AxiomSoapMessage) soapMessage;
+            return AxiomUtils.toDocument(axiomMessage.getAxiomMessage().getSOAPEnvelope());
+        }
+        else {
+            throw new IllegalArgumentException("Message type not supported [" + soapMessage + "]");
+        }
+    }
+
     /**
-     * Replaces an axiom message.
-     *
-     * @param soapMessage the soap message to replace
-     * @param envelope    the new envelope
+     * Replaces the contents of the given {@link SoapMessage} with that of the document parameter. Only required when
+     * using Axiom, since the document returned by {@link #toDocument(org.springframework.ws.soap.SoapMessage)} is live
+     * for a {@link SaajSoapMessage}.
      */
-    private void replaceMessageIfNecessary(SoapMessage soapMessage, Document envelope) {
+    private void replaceMessage(SoapMessage soapMessage, Document envelope) {
         if (soapMessage instanceof AxiomSoapMessage) {
             // construct a new Axiom message with the processed envelope
             AxiomSoapMessage axiomMessage = (AxiomSoapMessage) soapMessage;
