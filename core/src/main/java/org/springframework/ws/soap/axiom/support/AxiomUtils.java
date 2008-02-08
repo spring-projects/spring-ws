@@ -40,7 +40,6 @@ import org.w3c.dom.ls.LSSerializer;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import org.springframework.ws.soap.axiom.AxiomSoapEnvelopeException;
 import org.springframework.xml.namespace.QNameUtils;
 
 /**
@@ -113,7 +112,7 @@ public abstract class AxiomUtils {
      *
      * @param envelope the SOAP envelope to be converted
      * @return the converted document
-     * @throws AxiomSoapEnvelopeException in case of errors
+     * @throws IllegalArgumentException in case of errors
      * @see org.apache.rampart.util.Axis2Util.getDocumentFromSOAPEnvelope(SOAPEnvelope, boolean)
      */
     public static Document toDocument(SOAPEnvelope envelope) {
@@ -133,7 +132,7 @@ public abstract class AxiomUtils {
             }
         }
         catch (Exception ex) {
-            throw new AxiomSoapEnvelopeException("Error in converting SOAP Envelope to Document", ex);
+            throw new IllegalArgumentException("Error in converting SOAP Envelope to Document", ex);
         }
     }
 
@@ -142,7 +141,7 @@ public abstract class AxiomUtils {
      *
      * @param document the document to be converted
      * @return the converted envelope
-     * @throws AxiomSoapEnvelopeException in case of errors
+     * @throws IllegalArgumentException in case of errors
      * @see org.apache.rampart.util.Axis2Util.getSOAPEnvelopeFromDOMDocument(Document, boolean)
      */
     public static SOAPEnvelope toEnvelope(Document document) {
@@ -165,7 +164,7 @@ public abstract class AxiomUtils {
             return stAXSOAPModelBuilder.getSOAPEnvelope();
         }
         catch (Exception ex) {
-            throw new AxiomSoapEnvelopeException("Error in converting Document to SOAP Envelope", ex);
+            throw new IllegalArgumentException("Error in converting Document to SOAP Envelope", ex);
         }
     }
 
