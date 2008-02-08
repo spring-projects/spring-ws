@@ -9,8 +9,7 @@
                 <wsse:Username>Bert</wsse:Username>
                 <wsse:Password
                         Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"
-                        >Ernie
-                </wsse:Password>
+                        >Ernie</wsse:Password>
             </wsse:UsernameToken>
         </wsse:Security>
     </SOAP-ENV:Header>
