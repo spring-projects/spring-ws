@@ -27,17 +27,15 @@ import org.acegisecurity.AuthenticationException;
 import org.acegisecurity.AuthenticationManager;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.providers.x509.X509AuthenticationToken;
+
 import org.springframework.util.Assert;
-import org.springframework.ws.soap.security.xwss.callback.AbstractCallbackHandler;
+import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
 /**
  * Callback handler that validates a certificate using an Acegi <code>AuthenticationManager</code>. Logic based on
- * Acegi's <code>X509ProcessingFilter</code>.
- * <p/>
- * An Acegi <code>X509AuthenticationToken</code> is created with the certificate as the credentials.
- * <p/>
- * The configured authentication manager is expected to supply a provider which can handle this token (usually an
- * instance of <code>X509AuthenticationProvider</code>).</p>
+ * Acegi's <code>X509ProcessingFilter</code>. <p/> An Acegi <code>X509AuthenticationToken</code> is created with the
+ * certificate as the credentials. <p/> The configured authentication manager is expected to supply a provider which can
+ * handle this token (usually an instance of <code>X509AuthenticationProvider</code>).</p>
  * <p/>
  * This class only handles <code>CertificateValidationCallback</code>s, and throws an
  * <code>UnsupportedCallbackException</code> for others.

@@ -24,9 +24,9 @@ import com.sun.xml.wss.impl.callback.EncryptionKeyCallback;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
-import org.springframework.ws.soap.security.xwss.callback.AbstractCallbackHandler;
+import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
-public class XwssMessageInterceptorEncryptTest extends XwssMessageInterceptorKeyStoreTestCase {
+public class XwssMessageInterceptorEncryptTest extends AbstractXwssMessageInterceptorKeyStoreTestCase {
 
     public void testEncryptDefaultCertificate() throws Exception {
         interceptor.setPolicyConfiguration(new ClassPathResource("encrypt-config.xml", getClass()));
@@ -53,7 +53,7 @@ public class XwssMessageInterceptorEncryptTest extends XwssMessageInterceptorKey
         interceptor.setCallbackHandler(handler);
         interceptor.afterPropertiesSet();
         SaajSoapMessage message = loadSaajMessage("empty-soap.xml");
-        interceptor.secureMessage(message);
+        interceptor.secureMessage(message, null);
         SOAPMessage result = message.getSaajMessage();
         assertNotNull("No result returned", result);
         assertXpathExists("BinarySecurityToken does not exist",
@@ -87,7 +87,7 @@ public class XwssMessageInterceptorEncryptTest extends XwssMessageInterceptorKey
         interceptor.setCallbackHandler(handler);
         interceptor.afterPropertiesSet();
         SaajSoapMessage message = loadSaajMessage("empty-soap.xml");
-        interceptor.secureMessage(message);
+        interceptor.secureMessage(message, null);
         SOAPMessage result = message.getSaajMessage();
         assertNotNull("No result returned", result);
         assertXpathExists("BinarySecurityToken does not exist",

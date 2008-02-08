@@ -29,9 +29,10 @@ import org.acegisecurity.providers.dao.cache.NullUserCache;
 import org.acegisecurity.userdetails.UserDetails;
 import org.acegisecurity.userdetails.UserDetailsService;
 import org.acegisecurity.userdetails.UsernameNotFoundException;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.util.Assert;
-import org.springframework.ws.soap.security.xwss.callback.AbstractCallbackHandler;
+import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 import org.springframework.ws.soap.security.xwss.callback.DefaultTimestampValidator;
 
 /**

@@ -22,8 +22,10 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 
 import com.sun.xml.wss.impl.callback.PasswordCallback;
 import com.sun.xml.wss.impl.callback.UsernameCallback;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
+import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
 /**
  * Simple callback handler that supplies a username and password to a username token at runtime.

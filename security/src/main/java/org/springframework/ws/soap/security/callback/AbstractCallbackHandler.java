@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.security.xwss.callback;
+package org.springframework.ws.soap.security.callback;
 
 import java.io.IOException;
 import javax.security.auth.callback.Callback;

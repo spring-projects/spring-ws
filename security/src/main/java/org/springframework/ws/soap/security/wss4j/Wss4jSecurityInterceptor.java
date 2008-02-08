@@ -1,0 +1,578 @@
+/*
+ * Copyright 2006 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.springframework.ws.soap.security.wss4j;
+
+import java.security.cert.X509Certificate;
+import java.util.Vector;
+import javax.security.auth.callback.CallbackHandler;
+
+import org.apache.axiom.soap.SOAPEnvelope;
+import org.apache.axiom.soap.SOAPFactory;
+import org.apache.axiom.soap.SOAPMessage;
+import org.apache.ws.security.WSConstants;
+import org.apache.ws.security.WSSecurityEngine;
+import org.apache.ws.security.WSSecurityEngineResult;
+import org.apache.ws.security.WSSecurityException;
+import org.apache.ws.security.components.crypto.Crypto;
+import org.apache.ws.security.handler.RequestData;
+import org.apache.ws.security.handler.WSHandlerConstants;
+import org.apache.ws.security.handler.WSHandlerResult;
+import org.apache.ws.security.message.token.Timestamp;
+import org.apache.ws.security.util.WSSecurityUtil;
+import org.w3c.dom.Document;
+
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.Assert;
+import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.axiom.AxiomSoapMessage;
+import org.springframework.ws.soap.axiom.support.AxiomUtils;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
+import org.springframework.ws.soap.security.AbstractWsSecurityInterceptor;
+import org.springframework.ws.soap.security.WsSecuritySecurementException;
+import org.springframework.ws.soap.security.WsSecurityValidationException;
+
+/**
+ * A WS-Security endpoint interceptor based on Apache Wss4j. The inteceptor supports both Axiom and Saaj messages. The
+ * interceptor's configuration does not rely on an external configuration files and thus is set using the various
+ * attributes.
+ * <p/>
+ * The actions executed by the interceptor are configured via <code>validationActions</code> and
+ * <code>securementActions</code> attributes. Actions are passed as a space separated string.
+ * <p/>
+ * Validation actions are: <ul> <li><strong>UsernameToken</strong>: validates username token</li>
+ * <li><strong>Timestamp</strong>: validates the timestamp</li> <li><strong>Encrypt</strong>: decrypts the message</li>
+ * <li><strong>Signature</strong>: validates the signature</li> <li><strong>NoSecurity</strong>: no action
+ * performed</li> </ul> The order of the actions that the client performed to secure the messages is significant and is
+ * enforced by the interceptor.
+ * <p/>
+ * Securement actions are: <ul> <li><strong>UsernameToken</strong>: adds a username token</li>
+ * <li><strong>UsernameTokenSignature</strong>: adds a username token and a sinagture username token secrect key</li>
+ * <li><strong>Timestamp</strong>: adds a timestamp</li> <li><strong>Encrypt</strong>: encrypts the response</li>
+ * <li><strong>Signature</strong>: signs the response</li> <li><strong>NoSecurity</strong>: no action performed</li>
+ * </ul>
+ *
+ * @author Tareq Abed Rabbo
+ * @author Arjen Poutsma
+ * @since 1.5.0
+ */
+public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor implements InitializingBean {
+
+    public static final String SECUREMENT_USER_PROPERTY_NAME = "Wss4jSecurityInterceptor.securementUser";
+
+    private CallbackHandler validationCallbackHandler;
+
+    private int securementAction;
+
+    private String securementActions;
+
+    private Vector securementActionsVector;
+
+    private String securementUsername;
+
+    private boolean timestampStrict = true;
+
+    private int timeToLive = 300;
+
+    private int validationAction;
+
+    private String validationActions;
+
+    private Vector validationActionsVector;
+
+    private String validationActor;
+
+    private Crypto validationDecryptionCrypto;
+
+    private Crypto validationSignatureCrypto;
+
+    private Wss4jHandler handler = new Wss4jHandler();
+
+    private boolean enableSignatureConfirmation;
+
+    public void setSecurementActions(String securementActions) {
+        this.securementActions = securementActions;
+        securementActionsVector = new Vector();
+        try {
+            securementAction = WSSecurityUtil.decodeAction(securementActions, securementActionsVector);
+        }
+        catch (WSSecurityException ex) {
+            throw new IllegalArgumentException(ex);
+        }
+    }
+
+    /**
+     * The actor name of the <code>wsse:Security</code> header.
+     * <p/>
+     * If this parameter is omitted, the actor name is not set.
+     * <p/>
+     * The value of the actor or role has to match the receiver's setting or may contain standard values.
+     */
+    public void setSecurementActor(String securementActor) {
+        handler.setOption(WSHandlerConstants.ACTOR, securementActor);
+    }
+
+    public void setSecurementCallbackHandler(CallbackHandler securementCallbackHandler) {
+        handler.setSecurementCallbackHandler(securementCallbackHandler);
+    }
+
+    public void setSecurementEncryptionCrypto(Crypto securementEncryptionCrypto) {
+        handler.setSecurementEncryptionCrypto(securementEncryptionCrypto);
+    }
+
+    /**
+     * Defines which key identifier type to use. The WS-Security specifications recommends to use the identifier type
+     * <code>IssuerSerial</code>. For possible encryption key identifier types refer to {@link
+     * org.apache.ws.security.handler.WSHandlerConstants#keyIdentifier}. For encryption <code>IssuerSerial</code>,
+     * <code>X509KeyIdentifier</code>,  <code>DirectReference</code>, <code>Thumbprint</code>,
+     * <code>SKIKeyIdentifier</code>, and <code>EmbeddedKeyName</code> are valid only.
+     */
+    public void setSecurementEncryptionKeyIdentifier(String securementEncryptionKeyIdentifier) {
+        handler.setOption(WSHandlerConstants.ENC_KEY_ID, securementEncryptionKeyIdentifier);
+    }
+
+    /**
+     * Defines which algorithm to use to encrypt the generated symmetric key. Currently WSS4J supports {@link
+     * WSConstants#KEYTRANSPORT_RSA15} only.
+     */
+    public void setSecurementEncryptionKeyTransportAlgorithm(String securementEncryptionKeyTransportAlgorithm) {
+        handler.setOption(WSHandlerConstants.ENC_KEY_TRANSPORT, securementEncryptionKeyTransportAlgorithm);
+    }
+
+    /**
+     * Parameter to define which parts of the request shall be encrypted.
+     * <p/>
+     * The value of this parameter is a list of semi-colon separated element names that identify the elements to
+     * encrypt. An encryption mode specifier and a namespace identification, each inside a pair of curly brackets, may
+     * preceed each element name.
+     * <p/>
+     * The encryption mode specifier is either <code>{Content}</code> or <code>{Element}</code>. Please refer to the W3C
+     * XML Encryption specification about the differences between Element and Content encryption. The encryption mode
+     * defaults to <code>Content</code> if it is omitted. Example of a list:
+     * <pre>
+     * &lt;parameter name="encryptionParts"
+     *   value="{Content}{http://example.org/paymentv2}CreditCard;
+     *             {Element}{}UserName" />
+     * </pre>
+     * The the first entry of the list identifies the element <code>CreditCard</code> in the namespace
+     * <code>http://example.org/paymentv2</code>, and will encrypt its content. Be aware that the element name, the
+     * namespace identifier, and the encryption modifier are case sensitive.
+     * <p/>
+     * The encryption modifier and the namespace identifier can be ommited. In this case the encryption mode defaults to
+     * <code>Content</code> and the namespace is set to the SOAP namespace.
+     * <p/>
+     * An empty encryption mode defaults to <code>Content</code>, an empty namespace identifier defaults to the SOAP
+     * namespace. The second line of the example defines <code>Element</code> as encryption mode for an
+     * <code>UserName</code> element in the SOAP namespace.
+     * <p/>
+     * To specify an element without a namespace use the string <code>Null</code> as the namespace name (this is a case
+     * sensitive string)
+     * <p/>
+     * If no list is specified, the handler encrypts the SOAP Body in <code>Content</code> mode by default.
+     */
+    public void setSecurementEncryptionParts(String securementEncryptionParts) {
+        handler.setOption(WSHandlerConstants.ENCRYPTION_PARTS, securementEncryptionParts);
+    }
+
+    /**
+     * Defines which symmetric encryption algorithm to use. WSS4J supports the following alorithms: {@link
+     * WSConstants#TRIPLE_DES}, {@link WSConstants#AES_128}, {@link WSConstants#AES_256}, and {@link
+     * WSConstants#AES_192}. Except for AES 192 all of these algorithms are required by the XML Encryption
+     * specification.
+     */
+    public void setSecurementEncryptionSymAlgorithm(String securementEncryptionSymAlgorithm) {
+        this.handler.setOption(WSHandlerConstants.ENC_SYM_ALGO, securementEncryptionSymAlgorithm);
+    }
+
+    /**
+     * The user's name for encryption.
+     * <p/>
+     * The encryption functions uses the public key of this user's certificate to encrypt the generated symmetric key.
+     * <p/>
+     * If this parameter is not set, then the encryption function falls back to the {@link
+     * org.apache.ws.security.handler.WSHandlerConstants#USER} parameter to get the certificate.
+     * <p/>
+     * If <b>only</b> encryption of the SOAP body data is requested, it is recommended to use this parameter to define
+     * the username. The application can then use the standard user and password functions (see example at {@link
+     * org.apache.ws.security.handler.WSHandlerConstants#USER} to enable HTTP authentication functions.
+     * <p/>
+     * Encryption only does not authenticate a user / sender, therefore it does not need a password.
+     * <p/>
+     * Placing the username of the encryption certficate in the WSDD is not a security risk, because the public key of
+     * that certificate is used only.
+     * <p/>
+     * The application may set this parameter using the following method:
+     * <pre>
+     * call.setProperty(WSHandlerConstants.ENCYRPTION_USER, "encryptionuser");
+     * </pre>
+     * However, the parameter in the WSDD deployment file overwrites the property setting (deployment setting overwrites
+     * application setting).
+     */
+    public void setSecurementEncryptionUser(String securementEncryptionUser) {
+        handler.setOption(WSHandlerConstants.ENCRYPTION_USER, securementEncryptionUser);
+    }
+
+    public void setSecurementPassword(String securementPassword) {
+        this.handler.setSecurementPassword(securementPassword);
+    }
+
+    /**
+     * Specific parameter for UsernameToken action to define the encoding of the passowrd.
+     * <p/>
+     * The parameter can be set to either {@link WSConstants#PW_DIGEST} or to {@link WSConstants#PW_TEXT}.
+     * <p/>
+     * The default setting is PW_DIGEST.
+     */
+    public void setSecurementPasswordType(String securementUsernameTokenPasswordType) {
+        handler.setOption(WSHandlerConstants.PASSWORD_TYPE, securementUsernameTokenPasswordType);
+    }
+
+    /**
+     * Defines which signature algorithm to use. Currently this parameter is ignored - SHA1RSA is the only supported
+     * algorithm, will be enhanced soon.
+     */
+    public void setSecurementSignatureAlgorithm(String securementSignatureAlgorithm) {
+        handler.setOption(WSHandlerConstants.SIG_ALGO, securementSignatureAlgorithm);
+    }
+
+    public void setSecurementSignatureCrypto(Crypto securementSignatureCrypto) {
+        handler.setSecurementSignatureCrypto(securementSignatureCrypto);
+    }
+
+    /**
+     * Defines which key identifier type to use. The WS-Security specifications recommends to use the identifier type
+     * <code>IssuerSerial</code>. For possible signature key identifier types refer to {@link
+     * org.apache.ws.security.handler.WSHandlerConstants#keyIdentifier}. For signature <code>IssuerSerial</code> and
+     * <code>DirectReference</code> are valid only.
+     */
+    public void setSecurementSignatureKeyIdentifier(String securementSignatureKeyIdentifier) {
+        handler.setOption(WSHandlerConstants.SIG_KEY_ID, securementSignatureKeyIdentifier);
+    }
+
+    /**
+     * Parameter to define which parts of the request shall be signed.
+     * <p/>
+     * Refer to {@link #setSecurementEncryptionParts(String)} for a detailed description of the format of the value
+     * string.
+     * <p/>
+     * If this parameter is not specified the handler signs the SOAP Body by default.
+     * <p/>
+     * The WS Security specifications define several formats to transfer the signature tokens (certificates) or
+     * references to these tokens. Thus, the plain element name <code>Token</code> signs the token and takes care of the
+     * different format.
+     * <p/>
+     * To sign the SOAP body <b>and</b> the signature token the value of this parameter must contain:
+     * <pre>
+     * &lt;parameter name="signatureParts"
+     *   value="{}{http://schemas.xmlsoap.org/soap/envelope/}Body; Token" />
+     * </pre>
+     * To specify an element without a namespace use the string <code>Null</code> as the namespace name (this is a case
+     * sensitive string)
+     * <p/>
+     * If there is no other element in the request with a local name of <code>Body</code> then the SOAP namespace
+     * identifier can be empty (<code>{}</code>).
+     */
+    public void setSecurementSignatureParts(String securementSignatureParts) {
+        handler.setOption(WSHandlerConstants.SIGNATURE_PARTS, securementSignatureParts);
+    }
+
+    public void setSecurementUsername(String securementUsername) {
+        this.securementUsername = securementUsername;
+    }
+
+    /** Sets the server-side time to live */
+    public void setTimeToLive(int timeToLive) {
+        if (timeToLive <= 0) {
+            throw new IllegalArgumentException("timeToLive must be positive");
+        }
+        this.timeToLive = timeToLive;
+    }
+
+    /** Sets the validation actions to be executed by the interceptor. */
+    public void setValidationActions(String actions) {
+        this.validationActions = actions;
+        try {
+            validationActionsVector = new Vector();
+            validationAction = WSSecurityUtil.decodeAction(actions, validationActionsVector);
+        }
+        catch (WSSecurityException ex) {
+            throw new IllegalArgumentException(ex);
+        }
+    }
+
+    public void setValidationActor(String validationActor) {
+        this.validationActor = validationActor;
+    }
+
+    public void setValidationCallbackHandler(CallbackHandler callbackHandler) {
+        this.validationCallbackHandler = callbackHandler;
+    }
+
+    /** Sets the Crypto to use to decrypt incoming messages */
+    public void setValidationDecryptionCrypto(Crypto decryptionCrypto) {
+        this.validationDecryptionCrypto = decryptionCrypto;
+    }
+
+    /** Sets the Crypto to use to verify the signature of incoming messages */
+    public void setValidationSignatureCrypto(Crypto signatureCrypto) {
+        this.validationSignatureCrypto = signatureCrypto;
+    }
+
+    /** Whether to enable signatureConfirmation or not. By default signatureConfirmation is enabled */
+    public void setEnableSignatureConfirmation(boolean enableSignatureConfirmation) {
+        handler.setOption(WSHandlerConstants.ENABLE_SIGNATURE_CONFIRMATION, enableSignatureConfirmation);
+        this.enableSignatureConfirmation = enableSignatureConfirmation;
+    }
+
+    /** Sets if the generated timestamp header's precision is in milliseconds. */
+    public void setTimestampPrecisionInMilliseconds(boolean timestampPrecisionInMilliseconds) {
+        handler.setOption(WSHandlerConstants.TIMESTAMP_PRECISION, timestampPrecisionInMilliseconds);
+    }
+
+    /** Sets whether or not timestamp verification is done with the server-side time to live */
+    public void setTimestampStrict(boolean timestampStrict) {
+        this.timestampStrict = timestampStrict;
+    }
+
+    /**
+     * Enables the <code>mustUnderstand</code> attribute on WS-Security headers on outgoing messages. Default is
+     * <code>true</code>.
+     */
+    public void setSecurementMustUnderstand(boolean securementMustUnderstand) {
+        handler.setOption(WSHandlerConstants.MUST_UNDERSTAND, securementMustUnderstand);
+    }
+
+    /**
+     * Sets the additional elements in <code>UsernameToken</code>s.
+     * <p/>
+     * The value of this parameter is a list of element names that are added to the UsernameToken. The names of the list
+     * a separated by spaces.
+     * <p/>
+     * The list may containe the names <code>nonce</code> and <code>created</code> only. Use this option if the password
+     * type is <code>passwordText</code> and the handler shall add the <code>Nonce</code> and/or <code>Created</code>
+     * elements.
+     */
+    public void setSecurementUsernameTokenElements(String securementUsernameTokenElements) {
+        handler.setOption(WSHandlerConstants.ADD_UT_ELEMENTS, securementUsernameTokenElements);
+    }
+
+    public void afterPropertiesSet() throws Exception {
+        Assert.isTrue(validationActions != null || securementActions != null,
+                "validationActions or securementActions are required");
+        if (validationActions != null) {
+            if ((validationAction & WSConstants.UT) != 0) {
+                Assert.notNull(validationCallbackHandler, "validationCallbackHandler is required");
+            }
+
+            if ((validationAction & WSConstants.SIGN) != 0) {
+                Assert.notNull(validationSignatureCrypto, "validationSignatureCrypto is required");
+            }
+
+            if ((validationAction & WSConstants.ENCR) != 0) {
+                Assert.notNull(validationDecryptionCrypto, "validationDecryptionCrypto is required");
+            }
+        }
+        // securement actions are not to be validated at start up as they could
+        // be configured dynamically via the message context
+    }
+
+    protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
+            throws WsSecuritySecurementException {
+        if (securementAction == WSConstants.NO_SECURITY && !enableSignatureConfirmation) {
+            return;
+        }
+        RequestData requestData = initializeRequestData(messageContext);
+
+        Document envelopeAsDocument = getEnvelopeAsDocument(soapMessage);
+        try {
+            // In case on signature confirmation with no other securement
+            // action, we need to pass an empty securementActionsVector to avoid
+            // NPE
+            if (securementAction == WSConstants.NO_SECURITY) {
+                securementActionsVector = new Vector(0);
+            }
+
+            handler.doSenderAction(securementAction, envelopeAsDocument, requestData, securementActionsVector, false);
+        }
+        catch (WSSecurityException ex) {
+            throw new Wss4jSecuritySecurementException(ex.getMessage(), ex);
+        }
+
+        replaceMessageIfNecessary(soapMessage, envelopeAsDocument);
+    }
+
+    /** Creates and initializes a request data */
+    private RequestData initializeRequestData(MessageContext messageContext) {
+        RequestData requestData = new RequestData();
+        requestData.setMsgContext(messageContext);
+
+        // reads securementUsername first from the context then from the
+        // property
+        String su = (String) messageContext
+                .getProperty(SECUREMENT_USER_PROPERTY_NAME);
+        if (su != null && !su.equals("")) {
+            requestData.setUsername(su);
+        }
+        else {
+            requestData.setUsername(securementUsername);
+
+        }
+
+        requestData.setUsername(securementUsername);
+        return requestData;
+    }
+
+    protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
+            throws WsSecurityValidationException {
+        if (logger.isDebugEnabled()) {
+            logger.debug("validating message: " + soapMessage + " with actions: " + validationActions);
+        }
+
+        if (validationAction == WSConstants.NO_SECURITY) {
+            return;
+        }
+
+        Document envelopeAsDocument = getEnvelopeAsDocument(soapMessage);
+
+        // Header processing
+        WSSecurityEngine securityEngine = WSSecurityEngine.getInstance();
+
+        try {
+            Vector results = securityEngine.processSecurityHeader(envelopeAsDocument, validationActor,
+                    validationCallbackHandler, validationSignatureCrypto, validationDecryptionCrypto);
+
+            // Results verification
+            if (results == null) {
+                throw new Wss4jSecurityValidationException("No WS-Security header found");
+            }
+
+            if (!handler.checkReceiverResults(results, validationActionsVector)) {
+                throw new Wss4jSecurityValidationException("Security processing failed (actions mismatch)");
+            }
+
+            // puts the results in the context
+            // useful for Signature Confirmation
+            updateContextWithResults(messageContext, results);
+
+            verifyCertificateTrust(results);
+
+            verifyTimestamp(results);
+        }
+        catch (WSSecurityException ex) {
+            throw new Wss4jSecurityValidationException(ex.getMessage(), ex);
+        }
+
+        replaceMessageIfNecessary(soapMessage, envelopeAsDocument);
+
+        soapMessage.getEnvelope().getHeader().removeHeaderElement(WS_SECURITY_NAME);
+    }
+
+    /**
+     * Transforms a soap message to a DOM document.
+     *
+     * @param soapMessage the message to transform
+     * @return a DOM document representing the message
+     */
+    private Document getEnvelopeAsDocument(SoapMessage soapMessage) {
+        if (soapMessage instanceof SaajSoapMessage) {
+            SaajSoapMessage saajMessage = (SaajSoapMessage) soapMessage;
+            return saajMessage.getSaajMessage().getSOAPPart();
+        }
+
+        if (soapMessage instanceof AxiomSoapMessage) {
+            AxiomSoapMessage axiomMessage = (AxiomSoapMessage) soapMessage;
+            return AxiomUtils.toDocument(axiomMessage.getAxiomMessage().getSOAPEnvelope());
+        }
+
+        throw new UnsupportedOperationException("Message type not supported: " + soapMessage);
+    }
+
+    /**
+     * Puts the results of WS-Security headers processing in the message context. Some actions like Signature
+     * Confirmation
+     */
+    private void updateContextWithResults(MessageContext messageContext, Vector results) {
+        Vector handlerResults;
+        if ((handlerResults = (Vector) messageContext
+                .getProperty(WSHandlerConstants.RECV_RESULTS)) == null) {
+            handlerResults = new Vector();
+            messageContext.setProperty(WSHandlerConstants.RECV_RESULTS, handlerResults);
+        }
+        WSHandlerResult rResult = new WSHandlerResult(validationActor, results);
+        handlerResults.add(0, rResult);
+        messageContext.setProperty(WSHandlerConstants.RECV_RESULTS, handlerResults);
+    }
+
+    /**
+     *
+     * @param results
+     * @throws WSSecurityException
+     */
+    protected void verifyCertificateTrust(Vector results) throws WSSecurityException {
+        RequestData requestData = new RequestData();
+        requestData.setSigCrypto(validationSignatureCrypto);
+        WSSecurityEngineResult actionResult = WSSecurityUtil.fetchActionResult(results, WSConstants.SIGN);
+
+        if (actionResult != null) {
+            X509Certificate returnCert = actionResult.getCertificate();
+            if (!handler.verifyTrust(returnCert, requestData)) {
+                throw new Wss4jSecurityValidationException("The certificate used for the signature is not trusted");
+            }
+        }
+    }
+
+    /**
+     *
+     * @param results
+     * @throws WSSecurityException
+     */
+    protected void verifyTimestamp(Vector results) throws WSSecurityException {
+        WSSecurityEngineResult actionResult = WSSecurityUtil.fetchActionResult(results, WSConstants.TS);
+
+        if (actionResult != null) {
+            Timestamp timestamp = actionResult.getTimestamp();
+
+            if (timestamp != null && timestampStrict) {
+                if (!handler.verifyTimestamp(timestamp, timeToLive)) {
+                    throw new Wss4jSecurityValidationException("Invalid timestamp : " + timestamp.getID());
+                }
+            }
+        }
+
+    }
+
+    /**
+     * Replaces an axiom message.
+     *
+     * @param soapMessage the soap message to replace
+     * @param envelope    the new envelope
+     */
+    private void replaceMessageIfNecessary(SoapMessage soapMessage, Document envelope) {
+        if (soapMessage instanceof AxiomSoapMessage) {
+            // construct a new Axiom message with the processed envelope
+            AxiomSoapMessage axiomMessage = (AxiomSoapMessage) soapMessage;
+            SOAPEnvelope envelopeFromDOMDocument = AxiomUtils.toEnvelope(envelope);
+            SOAPFactory factory = (SOAPFactory) axiomMessage.getAxiomMessage().getOMFactory();
+            SOAPMessage newMessage = factory.createSOAPMessage();
+            newMessage.setSOAPEnvelope(envelopeFromDOMDocument);
+
+            // replace the Axiom message
+            axiomMessage.setAxiomMessage(newMessage);
+        }
+    }
+
+}

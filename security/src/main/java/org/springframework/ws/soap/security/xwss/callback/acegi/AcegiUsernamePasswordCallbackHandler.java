@@ -26,7 +26,7 @@ import org.acegisecurity.Authentication;
 import org.acegisecurity.context.SecurityContext;
 import org.acegisecurity.context.SecurityContextHolder;
 
-import org.springframework.ws.soap.security.xwss.callback.AbstractCallbackHandler;
+import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
 /**
  * Callback handler that adds username/password information to a mesage using an Acegi {@link SecurityContext}.

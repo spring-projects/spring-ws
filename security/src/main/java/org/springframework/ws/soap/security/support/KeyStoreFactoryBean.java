@@ -23,19 +23,21 @@ import java.security.KeyStore;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
 /**
- * Spring factory bean for a <code>java.security.KeyStore</code>.
+ * Spring factory bean for a {@link KeyStore}.
  * <p/>
  * To load an existing key store, you must set the <code>location</code> property. If this property is not set, a new,
  * empty key store is created, which is most likely not what you want.
  *
  * @author Arjen Poutsma
  * @see #setLocation(org.springframework.core.io.Resource)
+ * @see KeyStore
  * @since 1.0.0
  */
 public class KeyStoreFactoryBean implements FactoryBean, InitializingBean {

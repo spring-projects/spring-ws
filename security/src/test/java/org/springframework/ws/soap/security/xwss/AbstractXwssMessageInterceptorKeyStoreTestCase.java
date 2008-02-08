@@ -21,7 +21,7 @@ import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 
-public abstract class XwssMessageInterceptorKeyStoreTestCase extends XwssMessageInterceptorTestCase {
+public abstract class AbstractXwssMessageInterceptorKeyStoreTestCase extends AbstractXwssMessageInterceptorTestCase {
 
     protected X509Certificate certificate;
 
