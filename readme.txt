@@ -49,7 +49,7 @@ exact list of Spring-WS project dependencies see the respective Maven2 pom.xml f
 * spring-ws-core-1.5.0-m1.jar
 - Contents: The Spring-WS Core
 - Dependencies: Commons Logging, spring-beans, spring-core, spring-context, spring-oxm
-                [Log4J, spring-web, spring-webmvc, SAAJ, JDOM, StAX, Servlet API, JAF, Axiom, DOM4J, XOM]
+                [Log4J, spring-web, spring-webmvc, SAAJ, JDOM, StAX, Servlet API, JAF, Axiom, DOM4J, XOM, WSDL4J]
 
 * spring-ws-core-tiger-1.5.0-m1.jar
 - Contents: The Spring-WS Core for Java 5
