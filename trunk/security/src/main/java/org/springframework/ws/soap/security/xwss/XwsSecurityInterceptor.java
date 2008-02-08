@@ -25,14 +25,16 @@ import com.sun.xml.wss.XWSSProcessor;
 import com.sun.xml.wss.XWSSProcessorFactory;
 import com.sun.xml.wss.XWSSecurityException;
 import com.sun.xml.wss.impl.WssSoapFaultException;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
+import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.security.AbstractWsSecurityInterceptor;
 import org.springframework.ws.soap.security.WsSecurityValidationException;
-import org.springframework.ws.soap.security.xwss.callback.CallbackHandlerChain;
+import org.springframework.ws.soap.security.callback.CallbackHandlerChain;
 
 /**
  * WS-Security endpoint interceptor  that is based on Sun's XML and Web Services Security package (XWSS). This
@@ -87,9 +89,7 @@ public class XwsSecurityInterceptor extends AbstractWsSecurityInterceptor implem
         this.callbackHandler = new CallbackHandlerChain(callbackHandler);
     }
 
-    /**
-     * Sets the policy configuration to use for XWSS. Required.
-     */
+    /** Sets the policy configuration to use for XWSS. Required. */
     public void setPolicyConfiguration(Resource policyConfiguration) {
         this.policyConfiguration = policyConfiguration;
     }
@@ -121,7 +121,8 @@ public class XwsSecurityInterceptor extends AbstractWsSecurityInterceptor implem
      * @throws XwsSecuritySecurementException in case of errors
      * @throws IllegalArgumentException       when soapMessage is not a <code>SaajSoapMessage</code>
      */
-    protected void secureMessage(SoapMessage soapMessage) throws XwsSecuritySecurementException {
+    protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
+            throws XwsSecuritySecurementException {
         Assert.isTrue(soapMessage instanceof SaajSoapMessage, "XwsSecurityInterceptor requires a SaajSoapMessage. " +
                 "Use a SaajSoapMessageFactory to create the SOAP messages.");
         SaajSoapMessage saajSoapMessage = (SaajSoapMessage) soapMessage;
@@ -145,7 +146,8 @@ public class XwsSecurityInterceptor extends AbstractWsSecurityInterceptor implem
      * @throws XwsSecurityValidationException in case of errors
      * @throws IllegalArgumentException       when soapMessage is not a <code>SaajSoapMessage</code>
      */
-    protected void validateMessage(SoapMessage soapMessage) throws WsSecurityValidationException {
+    protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
+            throws WsSecurityValidationException {
         Assert.isTrue(soapMessage instanceof SaajSoapMessage, "XwsSecurityInterceptor requires a SaajSoapMessage. " +
                 "Use a SaajSoapMessageFactory to create the SOAP messages.");
         SaajSoapMessage saajSoapMessage = (SaajSoapMessage) soapMessage;

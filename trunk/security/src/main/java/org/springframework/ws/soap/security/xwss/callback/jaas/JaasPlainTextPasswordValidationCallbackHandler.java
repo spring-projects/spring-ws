@@ -25,7 +25,8 @@ import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 
 import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
-import org.springframework.ws.soap.security.xwss.callback.AbstractCallbackHandler;
+
+import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
 /**
  * Provides basic support for integrating with JAAS and plain text passwords.

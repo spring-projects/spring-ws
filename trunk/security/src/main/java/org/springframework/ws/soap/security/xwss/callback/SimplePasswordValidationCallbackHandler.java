@@ -25,8 +25,10 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 
 import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
 import com.sun.xml.wss.impl.callback.TimestampValidationCallback;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
+import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
 /**
  * Simple callback handler that validates passwords agains a in-memory <code>Properties</code> object. Password

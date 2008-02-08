@@ -18,7 +18,7 @@ package org.springframework.ws.soap.security.xwss.callback.jaas;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
-import org.springframework.ws.soap.security.xwss.callback.AbstractCallbackHandler;
+import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
 /**
  * Abstract base class for integrating with JAAS. Provides a login context name property.

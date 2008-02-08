@@ -41,11 +41,13 @@ public class XwsSecurityInterceptorTest extends TestCase {
         final SOAPMessage validatedRequest = messageFactory.createMessage();
         XwsSecurityInterceptor interceptor = new XwsSecurityInterceptor() {
 
-            protected void secureMessage(SoapMessage soapMessage) throws XwsSecuritySecurementException {
+            protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
+                    throws XwsSecuritySecurementException {
                 fail("secure not expected");
             }
 
-            protected void validateMessage(SoapMessage message) throws WsSecurityValidationException {
+            protected void validateMessage(SoapMessage message, MessageContext messageContext)
+                    throws WsSecurityValidationException {
                 SaajSoapMessage saajSoapMessage = (SaajSoapMessage) message;
                 assertEquals("Invalid message", request, saajSoapMessage.getSaajMessage());
                 saajSoapMessage.setSaajMessage(validatedRequest);
@@ -62,12 +64,14 @@ public class XwsSecurityInterceptorTest extends TestCase {
         final SOAPMessage securedResponse = messageFactory.createMessage();
         XwsSecurityInterceptor interceptor = new XwsSecurityInterceptor() {
 
-            protected void secureMessage(SoapMessage message) throws XwsSecuritySecurementException {
+            protected void secureMessage(SoapMessage message, MessageContext messageContext)
+                    throws XwsSecuritySecurementException {
                 SaajSoapMessage saajSoapMessage = (SaajSoapMessage) message;
                 saajSoapMessage.setSaajMessage(securedResponse);
             }
 
-            protected void validateMessage(SoapMessage soapMessage) throws WsSecurityValidationException {
+            protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
+                    throws WsSecurityValidationException {
                 fail("validate not expected");
             }
 
@@ -85,13 +89,15 @@ public class XwsSecurityInterceptorTest extends TestCase {
         final SOAPMessage securedRequest = messageFactory.createMessage();
         XwsSecurityInterceptor interceptor = new XwsSecurityInterceptor() {
 
-            protected void secureMessage(SoapMessage soapMessage) throws XwsSecuritySecurementException {
+            protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
+                    throws XwsSecuritySecurementException {
                 SaajSoapMessage saajSoapMessage = (SaajSoapMessage) soapMessage;
                 assertEquals("Invalid message", request, saajSoapMessage.getSaajMessage());
                 saajSoapMessage.setSaajMessage(securedRequest);
             }
 
-            protected void validateMessage(SoapMessage message) throws WsSecurityValidationException {
+            protected void validateMessage(SoapMessage message, MessageContext messageContext)
+                    throws WsSecurityValidationException {
                 fail("validate not expected");
             }
 
@@ -106,11 +112,13 @@ public class XwsSecurityInterceptorTest extends TestCase {
         final SOAPMessage validatedResponse = messageFactory.createMessage();
         XwsSecurityInterceptor interceptor = new XwsSecurityInterceptor() {
 
-            protected void secureMessage(SoapMessage message) throws XwsSecuritySecurementException {
+            protected void secureMessage(SoapMessage message, MessageContext messageContext)
+                    throws XwsSecuritySecurementException {
                 fail("secure not expected");
             }
 
-            protected void validateMessage(SoapMessage soapMessage) throws WsSecurityValidationException {
+            protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
+                    throws WsSecurityValidationException {
                 SaajSoapMessage saajSoapMessage = (SaajSoapMessage) soapMessage;
                 saajSoapMessage.setSaajMessage(validatedResponse);
             }

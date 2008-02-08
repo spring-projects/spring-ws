@@ -24,6 +24,8 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
 import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
 
+import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
+
 /**
  * Mock implementation of of callback handler that accepts all password and certificate validation callbacks.
  * <p/>

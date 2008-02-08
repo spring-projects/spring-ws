@@ -23,11 +23,12 @@ import javax.xml.soap.SOAPMessage;
 
 import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
 import com.sun.xml.wss.impl.callback.SignatureKeyCallback;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
-import org.springframework.ws.soap.security.xwss.callback.AbstractCallbackHandler;
+import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
-public class XwssMessageInterceptorSignTest extends XwssMessageInterceptorKeyStoreTestCase {
+public class XwssMessageInterceptorSignTest extends AbstractXwssMessageInterceptorKeyStoreTestCase {
 
     public void testSignDefaultCertificate() throws Exception {
         interceptor.setPolicyConfiguration(new ClassPathResource("sign-config.xml", getClass()));
@@ -54,7 +55,7 @@ public class XwssMessageInterceptorSignTest extends XwssMessageInterceptorKeySto
         interceptor.setCallbackHandler(handler);
         interceptor.afterPropertiesSet();
         SaajSoapMessage message = loadSaajMessage("empty-soap.xml");
-        interceptor.secureMessage(message);
+        interceptor.secureMessage(message, null);
         SOAPMessage result = message.getSaajMessage();
         assertNotNull("No result returned", result);
         assertXpathExists("BinarySecurityToken does not exist",
@@ -89,7 +90,7 @@ public class XwssMessageInterceptorSignTest extends XwssMessageInterceptorKeySto
         interceptor.setCallbackHandler(handler);
         interceptor.afterPropertiesSet();
         SaajSoapMessage message = loadSaajMessage("empty-soap.xml");
-        interceptor.secureMessage(message);
+        interceptor.secureMessage(message, null);
         SOAPMessage result = message.getSaajMessage();
         assertNotNull("No result returned", result);
         assertXpathExists("BinarySecurityToken does not exist",
@@ -120,7 +121,7 @@ public class XwssMessageInterceptorSignTest extends XwssMessageInterceptorKeySto
         interceptor.setCallbackHandler(handler);
         interceptor.afterPropertiesSet();
         SaajSoapMessage message = loadSaajMessage("signed-soap.xml");
-        interceptor.validateMessage(message);
+        interceptor.validateMessage(message, null);
         SOAPMessage result = message.getSaajMessage();
         assertNotNull("No result returned", result);
         assertXpathNotExists("Security Header not removed", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security", result);

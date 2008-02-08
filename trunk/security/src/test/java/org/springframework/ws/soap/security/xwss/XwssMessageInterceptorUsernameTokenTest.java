@@ -24,11 +24,12 @@ import com.sun.xml.wss.impl.callback.PasswordCallback;
 import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
 import com.sun.xml.wss.impl.callback.TimestampValidationCallback;
 import com.sun.xml.wss.impl.callback.UsernameCallback;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
-import org.springframework.ws.soap.security.xwss.callback.AbstractCallbackHandler;
+import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
-public class XwssMessageInterceptorUsernameTokenTest extends XwssMessageInterceptorTestCase {
+public class XwssMessageInterceptorUsernameTokenTest extends AbstractXwssMessageInterceptorTestCase {
 
     public void testAddUsernameTokenDigest() throws Exception {
         interceptor.setPolicyConfiguration(new ClassPathResource("usernameToken-digest-config.xml", getClass()));
@@ -50,7 +51,7 @@ public class XwssMessageInterceptorUsernameTokenTest extends XwssMessageIntercep
         interceptor.setCallbackHandler(handler);
         interceptor.afterPropertiesSet();
         SaajSoapMessage message = loadSaajMessage("empty-soap.xml");
-        interceptor.secureMessage(message);
+        interceptor.secureMessage(message, null);
         SOAPMessage result = message.getSaajMessage();
         assertNotNull("No result returned", result);
         assertXpathEvaluatesTo("Invalid Username", "Bert",
@@ -80,7 +81,7 @@ public class XwssMessageInterceptorUsernameTokenTest extends XwssMessageIntercep
         interceptor.setCallbackHandler(handler);
         interceptor.afterPropertiesSet();
         SaajSoapMessage message = loadSaajMessage("empty-soap.xml");
-        interceptor.secureMessage(message);
+        interceptor.secureMessage(message, null);
         SOAPMessage result = message.getSaajMessage();
         assertNotNull("No result returned", result);
         assertXpathEvaluatesTo("Invalid Username", "Bert",
@@ -122,7 +123,7 @@ public class XwssMessageInterceptorUsernameTokenTest extends XwssMessageIntercep
         interceptor.setCallbackHandler(handler);
         interceptor.afterPropertiesSet();
         SaajSoapMessage message = loadSaajMessage("usernameTokenPlainText-soap.xml");
-        interceptor.validateMessage(message);
+        interceptor.validateMessage(message, null);
         SOAPMessage result = message.getSaajMessage();
         assertNotNull("No result returned", result);
         assertXpathNotExists("Security Header not removed", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security", result);
@@ -161,7 +162,7 @@ public class XwssMessageInterceptorUsernameTokenTest extends XwssMessageIntercep
         interceptor.setCallbackHandler(handler);
         interceptor.afterPropertiesSet();
         SaajSoapMessage message = loadSaajMessage("usernameTokenDigest-soap.xml");
-        interceptor.validateMessage(message);
+        interceptor.validateMessage(message, null);
         SOAPMessage result = message.getSaajMessage();
         assertNotNull("No result returned", result);
         assertXpathNotExists("Security Header not removed", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security", result);

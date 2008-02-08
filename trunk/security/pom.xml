@@ -22,6 +22,11 @@
             <name>Spring External Dependencies Repository</name>
             <url>https://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo-ext/</url>
         </repository>
+        <repository>
+            <id>wso2</id>
+            <name>WSO2 Repository</name>
+            <url>http://dist.wso2.org/maven2/</url>
+        </repository>
     </repositories>
     <profiles>
         <profile>
@@ -103,7 +108,17 @@
             <artifactId>saaj-impl</artifactId>
             <scope>provided</scope>
         </dependency>
-        <!-- WS-Security dependencies -->
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <artifactId>axiom-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <artifactId>axiom-impl</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- XWSS dependencies -->
         <dependency>
             <groupId>com.sun.xml.wss</groupId>
             <artifactId>xws-security</artifactId>
@@ -112,6 +127,12 @@
             <groupId>xml-security</groupId>
             <artifactId>xmlsec</artifactId>
         </dependency>
+        <!-- WSS4J dependencies -->
+        <dependency>
+            <groupId>org.apache.ws.security</groupId>
+            <artifactId>wss4j</artifactId>
+        </dependency>
+        <!-- Acegi depdencies -->
         <dependency>
             <groupId>org.acegisecurity</groupId>
             <artifactId>acegi-security</artifactId>

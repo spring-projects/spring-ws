@@ -15,7 +15,7 @@
     <url>http://static.springframework.org/spring-ws/site/index.html</url>
     <issueManagement>
         <system>JIRA</system>
-        <url>http://opensource2.atlassian.com/projects/spring/browse/SWS/</url>
+        <url>http://jira.springframework.org/browse/SWS</url>
     </issueManagement>
     <ciManagement>
         <system>bamboo</system>
@@ -48,6 +48,9 @@
         </contributor>
         <contributor>
             <name>Rick Evans</name>
+        </contributor>
+        <contributor>
+            <name>Tareq Abed Rabbo</name>
         </contributor>
     </contributors>
     <organization>

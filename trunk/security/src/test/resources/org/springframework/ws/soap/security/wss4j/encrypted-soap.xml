@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+                   xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
+    <SOAP-ENV:Header>
+        <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+                       SOAP-ENV:mustUnderstand="1">
+            <xenc:EncryptedKey Id="EncKeyId-25488452" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
+                <xenc:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-1_5"/>
+                <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                    <wsse:SecurityTokenReference
+                            xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+                        <ds:X509Data xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                            <ds:X509IssuerSerial xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                                <ds:X509IssuerName
+                                        xmlns:ds="http://www.w3.org/2000/09/xmldsig#">CN=client,OU=Unknown,O=Unknown,L=Unknown,ST=Unknown,C=Unknown
+                                </ds:X509IssuerName>
+                                <ds:X509SerialNumber xmlns:ds="http://www.w3.org/2000/09/xmldsig#">1196367787
+                                </ds:X509SerialNumber>
+                            </ds:X509IssuerSerial>
+                        </ds:X509Data>
+                    </wsse:SecurityTokenReference>
+                </ds:KeyInfo>
+                <xenc:CipherData>
+                    <xenc:CipherValue>CtuWCgHBFl1zHdRU70e4aPoRwpMH8GMzWKmywSxdrMz4dS+hOexUu8sY2SUl0jdO+IfL/oNYj4eic7G6utkddKeOCHM8Rj7gtr2Elol2q1ZHXc5N1DUk99t7dYs+XmMU2ULqyGh0T0rmhbABmbxZDB4NzwCBFvXxEUUFFBbN460=</xenc:CipherValue>
+                </xenc:CipherData>
+                <xenc:ReferenceList>
+                    <xenc:DataReference URI="#EncDataId-22297736"/>
+                </xenc:ReferenceList>
+            </xenc:EncryptedKey>
+        </wsse:Security>
+    </SOAP-ENV:Header>
+    <SOAP-ENV:Body>
+        <xenc:EncryptedData Id="EncDataId-22297736" Type="http://www.w3.org/2001/04/xmlenc#Content"
+                            xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
+            <xenc:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes128-cbc"
+                                   xmlns:xenc="http://www.w3.org/2001/04/xmlenc#"/>
+            <xenc:CipherData xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
+                <xenc:CipherValue
+                        xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">pqzkZJz0/RdUsf8y1z04PvWv48lYtrfmskeW8304PtXD2lXS2iGva5SlL7vc96aA6915zzyld4O0
+                    c+0ISwgvHnharmwatlih/kGfHNY0/LBDidzsbbjrsMWFiq3MLy3x9Sj79pHnChd2BSw9D49kgtUN
+                    W8uIAUxLlsPqdSst9hEq/RYUk0M6mx8HBy2DnE3t36ifrB/1QnY4ohQoMrBARu4HIWidCxhajFSX
+                    i1ZNX8ff4RrD3JUoAlDX6J5zj3+YfxtaaZhoMXRshxAhJwoLidKGlFKN6gsZXqorDJ8ETZ6SdCJ3
+                    O2f4c+WW1xQLUdvt
+                </xenc:CipherValue>
+            </xenc:CipherData>
+        </xenc:EncryptedData>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

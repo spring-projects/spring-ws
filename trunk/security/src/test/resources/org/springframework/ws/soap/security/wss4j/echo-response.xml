@@ -1,0 +1,6 @@
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+    <SOAP-ENV:Header/>
+    <SOAP-ENV:Body>
+        <echoResponse xmlns="http://www.springframework.org/spring-ws/samples/echo">Hello</echoResponse>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
