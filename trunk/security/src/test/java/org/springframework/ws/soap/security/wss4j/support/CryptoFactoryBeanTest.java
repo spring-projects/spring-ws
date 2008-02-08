@@ -19,10 +19,9 @@ package org.springframework.ws.soap.security.wss4j.support;
 import java.util.Properties;
 
 import junit.framework.TestCase;
-import org.apache.ws.security.components.crypto.Crypto;
+import org.apache.ws.security.components.crypto.Merlin;
 
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.util.ClassUtils;
 
 public class CryptoFactoryBeanTest extends TestCase {
@@ -33,15 +32,31 @@ public class CryptoFactoryBeanTest extends TestCase {
         factoryBean = new CryptoFactoryBean();
     }
 
-    public void testMerlin() throws Exception {
-        Properties configuration =
-                PropertiesLoaderUtils.loadProperties(new ClassPathResource("merlin.properties", getClass()));
+    public void testSetConfiguration() throws Exception {
+        Properties configuration = new Properties();
+        configuration.setProperty("org.apache.ws.security.crypto.provider",
+                "org.apache.ws.security.components.crypto.Merlin");
+        configuration.setProperty("org.apache.ws.security.crypto.merlin.keystore.type", "jceks");
+        configuration.setProperty("org.apache.ws.security.crypto.merlin.keystore.password", "123456");
+        configuration.setProperty("org.apache.ws.security.crypto.merlin.file", "private.jks");
+
         factoryBean.setConfiguration(configuration);
         factoryBean.setBeanClassLoader(ClassUtils.getDefaultClassLoader());
         factoryBean.afterPropertiesSet();
 
         Object result = factoryBean.getObject();
         assertNotNull("No result", result);
-        assertTrue("Not a crypto instance", result instanceof Crypto);
+        assertTrue("Not a Merlin instance", result instanceof Merlin);
+    }
+
+    public void testProperties() throws Exception {
+        factoryBean.setKeyStoreType("jceks");
+        factoryBean.setKeyStorePassword("123456");
+        factoryBean.setKeyStoreLocation(new ClassPathResource("private.jks"));
+        factoryBean.setBeanClassLoader(ClassUtils.getDefaultClassLoader());
+        factoryBean.afterPropertiesSet();
+        Object result = factoryBean.getObject();
+        assertNotNull("No result", result);
+        assertTrue("Not a Merlin instance", result instanceof Merlin);
     }
 }
