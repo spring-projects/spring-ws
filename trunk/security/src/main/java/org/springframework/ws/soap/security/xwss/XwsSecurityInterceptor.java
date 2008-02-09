@@ -34,7 +34,7 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.security.AbstractWsSecurityInterceptor;
 import org.springframework.ws.soap.security.WsSecurityValidationException;
-import org.springframework.ws.soap.security.callback.CallbackHandlerChain;
+import org.springframework.ws.soap.security.xwss.callback.CallbackHandlerChain;
 
 /**
  * WS-Security endpoint interceptor  that is based on Sun's XML and Web Services Security package (XWSS). This
