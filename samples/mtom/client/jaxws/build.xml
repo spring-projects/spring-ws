@@ -14,7 +14,7 @@
             </classpath>
         </typedef>
 
-	<artifact:remoteRepository id="main" url="http://repo1.maven.org/maven2/"/>
+        <artifact:remoteRepository id="main" url="http://repo1.maven.org/maven2/"/>
         <artifact:remoteRepository id="java.net" url="https://maven-repository.dev.java.net/nonav/repository"
                                    layout="legacy"/>
 
