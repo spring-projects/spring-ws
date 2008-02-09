@@ -22,8 +22,6 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 
 import junit.framework.TestCase;
 
-import org.springframework.ws.soap.security.callback.CallbackHandlerChain;
-
 public class CallbackHandlerChainTest extends TestCase {
 
     private CallbackHandler supported = new CallbackHandler() {
