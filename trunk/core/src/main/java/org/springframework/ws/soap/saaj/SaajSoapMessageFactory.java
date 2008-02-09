@@ -27,6 +27,7 @@ import javax.xml.soap.SOAPException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
@@ -130,8 +131,8 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
                 throw new SoapMessageCreationException("Could not create SAAJ MessageFactory: " + ex.getMessage(), ex);
             }
         }
-        if (logger.isTraceEnabled()) {
-            logger.trace("Using MessageFactory class [" + messageFactory.getClass().getName() + "]");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Using MessageFactory class [" + messageFactory.getClass().getName() + "]");
         }
     }
 
