@@ -998,7 +998,7 @@ public class AnnotationOrderEndpoint {
                 <programlisting><![CDATA[<bean id="transformingInterceptor"
         class="org.springframework.ws.server.endpoint.interceptor.PayloadTransformingInterceptor">
     <property name="requestXslt" value="/WEB-INF/oldRequests.xslt"/>
-    <property name="requestXslt" value="/WEB-INF/oldResponses.xslt"/>
+    <property name="responseXslt" value="/WEB-INF/oldResponses.xslt"/>
 </bean>]]></programlisting>
                 <para>
                     We are simply transforming requests using <filename>/WEB-INF/oldRequests.xslt</filename>, and
