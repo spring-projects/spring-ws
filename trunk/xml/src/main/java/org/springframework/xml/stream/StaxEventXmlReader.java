@@ -23,8 +23,11 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.Characters;
+import javax.xml.stream.events.Comment;
+import javax.xml.stream.events.DTD;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.EntityDeclaration;
+import javax.xml.stream.events.EntityReference;
 import javax.xml.stream.events.Namespace;
 import javax.xml.stream.events.NotationDeclaration;
 import javax.xml.stream.events.ProcessingInstruction;
@@ -120,6 +123,15 @@ public class StaxEventXmlReader extends AbstractStaxXmlReader {
                 case XMLStreamConstants.ENTITY_DECLARATION:
                     handleEntityDeclaration((EntityDeclaration) event);
                     break;
+                case XMLStreamConstants.COMMENT:
+                    handleComment((Comment) event);
+                    break;
+                case XMLStreamConstants.DTD:
+                    handleDtd((DTD) event);
+                    break;
+                case XMLStreamConstants.ENTITY_REFERENCE:
+                    handleEntityReference((EntityReference) event);
+                    break;
             }
         }
         if (!documentEnded) {
@@ -128,21 +140,38 @@ public class StaxEventXmlReader extends AbstractStaxXmlReader {
 
     }
 
-    private void handleCharacters(Characters characters) throws SAXException {
+    private void handleStartElement(StartElement startElement) throws SAXException {
         if (getContentHandler() != null) {
-            if (characters.isIgnorableWhiteSpace()) {
-                getContentHandler()
-                        .ignorableWhitespace(characters.getData().toCharArray(), 0, characters.getData().length());
+            QName qName = startElement.getName();
+            if (hasNamespacesFeature()) {
+                for (Iterator i = startElement.getNamespaces(); i.hasNext();) {
+                    Namespace namespace = (Namespace) i.next();
+                    getContentHandler().startPrefixMapping(namespace.getPrefix(), namespace.getNamespaceURI());
+                }
+                getContentHandler().startElement(qName.getNamespaceURI(), qName.getLocalPart(),
+                        QNameUtils.toQualifiedName(qName), getAttributes(startElement));
             }
             else {
-                if (characters.isCData() && getLexicalHandler() != null) {
-                    getLexicalHandler().startCDATA();
-                }
-                getContentHandler().characters(characters.getData().toCharArray(), 0, characters.getData().length());
-                if (characters.isCData() && getLexicalHandler() != null) {
-                    getLexicalHandler().endCDATA();
-                }
+                getContentHandler()
+                        .startElement("", "", QNameUtils.toQualifiedName(qName), getAttributes(startElement));
             }
+        }
+    }
+
+    private void handleCharacters(Characters characters) throws SAXException {
+        char[] data = characters.getData().toCharArray();
+        if (getContentHandler() != null && characters.isIgnorableWhiteSpace()) {
+            getContentHandler().ignorableWhitespace(data, 0, data.length);
+            return;
+        }
+        if (characters.isCData() && getLexicalHandler() != null) {
+            getLexicalHandler().startCDATA();
+        }
+        if (getContentHandler() != null) {
+            getContentHandler().characters(data, 0, data.length);
+        }
+        if (characters.isCData() && getLexicalHandler() != null) {
+            getLexicalHandler().endCDATA();
         }
     }
 
@@ -195,22 +224,32 @@ public class StaxEventXmlReader extends AbstractStaxXmlReader {
         }
     }
 
-    private void handleStartElement(StartElement startElement) throws SAXException {
-        if (getContentHandler() != null) {
-            QName qName = startElement.getName();
-            if (hasNamespacesFeature()) {
-                for (Iterator i = startElement.getNamespaces(); i.hasNext();) {
-                    Namespace namespace = (Namespace) i.next();
-                    getContentHandler().startPrefixMapping(namespace.getPrefix(), namespace.getNamespaceURI());
-                }
-                getContentHandler().startElement(qName.getNamespaceURI(), qName.getLocalPart(),
-                        QNameUtils.toQualifiedName(qName), getAttributes(startElement));
-            }
-            else {
-                getContentHandler()
-                        .startElement("", "", QNameUtils.toQualifiedName(qName), getAttributes(startElement));
-            }
+    private void handleComment(Comment comment) throws SAXException {
+        if (getLexicalHandler() != null) {
+            char[] ch = comment.getText().toCharArray();
+            getLexicalHandler().comment(ch, 0, ch.length);
         }
+    }
+
+    private void handleDtd(DTD dtd) throws SAXException {
+        if (getLexicalHandler() != null) {
+            javax.xml.stream.Location location = dtd.getLocation();
+            getLexicalHandler().startDTD(null, location.getPublicId(), location.getSystemId());
+        }
+        if (getLexicalHandler() != null) {
+            getLexicalHandler().endDTD();
+        }
+
+    }
+
+    private void handleEntityReference(EntityReference reference) throws SAXException {
+        if (getLexicalHandler() != null) {
+            getLexicalHandler().startEntity(reference.getName());
+        }
+        if (getLexicalHandler() != null) {
+            getLexicalHandler().endEntity(reference.getName());
+        }
+
     }
 
     private Attributes getAttributes(StartElement event) {
@@ -248,6 +287,5 @@ public class StaxEventXmlReader extends AbstractStaxXmlReader {
 
         return attributes;
     }
-
 
 }

@@ -19,7 +19,6 @@ package org.springframework.ws.soap.axiom;
 import java.util.Iterator;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
-import javax.xml.transform.sax.SAXResult;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
@@ -46,7 +45,7 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
     }
 
     public Result getResult() {
-        return new SAXResult(new AxiomContentHandler(getAxiomHeader(), getAxiomFactory()));
+        return new AxiomResult(getAxiomHeader(), getAxiomFactory());
     }
 
     public SoapHeaderElement addHeaderElement(QName name) {

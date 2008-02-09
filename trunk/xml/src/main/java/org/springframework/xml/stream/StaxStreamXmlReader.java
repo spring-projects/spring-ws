@@ -99,6 +99,15 @@ public class StaxStreamXmlReader extends AbstractStaxXmlReader {
                     handleEndDocument();
                     documentEnded = true;
                     break;
+                case XMLStreamConstants.COMMENT:
+                    handleComment();
+                    break;
+                case XMLStreamConstants.DTD:
+                    handleDtd();
+                    break;
+                case XMLStreamConstants.ENTITY_REFERENCE:
+                    handleEntityReference();
+                    break;
             }
             if (reader.hasNext() && elementDepth >= 0) {
                 eventType = reader.next();
@@ -110,7 +119,6 @@ public class StaxStreamXmlReader extends AbstractStaxXmlReader {
         if (!documentEnded) {
             handleEndDocument();
         }
-
     }
 
     private void handleStartDocument() throws SAXException {
@@ -163,15 +171,45 @@ public class StaxStreamXmlReader extends AbstractStaxXmlReader {
     }
 
     private void handleCharacters() throws SAXException {
+        if (getContentHandler() != null && reader.isWhiteSpace()) {
+            getContentHandler()
+                    .ignorableWhitespace(reader.getTextCharacters(), reader.getTextStart(), reader.getTextLength());
+            return;
+        }
+        if (XMLStreamConstants.CDATA == reader.getEventType() && getLexicalHandler() != null) {
+            getLexicalHandler().startCDATA();
+        }
         if (getContentHandler() != null) {
-            if (reader.isWhiteSpace()) {
-                getContentHandler()
-                        .ignorableWhitespace(reader.getTextCharacters(), reader.getTextStart(), reader.getTextLength());
-            }
-            else {
-                getContentHandler()
-                        .characters(reader.getTextCharacters(), reader.getTextStart(), reader.getTextLength());
-            }
+            getContentHandler()
+                    .characters(reader.getTextCharacters(), reader.getTextStart(), reader.getTextLength());
+        }
+        if (XMLStreamConstants.CDATA == reader.getEventType() && getLexicalHandler() != null) {
+            getLexicalHandler().endCDATA();
+        }
+    }
+
+    private void handleComment() throws SAXException {
+        if (getLexicalHandler() != null) {
+            getLexicalHandler().comment(reader.getTextCharacters(), reader.getTextStart(), reader.getTextLength());
+        }
+    }
+
+    private void handleDtd() throws SAXException {
+        if (getLexicalHandler() != null) {
+            javax.xml.stream.Location location = reader.getLocation();
+            getLexicalHandler().startDTD(null, location.getPublicId(), location.getSystemId());
+        }
+        if (getLexicalHandler() != null) {
+            getLexicalHandler().endDTD();
+        }
+    }
+
+    private void handleEntityReference() throws SAXException {
+        if (getLexicalHandler() != null) {
+            getLexicalHandler().startEntity(reader.getLocalName());
+        }
+        if (getLexicalHandler() != null) {
+            getLexicalHandler().endEntity(reader.getLocalName());
         }
     }
 

@@ -17,7 +17,6 @@
 package org.springframework.ws.soap.axiom;
 
 import javax.xml.transform.Result;
-import javax.xml.transform.sax.SAXResult;
 
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.soap.SOAPFactory;
@@ -50,7 +49,7 @@ class AxiomSoapHeaderElement extends AxiomSoapElement implements SoapHeaderEleme
 
     public Result getResult() {
         try {
-            return new SAXResult(new AxiomContentHandler(getAxiomHeaderBlock(), getAxiomFactory()));
+            return new AxiomResult(getAxiomHeaderBlock(), getAxiomFactory());
         }
         catch (OMException ex) {
             throw new AxiomSoapHeaderException(ex);
