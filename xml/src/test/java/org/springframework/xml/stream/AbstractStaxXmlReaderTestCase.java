@@ -31,6 +31,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
+import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.XMLReaderFactory;
 
@@ -40,7 +41,7 @@ import org.springframework.xml.sax.SaxUtils;
 
 public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
 
-    protected static XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+    protected static XMLInputFactory inputFactory;
 
     private Resource testContentHandler;
 
@@ -51,6 +52,7 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
     private ContentHandler contentHandler;
 
     protected void setUp() throws Exception {
+        inputFactory = XMLInputFactory.newInstance();
         standardReader = XMLReaderFactory.createXMLReader();
         contentHandlerControl = MockControl.createStrictControl(ContentHandler.class);
         contentHandlerControl.setDefaultMatcher(new SaxArgumentMatcher());
@@ -109,6 +111,32 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
         contentHandlerControl.verify();
     }
 
+    public void testLexicalHandler() throws SAXException, IOException, XMLStreamException {
+
+        MockControl lexicalHandlerControl = MockControl.createStrictControl(LexicalHandler.class);
+        lexicalHandlerControl.setDefaultMatcher(new SaxArgumentMatcher());
+        LexicalHandler lexicalHandlerMock = (LexicalHandler) lexicalHandlerControl.getMock();
+        LexicalHandler lexicalHandler = new CopyingLexicalHandler(lexicalHandlerMock);
+
+        Resource testLexicalHandlerXml = new ClassPathResource("testLexicalHandler.xml", getClass());
+
+        standardReader.setContentHandler(null);
+        standardReader.setProperty("http://xml.org/sax/properties/lexical-handler", lexicalHandler);
+        standardReader.parse(SaxUtils.createInputSource(testLexicalHandlerXml));
+        lexicalHandlerControl.replay();
+
+        inputFactory.setProperty("javax.xml.stream.isCoalescing", Boolean.FALSE);
+        inputFactory.setProperty("http://java.sun.com/xml/stream/properties/report-cdata-event", Boolean.TRUE);
+        inputFactory.setProperty("javax.xml.stream.isReplacingEntityReferences", Boolean.FALSE);
+        inputFactory.setProperty("javax.xml.stream.isSupportingExternalEntities", Boolean.FALSE);
+
+        AbstractStaxXmlReader staxXmlReader = createStaxXmlReader(testLexicalHandlerXml.getInputStream());
+
+        staxXmlReader.setProperty("http://xml.org/sax/properties/lexical-handler", lexicalHandler);
+        staxXmlReader.parse(new InputSource());
+        lexicalHandlerControl.verify();
+    }
+
     protected abstract AbstractStaxXmlReader createStaxXmlReader(InputStream inputStream) throws XMLStreamException;
 
     /** Easymock <code>ArgumentMatcher</code> implementation that matches SAX arguments. */
@@ -156,7 +184,6 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
                     for (int j = 0; j < actualAttributes.getLength(); j++) {
                         if (expectedAttributes.getURI(i).equals(actualAttributes.getURI(j)) &&
                                 expectedAttributes.getQName(i).equals(actualAttributes.getQName(j)) &&
-//                                expectedAttributes.getLocalName(i).equals(actualAttributes.getLocalName(j)) &&
                                 expectedAttributes.getType(i).equals(actualAttributes.getType(j)) &&
                                 expectedAttributes.getValue(i).equals(actualAttributes.getValue(j))) {
                             found = true;
@@ -237,7 +264,7 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
 
     private static class CopyingContentHandler implements ContentHandler {
 
-        private ContentHandler wrappee;
+        private final ContentHandler wrappee;
 
         private CopyingContentHandler(ContentHandler wrappee) {
             this.wrappee = wrappee;
@@ -286,7 +313,43 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
         public void skippedEntity(String name) throws SAXException {
             wrappee.skippedEntity(name);
         }
+    }
 
+    private static class CopyingLexicalHandler implements LexicalHandler {
+
+        private final LexicalHandler wrappee;
+
+        private CopyingLexicalHandler(LexicalHandler wrappee) {
+            this.wrappee = wrappee;
+        }
+
+        public void startDTD(String name, String publicId, String systemId) throws SAXException {
+            wrappee.startDTD("element", publicId, systemId);
+        }
+
+        public void endDTD() throws SAXException {
+            wrappee.endDTD();
+        }
+
+        public void startEntity(String name) throws SAXException {
+            wrappee.startEntity(name);
+        }
+
+        public void endEntity(String name) throws SAXException {
+            wrappee.endEntity(name);
+        }
+
+        public void startCDATA() throws SAXException {
+            wrappee.startCDATA();
+        }
+
+        public void endCDATA() throws SAXException {
+            wrappee.endCDATA();
+        }
+
+        public void comment(char ch[], int start, int length) throws SAXException {
+            wrappee.comment(copy(ch), start, length);
+        }
     }
 
     private static char[] copy(char[] ch) {

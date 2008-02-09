@@ -17,7 +17,6 @@
 package org.springframework.ws.soap.axiom;
 
 import javax.xml.transform.Result;
-import javax.xml.transform.sax.SAXResult;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
@@ -39,7 +38,7 @@ class AxiomSoapFaultDetailElement extends AxiomSoapElement implements SoapFaultD
 
     public Result getResult() {
         try {
-            return new SAXResult(new AxiomContentHandler(getAxiomElement(), getAxiomFactory()));
+            return new AxiomResult(getAxiomElement(), getAxiomFactory());
         }
         catch (OMException ex) {
             throw new AxiomSoapFaultException(ex);

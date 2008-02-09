@@ -20,7 +20,6 @@ import java.util.Iterator;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
-import javax.xml.transform.sax.SAXResult;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
@@ -70,7 +69,7 @@ abstract class AxiomSoapBody extends AxiomSoapElement implements SoapBody {
 
     public Result getPayloadResult() {
         AxiomUtils.removeContents(getAxiomBody());
-        return new SAXResult(new AxiomContentHandler(getAxiomBody(), getAxiomFactory()));
+        return new AxiomResult(getAxiomBody(), getAxiomFactory());
     }
 
     public boolean hasFault() {

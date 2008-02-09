@@ -16,6 +16,7 @@
 
 package org.springframework.ws.server.endpoint;
 
+import javax.xml.soap.MessageFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
@@ -30,6 +31,8 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
+import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
@@ -80,6 +83,23 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
                 return outputFactory;
             }
         };
+    }
+
+    public void testSaajResponse() throws Exception {
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        MessageFactory messageFactory = MessageFactory.newInstance();
+        SaajSoapMessage request = new SaajSoapMessage(messageFactory.createMessage());
+        transformer.transform(new StringSource(REQUEST), request.getPayloadResult());
+        SaajSoapMessageFactory soapMessageFactory = new SaajSoapMessageFactory();
+        soapMessageFactory.afterPropertiesSet();
+        MessageContext context = new DefaultMessageContext(request, soapMessageFactory);
+
+        MessageEndpoint endpoint = createResponseEndpoint();
+        endpoint.invoke(context);
+        assertTrue("context has not response", context.hasResponse());
+        StringResult stringResult = new StringResult();
+        transformer.transform(context.getResponse().getPayloadSource(), stringResult);
+        assertXMLEqual(RESPONSE, stringResult.toString());
     }
 
     public void testAxiomResponse() throws Exception {
