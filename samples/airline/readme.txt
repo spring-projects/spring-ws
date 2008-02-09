@@ -12,7 +12,9 @@ Multiple clients are available, showing interoperability with Axis 1, SAAJ, C#, 
 
 2. INSTALLATION
 
-The Airline sample is a normal web application that connects to a HSQLDB database.
+The Airline sample is a normal web application that connects to an embedded
+HSQLDB database. It requires JDK 1.5 to run; JDK 1.6 works as well, except for
+the WS-Security endpoints.
 
 To execute the sample, run "mvn jetty:run" to run the sample in the Jetty6 Web container.
 
