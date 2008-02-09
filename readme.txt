@@ -63,7 +63,7 @@ exact list of Spring-WS project dependencies see the respective Maven2 pom.xml f
 * spring-ws-security-1.5.0-m1.jar
 - Contents: Spring-WS Security integration
 - Dependencies: Commons Logging, spring-beans, spring-core, spring-context, spring-ws-core
-                [Log4J, xmlsdig, xmlsec, XWS-security, Acegi]
+                [Log4J, xmlsdig, xmlsec, XWS-security, Acegi, WSS4j]
 
 * spring-xml-1.5.0-m1.jar
 - Contents: Spring XML utility framework
