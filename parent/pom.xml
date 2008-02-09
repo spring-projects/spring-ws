@@ -572,6 +572,28 @@
                 <groupId>org.apache.ws.security</groupId>
                 <artifactId>wss4j</artifactId>
                 <version>1.5.4</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>axis</groupId>
+                        <artifactId>axis</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>axis</groupId>
+                        <artifactId>axis-ant</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>xerces</groupId>
+                        <artifactId>xercecImpl</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.acegisecurity</groupId>
