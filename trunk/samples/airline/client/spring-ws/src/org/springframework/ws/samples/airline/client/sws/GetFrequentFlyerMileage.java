@@ -18,6 +18,7 @@ package org.springframework.ws.samples.airline.client.sws;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamResult;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -36,11 +37,8 @@ public class GetFrequentFlyerMileage extends WebServiceGatewaySupport {
         Source source = new StringSource(
                 "<GetFrequentFlyerMileageRequest xmlns=\"http://www.springframework.org/spring-ws/samples/airline/schemas/messages\" />");
 
-        Result result = new StringResult();
+        getWebServiceTemplate().sendSourceAndReceiveToResult(source, new StreamResult(System.out));
 
-        getWebServiceTemplate().sendSourceAndReceiveToResult(source, result);
-
-        System.out.println("result = " + result);
     }
 
     public static void main(String[] args) {
