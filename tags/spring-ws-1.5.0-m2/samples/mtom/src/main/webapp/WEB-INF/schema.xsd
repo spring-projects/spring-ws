@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.springframework.org/spring-ws/samples/mtom"
+        xmlns:tns="http://www.springframework.org/spring-ws/samples/mtom"
+        xmlns:xmime="http://www.w3.org/2005/05/xmlmime" elementFormDefault="qualified">
+
+    <element name="StoreImageRequest" type="tns:Image"/>
+
+    <element name="LoadImageRequest" type="string"/>
+
+    <element name="LoadImageResponse" type="tns:Image"/>
+
+    <complexType name="Image">
+        <sequence>
+            <element name="name" type="string"/>
+            <element name="image" type="base64Binary" xmime:expectedContentTypes="image/png"/>
+        </sequence>
+    </complexType>
+
+</schema>
