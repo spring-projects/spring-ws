@@ -629,9 +629,10 @@
                         <link>http://dom4j.org/apidocs/</link>
                         <link>http://jdom.org/docs/apidocs/</link>
                         <link>http://www.xom.nu/apidocs/</link>
-                        <link>http://www.acegisecurity.org/acegi-security/apidocs/</link>
+                        <link>http://acegisecurity.org/acegi-security/apidocs/</link>
                         <link>http://www.extreme.indiana.edu/apis/wsdl4j/</link>
                         <link>http://jakarta.apache.org/commons/httpclient/apidocs/</link>
+                        <link>http://ws.apache.org/wss4j/apidocs/</link>
                     </links>
                 </configuration>
             </plugin>
