@@ -34,7 +34,7 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.security.AbstractWsSecurityInterceptor;
 import org.springframework.ws.soap.security.WsSecurityValidationException;
-import org.springframework.ws.soap.security.xwss.callback.CallbackHandlerChain;
+import org.springframework.ws.soap.security.xwss.callback.XwssCallbackHandlerChain;
 
 /**
  * WS-Security endpoint interceptor  that is based on Sun's XML and Web Services Security package (XWSS). This
@@ -86,7 +86,7 @@ public class XwsSecurityInterceptor extends AbstractWsSecurityInterceptor implem
      * @see #setCallbackHandler(javax.security.auth.callback.CallbackHandler)
      */
     public void setCallbackHandlers(CallbackHandler[] callbackHandler) {
-        this.callbackHandler = new CallbackHandlerChain(callbackHandler);
+        this.callbackHandler = new XwssCallbackHandlerChain(callbackHandler);
     }
 
     /** Sets the policy configuration to use for XWSS. Required. */

@@ -16,7 +16,6 @@
 
 package org.springframework.ws.soap.security.xwss.callback;
 
-import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;
@@ -42,11 +41,9 @@ import com.sun.xml.wss.impl.callback.EncryptionKeyCallback;
 import com.sun.xml.wss.impl.callback.SignatureKeyCallback;
 import com.sun.xml.wss.impl.callback.SignatureVerificationKeyCallback;
 import org.apache.xml.security.utils.RFC2253Parser;
+
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
-import org.springframework.ws.soap.security.support.KeyStoreFactoryBean;
+import org.springframework.ws.soap.security.support.KeyStoreUtils;
 
 /**
  * Callback handler that uses Java Security <code>KeyStore</code>s to handle cryptographic callbacks. Allows for
@@ -562,43 +559,10 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
         }
     }
 
-    /**
-     * Loads the key store indicated by system properties. This method tries to load a key store by consulting the
-     * following system properties:<code>javax.net.ssl.keyStore</code>, <code>javax.net.ssl.keyStorePassword</code>, and
-     * <code>javax.net.ssl.keyStoreType</code>.
-     * <p/>
-     * If these properties specify a file with an appropriate password, the factory uses this file for the key store. If
-     * that file does not exist, then a default, empty keystore is created.
-     * <p/>
-     * This behavior corresponds to the standard J2SDK behavior for SSL key stores.
-     *
-     * @see <a href="http://java.sun.com/j2se/1.4.2/docs/guide/security/jsse/JSSERefGuide.html#X509KeyManager">The
-     *      standard J2SDK SSL key store mechanism</a>
-     */
+    /** Loads the key store indicated by system properties. Delegates to {@link KeyStoreUtils#loadDefaultKeyStore()}. */
     protected void loadDefaultKeyStore() {
-        Resource location = null;
-        String type = null;
-        String password = null;
-        String locationProperty = System.getProperty("javax.net.ssl.keyStore");
-        if (StringUtils.hasLength(locationProperty)) {
-            File f = new File(locationProperty);
-            if (f.exists() && f.isFile() && f.canRead()) {
-                location = new FileSystemResource(f);
-            }
-            String passwordProperty = System.getProperty("javax.net.ssl.keyStorePassword");
-            if (StringUtils.hasLength(passwordProperty)) {
-                password = passwordProperty;
-            }
-            type = System.getProperty("javax.net.ssl.trustStore");
-        }
-        // use the factory bean here, easier to setup
-        KeyStoreFactoryBean factoryBean = new KeyStoreFactoryBean();
-        factoryBean.setLocation(location);
-        factoryBean.setPassword(password);
-        factoryBean.setType(type);
         try {
-            factoryBean.afterPropertiesSet();
-            keyStore = (KeyStore) factoryBean.getObject();
+            keyStore = KeyStoreUtils.loadDefaultKeyStore();
             if (logger.isDebugEnabled()) {
                 logger.debug("Loaded default key store");
             }
@@ -608,54 +572,10 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
         }
     }
 
-    /**
-     * Loads a default trust store. This method uses the following algorithm: <ol> <li> If the system property
-     * <code>javax.net.ssl.trustStore</code> is defined, its value is loaded. If the
-     * <code>javax.net.ssl.trustStorePassword</code> system property is also defined, its value is used as a password.
-     * If the <code>javax.net.ssl.trustStoreType</code> system property is defined, its value is used as a key store
-     * type.
-     * <p/>
-     * If <code>javax.net.ssl.trustStore</code> is defined but the specified file does not exist, then a default, empty
-     * trust store is created. </li> <li> If the <code>javax.net.ssl.trustStore</code> system property was not
-     * specified, but if the file <code>$JAVA_HOME/lib/security/jssecacerts</code> exists, that file is used. </li>
-     * Otherwise, <li>If the file <code>$JAVA_HOME/lib/security/cacerts</code> exists, that file is used. </ol>
-     * <p/>
-     * This behavior corresponds to the standard J2SDK behavior for SSL trust stores.
-     *
-     * @see <a href="http://java.sun.com/j2se/1.4.2/docs/guide/security/jsse/JSSERefGuide.html#X509TrustManager">The
-     *      standard J2SDK SSL trust store mechanism</a>
-     */
+    /** Loads a default trust store. Delegates to {@link KeyStoreUtils#loadDefaultTrustStore()}. */
     protected void loadDefaultTrustStore() {
-        Resource location = null;
-        String type = null;
-        String password = null;
-        String locationProperty = System.getProperty("javax.net.ssl.trustStore");
-        if (StringUtils.hasLength(locationProperty)) {
-            File f = new File(locationProperty);
-            if (f.exists() && f.isFile() && f.canRead()) {
-                location = new FileSystemResource(f);
-            }
-            String passwordProperty = System.getProperty("javax.net.ssl.trustStorePassword");
-            if (StringUtils.hasLength(passwordProperty)) {
-                password = passwordProperty;
-            }
-            type = System.getProperty("javax.net.ssl.trustStoreType");
-        }
-        else {
-            String javaHome = System.getProperty("java.home");
-            location = new FileSystemResource(javaHome + "/lib/security/jssecacerts");
-            if (!location.exists()) {
-                location = new FileSystemResource(javaHome + "/lib/security/cacerts");
-            }
-        }
-        // use the factory bean here, easier to setup
-        KeyStoreFactoryBean factoryBean = new KeyStoreFactoryBean();
-        factoryBean.setLocation(location);
-        factoryBean.setPassword(password);
-        factoryBean.setType(type);
         try {
-            factoryBean.afterPropertiesSet();
-            trustStore = (KeyStore) factoryBean.getObject();
+            trustStore = KeyStoreUtils.loadDefaultTrustStore();
             if (logger.isDebugEnabled()) {
                 logger.debug("Loaded default trust store");
             }

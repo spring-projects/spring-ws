@@ -8,7 +8,7 @@ import org.w3c.dom.Document;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.security.wss4j.callback.SimpleCallbackHandler;
+import org.springframework.ws.soap.security.wss4j.callback.SimplePasswordValidationCallbackHandler;
 
 public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4jTestCase {
 
@@ -96,16 +96,16 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
         else {
             interceptor.setSecurementActions(actions);
         }
-        SimpleCallbackHandler callbackHandler = new SimpleCallbackHandler();
+        SimplePasswordValidationCallbackHandler callbackHandler = new SimplePasswordValidationCallbackHandler();
         callbackHandler.setUsers(users);
         if (digest) {
-            callbackHandler.setPasswordDigestRequired(true);
-            callbackHandler.setPasswordPlainTextRequired(false);
+//            callbackHandler.setPasswordDigestRequired(true);
+//            callbackHandler.setPasswordPlainTextRequired(false);
             interceptor.setSecurementPasswordType(WSConstants.PW_DIGEST);
         }
         else {
-            callbackHandler.setPasswordDigestRequired(false);
-            callbackHandler.setPasswordPlainTextRequired(true);
+//            callbackHandler.setPasswordDigestRequired(false);
+//            callbackHandler.setPasswordPlainTextRequired(true);
             interceptor.setSecurementPasswordType(WSConstants.PW_TEXT);
         }
         interceptor.setValidationCallbackHandler(callbackHandler);
