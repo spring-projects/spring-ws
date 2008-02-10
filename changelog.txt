@@ -1,0 +1,42 @@
+SPRING WEB SERVICES CHANGELOG
+=============================
+http://www.springframework.org/spring-ws
+
+Changes in version 1.5.0 Milestone 2
+-------------------------
+
+** Bug
+    * [SWS-257] - Infinite loop in XsdBasedSoap11Wsdl4jDefinitionBuilder#buildMessages method
+    * [SWS-258] - getting error when trying to use IBM MQ JMS implementation as transport.
+    * [SWS-264] - XPathExpressionFactory should fallback to Jaxen if no JAXP 1.3 XPath implementation is available
+    * [SWS-265] - AbstractStaxXmlReader should support the required standard SAX features (namespace, namespace-prefixes...)
+    * [SWS-266] - AxiomContentHandler should empty the response body before adding the transformation result
+    * [SWS-267] - code bugs in Reference docs section 4.3.1
+    * [SWS-268] - cope typos in reference docs section 6.2.4 and 6.2.5
+    * [SWS-274] - Soap headers with whitespace cause java.lang.ClassCastException: com.sun.xml.messaging.saaj.soap.impl.TextImpl - Part II
+    * [SWS-275] - NAMESPACE_ERR: An attempt is made to create or change an object in a way which is incorrect with regard to namespaces.
+    * [SWS-276] - PayloadTransformingInterceptor has a typo in the example
+
+** Improvement
+    * [SWS-92] - JAXP 1.4 support
+    * [SWS-148] - WebServiceTemplte needs two more methods in order to easy enable ws security client support
+    * [SWS-231] - @Endpoint component scanning
+    * [SWS-243] - AxiomSoapHeaderElement has no convenient way to access child elements of the header element
+    * [SWS-246] - Better support for large Axiom attachments
+    * [SWS-251] - Improve OSGi manifest
+    * [SWS-253] - Tiger jars should not include non-tiger classes
+    * [SWS-255] - Support for javax.jms.TextMessage
+    * [SWS-261] - There are more default HandlerAdapters in Spring-MVC
+    * [SWS-262] - Endpoint annotation should be annotated as @Inherited
+    * [SWS-269] - OSGi bundleSymName
+    * [SWS-270] - Changes for WS XSD for tooling
+    * [SWS-272] - Add removeHeaderElement(QName) to SoapHeader
+    * [SWS-278] - Add traffic logging when response is fault
+
+** New Feature
+    * [SWS-143] - Client-side WS-Security support
+    * [SWS-194] - Add Interceptor functionality to WebServiceTemplate
+    * [SWS-207] - WSS4J-based WS-Security implementation
+    * [SWS-277] - URI-based routing
+    * [SWS-279] - AcegiUsernamePasswordCallbackHandler
+
