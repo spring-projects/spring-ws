@@ -8,7 +8,7 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.security.wss4j.callback.SimpleCallbackHandler;
+import org.springframework.ws.soap.security.wss4j.callback.SimplePasswordValidationCallbackHandler;
 
 public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCase {
 
@@ -21,7 +21,7 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
         interceptor.setValidateRequest(true);
         interceptor.setSecureResponse(true);
         interceptor.setValidationActions("UsernameToken");
-        SimpleCallbackHandler callbackHandler = new SimpleCallbackHandler();
+        SimplePasswordValidationCallbackHandler callbackHandler = new SimplePasswordValidationCallbackHandler();
         callbackHandler.setUsers(users);
         interceptor.setValidationCallbackHandler(callbackHandler);
         interceptor.afterPropertiesSet();

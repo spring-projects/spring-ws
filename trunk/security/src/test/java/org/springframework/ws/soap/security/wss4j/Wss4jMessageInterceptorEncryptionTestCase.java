@@ -8,7 +8,7 @@ import org.w3c.dom.Document;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.security.wss4j.callback.SimpleCallbackHandler;
+import org.springframework.ws.soap.security.wss4j.callback.KeyStoreCallbackHandler;
 import org.springframework.ws.soap.security.wss4j.support.CryptoFactoryBean;
 
 public abstract class Wss4jMessageInterceptorEncryptionTestCase extends Wss4jTestCase {
@@ -20,8 +20,8 @@ public abstract class Wss4jMessageInterceptorEncryptionTestCase extends Wss4jTes
         interceptor.setValidationActions("Encrypt");
         interceptor.setSecurementActions("Encrypt");
 
-        SimpleCallbackHandler callbackHandler = new SimpleCallbackHandler();
-        callbackHandler.setKeyPassword("123456");
+        KeyStoreCallbackHandler callbackHandler = new KeyStoreCallbackHandler();
+        callbackHandler.setPrivateKeyPassword("123456");
         interceptor.setValidationCallbackHandler(callbackHandler);
 
         CryptoFactoryBean cryptoFactoryBean = new CryptoFactoryBean();
@@ -63,6 +63,5 @@ public abstract class Wss4jMessageInterceptorEncryptionTestCase extends Wss4jTes
         Document document = getDocument(message);
         assertXpathExists("Encryption error", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/xenc:EncryptedKey",
                 document);
-        //TODO see why the clear message appears in the unit test
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.security.wss4j.callback.SimpleCallbackHandler;
 import org.springframework.ws.soap.security.wss4j.support.CryptoFactoryBean;
 
 public abstract class Wss4jMessageInterceptorSignTestCase extends Wss4jTestCase {
@@ -19,8 +18,6 @@ public abstract class Wss4jMessageInterceptorSignTestCase extends Wss4jTestCase 
     protected void onSetup() throws Exception {
         interceptor = new Wss4jSecurityInterceptor();
         interceptor.setValidationActions("Signature");
-        SimpleCallbackHandler callbackHandler = new SimpleCallbackHandler();
-        interceptor.setValidationCallbackHandler(callbackHandler);
 
         CryptoFactoryBean cryptoFactoryBean = new CryptoFactoryBean();
         Properties cryptoFactoryBeanConfig = new Properties();
@@ -61,7 +58,6 @@ public abstract class Wss4jMessageInterceptorSignTestCase extends Wss4jTestCase 
         interceptor.secureMessage(message, messageContext);
         assertNotNull("No result returned", response);
         Document document = getDocument((SoapMessage) response);
-        message.writeTo(System.out);
         assertXpathExists("Absent SignatureConfirmation element",
                 "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse11:SignatureConfirmation", document);
     }

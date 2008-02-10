@@ -46,39 +46,31 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.security.AbstractWsSecurityInterceptor;
 import org.springframework.ws.soap.security.WsSecuritySecurementException;
 import org.springframework.ws.soap.security.WsSecurityValidationException;
+import org.springframework.ws.soap.security.callback.CallbackHandlerChain;
 
 /**
  * A WS-Security endpoint interceptor based on Apache's WSS4J. This inteceptor supports messages created by the {@link
  * org.springframework.ws.soap.axiom.AxiomSoapMessageFactory} and the {@link org.springframework.ws.soap.saaj.SaajSoapMessageFactory}.
  * <p/>
- * The validation and securement actions executed by this interceptor are configured via <code>validationActions</code> and
- * <code>securementActions</code> properties, respectively. Actions should be passed as a space-separated strings.
+ * The validation and securement actions executed by this interceptor are configured via <code>validationActions</code>
+ * and <code>securementActions</code> properties, respectively. Actions should be passed as a space-separated strings.
  * <p/>
  * Valid <strong>validation</strong> actions are:
- *
- * <blockquote><table>
- * <tr><th>Validation action</th><th>Description</th></tr>
- * <tr><td><code>UsernameToken</code></td><td>Validates username token</td></tr>
- * <tr><td><code>Timestamp</code></td><td>Validates the timestamp</td></tr>
- * <tr><td><code>Encrypt</code></td><td>Decrypts the message</td></tr>
- * <tr><td><code>Signature</code></td><td>Validates the signature</td></tr>
- * <tr><td><code>NoSecurity</code></td><td>No action performed</td></tr>
- * </table></blockquote>
  * <p/>
- * <strong>Securement</strong> actions are:
- * <blockquote><table>
- * <tr><th>Securement action</th><th>Description</th></tr>
- * <tr><td><code>UsernameToken</td></code><td>Adds a username token</td></tr>
- * <tr><td><code>UsernameTokenSignature</td></code><td>Adds a username token and a signature username token secrect key</td></tr>
- * <tr><td><code>Timestamp</td></code><td>Adds a timestamp</td></tr>
- * <tr><td><code>Encrypt</td></code><td>Encrypts the response</td></tr>
- * <tr><td><code>Signature</td></code><td>Signs the response</td></tr>
- * <tr><td><code>NoSecurity</td></code><td>No action performed</td></tr>
- * </table></blockquote>
+ * <blockquote><table> <tr><th>Validation action</th><th>Description</th></tr> <tr><td><code>UsernameToken</code></td><td>Validates
+ * username token</td></tr> <tr><td><code>Timestamp</code></td><td>Validates the timestamp</td></tr>
+ * <tr><td><code>Encrypt</code></td><td>Decrypts the message</td></tr> <tr><td><code>Signature</code></td><td>Validates
+ * the signature</td></tr> <tr><td><code>NoSecurity</code></td><td>No action performed</td></tr> </table></blockquote>
  * <p/>
- * The order of the actions that the client performed to secure the messages is significant and is
- * enforced by the interceptor.
- *
+ * <strong>Securement</strong> actions are: <blockquote><table> <tr><th>Securement action</th><th>Description</th></tr>
+ * <tr><td><code>UsernameToken</td></code><td>Adds a username token</td></tr> <tr><td><code>UsernameTokenSignature</td></code><td>Adds
+ * a username token and a signature username token secrect key</td></tr> <tr><td><code>Timestamp</td></code><td>Adds a
+ * timestamp</td></tr> <tr><td><code>Encrypt</td></code><td>Encrypts the response</td></tr>
+ * <tr><td><code>Signature</td></code><td>Signs the response</td></tr> <tr><td><code>NoSecurity</td></code><td>No action
+ * performed</td></tr> </table></blockquote>
+ * <p/>
+ * The order of the actions that the client performed to secure the messages is significant and is enforced by the
+ * interceptor.
  *
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
@@ -89,8 +81,6 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     public static final String SECUREMENT_USER_PROPERTY_NAME = "Wss4jSecurityInterceptor.securementUser";
 
-    private CallbackHandler validationCallbackHandler;
-
     private int securementAction;
 
     private String securementActions;
@@ -99,9 +89,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     private String securementUsername;
 
-    private boolean timestampStrict = true;
-
-    private int timeToLive = 300;
+    private CallbackHandler validationCallbackHandler;
 
     private int validationAction;
 
@@ -115,9 +103,13 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     private Crypto validationSignatureCrypto;
 
-    private Wss4jHandler handler = new Wss4jHandler();
+    private boolean timestampStrict = true;
 
     private boolean enableSignatureConfirmation;
+
+    private int timeToLive = 300;
+
+    private Wss4jHandler handler = new Wss4jHandler();
 
     public void setSecurementActions(String securementActions) {
         this.securementActions = securementActions;
@@ -141,8 +133,22 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         handler.setOption(WSHandlerConstants.ACTOR, securementActor);
     }
 
+    /**
+     * Sets the {@link org.apache.ws.security.WSPasswordCallback} handler to use when securing messages.
+     *
+     * @see #setSecurementCallbackHandlers(CallbackHandler[])
+     */
     public void setSecurementCallbackHandler(CallbackHandler securementCallbackHandler) {
         handler.setSecurementCallbackHandler(securementCallbackHandler);
+    }
+
+    /**
+     * Sets the {@link org.apache.ws.security.WSPasswordCallback} handlers to use when securing messages.
+     *
+     * @see #setSecurementCallbackHandler(CallbackHandler)
+     */
+    public void setSecurementCallbackHandlers(CallbackHandler[] securementCallbackHandler) {
+        handler.setSecurementCallbackHandler(new CallbackHandlerChain(securementCallbackHandler));
     }
 
     public void setSecurementEncryptionCrypto(Crypto securementEncryptionCrypto) {
@@ -333,8 +339,22 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         this.validationActor = validationActor;
     }
 
+    /**
+     * Sets the {@link org.apache.ws.security.WSPasswordCallback} handler to use when validating messages.
+     *
+     * @see #setValidationCallbackHandlers(CallbackHandler[])
+     */
     public void setValidationCallbackHandler(CallbackHandler callbackHandler) {
         this.validationCallbackHandler = callbackHandler;
+    }
+
+    /**
+     * Sets the {@link org.apache.ws.security.WSPasswordCallback} handlers to use when validating messages.
+     *
+     * @see #setValidationCallbackHandler(CallbackHandler)
+     */
+    public void setValidationCallbackHandlers(CallbackHandler[] callbackHandler) {
+        this.validationCallbackHandler = new CallbackHandlerChain(callbackHandler);
     }
 
     /** Sets the Crypto to use to decrypt incoming messages */
@@ -410,6 +430,9 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         if (securementAction == WSConstants.NO_SECURITY && !enableSignatureConfirmation) {
             return;
         }
+        if (logger.isDebugEnabled()) {
+            logger.debug("Securing message [" + soapMessage + "] with actions [" + securementActions + "]");
+        }
         RequestData requestData = initializeRequestData(messageContext);
 
         Document envelopeAsDocument = toDocument(soapMessage);
@@ -450,7 +473,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
     protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
             throws WsSecurityValidationException {
         if (logger.isDebugEnabled()) {
-            logger.debug("Validating message [" + soapMessage + "] with actions " + validationActions);
+            logger.debug("Validating message [" + soapMessage + "] with actions [" + validationActions + "]");
         }
 
         if (validationAction == WSConstants.NO_SECURITY) {
@@ -508,11 +531,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         messageContext.setProperty(WSHandlerConstants.RECV_RESULTS, handlerResults);
     }
 
-    /**
-     * Verifies the trust of a certificate.
-     * @param results
-     * @throws WSSecurityException
-     */
+    /** Verifies the trust of a certificate. */
     protected void verifyCertificateTrust(Vector results) throws WSSecurityException {
         RequestData requestData = new RequestData();
         requestData.setSigCrypto(validationSignatureCrypto);

@@ -87,7 +87,7 @@ public class KeyStoreFactoryBean implements FactoryBean, InitializingBean {
         this.type = type;
     }
 
-    public Object getObject() throws Exception {
+    public Object getObject() {
         return keyStore;
     }
 

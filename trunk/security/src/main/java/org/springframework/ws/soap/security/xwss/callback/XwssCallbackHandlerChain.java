@@ -26,7 +26,7 @@ import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
 import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
 import com.sun.xml.wss.impl.callback.TimestampValidationCallback;
 
-import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
+import org.springframework.ws.soap.security.callback.CallbackHandlerChain;
 
 /**
  * Represents a chain of <code>CallbackHandler</code>s. For each callback, each of the handlers is called in term. If a
@@ -35,16 +35,10 @@ import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
-public class CallbackHandlerChain extends AbstractCallbackHandler {
+public class XwssCallbackHandlerChain extends CallbackHandlerChain {
 
-    private CallbackHandler[] callbackHandlers;
-
-    public CallbackHandlerChain(CallbackHandler[] callbackHandlers) {
-        this.callbackHandlers = callbackHandlers;
-    }
-
-    public void setCallbackHandlers(CallbackHandler[] callbackHandlers) {
-        this.callbackHandlers = callbackHandlers;
+    public XwssCallbackHandlerChain(CallbackHandler[] callbackHandlers) {
+        super(callbackHandlers);
     }
 
     protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
@@ -58,20 +52,7 @@ public class CallbackHandlerChain extends AbstractCallbackHandler {
             handleTimestampValidationCallback((TimestampValidationCallback) callback);
         }
         else {
-            boolean allUnsupported = true;
-            for (int i = 0; i < callbackHandlers.length; i++) {
-                CallbackHandler callbackHandler = callbackHandlers[i];
-                try {
-                    callbackHandler.handle(new Callback[]{callback});
-                    allUnsupported = false;
-                }
-                catch (UnsupportedCallbackException ex) {
-                    // if an UnsupportedCallbackException occurs, go to the next handler
-                }
-            }
-            if (allUnsupported) {
-                throw new UnsupportedCallbackException(callback);
-            }
+            super.handleInternal(callback);
         }
     }
 
@@ -97,8 +78,8 @@ public class CallbackHandlerChain extends AbstractCallbackHandler {
 
         public void validate(TimestampValidationCallback.Request request)
                 throws TimestampValidationCallback.TimestampValidationException {
-            for (int i = 0; i < callbackHandlers.length; i++) {
-                CallbackHandler callbackHandler = callbackHandlers[i];
+            for (int i = 0; i < getCallbackHandlers().length; i++) {
+                CallbackHandler callbackHandler = getCallbackHandlers()[i];
                 try {
                     callbackHandler.handle(new Callback[]{callback});
                     callback.getResult();
@@ -124,8 +105,8 @@ public class CallbackHandlerChain extends AbstractCallbackHandler {
         public boolean validate(PasswordValidationCallback.Request request)
                 throws PasswordValidationCallback.PasswordValidationException {
             boolean allUnsupported = true;
-            for (int i = 0; i < callbackHandlers.length; i++) {
-                CallbackHandler callbackHandler = callbackHandlers[i];
+            for (int i = 0; i < getCallbackHandlers().length; i++) {
+                CallbackHandler callbackHandler = getCallbackHandlers()[i];
                 try {
                     callbackHandler.handle(new Callback[]{callback});
                     allUnsupported = false;
@@ -155,8 +136,8 @@ public class CallbackHandlerChain extends AbstractCallbackHandler {
         public boolean validate(X509Certificate certificate)
                 throws CertificateValidationCallback.CertificateValidationException {
             boolean allUnsupported = true;
-            for (int i = 0; i < callbackHandlers.length; i++) {
-                CallbackHandler callbackHandler = callbackHandlers[i];
+            for (int i = 0; i < getCallbackHandlers().length; i++) {
+                CallbackHandler callbackHandler = getCallbackHandlers()[i];
                 try {
                     callbackHandler.handle(new Callback[]{callback});
                     allUnsupported = false;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.security.xwss.callback;
+package org.springframework.ws.soap.security.callback;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
@@ -46,7 +46,7 @@ public class CallbackHandlerChainTest extends TestCase {
         chain.handle(new Callback[]{callback});
     }
 
-    public void testUnsupportedNormal() throws Exception {
+    public void testUnsupportedSupported() throws Exception {
         CallbackHandlerChain chain = new CallbackHandlerChain(new CallbackHandler[]{unsupported, supported});
         chain.handle(new Callback[]{callback});
     }
