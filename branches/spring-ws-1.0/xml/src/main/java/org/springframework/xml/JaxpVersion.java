@@ -80,4 +80,27 @@ public abstract class JaxpVersion {
     public static int getJaxpVersion() {
         return jaxpVersion;
     }
+
+    /**
+     * Convenience method to determine if the current JAXP version is at least 1.3 (packaged with JDK 1.5).
+     *
+     * @return <code>true</code> if the current JAXP version is at least JAXP 1.3
+     * @see #getJaxpVersion()
+     * @see #JAXP_13
+     */
+    public static boolean isAtLeastJaxp13() {
+        return getJaxpVersion() >= JAXP_13;
+    }
+
+    /**
+     * Convenience method to determine if the current JAXP version is at least 1.4 (packaged with JDK 1.6).
+     *
+     * @return <code>true</code> if the current JAXP version is at least JAXP 1.4
+     * @see #getJaxpVersion()
+     * @see #JAXP_14
+     */
+    public static boolean isAtLeastJaxp14() {
+        return getJaxpVersion() >= JAXP_14;
+    }
+
 }

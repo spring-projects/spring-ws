@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.xml.JaxpVersion;
@@ -42,9 +43,14 @@ public abstract class XPathExpressionFactory {
 
     private static final String JAXEN_CLASS_NAME = "org.jaxen.XPath";
 
+    private static boolean jaxp13Available;
+
     private static boolean jaxenAvailable;
 
     static {
+        // Check whether JAXP 1.3 is available
+        jaxp13Available = JaxpVersion.isAtLeastJaxp13();
+
         // Check whether Jaxen is available
         try {
             ClassUtils.forName(JAXEN_CLASS_NAME);
@@ -81,18 +87,24 @@ public abstract class XPathExpressionFactory {
     public static XPathExpression createXPathExpression(String expression, Map namespaces)
             throws IllegalStateException, XPathParseException {
         Assert.hasLength(expression, "expression is empty");
-        if (JaxpVersion.getJaxpVersion() >= JaxpVersion.JAXP_13) {
-            logger.trace("Creating [javax.xml.xpath.XPathExpression]");
-            return Jaxp13XPathExpressionFactory.createXPathExpression(expression, namespaces);
+        if (jaxp13Available) {
+            try {
+                logger.trace("Creating [javax.xml.xpath.XPathExpression]");
+                return Jaxp13XPathExpressionFactory.createXPathExpression(expression, namespaces);
+            }
+            catch (XPathException e) {
+                throw e;
+            }
+            catch (Throwable e) {
+                jaxp13Available = false;
+            }
         }
-        else if (jaxenAvailable) {
+        if (jaxenAvailable) {
             logger.trace("Creating [org.jaxen.XPath]");
             return JaxenXPathExpressionFactory.createXPathExpression(expression, namespaces);
         }
-        else {
-            throw new IllegalStateException(
-                    "Could not create XPathExpression: could not locate JAXP 1.3, or Jaxen on the class path");
-        }
+        throw new IllegalStateException(
+                "Could not create XPathExpression: could not locate JAXP 1.3, or Jaxen on the class path");
     }
 
 
