@@ -254,19 +254,12 @@
                             disadvantage that the "location" attribute in the WSDL is static, i.e. it does not
                             necessarily reflect the host name of the server. You can transform locations by using a
                             <a href="http://static.springframework.org/spring-ws/site/apidocs/org/springframework/ws/transport/http/WsdlDefinitionHandlerAdapter.html">
-                                <tt>WsdlDefinitionHandlerAdapter</tt>
-                            </a>
-                            .
+                            <tt>WsdlDefinitionHandlerAdapter</tt></a>.
                         </li>
                         <li>Use the<tt>MessageDispatcherServlet</tt>, which is done is the samples. Every
-                            <tt>WsdlDefinition</tt>
-                            listed in the
-                            <tt>*-servlet.xml</tt>
-                            will be exposed under the
-                            bean name. So if you define a
-                            <tt>WsdlDefinition</tt>
-                            named<tt>echo</tt>, it will be
-                            exposed as<tt>echo.wsdl</tt>. (i.e.<tt>http://localhost:8080/echo/echo.wsdl</tt>).
+                            <tt>WsdlDefinition</tt> listed in the <tt>*-servlet.xml</tt> will be exposed under the
+                            bean name. So if you define a <tt>WsdlDefinition</tt> named<tt>echo</tt>, it will be
+                            exposed as <tt>echo.wsdl</tt> (i.e.<tt>http://localhost:8080/echo/echo.wsdl</tt>).
                         </li>
                     </ul>
                 </p>
