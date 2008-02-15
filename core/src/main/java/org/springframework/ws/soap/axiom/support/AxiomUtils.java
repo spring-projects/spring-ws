@@ -16,12 +16,16 @@
 
 package org.springframework.ws.soap.axiom.support;
 
+import java.util.Iterator;
 import java.util.Locale;
 import javax.xml.namespace.QName;
 
+import org.apache.axiom.om.OMContainer;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMNamespace;
+import org.apache.axiom.om.OMNode;
+
 import org.springframework.util.StringUtils;
 import org.springframework.xml.namespace.QNameUtils;
 
@@ -79,6 +83,14 @@ public abstract class AxiomUtils {
     public static Locale toLocale(String language) {
         language = language.replace('-', '_');
         return StringUtils.parseLocaleString(language);
+    }
+
+    /** Removes the contents (i.e. children) of the container. */
+    public static void removeContents(OMContainer container) {
+        for (Iterator iterator = container.getChildren(); iterator.hasNext();) {
+            OMNode child = (OMNode) iterator.next();
+            child.detach();
+        }
     }
 
 

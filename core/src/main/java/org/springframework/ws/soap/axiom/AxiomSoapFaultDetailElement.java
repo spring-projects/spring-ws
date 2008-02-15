@@ -38,7 +38,7 @@ class AxiomSoapFaultDetailElement extends AxiomSoapElement implements SoapFaultD
 
     public Result getResult() {
         try {
-            return new SAXResult(new AxiomContentHandler(getAxiomElement()));
+            return new SAXResult(new AxiomHandler(getAxiomElement(), getAxiomFactory()));
         }
         catch (OMException ex) {
             throw new AxiomSoapFaultException(ex);

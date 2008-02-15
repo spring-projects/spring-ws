@@ -17,6 +17,11 @@
 package org.springframework.ws.soap;
 
 import java.util.Locale;
+import javax.xml.transform.dom.DOMResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
@@ -34,9 +39,19 @@ public abstract class AbstractSoapBodyTestCase extends AbstractSoapElementTestCa
 
     public void testPayload() throws Exception {
         String payload = "<payload xmlns='http://www.springframework.org' />";
-        StringSource contents = new StringSource(payload);
-        transformer.transform(contents, soapBody.getPayloadResult());
+        transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
         assertPayloadEqual(payload);
+    }
+
+    public void testGetPayloadResultTwice() throws Exception {
+        String payload = "<payload xmlns='http://www.springframework.org' />";
+        transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
+        transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
+        DOMResult domResult = new DOMResult();
+        transformer.transform(soapBody.getSource(), domResult);
+        Element bodyElement = ((Document) domResult.getNode()).getDocumentElement();
+        NodeList children = bodyElement.getChildNodes();
+        assertEquals("Invalid amount of child nodes", 1, children.getLength());
     }
 
     public void testNoFault() throws Exception {

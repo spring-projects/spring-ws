@@ -42,8 +42,11 @@ public interface WebServiceMessage {
     Source getPayloadSource();
 
     /**
-     * Returns the contents of the message as a {@link Result}. <p>Implementations that are read-only will throw an
-     * {@link UnsupportedOperationException}.
+     * Returns the contents of the message as a {@link Result}.
+     * <p/>
+     * Calling this method removes the current payload.
+     * <p/>
+     * Implementations that are read-only will throw an {@link UnsupportedOperationException}.
      *
      * @return the message contents
      * @throws UnsupportedOperationException if the message is read-only
