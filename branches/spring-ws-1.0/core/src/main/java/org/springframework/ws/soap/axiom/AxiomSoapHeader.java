@@ -44,7 +44,7 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
     }
 
     public Result getResult() {
-        return new SAXResult(new AxiomContentHandler(getAxiomHeader()));
+        return new SAXResult(new AxiomHandler(getAxiomHeader(), getAxiomFactory()));
     }
 
     public SoapHeaderElement addHeaderElement(QName name) {

@@ -49,7 +49,7 @@ class AxiomSoapHeaderElement extends AxiomSoapElement implements SoapHeaderEleme
 
     public Result getResult() {
         try {
-            return new SAXResult(new AxiomContentHandler(getAxiomHeaderBlock()));
+            return new SAXResult(new AxiomHandler(getAxiomHeaderBlock(), getAxiomFactory()));
         }
         catch (OMException ex) {
             throw new AxiomSoapHeaderException(ex);

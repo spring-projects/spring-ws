@@ -20,6 +20,8 @@ import java.util.Locale;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import org.springframework.ws.WebServiceMessage;
+
 /**
  * Represents the <code>Body</code> element in a SOAP message. A SOAP body contains the <strong>payload</strong> of the
  * message. This payload can be custom XML, or a <code>SoapFault</code> (but not both).
@@ -40,13 +42,17 @@ public interface SoapBody extends SoapElement {
      * Returns a <code>Source</code> that represents the contents of the body.
      *
      * @return the message contents
+     * @see WebServiceMessage#getPayloadSource()
      */
     Source getPayloadSource();
 
     /**
      * Returns a <code>Result</code> that represents the contents of the body.
+     * <p/>
+     * Calling this method removes the current content of the body.
      *
      * @return the message contents
+     * @see WebServiceMessage#getPayloadResult()
      */
     Result getPayloadResult();
 

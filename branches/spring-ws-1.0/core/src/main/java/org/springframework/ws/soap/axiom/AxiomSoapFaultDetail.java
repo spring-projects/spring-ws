@@ -56,7 +56,7 @@ class AxiomSoapFaultDetail extends AxiomSoapElement implements SoapFaultDetail {
     }
 
     public Result getResult() {
-        return new SAXResult(new AxiomContentHandler(getAxiomFaultDetail()));
+        return new SAXResult(new AxiomHandler(getAxiomFaultDetail(), getAxiomFactory()));
     }
 
     protected SOAPFaultDetail getAxiomFaultDetail() {
