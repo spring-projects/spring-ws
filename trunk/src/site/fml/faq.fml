@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <faqs title="Frequently Asked Questions" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="http://maven.apache.org/maven-1.x/plugins/faq/faq.xsd">
+    <part id="general">
+        <title>General</title>
+        <faq id="requirements">
+            <question>Do I need any other SOAP framework to run Spring Web Services?</question>
+            <answer>
+                You don't need any other SOAP framework to use Spring Web services, though it can use some of the
+                features of Axis 1 and 2.
+            </answer>
+        </faq>
+    </part>
     <part id="java">
         <title>Java</title>
         <faq id="java-1.4">
@@ -11,11 +21,8 @@
                     bundled with the older XML parser Crimson, which does not handle namespaces correctly. Additionally,
                     it is bundled with an older version of Xalan, which also has problems.
                     Unfortunately, placing newer versions of these on the class path does not override them.
-                    See
-                    <a href="http://xml.apache.org/xalan-j/faq.html#faq-N100D6">this FAQ</a>
-                    entry on the Xalan
-                    site, and also
-                    <a href="http://xerces.apache.org/xerces2-j/faq-general.html#faq-4">this entry</a>
+                    See <a href="http://xml.apache.org/xalan-j/faq.html#faq-N100D6">this FAQ</a> entry on the Xalan
+                    site, and also <a href="http://xerces.apache.org/xerces2-j/faq-general.html#faq-4">this entry</a>
                     on the Xerces site.
                 </p>
                 <p>
@@ -60,10 +67,7 @@
                 </p>
                 <p>
                     The jar can be found at
-                    <tt>
-                        /System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/.compatibility/14compatibility.jar
-                    </tt>
-                    .
+                    <tt>/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/.compatibility/14compatibility.jar</tt>.
                     You can safely remove or rename it, and the tests will run again.
                 </p>
             </answer>
