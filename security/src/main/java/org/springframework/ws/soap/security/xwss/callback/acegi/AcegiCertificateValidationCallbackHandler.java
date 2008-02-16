@@ -30,6 +30,7 @@ import org.acegisecurity.providers.x509.X509AuthenticationToken;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
+import org.springframework.ws.soap.security.callback.CleanupCallback;
 
 /**
  * Callback handler that validates a certificate using an Acegi <code>AuthenticationManager</code>. Logic based on
@@ -76,6 +77,9 @@ public class AcegiCertificateValidationCallbackHandler extends AbstractCallbackH
         if (callback instanceof CertificateValidationCallback) {
             ((CertificateValidationCallback) callback).setValidator(new AcegiCertificateValidator());
         }
+        else if (callback instanceof CleanupCallback) {
+            SecurityContextHolder.clearContext();
+        }
         else {
             throw new UnsupportedCallbackException(callback);
         }
@@ -101,7 +105,7 @@ public class AcegiCertificateValidationCallbackHandler extends AbstractCallbackH
                     logger.debug("Authentication request for certificate with DN [" +
                             certificate.getSubjectX500Principal().getName() + "] failed: " + failed.toString());
                 }
-                SecurityContextHolder.getContext().setAuthentication(null);
+                SecurityContextHolder.clearContext();
                 result = ignoreFailure;
             }
             return result;

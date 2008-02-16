@@ -23,6 +23,7 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import org.apache.ws.security.WSPasswordCallback;
 
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
+import org.springframework.ws.soap.security.callback.CleanupCallback;
 
 /**
  * Abstract base class for {@link javax.security.auth.callback.CallbackHandler} implementations that handle {@link
@@ -73,6 +74,10 @@ public abstract class AbstractWsPasswordCallbackHandler extends AbstractCallback
                     throw new UnsupportedCallbackException(callback,
                             "Unknown usage [" + passwordCallback.getUsage() + "]");
             }
+        }
+        else if (callback instanceof CleanupCallback) {
+            CleanupCallback cleanupCallback = (CleanupCallback) callback;
+            handleCleanup(cleanupCallback);
         }
         else {
             throw new UnsupportedCallbackException(callback);
@@ -171,6 +176,15 @@ public abstract class AbstractWsPasswordCallbackHandler extends AbstractCallback
      * Default implementation throws an {@link UnsupportedCallbackException}.
      */
     protected void handleEncryptedKeyToken(Callback callback) throws IOException, UnsupportedCallbackException {
+        throw new UnsupportedCallbackException(callback);
+    }
+
+    /**
+     * Invoked when a {@link CleanupCallback} is passed to {@link #handle(Callback[])}.
+     * <p/>
+     * Default implementation throws an {@link UnsupportedCallbackException}.
+     */
+    protected void handleCleanup(CleanupCallback callback) throws IOException, UnsupportedCallbackException {
         throw new UnsupportedCallbackException(callback);
     }
 }

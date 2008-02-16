@@ -16,9 +16,12 @@
 
 package org.springframework.ws.soap.security.wss4j;
 
+import java.io.IOException;
 import java.security.cert.X509Certificate;
 import java.util.Vector;
+import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.UnsupportedCallbackException;
 
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
@@ -47,6 +50,7 @@ import org.springframework.ws.soap.security.AbstractWsSecurityInterceptor;
 import org.springframework.ws.soap.security.WsSecuritySecurementException;
 import org.springframework.ws.soap.security.WsSecurityValidationException;
 import org.springframework.ws.soap.security.callback.CallbackHandlerChain;
+import org.springframework.ws.soap.security.callback.CleanupCallback;
 
 /**
  * A WS-Security endpoint interceptor based on Apache's WSS4J. This inteceptor supports messages created by the {@link
@@ -599,4 +603,18 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         }
     }
 
+    protected void cleanUp() {
+        if (validationCallbackHandler != null) {
+            try {
+                CleanupCallback cleanupCallback = new CleanupCallback();
+                validationCallbackHandler.handle(new Callback[]{cleanupCallback});
+            }
+            catch (IOException ex) {
+                logger.warn("Cleanup callback resulted in IOException", ex);
+            }
+            catch (UnsupportedCallbackException ex) {
+                // ignore
+            }
+        }
+    }
 }
