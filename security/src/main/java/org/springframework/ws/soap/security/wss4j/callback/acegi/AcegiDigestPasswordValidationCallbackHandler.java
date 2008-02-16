@@ -20,17 +20,20 @@ import java.io.IOException;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
 import org.acegisecurity.context.SecurityContextHolder;
+import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
 import org.acegisecurity.providers.dao.UserCache;
 import org.acegisecurity.providers.dao.cache.NullUserCache;
 import org.acegisecurity.userdetails.UserDetails;
 import org.acegisecurity.userdetails.UserDetailsService;
 import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.apache.ws.security.WSPasswordCallback;
+import org.apache.ws.security.WSUsernameTokenPrincipal;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 import org.springframework.ws.soap.security.wss4j.callback.AbstractWsPasswordCallbackHandler;
+import org.springframework.ws.soap.security.wss4j.callback.UsernameTokenPrincipalCallback;
 
 /**
  * Callback handler that validates a password digest using an Acegi <code>UserDetailsService</code>. Logic based on
@@ -70,6 +73,17 @@ public class AcegiDigestPasswordValidationCallbackHandler extends AbstractWsPass
         if (user != null) {
             callback.setPassword(user.getPassword());
         }
+    }
+
+    protected void handleUsernameTokenPrincipal(UsernameTokenPrincipalCallback callback)
+            throws IOException, UnsupportedCallbackException {
+        WSUsernameTokenPrincipal principal = callback.getPrincipal();
+        UsernamePasswordAuthenticationToken authRequest =
+                new UsernamePasswordAuthenticationToken(principal, principal.getPassword());
+        if (logger.isDebugEnabled()) {
+            logger.debug("Authentication success: " + authRequest.toString());
+        }
+        SecurityContextHolder.getContext().setAuthentication(authRequest);
     }
 
     protected void handleCleanup(CleanupCallback callback) throws IOException, UnsupportedCallbackException {

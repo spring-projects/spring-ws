@@ -76,8 +76,10 @@ public abstract class AbstractWsPasswordCallbackHandler extends AbstractCallback
             }
         }
         else if (callback instanceof CleanupCallback) {
-            CleanupCallback cleanupCallback = (CleanupCallback) callback;
-            handleCleanup(cleanupCallback);
+            handleCleanup((CleanupCallback) callback);
+        }
+        else if (callback instanceof UsernameTokenPrincipalCallback) {
+            handleUsernameTokenPrincipal((UsernameTokenPrincipalCallback) callback);
         }
         else {
             throw new UnsupportedCallbackException(callback);
@@ -185,6 +187,16 @@ public abstract class AbstractWsPasswordCallbackHandler extends AbstractCallback
      * Default implementation throws an {@link UnsupportedCallbackException}.
      */
     protected void handleCleanup(CleanupCallback callback) throws IOException, UnsupportedCallbackException {
+        throw new UnsupportedCallbackException(callback);
+    }
+
+    /**
+     * Invoked when a {@link UsernameTokenPrincipalCallback} is passed to {@link #handle(Callback[])}.
+     * <p/>
+     * Default implementation throws an {@link UnsupportedCallbackException}.
+     */
+    protected void handleUsernameTokenPrincipal(UsernameTokenPrincipalCallback callback)
+            throws IOException, UnsupportedCallbackException {
         throw new UnsupportedCallbackException(callback);
     }
 }
