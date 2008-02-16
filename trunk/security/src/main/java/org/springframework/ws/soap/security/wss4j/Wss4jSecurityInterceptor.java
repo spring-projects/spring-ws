@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.security.wss4j;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.security.cert.X509Certificate;
 import java.util.Vector;
 import javax.security.auth.callback.Callback;
@@ -30,6 +31,7 @@ import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSSecurityEngine;
 import org.apache.ws.security.WSSecurityEngineResult;
 import org.apache.ws.security.WSSecurityException;
+import org.apache.ws.security.WSUsernameTokenPrincipal;
 import org.apache.ws.security.components.crypto.Crypto;
 import org.apache.ws.security.handler.RequestData;
 import org.apache.ws.security.handler.WSHandlerConstants;
@@ -51,6 +53,7 @@ import org.springframework.ws.soap.security.WsSecuritySecurementException;
 import org.springframework.ws.soap.security.WsSecurityValidationException;
 import org.springframework.ws.soap.security.callback.CallbackHandlerChain;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
+import org.springframework.ws.soap.security.wss4j.callback.UsernameTokenPrincipalCallback;
 
 /**
  * A WS-Security endpoint interceptor based on Apache's WSS4J. This inteceptor supports messages created by the {@link
@@ -509,6 +512,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
             verifyCertificateTrust(results);
 
             verifyTimestamp(results);
+
+            processPrincipal(results);
         }
         catch (WSSecurityException ex) {
             throw new Wss4jSecurityValidationException(ex.getMessage(), ex);
@@ -542,24 +547,20 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         WSSecurityEngineResult actionResult = WSSecurityUtil.fetchActionResult(results, WSConstants.SIGN);
 
         if (actionResult != null) {
-            X509Certificate returnCert = actionResult.getCertificate();
+            X509Certificate returnCert =
+                    (X509Certificate) actionResult.get(WSSecurityEngineResult.TAG_X509_CERTIFICATE);
             if (!handler.verifyTrust(returnCert, requestData)) {
                 throw new Wss4jSecurityValidationException("The certificate used for the signature is not trusted");
             }
         }
     }
 
-    /**
-     *
-     * @param results
-     * @throws WSSecurityException
-     */
+    /** Verifies the timestamp. */
     protected void verifyTimestamp(Vector results) throws WSSecurityException {
         WSSecurityEngineResult actionResult = WSSecurityUtil.fetchActionResult(results, WSConstants.TS);
 
         if (actionResult != null) {
-            Timestamp timestamp = actionResult.getTimestamp();
-
+            Timestamp timestamp = (Timestamp) actionResult.get(WSSecurityEngineResult.TAG_TIMESTAMP);
             if (timestamp != null && timestampStrict) {
                 if (!handler.verifyTimestamp(timestamp, timeToLive)) {
                     throw new Wss4jSecurityValidationException("Invalid timestamp : " + timestamp.getID());
@@ -567,6 +568,27 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
             }
         }
 
+    }
+
+    private void processPrincipal(Vector results) {
+        WSSecurityEngineResult actionResult = WSSecurityUtil.fetchActionResult(results, WSConstants.UT);
+
+        if (actionResult != null) {
+            Principal principal = (Principal) actionResult.get(WSSecurityEngineResult.TAG_PRINCIPAL);
+            if (principal != null && principal instanceof WSUsernameTokenPrincipal) {
+                WSUsernameTokenPrincipal usernameTokenPrincipal = (WSUsernameTokenPrincipal) principal;
+                UsernameTokenPrincipalCallback callback = new UsernameTokenPrincipalCallback(usernameTokenPrincipal);
+                try {
+                    validationCallbackHandler.handle(new Callback[]{callback});
+                }
+                catch (IOException ex) {
+                    logger.warn("Principal callback resulted in IOException", ex);
+                }
+                catch (UnsupportedCallbackException ex) {
+                    // ignore
+                }
+            }
+        }
     }
 
     /** Converts the given {@link SoapMessage} into a {@link Document}. */
