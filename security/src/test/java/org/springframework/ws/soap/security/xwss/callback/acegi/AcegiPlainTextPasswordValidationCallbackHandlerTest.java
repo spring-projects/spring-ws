@@ -22,9 +22,12 @@ import org.acegisecurity.Authentication;
 import org.acegisecurity.AuthenticationManager;
 import org.acegisecurity.BadCredentialsException;
 import org.acegisecurity.GrantedAuthority;
+import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.providers.TestingAuthenticationToken;
 import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
 import org.easymock.MockControl;
+
+import org.springframework.ws.soap.security.xwss.callback.CleanupCallback;
 
 public class AcegiPlainTextPasswordValidationCallbackHandlerTest extends TestCase {
 
@@ -52,6 +55,10 @@ public class AcegiPlainTextPasswordValidationCallbackHandlerTest extends TestCas
         callback = new PasswordValidationCallback(request);
     }
 
+    protected void tearDown() throws Exception {
+        SecurityContextHolder.clearContext();
+    }
+
     public void testAuthenticateUserPlainTextValid() throws Exception {
         Authentication authResult = new TestingAuthenticationToken(username, password, new GrantedAuthority[0]);
         control.expectAndReturn(mock.authenticate(new UsernamePasswordAuthenticationToken(username, password)),
@@ -60,6 +67,7 @@ public class AcegiPlainTextPasswordValidationCallbackHandlerTest extends TestCas
         callbackHandler.handleInternal(callback);
         boolean authenticated = callback.getResult();
         assertTrue("Not authenticated", authenticated);
+        assertNotNull("No Authentication created", SecurityContextHolder.getContext().getAuthentication());
         control.verify();
     }
 
@@ -70,7 +78,18 @@ public class AcegiPlainTextPasswordValidationCallbackHandlerTest extends TestCas
         callbackHandler.handleInternal(callback);
         boolean authenticated = callback.getResult();
         assertFalse("Authenticated", authenticated);
+        assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
         control.verify();
+    }
+
+    public void testCleanUp() throws Exception {
+        TestingAuthenticationToken authentication =
+                new TestingAuthenticationToken(new Object(), new Object(), new GrantedAuthority[0]);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        CleanupCallback cleanupCallback = new CleanupCallback();
+        callbackHandler.handleInternal(cleanupCallback);
+        assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
     }
 
 }

@@ -58,9 +58,9 @@ public class JaasCertificateValidationCallbackHandler extends AbstractJaasValida
 
         public boolean validate(X509Certificate certificate)
                 throws CertificateValidationCallback.CertificateValidationException {
-            LoginContext loginContext = null;
             Subject subject = new Subject();
             subject.getPrincipals().add(certificate.getSubjectX500Principal());
+            LoginContext loginContext;
             try {
                 loginContext = new LoginContext(getLoginContextName(), subject);
             }

@@ -74,6 +74,7 @@ public class XwsSecurityInterceptorTest extends TestCase {
         SOAPMessage request = messageFactory.createMessage();
         MessageContext context =
                 new DefaultMessageContext(new SaajSoapMessage(request), new SaajSoapMessageFactory(messageFactory));
+        context.getResponse();
         interceptor.handleResponse(context, null);
         assertEquals("Invalid response", securedResponse, ((SaajSoapMessage) context.getResponse()).getSaajMessage());
     }

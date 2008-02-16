@@ -18,7 +18,6 @@ package org.springframework.ws.soap.security.xwss.callback.jaas;
 
 import java.security.Principal;
 import java.util.Iterator;
-
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.LoginException;
@@ -72,7 +71,7 @@ public class CertificateLoginModule implements LoginModule {
         for (Iterator iterator = subject.getPrincipals().iterator(); iterator.hasNext();) {
             Principal principal = (Principal) iterator.next();
             if (principal instanceof X500Principal) {
-                return ((X500Principal) principal).getName();
+                return principal.getName();
             }
         }
         return null;

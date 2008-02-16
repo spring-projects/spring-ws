@@ -16,8 +16,11 @@
 
 package org.springframework.ws.soap.security.xwss;
 
+import java.io.IOException;
 import java.io.InputStream;
+import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.xml.soap.SOAPMessage;
 
 import com.sun.xml.wss.ProcessingContext;
@@ -33,6 +36,7 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.security.AbstractWsSecurityInterceptor;
 import org.springframework.ws.soap.security.WsSecurityValidationException;
 import org.springframework.ws.soap.security.xwss.callback.CallbackHandlerChain;
+import org.springframework.ws.soap.security.xwss.callback.CleanupCallback;
 
 /**
  * WS-Security endpoint interceptor  that is based on Sun's XML and Web Services Security package (XWSS). This
@@ -162,4 +166,18 @@ public class XwsSecurityInterceptor extends AbstractWsSecurityInterceptor implem
         }
     }
 
+    protected void cleanUp() {
+        if (callbackHandler != null) {
+            try {
+                CleanupCallback cleanupCallback = new CleanupCallback();
+                callbackHandler.handle(new Callback[]{cleanupCallback});
+            }
+            catch (IOException ex) {
+                logger.warn("Cleanup callback resulted in IOException", ex);
+            }
+            catch (UnsupportedCallbackException ex) {
+                // ignore
+            }
+        }
+    }
 }
