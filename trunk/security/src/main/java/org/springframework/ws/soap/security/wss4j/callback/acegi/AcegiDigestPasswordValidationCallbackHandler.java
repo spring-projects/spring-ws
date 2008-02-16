@@ -45,7 +45,7 @@ import org.springframework.ws.soap.security.wss4j.callback.UsernameTokenPrincipa
  * @author Arjen Poutsma
  * @see org.acegisecurity.userdetails.UserDetailsService
  * @see org.acegisecurity.ui.digestauth.DigestProcessingFilter
- * @since 1.0.0
+ * @since 1.5.0
  */
 public class AcegiDigestPasswordValidationCallbackHandler extends AbstractWsPasswordCallbackHandler {
 
