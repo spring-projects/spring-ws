@@ -3,7 +3,6 @@
         <title>Home</title>
     </properties>
     <body>
-        <center><img src="images/spring-ws-logo.png"/></center>
         <h2>What is Spring Web Services?</h2>
         <p>
             Spring Web Services is a product of the <a href="http://www.springframework.org">Spring</a> community
