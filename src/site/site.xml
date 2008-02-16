@@ -3,7 +3,7 @@
     <skin>
         <groupId>org.springframework.maven.skins</groupId>
         <artifactId>maven-spring-skin</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
     </skin>
     <publishDate position="left" format="d MMM yyyy"/>
     <bannerLeft>
