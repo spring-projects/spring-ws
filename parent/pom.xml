@@ -9,12 +9,12 @@
     <distributionManagement>
         <downloadUrl>http://static.springframework.org/spring-ws/site/downloads/releases.html</downloadUrl>
         <repository>
-            <id>spring-milestone</id>
+            <id>spring-s3</id>
             <name>Spring Milestone Repository</name>
             <url>s3://maven.springframework.org/milestone</url>
         </repository>
         <snapshotRepository>
-            <id>spring-snapshot</id>
+            <id>spring-s3</id>
             <name>Spring Snapshot Repository</name>
             <url>s3://maven.springframework.org/snapshot</url>
         </snapshotRepository>
@@ -594,10 +594,11 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <!-- Acegi -->
             <dependency>
                 <groupId>org.acegisecurity</groupId>
                 <artifactId>acegi-security</artifactId>
-                <version>1.0.5</version>
+                <version>1.0.6</version>
                 <exclusions>
                     <exclusion>
                         <groupId>log4j</groupId>
@@ -640,7 +641,13 @@
             <dependency>
                 <groupId>org.acegisecurity</groupId>
                 <artifactId>acegi-security-tiger</artifactId>
-                <version>1.0.5</version>
+                <version>1.0.6</version>
+            </dependency>
+            <!-- Spring Security -->
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-core</artifactId>
+                <version>2.0-M1</version>
             </dependency>
             <!-- JEE dependencies -->
             <dependency>

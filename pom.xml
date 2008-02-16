@@ -410,7 +410,7 @@
                                         <artifactItem>
                                             <groupId>org.acegisecurity</groupId>
                                             <artifactId>acegi-security</artifactId>
-                                            <version>1.0.5</version>
+                                            <version>1.0.6</version>
                                             <outputDirectory>${project.build.directory}/dependency/acegi/</outputDirectory>
                                         </artifactItem>
                                         <!--Java EE-->

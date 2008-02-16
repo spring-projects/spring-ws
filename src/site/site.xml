@@ -37,7 +37,7 @@
         </menu>
         <menu name="Support">
             <item name="Support Forums" href="http://forum.springframework.org/forumdisplay.php?f=39"/>
-            <item name="JIRA" href="http://opensource.atlassian.com/projects/spring/browse/SWS"/>
+            <item name="JIRA" href="http://jira.springframework.org/browse/SWS"/>
         </menu>
         <menu ref="reports" name="Reports"/>
     </body>
