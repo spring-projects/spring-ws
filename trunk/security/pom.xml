@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <artifactId>spring-ws-parent</artifactId>
         <groupId>org.springframework.ws</groupId>
@@ -20,6 +21,12 @@
             <id>spring-ext</id>
             <name>Spring External Dependencies Repository</name>
             <url>https://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo-ext/</url>
+        </repository>
+        <!-- S3 repo required for Spring Security Milestones -->
+        <repository>
+            <id>spring-s3</id>
+            <name>Springframework Maven SNAPSHOT Repository</name>
+            <url>http://s3.amazonaws.com/maven.springframework.org/milestone</url>
         </repository>
         <repository>
             <id>wso2</id>
@@ -135,6 +142,12 @@
         <dependency>
             <groupId>org.acegisecurity</groupId>
             <artifactId>acegi-security</artifactId>
+        </dependency>
+        <!-- Spring Security dependencies -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <optional>true</optional>
         </dependency>
         <!-- JEE dependencies -->
         <dependency>
