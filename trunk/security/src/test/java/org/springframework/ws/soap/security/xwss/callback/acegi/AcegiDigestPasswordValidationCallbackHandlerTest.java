@@ -19,10 +19,14 @@ package org.springframework.ws.soap.security.xwss.callback.acegi;
 import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
 import junit.framework.TestCase;
 import org.acegisecurity.GrantedAuthority;
+import org.acegisecurity.context.SecurityContextHolder;
+import org.acegisecurity.providers.TestingAuthenticationToken;
 import org.acegisecurity.userdetails.User;
 import org.acegisecurity.userdetails.UserDetailsService;
 import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.easymock.MockControl;
+
+import org.springframework.ws.soap.security.callback.CleanupCallback;
 
 public class AcegiDigestPasswordValidationCallbackHandlerTest extends TestCase {
 
@@ -53,12 +57,17 @@ public class AcegiDigestPasswordValidationCallbackHandlerTest extends TestCase {
         callback = new PasswordValidationCallback(request);
     }
 
+    protected void tearDown() throws Exception {
+        SecurityContextHolder.clearContext();
+    }
+
     public void testAuthenticateUserDigestUserNotFound() throws Exception {
         control.expectAndThrow(mock.loadUserByUsername(username), new UsernameNotFoundException(username));
         control.replay();
         callbackHandler.handleInternal(callback);
         boolean authenticated = callback.getResult();
         assertFalse("Authenticated", authenticated);
+        assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
         control.verify();
     }
 
@@ -69,6 +78,7 @@ public class AcegiDigestPasswordValidationCallbackHandlerTest extends TestCase {
         callbackHandler.handleInternal(callback);
         boolean authenticated = callback.getResult();
         assertTrue("Not authenticated", authenticated);
+        assertNotNull("No Authentication created", SecurityContextHolder.getContext().getAuthentication());
         control.verify();
     }
 
@@ -79,6 +89,18 @@ public class AcegiDigestPasswordValidationCallbackHandlerTest extends TestCase {
         callbackHandler.handleInternal(callback);
         boolean authenticated = callback.getResult();
         assertFalse("Authenticated", authenticated);
+        assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
         control.verify();
     }
+
+    public void testCleanUp() throws Exception {
+        TestingAuthenticationToken authentication =
+                new TestingAuthenticationToken(new Object(), new Object(), new GrantedAuthority[0]);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        CleanupCallback cleanupCallback = new CleanupCallback();
+        callbackHandler.handleInternal(cleanupCallback);
+        assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
+    }
+
 }

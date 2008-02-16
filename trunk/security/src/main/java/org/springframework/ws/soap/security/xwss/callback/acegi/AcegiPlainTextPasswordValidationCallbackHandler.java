@@ -29,6 +29,7 @@ import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
+import org.springframework.ws.soap.security.callback.CleanupCallback;
 
 /**
  * Callback handler that validates a certificate uses an Acegi <code>AuthenticationManager</code>. Logic based on
@@ -81,6 +82,10 @@ public class AcegiPlainTextPasswordValidationCallbackHandler extends AbstractCal
                 return;
             }
         }
+        else if (callback instanceof CleanupCallback) {
+            SecurityContextHolder.clearContext();
+            return;
+        }
         throw new UnsupportedCallbackException(callback);
     }
 
@@ -104,7 +109,7 @@ public class AcegiPlainTextPasswordValidationCallbackHandler extends AbstractCal
                     logger.debug("Authentication request for user '" + plainTextRequest.getUsername() + "' failed: " +
                             failed.toString());
                 }
-                SecurityContextHolder.getContext().setAuthentication(null);
+                SecurityContextHolder.clearContext();
                 return ignoreFailure;
             }
         }

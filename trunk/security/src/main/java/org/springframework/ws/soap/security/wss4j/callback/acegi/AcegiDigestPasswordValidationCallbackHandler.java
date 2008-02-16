@@ -19,6 +19,7 @@ package org.springframework.ws.soap.security.wss4j.callback.acegi;
 import java.io.IOException;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
+import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.providers.dao.UserCache;
 import org.acegisecurity.providers.dao.cache.NullUserCache;
 import org.acegisecurity.userdetails.UserDetails;
@@ -28,6 +29,7 @@ import org.apache.ws.security.WSPasswordCallback;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.util.Assert;
+import org.springframework.ws.soap.security.callback.CleanupCallback;
 import org.springframework.ws.soap.security.wss4j.callback.AbstractWsPasswordCallbackHandler;
 
 /**
@@ -68,6 +70,10 @@ public class AcegiDigestPasswordValidationCallbackHandler extends AbstractWsPass
         if (user != null) {
             callback.setPassword(user.getPassword());
         }
+    }
+
+    protected void handleCleanup(CleanupCallback callback) throws IOException, UnsupportedCallbackException {
+        SecurityContextHolder.clearContext();
     }
 
     private UserDetails loadUserDetails(String username) throws DataAccessException {

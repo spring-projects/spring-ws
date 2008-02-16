@@ -33,6 +33,7 @@ import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
+import org.springframework.ws.soap.security.callback.CleanupCallback;
 import org.springframework.ws.soap.security.xwss.callback.DefaultTimestampValidator;
 
 /**
@@ -98,6 +99,10 @@ public class AcegiDigestPasswordValidationCallbackHandler extends AbstractCallba
             TimestampValidationCallback timestampCallback = (TimestampValidationCallback) callback;
             timestampCallback.setValidator(new DefaultTimestampValidator());
 
+        }
+        else if (callback instanceof CleanupCallback) {
+            SecurityContextHolder.clearContext();
+            return;
         }
         throw new UnsupportedCallbackException(callback);
     }

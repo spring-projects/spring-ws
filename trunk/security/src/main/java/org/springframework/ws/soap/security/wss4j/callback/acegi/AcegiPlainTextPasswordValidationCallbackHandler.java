@@ -28,6 +28,7 @@ import org.apache.ws.security.WSPasswordCallback;
 import org.apache.ws.security.WSSecurityException;
 
 import org.springframework.util.Assert;
+import org.springframework.ws.soap.security.callback.CleanupCallback;
 import org.springframework.ws.soap.security.wss4j.callback.AbstractWsPasswordCallbackHandler;
 
 /**
@@ -62,6 +63,10 @@ public class AcegiPlainTextPasswordValidationCallbackHandler extends AbstractWsP
         Assert.notNull(authenticationManager, "authenticationManager is required");
     }
 
+    protected void handleCleanup(CleanupCallback callback) throws IOException, UnsupportedCallbackException {
+        SecurityContextHolder.clearContext();
+    }
+
     protected void handleUsernameTokenUnknown(WSPasswordCallback callback)
             throws IOException, UnsupportedCallbackException {
         String identifier = callback.getIdentifer();
@@ -77,7 +82,7 @@ public class AcegiPlainTextPasswordValidationCallbackHandler extends AbstractWsP
             if (logger.isDebugEnabled()) {
                 logger.debug("Authentication request for user '" + identifier + "' failed: " + failed.toString());
             }
-            SecurityContextHolder.getContext().setAuthentication(null);
+            SecurityContextHolder.clearContext();
             if (!ignoreFailure) {
                 throw new WSSecurityException(WSSecurityException.FAILED_AUTHENTICATION);
             }

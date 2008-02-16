@@ -35,6 +35,7 @@ public abstract class Wss4jMessageInterceptorAcegiCallbackHandlerTestCase extend
 
     protected void tearDown() throws Exception {
         control.verify();
+        SecurityContextHolder.clearContext();
     }
 
     public void testValidateUsernameTokenPlainText() throws Exception {
@@ -43,6 +44,11 @@ public abstract class Wss4jMessageInterceptorAcegiCallbackHandlerTestCase extend
         MessageContext messageContext = new DefaultMessageContext(message, getMessageFactory());
         interceptor.handleRequest(messageContext, null);
         assertValidateUsernameToken(message);
+
+        // test clean up
+        messageContext.getResponse();
+        interceptor.handleResponse(messageContext, null);
+        assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
     }
 
     public void testValidateUsernameTokenDigest() throws Exception {
@@ -51,6 +57,11 @@ public abstract class Wss4jMessageInterceptorAcegiCallbackHandlerTestCase extend
         MessageContext messageContext = new DefaultMessageContext(message, getMessageFactory());
         interceptor.handleRequest(messageContext, null);
         assertValidateUsernameToken(message);
+
+        // test clean up
+        messageContext.getResponse();
+        interceptor.handleResponse(messageContext, null);
+        assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
     }
 
     protected void assertValidateUsernameToken(SoapMessage message) throws Exception {
@@ -58,9 +69,7 @@ public abstract class Wss4jMessageInterceptorAcegiCallbackHandlerTestCase extend
         assertNotNull("No result returned", result);
         assertXpathNotExists("Security Header not removed", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security",
                 getDocument(message));
-        Authentication authentication = SecurityContextHolder.getContext()
-                .getAuthentication();
-        assertNotNull("authentication must not be null", authentication);
+        assertNotNull("No Authentication created", SecurityContextHolder.getContext().getAuthentication());
     }
 
     protected EndpointInterceptor prepareInterceptor(String actions, boolean validating, boolean digest)

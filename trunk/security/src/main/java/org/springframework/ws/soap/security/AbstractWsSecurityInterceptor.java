@@ -127,27 +127,33 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
      * @see #secureMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)
      */
     public final boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
-        if (secureResponse) {
-            Assert.isTrue(messageContext.hasResponse(), "MessageContext contains no response");
-            Assert.isInstanceOf(SoapMessage.class, messageContext.getResponse());
-            try {
-                secureMessage((SoapMessage) messageContext.getResponse(), messageContext);
+        try {
+            if (secureResponse) {
+                Assert.isTrue(messageContext.hasResponse(), "MessageContext contains no response");
+                Assert.isInstanceOf(SoapMessage.class, messageContext.getResponse());
+                try {
+                    secureMessage((SoapMessage) messageContext.getResponse(), messageContext);
+                    return true;
+                }
+                catch (WsSecuritySecurementException ex) {
+                    return handleSecurementException(ex, messageContext);
+                }
+                catch (WsSecurityFaultException ex) {
+                    return handleFaultException(ex, messageContext);
+                }
+            }
+            else {
                 return true;
             }
-            catch (WsSecuritySecurementException ex) {
-                return handleSecurementException(ex, messageContext);
-            }
-            catch (WsSecurityFaultException ex) {
-                return handleFaultException(ex, messageContext);
-            }
         }
-        else {
-            return true;
+        finally {
+            cleanUp();
         }
     }
 
     /** Returns <code>true</code>, i.e. fault responses are not secured. */
     public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
+        cleanUp();
         return true;
     }
 
@@ -296,4 +302,6 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
      */
     protected abstract void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
             throws WsSecuritySecurementException;
+
+    protected abstract void cleanUp();
 }
