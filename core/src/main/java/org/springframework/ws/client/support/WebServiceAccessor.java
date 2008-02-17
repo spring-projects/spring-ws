@@ -18,6 +18,7 @@ package org.springframework.ws.client.support;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
@@ -103,10 +104,16 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
         WebServiceMessageSender[] messageSenders = getMessageSenders();
         for (int i = 0; i < messageSenders.length; i++) {
             if (messageSenders[i].supports(uri)) {
+                WebServiceConnection connection = messageSenders[i].createConnection(uri);
                 if (logger.isDebugEnabled()) {
-                    logger.debug("Opening connection to [" + uri + "] using [" + messageSenders[i] + "]");
+                    try {
+                        logger.debug("Opening [" + connection + "] to [" + connection.getUri() + "]");
+                    }
+                    catch (URISyntaxException e) {
+                        // ignore
+                    }
                 }
-                return messageSenders[i].createConnection(uri);
+                return connection;
             }
         }
         throw new IllegalArgumentException("Could not resolve [" + uri + "] to a WebServiceMessageSender");
