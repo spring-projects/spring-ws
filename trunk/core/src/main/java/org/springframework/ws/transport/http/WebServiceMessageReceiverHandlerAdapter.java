@@ -52,7 +52,7 @@ public class WebServiceMessageReceiverHandlerAdapter extends WebServiceMessageRe
     public ModelAndView handle(HttpServletRequest httpServletRequest,
                                HttpServletResponse httpServletResponse,
                                Object handler) throws Exception {
-        if ("POST".equals(httpServletRequest.getMethod())) {
+        if (HttpTransportConstants.METHOD_POST.equals(httpServletRequest.getMethod())) {
             WebServiceConnection connection = new HttpServletConnection(httpServletRequest, httpServletResponse);
             handleConnection(connection, (WebServiceMessageReceiver) handler);
         }

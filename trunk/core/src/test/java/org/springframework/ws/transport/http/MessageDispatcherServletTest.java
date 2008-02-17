@@ -9,6 +9,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.w3c.dom.Document;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.core.io.ClassPathResource;
@@ -22,7 +24,6 @@ import org.springframework.ws.server.endpoint.adapter.PayloadEndpointAdapter;
 import org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping;
 import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
 import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
-import org.w3c.dom.Document;
 
 public class MessageDispatcherServletTest extends XMLTestCase {
 
@@ -61,7 +62,8 @@ public class MessageDispatcherServletTest extends XMLTestCase {
     public void testDetectWsdlDefinitions() throws Exception {
         servlet.setContextClass(WsdlDefinitionWebApplicationContext.class);
         servlet.init(config);
-        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/definition.wsdl");
+        MockHttpServletRequest request =
+                new MockHttpServletRequest(HttpTransportConstants.METHOD_GET, "/definition.wsdl");
         MockHttpServletResponse response = new MockHttpServletResponse();
         servlet.service(request, response);
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
