@@ -27,7 +27,7 @@ import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
 
 /**
- * Spring {@link SessionAwareMessageListener} that can be used to handle incoming JMS messages.
+ * Spring {@link SessionAwareMessageListener} that can be used to handle incoming {@link Message} service requests.
  * <p/>
  * Requires a {@link WebServiceMessageFactory} which is used to convert the incoming JMS {@link BytesMessage} into a
  * {@link WebServiceMessage}, and passes that to the {@link WebServiceMessageReceiver} {@link
