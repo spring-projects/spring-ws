@@ -111,7 +111,7 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
     private void logUri(WebServiceConnection connection) {
         if (logger.isDebugEnabled()) {
             try {
-                logger.debug("Regestering incoming connection [" + connection.getUri() + "]");
+                logger.debug("Incoming connection [" + connection.getUri() + "]");
             }
             catch (URISyntaxException e) {
                 // ignore
