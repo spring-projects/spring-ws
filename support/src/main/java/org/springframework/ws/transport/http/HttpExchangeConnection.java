@@ -20,6 +20,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -49,6 +51,8 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
 
     private int responseStatusCode = HttpTransportConstants.STATUS_ACCEPTED;
 
+    private boolean chunkedEncoding;
+
     /** Constructs a new exchange connection with the given <code>HttpExchange</code>. */
     protected HttpExchangeConnection(HttpExchange httpExchange) {
         Assert.notNull(httpExchange, "'httpExchange' must not be null");
@@ -60,12 +64,16 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
         return httpExchange;
     }
 
-    public void endpointNotFound() {
-        responseStatusCode = HttpTransportConstants.STATUS_NOT_FOUND;
+    public URI getUri() throws URISyntaxException {
+        return httpExchange.getRequestURI();
     }
 
-    protected void onClose() throws IOException {
-        httpExchange.close();
+    void setChunkedEncoding(boolean chunkedEncoding) {
+        this.chunkedEncoding = chunkedEncoding;
+    }
+
+    public void endpointNotFound() {
+        responseStatusCode = HttpTransportConstants.STATUS_NOT_FOUND;
     }
 
     /*
@@ -106,17 +114,34 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
     }
 
     protected OutputStream getResponseOutputStream() throws IOException {
-        if (responseBuffer == null) {
-            responseBuffer = new ByteArrayOutputStream();
+        if (chunkedEncoding) {
+            httpExchange.sendResponseHeaders(responseStatusCode, 0);
+            return httpExchange.getResponseBody();
         }
-        return responseBuffer;
+        else {
+            if (responseBuffer == null) {
+                responseBuffer = new ByteArrayOutputStream();
+            }
+            return responseBuffer;
+        }
     }
 
     protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-        byte[] buf = responseBuffer.toByteArray();
-        httpExchange.sendResponseHeaders(responseStatusCode, buf.length);
-        OutputStream responseBody = httpExchange.getResponseBody();
-        FileCopyUtils.copy(buf, responseBody);
+        if (!chunkedEncoding) {
+            byte[] buf = responseBuffer.toByteArray();
+            httpExchange.sendResponseHeaders(responseStatusCode, buf.length);
+            OutputStream responseBody = httpExchange.getResponseBody();
+            FileCopyUtils.copy(buf, responseBody);
+        }
+        responseBuffer = null;
+    }
+
+    public void onClose() throws IOException {
+        if (responseStatusCode == HttpTransportConstants.STATUS_ACCEPTED ||
+                responseStatusCode == HttpTransportConstants.STATUS_NOT_FOUND) {
+            httpExchange.sendResponseHeaders(responseStatusCode, -1);
+        }
+        httpExchange.close();
     }
 
     /*

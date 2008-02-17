@@ -1,5 +1,5 @@
 /*
- * Copyright ${YEAR} the original author or authors.
+ * Copyright 2007 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
 
 package org.springframework.ws.transport.http;
 
-import junit.framework.TestCase;
+import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.server.endpoint.MessageEndpoint;
 
-public class HttpServerFactoryBeanTest extends TestCase {
+/** @author Arjen Poutsma */
+public class ResponseEndpoint implements MessageEndpoint {
 
-    private HttpServerFactoryBean bean;
-
-    protected void setUp() throws Exception {
-        bean = new HttpServerFactoryBean();
+    public void invoke(MessageContext messageContext) throws Exception {
+        messageContext.getResponse();
     }
 }

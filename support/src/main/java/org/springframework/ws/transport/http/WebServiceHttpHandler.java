@@ -21,18 +21,34 @@ import java.io.IOException;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.support.SimpleWebServiceMessageReceiverObjectSupport;
 
 /**
+ * {@link HttpHandler} that can be used to handle incoming {@link HttpExchange} service requests. Designed for Sun's JRE
+ * 1.6 HTTP server.
+ * <p/>
+ * Requires a {@link org.springframework.ws.WebServiceMessageFactory} which is used to convert the incoming {@link
+ * HttpExchange} into a {@link org.springframework.ws.WebServiceMessage}, and passes that to the {@link
+ * org.springframework.ws.transport.WebServiceMessageReceiver} {@link #setMessageReceiver(org.springframework.ws.transport.WebServiceMessageReceiver)
+ * registered}.
+ *
  * @author Arjen Poutsma
+ * @see org.springframework.remoting.support.SimpleHttpServerFactoryBean
  * @since 1.5.0
  */
 public class WebServiceHttpHandler extends SimpleWebServiceMessageReceiverObjectSupport implements HttpHandler {
 
+    private boolean chunkedEncoding = false;
+
+    /** Enables chunked encoding on response bodies. Defaults to <code>false</code>. */
+    public void setChunkedEncoding(boolean chunkedEncoding) {
+        this.chunkedEncoding = chunkedEncoding;
+    }
+
     public void handle(HttpExchange httpExchange) throws IOException {
-        if ("POST".equals(httpExchange.getRequestMethod())) {
-            WebServiceConnection connection = new HttpExchangeConnection(httpExchange);
+        if (HttpTransportConstants.METHOD_POST.equals(httpExchange.getRequestMethod())) {
+            HttpExchangeConnection connection = new HttpExchangeConnection(httpExchange);
+            connection.setChunkedEncoding(chunkedEncoding);
             try {
                 handleConnection(connection);
             }
