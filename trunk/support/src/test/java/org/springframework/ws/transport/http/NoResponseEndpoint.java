@@ -16,24 +16,12 @@
 
 package org.springframework.ws.transport.http;
 
-import java.io.IOException;
+import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.server.endpoint.MessageEndpoint;
 
-import com.sun.net.httpserver.HttpServer;
+/** @author Arjen Poutsma */
+public class NoResponseEndpoint implements MessageEndpoint {
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-/**
- * @author Arjen Poutsma
- * @since 1.5.0
- */
-public class Driver {
-
-    public static void main(String[] args) throws IOException {
-        ApplicationContext context =
-                new ClassPathXmlApplicationContext("httpserver-applicationContext.xml", Driver.class);
-        HttpServer server = (HttpServer) context.getBean("httpServer");
-        System.in.read();
+    public void invoke(MessageContext messageContext) throws Exception {
     }
-
 }

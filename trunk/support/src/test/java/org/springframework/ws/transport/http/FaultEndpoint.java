@@ -16,12 +16,16 @@
 
 package org.springframework.ws.transport.http;
 
+import java.util.Locale;
+
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
+import org.springframework.ws.soap.SoapMessage;
 
-/** @author Arjen Poutsma */
-public class NoResponseEndpoint implements MessageEndpoint {
+public class FaultEndpoint implements MessageEndpoint {
 
     public void invoke(MessageContext messageContext) throws Exception {
+        SoapMessage response = (SoapMessage) messageContext.getResponse();
+        response.getSoapBody().addServerOrReceiverFault("Something went wrong", Locale.ENGLISH);
     }
 }

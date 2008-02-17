@@ -658,6 +658,7 @@
                         <link>http://www.extreme.indiana.edu/apis/wsdl4j/</link>
                         <link>http://jakarta.apache.org/commons/httpclient/apidocs/</link>
                         <link>http://ws.apache.org/wss4j/apidocs/</link>
+                        <link>http://java.sun.com/javase/6/docs/jre/api/net/httpserver/spec/</link>
                     </links>
                 </configuration>
             </plugin>
