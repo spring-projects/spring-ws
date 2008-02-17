@@ -231,7 +231,8 @@ public class MessageDispatcherServlet extends FrameworkServlet {
      * @return a definition, or <code>null</code>
      */
     protected WsdlDefinition getWsdlDefinition(HttpServletRequest request) {
-        if ("GET".equals(request.getMethod()) && request.getRequestURI().endsWith(WSDL_SUFFIX_NAME)) {
+        if (HttpTransportConstants.METHOD_GET.equals(request.getMethod()) &&
+                request.getRequestURI().endsWith(WSDL_SUFFIX_NAME)) {
             String fileName = WebUtils.extractFilenameFromUrlPath(request.getRequestURI());
             return (WsdlDefinition) wsdlDefinitions.get(fileName);
         }

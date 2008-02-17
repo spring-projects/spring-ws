@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.TestCase;
 import org.easymock.MockControl;
+
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.ws.FaultAwareWebServiceMessage;
@@ -65,7 +66,7 @@ public class WebServiceMessageReceiverHandlerAdapterTest extends TestCase {
     }
 
     public void testHandleNonPost() throws Exception {
-        httpRequest.setMethod("GET");
+        httpRequest.setMethod(HttpTransportConstants.METHOD_GET);
         replayMockControls();
         WebServiceMessageReceiver endpoint = new WebServiceMessageReceiver() {
 
@@ -79,7 +80,7 @@ public class WebServiceMessageReceiverHandlerAdapterTest extends TestCase {
     }
 
     public void testHandlePostNoResponse() throws Exception {
-        httpRequest.setMethod("POST");
+        httpRequest.setMethod(HttpTransportConstants.METHOD_POST);
         httpRequest.setContent(REQUEST.getBytes("UTF-8"));
         httpRequest.setContentType("text/xml; charset=\"utf-8\"");
         httpRequest.setCharacterEncoding("UTF-8");
@@ -102,7 +103,7 @@ public class WebServiceMessageReceiverHandlerAdapterTest extends TestCase {
     }
 
     public void testHandlePostResponse() throws Exception {
-        httpRequest.setMethod("POST");
+        httpRequest.setMethod(HttpTransportConstants.METHOD_POST);
         httpRequest.setContent(REQUEST.getBytes("UTF-8"));
         httpRequest.setContentType("text/xml; charset=\"utf-8\"");
         httpRequest.setCharacterEncoding("UTF-8");
@@ -129,7 +130,7 @@ public class WebServiceMessageReceiverHandlerAdapterTest extends TestCase {
     }
 
     public void testHandlePostFault() throws Exception {
-        httpRequest.setMethod("POST");
+        httpRequest.setMethod(HttpTransportConstants.METHOD_POST);
         httpRequest.setContent(REQUEST.getBytes("UTF-8"));
         httpRequest.setContentType("text/xml; charset=\"utf-8\"");
         httpRequest.setCharacterEncoding("UTF-8");
@@ -157,7 +158,7 @@ public class WebServiceMessageReceiverHandlerAdapterTest extends TestCase {
     }
 
     public void testHandleNotFound() throws Exception {
-        httpRequest.setMethod("POST");
+        httpRequest.setMethod(HttpTransportConstants.METHOD_POST);
         httpRequest.setContent(REQUEST.getBytes("UTF-8"));
         httpRequest.setContentType("text/xml; charset=\"utf-8\"");
         httpRequest.setCharacterEncoding("UTF-8");

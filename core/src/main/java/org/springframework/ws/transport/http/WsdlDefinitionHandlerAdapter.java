@@ -29,6 +29,9 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerAdapter;
@@ -37,8 +40,6 @@ import org.springframework.ws.wsdl.WsdlDefinition;
 import org.springframework.xml.transform.TransformerObjectSupport;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
 
 /**
  * Adapter to use the <code>WsdlDefinition</code> interface with the generic <code>DispatcherServlet</code>.
@@ -113,7 +114,7 @@ public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport imple
 
     public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        if ("GET".equals(request.getMethod())) {
+        if (HttpTransportConstants.METHOD_GET.equals(request.getMethod())) {
             response.setContentType(CONTENT_TYPE);
             Transformer transformer = createTransformer();
             WsdlDefinition definition = (WsdlDefinition) handler;

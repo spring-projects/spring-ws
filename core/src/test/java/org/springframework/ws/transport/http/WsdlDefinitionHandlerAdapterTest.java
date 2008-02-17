@@ -28,14 +28,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.easymock.MockControl;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.ws.wsdl.WsdlDefinition;
 import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
 import org.springframework.xml.transform.StringSource;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 
 public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
 
@@ -59,7 +60,7 @@ public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
     }
 
     public void testHandleGet() throws Exception {
-        request.setMethod("GET");
+        request.setMethod(HttpTransportConstants.METHOD_GET);
         String definition = "<definition xmlns='http://schemas.xmlsoap.org/wsdl/'/>";
         definitionControl.expectAndReturn(definitionMock.getSource(), new StringSource(definition));
         definitionControl.replay();
@@ -69,7 +70,7 @@ public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
     }
 
     public void testHandleNonGet() throws Exception {
-        request.setMethod("POST");
+        request.setMethod(HttpTransportConstants.METHOD_POST);
         definitionControl.replay();
         adapter.handle(request, response, definitionMock);
         definitionControl.verify();
@@ -79,7 +80,7 @@ public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
 
     public void testTransformLocations() throws Exception {
         adapter.setTransformLocations(true);
-        request.setMethod("GET");
+        request.setMethod(HttpTransportConstants.METHOD_GET);
         request.setScheme("http");
         request.setServerName("example.com");
         request.setServerPort(8080);
@@ -156,7 +157,7 @@ public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
 
     public void testHandleSimpleWsdl11DefinitionWithoutTransformLocations() throws Exception {
         adapter.setTransformLocations(false);
-        request.setMethod("GET");
+        request.setMethod(HttpTransportConstants.METHOD_GET);
         request.setScheme("http");
         request.setServerName("example.com");
         request.setServerPort(8080);
@@ -189,7 +190,7 @@ public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
 
     public void testHandleSimpleWsdl11DefinitionWithTransformLocation() throws Exception {
         adapter.setTransformLocations(true);
-        request.setMethod("GET");
+        request.setMethod(HttpTransportConstants.METHOD_GET);
         request.setScheme("http");
         request.setServerName("example.com");
         request.setServerPort(8080);

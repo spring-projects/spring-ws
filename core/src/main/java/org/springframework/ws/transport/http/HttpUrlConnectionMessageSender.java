@@ -38,8 +38,6 @@ import org.springframework.ws.transport.WebServiceConnection;
  */
 public class HttpUrlConnectionMessageSender extends AbstractHttpWebServiceMessageSender {
 
-    private static final String HTTP_METHOD_POST = "POST";
-
     public WebServiceConnection createConnection(URI uri) throws IOException {
         URL url = uri.toURL();
         URLConnection connection = url.openConnection();
@@ -48,7 +46,7 @@ public class HttpUrlConnectionMessageSender extends AbstractHttpWebServiceMessag
         }
         else {
             HttpURLConnection httpURLConnection = (HttpURLConnection) connection;
-            httpURLConnection.setRequestMethod(HTTP_METHOD_POST);
+            httpURLConnection.setRequestMethod(HttpTransportConstants.METHOD_POST);
             httpURLConnection.setUseCaches(false);
             httpURLConnection.setDoInput(true);
             httpURLConnection.setDoOutput(true);
