@@ -71,7 +71,7 @@ import org.springframework.ws.soap.security.wss4j.callback.UsernameTokenPrincipa
  * <p/>
  * <strong>Securement</strong> actions are: <blockquote><table> <tr><th>Securement action</th><th>Description</th></tr>
  * <tr><td><code>UsernameToken</td></code><td>Adds a username token</td></tr> <tr><td><code>UsernameTokenSignature</td></code><td>Adds
- * a username token and a signature username token secrect key</td></tr> <tr><td><code>Timestamp</td></code><td>Adds a
+ * a username token and a signature username token secret key</td></tr> <tr><td><code>Timestamp</td></code><td>Adds a
  * timestamp</td></tr> <tr><td><code>Encrypt</td></code><td>Encrypts the response</td></tr>
  * <tr><td><code>Signature</td></code><td>Signs the response</td></tr> <tr><td><code>NoSecurity</td></code><td>No action
  * performed</td></tr> </table></blockquote>
