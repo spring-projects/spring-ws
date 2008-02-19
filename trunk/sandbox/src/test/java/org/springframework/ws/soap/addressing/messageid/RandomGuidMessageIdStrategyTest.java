@@ -4,9 +4,9 @@
 
 package org.springframework.ws.soap.addressing.messageid;
 
-public class UidMessageIdStrategyTest extends AbstractMessageIdStrategyTestCase {
+public class RandomGuidMessageIdStrategyTest extends AbstractMessageIdStrategyTestCase {
 
     protected MessageIdStrategy createProvider() {
-        return new UidMessageIdStrategy();
+        return new RandomGuidMessageIdStrategy();
     }
 }

@@ -16,28 +16,30 @@
 
 package org.springframework.ws.soap.addressing.messageid;
 
+import java.net.URI;
 import java.util.UUID;
 
-import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.context.MessageContext;
 
 /**
  * Implementation of the {@link MessageIdStrategy} interface that uses a {@link UUID} to generate a Message Id. The UUID
- * is prefixed by <code>uuid:</code>.
+ * is prefixed by <code>urn:uuid:</code>.
  * <p/>
  * Note that the {@link UUID} class is only available on Java 5 and above.
  *
  * @author Arjen Poutsma
+ * @since 1.5.0
  */
 public class UuidMessageIdStrategy implements MessageIdStrategy {
 
-    public static final String PREFIX = "uuid:";
+    public static final String PREFIX = "urn:uuid:";
 
     /** Returns <code>false</code>. */
-    public boolean isDuplicate(String messageId) {
+    public boolean isDuplicate(URI messageId) {
         return false;
     }
 
-    public String newMessageId(SoapMessage message) {
-        return PREFIX + UUID.randomUUID().toString();
+    public URI newMessageId(MessageContext messageContext) {
+        return URI.create(PREFIX + UUID.randomUUID().toString());
     }
 }

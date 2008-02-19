@@ -4,8 +4,9 @@
 
 package org.springframework.ws.soap.addressing.messageid;
 
+import java.net.URI;
+
 import junit.framework.TestCase;
-import org.springframework.util.StringUtils;
 
 public abstract class AbstractMessageIdStrategyTestCase extends TestCase {
 
@@ -17,11 +18,11 @@ public abstract class AbstractMessageIdStrategyTestCase extends TestCase {
 
     protected abstract MessageIdStrategy createProvider();
 
-    public void testProvider() {
-        String messageId1 = strategy.newMessageId(null);
-        assertTrue("Empty messageId", StringUtils.hasLength(messageId1));
-        String messageId2 = strategy.newMessageId(null);
-        assertTrue("Empty messageId", StringUtils.hasLength(messageId2));
+    public void testStrategy() {
+        URI messageId1 = strategy.newMessageId(null);
+        assertNotNull("Empty messageId", messageId1);
+        URI messageId2 = strategy.newMessageId(null);
+        assertNotNull("Empty messageId", messageId2);
         assertFalse("Equal messageIds", messageId1.equals(messageId2));
     }
 }

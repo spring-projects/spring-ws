@@ -6,6 +6,9 @@ package org.springframework.ws.soap.addressing;
 
 import java.net.URI;
 import java.util.Iterator;
+import java.util.Locale;
+
+import org.easymock.MockControl;
 
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
@@ -16,11 +19,9 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
 
-import org.easymock.MockControl;
-
 public abstract class AbstractWsAddressingInterceptorTestCase extends AbstractWsAddressingTestCase {
 
-    protected WsAddressingInterceptor interceptor;
+    private WsAddressingEndpointInterceptor interceptor;
 
     private MockControl strategyControl;
 
@@ -30,7 +31,7 @@ public abstract class AbstractWsAddressingInterceptorTestCase extends AbstractWs
         strategyControl = MockControl.createControl(MessageIdStrategy.class);
         strategyMock = (MessageIdStrategy) strategyControl.getMock();
         strategyControl.expectAndDefaultReturn(strategyMock.isDuplicate(null), false);
-        interceptor = new WsAddressingInterceptor(getVersion(), strategyMock, new WebServiceMessageSender[0]);
+        interceptor = new WsAddressingEndpointInterceptor(getVersion(), strategyMock, new WebServiceMessageSender[0]);
     }
 
     public void testUnderstands() throws Exception {
@@ -45,7 +46,7 @@ public abstract class AbstractWsAddressingInterceptorTestCase extends AbstractWs
         strategyControl.verify();
     }
 
-    public void testHandleValidRequest() throws Exception {
+    public void testValidRequest() throws Exception {
         SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/valid.xml");
         MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
         strategyControl.replay();
@@ -55,49 +56,80 @@ public abstract class AbstractWsAddressingInterceptorTestCase extends AbstractWs
         strategyControl.verify();
     }
 
-    public void testHandleInvalidRequest() throws Exception {
-        SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/invalid.xml");
+    public void testNoMessageId() throws Exception {
+        SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-no-message-id.xml");
         MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
         strategyControl.replay();
         boolean result = interceptor.handleRequest(context, null);
-        assertFalse("Invalid request handled", result);
+        assertFalse("Request with no MessageID handled", result);
         assertTrue("Message Context has no response", context.hasResponse());
-        SaajSoapMessage expectedResponse = loadSaajMessage(getTestPath() + "/response-invalid.xml");
-        assertXMLEqual("Invalid response for message with invalid MAP", expectedResponse,
+        SaajSoapMessage expectedResponse = loadSaajMessage(getTestPath() + "/response-no-message-id.xml");
+        assertXMLEqual("Invalid response for message with no MessageID", expectedResponse,
                 (SaajSoapMessage) context.getResponse());
         strategyControl.verify();
     }
 
-    public void testHandleAnonymousReplyTo() throws Exception {
-        SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/anonymous.xml");
+    public void testNoReplyTo() throws Exception {
+        SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-no-reply-to.xml");
         MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
-        SaajSoapMessage response = (SaajSoapMessage) context.getResponse();
-        String messageId = "uid:1234";
-        strategyControl.expectAndReturn(strategyMock.newMessageId(response), messageId);
+        URI messageId = new URI("uid:1234");
+        strategyControl.expectAndReturn(strategyMock.newMessageId(context), messageId);
         strategyControl.replay();
         boolean result = interceptor.handleResponse(context, null);
-        assertTrue("Anonymous request not handled", result);
+        assertTrue("Request with no ReplyTo not handled", result);
+        assertTrue("Message Context has no response", context.hasResponse());
         SaajSoapMessage expectedResponse = loadSaajMessage(getTestPath() + "/response-anonymous.xml");
         assertXMLEqual("Invalid response for message with invalid MAP", expectedResponse,
                 (SaajSoapMessage) context.getResponse());
         strategyControl.verify();
     }
 
-    public void testHandleNoneReplyTo() throws Exception {
-        SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/none.xml");
+    public void testAnonymousReplyTo() throws Exception {
+        SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-anonymous.xml");
+        MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
+        URI messageId = new URI("uid:1234");
+        strategyControl.expectAndReturn(strategyMock.newMessageId(context), messageId);
+        strategyControl.replay();
+        boolean result = interceptor.handleResponse(context, null);
+        assertTrue("Request with anonymous ReplyTo not handled", result);
+        SaajSoapMessage expectedResponse = loadSaajMessage(getTestPath() + "/response-anonymous.xml");
+        assertXMLEqual("Invalid response for message with invalid MAP", expectedResponse,
+                (SaajSoapMessage) context.getResponse());
+        strategyControl.verify();
+    }
+
+    public void testNoneReplyTo() throws Exception {
+        SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-none.xml");
         MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
         strategyControl.replay();
         boolean result = interceptor.handleResponse(context, null);
         assertFalse("None request handled", result);
+        assertFalse("Message context has response", context.hasResponse());
         strategyControl.verify();
     }
 
-    public void testHandleOutOfBandReplyTo() throws Exception {
+    public void testFaultTo() throws Exception {
+        SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-fault-to.xml");
+        MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
+        SaajSoapMessage response = (SaajSoapMessage) context.getResponse();
+        response.getSoapBody().addServerOrReceiverFault("Error", Locale.ENGLISH);
+        URI messageId = new URI("uid:1234");
+        strategyControl.expectAndReturn(strategyMock.newMessageId(context), messageId);
+        strategyControl.replay();
+        boolean result = interceptor.handleFault(context, null);
+        assertTrue("Request with anonymous FaultTo not handled", result);
+        SaajSoapMessage expectedResponse = loadSaajMessage(getTestPath() + "/response-fault-to.xml");
+        assertXMLEqual("Invalid response for message with invalid MAP", expectedResponse,
+                (SaajSoapMessage) context.getResponse());
+        strategyControl.verify();
+    }
+
+    public void testOutOfBandReplyTo() throws Exception {
         MockControl senderControl = MockControl.createControl(WebServiceMessageSender.class);
         WebServiceMessageSender senderMock = (WebServiceMessageSender) senderControl.getMock();
 
-        interceptor =
-                new WsAddressingInterceptor(getVersion(), strategyMock, new WebServiceMessageSender[]{senderMock});
+        interceptor = new WsAddressingEndpointInterceptor(getVersion(), strategyMock,
+                new WebServiceMessageSender[]{senderMock});
 
         MockControl connectionControl = MockControl.createControl(WebServiceConnection.class);
         WebServiceConnection connectionMock = (WebServiceConnection) connectionControl.getMock();
@@ -106,8 +138,8 @@ public abstract class AbstractWsAddressingInterceptorTestCase extends AbstractWs
         MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
         SaajSoapMessage response = (SaajSoapMessage) context.getResponse();
 
-        String messageId = "uid:1234";
-        strategyControl.expectAndReturn(strategyMock.newMessageId(response), messageId);
+        URI messageId = new URI("uid:1234");
+        strategyControl.expectAndReturn(strategyMock.newMessageId(context), messageId);
 
         URI uri = new URI("http://example.com/business/client1");
         senderControl.expectAndReturn(senderMock.supports(uri), true);
@@ -121,6 +153,7 @@ public abstract class AbstractWsAddressingInterceptorTestCase extends AbstractWs
 
         boolean result = interceptor.handleResponse(context, null);
         assertFalse("Out of Band request handled", result);
+        assertFalse("Message context has response", context.hasResponse());
 
         strategyControl.verify();
         senderControl.verify();

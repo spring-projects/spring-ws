@@ -16,10 +16,9 @@
 
 package org.springframework.ws.soap.addressing;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
-
-import org.springframework.util.StringUtils;
 
 /**
  * Represents a set of Message Addressing Properties, as defined in the WS-Addressing specification.
@@ -28,11 +27,11 @@ import org.springframework.util.StringUtils;
  *
  * @author Arjen Poutsma
  * @see <a href="http://www.w3.org/TR/ws-addr-core/#msgaddrprops">Message Addressing Properties</a>
- * @since 1.1.0
+ * @since 1.5.0
  */
 public final class MessageAddressingProperties {
 
-    private final String to;
+    private final URI to;
 
     private final EndpointReference from;
 
@@ -40,11 +39,11 @@ public final class MessageAddressingProperties {
 
     private final EndpointReference faultTo;
 
-    private final String action;
+    private final URI action;
 
-    private final String messageId;
+    private final URI messageId;
 
-    private final String relatesTo;
+    private final URI relatesTo;
 
     private final List referenceProperties;
 
@@ -60,12 +59,12 @@ public final class MessageAddressingProperties {
      * @param action    the value of the action property
      * @param messageId the value of the message id property
      */
-    public MessageAddressingProperties(String to,
+    public MessageAddressingProperties(URI to,
                                        EndpointReference from,
                                        EndpointReference replyTo,
                                        EndpointReference faultTo,
-                                       String action,
-                                       String messageId) {
+                                       URI action,
+                                       URI messageId) {
         this.to = to;
         this.from = from;
         this.replyTo = replyTo;
@@ -77,7 +76,7 @@ public final class MessageAddressingProperties {
         this.referenceParameters = Collections.EMPTY_LIST;
     }
 
-    private MessageAddressingProperties(EndpointReference epr, String action, String messageId, String relatesTo) {
+    private MessageAddressingProperties(EndpointReference epr, URI action, URI messageId, URI relatesTo) {
         this.to = epr.getAddress();
         this.action = action;
         this.messageId = messageId;
@@ -90,7 +89,7 @@ public final class MessageAddressingProperties {
     }
 
     /** Returns the value of the destination property. */
-    public String getTo() {
+    public URI getTo() {
         return to;
     }
 
@@ -104,23 +103,23 @@ public final class MessageAddressingProperties {
         return replyTo;
     }
 
-    /** Returns the value of the fault endpoint property. Defaults to {@link #getReplyTo()} if no fault endpoint is set. */
+    /** Returns the value of the fault endpoint property. */
     public EndpointReference getFaultTo() {
-        return faultTo != null ? faultTo : getReplyTo();
+        return faultTo;
     }
 
     /** Returns the value of the action property. */
-    public String getAction() {
+    public URI getAction() {
         return action;
     }
 
     /** Returns the value of the message id property. */
-    public String getMessageId() {
+    public URI getMessageId() {
         return messageId;
     }
 
     /** Returns the value of the relationship property. */
-    public String getRelatesTo() {
+    public URI getRelatesTo() {
         return relatesTo;
     }
 
@@ -135,18 +134,26 @@ public final class MessageAddressingProperties {
     }
 
     /**
-     * Indicates whether is {@link MessageAddressingProperties} is valid, i.e. whether all required elements are listed.
-     * Returns <code>true</code> if the destination and action properties have been set, and if a reply or fault
-     * endpoint has been set, also checks for the message id.
+     * Indicates whether is {@link MessageAddressingProperties} is valid, i.e. whether all required elements are
+     * listed.
+     * <p/>
+     * Returns <code>true</code> if the to and action properties have been set, and - if a reply or fault endpoint has
+     * been set - also checks for the message id.
      */
     public boolean isValid() {
-        return StringUtils.hasLength(to) && StringUtils.hasLength(action) &&
-                !(replyTo != null && !StringUtils.hasLength(messageId)) &&
-                !(faultTo != null && !StringUtils.hasLength(messageId));
-
+        if (to == null) {
+            return false;
+        }
+        if (action == null) {
+            return false;
+        }
+        if (replyTo != null || faultTo != null) {
+            return messageId != null;
+        }
+        return true;
     }
 
-    public MessageAddressingProperties getResponseProperties(EndpointReference epr, String action, String messageId) {
+    public MessageAddressingProperties getReplyProperties(EndpointReference epr, URI action, URI messageId) {
         return new MessageAddressingProperties(epr, action, messageId, this.messageId);
     }
 
@@ -156,8 +163,16 @@ public final class MessageAddressingProperties {
      * checks for the message id.
      */
     public boolean hasRequiredProperties() {
-        return StringUtils.hasLength(to) && StringUtils.hasLength(action) &&
-                !(replyTo != null && !StringUtils.hasLength(messageId)) &&
-                !(faultTo != null && !StringUtils.hasLength(messageId));
+        // TODO: make sure this is handled according to the spec
+        if (to == null) {
+            return false;
+        }
+        if (action == null) {
+            return false;
+        }
+        if (replyTo != null || faultTo != null) {
+            return messageId != null;
+        }
+        return true;
     }
 }

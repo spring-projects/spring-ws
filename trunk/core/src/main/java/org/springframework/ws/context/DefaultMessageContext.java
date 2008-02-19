@@ -73,6 +73,10 @@ public class DefaultMessageContext extends AbstractMessageContext {
         this.response = response;
     }
 
+    public void clearResponse() {
+        response = null;
+    }
+
     public void readResponse(InputStream inputStream) throws IOException {
         checkForResponse();
         response = messageFactory.createWebServiceMessage(inputStream);
