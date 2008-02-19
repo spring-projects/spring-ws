@@ -16,6 +16,8 @@
 
 package org.springframework.ws.soap.addressing;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -26,6 +28,10 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.SoapFault;
@@ -39,16 +45,13 @@ import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.TransformerObjectSupport;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 /**
  * Abstract base class for {@link WsAddressingVersion} implementations. Uses {@link XPathExpression}s to retrieve
  * addressing information.
  *
  * @author Arjen Poutsma
- * @since 1.1.0
+ * @since 1.5.0
  */
 public abstract class AbstractWsAddressingVersion extends TransformerObjectSupport implements WsAddressingVersion {
 
@@ -111,13 +114,32 @@ public abstract class AbstractWsAddressingVersion extends TransformerObjectSuppo
 
     public MessageAddressingProperties getMessageAddressingProperties(SoapMessage message) {
         Element headerElement = getSoapHeaderElement(message);
-        String to = toExpression.evaluateAsString(headerElement);
+        URI to = getUri(headerElement, toExpression);
         EndpointReference from = getEndpointReference(fromExpression.evaluateAsNode(headerElement));
         EndpointReference replyTo = getEndpointReference(replyToExpression.evaluateAsNode(headerElement));
+        if (replyTo == null && getAnonymous() != null) {
+            replyTo = getDefaultReplyTo(from);
+        }
         EndpointReference faultTo = getEndpointReference(faultToExpression.evaluateAsNode(headerElement));
-        String action = actionExpression.evaluateAsString(headerElement);
-        String messageId = messageIdExpression.evaluateAsString(headerElement);
+        if (faultTo == null) {
+            faultTo = replyTo;
+        }
+        URI action = getUri(headerElement, actionExpression);
+        URI messageId = getUri(headerElement, messageIdExpression);
         return new MessageAddressingProperties(to, from, replyTo, faultTo, action, messageId);
+    }
+
+    private URI getUri(Node node, XPathExpression expression) {
+        String messageId = expression.evaluateAsString(node);
+        if (!StringUtils.hasLength(messageId)) {
+            return null;
+        }
+        try {
+            return new URI(messageId);
+        }
+        catch (URISyntaxException e) {
+            return null;
+        }
     }
 
     private Element getSoapHeaderElement(SoapMessage message) {
@@ -144,8 +166,8 @@ public abstract class AbstractWsAddressingVersion extends TransformerObjectSuppo
         if (node == null) {
             return null;
         }
-        String address = addressExpression.evaluateAsString(node);
-        if (!StringUtils.hasLength(address)) {
+        URI address = getUri(node, addressExpression);
+        if (address == null) {
             return null;
         }
         List referenceProperties = referencePropertiesExpression != null ?
@@ -162,11 +184,11 @@ public abstract class AbstractWsAddressingVersion extends TransformerObjectSuppo
     public final void addAddressingHeaders(SoapMessage message, MessageAddressingProperties map) {
         SoapHeader header = message.getSoapHeader();
         SoapHeaderElement messageId = header.addHeaderElement(getMessageIdName());
-        messageId.setText(map.getMessageId());
+        messageId.setText(map.getMessageId().toString());
         SoapHeaderElement relatesTo = header.addHeaderElement(getRelatesToName());
-        relatesTo.setText(map.getRelatesTo());
+        relatesTo.setText(map.getRelatesTo().toString());
         SoapHeaderElement to = header.addHeaderElement(getToName());
-        to.setText(map.getTo());
+        to.setText(map.getTo().toString());
         to.setMustUnderstand(true);
         try {
             Transformer transformer = createTransformer();
@@ -215,12 +237,12 @@ public abstract class AbstractWsAddressingVersion extends TransformerObjectSuppo
     */
 
     public final boolean hasAnonymousAddress(EndpointReference epr) {
-        String anonymous = getAnonymousUri();
+        URI anonymous = getAnonymous();
         return anonymous != null && anonymous.equals(epr.getAddress());
     }
 
     public final boolean hasNoneAddress(EndpointReference epr) {
-        String none = getNoneUri();
+        URI none = getNone();
         return none != null && none.equals(epr.getAddress());
     }
 
@@ -296,15 +318,18 @@ public abstract class AbstractWsAddressingVersion extends TransformerObjectSuppo
         return QNameUtils.createQName(getNamespaceUri(), "Address", getNamespacePrefix());
     }
 
+    /** Returns the default ReplyTo EPR. Can be based on the From EPR, or the anonymous URI. */
+    protected abstract EndpointReference getDefaultReplyTo(EndpointReference from);
+
     /*
      * Address URIs
      */
 
     /** Returns the anonymous URI. */
-    protected abstract String getAnonymousUri();
+    protected abstract URI getAnonymous();
 
     /** Returns the none URI, or <code>null</code> if the spec does not define it. */
-    protected abstract String getNoneUri();
+    protected abstract URI getNone();
 
     /*
      * Faults
@@ -321,4 +346,8 @@ public abstract class AbstractWsAddressingVersion extends TransformerObjectSuppo
 
     /** Returns the reason of the fault that indicates that a header is invalid. */
     protected abstract String getInvalidAddressingHeaderFaultReason();
+
+    public String toString() {
+        return getNamespaceUri();
+    }
 }

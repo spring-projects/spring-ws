@@ -19,10 +19,10 @@ package org.springframework.ws.soap.addressing;
 import org.springframework.ws.WebServiceException;
 
 /**
- * Exception thrown in cases on WS-Addressing errors.
+ * Exception thrown in case on WS-Addressing errors.
  *
  * @author Arjen Poutsma
- * @since 1.1.0
+ * @since 1.5.0
  */
 public class WsAddressingException extends WebServiceException {
 

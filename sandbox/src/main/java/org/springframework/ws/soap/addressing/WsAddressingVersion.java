@@ -24,7 +24,7 @@ import org.springframework.ws.soap.SoapMessage;
  * Defines the contract for a specific version of the WS-Addressing specification.
  *
  * @author Arjen Poutsma
- * @since 1.1.0
+ * @since 1.5.0
  */
 public interface WsAddressingVersion {
 

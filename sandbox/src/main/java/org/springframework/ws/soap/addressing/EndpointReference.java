@@ -16,24 +16,24 @@
 
 package org.springframework.ws.soap.addressing;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.util.Assert;
 import org.w3c.dom.Node;
 
+import org.springframework.util.Assert;
+
 /**
- * Represents a set of Message Addressing Properties, as defined in the WS-Addressing specification.
- * <p/>
- * In earlier versions of the spec, these properties were called Message Information Headers.
+ * Represents an Endpoint Reference, as defined in the WS-Addressing specification.
  *
  * @author Arjen Poutsma
  * @see <a href="http://www.w3.org/TR/ws-addr-core/#eprs">Endpoint References</a>
- * @since 1.1.0
+ * @since 1.5.0
  */
 public final class EndpointReference {
 
-    private final String address;
+    private final URI address;
 
     private final List referenceProperties;
 
@@ -45,7 +45,7 @@ public final class EndpointReference {
      *
      * @param address the endpoint address
      */
-    public EndpointReference(String address) {
+    public EndpointReference(URI address) {
         Assert.notNull(address, "address must not be null");
         this.address = address;
         this.referenceParameters = Collections.EMPTY_LIST;
@@ -60,7 +60,7 @@ public final class EndpointReference {
      * @param referenceProperties the reference properties, as a list of {@link Node}
      * @param referenceProperties the reference parameters, as a list of {@link Node}
      */
-    public EndpointReference(String address, List referenceProperties, List referenceParameters) {
+    public EndpointReference(URI address, List referenceProperties, List referenceParameters) {
         Assert.notNull(address, "address must not be null");
         Assert.notNull(referenceProperties, "referenceProperties must not be null");
         Assert.notNull(referenceParameters, "referenceParameters must not be null");
@@ -70,7 +70,7 @@ public final class EndpointReference {
     }
 
     /** Returns the address of the endpoint. */
-    public String getAddress() {
+    public URI getAddress() {
         return address;
     }
 
@@ -100,6 +100,6 @@ public final class EndpointReference {
     }
 
     public String toString() {
-        return "EndpointReference[" + address + ']';
+        return address.toString();
     }
 }

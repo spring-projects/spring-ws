@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap.addressing;
 
+import java.net.URI;
 import javax.xml.namespace.QName;
 
 import org.springframework.xml.namespace.QNameUtils;
@@ -26,7 +27,7 @@ import org.springframework.xml.namespace.QNameUtils;
  *
  * @author Arjen Poutsma
  * @see <a href="http://www.w3.org/TR/2006/REC-ws-addr-core-20060509">Web Services Addressing, August 2004</a>
- * @since 1.1.0
+ * @since 1.5.0
  */
 
 public class WsAddressing200605 extends AbstractWsAddressingVersion {
@@ -41,12 +42,16 @@ public class WsAddressing200605 extends AbstractWsAddressingVersion {
         return null;
     }
 
-    protected final String getAnonymousUri() {
-        return NAMESPACE_URI + "/anonymous";
+    protected EndpointReference getDefaultReplyTo(EndpointReference from) {
+        return new EndpointReference(getAnonymous());
     }
 
-    protected final String getNoneUri() {
-        return NAMESPACE_URI + "/none";
+    protected final URI getAnonymous() {
+        return URI.create(NAMESPACE_URI + "/anonymous");
+    }
+
+    protected final URI getNone() {
+        return URI.create(NAMESPACE_URI + "/none");
     }
 
     protected final QName getMessageAddressingHeaderRequiredFaultSubcode() {

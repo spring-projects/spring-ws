@@ -66,6 +66,9 @@ public interface MessageContext {
      */
     void setResponse(WebServiceMessage response);
 
+    /** Removes the response message, if any. */
+    void clearResponse();
+
     /**
      * Reads a response message from the given input stream.
      *

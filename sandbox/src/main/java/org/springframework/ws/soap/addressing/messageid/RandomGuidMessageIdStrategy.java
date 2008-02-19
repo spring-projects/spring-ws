@@ -21,27 +21,32 @@ import java.net.URI;
 import org.springframework.ws.context.MessageContext;
 
 /**
- * Strategy interface that encapsulates the creation and validation of WS-Addressing <code>MessageID</code>s.
+ * Implementation of the {@link MessageIdStrategy} interface that uses a {@link RandomGuid} to generate a Message Id.
+ * The GUID is prefixed by <code>urn:guid:</code>.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
  */
-public interface MessageIdStrategy {
+public class RandomGuidMessageIdStrategy implements MessageIdStrategy {
+
+    public static final String PREFIX = "urn:guid:";
+
+    private boolean secure;
 
     /**
-     * Indicates whether the given <code>MessageID</code> value is a duplicate or not
-     *
-     * @param messageId the message id
-     * @return <code>true</code> if a duplicate; <code>false</code> otherwise
+     * Sets whether or not the generated random numbers should be <i>secure</i>. If set to <code>true</code>, generated
+     * GUIDs are cryptographically strong.
      */
-    boolean isDuplicate(URI messageId);
+    public void setSecure(boolean secure) {
+        this.secure = secure;
+    }
 
-    /**
-     * Returns a new WS-Addressing <code>MessageID</code> for the {@link MessageContext#getResponse() response} in the
-     * given message context.
-     *
-     * @return the new message id
-     */
-    URI newMessageId(MessageContext messageContext);
+    /** Returns <code>false</code>. */
+    public boolean isDuplicate(URI messageId) {
+        return false;
+    }
 
+    public URI newMessageId(MessageContext messageContext) {
+        return URI.create(PREFIX + new RandomGuid(secure).toString());
+    }
 }

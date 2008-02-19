@@ -14,7 +14,7 @@ public class WsAddressingInterceptor200408Test extends AbstractWsAddressingInter
         return "200408";
     }
 
-    public void testHandleNoneReplyTo() throws Exception {
+    public void testNoneReplyTo() throws Exception {
         // This version of the spec does not have none addresses
     }
 }

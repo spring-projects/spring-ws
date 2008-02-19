@@ -11,6 +11,6 @@ public class WsAddressingInterceptor200605Test extends AbstractWsAddressingInter
     }
 
     protected String getTestPath() {
-        return "200508";
+        return "200605";
     }
 }
