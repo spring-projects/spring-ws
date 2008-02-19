@@ -16,6 +16,7 @@
 
 package org.springframework.ws.transport.context;
 
+import org.springframework.util.Assert;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
@@ -30,6 +31,7 @@ public class DefaultTransportContext implements TransportContext {
 
     /** Creates a new <code>DefaultTransportContext</code> that exposes the given connection. */
     public DefaultTransportContext(WebServiceConnection connection) {
+        Assert.notNull(connection, "'connection' must not be null");
         this.connection = connection;
     }
 
@@ -37,4 +39,7 @@ public class DefaultTransportContext implements TransportContext {
         return connection;
     }
 
+    public String toString() {
+        return connection.toString();
+    }
 }

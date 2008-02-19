@@ -25,7 +25,7 @@ package org.springframework.ws.transport.context;
  */
 public abstract class TransportContextHolder {
 
-    private static final ThreadLocal transportContextHolder = new ThreadLocal();
+    private static final ThreadLocal transportContextHolder = new TransportThreadLocal();
 
     /**
      * Associate the given <code>TransportContext</code> with the current thread.
@@ -43,5 +43,12 @@ public abstract class TransportContextHolder {
      */
     public static TransportContext getTransportContext() {
         return (TransportContext) transportContextHolder.get();
+    }
+
+    private static class TransportThreadLocal extends ThreadLocal {
+
+        public String toString() {
+            return "Transport State";
+        }
     }
 }
