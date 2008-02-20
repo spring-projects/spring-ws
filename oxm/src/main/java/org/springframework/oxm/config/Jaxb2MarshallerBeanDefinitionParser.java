@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
  */
 class Jaxb2MarshallerBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
-    public static final String JAXB2_MARSHALLER_CLASS_NAME = "org.springframework.oxm.jaxb.Jaxb2Marshaller";
+    private static final String JAXB2_MARSHALLER_CLASS_NAME = "org.springframework.oxm.jaxb.Jaxb2Marshaller";
 
     protected String getBeanClassName(Element element) {
         return JAXB2_MARSHALLER_CLASS_NAME;
