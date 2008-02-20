@@ -16,7 +16,7 @@
 
 package org.springframework.ws.soap.server.endpoint;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Properties;
 
 import org.springframework.util.CollectionUtils;
@@ -54,8 +54,8 @@ public class SoapFaultMappingExceptionResolver extends AbstractSoapFaultDefiniti
         if (!CollectionUtils.isEmpty(exceptionMappings)) {
             String definitionText = null;
             int deepest = Integer.MAX_VALUE;
-            for (Enumeration names = exceptionMappings.propertyNames(); names.hasMoreElements();) {
-                String exceptionMapping = (String) names.nextElement();
+            for (Iterator iterator = exceptionMappings.keySet().iterator(); iterator.hasNext();) {
+                String exceptionMapping = (String) iterator.next();
                 int depth = getDepth(exceptionMapping, ex);
                 if (depth >= 0 && depth < deepest) {
                     deepest = depth;
