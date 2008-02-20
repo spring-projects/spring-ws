@@ -19,8 +19,10 @@ import org.w3c.dom.Element;
  */
 class XmlBeansMarshallerBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
-    protected Class getBeanClass(Element element) {
-        return XmlBeansMarshaller.class;
+    public static final String XML_BEANS_MARSHALLER_CLASS_NAME = "org.springframework.oxm.xmlbeans.XmlBeansMarshaller";
+
+    protected String getBeanClassName(Element element) {
+        return XML_BEANS_MARSHALLER_CLASS_NAME;
     }
 
     protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder beanDefinitionBuilder) {

@@ -35,6 +35,8 @@ class MarshallingEndpointsBeanDefinitionParser extends AbstractSimpleBeanDefinit
     private static final String GENERIC_MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME =
             "org.springframework.ws.server.endpoint.adapter.GenericMarshallingMethodEndpointAdapter";
 
+    private static final boolean genericAdapterPresent = ClassUtils.isPresent(GENERIC_MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME);    
+
     private static final String MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME =
             "org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter";
 
@@ -43,14 +45,8 @@ class MarshallingEndpointsBeanDefinitionParser extends AbstractSimpleBeanDefinit
     }
 
     protected String getBeanClassName(Element element) {
-        if (JdkVersion.isAtLeastJava15()) {
-            try {
-                ClassUtils.forName(GENERIC_MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME);
+        if (JdkVersion.isAtLeastJava15() && genericAdapterPresent) {
                 return GENERIC_MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME;
-            }
-            catch (ClassNotFoundException e) {
-                // ignore, fall through;
-            }
         }
         return MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME;
     }

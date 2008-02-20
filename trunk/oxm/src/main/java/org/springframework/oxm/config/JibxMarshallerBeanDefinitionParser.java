@@ -16,7 +16,10 @@ import org.w3c.dom.Element;
  */
 class JibxMarshallerBeanDefinitionParser extends AbstractSimpleBeanDefinitionParser {
 
-    protected Class getBeanClass(Element element) {
-        return JibxMarshaller.class;
+    private static final String JIBX_MARSHALLER_CLASS_NAME = "org.springframework.oxm.jibx.JibxMarshaller";
+
+    protected String getParentName(Element element) {
+        return JIBX_MARSHALLER_CLASS_NAME;
     }
+
 }

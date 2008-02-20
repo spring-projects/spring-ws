@@ -16,7 +16,9 @@ import org.w3c.dom.Element;
  */
 class Jaxb1MarshallerBeanDefinitionParser extends AbstractSimpleBeanDefinitionParser {
 
-    protected Class getBeanClass(Element element) {
-        return Jaxb1Marshaller.class;
+    public static final String JAXB1_MARSHALLER_CLASS_NAME = "org.springframework.oxm.jaxb.Jaxb1Marshaller";
+
+    protected String getBeanClassName(Element element) {
+        return JAXB1_MARSHALLER_CLASS_NAME;
     }
 }
