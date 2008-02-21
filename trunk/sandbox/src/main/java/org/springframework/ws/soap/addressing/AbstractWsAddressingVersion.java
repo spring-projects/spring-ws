@@ -190,6 +190,10 @@ public abstract class AbstractWsAddressingVersion extends TransformerObjectSuppo
         SoapHeaderElement to = header.addHeaderElement(getToName());
         to.setText(map.getTo().toString());
         to.setMustUnderstand(true);
+        if (map.getAction() != null) {
+            SoapHeaderElement action = header.addHeaderElement(getActionName());
+            action.setText(map.getAction().toString());
+        }
         try {
             Transformer transformer = createTransformer();
             for (Iterator iterator = map.getReferenceParameters().iterator(); iterator.hasNext();) {

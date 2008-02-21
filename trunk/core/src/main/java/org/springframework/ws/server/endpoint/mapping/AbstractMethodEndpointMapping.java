@@ -112,7 +112,7 @@ public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapp
         Assert.notNull(endpoint, "'endpoint' must not be null");
         Method[] methods = getEndpointClass(endpoint).getMethods();
         for (int i = 0; i < methods.length; i++) {
-            if (JdkVersion.getMajorJavaVersion() >= JdkVersion.JAVA_15 && methods[i].isSynthetic() ||
+            if (JdkVersion.isAtLeastJava15() && methods[i].isSynthetic() ||
                     methods[i].getDeclaringClass().equals(Object.class)) {
                 continue;
             }
