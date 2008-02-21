@@ -4,6 +4,7 @@
         <wsa:MessageID>uid:1234</wsa:MessageID>
         <wsa:RelatesTo>uuid:aaaabbbb-cccc-dddd-eeee-ffffffffffff</wsa:RelatesTo>
         <wsa:To env:mustUnderstand="true">http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:To>
+        <wsa:Action>urn:faultAction</wsa:Action>
     </env:Header>
     <env:Body>
         <env:Fault>

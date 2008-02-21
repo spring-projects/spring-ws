@@ -4,7 +4,7 @@
 
 package org.springframework.ws.soap.addressing;
 
-public class WsAddressingInterceptor200605Test extends AbstractWsAddressingInterceptorTestCase {
+public class AddressingInterceptor200605Test extends AbstractAddressingInterceptorTestCase {
 
     protected WsAddressingVersion getVersion() {
         return new WsAddressing200605();

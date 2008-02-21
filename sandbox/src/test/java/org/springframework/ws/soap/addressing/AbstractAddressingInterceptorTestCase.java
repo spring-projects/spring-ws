@@ -19,9 +19,9 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
 
-public abstract class AbstractWsAddressingInterceptorTestCase extends AbstractWsAddressingTestCase {
+public abstract class AbstractAddressingInterceptorTestCase extends AbstractWsAddressingTestCase {
 
-    private WsAddressingEndpointInterceptor interceptor;
+    private AddressingEndpointInterceptor interceptor;
 
     private MockControl strategyControl;
 
@@ -31,7 +31,10 @@ public abstract class AbstractWsAddressingInterceptorTestCase extends AbstractWs
         strategyControl = MockControl.createControl(MessageIdStrategy.class);
         strategyMock = (MessageIdStrategy) strategyControl.getMock();
         strategyControl.expectAndDefaultReturn(strategyMock.isDuplicate(null), false);
-        interceptor = new WsAddressingEndpointInterceptor(getVersion(), strategyMock, new WebServiceMessageSender[0]);
+        URI replyAction = new URI("urn:replyAction");
+        URI faultAction = new URI("urn:faultAction");
+        interceptor = new AddressingEndpointInterceptor(getVersion(), strategyMock, new WebServiceMessageSender[0],
+                replyAction, faultAction);
     }
 
     public void testUnderstands() throws Exception {
@@ -128,8 +131,10 @@ public abstract class AbstractWsAddressingInterceptorTestCase extends AbstractWs
         MockControl senderControl = MockControl.createControl(WebServiceMessageSender.class);
         WebServiceMessageSender senderMock = (WebServiceMessageSender) senderControl.getMock();
 
-        interceptor = new WsAddressingEndpointInterceptor(getVersion(), strategyMock,
-                new WebServiceMessageSender[]{senderMock});
+        URI replyAction = new URI("urn:replyAction");
+        URI faultAction = new URI("urn:replyAction");
+        interceptor = new AddressingEndpointInterceptor(getVersion(), strategyMock,
+                new WebServiceMessageSender[]{senderMock}, replyAction, faultAction);
 
         MockControl connectionControl = MockControl.createControl(WebServiceConnection.class);
         WebServiceConnection connectionMock = (WebServiceConnection) connectionControl.getMock();
