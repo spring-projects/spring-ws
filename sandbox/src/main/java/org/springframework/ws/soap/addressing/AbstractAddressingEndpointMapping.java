@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap.addressing;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.Iterator;
 import javax.xml.transform.TransformerException;
@@ -44,7 +45,7 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * @author Arjen Poutsma
  * @since 1.5.0
  */
-public abstract class AbstractWsAddressingMapping extends TransformerObjectSupport
+public abstract class AbstractAddressingEndpointMapping extends TransformerObjectSupport
         implements SoapEndpointMapping, InitializingBean {
 
     private String[] actorsOrRoles;
@@ -57,16 +58,12 @@ public abstract class AbstractWsAddressingMapping extends TransformerObjectSuppo
 
     private WsAddressingVersion[] versions;
 
-    private EndpointInterceptor[] preInterceptors;
+    private EndpointInterceptor[] preInterceptors = new EndpointInterceptor[0];
 
-    private EndpointInterceptor[] postInterceptors;
-
-    private int wsAddressingInterceptorIdx = -1;
-
-    private EndpointInterceptor[] allInterceptors;
+    private EndpointInterceptor[] postInterceptors = new EndpointInterceptor[0];
 
     /** Protected constructor. Initializes the default settings. */
-    protected AbstractWsAddressingMapping() {
+    protected AbstractAddressingEndpointMapping() {
         initDefaultStrategies();
     }
 
@@ -104,6 +101,7 @@ public abstract class AbstractWsAddressingMapping extends TransformerObjectSuppo
      * <code>XwsSecurityInterceptor</code>.
      */
     public final void setPreInterceptors(EndpointInterceptor[] preInterceptors) {
+        Assert.notNull(preInterceptors, "'preInterceptors' must not be null");
         this.preInterceptors = preInterceptors;
     }
 
@@ -112,6 +110,7 @@ public abstract class AbstractWsAddressingMapping extends TransformerObjectSuppo
      * <code>PayloadLoggingInterceptor</code>.
      */
     public final void setPostInterceptors(EndpointInterceptor[] postInterceptors) {
+        Assert.notNull(postInterceptors, "'postInterceptors' must not be null");
         this.postInterceptors = postInterceptors;
     }
 
@@ -141,7 +140,7 @@ public abstract class AbstractWsAddressingMapping extends TransformerObjectSuppo
 
     public void afterPropertiesSet() throws Exception {
         if (logger.isInfoEnabled()) {
-            logger.info("Supporting WS-Addressing " + Arrays.asList(versions));
+            logger.info("Supporting versions " + Arrays.asList(versions));
         }
     }
 
@@ -158,11 +157,24 @@ public abstract class AbstractWsAddressingMapping extends TransformerObjectSuppo
                 if (endpoint == null) {
                     return null;
                 }
-                return new SoapEndpointInvocationChain(endpoint, getAllEndpointInterceptors(versions[i]), actorsOrRoles,
-                        isUltimateReceiver);
+                return getEndpointInvocationChain(endpoint, versions[i]);
             }
         }
         return null;
+    }
+
+    /** Creates a {@link SoapEndpointInvocationChain} based on the given endpoint and {@link WsAddressingVersion}. */
+    private EndpointInvocationChain getEndpointInvocationChain(Object endpoint, WsAddressingVersion version) {
+        URI responseAction = getResponseAction(endpoint);
+        URI faultAction = getFaultAction(endpoint);
+        EndpointInterceptor[] interceptors =
+                new EndpointInterceptor[preInterceptors.length + postInterceptors.length + 1];
+        System.arraycopy(preInterceptors, 0, interceptors, 0, preInterceptors.length);
+        AddressingEndpointInterceptor interceptor = new AddressingEndpointInterceptor(version, messageIdStrategy,
+                messageSenders, responseAction, faultAction);
+        interceptors[preInterceptors.length] = interceptor;
+        System.arraycopy(postInterceptors, 0, interceptors, preInterceptors.length + 1, postInterceptors.length);
+        return new SoapEndpointInvocationChain(endpoint, interceptors, actorsOrRoles, isUltimateReceiver);
     }
 
     private boolean supports(WsAddressingVersion version, SoapMessage request) {
@@ -178,24 +190,6 @@ public abstract class AbstractWsAddressingMapping extends TransformerObjectSuppo
         return false;
     }
 
-    private EndpointInterceptor[] getAllEndpointInterceptors(WsAddressingVersion version) {
-        // lazy init
-        if (allInterceptors == null) {
-            if (preInterceptors == null) {
-                preInterceptors = new EndpointInterceptor[0];
-            }
-            if (postInterceptors == null) {
-                postInterceptors = new EndpointInterceptor[0];
-            }
-            allInterceptors = new EndpointInterceptor[preInterceptors.length + postInterceptors.length + 1];
-            System.arraycopy(preInterceptors, 0, allInterceptors, 0, preInterceptors.length);
-            System.arraycopy(postInterceptors, 0, allInterceptors, preInterceptors.length + 1, postInterceptors.length);
-        }
-        allInterceptors[preInterceptors.length] =
-                new WsAddressingEndpointInterceptor(version, messageIdStrategy, messageSenders);
-        return allInterceptors;
-    }
-
     /**
      * Lookup an endpoint for the given  {@link MessageAddressingProperties}, returning <code>null</code> if no specific
      * one is found. This template method is called by {@link #getEndpoint(MessageContext)}.
@@ -204,5 +198,13 @@ public abstract class AbstractWsAddressingMapping extends TransformerObjectSuppo
      * @return the endpoint, or <code>null</code>
      */
     protected abstract Object getEndpointInternal(MessageAddressingProperties map);
+
+    protected URI getResponseAction(Object endpoint) {
+        return null;
+    }
+
+    protected URI getFaultAction(Object endpoint) {
+        return null;
+    }
 
 }

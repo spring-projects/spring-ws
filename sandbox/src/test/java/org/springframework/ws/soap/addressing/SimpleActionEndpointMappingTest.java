@@ -28,16 +28,16 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor;
 
-public class WsAddressingActionEndpointMappingTest extends AbstractWsAddressingTestCase {
+public class SimpleActionEndpointMappingTest extends AbstractWsAddressingTestCase {
 
-    private WsAddressingActionEndpointMapping mapping;
+    private SimpleActionEndpointMapping mapping;
 
     private Endpoint1 endpoint1;
 
     private Endpoint2 endpoint2;
 
     protected void onSetUp() throws Exception {
-        mapping = new WsAddressingActionEndpointMapping();
+        mapping = new SimpleActionEndpointMapping();
         Map map = new HashMap();
         endpoint1 = new Endpoint1();
         endpoint2 = new Endpoint2();
@@ -46,7 +46,6 @@ public class WsAddressingActionEndpointMappingTest extends AbstractWsAddressingT
         mapping.setPreInterceptors(new EndpointInterceptor[]{new PayloadLoggingInterceptor()});
         mapping.setPostInterceptors(new EndpointInterceptor[]{new PayloadValidatingInterceptor()});
         mapping.setActionMap(map);
-        mapping.setApplicationContext(null);
         mapping.afterPropertiesSet();
     }
 
