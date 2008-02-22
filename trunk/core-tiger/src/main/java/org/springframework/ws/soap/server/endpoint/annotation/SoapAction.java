@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 
 /**
  * Marks an endpoint method as the handler for an incoming request. The annotation value signifies the value for the
- * request SOAPAction header that is handled by the method.
+ * request <code>SOAPAction</code> header that is handled by the method.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping
@@ -35,6 +35,7 @@ import java.lang.annotation.Target;
 @Documented
 public @interface SoapAction {
 
+    /** Signifies the value for the request <code>SOAPAction</code> header that is handled by the method. */
     String value();
 
 }
