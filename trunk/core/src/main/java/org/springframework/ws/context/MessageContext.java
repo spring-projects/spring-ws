@@ -63,10 +63,15 @@ public interface MessageContext {
      *
      * @param response the response message
      * @throws IllegalStateException if a response has already been created
+     * @since 1.5.0
      */
     void setResponse(WebServiceMessage response);
 
-    /** Removes the response message, if any. */
+    /**
+     * Removes the response message, if any.
+     *
+     * @since 1.5.0
+     */
     void clearResponse();
 
     /**
