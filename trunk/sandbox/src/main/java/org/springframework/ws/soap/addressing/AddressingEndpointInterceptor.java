@@ -33,7 +33,7 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
  * {@link SoapEndpointInterceptor} implementation that deals with WS-Addressing headers. Stateful, and instatiated by
- * the {@link AbstractWsAddressingEndpointMapping}.
+ * the {@link AbstractAddressingEndpointMapping}.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
