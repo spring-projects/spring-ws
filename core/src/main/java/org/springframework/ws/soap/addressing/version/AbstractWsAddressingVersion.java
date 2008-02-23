@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.addressing;
+package org.springframework.ws.soap.addressing.version;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -38,6 +38,9 @@ import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.addressing.WsAddressingException;
+import org.springframework.ws.soap.addressing.core.EndpointReference;
+import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 import org.springframework.ws.soap.soap11.Soap11Body;
 import org.springframework.ws.soap.soap12.Soap12Body;
 import org.springframework.ws.soap.soap12.Soap12Fault;

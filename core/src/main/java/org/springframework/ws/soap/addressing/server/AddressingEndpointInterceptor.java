@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.addressing;
+package org.springframework.ws.soap.addressing.server;
 
 import java.io.IOException;
 import java.net.URI;
@@ -26,7 +26,10 @@ import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.addressing.core.EndpointReference;
+import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 import org.springframework.ws.soap.addressing.messageid.MessageIdStrategy;
+import org.springframework.ws.soap.addressing.version.WsAddressingVersion;
 import org.springframework.ws.soap.server.SoapEndpointInterceptor;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
@@ -59,9 +62,7 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
                                   URI faultAction) {
         Assert.notNull(version, "version must not be null");
         Assert.notNull(messageIdStrategy, "messageIdStrategy must not be null");
-        if (messageSenders == null) {
-            messageSenders = new WebServiceMessageSender[0];
-        }
+        Assert.notNull(messageSenders, "'messageSenders' must not be null");
         this.version = version;
         this.messageIdStrategy = messageIdStrategy;
         this.messageSenders = messageSenders;
@@ -77,7 +78,7 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
             version.addMessageAddressingHeaderRequiredFault((SoapMessage) messageContext.getResponse());
             return false;
         }
-        if (!requestMap.isValid() || messageIdStrategy.isDuplicate(requestMap.getMessageId())) {
+        if (messageIdStrategy.isDuplicate(requestMap.getMessageId())) {
             version.addInvalidAddressingHeaderFault((SoapMessage) messageContext.getResponse());
             return false;
         }
@@ -101,10 +102,11 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
         if (handleNoneAddress(messageContext, replyEpr)) {
             return false;
         }
-        URI responseMessageId = getMessageId(messageContext);
+        SoapMessage reply = (SoapMessage) messageContext.getResponse();
+        URI replyMessageId = getMessageId(reply);
         URI action = !isFault ? replyAction : faultAction;
-        MessageAddressingProperties replyMap = requestMap.getReplyProperties(replyEpr, action, responseMessageId);
-        version.addAddressingHeaders((SoapMessage) messageContext.getResponse(), replyMap);
+        MessageAddressingProperties replyMap = requestMap.getReplyProperties(replyEpr, action, replyMessageId);
+        version.addAddressingHeaders(reply, replyMap);
         if (handleAnonymousAddress(messageContext, replyEpr)) {
             return true;
         }
@@ -161,16 +163,16 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
                 }
             }
         }
-        if (!supported) {
+        if (!supported && logger.isWarnEnabled()) {
             logger.warn("Could not send out-of-band response to [" + replyEpr.getAddress() + "]. " +
                     "Configure WebServiceMessageSenders which support this uri.");
         }
     }
 
-    private URI getMessageId(MessageContext messageContext) {
-        URI responseMessageId = messageIdStrategy.newMessageId(messageContext);
+    private URI getMessageId(SoapMessage response) {
+        URI responseMessageId = messageIdStrategy.newMessageId(response);
         if (logger.isTraceEnabled()) {
-            logger.trace("Generated reply MessageID [" + responseMessageId + "] for [" + messageContext + "]");
+            logger.trace("Generated reply MessageID [" + responseMessageId + "] for [" + response + "]");
         }
         return responseMessageId;
     }
