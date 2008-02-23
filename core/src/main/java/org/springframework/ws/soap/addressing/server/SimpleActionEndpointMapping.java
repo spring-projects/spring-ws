@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.addressing;
+package org.springframework.ws.soap.addressing.server;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -41,12 +41,12 @@ import org.springframework.beans.BeansException;
  * The syntax is WS_ADDRESSING_ACTION=ENDPOINT_BEAN_NAME.
  * <p/>
  * If set, the {@link #setAddress(URI) address} property should be equal to the {@link
- * MessageAddressingProperties#getTo() destination} property of the incominging message. As such, it can be used to
- * create multiple Endpoint References, by defining multiple <code>SimpleActionEndpointMapping</code> bean definitions
- * with different <code>address</code>property values.
+ * org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo() destination} property of the
+ * incominging message. As such, it can be used to create multiple Endpoint References, by defining multiple
+ * <code>SimpleActionEndpointMapping</code> bean definitions with different <code>address</code> property values.
  *
  * @author Arjen Poutsma
- * @see MessageAddressingProperties#getAction()
+ * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getAction()
  * @since 1.5.0
  */
 public class SimpleActionEndpointMapping extends AbstractActionEndpointMapping {
@@ -93,7 +93,8 @@ public class SimpleActionEndpointMapping extends AbstractActionEndpointMapping {
 
     /**
      * Set the address property. If set, value of this property is compared to the {@link
-     * MessageAddressingProperties#getTo() destination} property of the incominging message.
+     * org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo() destination} property of the
+     * incominging message.
      *
      * @param address the address URI
      */
@@ -104,14 +105,6 @@ public class SimpleActionEndpointMapping extends AbstractActionEndpointMapping {
     public void afterPropertiesSet() throws Exception {
         super.afterPropertiesSet();
         registerEndpoints(actionMap);
-    }
-
-    protected Object getEndpointInternal(URI to, URI action) {
-        // MAP address much match the defined EPR address
-        if (address != null && !address.equals(to)) {
-            return null;
-        }
-        return lookupEndpoint(action);
     }
 
     /**
@@ -139,4 +132,7 @@ public class SimpleActionEndpointMapping extends AbstractActionEndpointMapping {
         }
     }
 
+    protected URI getEndpointAddress(Object endpoint) {
+        return address;
+    }
 }

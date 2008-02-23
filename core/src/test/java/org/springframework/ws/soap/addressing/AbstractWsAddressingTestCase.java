@@ -33,7 +33,7 @@ public abstract class AbstractWsAddressingTestCase extends XMLTestCase {
     protected SaajSoapMessage loadSaajMessage(String fileName) throws SOAPException, IOException {
         MimeHeaders mimeHeaders = new MimeHeaders();
         mimeHeaders.addHeader("Content-Type", " application/soap+xml");
-        InputStream is = getClass().getResourceAsStream(fileName);
+        InputStream is = AbstractWsAddressingTestCase.class.getResourceAsStream(fileName);
         assertNotNull("Could not load " + fileName, is);
         try {
             return new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, is));

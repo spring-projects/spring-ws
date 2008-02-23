@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.addressing;
+package org.springframework.ws.soap.addressing.server;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -31,16 +31,36 @@ import org.springframework.ws.server.EndpointMapping;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 import org.springframework.ws.soap.addressing.messageid.MessageIdStrategy;
 import org.springframework.ws.soap.addressing.messageid.RandomGuidMessageIdStrategy;
 import org.springframework.ws.soap.addressing.messageid.UuidMessageIdStrategy;
+import org.springframework.ws.soap.addressing.version.WsAddressing200408;
+import org.springframework.ws.soap.addressing.version.WsAddressing200605;
+import org.springframework.ws.soap.addressing.version.WsAddressingVersion;
 import org.springframework.ws.soap.server.SoapEndpointInvocationChain;
 import org.springframework.ws.soap.server.SoapEndpointMapping;
 import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
- * Abstract base class for {@link EndpointMapping} implementations that implement WS-Addressing.
+ * Abstract base class for {@link EndpointMapping} implementations that handle WS-Addressing. Besides the normal {@link
+ * SoapEndpointMapping} properties, this mapping has a {@link #setVersions(WsAddressingVersion[]) versions} property,
+ * which defines the WS-Addressing specifications supported. By default, these are {@link WsAddressing200408} and {@link
+ * WsAddressing200605}.
+ * <p/>
+ * The {@link #setMessageIdStrategy(MessageIdStrategy) messageIdStrategy} property defines the strategy to use for
+ * creating reply <code>MessageIDs</code>. By default, this is the {@link UuidMessageIdStrategy} on Java 5 and higher,
+ * and the {@link RandomGuidMessageIdStrategy} on Java 1.4.
+ * <p/>
+ * The {@link #setMessageSenders(WebServiceMessageSender[]) messageSenders} are used to send out-of-band reply messages.
+ * If a request messages defines a non-anonymous reply address, these senders will be used to send the message.
+ * <p/>
+ * This mapping (and all subclasses) uses an implicit WS-Addressing {@link EndpointInterceptor}, which is added in every
+ * {@link EndpointInvocationChain} produced. As such, this mapping does not have the standard <code>interceptors</code>
+ * property, but rather a {@link #setPreInterceptors(EndpointInterceptor[]) preInterceptors} and {@link
+ * #setPostInterceptors(EndpointInterceptor[]) postInterceptors} property, which are added before and after the implicit
+ * WS-Addressing interceptor, respectively.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
@@ -54,7 +74,7 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 
     private MessageIdStrategy messageIdStrategy;
 
-    private WebServiceMessageSender[] messageSenders;
+    private WebServiceMessageSender[] messageSenders = new WebServiceMessageSender[0];
 
     private WsAddressingVersion[] versions;
 
@@ -115,16 +135,18 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
     }
 
     /**
-     * Sets the message id provider used for creating WS-Addressing MessageIds.
+     * Sets the message id strategy used for creating WS-Addressing MessageIds.
      * <p/>
      * By default, the {@link UuidMessageIdStrategy} is used on Java 5 and higher, and the {@link
      * RandomGuidMessageIdStrategy} on Java 1.4.
      */
-    public final void setMessageIdProvider(MessageIdStrategy messageIdStrategy) {
+    public final void setMessageIdStrategy(MessageIdStrategy messageIdStrategy) {
+        Assert.notNull(messageIdStrategy, "'messageIdStrategy' must not be null");
         this.messageIdStrategy = messageIdStrategy;
     }
 
     public final void setMessageSenders(WebServiceMessageSender[] messageSenders) {
+        Assert.notNull(messageSenders, "'messageSenders' must not be null");
         this.messageSenders = messageSenders;
     }
 
