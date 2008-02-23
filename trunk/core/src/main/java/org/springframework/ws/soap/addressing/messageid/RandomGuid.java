@@ -130,7 +130,7 @@ public class RandomGuid {
 
     /** Method to generate the random GUID. */
     private void getRandomGuid(boolean secure) {
-        MessageDigest md5 = null;
+        MessageDigest md5;
         StringBuffer sbValueBeforeMD5 = new StringBuffer();
 
         try {
@@ -141,7 +141,7 @@ public class RandomGuid {
         }
 
         long time = System.currentTimeMillis();
-        long rand = 0;
+        long rand;
 
         if (secure) {
             rand = secureRandom.nextLong();

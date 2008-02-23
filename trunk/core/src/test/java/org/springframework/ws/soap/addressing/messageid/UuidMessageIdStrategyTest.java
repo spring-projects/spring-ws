@@ -8,15 +8,13 @@ import java.net.URI;
 
 import junit.framework.TestCase;
 
-public abstract class AbstractMessageIdStrategyTestCase extends TestCase {
+public class UuidMessageIdStrategyTest extends TestCase {
 
     private MessageIdStrategy strategy;
 
     protected final void setUp() throws Exception {
-        strategy = createProvider();
+        strategy = new UuidMessageIdStrategy();
     }
-
-    protected abstract MessageIdStrategy createProvider();
 
     public void testStrategy() {
         URI messageId1 = strategy.newMessageId(null);
