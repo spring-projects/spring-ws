@@ -13,8 +13,9 @@ import javax.xml.soap.SOAPException;
 
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
-import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.w3c.dom.Document;
+
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
 public abstract class AbstractWsAddressingTestCase extends XMLTestCase {
 
