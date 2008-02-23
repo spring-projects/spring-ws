@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.addressing;
+package org.springframework.ws.soap.addressing.server;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.EndpointInvocationChain;
 import org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor;
+import org.springframework.ws.soap.addressing.AbstractWsAddressingTestCase;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor;
@@ -34,17 +36,16 @@ public class SimpleActionEndpointMappingTest extends AbstractWsAddressingTestCas
 
     private Endpoint1 endpoint1;
 
-    private Endpoint2 endpoint2;
-
     protected void onSetUp() throws Exception {
         mapping = new SimpleActionEndpointMapping();
         Map map = new HashMap();
         endpoint1 = new Endpoint1();
-        endpoint2 = new Endpoint2();
+        Endpoint2 endpoint2 = new Endpoint2();
         map.put("http://fabrikam123.example/mail/Delete", endpoint1);
         map.put("http://fabrikam123.example/mail/Add", endpoint2);
         mapping.setPreInterceptors(new EndpointInterceptor[]{new PayloadLoggingInterceptor()});
         mapping.setPostInterceptors(new EndpointInterceptor[]{new PayloadValidatingInterceptor()});
+        mapping.setAddress(new URI("mailto:joe@fabrikam123.example"));
         mapping.setActionMap(map);
         mapping.afterPropertiesSet();
     }

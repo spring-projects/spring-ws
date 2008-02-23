@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.addressing;
+package org.springframework.ws.soap.addressing.version;
 
 import java.net.URI;
 import javax.xml.namespace.QName;
 
+import org.springframework.ws.soap.addressing.core.EndpointReference;
 import org.springframework.xml.namespace.QNameUtils;
 
 /**

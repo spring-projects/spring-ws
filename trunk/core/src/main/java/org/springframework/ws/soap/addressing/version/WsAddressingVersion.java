@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.addressing;
+package org.springframework.ws.soap.addressing.version;
 
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.addressing.core.EndpointReference;
+import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 
 /**
  * Defines the contract for a specific version of the WS-Addressing specification.
@@ -29,7 +31,8 @@ import org.springframework.ws.soap.SoapMessage;
 public interface WsAddressingVersion {
 
     /**
-     * Returns the {@link MessageAddressingProperties} for the given message.
+     * Returns the {@link org.springframework.ws.soap.addressing.core.MessageAddressingProperties} for the given
+     * message.
      *
      * @param message the message to find the map for
      * @return the message addressing properties

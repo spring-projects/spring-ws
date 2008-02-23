@@ -2,7 +2,7 @@
  * Copyright (c) 2007, Your Corporation. All Rights Reserved.
  */
 
-package org.springframework.ws.soap.addressing;
+package org.springframework.ws.soap.addressing.server;
 
 import java.net.URI;
 import java.util.Iterator;
@@ -13,7 +13,10 @@ import org.easymock.MockControl;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapHeaderElement;
+import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.addressing.AbstractWsAddressingTestCase;
 import org.springframework.ws.soap.addressing.messageid.MessageIdStrategy;
+import org.springframework.ws.soap.addressing.version.WsAddressingVersion;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
@@ -76,7 +79,7 @@ public abstract class AbstractAddressingInterceptorTestCase extends AbstractWsAd
         SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-no-reply-to.xml");
         MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
         URI messageId = new URI("uid:1234");
-        strategyControl.expectAndReturn(strategyMock.newMessageId(context), messageId);
+        strategyControl.expectAndReturn(strategyMock.newMessageId((SoapMessage) context.getResponse()), messageId);
         strategyControl.replay();
         boolean result = interceptor.handleResponse(context, null);
         assertTrue("Request with no ReplyTo not handled", result);
@@ -91,7 +94,7 @@ public abstract class AbstractAddressingInterceptorTestCase extends AbstractWsAd
         SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-anonymous.xml");
         MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
         URI messageId = new URI("uid:1234");
-        strategyControl.expectAndReturn(strategyMock.newMessageId(context), messageId);
+        strategyControl.expectAndReturn(strategyMock.newMessageId((SoapMessage) context.getResponse()), messageId);
         strategyControl.replay();
         boolean result = interceptor.handleResponse(context, null);
         assertTrue("Request with anonymous ReplyTo not handled", result);
@@ -117,7 +120,7 @@ public abstract class AbstractAddressingInterceptorTestCase extends AbstractWsAd
         SaajSoapMessage response = (SaajSoapMessage) context.getResponse();
         response.getSoapBody().addServerOrReceiverFault("Error", Locale.ENGLISH);
         URI messageId = new URI("uid:1234");
-        strategyControl.expectAndReturn(strategyMock.newMessageId(context), messageId);
+        strategyControl.expectAndReturn(strategyMock.newMessageId((SoapMessage) context.getResponse()), messageId);
         strategyControl.replay();
         boolean result = interceptor.handleFault(context, null);
         assertTrue("Request with anonymous FaultTo not handled", result);
@@ -144,7 +147,7 @@ public abstract class AbstractAddressingInterceptorTestCase extends AbstractWsAd
         SaajSoapMessage response = (SaajSoapMessage) context.getResponse();
 
         URI messageId = new URI("uid:1234");
-        strategyControl.expectAndReturn(strategyMock.newMessageId(context), messageId);
+        strategyControl.expectAndReturn(strategyMock.newMessageId((SoapMessage) context.getResponse()), messageId);
 
         URI uri = new URI("http://example.com/business/client1");
         senderControl.expectAndReturn(senderMock.supports(uri), true);
