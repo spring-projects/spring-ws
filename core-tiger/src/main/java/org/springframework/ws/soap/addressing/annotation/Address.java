@@ -24,11 +24,8 @@ import java.lang.annotation.Target;
 
 /**
  * Marks an endpoint with a WS-Addressing <code>Address</code>. If this annotation is applied, the {@link #value()} is
- * compared to the {@link org.springframework.ws.soap.addressing.MessageAddressingProperties#getTo() destination}
+ * compared to the {@link org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo() destination}
  * property of the incominging message.
- * <p/>
- * as the handler for an incoming request. The annotation value signifies the value for the request WS-Addressing
- * <code>Action</code> header that is handled by the method.
  *
  * @author Arjen Poutsma
  * @since 1.5.0

@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.addressing;
+package org.springframework.ws.soap.addressing.server;
 
 import java.io.IOException;
+import java.io.InputStream;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.MimeHeaders;
+import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPException;
+
+import org.custommonkey.xmlunit.XMLTestCase;
+import org.custommonkey.xmlunit.XMLUnit;
 
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ws.context.DefaultMessageContext;
@@ -30,16 +37,20 @@ import org.springframework.ws.soap.addressing.annotation.Address;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 
-public class AnnotationActionMethodEndpointMappingTest extends AbstractWsAddressingTestCase {
+public class AnnotationActionMethodEndpointMappingTest extends XMLTestCase {
 
     private StaticApplicationContext applicationContext;
 
-    private AnnotationActionMethodEndpointMapping mapping;
+    private AnnotationActionEndpointMapping mapping;
 
-    protected void onSetUp() throws Exception {
+    private MessageFactory messageFactory;
+
+    protected void setUp() throws Exception {
+        messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+        XMLUnit.setIgnoreWhitespace(true);
         applicationContext = new StaticApplicationContext();
-        applicationContext.registerSingleton("mapping", AnnotationActionMethodEndpointMapping.class);
-        mapping = (AnnotationActionMethodEndpointMapping) applicationContext.getBean("mapping");
+        applicationContext.registerSingleton("mapping", AnnotationActionEndpointMapping.class);
+        mapping = (AnnotationActionEndpointMapping) applicationContext.getBean("mapping");
     }
 
     public void testNoAddress() throws Exception {
@@ -65,8 +76,17 @@ public class AnnotationActionMethodEndpointMappingTest extends AbstractWsAddress
     }
 
     private MessageContext createMessageContext() throws SOAPException, IOException {
-        SaajSoapMessage message = loadSaajMessage("200408/valid.xml");
-        return new DefaultMessageContext(message, new SaajSoapMessageFactory(messageFactory));
+        MimeHeaders mimeHeaders = new MimeHeaders();
+        mimeHeaders.addHeader("Content-Type", " application/soap+xml");
+        InputStream is = getClass().getResourceAsStream("valid.xml");
+        assertNotNull("Could not load valid.xml", is);
+        try {
+            SaajSoapMessage message = new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, is));
+            return new DefaultMessageContext(message, new SaajSoapMessageFactory(messageFactory));
+        }
+        finally {
+            is.close();
+        }
     }
 
     @Endpoint
