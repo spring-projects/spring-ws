@@ -44,7 +44,6 @@ public class SoapFaultMappingExceptionResolver extends AbstractSoapFaultDefiniti
      * @param mappings exception patterns (can also be fully qualified class names) as keys, fault definition texts as
      *                 values
      * @see SoapFaultDefinitionEditor
-     * @see org.springframework.web.servlet.handler.SimpleMappingExceptionResolver
      */
     public void setExceptionMappings(Properties mappings) {
         exceptionMappings = mappings;
@@ -76,8 +75,6 @@ public class SoapFaultMappingExceptionResolver extends AbstractSoapFaultDefiniti
      * there's no match. Otherwise, returns depth. Lowest depth wins.
      * <p/>
      * Follows the same algorithm as RollbackRuleAttribute, and SimpleMappingExceptionResolver
-     *
-     * @see org.springframework.web.servlet.handler.SimpleMappingExceptionResolver
      */
     protected int getDepth(String exceptionMapping, Exception ex) {
         return getDepth(exceptionMapping, ex.getClass(), 0);
