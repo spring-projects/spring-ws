@@ -18,7 +18,7 @@ package org.springframework.ws.soap.addressing.messageid;
 
 import java.net.URI;
 
-import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.soap.SoapMessage;
 
 /**
  * Implementation of the {@link MessageIdStrategy} interface that uses a {@link RandomGuid} to generate a Message Id.
@@ -46,7 +46,7 @@ public class RandomGuidMessageIdStrategy implements MessageIdStrategy {
         return false;
     }
 
-    public URI newMessageId(MessageContext messageContext) {
+    public URI newMessageId(SoapMessage message) {
         return URI.create(PREFIX + new RandomGuid(secure).toString());
     }
 }

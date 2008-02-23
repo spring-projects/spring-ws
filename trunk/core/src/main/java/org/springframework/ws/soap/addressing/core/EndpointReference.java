@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.addressing;
+package org.springframework.ws.soap.addressing.core;
 
 import java.net.URI;
 import java.util.Collections;
@@ -54,11 +54,11 @@ public final class EndpointReference {
 
     /**
      * Creates a new instance of the {@link EndpointReference} class with the given address, reference properties, and
-     * reference paramters.
+     * reference parameters.
      *
      * @param address             the endpoint address
      * @param referenceProperties the reference properties, as a list of {@link Node}
-     * @param referenceProperties the reference parameters, as a list of {@link Node}
+     * @param referenceParameters the reference parameters, as a list of {@link Node}
      */
     public EndpointReference(URI address, List referenceProperties, List referenceParameters) {
         Assert.notNull(address, "address must not be null");

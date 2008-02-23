@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.addressing;
+package org.springframework.ws.soap.addressing.core;
 
 import java.net.URI;
 import java.util.Collections;
@@ -76,6 +76,14 @@ public final class MessageAddressingProperties {
         this.referenceParameters = Collections.EMPTY_LIST;
     }
 
+    /**
+     * Constructs a new {@link MessageAddressingProperties} that forms a reply to the given EPR.
+     *
+     * @param epr       the endpoint reference to create a reply for
+     * @param action    the value of the action property
+     * @param messageId the value of the message id property
+     * @param relatesTo the value of the relates to property
+     */
     private MessageAddressingProperties(EndpointReference epr, URI action, URI messageId, URI relatesTo) {
         this.to = epr.getAddress();
         this.action = action;
@@ -134,36 +142,25 @@ public final class MessageAddressingProperties {
     }
 
     /**
-     * Indicates whether is {@link MessageAddressingProperties} is valid, i.e. whether all required elements are
-     * listed.
-     * <p/>
-     * Returns <code>true</code> if the to and action properties have been set, and - if a reply or fault endpoint has
-     * been set - also checks for the message id.
+     * Creates a {@link MessageAddressingProperties} that can be used for creating a reply to the given {@link
+     * EndpointReference}. The {@link #getTo() destination} property will be populated with the {@link
+     * EndpointReference#getAddress() address} of the given EPR, and the {@link #getRelatesTo() relationship} property
+     * will be set to the {@link #getMessageId() message id} property of this instance. the action is specified, the
+     *
+     * @param epr    the endpoint reference to create a reply to
+     * @param action the action
      */
-    public boolean isValid() {
-        if (to == null) {
-            return false;
-        }
-        if (action == null) {
-            return false;
-        }
-        if (replyTo != null || faultTo != null) {
-            return messageId != null;
-        }
-        return true;
-    }
-
     public MessageAddressingProperties getReplyProperties(EndpointReference epr, URI action, URI messageId) {
         return new MessageAddressingProperties(epr, action, messageId, this.messageId);
     }
 
     /**
-     * Indicates whether is {@link MessageAddressingProperties} has all required properties. Returns <code>true</code>
-     * if the destination and action properties have been set, and if a reply or fault endpoint has been set, also
-     * checks for the message id.
+     * Indicates whether is {@link MessageAddressingProperties} has all required properties.
+     *
+     * @return <code>true</code> if the to and action properties have been set, and - if a reply or fault endpoint has
+     *         been set - also checks for the message id
      */
     public boolean hasRequiredProperties() {
-        // TODO: make sure this is handled according to the spec
         if (to == null) {
             return false;
         }

@@ -19,7 +19,7 @@ package org.springframework.ws.soap.addressing.messageid;
 import java.net.URI;
 import java.util.UUID;
 
-import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.soap.SoapMessage;
 
 /**
  * Implementation of the {@link MessageIdStrategy} interface that uses a {@link UUID} to generate a Message Id. The UUID
@@ -39,7 +39,7 @@ public class UuidMessageIdStrategy implements MessageIdStrategy {
         return false;
     }
 
-    public URI newMessageId(MessageContext messageContext) {
+    public URI newMessageId(SoapMessage message) {
         return URI.create(PREFIX + UUID.randomUUID().toString());
     }
 }

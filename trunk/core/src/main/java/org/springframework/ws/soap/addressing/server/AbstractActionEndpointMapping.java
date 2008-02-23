@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.addressing;
+package org.springframework.ws.soap.addressing.server;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -24,8 +24,12 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
+import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 
 /**
+ * Abstract base class for WS-Addressing <code>Action</code>-mapped {@link org.springframework.ws.server.EndpointMapping}
+ * implementations. Provides infrastructure for mapping endpoints to actions.
+ *
  * @author Arjen Poutsma
  * @since 1.5.0
  */
@@ -37,6 +41,31 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 
     private ApplicationContext applicationContext;
 
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    protected final Object getEndpointInternal(MessageAddressingProperties map) {
+        Object endpoint = lookupEndpoint(map.getAction());
+        if (endpoint != null) {
+            URI endpointAddress = getEndpointAddress(endpoint);
+            if (endpointAddress == null || endpointAddress.equals(map.getTo())) {
+                return endpoint;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns the address property of the given endpoint. The value of this property should match the {@link
+     * MessageAddressingProperties#getTo() destination} of incoming messages. May return <code>null</code>  to ignore
+     * the destination.
+     *
+     * @param endpoint the endpoint to return the address for
+     * @return the endpoint address; or <code>null</code> to ignore the destination property
+     */
+    protected abstract URI getEndpointAddress(Object endpoint);
+
     /**
      * Looks up an endpoint instance for the given action. All keys are tried in order.
      *
@@ -45,10 +74,6 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
      */
     protected Object lookupEndpoint(URI action) {
         return endpointMap.get(action);
-    }
-
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
     }
 
     /**
@@ -86,12 +111,6 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
             }
         }
     }
-
-    protected final Object getEndpointInternal(MessageAddressingProperties map) {
-        return getEndpointInternal(map.getTo(), map.getAction());
-    }
-
-    protected abstract Object getEndpointInternal(URI to, URI action);
 
 
 }
