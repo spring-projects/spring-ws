@@ -11,7 +11,7 @@
         </property>
     </bean>
 
-    <bean id="webServiceHandler" class="org.springframework.ws.transport.http.WebServiceHttpHandler">
+    <bean id="webServiceHandler" class="org.springframework.ws.transport.http.WebServiceMessageReceiverHttpHandler">
         <property name="chunkedEncoding" value="true"/>
         <property name="messageFactory" ref="messageFactory"/>
         <property name="messageReceiver" ref="messageDispatcher"/>

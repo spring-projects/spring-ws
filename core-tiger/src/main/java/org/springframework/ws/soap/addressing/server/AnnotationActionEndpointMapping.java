@@ -30,8 +30,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
-import org.springframework.ws.soap.addressing.annotation.Action;
-import org.springframework.ws.soap.addressing.annotation.Address;
+import org.springframework.ws.soap.addressing.server.annotation.Action;
+import org.springframework.ws.soap.addressing.server.annotation.Address;
 
 /**
  * Implementation of the {@link org.springframework.ws.server.EndpointMapping} interface that uses the {@link Action}
