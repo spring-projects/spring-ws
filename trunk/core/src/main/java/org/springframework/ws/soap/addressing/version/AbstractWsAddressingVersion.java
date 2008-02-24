@@ -353,8 +353,4 @@ public abstract class AbstractWsAddressingVersion extends TransformerObjectSuppo
 
     /** Returns the reason of the fault that indicates that a header is invalid. */
     protected abstract String getInvalidAddressingHeaderFaultReason();
-
-    public String toString() {
-        return getNamespaceUri();
-    }
 }

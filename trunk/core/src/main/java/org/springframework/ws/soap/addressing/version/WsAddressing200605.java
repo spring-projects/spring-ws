@@ -70,4 +70,8 @@ public class WsAddressing200605 extends AbstractWsAddressingVersion {
     protected String getInvalidAddressingHeaderFaultReason() {
         return "A header representing a Message Addressing Property is not valid and the message cannot be processed";
     }
+
+    public String toString() {
+        return "WS-Addressing 1.0";
+    }
 }

@@ -171,6 +171,9 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
         SoapMessage request = (SoapMessage) messageContext.getRequest();
         for (int i = 0; i < versions.length; i++) {
             if (supports(versions[i], request)) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Request [" + request + "] uses [" + versions[i] + "]");
+                }
                 MessageAddressingProperties requestMap = versions[i].getMessageAddressingProperties(request);
                 if (requestMap == null) {
                     return null;
