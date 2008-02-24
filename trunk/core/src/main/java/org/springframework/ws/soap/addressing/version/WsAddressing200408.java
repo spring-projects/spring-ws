@@ -58,7 +58,7 @@ public class WsAddressing200408 extends AbstractWsAddressingVersion {
         return NAMESPACE_URI;
     }
 
-    protected EndpointReference getDefaultReplyTo(EndpointReference from) {
+    protected final EndpointReference getDefaultReplyTo(EndpointReference from) {
         return from;
     }
 

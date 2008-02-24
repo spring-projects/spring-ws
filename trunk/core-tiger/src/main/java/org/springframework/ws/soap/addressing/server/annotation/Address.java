@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.addressing.annotation;
+package org.springframework.ws.soap.addressing.server.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -23,18 +23,24 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks an endpoint method as the handler for an incoming request. The annotation value signifies the value for the
- * request WS-Addressing <code>Action</code> header that is handled by the method.
+ * Marks an endpoint with a WS-Addressing <code>Address</code>. If this annotation is applied, the {@link #value()} is
+ * compared to the {@link org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo() destination}
+ * property of the incominging message.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Action {
+@Target(ElementType.TYPE)
+public @interface Address {
 
-    /** Signifies the value for the request WS-Addressing <code>Action</code> header that is handled by the method. */
+    /**
+     * The value may indicate a suggestion for a logical component name, to be turned into a Spring bean in case of an
+     * autodetected component.
+     *
+     * @return the suggested component name, if any
+     */
     String value();
 
 }

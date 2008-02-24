@@ -46,7 +46,11 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
     }
 
     protected final Object getEndpointInternal(MessageAddressingProperties map) {
-        Object endpoint = lookupEndpoint(map.getAction());
+        URI action = map.getAction();
+        if (logger.isDebugEnabled()) {
+            logger.debug("Looking up endpoint for action [" + action + "]");
+        }
+        Object endpoint = lookupEndpoint(action);
         if (endpoint != null) {
             URI endpointAddress = getEndpointAddress(endpoint);
             if (endpointAddress == null || endpointAddress.equals(map.getTo())) {

@@ -32,8 +32,8 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInvocationChain;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
-import org.springframework.ws.soap.addressing.annotation.Action;
-import org.springframework.ws.soap.addressing.annotation.Address;
+import org.springframework.ws.soap.addressing.server.annotation.Action;
+import org.springframework.ws.soap.addressing.server.annotation.Address;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 

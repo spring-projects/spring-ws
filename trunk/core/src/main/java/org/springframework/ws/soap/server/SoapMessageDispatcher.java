@@ -115,13 +115,8 @@ public class SoapMessageDispatcher extends MessageDispatcher {
         while (headerIterator.hasNext()) {
             SoapHeaderElement headerElement = (SoapHeaderElement) headerIterator.next();
             QName headerName = headerElement.getName();
-            if (logger.isDebugEnabled()) {
-                if (!headerElement.getMustUnderstand()) {
-                    logger.debug("Handling header " + headerName);
-                }
-                else {
-                    logger.debug("Handling MustUnderstand header " + headerName);
-                }
+            if (headerElement.getMustUnderstand() && logger.isDebugEnabled()) {
+                logger.debug("Handling MustUnderstand header " + headerName);
             }
             if (headerElement.getMustUnderstand() && !headerUnderstood(mappedEndpoint, headerElement)) {
                 notUnderstoodHeaderNames.add(headerName);
