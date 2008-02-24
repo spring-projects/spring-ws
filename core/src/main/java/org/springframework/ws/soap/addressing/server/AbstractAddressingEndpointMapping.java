@@ -162,7 +162,7 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 
     public void afterPropertiesSet() throws Exception {
         if (logger.isInfoEnabled()) {
-            logger.info("Supporting versions " + Arrays.asList(versions));
+            logger.info("Supporting " + Arrays.asList(versions));
         }
     }
 
