@@ -32,8 +32,7 @@
     <target name="generate" depends="init">
         <taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport" classpathref="classpath"/>
         <wsimport wsdl="http://localhost:8080/StockService.wsdl" destdir="${bin.dir}"
-                  package="org.springframework.ws.samples.stockquote.client.jaxws" xendorsed="true"
-                  keep="true" sourcedestdir="gen"/>
+                  package="org.springframework.ws.samples.stockquote.client.jaxws" xendorsed="true"/>
     </target>
 
     <target name="build" depends="generate">
