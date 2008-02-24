@@ -65,4 +65,8 @@ public class WsAddressing200408 extends AbstractWsAddressingVersion {
     protected final URI getNone() {
         return null;
     }
+
+    public String toString() {
+        return "Ws-Addressing August 2004";
+    }
 }
