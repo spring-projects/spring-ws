@@ -69,9 +69,7 @@ public class WsdlDefinitionHttpHandler extends TransformerObjectSupport implemen
             }
             else {
                 httpExchange.sendResponseHeaders(HttpTransportConstants.STATUS_METHOD_NOT_ALLOWED, -1);
-                httpExchange.close();
             }
-
         }
         catch (TransformerException ex) {
             logger.error(ex, ex);
