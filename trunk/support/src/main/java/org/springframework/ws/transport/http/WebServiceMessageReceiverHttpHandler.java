@@ -36,7 +36,8 @@ import org.springframework.ws.transport.support.SimpleWebServiceMessageReceiverO
  * @see org.springframework.remoting.support.SimpleHttpServerFactoryBean
  * @since 1.5.0
  */
-public class WebServiceHttpHandler extends SimpleWebServiceMessageReceiverObjectSupport implements HttpHandler {
+public class WebServiceMessageReceiverHttpHandler extends SimpleWebServiceMessageReceiverObjectSupport
+        implements HttpHandler {
 
     private boolean chunkedEncoding = false;
 
