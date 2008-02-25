@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.security.xwss.callback.springsecurity;
+package org.springframework.ws.soap.security.xwss.callback;
 
 import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
 import junit.framework.TestCase;
@@ -28,9 +28,9 @@ import org.springframework.security.userdetails.UserDetailsService;
 import org.springframework.security.userdetails.UsernameNotFoundException;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 
-public class SpringSecurityDigestPasswordValidationCallbackHandlerTest extends TestCase {
+public class SpringDigestPasswordValidationCallbackHandlerTest extends TestCase {
 
-    private SpringSecurityDigestPasswordValidationCallbackHandler callbackHandler;
+    private SpringDigestPasswordValidationCallbackHandler callbackHandler;
 
     private MockControl control;
 
@@ -43,7 +43,7 @@ public class SpringSecurityDigestPasswordValidationCallbackHandlerTest extends T
     private PasswordValidationCallback callback;
 
     protected void setUp() throws Exception {
-        callbackHandler = new SpringSecurityDigestPasswordValidationCallbackHandler();
+        callbackHandler = new SpringDigestPasswordValidationCallbackHandler();
         control = MockControl.createControl(UserDetailsService.class);
         mock = (UserDetailsService) control.getMock();
         callbackHandler.setUserDetailsService(mock);

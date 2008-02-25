@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.security.xwss.callback.springsecurity;
+package org.springframework.ws.soap.security.xwss.callback;
 
 import com.sun.xml.wss.impl.callback.PasswordCallback;
 import com.sun.xml.wss.impl.callback.UsernameCallback;
@@ -24,12 +24,12 @@ import org.springframework.security.Authentication;
 import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 
-public class SpringSecurityUsernamePasswordCallbackHandlerTest extends TestCase {
+public class SpringUsernamePasswordCallbackHandlerTest extends TestCase {
 
-    private SpringSecurityUsernamePasswordCallbackHandler handler;
+    private SpringUsernamePasswordCallbackHandler handler;
 
     protected void setUp() throws Exception {
-        handler = new SpringSecurityUsernamePasswordCallbackHandler();
+        handler = new SpringUsernamePasswordCallbackHandler();
         Authentication authentication = new UsernamePasswordAuthenticationToken("Bert", "Ernie");
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }

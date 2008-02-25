@@ -16,8 +16,8 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.security.wss4j.callback.springsecurity.SpringSecurityDigestPasswordValidationCallbackHandler;
-import org.springframework.ws.soap.security.wss4j.callback.springsecurity.SpringSecurityPlainTextPasswordValidationCallbackHandler;
+import org.springframework.ws.soap.security.wss4j.callback.SpringDigestPasswordValidationCallbackHandler;
+import org.springframework.ws.soap.security.wss4j.callback.SpringPlainTextPasswordValidationCallbackHandler;
 
 public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCase extends Wss4jTestCase {
 
@@ -82,8 +82,8 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCa
             interceptor.setSecurementActions(actions);
         }
         if (digest) {
-            SpringSecurityDigestPasswordValidationCallbackHandler callbackHandler =
-                    new SpringSecurityDigestPasswordValidationCallbackHandler();
+            SpringDigestPasswordValidationCallbackHandler callbackHandler =
+                    new SpringDigestPasswordValidationCallbackHandler();
             InMemoryDaoImpl userDetailsService = new InMemoryDaoImpl();
             userDetailsService.setUserProperties(users);
             userDetailsService.afterPropertiesSet();
@@ -93,8 +93,8 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCa
             interceptor.afterPropertiesSet();
         }
         else {
-            SpringSecurityPlainTextPasswordValidationCallbackHandler callbackHandler =
-                    new SpringSecurityPlainTextPasswordValidationCallbackHandler();
+            SpringPlainTextPasswordValidationCallbackHandler callbackHandler =
+                    new SpringPlainTextPasswordValidationCallbackHandler();
             Authentication authResult = new TestingAuthenticationToken("Bert", "Ernie", new GrantedAuthority[0]);
             control.expectAndReturn(mock.authenticate(new UsernamePasswordAuthenticationToken("Bert", "Ernie")),
                     authResult);

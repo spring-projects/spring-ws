@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.security.xwss.callback.springsecurity;
+package org.springframework.ws.soap.security.xwss.callback;
 
 import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
 import junit.framework.TestCase;
@@ -29,9 +29,9 @@ import org.springframework.security.providers.TestingAuthenticationToken;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 
-public class SpringSecurityPlainTextPasswordValidationCallbackHandlerTest extends TestCase {
+public class SpringPlainTextPasswordValidationCallbackHandlerTest extends TestCase {
 
-    private SpringSecurityPlainTextPasswordValidationCallbackHandler callbackHandler;
+    private SpringPlainTextPasswordValidationCallbackHandler callbackHandler;
 
     private MockControl control;
 
@@ -44,7 +44,7 @@ public class SpringSecurityPlainTextPasswordValidationCallbackHandlerTest extend
     private String password;
 
     protected void setUp() throws Exception {
-        callbackHandler = new SpringSecurityPlainTextPasswordValidationCallbackHandler();
+        callbackHandler = new SpringPlainTextPasswordValidationCallbackHandler();
         control = MockControl.createControl(AuthenticationManager.class);
         mock = (AuthenticationManager) control.getMock();
         callbackHandler.setAuthenticationManager(mock);

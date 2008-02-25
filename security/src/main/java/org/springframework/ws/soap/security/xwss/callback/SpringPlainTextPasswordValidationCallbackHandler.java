@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.security.xwss.callback.springsecurity;
+package org.springframework.ws.soap.security.xwss.callback;
 
 import java.io.IOException;
 import javax.security.auth.callback.Callback;
@@ -49,7 +49,7 @@ import org.springframework.ws.soap.security.callback.CleanupCallback;
  * @see org.springframework.security.ui.basicauth.BasicProcessingFilter
  * @since 1.5.0
  */
-public class SpringSecurityPlainTextPasswordValidationCallbackHandler extends AbstractCallbackHandler {
+public class SpringPlainTextPasswordValidationCallbackHandler extends AbstractCallbackHandler {
 
     private AuthenticationManager authenticationManager;
 
