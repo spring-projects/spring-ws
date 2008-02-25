@@ -4,13 +4,13 @@
 
 package org.springframework.ws.soap.addressing.server;
 
-import org.springframework.ws.soap.addressing.version.WsAddressing200408;
-import org.springframework.ws.soap.addressing.version.WsAddressingVersion;
+import org.springframework.ws.soap.addressing.version.Addressing200408;
+import org.springframework.ws.soap.addressing.version.AddressingVersion;
 
 public class AddressingInterceptor200408Test extends AbstractAddressingInterceptorTestCase {
 
-    protected WsAddressingVersion getVersion() {
-        return new WsAddressing200408();
+    protected AddressingVersion getVersion() {
+        return new Addressing200408();
     }
 
     protected String getTestPath() {

@@ -50,13 +50,13 @@ import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
 
 /**
- * Abstract base class for {@link WsAddressingVersion} implementations. Uses {@link XPathExpression}s to retrieve
+ * Abstract base class for {@link AddressingVersion} implementations. Uses {@link XPathExpression}s to retrieve
  * addressing information.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
  */
-public abstract class AbstractWsAddressingVersion extends TransformerObjectSupport implements WsAddressingVersion {
+public abstract class AbstractAddressingVersion extends TransformerObjectSupport implements AddressingVersion {
 
     private final XPathExpression toExpression;
 
@@ -76,7 +76,7 @@ public abstract class AbstractWsAddressingVersion extends TransformerObjectSuppo
 
     private final XPathExpression referenceParametersExpression;
 
-    protected AbstractWsAddressingVersion() {
+    protected AbstractAddressingVersion() {
         Properties namespaces = new Properties();
         namespaces.setProperty(getNamespacePrefix(), getNamespaceUri());
         toExpression = createNormalizedExpression(getToName(), namespaces);

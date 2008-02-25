@@ -28,7 +28,7 @@ import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
  * @author Arjen Poutsma
  * @since 1.5.0
  */
-public interface WsAddressingVersion {
+public interface AddressingVersion {
 
     /**
      * Returns the {@link org.springframework.ws.soap.addressing.core.MessageAddressingProperties} for the given

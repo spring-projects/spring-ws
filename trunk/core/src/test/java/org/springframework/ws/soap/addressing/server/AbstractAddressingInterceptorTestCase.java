@@ -16,7 +16,7 @@ import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.addressing.AbstractWsAddressingTestCase;
 import org.springframework.ws.soap.addressing.messageid.MessageIdStrategy;
-import org.springframework.ws.soap.addressing.version.WsAddressingVersion;
+import org.springframework.ws.soap.addressing.version.AddressingVersion;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
@@ -168,7 +168,7 @@ public abstract class AbstractAddressingInterceptorTestCase extends AbstractWsAd
         connectionControl.verify();
     }
 
-    protected abstract WsAddressingVersion getVersion();
+    protected abstract AddressingVersion getVersion();
 
     protected abstract String getTestPath();
 

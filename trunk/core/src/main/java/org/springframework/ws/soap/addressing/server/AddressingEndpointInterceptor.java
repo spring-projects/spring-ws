@@ -29,7 +29,7 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.addressing.core.EndpointReference;
 import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 import org.springframework.ws.soap.addressing.messageid.MessageIdStrategy;
-import org.springframework.ws.soap.addressing.version.WsAddressingVersion;
+import org.springframework.ws.soap.addressing.version.AddressingVersion;
 import org.springframework.ws.soap.server.SoapEndpointInterceptor;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
@@ -45,7 +45,7 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 
     private static final Log logger = LogFactory.getLog(AddressingEndpointInterceptor.class);
 
-    private final WsAddressingVersion version;
+    private final AddressingVersion version;
 
     private final MessageIdStrategy messageIdStrategy;
 
@@ -55,7 +55,7 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 
     private URI faultAction;
 
-    AddressingEndpointInterceptor(WsAddressingVersion version,
+    AddressingEndpointInterceptor(AddressingVersion version,
                                   MessageIdStrategy messageIdStrategy,
                                   WebServiceMessageSender[] messageSenders,
                                   URI replyAction,

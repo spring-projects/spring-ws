@@ -35,9 +35,9 @@ import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 import org.springframework.ws.soap.addressing.messageid.MessageIdStrategy;
 import org.springframework.ws.soap.addressing.messageid.RandomGuidMessageIdStrategy;
 import org.springframework.ws.soap.addressing.messageid.UuidMessageIdStrategy;
-import org.springframework.ws.soap.addressing.version.WsAddressing200408;
-import org.springframework.ws.soap.addressing.version.WsAddressing200605;
-import org.springframework.ws.soap.addressing.version.WsAddressingVersion;
+import org.springframework.ws.soap.addressing.version.Addressing10;
+import org.springframework.ws.soap.addressing.version.Addressing200408;
+import org.springframework.ws.soap.addressing.version.AddressingVersion;
 import org.springframework.ws.soap.server.SoapEndpointInvocationChain;
 import org.springframework.ws.soap.server.SoapEndpointMapping;
 import org.springframework.ws.transport.WebServiceMessageSender;
@@ -45,9 +45,9 @@ import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
  * Abstract base class for {@link EndpointMapping} implementations that handle WS-Addressing. Besides the normal {@link
- * SoapEndpointMapping} properties, this mapping has a {@link #setVersions(WsAddressingVersion[]) versions} property,
- * which defines the WS-Addressing specifications supported. By default, these are {@link WsAddressing200408} and {@link
- * WsAddressing200605}.
+ * SoapEndpointMapping} properties, this mapping has a {@link #setVersions(org.springframework.ws.soap.addressing.version.AddressingVersion[])
+ * versions} property, which defines the WS-Addressing specifications supported. By default, these are {@link
+ * org.springframework.ws.soap.addressing.version.Addressing200408} and {@link org.springframework.ws.soap.addressing.version.Addressing10}.
  * <p/>
  * The {@link #setMessageIdStrategy(MessageIdStrategy) messageIdStrategy} property defines the strategy to use for
  * creating reply <code>MessageIDs</code>. By default, this is the {@link UuidMessageIdStrategy} on Java 5 and higher,
@@ -76,7 +76,7 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 
     private WebServiceMessageSender[] messageSenders = new WebServiceMessageSender[0];
 
-    private WsAddressingVersion[] versions;
+    private AddressingVersion[] versions;
 
     private EndpointInterceptor[] preInterceptors = new EndpointInterceptor[0];
 
@@ -88,12 +88,13 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
     }
 
     /**
-     * Initializes the default implementation for this mapping's strategies: the {@link WsAddressing200408} and {@link
-     * WsAddressing200605} versions of the specication, and the {@link UuidMessageIdStrategy} on Java 5 and higher; the
-     * {@link RandomGuidMessageIdStrategy} on Java 1.4.
+     * Initializes the default implementation for this mapping's strategies: the {@link
+     * org.springframework.ws.soap.addressing.version.Addressing200408} and {@link org.springframework.ws.soap.addressing.version.Addressing10}
+     * versions of the specication, and the {@link UuidMessageIdStrategy} on Java 5 and higher; the {@link
+     * RandomGuidMessageIdStrategy} on Java 1.4.
      */
     protected void initDefaultStrategies() {
-        this.versions = new WsAddressingVersion[]{new WsAddressing200408(), new WsAddressing200605()};
+        this.versions = new AddressingVersion[]{new Addressing200408(), new Addressing10()};
         if (JdkVersion.isAtLeastJava15()) {
             messageIdStrategy = new UuidMessageIdStrategy();
         }
@@ -153,10 +154,11 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
     /**
      * Sets the WS-Addressing versions to be supported by this mapping.
      * <p/>
-     * By default, this array is set to support {@link WsAddressing200408 the August 2004} and the {@link
-     * WsAddressing200605 May 2006} versions of the specification.
+     * By default, this array is set to support {@link org.springframework.ws.soap.addressing.version.Addressing200408
+     * the August 2004} and the {@link org.springframework.ws.soap.addressing.version.Addressing10 May 2006} versions of
+     * the specification.
      */
-    public final void setVersions(WsAddressingVersion[] versions) {
+    public final void setVersions(AddressingVersion[] versions) {
         this.versions = versions;
     }
 
@@ -188,8 +190,11 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
         return null;
     }
 
-    /** Creates a {@link SoapEndpointInvocationChain} based on the given endpoint and {@link WsAddressingVersion}. */
-    private EndpointInvocationChain getEndpointInvocationChain(Object endpoint, WsAddressingVersion version) {
+    /**
+     * Creates a {@link SoapEndpointInvocationChain} based on the given endpoint and {@link
+     * org.springframework.ws.soap.addressing.version.AddressingVersion}.
+     */
+    private EndpointInvocationChain getEndpointInvocationChain(Object endpoint, AddressingVersion version) {
         URI responseAction = getResponseAction(endpoint);
         URI faultAction = getFaultAction(endpoint);
         EndpointInterceptor[] interceptors =
@@ -202,7 +207,7 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
         return new SoapEndpointInvocationChain(endpoint, interceptors, actorsOrRoles, isUltimateReceiver);
     }
 
-    private boolean supports(WsAddressingVersion version, SoapMessage request) {
+    private boolean supports(AddressingVersion version, SoapMessage request) {
         SoapHeader header = request.getSoapHeader();
         if (header != null) {
             for (Iterator iterator = header.examineAllHeaderElements(); iterator.hasNext();) {

@@ -23,15 +23,15 @@ import org.springframework.ws.soap.addressing.core.EndpointReference;
 import org.springframework.xml.namespace.QNameUtils;
 
 /**
- * Implements the May 2006 edition of the WS-Addressing specification. This version of the specification is used by
- * Microsoft's Windows Communication Foundation (WCF), and supported by Axis 1 and 2.
+ * Implements WS-Addressing 1.0 (May 2006). This version of the specification is used by Microsoft's Windows
+ * Communication Foundation (WCF), and supported by Axis 1 and 2.
  *
  * @author Arjen Poutsma
  * @see <a href="http://www.w3.org/TR/2006/REC-ws-addr-core-20060509">Web Services Addressing, August 2004</a>
  * @since 1.5.0
  */
 
-public class WsAddressing200605 extends AbstractWsAddressingVersion {
+public class Addressing10 extends AbstractAddressingVersion {
 
     private static final String NAMESPACE_URI = "http://www.w3.org/2005/08/addressing";
 
