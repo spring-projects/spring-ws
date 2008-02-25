@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.security.xwss.callback.springsecurity;
+package org.springframework.ws.soap.security.xwss.callback;
 
 import java.io.IOException;
 import java.security.cert.X509Certificate;
@@ -49,7 +49,7 @@ import org.springframework.ws.soap.security.callback.CleanupCallback;
  * @see com.sun.xml.wss.impl.callback.CertificateValidationCallback
  * @since 1.5.0
  */
-public class SpringSecurityCertificateValidationCallbackHandler extends AbstractCallbackHandler {
+public class SpringCertificateValidationCallbackHandler extends AbstractCallbackHandler {
 
     private AuthenticationManager authenticationManager;
 

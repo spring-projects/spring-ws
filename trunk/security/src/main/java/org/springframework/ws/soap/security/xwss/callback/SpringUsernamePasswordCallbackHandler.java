@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.security.xwss.callback.springsecurity;
+package org.springframework.ws.soap.security.xwss.callback;
 
 import java.io.IOException;
 import javax.security.auth.callback.Callback;
@@ -37,7 +37,7 @@ import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
  * @author Arjen Poutsma
  * @since 1.5.0
  */
-public class SpringSecurityUsernamePasswordCallbackHandler extends AbstractCallbackHandler {
+public class SpringUsernamePasswordCallbackHandler extends AbstractCallbackHandler {
 
     protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
         if (callback instanceof UsernameCallback) {

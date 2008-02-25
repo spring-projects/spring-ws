@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.security.xwss.callback.springsecurity;
+package org.springframework.ws.soap.security.xwss.callback;
 
 import java.io.IOException;
 import javax.security.auth.callback.Callback;
@@ -34,7 +34,6 @@ import org.springframework.security.userdetails.UsernameNotFoundException;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
-import org.springframework.ws.soap.security.xwss.callback.DefaultTimestampValidator;
 
 /**
  * Callback handler that validates a password digest using an Spring Security <code>UserDetailsService</code>. Logic
@@ -53,7 +52,7 @@ import org.springframework.ws.soap.security.xwss.callback.DefaultTimestampValida
  * @see org.springframework.security.ui.digestauth.DigestProcessingFilter
  * @since 1.5.0
  */
-public class SpringSecurityDigestPasswordValidationCallbackHandler extends AbstractCallbackHandler {
+public class SpringDigestPasswordValidationCallbackHandler extends AbstractCallbackHandler {
 
     private UserCache userCache = new NullUserCache();
 

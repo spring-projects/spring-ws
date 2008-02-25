@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.security.xwss.callback.springsecurity;
+package org.springframework.ws.soap.security.xwss.callback;
 
 import java.io.InputStream;
 import java.security.KeyStore;
@@ -33,9 +33,9 @@ import org.springframework.security.providers.TestingAuthenticationToken;
 import org.springframework.security.providers.x509.X509AuthenticationToken;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 
-public class SpringSecurityCertificateValidationCallbackHandlerTest extends TestCase {
+public class SpringCertificateValidationCallbackHandlerTest extends TestCase {
 
-    private SpringSecurityCertificateValidationCallbackHandler callbackHandler;
+    private SpringCertificateValidationCallbackHandler callbackHandler;
 
     private MockControl control;
 
@@ -46,7 +46,7 @@ public class SpringSecurityCertificateValidationCallbackHandlerTest extends Test
     private CertificateValidationCallback callback;
 
     protected void setUp() throws Exception {
-        callbackHandler = new SpringSecurityCertificateValidationCallbackHandler();
+        callbackHandler = new SpringCertificateValidationCallbackHandler();
         control = MockControl.createControl(AuthenticationManager.class);
         mock = (AuthenticationManager) control.getMock();
         callbackHandler.setAuthenticationManager(mock);
