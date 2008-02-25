@@ -30,7 +30,7 @@ import org.springframework.xml.namespace.QNameUtils;
  * @see <a href="http://msdn.microsoft.com/ws/2004/08/ws-addressing/">Web Services Addressing, August 2004</a>
  * @since 1.5.0
  */
-public class WsAddressing200408 extends AbstractWsAddressingVersion {
+public class Addressing200408 extends AbstractAddressingVersion {
 
     private static final String NAMESPACE_URI = "http://schemas.xmlsoap.org/ws/2004/08/addressing";
 
