@@ -21,7 +21,10 @@ import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.spi.LoggingEvent;
+
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
@@ -43,6 +46,12 @@ public class PayloadLoggingInterceptorTest extends TestCase {
         MockWebServiceMessage request = new MockWebServiceMessage("<request/>");
         messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
         appender.reset();
+    }
+
+    protected void tearDown() throws Exception {
+        BasicConfigurator.resetConfiguration();
+        ClassPathResource resource = new ClassPathResource("log4j.properties");
+        PropertyConfigurator.configure(resource.getURL());
     }
 
     public void testHandleRequestDisabled() throws Exception {
