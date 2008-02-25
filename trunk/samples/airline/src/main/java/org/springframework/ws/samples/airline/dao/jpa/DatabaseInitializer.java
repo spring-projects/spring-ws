@@ -36,7 +36,7 @@ import org.springframework.ws.samples.airline.domain.ServiceClass;
  * A simple class that uses JPA to initialize the database.
  *
  * @author Arjen Poutsma
- * @since 1.1.0
+ * @since 1.5.0
  */
 public class DatabaseInitializer implements InitializingBean {
 
