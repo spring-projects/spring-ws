@@ -17,17 +17,20 @@
 package org.springframework.ws.samples.stockquote.ws;
 
 import java.util.GregorianCalendar;
-import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.springframework.ws.samples.stockquote.schema.StockQuote;
 import org.springframework.ws.samples.stockquote.schema.StockQuoteRequest;
 import org.springframework.ws.samples.stockquote.schema.StockQuoteResponse;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.soap.addressing.server.annotation.Action;
+import org.springframework.ws.soap.addressing.server.annotation.Address;
 
 @Endpoint
+@Address("http://localhost:8080/StockService")
+// optional
 public class StockService {
 
     private DatatypeFactory datatypeFactory;
@@ -36,7 +39,8 @@ public class StockService {
         datatypeFactory = DatatypeFactory.newInstance();
     }
 
-    @Action("http://www.springframework.org/spring-ws/samples/stockquote/StockService/GetQuote")
+    @Action(value = "http://www.springframework.org/spring-ws/samples/stockquote/StockService/GetQuote",
+            output = "http://www.springframework.org/spring-ws/samples/stockquote/StockService/Quotes")
     public StockQuoteResponse getStockQuotes(StockQuoteRequest request) {
         StockQuoteResponse response = new StockQuoteResponse();
 
