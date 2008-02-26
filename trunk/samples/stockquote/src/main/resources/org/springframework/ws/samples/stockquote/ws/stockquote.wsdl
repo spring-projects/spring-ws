@@ -49,7 +49,7 @@
             <wsdl:input message="tns:StockQuoteRequest" name="StockQuoteRequest"
                         wsaw:Action="http://www.springframework.org/spring-ws/samples/stockquote/StockService/GetQuote"/>
             <wsdl:output message="tns:StockQuoteResponse" name="StockQuoteResponse"
-                         wsaw:Action="http://www.springframework.org/spring-ws/samples/stockquote/StockService/GetQuoteResponse"/>
+                         wsaw:Action="http://www.springframework.org/spring-ws/samples/stockquote/StockService/Quotes"/>
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="StockSoap11" type="tns:Stock">

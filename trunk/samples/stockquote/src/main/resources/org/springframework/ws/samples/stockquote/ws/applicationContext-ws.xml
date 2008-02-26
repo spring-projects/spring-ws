@@ -22,6 +22,9 @@
         <property name="messageSenders">
             <bean class="org.springframework.ws.transport.http.HttpUrlConnectionMessageSender"/>
         </property>
+        <property name="preInterceptors">
+            <bean class="org.springframework.ws.soap.server.endpoint.interceptor.SoapEnvelopeLoggingInterceptor"/>
+        </property>
     </bean>
 
     <bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
