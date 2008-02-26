@@ -303,11 +303,10 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
             throws Exception {
         for (Iterator iterator = endpointExceptionResolvers.iterator(); iterator.hasNext();) {
             EndpointExceptionResolver resolver = (EndpointExceptionResolver) iterator.next();
-            if (logger.isDebugEnabled()) {
-                logger.debug("Testing endpoint exception resolver [" + resolver + "]");
-            }
             if (resolver.resolveException(messageContext, endpoint, ex)) {
-                logger.warn("Endpoint invocation resulted in exception - responding with SOAP Fault", ex);
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Endpoint invocation resulted in exception - responding with Fault", ex);
+                }
                 return;
             }
         }
