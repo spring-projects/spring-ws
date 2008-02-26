@@ -19,7 +19,10 @@ package org.springframework.ws.soap.addressing.version;
 import java.net.URI;
 import javax.xml.namespace.QName;
 
+import org.springframework.util.Assert;
+import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.addressing.core.EndpointReference;
+import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 import org.springframework.xml.namespace.QNameUtils;
 
 /**
@@ -33,6 +36,12 @@ import org.springframework.xml.namespace.QNameUtils;
 public class Addressing200408 extends AbstractAddressingVersion {
 
     private static final String NAMESPACE_URI = "http://schemas.xmlsoap.org/ws/2004/08/addressing";
+
+    public void addAddressingHeaders(SoapMessage message, MessageAddressingProperties map) {
+        Assert.notNull(map.getAction(), "'Action' must not be null");
+        Assert.notNull(map.getTo(), "'Action' must not be null");
+        super.addAddressingHeaders(message, map);
+    }
 
     protected final URI getAnonymous() {
         return URI.create(NAMESPACE_URI + "/role/anonymous");

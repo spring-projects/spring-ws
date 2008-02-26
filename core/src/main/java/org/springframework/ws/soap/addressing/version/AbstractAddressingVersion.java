@@ -24,7 +24,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import javax.xml.namespace.QName;
-import javax.xml.transform.Transformer;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Result;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
@@ -38,7 +41,7 @@ import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.addressing.WsAddressingException;
+import org.springframework.ws.soap.addressing.AddressingException;
 import org.springframework.ws.soap.addressing.core.EndpointReference;
 import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 import org.springframework.ws.soap.soap11.Soap11Body;
@@ -57,6 +60,8 @@ import org.springframework.xml.xpath.XPathExpressionFactory;
  * @since 1.5.0
  */
 public abstract class AbstractAddressingVersion extends TransformerObjectSupport implements AddressingVersion {
+
+    private static DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
     private final XPathExpression toExpression;
 
@@ -120,7 +125,7 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
         URI to = getUri(headerElement, toExpression);
         EndpointReference from = getEndpointReference(fromExpression.evaluateAsNode(headerElement));
         EndpointReference replyTo = getEndpointReference(replyToExpression.evaluateAsNode(headerElement));
-        if (replyTo == null && getAnonymous() != null) {
+        if (replyTo == null) {
             replyTo = getDefaultReplyTo(from);
         }
         EndpointReference faultTo = getEndpointReference(faultToExpression.evaluateAsNode(headerElement));
@@ -160,7 +165,7 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
             return document.getDocumentElement();
         }
         catch (TransformerException ex) {
-            throw new WsAddressingException("Could not transform SoapHeader to Document", ex);
+            throw new AddressingException("Could not transform SoapHeader to Document", ex);
         }
     }
 
@@ -180,38 +185,92 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
         return new EndpointReference(address, referenceProperties, referenceParameters);
     }
 
+    public void addAddressingHeaders(SoapMessage message, MessageAddressingProperties map) {
+        SoapHeader header = message.getSoapHeader();
+        // To
+        if (map.getTo() != null) {
+            SoapHeaderElement to = header.addHeaderElement(getToName());
+            to.setText(map.getTo().toString());
+            to.setMustUnderstand(true);
+        }
+        // From
+        if (map.getFrom() != null) {
+            SoapHeaderElement from = header.addHeaderElement(getFromName());
+            addEndpointReference(from, map.getFrom());
+        }
+        //ReplyTo
+        if (map.getReplyTo() != null) {
+            SoapHeaderElement replyTo = header.addHeaderElement(getReplyToName());
+            addEndpointReference(replyTo, map.getReplyTo());
+        }
+        // FaultTo
+        if (map.getFaultTo() != null) {
+            SoapHeaderElement faultTo = header.addHeaderElement(getFaultToName());
+            addEndpointReference(faultTo, map.getFaultTo());
+        }
+        // Action
+        SoapHeaderElement action = header.addHeaderElement(getActionName());
+        action.setText(map.getAction().toString());
+        // MessageID
+        if (map.getMessageId() != null) {
+            SoapHeaderElement messageId = header.addHeaderElement(getMessageIdName());
+            messageId.setText(map.getMessageId().toString());
+        }
+        // RelatesTo
+        if (map.getRelatesTo() != null) {
+            SoapHeaderElement relatesTo = header.addHeaderElement(getRelatesToName());
+            relatesTo.setText(map.getRelatesTo().toString());
+        }
+        addReferenceNodes(header.getResult(), map.getReferenceParameters());
+        addReferenceNodes(header.getResult(), map.getReferenceProperties());
+    }
+
     public final boolean understands(SoapHeaderElement headerElement) {
         return getNamespaceUri().equals(headerElement.getName().getNamespaceURI());
     }
 
-    public final void addAddressingHeaders(SoapMessage message, MessageAddressingProperties map) {
-        SoapHeader header = message.getSoapHeader();
-        SoapHeaderElement messageId = header.addHeaderElement(getMessageIdName());
-        messageId.setText(map.getMessageId().toString());
-        SoapHeaderElement relatesTo = header.addHeaderElement(getRelatesToName());
-        relatesTo.setText(map.getRelatesTo().toString());
-        SoapHeaderElement to = header.addHeaderElement(getToName());
-        to.setText(map.getTo().toString());
-        to.setMustUnderstand(true);
-        if (map.getAction() != null) {
-            SoapHeaderElement action = header.addHeaderElement(getActionName());
-            action.setText(map.getAction().toString());
+    /** Adds ReplyTo, FaultTo, or From EPR to the given header Element. */
+    protected void addEndpointReference(SoapHeaderElement headerElement, EndpointReference epr) {
+        if (epr == null || epr.getAddress() == null) {
+            return;
         }
         try {
-            Transformer transformer = createTransformer();
-            for (Iterator iterator = map.getReferenceParameters().iterator(); iterator.hasNext();) {
-                Node node = (Node) iterator.next();
-                DOMSource source = new DOMSource(node);
-                transformer.transform(source, header.getResult());
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            Document document = documentBuilder.newDocument();
+            Element address = document.createElementNS(getNamespaceUri(), QNameUtils.toQualifiedName(getAddressName()));
+            address.setTextContent(epr.getAddress().toString());
+            transform(new DOMSource(address), headerElement.getResult());
+            if (getReferenceParametersName() != null && !epr.getReferenceParameters().isEmpty()) {
+                Element referenceParams = document.createElementNS(getNamespaceUri(),
+                        QNameUtils.toQualifiedName(getReferenceParametersName()));
+                addReferenceNodes(new DOMResult(referenceParams), epr.getReferenceParameters());
+                transform(new DOMSource(referenceParams), headerElement.getResult());
             }
-            for (Iterator iterator = map.getReferenceProperties().iterator(); iterator.hasNext();) {
+            if (getReferencePropertiesName() != null && !epr.getReferenceProperties().isEmpty()) {
+                Element referenceProps = document.createElementNS(getNamespaceUri(),
+                        QNameUtils.toQualifiedName(getReferencePropertiesName()));
+                addReferenceNodes(new DOMResult(referenceProps), epr.getReferenceProperties());
+                transform(new DOMSource(referenceProps), headerElement.getResult());
+            }
+        }
+        catch (ParserConfigurationException ex) {
+            throw new AddressingException("Could not add Endpoint Reference [" + epr + "] to header element", ex);
+        }
+        catch (TransformerException ex) {
+            throw new AddressingException("Could not add reference properties/parameters to message", ex);
+        }
+    }
+
+    protected void addReferenceNodes(Result result, List nodes) {
+        try {
+            for (Iterator iterator = nodes.iterator(); iterator.hasNext();) {
                 Node node = (Node) iterator.next();
                 DOMSource source = new DOMSource(node);
-                transformer.transform(source, header.getResult());
+                transform(source, result);
             }
         }
         catch (TransformerException ex) {
-            throw new WsAddressingException("Could not add reference properties/parameters to message", ex);
+            throw new AddressingException("Could not add reference properties/parameters to message", ex);
         }
     }
 
@@ -298,6 +357,11 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
     /** Returns the qualified name of the <code>RelatesTo</code> addressing header. */
     protected QName getRelatesToName() {
         return QNameUtils.createQName(getNamespaceUri(), "RelatesTo", getNamespacePrefix());
+    }
+
+    /** Returns the qualified name of the <code>RelatesTo</code> addressing header. */
+    protected QName getRelationshipTypeName() {
+        return new QName("RelationshipType");
     }
 
     /**

@@ -41,11 +41,11 @@ public class SimpleActionEndpointMappingTest extends AbstractWsAddressingTestCas
         Map map = new HashMap();
         endpoint1 = new Endpoint1();
         Endpoint2 endpoint2 = new Endpoint2();
-        map.put("http://fabrikam123.example/mail/Delete", endpoint1);
-        map.put("http://fabrikam123.example/mail/Add", endpoint2);
+        map.put("http://example.com/fabrikam/mail/Delete", endpoint1);
+        map.put("http://example.com/fabrikam/mail/Add", endpoint2);
         mapping.setPreInterceptors(new EndpointInterceptor[]{new PayloadLoggingInterceptor()});
         mapping.setPostInterceptors(new EndpointInterceptor[]{new PayloadValidatingInterceptor()});
-        mapping.setAddress(new URI("mailto:joe@fabrikam123.example"));
+        mapping.setAddress(new URI("mailto:fabrikam@example.com"));
         mapping.setActionMap(map);
         mapping.afterPropertiesSet();
     }

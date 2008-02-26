@@ -4,12 +4,12 @@
         <wsa:ReplyTo>
             <wsa:Address>http://example.com/business/client1</wsa:Address>
         </wsa:ReplyTo>
-        <wsa:To>mailto:fabrikam@example.com</wsa:To>
+        <wsa:To S:mustUnderstand="true">mailto:fabrikam@example.com</wsa:To>
         <wsa:Action>http://example.com/fabrikam/mail/Delete</wsa:Action>
     </S:Header>
     <S:Body>
         <f:Delete xmlns:f="http://example.com/fabrikam">
-            <maxCount>42</maxCount>
+            <f:maxCount>42</f:maxCount>
         </f:Delete>
     </S:Body>
 </S:Envelope>

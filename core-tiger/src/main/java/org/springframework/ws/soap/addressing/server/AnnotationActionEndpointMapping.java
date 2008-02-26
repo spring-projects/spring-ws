@@ -24,12 +24,11 @@ import java.net.URISyntaxException;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.core.JdkVersion;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 import org.springframework.ws.soap.addressing.server.annotation.Action;
 import org.springframework.ws.soap.addressing.server.annotation.Address;
 
@@ -58,44 +57,11 @@ import org.springframework.ws.soap.addressing.server.annotation.Address;
  * @see Address
  * @since 1.5.0
  */
-public class AnnotationActionEndpointMapping extends AbstractActionEndpointMapping implements BeanPostProcessor {
+public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpointMapping implements BeanPostProcessor {
 
     /** Returns the 'endpoint' annotation type. Default is {@link Endpoint}. */
     protected Class<? extends Annotation> getEndpointAnnotationType() {
         return Endpoint.class;
-    }
-
-    public final Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        return bean;
-    }
-
-    public final Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if (AopUtils.getTargetClass(bean).getAnnotation(getEndpointAnnotationType()) != null) {
-            registerMethods(bean);
-        }
-        return bean;
-    }
-
-    /**
-     * Helper method that registers the methods of the given bean. This method iterates over the methods of the bean,
-     * and calls {@link #getActionForMethod(java.lang.reflect.Method)} for each. If this returns a URI, the method is
-     * registered using {@link #registerEndpoint(java.net.URI, Object)}.
-     *
-     * @see #getActionForMethod (java.lang.reflect.Method)
-     */
-    protected void registerMethods(Object endpoint) {
-        Assert.notNull(endpoint, "'endpoint' must not be null");
-        Method[] methods = AopUtils.getTargetClass(endpoint).getMethods();
-        for (int i = 0; i < methods.length; i++) {
-            if (JdkVersion.isAtLeastJava15() && methods[i].isSynthetic() ||
-                    methods[i].getDeclaringClass().equals(Object.class)) {
-                continue;
-            }
-            URI action = getActionForMethod(methods[i]);
-            if (action != null) {
-                registerEndpoint(action, new MethodEndpoint(endpoint, methods[i]));
-            }
-        }
     }
 
     /**
@@ -109,7 +75,8 @@ public class AnnotationActionEndpointMapping extends AbstractActionEndpointMappi
                 return new URI(action.value());
             }
             catch (URISyntaxException e) {
-                // ignore
+                throw new IllegalArgumentException(
+                        "Invalid Action annotation [" + action.value() + "] on [" + method + "]");
             }
         }
         return null;
@@ -138,5 +105,33 @@ public class AnnotationActionEndpointMapping extends AbstractActionEndpointMappi
             }
         }
         return null;
+    }
+
+    protected URI getResponseAction(Object endpoint, MessageAddressingProperties map) {
+        MethodEndpoint methodEndpoint = (MethodEndpoint) endpoint;
+        Action action = methodEndpoint.getMethod().getAnnotation(Action.class);
+        if (action != null && StringUtils.hasText(action.output())) {
+            try {
+                return new URI(action.output());
+            }
+            catch (URISyntaxException e) {
+                throw new IllegalArgumentException(
+                        "Invalid Action annotation [" + action.value() + "] on [" + methodEndpoint + "]");
+            }
+        }
+        else {
+            return super.getResponseAction(endpoint, map);
+        }
+    }
+
+    public final Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        return bean;
+    }
+
+    public final Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        if (AopUtils.getTargetClass(bean).getAnnotation(getEndpointAnnotationType()) != null) {
+            registerMethods(bean);
+        }
+        return bean;
     }
 }

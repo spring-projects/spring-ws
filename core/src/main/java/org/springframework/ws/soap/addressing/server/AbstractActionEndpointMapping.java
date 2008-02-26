@@ -29,6 +29,9 @@ import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 /**
  * Abstract base class for WS-Addressing <code>Action</code>-mapped {@link org.springframework.ws.server.EndpointMapping}
  * implementations. Provides infrastructure for mapping endpoints to actions.
+ * <p/>
+ * By default, this mapping creates a <code>Action</code> for reply messages based on the request message, plus the
+ * extra {@link #setOutputActionSuffix(String) suffix}.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
@@ -36,10 +39,25 @@ import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 public abstract class AbstractActionEndpointMapping extends AbstractAddressingEndpointMapping
         implements ApplicationContextAware {
 
+    /** The defaults suffix to add to request <code>Action</code> for reply messages. */
+    public static final String DEFAULT_OUTPUT_ACTION_SUFFIX = "Response";
+
     // keys are action URIs, values are endpoints
     private final Map endpointMap = new HashMap();
 
+    private String outputActionSuffix = DEFAULT_OUTPUT_ACTION_SUFFIX;
+
     private ApplicationContext applicationContext;
+
+    /**
+     * Sets the suffix to add to request <code>Action</code>s for reply messages.
+     *
+     * @see #DEFAULT_OUTPUT_ACTION_SUFFIX
+     */
+    public void setOutputActionSuffix(String outputActionSuffix) {
+        Assert.hasText(outputActionSuffix, "'replyActionSuffix' must not be empty");
+        this.outputActionSuffix = outputActionSuffix;
+    }
 
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
@@ -116,5 +134,13 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
         }
     }
 
-
+    protected URI getResponseAction(Object endpoint, MessageAddressingProperties requestMap) {
+        URI requestAction = requestMap.getAction();
+        if (requestAction != null) {
+            return URI.create(requestAction.toString() + outputActionSuffix);
+        }
+        else {
+            return null;
+        }
+    }
 }
