@@ -38,6 +38,8 @@
         <menu name="Support">
             <item name="Support Forums" href="http://forum.springframework.org/forumdisplay.php?f=39"/>
             <item name="JIRA" href="http://jira.springframework.org/browse/SWS"/>
+            <item name="Road Map"
+                  href="http://jira.springframework.org/browse/SWS?report=com.atlassian.jira.plugin.system.project:roadmap-panel"/>
         </menu>
         <menu ref="reports" name="Reports"/>
     </body>
