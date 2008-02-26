@@ -184,7 +184,7 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
                 if (endpoint == null) {
                     return null;
                 }
-                return getEndpointInvocationChain(endpoint, versions[i]);
+                return getEndpointInvocationChain(endpoint, versions[i], requestMap);
             }
         }
         return null;
@@ -194,14 +194,15 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
      * Creates a {@link SoapEndpointInvocationChain} based on the given endpoint and {@link
      * org.springframework.ws.soap.addressing.version.AddressingVersion}.
      */
-    private EndpointInvocationChain getEndpointInvocationChain(Object endpoint, AddressingVersion version) {
-        URI responseAction = getResponseAction(endpoint);
-        URI faultAction = getFaultAction(endpoint);
+    private EndpointInvocationChain getEndpointInvocationChain(Object endpoint,
+                                                               AddressingVersion version,
+                                                               MessageAddressingProperties requestMap) {
+        URI responseAction = getResponseAction(endpoint, requestMap);
         EndpointInterceptor[] interceptors =
                 new EndpointInterceptor[preInterceptors.length + postInterceptors.length + 1];
         System.arraycopy(preInterceptors, 0, interceptors, 0, preInterceptors.length);
-        AddressingEndpointInterceptor interceptor = new AddressingEndpointInterceptor(version, messageIdStrategy,
-                messageSenders, responseAction, faultAction);
+        AddressingEndpointInterceptor interceptor =
+                new AddressingEndpointInterceptor(version, messageIdStrategy, messageSenders, responseAction, null);
         interceptors[preInterceptors.length] = interceptor;
         System.arraycopy(postInterceptors, 0, interceptors, preInterceptors.length + 1, postInterceptors.length);
         return new SoapEndpointInvocationChain(endpoint, interceptors, actorsOrRoles, isUltimateReceiver);
@@ -229,12 +230,6 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
      */
     protected abstract Object getEndpointInternal(MessageAddressingProperties map);
 
-    protected URI getResponseAction(Object endpoint) {
-        return null;
-    }
-
-    protected URI getFaultAction(Object endpoint) {
-        return null;
-    }
+    protected abstract URI getResponseAction(Object endpoint, MessageAddressingProperties requestMap);
 
 }

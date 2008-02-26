@@ -37,4 +37,7 @@ public @interface Action {
     /** Signifies the value for the request WS-Addressing <code>Action</code> header that is handled by the method. */
     String value();
 
+    /** Signifies the value for the response WS-Addressing <code>Action</code> header that is provided by the method. */
+    String output() default "";
+
 }

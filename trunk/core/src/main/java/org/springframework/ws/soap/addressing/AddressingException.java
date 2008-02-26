@@ -24,13 +24,13 @@ import org.springframework.ws.WebServiceException;
  * @author Arjen Poutsma
  * @since 1.5.0
  */
-public class WsAddressingException extends WebServiceException {
+public class AddressingException extends WebServiceException {
 
-    public WsAddressingException(String msg) {
+    public AddressingException(String msg) {
         super(msg);
     }
 
-    public WsAddressingException(String msg, Throwable ex) {
+    public AddressingException(String msg, Throwable ex) {
         super(msg, ex);
     }
 }
