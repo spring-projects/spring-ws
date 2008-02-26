@@ -18,6 +18,8 @@ package org.springframework.ws.soap.client.core;
 
 import java.io.IOException;
 
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
 import org.springframework.ws.soap.SoapMessage;
@@ -44,10 +46,14 @@ public class SoapActionCallback implements WebServiceMessageCallback {
 
     /** Create a new <code>SoapActionCallback</code> with the given string SOAPAction. */
     public SoapActionCallback(String soapAction) {
+        if (!StringUtils.hasText(soapAction)) {
+            soapAction = "\"\"";
+        }
         this.soapAction = soapAction;
     }
 
     public void doWithMessage(WebServiceMessage message) throws IOException {
+        Assert.isInstanceOf(SoapMessage.class, message);
         SoapMessage soapMessage = (SoapMessage) message;
         soapMessage.setSoapAction(soapAction);
     }
