@@ -136,10 +136,18 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
                     return true;
                 }
                 catch (WsSecuritySecurementException ex) {
-                    return handleSecurementException(ex, messageContext);
+                    boolean result = handleSecurementException(ex, messageContext);
+                    if (!result) {
+                        messageContext.clearResponse();
+                    }
+                    return result;
                 }
                 catch (WsSecurityFaultException ex) {
-                    return handleFaultException(ex, messageContext);
+                    boolean result = handleFaultException(ex, messageContext);
+                    if (!result) {
+                        messageContext.clearResponse();
+                    }
+                    return result;
                 }
             }
             else {
