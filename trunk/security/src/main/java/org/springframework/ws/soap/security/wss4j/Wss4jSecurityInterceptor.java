@@ -180,24 +180,24 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     /**
      * Defines which algorithm to use to encrypt the generated symmetric key. Currently WSS4J supports {@link
-     * WSConstants#KEYTRANSPORT_RSA15} only.
+     * WSConstants#KEYTRANSPORT_RSA15} and {@link WSConstants#KEYTRANSPORT_RSAOEP}.
      */
     public void setSecurementEncryptionKeyTransportAlgorithm(String securementEncryptionKeyTransportAlgorithm) {
         handler.setOption(WSHandlerConstants.ENC_KEY_TRANSPORT, securementEncryptionKeyTransportAlgorithm);
     }
 
     /**
-     * Parameter to define which parts of the request shall be encrypted.
+     * Property to define which parts of the request shall be encrypted.
      * <p/>
-     * The value of this parameter is a list of semi-colon separated element names that identify the elements to
-     * encrypt. An encryption mode specifier and a namespace identification, each inside a pair of curly brackets, may
-     * preceed each element name.
+     * The value of this property is a list of semi-colon separated element names that identify the elements to encrypt.
+     * An encryption mode specifier and a namespace identification, each inside a pair of curly brackets, may precede
+     * each element name.
      * <p/>
      * The encryption mode specifier is either <code>{Content}</code> or <code>{Element}</code>. Please refer to the W3C
      * XML Encryption specification about the differences between Element and Content encryption. The encryption mode
      * defaults to <code>Content</code> if it is omitted. Example of a list:
      * <pre>
-     * &lt;parameter name="encryptionParts"
+     * &lt;property name="securementEncryptionParts"
      *   value="{Content}{http://example.org/paymentv2}CreditCard;
      *             {Element}{}UserName" />
      * </pre>
@@ -205,7 +205,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
      * <code>http://example.org/paymentv2</code>, and will encrypt its content. Be aware that the element name, the
      * namespace identifier, and the encryption modifier are case sensitive.
      * <p/>
-     * The encryption modifier and the namespace identifier can be ommited. In this case the encryption mode defaults to
+     * The encryption modifier and the namespace identifier can be omitted. In this case the encryption mode defaults to
      * <code>Content</code> and the namespace is set to the SOAP namespace.
      * <p/>
      * An empty encryption mode defaults to <code>Content</code>, an empty namespace identifier defaults to the SOAP
@@ -245,15 +245,9 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
      * <p/>
      * Encryption only does not authenticate a user / sender, therefore it does not need a password.
      * <p/>
-     * Placing the username of the encryption certficate in the WSDD is not a security risk, because the public key of
-     * that certificate is used only.
+     * Placing the username of the encryption certificate in the configuration file is not a security risk, because the
+     * public key of that certificate is used only.
      * <p/>
-     * The application may set this parameter using the following method:
-     * <pre>
-     * call.setProperty(WSHandlerConstants.ENCYRPTION_USER, "encryptionuser");
-     * </pre>
-     * However, the parameter in the WSDD deployment file overwrites the property setting (deployment setting overwrites
-     * application setting).
      */
     public void setSecurementEncryptionUser(String securementEncryptionUser) {
         handler.setOption(WSHandlerConstants.ENCRYPTION_USER, securementEncryptionUser);
@@ -297,20 +291,20 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
     }
 
     /**
-     * Parameter to define which parts of the request shall be signed.
+     * Property to define which parts of the request shall be signed.
      * <p/>
      * Refer to {@link #setSecurementEncryptionParts(String)} for a detailed description of the format of the value
      * string.
      * <p/>
-     * If this parameter is not specified the handler signs the SOAP Body by default.
+     * If this property is not specified the handler signs the SOAP Body by default.
      * <p/>
      * The WS Security specifications define several formats to transfer the signature tokens (certificates) or
      * references to these tokens. Thus, the plain element name <code>Token</code> signs the token and takes care of the
-     * different format.
+     * different formats.
      * <p/>
      * To sign the SOAP body <b>and</b> the signature token the value of this parameter must contain:
      * <pre>
-     * &lt;parameter name="signatureParts"
+     * &lt;property name="securementSignatureParts"
      *   value="{}{http://schemas.xmlsoap.org/soap/envelope/}Body; Token" />
      * </pre>
      * To specify an element without a namespace use the string <code>Null</code> as the namespace name (this is a case
@@ -323,6 +317,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         handler.setOption(WSHandlerConstants.SIGNATURE_PARTS, securementSignatureParts);
     }
 
+    /** Sets the username for securement username token or/and the alias of the private key for securement signature */
     public void setSecurementUsername(String securementUsername) {
         this.securementUsername = securementUsername;
     }
@@ -409,9 +404,9 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
      * The value of this parameter is a list of element names that are added to the UsernameToken. The names of the list
      * a separated by spaces.
      * <p/>
-     * The list may containe the names <code>nonce</code> and <code>created</code> only. Use this option if the password
-     * type is <code>passwordText</code> and the handler shall add the <code>Nonce</code> and/or <code>Created</code>
-     * elements.
+     * The list may contain the names <code>Nonce</code> and <code>Created</code> only (case sensitive). Use this option
+     * if the password type is <code>passwordText</code> and the handler shall add the <code>Nonce</code> and/or
+     * <code>Created</code> elements.
      */
     public void setSecurementUsernameTokenElements(String securementUsernameTokenElements) {
         handler.setOption(WSHandlerConstants.ADD_UT_ELEMENTS, securementUsernameTokenElements);
