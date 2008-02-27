@@ -3,7 +3,7 @@
     <skin>
         <groupId>org.springframework.maven.skins</groupId>
         <artifactId>maven-spring-skin</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
     </skin>
     <publishDate position="left" format="d MMM yyyy"/>
     <bannerLeft>
@@ -14,7 +14,8 @@
     <body>
         <links>
             <item name="Spring Framework" href="http://www.springframework.org"/>
-            <item name="Spring Web Services" href="http://www.springframework.org/spring-ws"/>
+            <item name="Spring Web Services 1.0" href="http://static.springframework.org/spring-ws/sites/1.0/"/>
+            <item name="Spring Web Services 1.5" href="http://static.springframework.org/spring-ws/sites/1.5/"/>
         </links>
         <head>
             <script type="text/javascript" language="javascript">
@@ -37,7 +38,7 @@
         </menu>
         <menu name="Support">
             <item name="Support Forums" href="http://forum.springframework.org/forumdisplay.php?f=39"/>
-            <item name="JIRA" href="http://opensource.atlassian.com/projects/spring/browse/SWS"/>
+            <item name="JIRA" href="http://jira.springframework.org/browse/SWS"/>
         </menu>
         <menu ref="reports" name="Reports"/>
     </body>
