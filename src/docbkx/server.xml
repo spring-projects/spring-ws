@@ -1109,5 +1109,6 @@ public class MyBusinessException extends Exception {
        </SOAP-ENV:Fault>
     </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>]]></programlisting>
+            </section>
     </section>
 </chapter>
