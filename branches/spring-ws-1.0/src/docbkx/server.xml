@@ -915,33 +915,37 @@ public class AnnotationOrderEndpoint {
         <para>
             Besides implementing the <classname>EndpointExceptionResolver</classname> interface, which is only a
             matter of implementing the <methodname>resolveException(MessageContext, endpoint, Exception)</methodname>
-            method, you may also use one of the default implementations.
+            method, you may also use one of the provided implementations.
             The simplest implementation is the <classname>SimpleSoapExceptionResolver</classname>, which just
             creates a SOAP 1.1 Server or SOAP 1.2 Receiver Fault, and uses the exception message as the fault string.
+            The <classname>SimpleSoapExceptionResolver</classname> is the default, but it can be overriden by
+            explicitly adding another resolver.
         </para>
-        <para>
-            The <classname>SoapFaultMappingExceptionResolver</classname> is a more sophisticated implementation.
-            This resolver enables you to take the class name of any exception that might be thrown and map it to a
-            SOAP Fault, like so:
-        </para>
-        <programlisting><![CDATA[<beans>
+        <section>
+            <title><classname>SoapFaultMappingExceptionResolver</classname></title>
+            <para>
+                The <classname>SoapFaultMappingExceptionResolver</classname> is a more sophisticated implementation.
+                This resolver enables you to take the class name of any exception that might be thrown and map it to a
+                SOAP Fault, like so:
+            </para>
+            <programlisting><![CDATA[<beans>
     <bean id="exceptionResolver"
         class="org.springframework.ws.soap.server.endpoint.SoapFaultMappingExceptionResolver">
-    <property name="defaultFault" value="SERVER">
-    </property>
-    <property name="exceptionMappings">
-        org.springframework.oxm.ValidationFailureException=CLIENT,Invalid request
-    </property>
+        <property name="defaultFault" value="SERVER">
+        </property>
+        <property name="exceptionMappings">
+            org.springframework.oxm.ValidationFailureException=CLIENT,Invalid request
+        </property>
     </bean>
 </beans>]]></programlisting>
-        <para>
-            The key values and default endpoint use the format <literal>faultCode,faultString,locale</literal>, where
-            only the fault code is required. If the fault string is not set, it will default to the exception message.
-            If the language is not set, it will default to English. The above configuration will map exceptions of
-            type <classname>ValidationFailureException</classname> to a client-side SOAP Fault with a fault string
-            <literal>"Invalid request"</literal>, as can be seen in the following response:
-        </para>
-        <programlisting><![CDATA[<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+            <para>
+                The key values and default endpoint use the format <literal>faultCode,faultString,locale</literal>, where
+                only the fault code is required. If the fault string is not set, it will default to the exception message.
+                If the language is not set, it will default to English. The above configuration will map exceptions of
+                type <classname>ValidationFailureException</classname> to a client-side SOAP Fault with a fault string
+                <literal>"Invalid request"</literal>, as can be seen in the following response:
+            </para>
+            <programlisting><![CDATA[<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
     <SOAP-ENV:Body>]]><emphasis role="bold"><![CDATA[
        <SOAP-ENV:Fault>
            <faultcode>SOAP-ENV:Client</faultcode>
@@ -949,15 +953,22 @@ public class AnnotationOrderEndpoint {
        </SOAP-ENV:Fault>]]></emphasis><![CDATA[
     </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>]]></programlisting>
-        <para>
-            If any other exception occurs, it will return the default fault: a server-side fault with the exception
-            message as fault string.
-            Finally, it is also possible to annotate exception classes with the <interfacename>@SoapFault</interfacename>
-            annotation, to indicate the SOAP Fault that should be returned whenever that exception is thrown.
-            The elements of the annotation include a fault code enumeration, fault string or reason, and language. Here
-            is an example exception:
-        </para>
-        <programlisting><![CDATA[package samples;
+            <para>
+                If any other exception occurs, it will return the default fault: a server-side fault with the exception
+                message as fault string.
+            </para>
+            </section>
+        <section>
+            <title><classname>SoapFaultAnnotationExceptionResolver</classname></title>
+            <para>
+                Finally, it is also possible to annotate exception classes with the
+                <interfacename>@SoapFault</interfacename> annotation, to indicate the SOAP Fault that should be returned
+                whenever that exception is thrown. In order for these annotations to be picked up, you need to add the
+                <classname>SoapFaultAnnotationExceptionResolver</classname> to your application context.
+                The elements of the annotation include a fault code enumeration, fault string or reason, and language.
+                Here is an example exception:
+            </para>
+            <programlisting><![CDATA[package samples;
 
 import org.springframework.ws.soap.server.endpoint.annotation.FaultCode;
 import org.springframework.ws.soap.server.endpoint.annotation.SoapFault;
@@ -969,17 +980,19 @@ public class MyBusinessException extends Exception {
         super(message);
     }
 }]]></programlisting>
-        <para>
-            Whenever the <classname>MyBusinessException</classname> is thrown with the constructor string
-            <literal>"Oops!"</literal> during endpoint invocation, it will result in the following response:
-        </para>
-        <programlisting><![CDATA[<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-<SOAP-ENV:Body>
-   <SOAP-ENV:Fault>
-       <faultcode>SOAP-ENV:Server</faultcode>
-       <faultstring>Oops!</faultstring>
-   </SOAP-ENV:Fault>
-</SOAP-ENV:Body>
+            <para>
+            </para>
+            <para>
+                Whenever the <classname>MyBusinessException</classname> is thrown with the constructor string
+                <literal>"Oops!"</literal> during endpoint invocation, it will result in the following response:
+            </para>
+            <programlisting><![CDATA[<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+    <SOAP-ENV:Body>
+       <SOAP-ENV:Fault>
+           <faultcode>SOAP-ENV:Server</faultcode>
+           <faultstring>Oops!</faultstring>
+       </SOAP-ENV:Fault>
+    </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>]]></programlisting>
     </section>
 </chapter>
