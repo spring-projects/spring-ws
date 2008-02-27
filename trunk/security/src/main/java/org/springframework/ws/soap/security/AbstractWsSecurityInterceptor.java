@@ -127,36 +127,29 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
      * @see #secureMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)
      */
     public final boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
+        boolean result = true;
         try {
             if (secureResponse) {
                 Assert.isTrue(messageContext.hasResponse(), "MessageContext contains no response");
                 Assert.isInstanceOf(SoapMessage.class, messageContext.getResponse());
                 try {
                     secureMessage((SoapMessage) messageContext.getResponse(), messageContext);
-                    return true;
                 }
                 catch (WsSecuritySecurementException ex) {
-                    boolean result = handleSecurementException(ex, messageContext);
-                    if (!result) {
-                        messageContext.clearResponse();
-                    }
-                    return result;
+                    result = handleSecurementException(ex, messageContext);
                 }
                 catch (WsSecurityFaultException ex) {
-                    boolean result = handleFaultException(ex, messageContext);
-                    if (!result) {
-                        messageContext.clearResponse();
-                    }
-                    return result;
+                    result = handleFaultException(ex, messageContext);
                 }
-            }
-            else {
-                return true;
             }
         }
         finally {
+            if (!result) {
+                messageContext.clearResponse();
+            }
             cleanUp();
         }
+        return result;
     }
 
     /** Returns <code>true</code>, i.e. fault responses are not secured. */
