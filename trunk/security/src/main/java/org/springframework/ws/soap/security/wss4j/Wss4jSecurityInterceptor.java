@@ -162,6 +162,11 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         handler.setSecurementEncryptionCrypto(securementEncryptionCrypto);
     }
 
+    /** Sets the key name that needs to be sent for encryption. */
+    public void setSecurementEncryptionEmbeddedKeyName(String securementEncryptionEmbeddedKeyName) {
+        handler.setOption(WSHandlerConstants.ENC_KEY_NAME, securementEncryptionEmbeddedKeyName);
+    }
+
     /**
      * Defines which key identifier type to use. The WS-Security specifications recommends to use the identifier type
      * <code>IssuerSerial</code>. For possible encryption key identifier types refer to {@link
