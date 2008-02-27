@@ -423,10 +423,6 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
             if ((validationAction & WSConstants.SIGN) != 0) {
                 Assert.notNull(validationSignatureCrypto, "validationSignatureCrypto is required");
             }
-
-            if ((validationAction & WSConstants.ENCR) != 0) {
-                Assert.notNull(validationDecryptionCrypto, "validationDecryptionCrypto is required");
-            }
         }
         // securement actions are not to be validated at start up as they could
         // be configured dynamically via the message context
