@@ -1390,6 +1390,38 @@
 					<literal>SKIKeyIdentifier</literal> or <literal>EmbeddedKeyName</literal>.
 				</para>
 				<para>
+					If the <literal>EmbeddedKeyName</literal> type is chosen, you need to specify the
+                    <emphasis>secret key</emphasis> to use for the encryption. The alias of the key is set via the
+                    <property>securementEncryptionUser</property> property just as for the other key identifier types.
+                    However, WSS4J requires a callback handler to fetch the secret key.
+					Thus, <property>securementCallbackHandler</property> must be provided with a 
+					<classname>KeyStoreCallbackHandler</classname> pointing to the appropriate keystore.
+					By default, the <literal>ds:KeyName</literal> element in the resulting WS-Security header takes the
+                    value of the <property>securementEncryptionUser</property> property. To indicate a different name,
+                    set the <property>securementEncryptionEmbeddedKeyName</property> with the desired value.
+					In the next example, the outgoing message will be encrypted with a key aliased
+                    <literal>secretKey</literal> whereas <literal>myKey</literal> will appear in
+                    <literal>ds:KeyName</literal> element:
+				</para>
+				<programlisting><![CDATA[<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+    <property name="securementActions" value="Encrypt"/>
+    <property name="securementEncryptionKeyIdentifier" value="EmbeddedKeyName"/> 
+    <property name="securementEncryptionUser" value="secretKey"/>
+    <property name="securementEncryptionEmbeddedKeyName" value="myKey"/>
+    <property name="securementCallbackHandler">
+        <bean class="org.springframework.ws.soap.security.wss4j.callback.KeyStoreCallbackHandler">
+            <property name="symmetricKeyPassword" value="keypass"/>
+            <property name="keyStore">
+                <bean class="org.springframework.ws.soap.security.support.KeyStoreFactoryBean">
+                    <property name="location" value="file:/keystore.jks"/>
+                    <property name="type" value="jceks"/>
+                    <property name="password" value="123456"/>
+                </bean>
+            </property>
+        </bean>
+    </property>
+</bean>]]></programlisting>
+				<para>
 					The <property>securementEncryptionKeyTransportAlgorithm</property> property
 					defines which algorithm to use to encrypt the generated symmetric key. Supported values are
 					<literal>http://www.w3.org/2001/04/xmlenc#rsa-1_5</literal>, which is the default, and
