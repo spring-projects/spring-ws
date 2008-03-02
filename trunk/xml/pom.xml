@@ -66,6 +66,10 @@
             <artifactId>wstx-asl</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.schema</groupId>
+            <artifactId>XmlSchema</artifactId>
+        </dependency>
         <!-- Test dependencies -->
         <dependency>
             <groupId>easymock</groupId>
