@@ -3,7 +3,7 @@
     <parent>
         <artifactId>spring-ws-parent</artifactId>
         <groupId>org.springframework.ws</groupId>
-        <version>1.5.0-m2-SNAPSHOT</version>
+        <version>1.5.0-rc1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>spring-ws-sandbox</artifactId>
@@ -108,6 +108,15 @@
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.schema</groupId>
+            <artifactId>XmlSchema</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xsom</groupId>
+            <artifactId>xsom</artifactId>
+            <version>20070515</version>
         </dependency>
         <!-- Test dependencies -->
         <dependency>
