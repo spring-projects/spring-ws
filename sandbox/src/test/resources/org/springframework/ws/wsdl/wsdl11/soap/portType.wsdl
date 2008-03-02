@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:tns="http://springframework.org/spring-ws"
+                  name="wsdlDefinition"
+                  targetNamespace="http://springframework.org/spring-ws">
+    <wsdl:portType name="PortType">
+        <wsdl:operation name="Operation">
+            <wsdl:input/>
+            <wsdl:output/>
+            <wsdl:fault name="Fault"/>
+        </wsdl:operation>
+    </wsdl:portType>
+</wsdl:definitions>
