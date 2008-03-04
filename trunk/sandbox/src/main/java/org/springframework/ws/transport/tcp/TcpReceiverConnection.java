@@ -22,11 +22,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Iterator;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.transport.AbstractReceiverConnection;
+import org.springframework.ws.transport.tcp.support.TcpTransportUtils;
 
 /** @author Arjen Poutsma */
 public class TcpReceiverConnection extends AbstractReceiverConnection {
@@ -36,6 +39,10 @@ public class TcpReceiverConnection extends AbstractReceiverConnection {
     protected TcpReceiverConnection(Socket socket) {
         Assert.notNull(socket, "socket must not be null");
         this.socket = socket;
+    }
+
+    public URI getUri() throws URISyntaxException {
+        return TcpTransportUtils.toUri(socket);
     }
 
     public boolean hasError() throws IOException {
@@ -83,6 +90,5 @@ public class TcpReceiverConnection extends AbstractReceiverConnection {
 
     protected void sendResponse(boolean sentFault) throws IOException {
     }
-
 
 }

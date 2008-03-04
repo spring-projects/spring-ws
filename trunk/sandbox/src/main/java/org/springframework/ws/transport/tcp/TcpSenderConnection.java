@@ -22,12 +22,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Iterator;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.transport.AbstractSenderConnection;
 import org.springframework.ws.transport.WebServiceConnection;
+import org.springframework.ws.transport.tcp.support.TcpTransportUtils;
 
 /**
  * Implementation of {@link WebServiceConnection} that is used for client-side TCP/IP access. Exposes a {@link Socket}.
@@ -47,6 +50,10 @@ public class TcpSenderConnection extends AbstractSenderConnection {
     /** Returns the socket for this connection. */
     public Socket getSocket() {
         return socket;
+    }
+
+    public URI getUri() throws URISyntaxException {
+        return TcpTransportUtils.toUri(socket);
     }
 
     public void onClose() throws IOException {
