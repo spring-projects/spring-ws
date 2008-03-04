@@ -20,26 +20,18 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
-import org.apache.ws.commons.schema.XmlSchemaInclude;
-import org.apache.ws.commons.schema.XmlSchemaObject;
 import org.apache.ws.commons.schema.XmlSchemaObjectCollection;
 import org.xml.sax.SAXException;
 
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
-import org.springframework.xml.sax.SaxUtils;
-import org.springframework.xml.xsd.InlineableXsdSchema;
 import org.springframework.xml.xsd.XsdSchema;
 
 /**
@@ -49,30 +41,9 @@ import org.springframework.xml.xsd.XsdSchema;
  * @see <a href="http://ws.apache.org/commons/XmlSchema/">Commons XML Schema</a>
  * @since 1.5.0
  */
-public class CommonsXsdSchema implements InlineableXsdSchema, InitializingBean {
+public class CommonsXsdSchema implements XsdSchema {
 
     private XmlSchema schema;
-
-    private Resource xsdResource;
-
-    /**
-     * Create a new, empty instance of the {@link CommonsXsdSchema} class.
-     * <p/>
-     * A subsequent call to the {@link #setXsd(Resource)} method is required.
-     */
-    public CommonsXsdSchema() {
-    }
-
-    /**
-     * Create a new instance of the  {@link CommonsXsdSchema} class with the specified resource.
-     *
-     * @param xsdResource the XSD resource; must not be <code>null</code>
-     * @throws IllegalArgumentException if the supplied <code>xsdResource</code> is <code>null</code>
-     */
-    public CommonsXsdSchema(Resource xsdResource) {
-        Assert.notNull(xsdResource, "xsdResource must not be null");
-        this.xsdResource = xsdResource;
-    }
 
     /**
      * Create a new instance of the  {@link CommonsXsdSchema} class with the specified {@link XmlSchema} reference.
@@ -80,18 +51,9 @@ public class CommonsXsdSchema implements InlineableXsdSchema, InitializingBean {
      * @param schema the Commons <code>XmlSchema</code> object; must not be <code>null</code>
      * @throws IllegalArgumentException if the supplied <code>schema</code> is <code>null</code>
      */
-    private CommonsXsdSchema(XmlSchema schema) {
+    protected CommonsXsdSchema(XmlSchema schema) {
         Assert.notNull(schema, "'schema' must not be null");
         this.schema = schema;
-    }
-
-    /**
-     * Set the XSD resource to be exposed by calls to this instances' {@link #getSource()} method.
-     *
-     * @param xsdResource the XSD resource
-     */
-    public void setXsd(Resource xsdResource) {
-        this.xsdResource = xsdResource;
     }
 
     public String getTargetNamespace() {
@@ -131,17 +93,12 @@ public class CommonsXsdSchema implements InlineableXsdSchema, InitializingBean {
         return schema;
     }
 
-    public void afterPropertiesSet() throws IOException, SAXException {
-        Assert.notNull(xsdResource, "'xsd' is required");
-        Assert.isTrue(this.xsdResource.exists(), "xsd '" + this.xsdResource + "' does not exit");
-        loadSchema();
-    }
-
     private void loadSchema() throws SAXException, IOException {
         XmlSchemaCollection schemaCollection = new XmlSchemaCollection();
-        this.schema = schemaCollection.read(SaxUtils.createInputSource(xsdResource), null);
+//        this.schema = schemaCollection.read(SaxUtils.createInputSource(xsdResource), null);
     }
 
+    /*
     public XsdSchema[] inline() {
         XmlSchema clone = cloneSchema(schema);
         inlineIncludes(clone, new ArrayList());
@@ -179,7 +136,7 @@ public class CommonsXsdSchema implements InlineableXsdSchema, InitializingBean {
                 items.remove(include);
             }
         }
-    }
+    }*/
 
     public String toString() {
         StringBuffer buffer = new StringBuffer("CommonsXsdSchema");

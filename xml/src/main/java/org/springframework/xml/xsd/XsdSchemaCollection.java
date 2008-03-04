@@ -17,15 +17,17 @@
 package org.springframework.xml.xsd;
 
 /**
- * Represents an abstraction for XSD schemas.
-
+ * Represents an abstraction for a collection of XSD schemas.
+ *
  * @author Arjen Poutsma
  * @since 1.5.0
  */
-public interface InlineableXsdSchema extends XsdSchema {
+public interface XsdSchemaCollection {
 
     /**
-     * Inlines this schema into a set of self-contained schema's.
-     *     */
-    XsdSchema[] inline();
+     * Returns all schema's contained in this collection.
+     *
+     * @return the schema's contained in this collection
+     */
+    XsdSchema[] getXsdSchemas();
 }

@@ -16,48 +16,41 @@
 
 package org.springframework.xml.xsd.commons;
 
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.Source;
-
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.xsd.AbstractXsdSchemaTestCase;
 import org.springframework.xml.xsd.XsdSchema;
-import org.springframework.xml.transform.ResourceSource;
 
 public class CommonsXsdSchemaTest extends AbstractXsdSchemaTestCase {
 
     protected XsdSchema createSchema(Resource resource) throws Exception {
-        CommonsXsdSchema schema = new CommonsXsdSchema(resource);
-        schema.afterPropertiesSet();
-        return schema;
+        XmlSchemaCollection schemaCollection = new XmlSchemaCollection();
+        XmlSchema schema = schemaCollection.read(SaxUtils.createInputSource(resource), null);
+        return new CommonsXsdSchema(schema);
     }
 
+    /*
     public void testInline() throws Exception {
         Resource resource = new ClassPathResource("A.xsd", AbstractXsdSchemaTestCase.class);
         CommonsXsdSchema schema = new CommonsXsdSchema(resource);
-        schema.afterPropertiesSet();
         XsdSchema[] inlined = schema.inline();
         for (int i = 0; i < inlined.length; i++) {
             transformer.transform(inlined[i].getSource(), new StreamResult(System.out));
             System.out.println();
         }
     }
-    
+
     public void testCircular() throws Exception {
         Resource resource = new ClassPathResource("circular-1.xsd", AbstractXsdSchemaTestCase.class);
         CommonsXsdSchema schema = new CommonsXsdSchema(resource);
-        schema.afterPropertiesSet();
         XsdSchema[] inlined = schema.inline();
         for (int i = 0; i < inlined.length; i++) {
             transformer.transform(inlined[i].getSource(), new StreamResult(System.out));
             System.out.println();
         }
     }
+    */
 }
