@@ -41,7 +41,7 @@ import org.springframework.ws.transport.jms.JmsTransportConstants;
  * @author Arjen Poutsma
  * @since 1.5.0
  */
-public class JmsTransportUtils {
+public abstract class JmsTransportUtils {
 
     private static final String[] CONVERSION_TABLE = new String[]{JmsTransportConstants.HEADER_CONTENT_TYPE,
             JmsTransportConstants.PROPERTY_CONTENT_TYPE, JmsTransportConstants.HEADER_CONTENT_LENGTH,
@@ -95,7 +95,7 @@ public class JmsTransportUtils {
     }
 
     /**
-     * Converts the given JMS destination a <code>jms</code> URI.
+     * Converts the given JMS destination into a <code>jms</code> URI.
      *
      * @param destination the destination
      * @return a jms URI
