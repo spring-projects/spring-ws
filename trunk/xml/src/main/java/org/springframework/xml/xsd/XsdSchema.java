@@ -29,15 +29,15 @@ import javax.xml.transform.Source;
 public interface XsdSchema {
 
     /**
-     * Returns the target namespace of theis schema.
+     * Returns the target namespace of this schema.
      *
      * @return the target namespace
      */
     String getTargetNamespace();
 
     /**
-     * Returns the qualified names of all top-level elements declared in the schema. This excludes elements declared as child of
-     * another <code>element</code>, <code>simplyType</code>, or <code>complexType</code>.
+     * Returns the qualified names of all top-level elements declared in the schema. This excludes elements declared as
+     * child of another <code>element</code>, <code>simplyType</code>, or <code>complexType</code>.
      *
      * @return the top-level element names
      */

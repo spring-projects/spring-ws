@@ -18,7 +18,6 @@ package org.springframework.xml.xsd.commons;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,9 +26,6 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.ws.commons.schema.XmlSchema;
-import org.apache.ws.commons.schema.XmlSchemaCollection;
-import org.apache.ws.commons.schema.XmlSchemaObjectCollection;
-import org.xml.sax.SAXException;
 
 import org.springframework.util.Assert;
 import org.springframework.xml.xsd.XsdSchema;
@@ -43,7 +39,7 @@ import org.springframework.xml.xsd.XsdSchema;
  */
 public class CommonsXsdSchema implements XsdSchema {
 
-    private XmlSchema schema;
+    private final XmlSchema schema;
 
     /**
      * Create a new instance of the  {@link CommonsXsdSchema} class with the specified {@link XmlSchema} reference.
@@ -70,17 +66,6 @@ public class CommonsXsdSchema implements XsdSchema {
         return (QName[]) result.toArray(new QName[result.size()]);
     }
 
-    public void merge(XsdSchema o) {
-        Assert.isInstanceOf(CommonsXsdSchema.class, o);
-        XmlSchema otherSchema = ((CommonsXsdSchema) o).schema;
-        Assert.isTrue(this.schema.getTargetNamespace().equals(otherSchema.getTargetNamespace()),
-                "Schema does not have same namespace");
-        XmlSchemaObjectCollection otherItems = otherSchema.getItems();
-        for (int i = 0; i < otherItems.getCount(); i++) {
-            schema.getItems().add(otherItems.getItem(i));
-        }
-    }
-
     public Source getSource() {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         schema.write(bos);
@@ -92,51 +77,6 @@ public class CommonsXsdSchema implements XsdSchema {
     public XmlSchema getSchema() {
         return schema;
     }
-
-    private void loadSchema() throws SAXException, IOException {
-        XmlSchemaCollection schemaCollection = new XmlSchemaCollection();
-//        this.schema = schemaCollection.read(SaxUtils.createInputSource(xsdResource), null);
-    }
-
-    /*
-    public XsdSchema[] inline() {
-        XmlSchema clone = cloneSchema(schema);
-        inlineIncludes(clone, new ArrayList());
-        return new XsdSchema[]{new CommonsXsdSchema(clone)};
-    }
-
-    private static XmlSchema cloneSchema(XmlSchema schema)  {
-        XmlSchemaCollection schemaCollection = new XmlSchemaCollection();
-        XmlSchema clone = new XmlSchema(schemaCollection);
-        XmlSchemaObjectCollection originalItems = schema.getItems();
-        XmlSchemaObjectCollection cloneItems = clone.getItems();
-        for (int i = 0; i < originalItems.getCount(); i++) {
-            cloneItems.add(originalItems.getItem(i));
-        }
-        return clone;
-    }
-
-    private static void inlineIncludes(XmlSchema schema, List processedSchemas) {
-        processedSchemas.add(schema);
-        XmlSchemaObjectCollection includes = schema.getIncludes();
-        for (int i = 0; i < includes.getCount(); i++) {
-            if (includes.getItem(i) instanceof XmlSchemaInclude) {
-                XmlSchemaInclude include = (XmlSchemaInclude) includes.getItem(i);
-                XmlSchema includedSchema = include.getSchema();
-                XmlSchemaObjectCollection items = schema.getItems();
-                if (!processedSchemas.contains(includedSchema)) {
-                    inlineIncludes(includedSchema, processedSchemas);
-                    XmlSchemaObjectCollection includesItems = includedSchema.getItems();
-                    for (int j = 0; j < includesItems.getCount(); j++) {
-                        XmlSchemaObject includedItem = includesItems.getItem(j);
-                        items.add(includedItem);
-                    }
-                }
-                // remove the <include/>
-                items.remove(include);
-            }
-        }
-    }*/
 
     public String toString() {
         StringBuffer buffer = new StringBuffer("CommonsXsdSchema");

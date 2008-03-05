@@ -16,18 +16,38 @@
 
 package org.springframework.xml.xsd.commons;
 
-import junit.framework.TestCase;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+
+import org.custommonkey.xmlunit.XMLTestCase;
+import org.custommonkey.xmlunit.XMLUnit;
+import org.w3c.dom.Document;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.xsd.AbstractXsdSchemaTestCase;
+import org.springframework.xml.xsd.XsdSchema;
 
-public class CommonsXsdSchemaCollectionTest extends TestCase {
+public class CommonsXsdSchemaCollectionTest extends XMLTestCase {
 
     private CommonsXsdSchemaCollection collection;
 
+    private Transformer transformer;
+
+    private DocumentBuilder documentBuilder;
+
     protected void setUp() throws Exception {
         collection = new CommonsXsdSchemaCollection();
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        transformer = transformerFactory.newTransformer();
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(true);
+        documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        XMLUnit.setIgnoreWhitespace(true);
     }
 
     public void testSingle() throws Exception {
@@ -37,32 +57,36 @@ public class CommonsXsdSchemaCollectionTest extends TestCase {
         assertEquals("Invalid amount of XSDs loaded", 1, collection.getXsdSchemas().length);
     }
 
-    public void testIncludes() throws Exception {
-        Resource resource = new ClassPathResource("including.xsd", AbstractXsdSchemaTestCase.class);
-        collection.setXsds(new Resource[]{resource});
+    public void testInlineComplex() throws Exception {
+        Resource a = new ClassPathResource("A.xsd", AbstractXsdSchemaTestCase.class);
+        collection.setXsds(new Resource[]{a});
+        collection.setInline(true);
         collection.afterPropertiesSet();
-        assertEquals("Invalid amount of XSDs loaded", 2, collection.getXsdSchemas().length);
+        XsdSchema[] schemas = collection.getXsdSchemas();
+        assertEquals("Invalid amount of XSDs loaded", 2, schemas.length);
+
+        assertEquals("Invalid target namespace", "urn:1", schemas[0].getTargetNamespace());
+        Resource abc = new ClassPathResource("ABC.xsd", AbstractXsdSchemaTestCase.class);
+        Document expected = documentBuilder.parse(SaxUtils.createInputSource(abc));
+        DOMResult domResult = new DOMResult();
+        transformer.transform(schemas[0].getSource(), domResult);
+        assertXMLEqual("Invalid XSD generated", expected, (Document) domResult.getNode());
+
+        assertEquals("Invalid target namespace", "urn:2", schemas[1].getTargetNamespace());
+        Resource cd = new ClassPathResource("CD.xsd", AbstractXsdSchemaTestCase.class);
+        expected = documentBuilder.parse(SaxUtils.createInputSource(cd));
+        domResult = new DOMResult();
+        transformer.transform(schemas[1].getSource(), domResult);
+        assertXMLEqual("Invalid XSD generated", expected, (Document) domResult.getNode());
     }
 
-    public void testImports() throws Exception {
-        Resource resource = new ClassPathResource("importing.xsd", AbstractXsdSchemaTestCase.class);
+    public void testCircular() throws Exception {
+        Resource resource = new ClassPathResource("circular-1.xsd", AbstractXsdSchemaTestCase.class);
         collection.setXsds(new Resource[]{resource});
+        collection.setInline(true);
         collection.afterPropertiesSet();
-        assertEquals("Invalid amount of XSDs loaded", 2, collection.getXsdSchemas().length);
-    }
-
-    public void testDuplicates() throws Exception {
-        Resource resource = new ClassPathResource("single.xsd", AbstractXsdSchemaTestCase.class);
-        collection.setXsds(new Resource[]{resource, resource});
-        collection.afterPropertiesSet();
-        assertEquals("Invalid amount of XSDs loaded", 1, collection.getXsdSchemas().length);
-    }
-
-    public void testComplex() throws Exception {
-        Resource resource = new ClassPathResource("A.xsd", AbstractXsdSchemaTestCase.class);
-        collection.setXsds(new Resource[]{resource});
-        collection.afterPropertiesSet();
-        assertEquals("Invalid amount of XSDs loaded", 5, collection.getXsdSchemas().length);
+        XsdSchema[] schemas = collection.getXsdSchemas();
+        assertEquals("Invalid amount of XSDs loaded", 1, schemas.length);
     }
 
 }
