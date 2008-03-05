@@ -16,14 +16,18 @@
 
 package org.springframework.xml.xsd.commons;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.ws.commons.schema.ValidationEventHandler;
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
-import org.apache.ws.commons.schema.constants.Constants;
+import org.apache.ws.commons.schema.XmlSchemaExternal;
+import org.apache.ws.commons.schema.XmlSchemaImport;
+import org.apache.ws.commons.schema.XmlSchemaInclude;
+import org.apache.ws.commons.schema.XmlSchemaObject;
+import org.apache.ws.commons.schema.XmlSchemaObjectCollection;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
@@ -34,6 +38,10 @@ import org.springframework.xml.xsd.XsdSchemaCollection;
 
 /**
  * Implementation of the {@link XsdSchemaCollection} that uses Apache WS-Commons XML Schema.
+ * <p/>
+ * Setting the {@link #setInline(boolean) inline} flag to <code>true</code> will result in all referenced schemas
+ * (included and imported) being merged into the referred schema. When including the schemas into a WSDL, this greatly
+ * simplifies the deloyment of the schemas.
  *
  * @author Arjen Poutsma
  * @see <a href="http://ws.apache.org/commons/XmlSchema/">Commons XML Schema</a>
@@ -41,15 +49,15 @@ import org.springframework.xml.xsd.XsdSchemaCollection;
  */
 public class CommonsXsdSchemaCollection implements XsdSchemaCollection, InitializingBean {
 
-    private static final Log logger = LogFactory.getLog(CommonsXsdSchemaCollection.class);
-
     private final XmlSchemaCollection schemaCollection = new XmlSchemaCollection();
 
     private final List xmlSchemas = new ArrayList();
 
     private Resource[] xsdResources;
 
-    private boolean inlineIncludes = false;
+    private boolean inline = false;
+
+    private ValidationEventHandler validationEventHandler;
 
     /**
      * Constructs a new, empty instance of the <code>CommonsXsdSchemaCollection</code>.
@@ -82,15 +90,26 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
      * <p/>
      * Defaults to <code>false</code>.
      */
-    public void setInlineIncludes(boolean inlineIncludes) {
-        this.inlineIncludes = inlineIncludes;
+    public void setInline(boolean inline) {
+        this.inline = inline;
     }
 
-    public void afterPropertiesSet() throws Exception {
+    /** Sets the WS-Commons validation event handler to use while parsing schemas. */
+    public void setValidationEventHandler(ValidationEventHandler validationEventHandler) {
+        this.validationEventHandler = validationEventHandler;
+    }
+
+    public void afterPropertiesSet() throws IOException {
         Assert.notEmpty(xsdResources, "'xsds' must not be empty");
         for (int i = 0; i < xsdResources.length; i++) {
             Assert.isTrue(xsdResources[i].exists(), xsdResources[i] + " does not exit");
-            xmlSchemas.add(schemaCollection.read(SaxUtils.createInputSource(xsdResources[i]), null));
+            XmlSchema xmlSchema =
+                    schemaCollection.read(SaxUtils.createInputSource(xsdResources[i]), validationEventHandler);
+            xmlSchemas.add(xmlSchema);
+            if (inline) {
+                inlineIncludes(xmlSchema, new ArrayList());
+                findImports(xmlSchema, new ArrayList());
+            }
         }
     }
 
@@ -103,16 +122,55 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
         return result;
     }
 
+    private void inlineIncludes(XmlSchema schema, List processedSchemas) {
+        processedSchemas.add(schema);
+        XmlSchemaObjectCollection includes = schema.getIncludes();
+        for (int i = 0; i < includes.getCount(); i++) {
+            XmlSchemaExternal external = (XmlSchemaExternal) includes.getItem(i);
+            if (external instanceof XmlSchemaInclude) {
+                XmlSchema includedSchema = external.getSchema();
+                XmlSchemaObjectCollection items = schema.getItems();
+                if (!processedSchemas.contains(includedSchema)) {
+                    inlineIncludes(includedSchema, processedSchemas);
+                    findImports(includedSchema, new ArrayList());
+                    XmlSchemaObjectCollection includeItems = includedSchema.getItems();
+                    for (int j = 0; j < includeItems.getCount(); j++) {
+                        XmlSchemaObject includedItem = includeItems.getItem(j);
+                        items.add(includedItem);
+                    }
+                }
+                // remove the <include/>
+                items.remove(external);
+            }
+        }
+    }
+
+    private void findImports(XmlSchema schema, List processedSchemas) {
+        processedSchemas.add(schema);
+        XmlSchemaObjectCollection includes = schema.getIncludes();
+        for (int i = 0; i < includes.getCount(); i++) {
+            XmlSchemaExternal external = (XmlSchemaExternal) includes.getItem(i);
+            if (external instanceof XmlSchemaImport) {
+                XmlSchema importedSchema = external.getSchema();
+                if (!processedSchemas.contains(importedSchema)) {
+                    inlineIncludes(importedSchema, processedSchemas);
+                    findImports(importedSchema, processedSchemas);
+                    xmlSchemas.add(importedSchema);
+                }
+                // remove the schemaLocation
+                external.setSchemaLocation(null);
+            }
+        }
+    }
+
     public String toString() {
         StringBuffer buffer = new StringBuffer("CommonsXsdSchemaCollection");
         buffer.append('{');
-        XmlSchema[] schemas = schemaCollection.getXmlSchemas();
-        for (int i = 0; i < schemas.length; i++) {
-            if (!Constants.URI_2001_SCHEMA_XSD.equals(schemas[i].getTargetNamespace())) {
-                buffer.append(schemas[i].getTargetNamespace());
-                if (i < schemas.length - 1) {
-                    buffer.append(',');
-                }
+        for (int i = 0; i < xmlSchemas.size(); i++) {
+            XmlSchema schema = (XmlSchema) xmlSchemas.get(i);
+            buffer.append(schema.getTargetNamespace());
+            if (i < xmlSchemas.size() - 1) {
+                buffer.append(',');
             }
         }
         buffer.append('}');
