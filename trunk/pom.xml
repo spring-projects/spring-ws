@@ -90,7 +90,7 @@
         <url>http://fisheye3.cenqua.com/browse/springframework/spring-ws/trunk</url>
     </scm>
     <properties>
-        <spring.version>2.5.1</spring.version>
+        <spring.version>2.5.2</spring.version>
     </properties>
     <modules>
         <module>parent</module>
