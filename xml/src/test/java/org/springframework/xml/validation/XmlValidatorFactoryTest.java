@@ -23,6 +23,7 @@ import java.net.URI;
 import java.net.URL;
 
 import junit.framework.TestCase;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -92,6 +93,10 @@ public class XmlValidatorFactoryTest extends TestCase {
 
         public InputStream getInputStream() throws IOException {
             throw new IOException();
+        }
+
+        public boolean isReadable() {
+            return false;
         }
     }
 }
