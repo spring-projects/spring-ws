@@ -19,14 +19,15 @@ package org.springframework.ws.wsdl.wsdl11;
 import java.io.IOException;
 import javax.xml.transform.Source;
 
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.ws.wsdl.WsdlDefinitionException;
 import org.springframework.xml.transform.ResourceSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * The default {@link Wsdl11Definition} implementation.
@@ -87,5 +88,10 @@ public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBea
     public void setWsdl(Resource wsdlResource) {
         this.wsdlResource = wsdlResource;
     }
+
+    public String toString() {
+        return "SimpleWsdl11Definition " + wsdlResource;
+    }
+
 
 }

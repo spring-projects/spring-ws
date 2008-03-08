@@ -26,6 +26,7 @@ import javax.wsdl.Definition;
 import javax.wsdl.Fault;
 import javax.wsdl.Input;
 import javax.wsdl.Operation;
+import javax.wsdl.OperationType;
 import javax.wsdl.Output;
 import javax.wsdl.Port;
 import javax.wsdl.PortType;
@@ -101,15 +102,19 @@ public abstract class AbstractBindingWsdl4jDefinitionBuilder extends AbstractWsd
             BindingOperation bindingOperation = definition.createBindingOperation();
             bindingOperation.setOperation(operation);
             populateBindingOperation(bindingOperation, operation);
-            if (operation.getInput() != null) {
-                BindingInput bindingInput = definition.createBindingInput();
-                populateBindingInput(bindingInput, operation.getInput());
-                bindingOperation.setBindingInput(bindingInput);
+            if (operation.getStyle() == null || operation.getStyle().equals(OperationType.REQUEST_RESPONSE)) {
+                createBindingInput(definition, operation, bindingOperation);
+                createBindingOutput(definition, operation, bindingOperation);
             }
-            if (operation.getOutput() != null) {
-                BindingOutput bindingOutput = definition.createBindingOutput();
-                populateBindingOutput(bindingOutput, operation.getOutput());
-                bindingOperation.setBindingOutput(bindingOutput);
+            else if (operation.getStyle().equals(OperationType.ONE_WAY)) {
+                createBindingInput(definition, operation, bindingOperation);
+            }
+            else if (operation.getStyle().equals(OperationType.NOTIFICATION)) {
+                createBindingOutput(definition, operation, bindingOperation);
+            }
+            else if (operation.getStyle().equals(OperationType.SOLICIT_RESPONSE)) {
+                createBindingOutput(definition, operation, bindingOperation);
+                createBindingInput(definition, operation, bindingOperation);
             }
             for (Iterator faultIterator = operation.getFaults().values().iterator(); faultIterator.hasNext();) {
                 Fault fault = (Fault) faultIterator.next();
@@ -119,6 +124,20 @@ public abstract class AbstractBindingWsdl4jDefinitionBuilder extends AbstractWsd
             }
             binding.addBindingOperation(bindingOperation);
         }
+    }
+
+    private void createBindingOutput(Definition definition, Operation operation, BindingOperation bindingOperation)
+            throws WSDLException {
+        BindingOutput bindingOutput = definition.createBindingOutput();
+        populateBindingOutput(bindingOutput, operation.getOutput());
+        bindingOperation.setBindingOutput(bindingOutput);
+    }
+
+    private void createBindingInput(Definition definition, Operation operation, BindingOperation bindingOperation)
+            throws WSDLException {
+        BindingInput bindingInput = definition.createBindingInput();
+        populateBindingInput(bindingInput, operation.getInput());
+        bindingOperation.setBindingInput(bindingInput);
     }
 
     /**

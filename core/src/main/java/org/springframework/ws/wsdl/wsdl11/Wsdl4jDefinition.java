@@ -23,10 +23,11 @@ import javax.wsdl.xml.WSDLWriter;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
+import org.w3c.dom.Document;
+
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.wsdl.WsdlDefinitionException;
-import org.w3c.dom.Document;
 
 /**
  * Implementation of the <code>Wsdl11Definition</code> based on WSDL4J. A {@link javax.wsdl.Definition} can be given as
@@ -66,7 +67,9 @@ public class Wsdl4jDefinition implements Wsdl11Definition {
 
     /** Returns the WSDL4J <code>Definition</code>. */
     public Definition getDefinition() {
-        return definition;
+        synchronized (monitor) {
+            return definition;
+        }
     }
 
     /** Set the WSDL4J <code>Definition</code>. */
