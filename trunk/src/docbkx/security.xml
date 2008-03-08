@@ -457,7 +457,7 @@
             <section>
                 <title>AcegiDigestPasswordValidationCallbackHandler</title>
                 <para>
-                    The <classname>AcegiPlainTextPasswordValidationCallbackHandler</classname> requires an Acegi
+                    The <classname>AcegiDigestPasswordValidationCallbackHandler</classname> requires an Acegi
                     <classname>UserDetailService</classname> to operate. It uses this service to retrieve the password
                     of the user specified in the token. The digest of the password contained in this details object is
                     then compared with the digest in the message. If they are equal, the user has successfully
@@ -483,7 +483,7 @@
             <para>
                 A more secure way of authentication uses X509 certificates. In this scenerario, the SOAP message
                 contains a <literal>BinarySecurityToken</literal>, which contains a Base 64-encoded version of a X509
-                certificate. The recipient is used by the recipient to authenticate. The certificate stored in the
+                certificate. The certificate is used by the recipient to authenticate. The certificate stored in the
                 message is also used to sign the message (see <xref linkend="security-verifying-signatures"/>).
             </para>
             <para>
@@ -549,7 +549,7 @@
                         </listitem>
                         <listitem>
                             <para>
-                                If the certificate is not in the private keystore, the handler will check whether the
+                                If the certificate is not in the private keystore, the handler will check whether
                                 the current date and time are within the validity period given in the certificate.
                                 If they are not, the certificate is invalid; if it is, it will continue with the final
                                 step.
@@ -823,7 +823,7 @@
                 To encrypt outgoing SOAP messages, the security policy file should contain a <literal>Encrypt</literal>
                 element. This element can further carry a <literal>EncryptionTarget</literal> element which indicates
                 which part of the message should be encrypted, and a <literal>SymmetricKey</literal> to indicate that a
-                shared secret instead of the regular private key should be used to decrypt the message. You can read a
+                shared secret instead of the regular public key should be used to encrypt the message. You can read a
                 description of the other elements <ulink
                     url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565951">
                 <citetitle>here</citetitle></ulink>.
