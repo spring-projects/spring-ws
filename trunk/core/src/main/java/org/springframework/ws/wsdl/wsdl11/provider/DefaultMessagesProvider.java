@@ -26,6 +26,8 @@ import javax.wsdl.extensions.ExtensibilityElement;
 import javax.wsdl.extensions.schema.Schema;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -42,6 +44,8 @@ import org.springframework.util.Assert;
  */
 public class DefaultMessagesProvider implements MessagesProvider {
 
+    private static final Log logger = LogFactory.getLog(DefaultMessagesProvider.class);
+
     public void addMessages(Definition definition) throws WSDLException {
         Types types = definition.getTypes();
         Assert.notNull(types, "No types element present in definition");
@@ -54,11 +58,17 @@ public class DefaultMessagesProvider implements MessagesProvider {
                 }
             }
         }
+        if (definition.getMessages().isEmpty() && logger.isWarnEnabled()) {
+            logger.warn("No messages were created, make sure the referenced schema(s) contain elements");
+        }
     }
 
     private void createMessages(Definition definition, Element schemaElement) throws WSDLException {
         String schemaTargetNamespace = schemaElement.getAttribute("targetNamespace");
         Assert.hasText("No targetNamespace defined on schema");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Looking for elements in schema with target namespace [" + schemaTargetNamespace + "]");
+        }
         NodeList children = schemaElement.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
             Node child = children.item(i);
@@ -103,7 +113,11 @@ public class DefaultMessagesProvider implements MessagesProvider {
      * @throws WSDLException in case of errors
      */
     protected void populateMessage(Definition definition, Message message, QName elementName) throws WSDLException {
-        message.setQName(new QName(definition.getTargetNamespace(), elementName.getLocalPart()));
+        QName messageName = new QName(definition.getTargetNamespace(), elementName.getLocalPart());
+        if (logger.isDebugEnabled()) {
+            logger.debug("Creating message [" + messageName + "]");
+        }
+        message.setQName(messageName);
     }
 
     /**
