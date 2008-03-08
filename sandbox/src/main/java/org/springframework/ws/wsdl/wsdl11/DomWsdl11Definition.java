@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
@@ -29,18 +28,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Arjen Poutsma
  * @since 1.5.0
  */
-public class DomWsdl11Definition implements Wsdl11Definition, BeanNameAware, InitializingBean {
-
-    private static final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+public class DomWsdl11Definition implements Wsdl11Definition, InitializingBean {
 
     public static final String WSDL_NAMESPACE_URI = "http://schemas.xmlsoap.org/wsdl/";
 
@@ -52,38 +47,19 @@ public class DomWsdl11Definition implements Wsdl11Definition, BeanNameAware, Ini
 
     private String targetNamespace;
 
-    private String beanName;
-
-    private String name;
-
-    static {
-        documentBuilderFactory.setNamespaceAware(true);
-    }
-
     public void setTargetNamespace(String targetNamespace) {
         Assert.notNull(targetNamespace, "'targetNamespace' must not be null");
         this.targetNamespace = targetNamespace;
-    }
-
-    public void setName(String name) {
-        Assert.notNull(name, "'name' must not be null");
-        this.name = name;
     }
 
     public Source getSource() {
         return new DOMSource(document);
     }
 
-    public void setBeanName(String name) {
-        this.beanName = name;
-    }
-
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(targetNamespace, "'targetNamespace' is required");
-        if (!StringUtils.hasLength(name)) {
-            this.name = beanName;
-        }
-        DocumentBuilder documentBuilder = createDocumentBuilder();
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         document = documentBuilder.newDocument();
         Element definitions = createDefinitions(document);
         document.appendChild(definitions);
@@ -91,9 +67,6 @@ public class DomWsdl11Definition implements Wsdl11Definition, BeanNameAware, Ini
 
     public Element createDefinitions(Document document) {
         Element definitions = createWsdlElement(document, "definitions");
-        if (StringUtils.hasLength(name)) {
-            definitions.setAttribute("name", name);
-        }
         declareNamespaces(definitions);
         definitions.setAttribute("targetNamespace", targetNamespace);
         addImports(document, definitions);
@@ -114,7 +87,6 @@ public class DomWsdl11Definition implements Wsdl11Definition, BeanNameAware, Ini
     protected void addImports(Document document, Element definitions) {
     }
 
-
     protected void addTypes(Document document, Element definitions) {
     }
 
@@ -130,13 +102,7 @@ public class DomWsdl11Definition implements Wsdl11Definition, BeanNameAware, Ini
     protected void addServices(Document document, Element definitions) {
     }
 
-    protected DocumentBuilder createDocumentBuilder() throws ParserConfigurationException {
-        return documentBuilderFactory.newDocumentBuilder();
-    }
-
     protected void declareNamespace(Element element, String namespacePrefix, String namespaceUri) {
-        Assert.hasLength(namespacePrefix, "No prefix given");
-        Assert.hasLength(namespaceUri, "No namespace given");
         element.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:" + namespacePrefix, namespaceUri);
     }
 
