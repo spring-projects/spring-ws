@@ -32,9 +32,9 @@ public class Main {
     public static void main(String[] args) throws ServiceException, RemoteException {
         AirlineServiceLocator service = new AirlineServiceLocator();
         if (args.length > 0) {
-            service.setAirlinePortEndpointAddress(args[0]);
+            service.setAirlineSoap11EndpointAddress(args[0]);
         }
-        Airline airline = service.getAirlinePort();
+        Airline airline = service.getAirlineSoap11();
         GetFlightsRequest request = new GetFlightsRequest();
         request.setFrom("AMS");
         request.setTo("VCE");

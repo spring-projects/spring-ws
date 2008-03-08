@@ -6,23 +6,16 @@
 
     <!-- ===================== WSDL DEFINITION    ============================== -->
 
-    <bean id="airline" class="org.springframework.ws.wsdl.wsdl11.DynamicWsdl11Definition">
+    <bean id="airline" class="org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition">
         <description>
-            Dynamically builds a WSDL from the airline.xsd.This bean definition represents the airline.wsdl file found
-            in the root of the web application. It is used
-            by the WsdlDefinitionHandlerAdapter in airline-servlet.xml.
+            Builds a WSDL from the airline.xsd.This bean definition represents the airline.wsdl file found
+            in the root of the web application.
         </description>
-        <property name="builder">
-            <bean class="org.springframework.ws.wsdl.wsdl11.builder.XsdBasedSoap11Wsdl4jDefinitionBuilder">
-                <property name="schema" value="/messages.xsd"/>
-                <property name="schemaLocation" value="messages.xsd"/>
-                <property name="portTypeName" value="Airline"/>
-                <property name="locationUri" value="http://localhost:8080/airline/services"/>
-                <property name="targetNamespace"
-                        value="http://www.springframework.org/spring-ws/samples/airline/definitions"/>
-            </bean>
-        </property>
+        <property name="schemaCollection" ref="schemaCollection"/>
+        <property name="portTypeName" value="Airline"/>
+        <property name="locationUri" value="http://localhost:8080/airline/services"/>
+        <property name="targetNamespace"
+                value="http://www.springframework.org/spring-ws/samples/airline/definitions"/>
     </bean>
-
-
+    
 </beans>

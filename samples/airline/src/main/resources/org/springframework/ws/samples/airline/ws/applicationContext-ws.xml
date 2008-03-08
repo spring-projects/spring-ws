@@ -11,6 +11,14 @@
 
     <bean id="messageReceiver" class="org.springframework.ws.soap.server.SoapMessageDispatcher"/>
 
+    <bean id="schemaCollection" class="org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection">
+        <description>
+            This bean wrap the messages.xsd (which imports types.xsd), and inlines them as a one.
+        </description>
+        <property name="xsds" value="/messages.xsd"/>
+        <property name="inline" value="true"/>
+    </bean>
+
     <!-- ===================== ENDPOINTS  ===================================== -->
 
     <!--
