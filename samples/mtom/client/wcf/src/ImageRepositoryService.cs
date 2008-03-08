@@ -60,34 +60,15 @@ namespace Spring.Ws.Samples.Mtom.Client.Wcf
     public interface ImageRepository
     {
         
-        // CODEGEN: Generating message contract since the operation StoreImage is neither RPC nor document wrapped.
-        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="")]
-        [System.ServiceModel.XmlSerializerFormatAttribute()]
-        void StoreImage(Spring.Ws.Samples.Mtom.Client.Wcf.StoreImageRequest request);
-        
         // CODEGEN: Generating message contract since the operation LoadImage is neither RPC nor document wrapped.
         [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute()]
         Spring.Ws.Samples.Mtom.Client.Wcf.LoadImageResponse LoadImage(Spring.Ws.Samples.Mtom.Client.Wcf.LoadImageRequest request);
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "3.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
-    public partial class StoreImageRequest
-    {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Name="StoreImageRequest", Namespace="http://www.springframework.org/spring-ws/samples/mtom", Order=0)]
-        public Image StoreImageRequest1;
-        
-        public StoreImageRequest()
-        {
-        }
-        
-        public StoreImageRequest(Image StoreImageRequest1)
-        {
-            this.StoreImageRequest1 = StoreImageRequest1;
-        }
+        // CODEGEN: Generating message contract since the operation StoreImage is neither RPC nor document wrapped.
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="")]
+        [System.ServiceModel.XmlSerializerFormatAttribute()]
+        void StoreImage(Spring.Ws.Samples.Mtom.Client.Wcf.StoreImageRequest request);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -128,6 +109,25 @@ namespace Spring.Ws.Samples.Mtom.Client.Wcf
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "3.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
+    public partial class StoreImageRequest
+    {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Name="StoreImageRequest", Namespace="http://www.springframework.org/spring-ws/samples/mtom", Order=0)]
+        public Image StoreImageRequest1;
+        
+        public StoreImageRequest()
+        {
+        }
+        
+        public StoreImageRequest(Image StoreImageRequest1)
+        {
+            this.StoreImageRequest1 = StoreImageRequest1;
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "3.0.0.0")]
     public interface ImageRepositoryChannel : Spring.Ws.Samples.Mtom.Client.Wcf.ImageRepository, System.ServiceModel.IClientChannel
     {
@@ -163,19 +163,6 @@ namespace Spring.Ws.Samples.Mtom.Client.Wcf
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        void Spring.Ws.Samples.Mtom.Client.Wcf.ImageRepository.StoreImage(Spring.Ws.Samples.Mtom.Client.Wcf.StoreImageRequest request)
-        {
-            base.Channel.StoreImage(request);
-        }
-        
-        public void StoreImage(Image StoreImageRequest1)
-        {
-            Spring.Ws.Samples.Mtom.Client.Wcf.StoreImageRequest inValue = new Spring.Ws.Samples.Mtom.Client.Wcf.StoreImageRequest();
-            inValue.StoreImageRequest1 = StoreImageRequest1;
-            ((Spring.Ws.Samples.Mtom.Client.Wcf.ImageRepository)(this)).StoreImage(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         Spring.Ws.Samples.Mtom.Client.Wcf.LoadImageResponse Spring.Ws.Samples.Mtom.Client.Wcf.ImageRepository.LoadImage(Spring.Ws.Samples.Mtom.Client.Wcf.LoadImageRequest request)
         {
             return base.Channel.LoadImage(request);
@@ -187,6 +174,19 @@ namespace Spring.Ws.Samples.Mtom.Client.Wcf
             inValue.LoadImageRequest1 = LoadImageRequest1;
             Spring.Ws.Samples.Mtom.Client.Wcf.LoadImageResponse retVal = ((Spring.Ws.Samples.Mtom.Client.Wcf.ImageRepository)(this)).LoadImage(inValue);
             return retVal.LoadImageResponse1;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        void Spring.Ws.Samples.Mtom.Client.Wcf.ImageRepository.StoreImage(Spring.Ws.Samples.Mtom.Client.Wcf.StoreImageRequest request)
+        {
+            base.Channel.StoreImage(request);
+        }
+        
+        public void StoreImage(Image StoreImageRequest1)
+        {
+            Spring.Ws.Samples.Mtom.Client.Wcf.StoreImageRequest inValue = new Spring.Ws.Samples.Mtom.Client.Wcf.StoreImageRequest();
+            inValue.StoreImageRequest1 = StoreImageRequest1;
+            ((Spring.Ws.Samples.Mtom.Client.Wcf.ImageRepository)(this)).StoreImage(inValue);
         }
     }
 }
