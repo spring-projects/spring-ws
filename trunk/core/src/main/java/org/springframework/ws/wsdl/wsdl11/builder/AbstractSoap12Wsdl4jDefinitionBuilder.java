@@ -46,6 +46,8 @@ import javax.xml.namespace.QName;
  * @author Alex Marshall
  * @see #setLocationUri(String)
  * @since 1.5.0
+ * @deprecated as of Spring Web Services 1.5: superseded by {@link org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition}
+ *             and the {@link org.springframework.ws.wsdl.wsdl11.provider} package
  */
 public abstract class AbstractSoap12Wsdl4jDefinitionBuilder extends AbstractBindingWsdl4jDefinitionBuilder {
 
@@ -53,9 +55,7 @@ public abstract class AbstractSoap12Wsdl4jDefinitionBuilder extends AbstractBind
 
     private static final String WSDL_SOAP_PREFIX = "soap12";
 
-    /**
-     * The default soap12:binding transport attribute value.
-     */
+    /** The default soap12:binding transport attribute value. */
     public static final String DEFAULT_TRANSPORT_URI = "http://schemas.xmlsoap.org/soap/http";
 
     private String transportUri = DEFAULT_TRANSPORT_URI;
@@ -72,16 +72,12 @@ public abstract class AbstractSoap12Wsdl4jDefinitionBuilder extends AbstractBind
         this.transportUri = transportUri;
     }
 
-    /**
-     * Sets the value used for the soap12:address location attribute value.
-     */
+    /** Sets the value used for the soap12:address location attribute value. */
     public void setLocationUri(String locationUri) {
         this.locationUri = locationUri;
     }
 
-    /**
-     * Adds the WSDL SOAP namespace to the definition.
-     */
+    /** Adds the WSDL SOAP namespace to the definition. */
     protected void populateDefinition(Definition definition) throws WSDLException {
         definition.addNamespace(WSDL_SOAP_PREFIX, WSDL_SOAP_NAMESPACE_URI);
     }

@@ -33,6 +33,19 @@ import org.springframework.xml.xsd.XsdSchemaCollection;
  * conventions in one or more inlined XSD schemas. Delegates to {@link InliningXsdSchemaTypesProvider}, {@link
  * DefaultMessagesProvider}, {@link SuffixBasedPortTypesProvider}, {@link SoapProvider} underneath; effectively
  * equivalent to using a {@link ProviderBasedWsdl4jDefinition} with all these providers.
+ * <p/>
+ * Example configuration:
+ * <pre>
+ * &lt;bean id=&quot;airline&quot; class=&quot;org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition&quot;&gt;
+ *   &lt;property name=&quot;schema&quot;&gt;
+ *     &lt;bean class=&quot;org.springframework.xml.xsd.SimpleXsdSchema&quot;&gt;
+ *       &lt;property name=&quot;xsd&quot; value=&quot;/WEB-INF/airline.xsd&quot;/&gt;
+ *     &lt;/bean&gt;
+ *   &lt;/property&gt;
+ *   &lt;property name=&quot;portTypeName&quot; value=&quot;Airline&quot;/&gt;
+ *   &lt;property name=&quot;locationUri&quot; value=&quot;http://localhost:8080/airline/services&quot;/&gt;
+ * &lt;/bean&gt;
+ * </pre>
  *
  * @author Arjen Poutsma
  * @since 1.5.0

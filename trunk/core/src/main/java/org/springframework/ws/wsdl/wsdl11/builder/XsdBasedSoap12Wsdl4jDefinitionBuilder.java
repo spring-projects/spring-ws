@@ -83,6 +83,8 @@ import org.springframework.xml.namespace.QNameUtils;
  * @see #setRequestSuffix(String)
  * @see #setResponseSuffix(String)
  * @since 1.5.0
+ * @deprecated as of Spring Web Services 1.5: superseded by {@link org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition}
+ *             and the {@link org.springframework.ws.wsdl.wsdl11.provider} package
  */
 public class XsdBasedSoap12Wsdl4jDefinitionBuilder extends AbstractSoap12Wsdl4jDefinitionBuilder
         implements InitializingBean {
@@ -288,7 +290,7 @@ public class XsdBasedSoap12Wsdl4jDefinitionBuilder extends AbstractSoap12Wsdl4jD
                             definition.addNamespace(prefix, elementName.getNamespaceURI());
                             break;
                         }
-                        i++;                        
+                        i++;
                     }
                 }
                 Message message = definition.createMessage();
