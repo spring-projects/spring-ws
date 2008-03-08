@@ -1,0 +1,29 @@
+Dear Spring community,
+
+I'm pleased to announce that Spring Web Services 1.5.0 RC1 has been released! This release candidate release introduces:
+
+* WS-Addressing support for both client and server, supporting the August 2004 and final versions of the specification,
+* A new and improved XSD-to-WSDL generator that inlines included and import XSDs,
+* Support for Spring Security
+* Support for the Java 6 HTTP Server
+* Two new samples, showing Plain Old XML usage and WS-Addressing with the Java 6 HTTP server
+
+Additionally, there are other minor improvements and bug fixes.
+
+Spring-WS 1.5.0 RC1 is the first milestone in the 1.5 series, which is now feature complete. The 1.5.0 series is 95%
+backwards compatible, though support for Java 1.3 has been dropped, in favor of Java 1.6. Java is required 6 to build.
+
+The next release in this branch will be 1.5.0, to be released around the 28th of March, unless a second release
+candidate is required. After 1.5.0 final has been released, there will be a 1.0.4, backporting all bugfixes in the 1.5
+branch.
+
+For Maven users, please note that this release is not published at the central maven repository. Instead it is
+published on Amazon's S3 service, like all Spring milestones. To use it, add the following repository to your POM:
+
+<repository>
+   <id>spring-milestone</id>
+   <name>Spring Milestone Repository</name>
+   <url>http://s3.amazonaws.com/maven.springframework.org/milestone</url>
+</repository>
+
+For more information, see http://static.springframework.org/spring-ws/sites/1.5/

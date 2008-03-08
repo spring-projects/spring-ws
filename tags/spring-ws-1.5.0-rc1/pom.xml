@@ -254,6 +254,12 @@
                                             <version>3.2.3</version>
                                             <outputDirectory>${project.build.directory}/dependency/stax/</outputDirectory>
                                         </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.apache.ws.commons.schema</groupId>
+                                            <artifactId>XmlSchema</artifactId>
+                                            <version>1.3.2</version>
+                                            <outputDirectory>${project.build.directory}/dependency/ws-commons/</outputDirectory>
+                                        </artifactItem>
                                         <!-- OXM dependencies -->
                                         <!--Castor-->
                                         <artifactItem>
@@ -356,13 +362,13 @@
                                             <groupId>org.apache.ws.commons.axiom</groupId>
                                             <artifactId>axiom-api</artifactId>
                                             <version>1.2.5</version>
-                                            <outputDirectory>${project.build.directory}/dependency/axiom/</outputDirectory>
+                                            <outputDirectory>${project.build.directory}/dependency/ws-commons/</outputDirectory>
                                         </artifactItem>
                                         <artifactItem>
                                             <groupId>org.apache.ws.commons.axiom</groupId>
                                             <artifactId>axiom-impl</artifactId>
                                             <version>1.2.5</version>
-                                            <outputDirectory>${project.build.directory}/dependency/axiom/</outputDirectory>
+                                            <outputDirectory>${project.build.directory}/dependency/ws-commons/</outputDirectory>
                                         </artifactItem>
                                         <artifactItem>
                                             <groupId>wsdl4j</groupId>
