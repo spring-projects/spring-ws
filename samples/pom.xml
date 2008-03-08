@@ -13,6 +13,8 @@
         <module>echo</module>
         <module>tutorial</module>
         <module>mtom</module>
+        <module>pox</module>
+        <module>stockquote</module>
         <module>airline</module>
     </modules>
     <repositories>
