@@ -35,15 +35,15 @@
         </property>
     </bean>
 
-    <bean id="holiday" class="org.springframework.ws.wsdl.wsdl11.DynamicWsdl11Definition">
-        <property name="builder">
-            <bean class="org.springframework.ws.wsdl.wsdl11.builder.XsdBasedSoap11Wsdl4jDefinitionBuilder">
-                <property name="schema" value="/WEB-INF/hr.xsd"/>
-                <property name="portTypeName" value="HumanResource"/>
-                <property name="locationUri" value="http://localhost:8080/holidayService/"/>
-                <property name="targetNamespace" value="http://mycompany.com/hr/definitions"/>
-            </bean>
-        </property>
+    <bean id="holiday" class="org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition">
+        <property name="schema" ref="schema"/>
+        <property name="portTypeName" value="HumanResource"/>
+        <property name="locationUri" value="http://localhost:8080/holidayService/"/>
+        <property name="targetNamespace" value="http://mycompany.com/hr/definitions"/>
+    </bean>
+
+    <bean id="schema" class="org.springframework.xml.xsd.SimpleXsdSchema">
+        <property name="xsd" value="/WEB-INF/hr.xsd"/>
     </bean>
 
 </beans>
