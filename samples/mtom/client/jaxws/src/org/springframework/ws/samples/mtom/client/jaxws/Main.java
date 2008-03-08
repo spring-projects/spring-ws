@@ -38,7 +38,7 @@ public class Main {
         try {
 
             ImageRepositoryService service = new ImageRepositoryService();
-            ImageRepository imageRepository = service.getImageRepositoryPort();
+            ImageRepository imageRepository = service.getImageRepositorySoap11();
             SOAPBinding binding = (SOAPBinding) ((BindingProvider) imageRepository).getBinding();
             binding.setMTOMEnabled(true);
 
