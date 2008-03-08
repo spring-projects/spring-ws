@@ -68,9 +68,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-jmx</artifactId>
-            <version>${spring.version}</version>
-            <scope>test</scope>
+            <artifactId>spring-test</artifactId>
         </dependency>
         <!-- JEE dependencies -->
         <dependency>
