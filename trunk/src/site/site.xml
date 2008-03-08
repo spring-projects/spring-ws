@@ -14,7 +14,8 @@
     <body>
         <links>
             <item name="Spring Framework" href="http://www.springframework.org"/>
-            <item name="Spring Web Services" href="http://www.springframework.org/spring-ws"/>
+            <item name="Spring Web Services 1.0" href="http://static.springframework.org/spring-ws/sites/1.0/"/>
+            <item name="Spring Web Services 1.5" href="http://static.springframework.org/spring-ws/sites/1.5/"/>
         </links>
         <head>
             <script type="text/javascript" language="javascript">
