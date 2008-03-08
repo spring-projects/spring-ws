@@ -16,7 +16,6 @@
 
 package org.springframework.xml.xsd;
 
-import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
 /**
@@ -34,14 +33,6 @@ public interface XsdSchema {
      * @return the target namespace
      */
     String getTargetNamespace();
-
-    /**
-     * Returns the qualified names of all top-level elements declared in the schema. This excludes elements declared as
-     * child of another <code>element</code>, <code>simplyType</code>, or <code>complexType</code>.
-     *
-     * @return the top-level element names
-     */
-    QName[] getElementNames();
 
     /**
      * Returns the <code>Source</code> of the schema.

@@ -16,10 +16,6 @@
 
 package org.springframework.xml.xsd;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -54,9 +50,6 @@ public abstract class AbstractXsdSchemaTestCase extends XMLTestCase {
         XsdSchema single = createSchema(resource);
         String namespace = "http://www.springframework.org/spring-ws/single/schema";
         assertEquals("Invalid target namespace", namespace, single.getTargetNamespace());
-        QName[] elementNames = single.getElementNames();
-        assertQNamesEqual(new QName[]{new QName(namespace, "GetOrderRequest"), new QName(namespace, "GetOrderResponse"),
-                new QName(namespace, "GetOrderFault")}, elementNames);
         resource = new ClassPathResource("single.xsd", AbstractXsdSchemaTestCase.class);
         Document expected = documentBuilder.parse(SaxUtils.createInputSource(resource));
         DOMResult domResult = new DOMResult();
@@ -70,8 +63,6 @@ public abstract class AbstractXsdSchemaTestCase extends XMLTestCase {
         XsdSchema including = createSchema(resource);
         String namespace = "http://www.springframework.org/spring-ws/include/schema";
         assertEquals("Invalid target namespace", namespace, including.getTargetNamespace());
-        QName[] elementNames = including.getElementNames();
-        assertQNamesEqual(new QName[]{new QName(namespace, "GetOrderRequest")}, elementNames);
         resource = new ClassPathResource("including.xsd", AbstractXsdSchemaTestCase.class);
         Document expected = documentBuilder.parse(SaxUtils.createInputSource(resource));
         DOMResult domResult = new DOMResult();
@@ -85,20 +76,12 @@ public abstract class AbstractXsdSchemaTestCase extends XMLTestCase {
         XsdSchema importing = createSchema(resource);
         String namespace = "http://www.springframework.org/spring-ws/importing/schema";
         assertEquals("Invalid target namespace", namespace, importing.getTargetNamespace());
-        QName[] elementNames = importing.getElementNames();
-        assertQNamesEqual(new QName[]{new QName(namespace, "GetOrderRequest")}, elementNames);
         resource = new ClassPathResource("importing.xsd", AbstractXsdSchemaTestCase.class);
         Document expected = documentBuilder.parse(SaxUtils.createInputSource(resource));
         DOMResult domResult = new DOMResult();
         transformer.transform(importing.getSource(), domResult);
         Document result = (Document) domResult.getNode();
         assertXMLEqual("Invalid Source returned", expected, result);
-    }
-
-    private void assertQNamesEqual(QName[] expected, QName[] result) {
-        Set expectedSet = new HashSet(Arrays.asList(expected));
-        Set resultSet = new HashSet(Arrays.asList(result));
-        assertEquals("Invalid QNames", expectedSet, resultSet);
     }
 
     protected abstract XsdSchema createSchema(Resource resource) throws Exception;
