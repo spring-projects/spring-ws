@@ -24,6 +24,8 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -41,6 +43,8 @@ import org.springframework.xml.xsd.XsdSchemaCollection;
  * @since 1.5.0
  */
 public class InliningXsdSchemaTypesProvider extends TransformerObjectSupport implements TypesProvider {
+
+    private static final Log logger = LogFactory.getLog(InliningXsdSchemaTypesProvider.class);
 
     /** The prefix used to register the schema namespace in the WSDL. */
     public static final String SCHEMA_PREFIX = "sch";
@@ -78,6 +82,9 @@ public class InliningXsdSchemaTypesProvider extends TransformerObjectSupport imp
         Types types = definition.createTypes();
         XsdSchema[] schemas = schemaCollection.getXsdSchemas();
         for (int i = 0; i < schemas.length; i++) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Inling " + schemas[i]);
+            }
             if (schemas.length == 1) {
                 definition.addNamespace(SCHEMA_PREFIX, schemas[i].getTargetNamespace());
             }

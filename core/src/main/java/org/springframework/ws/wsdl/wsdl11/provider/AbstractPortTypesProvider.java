@@ -32,6 +32,9 @@ import javax.wsdl.PortType;
 import javax.wsdl.WSDLException;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -42,6 +45,9 @@ import org.springframework.util.StringUtils;
  * @since 1.5.0
  */
 public abstract class AbstractPortTypesProvider implements PortTypesProvider {
+
+    /** Logger available to subclasses. */
+    protected final Log logger = LogFactory.getLog(getClass());
 
     private String portTypeName;
 
@@ -80,7 +86,11 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
      * @see #setPortTypeName(String)
      */
     protected void populatePortType(Definition definition, PortType portType) throws WSDLException {
-        portType.setQName(new QName(definition.getTargetNamespace(), getPortTypeName()));
+        QName portTypeName = new QName(definition.getTargetNamespace(), getPortTypeName());
+        if (logger.isDebugEnabled()) {
+            logger.debug("Creating port type [" + portTypeName + "]");
+        }
+        portType.setQName(portTypeName);
     }
 
     private void createOperations(Definition definition, PortType portType) throws WSDLException {
@@ -96,6 +106,9 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
                 }
                 messages.add(message);
             }
+        }
+        if (operations.isEmpty() && logger.isWarnEnabled()) {
+            logger.warn("No operations were created, make sure the WSDL contains messages");
         }
         for (Iterator iterator = operations.keySet().iterator(); iterator.hasNext();) {
             String operationName = (String) iterator.next();
@@ -125,6 +138,10 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
             }
             operation.setStyle(getOperationType(operation));
             operation.setUndefined(false);
+            if (logger.isDebugEnabled()) {
+                logger.debug(
+                        "Adding operation [" + operation.getName() + "] to port type [" + portType.getQName() + "]");
+            }
             portType.addOperation(operation);
         }
     }
