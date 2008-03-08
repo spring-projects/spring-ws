@@ -43,7 +43,7 @@ public class Main {
                         "AirlineService");
                 service = new AirlineService(new URL(args[0]), serviceName);
             }
-            Airline airline = service.getAirlinePort();
+            Airline airline = service.getAirlineSoap11();
             GetFlightsRequest request = new GetFlightsRequest();
             request.setFrom("AMS");
             request.setTo("VCE");

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
         targetNamespace="http://www.springframework.org/spring-ws/samples/airline/schemas/messages"
+        xmlns:tns="http://www.springframework.org/spring-ws/samples/airline/schemas/messages"
         xmlns:types="http://www.springframework.org/spring-ws/samples/airline/schemas/types"
         elementFormDefault="qualified">
 
