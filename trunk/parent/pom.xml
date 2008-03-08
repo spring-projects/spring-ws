@@ -4,7 +4,7 @@
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.5.0-rc1</version>
+    <version>1.5.0-SNAPSHOT</version>
     <name>Spring Web Services - Parent</name>
     <distributionManagement>
         <downloadUrl>http://static.springframework.org/spring-ws/site/downloads/releases.html</downloadUrl>
@@ -24,9 +24,9 @@
         </site>
     </distributionManagement>
     <scm>
-        <connection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/tags/spring-ws-1.5.0-rc1</connection>
-        <developerConnection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/tags/spring-ws-1.5.0-rc1</developerConnection>
-        <url>http://fisheye3.cenqua.com/browse/springframework/spring-ws/tags/spring-ws-1.5.0-rc1</url>
+        <connection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk</connection>
+        <developerConnection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk</developerConnection>
+        <url>http://fisheye3.cenqua.com/browse/springframework/spring-ws/trunk</url>
     </scm>
     <properties>
         <spring.version>2.5.2</spring.version>
