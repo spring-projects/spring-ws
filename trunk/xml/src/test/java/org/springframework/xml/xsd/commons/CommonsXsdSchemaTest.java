@@ -32,25 +32,4 @@ public class CommonsXsdSchemaTest extends AbstractXsdSchemaTestCase {
         return new CommonsXsdSchema(schema);
     }
 
-    /*
-    public void testInline() throws Exception {
-        Resource resource = new ClassPathResource("A.xsd", AbstractXsdSchemaTestCase.class);
-        CommonsXsdSchema schema = new CommonsXsdSchema(resource);
-        XsdSchema[] inlined = schema.inline();
-        for (int i = 0; i < inlined.length; i++) {
-            transformer.transform(inlined[i].getSource(), new StreamResult(System.out));
-            System.out.println();
-        }
-    }
-
-    public void testCircular() throws Exception {
-        Resource resource = new ClassPathResource("circular-1.xsd", AbstractXsdSchemaTestCase.class);
-        CommonsXsdSchema schema = new CommonsXsdSchema(resource);
-        XsdSchema[] inlined = schema.inline();
-        for (int i = 0; i < inlined.length; i++) {
-            transformer.transform(inlined[i].getSource(), new StreamResult(System.out));
-            System.out.println();
-        }
-    }
-    */
 }

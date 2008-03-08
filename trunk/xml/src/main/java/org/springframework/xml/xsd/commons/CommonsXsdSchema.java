@@ -23,10 +23,15 @@ import java.util.Iterator;
 import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.ws.commons.schema.XmlSchema;
+import org.apache.ws.commons.schema.XmlSchemaSerializer;
+import org.w3c.dom.Document;
 
+import org.springframework.beans.BeanInstantiationException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.util.Assert;
 import org.springframework.xml.xsd.XsdSchema;
 
@@ -67,6 +72,19 @@ public class CommonsXsdSchema implements XsdSchema {
     }
 
     public Source getSource() {
+        // try to use the the package-friendly XmlSchemaSerializer first, fall back to slower stream-based version
+        try {
+            XmlSchemaSerializer serializer =
+                    (XmlSchemaSerializer) BeanUtils.instantiateClass(XmlSchemaSerializer.class);
+            Document[] serializesSchemas = serializer.serializeSchema(schema, false);
+            return new DOMSource(serializesSchemas[0]);
+        }
+        catch (BeanInstantiationException ex) {
+            // ignore
+        }
+        catch (XmlSchemaSerializer.XmlSchemaSerializerException ex) {
+            // ignore
+        }
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         schema.write(bos);
         ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
