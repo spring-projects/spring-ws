@@ -713,22 +713,24 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
         </para>
         <programlistingco>
             <areaspec>
-                <area id="tutorial.wsdl.gen.bean" coords="2"/>
-                <area id="tutorial.wsdl.gen.schema" coords="5"/>
-                <area id="tutorial.wsdl.gen.portType" coords="6"/>
-                <area id="tutorial.wsdl.gen.locationUri" coords="7"/>
-                <area id="tutorial.wsdl.gen.tns" coords="8"/>
+                <area id="tutorial.wsdl.gen.bean" coords="1"/>
+                <areaset id="tutorial.wsdl.gen.schema" coords="">
+                    <area id="tutorial.wsdl.gen.schema.ref" coords="2"/>
+                    <area id="tutorial.wsdl.gen.schema.def" coords="8"/>
+                </areaset>
+                <area id="tutorial.wsdl.gen.portType" coords="3"/>
+                <area id="tutorial.wsdl.gen.locationUri" coords="4"/>
+                <area id="tutorial.wsdl.gen.tns" coords="5"/>
             </areaspec>
-            <programlisting><![CDATA[
-<bean id="holiday" class="org.springframework.ws.wsdl.wsdl11.DynamicWsdl11Definition">
-  <property name="builder">
-    <bean class="org.springframework.ws.wsdl.wsdl11.builder.XsdBasedSoap11Wsdl4jDefinitionBuilder">
-      <property name="schema" value="/WEB-INF/hr.xsd"/>
-      <property name="portTypeName" value="HumanResource"/>
-      <property name="locationUri" value="http://localhost:8080/holidayService/"/>
-      <property name="targetNamespace" value="http://mycompany.com/hr/definitions"/>
-    </bean>
-  </property>
+            <programlisting><![CDATA[<bean id="holiday" class="org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition">
+    <property name="schema" ref="schema"/>
+    <property name="portTypeName" value="HumanResource"/>
+    <property name="locationUri" value="http://localhost:8080/holidayService/"/>
+    <property name="targetNamespace" value="http://mycompany.com/hr/definitions"/>
+</bean>
+
+<bean id="schema" class="org.springframework.xml.xsd.SimpleXsdSchema">
+    <property name="xsd" value="/WEB-INF/hr.xsd"/>
 </bean>]]></programlisting>
             <calloutlist>
                 <callout arearefs="tutorial.wsdl.gen.bean">
@@ -741,9 +743,9 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
                 </callout>
                 <callout arearefs="tutorial.wsdl.gen.schema">
                     <para>
-                        The <varname>schema</varname> property is set to the human resource schema we defined in
-                        <xref linkend="tutorial.xsd"/>: we simply placed the schema in the <filename>WEB-INF</filename>
-                        directory of the application.
+                        The <varname>schema</varname> property refers to the human resource schema we defined in
+                        <xref linkend="tutorial.xsd"/>, wrapped in a <classname>SimpleXsdSchema</classname>. We simply
+                        placed the schema in the <filename>WEB-INF</filename> directory of the application.
                     </para>
                 </callout>
                 <callout arearefs="tutorial.wsdl.gen.portType">
