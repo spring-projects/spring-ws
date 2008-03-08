@@ -25,6 +25,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.ws.wsdl.WsdlDefinitionException;
 import org.springframework.ws.wsdl.wsdl11.Wsdl11Definition;
 import org.springframework.ws.wsdl.wsdl11.Wsdl11DefinitionBuilder;
@@ -37,6 +38,8 @@ import org.springframework.ws.wsdl.wsdl11.Wsdl4jDefinitionException;
  *
  * @author Arjen Poutsma
  * @since 1.0.0
+ * @deprecated as of Spring Web Services 1.5: superseded by {@link org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition}
+ *             and the {@link org.springframework.ws.wsdl.wsdl11.provider} package
  */
 public abstract class AbstractWsdl4jDefinitionBuilder implements Wsdl11DefinitionBuilder {
 

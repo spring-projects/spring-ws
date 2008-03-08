@@ -45,6 +45,8 @@ import javax.xml.namespace.QName;
  * @author Arjen Poutsma
  * @see #setLocationUri(String)
  * @since 1.0.0
+ * @deprecated as of Spring Web Services 1.5: superseded by {@link org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition}
+ *             and the {@link org.springframework.ws.wsdl.wsdl11.provider} package
  */
 public abstract class AbstractSoap11Wsdl4jDefinitionBuilder extends AbstractBindingWsdl4jDefinitionBuilder {
 

@@ -26,16 +26,17 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-import org.springframework.xml.namespace.QNameUtils;
-import org.springframework.xml.sax.SaxUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import org.springframework.core.io.Resource;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+import org.springframework.xml.namespace.QNameUtils;
+import org.springframework.xml.sax.SaxUtils;
 
 /**
  * Helper class for dealing with XSD schemas. Exposes the target namespace, and the list of qualified names declared in
@@ -43,6 +44,8 @@ import org.xml.sax.SAXException;
  *
  * @author Arjen Poutsma
  * @since 1.0.2
+ * @deprecated as of Spring Web Services 1.5: superseded by {@link org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition}
+ *             and the {@link org.springframework.ws.wsdl.wsdl11.provider} package
  */
 class XsdSchemaHelper {
 

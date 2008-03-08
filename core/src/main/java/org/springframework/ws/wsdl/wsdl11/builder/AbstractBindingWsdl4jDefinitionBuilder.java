@@ -41,6 +41,8 @@ import javax.xml.namespace.QName;
  *
  * @author Arjen Poutsma
  * @since 1.0.0
+ * @deprecated as of Spring Web Services 1.5: superseded by {@link org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition}
+ *             and the {@link org.springframework.ws.wsdl.wsdl11.provider} package
  */
 public abstract class AbstractBindingWsdl4jDefinitionBuilder extends AbstractWsdl4jDefinitionBuilder {
 
