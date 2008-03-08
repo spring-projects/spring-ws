@@ -19,6 +19,8 @@ package org.springframework.ws.wsdl.wsdl11.provider;
 import javax.wsdl.Message;
 
 /**
+ * Implementation of the {@link  PortTypesProvider} interface that is based on suffixes.
+ *
  * @author Arjen Poutsma
  * @since 1.5.0
  */
