@@ -7,7 +7,7 @@
     <bean class="org.springframework.ws.samples.mtom.ws.ImageRepositoryEndpoint">
         <constructor-arg ref="imageRepository"/>
     </bean>
-    
+
     <bean class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping"/>
 
     <bean class="org.springframework.ws.server.endpoint.adapter.GenericMarshallingMethodEndpointAdapter">
@@ -19,14 +19,15 @@
         <property name="mtomEnabled" value="true"/>
     </bean>
 
-    <bean id="mtom" class="org.springframework.ws.wsdl.wsdl11.DynamicWsdl11Definition">
-        <property name="builder">
-            <bean class="org.springframework.ws.wsdl.wsdl11.builder.XsdBasedSoap11Wsdl4jDefinitionBuilder">
-                <property name="schema" value="/WEB-INF/schema.xsd"/>
-                <property name="portTypeName" value="ImageRepository"/>
-                <property name="locationUri" value="http://localhost:8080/mtom/"/>
-            </bean>
-        </property>
+    <bean id="mtom" class="org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition">
+        <property name="schema" ref="schema"/>
+        <property name="portTypeName" value="ImageRepository"/>
+        <property name="locationUri" value="http://localhost:8080/mtom/"/>
+    </bean>
+
+
+    <bean id="schema" class="org.springframework.xml.xsd.SimpleXsdSchema">
+        <property name="xsd" value="/WEB-INF/schema.xsd"/>
     </bean>
 
 </beans>
