@@ -32,7 +32,7 @@
                 <classname>Result</classname>. Additionally, it can marshal objects to XML before sending
                 them across a transport, and unmarshal any response XML into an object again.
             </para>
-            <section>
+            <section id="client-transports">
                 <title>URIs and Transports</title>
                 <para>
                     The <classname>WebServiceTemplate</classname> class uses an URI as the message destination.
@@ -313,6 +313,34 @@ public void marshalWithSoapActionHeader(MyObject o) {
         }
     });
 }]]></programlisting>
+            <note>
+                <para>
+                    Note that you can also use the
+                    <classname>org.springframework.ws.soap.client.core.SoapActionCallback</classname> to set the SOAP
+                    Action header.
+                </para>
+            </note>
+            <section>
+                <title>WS-Addressing</title>
+                <para>
+                    In addition to the <link linkend="server-ws-addressing">server-side WS-Addressing</link> support,
+                    Spring Web Services also has support for this specification on the client-side.
+                </para>
+                <para>
+                    For setting WS-Addressing headers on the client, you can use the
+                    <classname>org.springframework.ws.soap.addressing.client.ActionCallback</classname>. This callback
+                    takes the desired Action header as a parameter. It also has constructors for specifying the
+                    WS-Addressing version, and a <literal>To</literal> header. If not specified, the
+                    <literal>To</literal> header will default to the URL of the connection being made.
+                </para>
+                <para>
+                    Here is an example of setting the <literal>Action</literal> header to
+                    <uri>http://samples/RequestOrder</uri>:<programlisting><![CDATA[
+webServiceTemplate.marshalSendAndReceive(o, new ActionCallback("http://samples/RequestOrder"));
+]]></programlisting>
+
+                </para>
+            </section>
         </section>
         <section>
             <title>

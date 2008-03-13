@@ -850,7 +850,7 @@ public class AnnotationOrderEndpoint {
             <para>
                 The mapping above routes requests which have a <literal>SOAPAction</literal> of
                 <uri>http://samples/RequestOrder</uri> to the <literal>'getOrderEndpoint'</literal>. Requests with
-                <uri>http://samples/CreateOrder</uri> will be routed to the <literal>'createController'</literal>.
+                <uri>http://samples/CreateOrder</uri> will be routed to the <literal>'createOrderEndpoint'</literal>.
             </para>
             <caution>
                 <para>
@@ -886,6 +886,138 @@ public class AnnotationOrderEndpoint {
                 Whenever a message comes in which has this <literal>SOAPAction</literal> header, the
                 method will be invoked.
             </para>
+        </section>
+        <section id="server-ws-addressing">
+            <title>WS-Addressing</title>
+            <para>
+                WS-Addressing specifies a transport-neutral routing mechanism. It is based on a
+                <literal>To</literal> and <literal>Action</literal> SOAP header, which indicate the destination and
+                intent of the SOAP message, respectively. Additionally, WS-Addressing allows you to define a return
+                address (for normal messages and for faults), and a unique message identifier which can be used for
+                correlation
+                <footnote>
+                    <para>For more information on WS-Addressing, see <ulink url="http://en.wikipedia.org/wiki/WS-Addressing"/>.</para>
+                </footnote>.
+                Here is an example of a WS-Addressing message:
+                <programlisting><![CDATA[<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://www.w3.org/2003/05/soap-envelope"
+    xmlns:wsa="http://www.w3.org/2005/08/addressing">
+    <SOAP-ENV::Header>
+        <wsa:MessageID>urn:uuid:21363e0d-2645-4eb7-8afd-2f5ee1bb25cf</wsa:MessageID>
+        <wsa:ReplyTo>
+            <wsa:Address>http://example.com/business/client1</wsa:Address>
+        </wsa:ReplyTo>
+        <wsa:To S:mustUnderstand="true">http://example/com/fabrikam</wsa:To>
+        <wsa:Action>http://example.com/fabrikam/mail/Delete</wsa:Action>
+    </SOAP-ENV:Header>
+    <SOAP-ENV:Body>
+        <f:Delete xmlns:f="http://example.com/fabrikam">
+            <f:maxCount>42</f:maxCount>
+        </f:Delete>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>]]></programlisting>
+                In this example, the destination is set to <uri>http://example/com/fabrikam</uri>, while the action is
+                set to <uri>http://example.com/fabrikam/mail/Delete</uri>. Additionally, there is a message identifier,
+                and an reply-to address. By default, this address is the "anonymous" address, indicating that a response
+                should be sent using the same channel as the request (i.e. the HTTP response), but it can also be
+                another address, as indicated in this example.
+            </para>
+            <para>
+                In Spring Web Services, WS-Addressing is implemented as an endpoint mapping. Using this mapping, you
+                associate WS-Addressing actions with endpoints, similar to the <classname>SoapActionEndpointMapping</classname>
+                described above.
+            </para>
+            <section>
+                <title><classname>SimpleActionEndpointMapping</classname></title>
+                <para>
+                    The <classname>SimpleActionEndpointMapping</classname> is meant to be used in a standard Spring
+                    application context. It maps actions to endpoints via an exposed <property>mappings</property>
+                    property. Here is an example:<programlisting><![CDATA[<beans>
+    <bean id="endpointMapping" class="org.springframework.ws.soap.addressing.server.SimpleActionEndpointMapping">
+        <property name="mappings">
+            <props>
+                <prop key="http://samples/RequestOrder">getOrderEndpoint</prop>
+                <prop key="http://samples/CreateOrder">createOrderEndpoint</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="getOrderEndpoint" class="samples.GetOrderEndpoint">
+        <constructor-arg ref="orderService"/>
+    </bean>
+
+    <bean id="createOrderEndpoint" class="samples.CreateOrderEndpoint">
+        <constructor-arg ref="orderService"/>
+    </bean>
+</beans>]]></programlisting>
+                </para>
+                <para>
+                    The mapping above routes requests which have a WS-Addressing <literal>Action</literal> of
+                    <uri>http://samples/RequestOrder</uri> to the <literal>'getOrderEndpoint'</literal>. Requests with
+                    <uri>http://samples/CreateOrder</uri> will be routed to the <literal>'createOrderEndpoint'</literal>.
+                </para>
+                <para>
+                    By default, the <classname>SimpleActionEndpointMapping</classname> supports both the 1.0
+                    (May 2006), and the August 2004 editions of WS-Addressing. These two versions are most popular, and
+                    are interoperably with Axis 1 and 2, JAX-WS, XFire, Windows Communication Foundation (WCF), and
+                    Windows Services Enhancemenets (WSE) 3.0. If necessary, specific versions of the spec can be
+                    injected into the <property>versions</property> property.
+                </para>
+                <para>
+                    Besides the <property>mappings</property> property, the endpoint mapping also has an
+                    <property>address</property> property. If set, value of this property is compared to the
+                    <literal>To</literal> header property of the incominging message.
+                </para>
+                <para>
+                    Finally, there is the <property>messageSenders</property> property, which is required for sending
+                    response messages to non-anonymous, out-of-bound addresses. You can set <interfacename>MessageSender</interfacename>
+                    implementations in this property, the same as you would on the <classname>WebServiceTemplate</classname>.
+                    See <xref linkend="client-transports"/>.
+                </para>
+            </section>
+            <section>
+                <title><classname>AnnotationActionEndpointMapping</classname></title>
+                <para>
+                    The <classname>AnnotationActionEndpointMapping</classname> is quite similar to the <classname>SimpleActionEndpointMapping</classname>.
+                    It has the same <property>versions</property> and <property>messageSenders</property> properties,
+                    but uses Java 5 annotations.
+                </para>
+                <para>
+                    To use the <classname>AnnotationActionEndpointMapping</classname>, annotate the handling methods
+                    with the <interfacename>@Action</interfacename> annotation, similar to the
+                    <interfacename>@PayloadRoot</interfacename> and <interfacename>@SoapAction</interfacename>
+                    annotations described in <xref linkend="server-at-endpoint"/> and
+                    <xref linkend="server-method-endpoint-mapping"/>. Here is an example:
+                    <programlisting><![CDATA[package samples;
+
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.soap.addressing.server.annotation.Action
+
+@Endpoint
+public class AnnotationOrderEndpoint {
+    private final OrderService orderService;
+
+    public AnnotationOrderEndpoint(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    @Action("http://samples/RequestOrder")
+    public Order getOrder(OrderRequest orderRequest) {
+        return orderService.getOrder(orderRequest.getId());
+    }
+
+    @Action("http://samples/CreateOrder")
+    public void order(Order order) {
+        orderService.createOrder(order);
+    }
+
+}]]></programlisting>
+                </para>
+                <para>
+                    In addition to the <interfacename>@Action</interfacename> annotation, you can annotate the class
+                    with the <interfacename>@Address</interfacename> annotation. If set, the value is compared to the
+                    <literal>To</literal> header property of the incominging message.
+                </para>
+            </section>
         </section>
         <section id="server-endpoint-interceptor">
             <title>Intercepting requests - the <interfacename>EndpointInterceptor</interfacename> interface</title>
