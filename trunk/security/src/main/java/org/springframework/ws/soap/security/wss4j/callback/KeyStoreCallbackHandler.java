@@ -18,6 +18,7 @@ package org.springframework.ws.soap.security.wss4j.callback;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.security.Key;
 import java.security.KeyStore;
 import javax.crypto.SecretKey;
 import javax.security.auth.callback.UnsupportedCallbackException;
@@ -51,7 +52,7 @@ public class KeyStoreCallbackHandler extends AbstractWsPasswordCallbackHandler i
     }
 
     /**
-     * Sets the password used to retrieve private keys from the keystore. This property is required for decription based
+     * Sets the password used to retrieve private keys from the keystore. This property is required for decryption based
      * on private keys, and signing.
      */
     public void setPrivateKeyPassword(String privateKeyPassword) {
@@ -61,7 +62,7 @@ public class KeyStoreCallbackHandler extends AbstractWsPasswordCallbackHandler i
     }
 
     /**
-     * Sets the password used to retrieve keys from the symmetric keystore. If this property is not set, it default to
+     * Sets the password used to retrieve keys from the symmetric keystore. If this property is not set, it defaults to
      * the private key password.
      *
      * @see #setPrivateKeyPassword(String)
@@ -88,15 +89,12 @@ public class KeyStoreCallbackHandler extends AbstractWsPasswordCallbackHandler i
     protected void handleKeyName(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
         try {
             String identifier = callback.getIdentifer();
-            KeyStore.PasswordProtection protection = new KeyStore.PasswordProtection(symmetricKeyPassword);
-            KeyStore.Entry entry = keyStore.getEntry(identifier, protection);
-            if (entry instanceof KeyStore.SecretKeyEntry) {
-                KeyStore.SecretKeyEntry secretKeyEntry = (KeyStore.SecretKeyEntry) entry;
-                SecretKey secretKey = secretKeyEntry.getSecretKey();
-                callback.setKey(secretKey.getEncoded());
+            Key key = keyStore.getKey(identifier, symmetricKeyPassword);
+            if (key instanceof SecretKey) {
+                callback.setKey(key.getEncoded());
             }
             else {
-                throw new WSSecurityException("Key entry [" + entry + "] is not a javax.crypto.SecretKey");
+                throw new WSSecurityException("Key [" + key + "] is not a javax.crypto.SecretKey");
             }
         }
         catch (GeneralSecurityException ex) {
