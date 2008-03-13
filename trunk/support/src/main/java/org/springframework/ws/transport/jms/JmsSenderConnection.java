@@ -51,7 +51,7 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * @author Arjen Poutsma
  * @since 1.5.0
  */
-public class JmsSenderConnection extends AbstractSenderConnection implements WebServiceConnection {
+public class JmsSenderConnection extends AbstractSenderConnection {
 
     private final ConnectionFactory connectionFactory;
 
@@ -61,9 +61,9 @@ public class JmsSenderConnection extends AbstractSenderConnection implements Web
 
     private final Destination requestDestination;
 
-    private Destination responseDestination;
+    private final Message requestMessage;
 
-    private Message requestMessage;
+    private Destination responseDestination;
 
     private Message responseMessage;
 
@@ -77,20 +77,22 @@ public class JmsSenderConnection extends AbstractSenderConnection implements Web
 
     private String textMessageEncoding;
 
-    private int messageType;
-
     /** Constructs a new JMS connection with the given parameters. */
     protected JmsSenderConnection(ConnectionFactory connectionFactory,
                                   Connection connection,
                                   Session session,
-                                  Destination requestDestination) throws JMSException {
+                                  Destination requestDestination,
+                                  Message requestMessage) throws JMSException {
         Assert.notNull(connectionFactory, "'connectionFactory' must not be null");
         Assert.notNull(connection, "'connection' must not be null");
         Assert.notNull(session, "'session' must not be null");
+        Assert.notNull(requestDestination, "'requestDestination' must not be null");
+        Assert.notNull(requestMessage, "'requestMessage' must not be null");
         this.connectionFactory = connectionFactory;
         this.connection = connection;
         this.session = session;
         this.requestDestination = requestDestination;
+        this.requestMessage = requestMessage;
     }
 
     /** Returns the request message for this connection. Returns either a {@link BytesMessage} or a {@link TextMessage}. */
@@ -134,10 +136,6 @@ public class JmsSenderConnection extends AbstractSenderConnection implements Web
         this.textMessageEncoding = textMessageEncoding;
     }
 
-    void setMessageType(int messageType) {
-        this.messageType = messageType;
-    }
-
     /*
      * URI
      */
@@ -166,20 +164,6 @@ public class JmsSenderConnection extends AbstractSenderConnection implements Web
     /*
      * Sending
      */
-
-    protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
-        try {
-            if (messageType == JmsTransportConstants.BYTES_MESSAGE_TYPE) {
-                requestMessage = session.createBytesMessage();
-            }
-            else {
-                requestMessage = session.createTextMessage();
-            }
-        }
-        catch (JMSException ex) {
-            throw new JmsTransportException(ex);
-        }
-    }
 
     protected void addRequestHeader(String name, String value) throws IOException {
         try {

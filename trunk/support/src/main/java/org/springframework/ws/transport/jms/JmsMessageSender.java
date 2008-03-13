@@ -128,14 +128,14 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
             jmsConnection = createConnection();
             jmsSession = createSession(jmsConnection);
             Destination requestDestination = resolveRequestDestination(jmsSession, uri);
-            JmsSenderConnection wsConnection =
-                    new JmsSenderConnection(getConnectionFactory(), jmsConnection, jmsSession, requestDestination);
+            Message requestMessage = createRequestMessage(jmsSession, uri);
+            JmsSenderConnection wsConnection = new JmsSenderConnection(getConnectionFactory(), jmsConnection,
+                    jmsSession, requestDestination, requestMessage);
             wsConnection.setDeliveryMode(JmsTransportUtils.getDeliveryMode(uri));
             wsConnection.setPriority(JmsTransportUtils.getPriority(uri));
             wsConnection.setReceiveTimeout(receiveTimeout);
             wsConnection.setResponseDestination(resolveResponseDestination(jmsSession, uri));
             wsConnection.setTimeToLive(JmsTransportUtils.getTimeToLive(uri));
-            wsConnection.setMessageType(JmsTransportUtils.getMessageType(uri));
             wsConnection.setTextMessageEncoding(textMessageEncoding);
             return wsConnection;
         }
@@ -157,6 +157,20 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
     private Destination resolveResponseDestination(Session session, URI uri) throws JMSException {
         String destinationName = JmsTransportUtils.getReplyToName(uri);
         return StringUtils.hasLength(destinationName) ? resolveDestinationName(session, destinationName) : null;
+    }
+
+    private Message createRequestMessage(Session session, URI uri) throws JMSException {
+        int messageType = JmsTransportUtils.getMessageType(uri);
+        if (messageType == JmsTransportConstants.BYTES_MESSAGE_TYPE) {
+            return session.createBytesMessage();
+        }
+        else if (messageType == JmsTransportConstants.TEXT_MESSAGE_TYPE) {
+            return session.createTextMessage();
+        }
+        else {
+            throw new IllegalArgumentException("Invalid message type [" + messageType + "].");
+        }
+
     }
 
 
