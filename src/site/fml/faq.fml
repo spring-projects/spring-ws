@@ -190,6 +190,37 @@
                 </p>
             </answer>
         </faq>
+        <faq id="saaj-websphere">
+            <question>
+                Does Spring-WS run on IBM WebSphere?
+            </question>
+            <answer>
+                <p>
+                    WebSphere bundles some libraries which are out-of-date, and need to be upgraded with more recent
+                    versions. Specifically, this includes XML-apis, Xerces, Xalan, and WSDL4J.
+                </p>
+                <p>
+                    There are a couple of ways to upgrade these libraries, all using parent-last or application-first
+                    classloading.
+                    <ul>
+                        <li>
+                            Package the libraries as part of the WAR (in WEB-INF/lib), and run the web application with
+                            the parent-last (application-first) classloading.
+                        </li>
+                        <li>
+                            Package the libraries as part of the EAR, add class-path entries to the manifest of the web
+                            application, and run the entire application with the parent-last classloading.
+                        </li>
+                        <li>
+                            Create a new classloader in the WebSphere console, and associate the libraries with. Set
+                            this classloader to parent-last.
+                        </li>
+                    </ul>
+                    The last approach has the advantage of restricting the parent-last classloading to the conflicting
+                    libraries only, and not to the entire application.
+                </p>
+            </answer>
+        </faq>
     </part>
     <part id="wsdl">
         <title>WSDL</title>
