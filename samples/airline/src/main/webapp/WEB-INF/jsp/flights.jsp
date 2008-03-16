@@ -44,9 +44,10 @@
             <c:forEach var="flight" items="${flights}">
                 <tr>
                     <td>
-                        <a href='<c:url value="flights/${flight.id}"/>'>
-                            <c:out value="${flight.number}"/>
-                        </a>
+                        <c:url var="flightUrl" value="flight">
+                            <c:param name="id" value="${flight.id}"/>
+                        </c:url>
+                        <a href='<c:out value="${flightUrl}"/>'><c:out value="${flight.number}"/></a>
                     </td>
                     <td>
                         <c:out value="${flight.from.city}"/>

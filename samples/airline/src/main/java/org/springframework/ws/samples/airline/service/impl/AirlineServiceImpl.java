@@ -21,6 +21,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.ws.samples.airline.dao.FlightDao;
 import org.springframework.ws.samples.airline.dao.TicketDao;
@@ -41,6 +45,8 @@ import org.springframework.ws.samples.airline.service.NoSuchFrequentFlyerExcepti
  *
  * @author Arjen Poutsma
  */
+@Service
+@Transactional(readOnly = true)
 public class AirlineServiceImpl implements AirlineService {
 
     private static final Log logger = LogFactory.getLog(AirlineServiceImpl.class);
@@ -51,15 +57,19 @@ public class AirlineServiceImpl implements AirlineService {
 
     private FrequentFlyerSecurityService frequentFlyerSecurityService = new StubFrequentFlyerSecurityService();
 
+    @Autowired
     public AirlineServiceImpl(FlightDao flightDao, TicketDao ticketDao) {
         this.flightDao = flightDao;
         this.ticketDao = ticketDao;
     }
 
+    @Autowired
     public void setFrequentFlyerSecurityService(FrequentFlyerSecurityService frequentFlyerSecurityService) {
         this.frequentFlyerSecurityService = frequentFlyerSecurityService;
     }
 
+    @Transactional(readOnly = false,
+            rollbackFor = {NoSuchFlightException.class, NoSeatAvailableException.class, NoSuchFrequentFlyerException.class})
     public Ticket bookFlight(String flightNumber, DateTime departureTime, List<Passenger> passengers)
             throws NoSuchFlightException, NoSeatAvailableException, NoSuchFrequentFlyerException {
         Assert.notEmpty(passengers, "No passengers given");
