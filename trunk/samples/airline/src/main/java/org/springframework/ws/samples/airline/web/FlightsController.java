@@ -16,57 +16,62 @@
 
 package org.springframework.ws.samples.airline.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.joda.time.LocalDate;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.ServletRequestUtils;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ws.samples.airline.domain.Flight;
 import org.springframework.ws.samples.airline.domain.ServiceClass;
 import org.springframework.ws.samples.airline.service.AirlineService;
 
 /** @author Arjen Poutsma */
-public class FlightsController extends MultiActionController {
+@Controller
+public class FlightsController {
 
     private AirlineService airlineService;
 
+    @Autowired
     public FlightsController(AirlineService airlineService) {
         Assert.notNull(airlineService, "'airlineService' must not be null");
         this.airlineService = airlineService;
     }
 
-    public ModelAndView flightList(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String fromAirportCode = ServletRequestUtils.getStringParameter(request, "from");
-        String toAirportCode = ServletRequestUtils.getStringParameter(request, "to");
-        String departureDateString =
-                ServletRequestUtils.getStringParameter(request, "departureDate", new LocalDate().toString());
-        String serviceClassString = ServletRequestUtils.getStringParameter(request, "serviceClass", "ECONOMY");
-
+    @RequestMapping("/flights")
+    public String flightList(@RequestParam(value = "from", required = false)String fromAirportCode,
+                             @RequestParam(value = "to", required = false)String toAirportCode,
+                             @RequestParam(value = "departureDate", required = false)String departureDateString,
+                             @RequestParam(value = "serviceClass", required = false)String serviceClassString,
+                             ModelMap model) {
+        if (!StringUtils.hasLength(departureDateString)) {
+            departureDateString = new LocalDate().toString();
+        }
+        if (!StringUtils.hasLength(serviceClassString)) {
+            serviceClassString = "ECONOMY";
+        }
         ServiceClass serviceClass = ServiceClass.valueOf(serviceClassString);
         LocalDate departureDate = new LocalDate(departureDateString);
 
-        ModelAndView mav = new ModelAndView("flights");
         if (StringUtils.hasLength(fromAirportCode) && StringUtils.hasLength(toAirportCode)) {
-            mav.addObject("from", fromAirportCode);
-            mav.addObject("to", toAirportCode);
-            mav.addObject("departureDate", departureDateString);
-            mav.addObject("serviceClass", serviceClassString);
-            mav.addObject("flights",
+            model.addAttribute("from", fromAirportCode);
+            model.addAttribute("to", toAirportCode);
+            model.addAttribute("departureDate", departureDateString);
+            model.addAttribute("serviceClass", serviceClassString);
+            model.addAttribute("flights",
                     airlineService.getFlights(fromAirportCode, toAirportCode, departureDate, serviceClass));
         }
-        return mav;
+        return "flights";
     }
 
-    public ModelAndView singleFlight(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String uri = request.getRequestURI();
-        int pos = uri.lastIndexOf('/') + 1;
-        long id = Long.parseLong(uri.substring(pos));
+    @RequestMapping(value = "/flight")
+    public String singleFlight(@RequestParam("id")long id, ModelMap model) throws Exception {
         Flight flight = airlineService.getFlight(id);
-        return new ModelAndView("flight", "flight", flight);
+        model.addAttribute(flight);
+        return "flight";
     }
 
 }

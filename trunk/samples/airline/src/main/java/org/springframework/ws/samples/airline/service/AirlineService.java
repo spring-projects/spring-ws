@@ -20,6 +20,7 @@ import java.util.List;
 import org.acegisecurity.annotation.Secured;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ws.samples.airline.domain.Flight;
 import org.springframework.ws.samples.airline.domain.FrequentFlyer;
@@ -32,7 +33,6 @@ import org.springframework.ws.samples.airline.domain.Ticket;
  *
  * @author Arjen Poutsma
  */
-@Transactional(readOnly = true)
 public interface AirlineService {
 
     /**

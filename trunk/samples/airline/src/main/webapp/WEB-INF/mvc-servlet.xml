@@ -1,39 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
     <description>
         This web application context contains a simple Spring Web MVC web application that shows flights
     </description>
 
-    <!-- ===================== HANDLER MAPPINGS  ============================== -->
-
-    <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-        <property name="mappings">
-            <props>
-                <prop key="/flights">flightController</prop>
-                <prop key="/flights/*">flightController</prop>
-            </props>
-        </property>
-    </bean>
-
+    <context:annotation-config/>
 
     <!-- ===================== HANDLERS  ===================================== -->
 
-    <bean id="flightController" class="org.springframework.ws.samples.airline.web.FlightsController">
-        <constructor-arg ref="airlineService"/>
-        <property name="methodNameResolver">
-            <bean class="org.springframework.web.servlet.mvc.multiaction.PropertiesMethodNameResolver">
-                <property name="mappings">
-                    <props>
-                        <prop key="/flights">flightList</prop>
-                        <prop key="/flights/*">singleFlight</prop>
-                    </props>
-                </property>
-            </bean>
-        </property>
-    </bean>
+    <bean id="flightController" class="org.springframework.ws.samples.airline.web.FlightsController"/>
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
