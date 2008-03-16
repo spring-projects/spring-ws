@@ -22,9 +22,8 @@ import java.util.List;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 import org.joda.time.LocalDate;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.web.servlet.ModelAndView;
+
+import org.springframework.ui.ModelMap;
 import org.springframework.ws.samples.airline.domain.Flight;
 import org.springframework.ws.samples.airline.domain.ServiceClass;
 import org.springframework.ws.samples.airline.service.AirlineService;
@@ -41,26 +40,22 @@ public class FlightsControllerTest extends TestCase {
     }
 
     public void testFlightList() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest();
         String from = "AMS";
-        request.setParameter("from", from);
         String to = "VCE";
-        request.setParameter("to", to);
         LocalDate departureDate = new LocalDate();
-        request.setParameter("departureDate", departureDate.toString());
         ServiceClass serviceClass = ServiceClass.FIRST;
-        request.setParameter("serviceClass", serviceClass.toString());
-        MockHttpServletResponse response = new MockHttpServletResponse();
         List<Flight> flights = new ArrayList<Flight>();
         flights.add(new Flight());
         expect(airlineServiceMock.getFlights(from, to, departureDate, serviceClass)).andReturn(flights);
 
         replay(airlineServiceMock);
 
-        ModelAndView mav = flightsController.flightList(request, response);
-        assertNotNull("No ModelAndView returned", mav);
-        assertEquals("Invalid view name", "flights", mav.getViewName());
-        assertTrue("No flights in ModelAndView", mav.getModel().containsKey("flights"));
+        ModelMap model = new ModelMap();
+        String view = flightsController
+                .flightList(from, to, departureDate.toString(), serviceClass.toString(), model);
+        assertNotNull("No view returned", view);
+        assertEquals("Invalid view name", "flights", view);
+        assertTrue("No flights in ModelAndView", model.containsAttribute("flights"));
         verify(airlineServiceMock);
     }
 }
