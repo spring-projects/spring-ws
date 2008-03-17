@@ -18,6 +18,7 @@ package org.springframework.xml.xsd.commons;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,7 +33,11 @@ import org.w3c.dom.Document;
 
 import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeanUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.util.Assert;
+import org.springframework.xml.validation.XmlValidator;
+import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.XsdSchema;
 
 /**
@@ -89,6 +94,11 @@ public class CommonsXsdSchema implements XsdSchema {
         schema.write(bos);
         ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
         return new StreamSource(bis);
+    }
+
+    public XmlValidator createValidator() throws IOException {
+        Resource resource = new UrlResource(schema.getSourceURI());
+        return XmlValidatorFactory.createValidator(resource, XmlValidatorFactory.SCHEMA_W3C_XML);
     }
 
     /** Returns the wrapped Commons <code>XmlSchema</code> object. */

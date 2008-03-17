@@ -29,6 +29,7 @@ import org.w3c.dom.Document;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.sax.SaxUtils;
+import org.springframework.xml.validation.XmlValidator;
 
 public abstract class AbstractXsdSchemaTestCase extends XMLTestCase {
 
@@ -82,6 +83,13 @@ public abstract class AbstractXsdSchemaTestCase extends XMLTestCase {
         transformer.transform(importing.getSource(), domResult);
         Document result = (Document) domResult.getNode();
         assertXMLEqual("Invalid Source returned", expected, result);
+    }
+
+    public void testCreateValidator() throws Exception {
+        Resource resource = new ClassPathResource("single.xsd", AbstractXsdSchemaTestCase.class);
+        XsdSchema single = createSchema(resource);
+        XmlValidator validator = single.createValidator();
+        assertNotNull("No XmlValidator returned", validator);
     }
 
     protected abstract XsdSchema createSchema(Resource resource) throws Exception;

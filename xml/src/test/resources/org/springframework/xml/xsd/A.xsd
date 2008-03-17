@@ -4,7 +4,9 @@
             xmlns:tns="urn:1" elementFormDefault="qualified"
             attributeFormDefault="unqualified">
     <xsd:include schemaLocation="B.xsd"/>
-    <xsd:simpleType name="A">
-        <xsd:restriction base="tns:B"/>
-    </xsd:simpleType>
+    <xsd:complexType name="A">
+        <xsd:complexContent>
+            <xsd:extension base="tns:B"/>
+        </xsd:complexContent>
+    </xsd:complexType>
 </xsd:schema>

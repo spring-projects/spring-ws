@@ -16,6 +16,7 @@
 
 package org.springframework.ws.wsdl.wsdl11.provider;
 
+import java.io.IOException;
 import javax.wsdl.Definition;
 import javax.wsdl.Types;
 import javax.wsdl.WSDLException;
@@ -32,6 +33,7 @@ import org.w3c.dom.Element;
 import org.springframework.util.Assert;
 import org.springframework.ws.wsdl.WsdlDefinitionException;
 import org.springframework.xml.transform.TransformerObjectSupport;
+import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.xsd.XsdSchema;
 import org.springframework.xml.xsd.XsdSchemaCollection;
 
@@ -60,6 +62,10 @@ public class InliningXsdSchemaTypesProvider extends TransformerObjectSupport imp
 
             public XsdSchema[] getXsdSchemas() {
                 return new XsdSchema[]{schema};
+            }
+
+            public XmlValidator createValidator() throws IOException {
+                throw new UnsupportedOperationException();
             }
         };
     }

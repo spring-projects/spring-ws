@@ -31,8 +31,11 @@ import org.apache.ws.commons.schema.XmlSchemaObjectCollection;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.util.Assert;
 import org.springframework.xml.sax.SaxUtils;
+import org.springframework.xml.validation.XmlValidator;
+import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.XsdSchema;
 import org.springframework.xml.xsd.XsdSchemaCollection;
 
@@ -120,6 +123,15 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
             result[i] = new CommonsXsdSchema(xmlSchema);
         }
         return result;
+    }
+
+    public XmlValidator createValidator() throws IOException {
+        Resource[] resources = new Resource[xmlSchemas.size()];
+        for (int i = xmlSchemas.size() - 1; i >= 0; i--) {
+            XmlSchema xmlSchema = (XmlSchema) xmlSchemas.get(i);
+            resources[i] = new UrlResource(xmlSchema.getSourceURI());
+        }
+        return XmlValidatorFactory.createValidator(resources, XmlValidatorFactory.SCHEMA_W3C_XML);
     }
 
     private void inlineIncludes(XmlSchema schema, List processedSchemas) {

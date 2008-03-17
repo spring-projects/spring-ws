@@ -17,8 +17,6 @@
 package org.springframework.xml.xsd;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -28,16 +26,15 @@ import javax.xml.transform.dom.DOMSource;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.sax.SaxUtils;
+import org.springframework.xml.validation.XmlValidator;
+import org.springframework.xml.validation.XmlValidatorFactory;
 
 /**
  * The default {@link XsdSchema} implementation.
@@ -56,8 +53,6 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
     private static final String SCHEMA_NAMESPACE = "http://www.w3.org/2001/XMLSchema";
 
     private static final QName SCHEMA_NAME = QNameUtils.createQName(SCHEMA_NAMESPACE, "schema", "xsd");
-
-    private static final QName ELEMENT_NAME = QNameUtils.createQName(SCHEMA_NAMESPACE, "element", "xsd");
 
     private Resource xsdResource;
 
@@ -103,24 +98,8 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
         return new DOMSource(schemaElement);
     }
 
-    public QName[] getElementNames() {
-        NodeList children = schemaElement.getChildNodes();
-        List result = new ArrayList(children.getLength());
-        for (int i = 0; i < children.getLength(); i++) {
-            if (children.item(i).getNodeType() == Node.ELEMENT_NODE) {
-                Element childElement = (Element) children.item(i);
-                QName childName = QNameUtils.getQNameForNode(childElement);
-                if (ELEMENT_NAME.equals(childName)) {
-                    result.add(getElementName(childElement));
-                }
-            }
-        }
-        return (QName[]) result.toArray(new QName[result.size()]);
-    }
-
-    private QName getElementName(Element element) {
-        String attributeValue = element.getAttribute("name");
-        return StringUtils.hasLength(attributeValue) ? new QName(getTargetNamespace(), attributeValue) : null;
+    public XmlValidator createValidator() throws IOException {
+        return XmlValidatorFactory.createValidator(xsdResource, XmlValidatorFactory.SCHEMA_W3C_XML);
     }
 
     public void afterPropertiesSet() throws ParserConfigurationException, IOException, SAXException {
