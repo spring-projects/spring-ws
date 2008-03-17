@@ -16,6 +16,10 @@
 
 package org.springframework.xml.xsd;
 
+import java.io.IOException;
+
+import org.springframework.xml.validation.XmlValidator;
+
 /**
  * Represents an abstraction for a collection of XSD schemas.
  *
@@ -25,9 +29,18 @@ package org.springframework.xml.xsd;
 public interface XsdSchemaCollection {
 
     /**
-     * Returns all schema's contained in this collection.
+     * Returns all schemas contained in this collection.
      *
-     * @return the schema's contained in this collection
+     * @return the schemas contained in this collection
      */
     XsdSchema[] getXsdSchemas();
+
+    /**
+     * Creates a {@link XmlValidator} based on the schemas contained in this collection.
+     *
+     * @return a validator for this collection
+     * @throws IOException in case of I/O errors
+     */
+    XmlValidator createValidator() throws IOException;
+
 }

@@ -16,7 +16,10 @@
 
 package org.springframework.xml.xsd;
 
+import java.io.IOException;
 import javax.xml.transform.Source;
+
+import org.springframework.xml.validation.XmlValidator;
 
 /**
  * Represents an abstraction for XSD schemas.
@@ -35,9 +38,17 @@ public interface XsdSchema {
     String getTargetNamespace();
 
     /**
-     * Returns the <code>Source</code> of the schema.
+     * Returns the {@link Source} of the schema.
      *
-     * @return the <code>Source</code> of this XSD schema
+     * @return the source of this XSD schema
      */
     Source getSource();
+
+    /**
+     * Creates a {@link XmlValidator} based on the schema.
+     *
+     * @return a validator for this schema
+     * @throws IOException in case of I/O errors
+     */
+    XmlValidator createValidator() throws IOException;
 }

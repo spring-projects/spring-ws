@@ -29,6 +29,7 @@ import org.w3c.dom.Document;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.sax.SaxUtils;
+import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.xsd.AbstractXsdSchemaTestCase;
 import org.springframework.xml.xsd.XsdSchema;
 
@@ -89,4 +90,13 @@ public class CommonsXsdSchemaCollectionTest extends XMLTestCase {
         assertEquals("Invalid amount of XSDs loaded", 1, schemas.length);
     }
 
+    public void testCreateValidator() throws Exception {
+        Resource a = new ClassPathResource("A.xsd", AbstractXsdSchemaTestCase.class);
+        collection.setXsds(new Resource[]{a});
+        collection.setInline(true);
+        collection.afterPropertiesSet();
+
+        XmlValidator validator = collection.createValidator();
+        assertNotNull("No XmlValidator returned", validator);
+    }
 }

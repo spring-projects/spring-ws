@@ -28,6 +28,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
 import org.custommonkey.xmlunit.XMLTestCase;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.LocatorImpl;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.ws.MockWebServiceMessage;
@@ -42,8 +45,7 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 import org.springframework.ws.soap.soap12.Soap12Fault;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.helpers.LocatorImpl;
+import org.springframework.xml.xsd.SimpleXsdSchema;
 
 public class PayloadValidatingInterceptorTest extends XMLTestCase {
 
@@ -189,6 +191,7 @@ public class PayloadValidatingInterceptorTest extends XMLTestCase {
         System.setProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI,
                 "org.apache.xerces.jaxp.validation.XMLSchemaFactory");
         try {
+            PayloadValidatingInterceptor interceptor = new PayloadValidatingInterceptor();
             interceptor.setSchema(new ClassPathResource(SCHEMA2, PayloadValidatingInterceptorTest.class));
             interceptor.afterPropertiesSet();
             MessageFactory messageFactory = MessageFactory.newInstance();
@@ -281,6 +284,23 @@ public class PayloadValidatingInterceptorTest extends XMLTestCase {
                 "<spring-ws:ValidationError xmlns:spring-ws=\"http://springframework.org/spring-ws\">Message 1</spring-ws:ValidationError>" +
                 "<spring-ws:ValidationError xmlns:spring-ws=\"http://springframework.org/spring-ws\">Message 2</spring-ws:ValidationError>" +
                 "</detail>" + "</soapenv:Fault>" + "</soapenv:Body>" + "</soapenv:Envelope>", os.toString());
+
+    }
+
+    public void testXsdSchema() throws Exception {
+        PayloadValidatingInterceptor interceptor = new PayloadValidatingInterceptor();
+        SimpleXsdSchema schema = new SimpleXsdSchema(new ClassPathResource(SCHEMA, getClass()));
+        schema.afterPropertiesSet();
+        interceptor.setXsdSchema(schema);
+        interceptor.setValidateRequest(true);
+        interceptor.setValidateResponse(true);
+        interceptor.afterPropertiesSet();
+        MockWebServiceMessage request = new MockWebServiceMessage();
+        request.setPayload(new ClassPathResource(VALID_MESSAGE, getClass()));
+        context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
+        boolean result = interceptor.handleRequest(context, null);
+        assertTrue("Invalid response from interceptor", result);
+        assertFalse("Response set", context.hasResponse());
 
     }
 

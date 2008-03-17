@@ -20,6 +20,9 @@ import java.io.IOException;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -33,8 +36,8 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.xml.transform.TransformerObjectSupport;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
+import org.springframework.xml.xsd.XsdSchema;
+import org.springframework.xml.xsd.XsdSchemaCollection;
 
 /**
  * Abstract base class for <code>EndpointInterceptor</code> implementations that validate part of the message using a
@@ -82,6 +85,14 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
     }
 
     /**
+     * Sets the schema resource to use for validation.  Setting either this property or <code>schemas</code> is
+     * required.
+     */
+    public void setSchema(Resource schema) {
+        setSchemas(new Resource[]{schema});
+    }
+
+    /**
      * Sets the schema resources to use for validation.  Setting either this property or <code>schema</code> is
      * required.
      */
@@ -95,11 +106,27 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
     }
 
     /**
-     * Sets the schema resource to use for validation.  Setting either this property or <code>schemas</code> is
-     * required.
+     * Sets the {@link XsdSchema} to use for validation. Setting this property, {@link
+     * #setXsdSchemaCollection(XsdSchemaCollection) xsdSchemaCollection}, {@link #setSchema(Resource) schema}, or {@link
+     * #setSchemas(Resource[]) schemas} is required.
+     *
+     * @param schema the xsd schema to use
+     * @throws IOException in case of I/O errors
      */
-    public void setSchema(Resource schema) {
-        setSchemas(new Resource[]{schema});
+    public void setXsdSchema(XsdSchema schema) throws IOException {
+        this.validator = schema.createValidator();
+    }
+
+    /**
+     * Sets the {@link XsdSchemaCollection} to use for validation. Setting this property, {@link
+     * #setXsdSchema(XsdSchema) xsdSchema}, {@link #setSchema(Resource) schema}, or {@link #setSchemas(Resource[])
+     * schemas} is required.
+     *
+     * @param schemaCollection the xsd schema collection to use
+     * @throws IOException in case of I/O errors
+     */
+    public void setXsdSchemaCollection(XsdSchemaCollection schemaCollection) throws IOException {
+        this.validator = schemaCollection.createValidator();
     }
 
     /** Indicates whether the request should be validated against the schema. Default is <code>true</code>. */
@@ -113,15 +140,17 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
     }
 
     public void afterPropertiesSet() throws Exception {
-        Assert.notEmpty(schemas, "setting either the schema or schemas property is required");
-        Assert.hasLength(schemaLanguage, "schemaLanguage is required");
-        for (int i = 0; i < schemas.length; i++) {
-            Assert.isTrue(schemas[i].exists(), "schema [" + schemas[i] + "] does not exist");
+        if (validator == null && !ObjectUtils.isEmpty(schemas)) {
+            Assert.hasLength(schemaLanguage, "schemaLanguage is required");
+            for (int i = 0; i < schemas.length; i++) {
+                Assert.isTrue(schemas[i].exists(), "schema [" + schemas[i] + "] does not exist");
+            }
+            if (logger.isInfoEnabled()) {
+                logger.info("Validating using " + StringUtils.arrayToCommaDelimitedString(schemas));
+            }
+            validator = XmlValidatorFactory.createValidator(schemas, schemaLanguage);
         }
-        if (logger.isInfoEnabled()) {
-            logger.info("Validating using " + StringUtils.arrayToCommaDelimitedString(schemas));
-        }
-        validator = XmlValidatorFactory.createValidator(schemas, schemaLanguage);
+        Assert.notNull(validator, "Setting 'schema', 'schemas', 'xsdSchema', or 'xsdSchemaCollection' is required");
     }
 
     /**
