@@ -55,7 +55,7 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
      * Receiving response
      */
     protected final boolean hasResponse() throws IOException {
-        if (getResponseCode() == HttpTransportConstants.STATUS_ACCEPTED) {
+        if (HttpTransportConstants.STATUS_ACCEPTED == getResponseCode()) {
             return false;
         }
         long contentLength = getResponseContentLength();
@@ -81,8 +81,8 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 
     /** Determine whether the given response is a GZIP response. */
     private boolean isGzipResponse() throws IOException {
-        for (Iterator iterator = getResponseHeaders(HttpTransportConstants.HEADER_CONTENT_ENCODING);
-             iterator.hasNext();) {
+        Iterator iterator = getResponseHeaders(HttpTransportConstants.HEADER_CONTENT_ENCODING);
+        if (iterator.hasNext()) {
             String encodingHeader = (String) iterator.next();
             return encodingHeader.toLowerCase().indexOf(HttpTransportConstants.CONTENT_ENCODING_GZIP) != -1;
         }
