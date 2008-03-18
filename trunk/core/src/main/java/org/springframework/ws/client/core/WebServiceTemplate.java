@@ -530,16 +530,16 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      * @throws IOException in case of I/O errors
      */
     protected boolean hasError(WebServiceConnection connection, WebServiceMessage request) throws IOException {
-        if (!connection.hasError()) {
-            return false;
+        if (connection.hasError() && checkConnectionForFault) {
+            if (connection instanceof FaultAwareWebServiceConnection) {
+                FaultAwareWebServiceConnection faultConnection = (FaultAwareWebServiceConnection) connection;
+                return !(faultConnection.hasFault() && request instanceof FaultAwareWebServiceMessage);
+            }
+            else {
+                return true;
+            }
         }
-        if (checkConnectionForFault && connection instanceof FaultAwareWebServiceConnection) {
-            FaultAwareWebServiceConnection faultConnection = (FaultAwareWebServiceConnection) connection;
-            return !(faultConnection.hasFault() && request instanceof FaultAwareWebServiceMessage);
-        }
-        else {
-            return checkConnectionForFault;
-        }
+        return false;
     }
 
     /**
