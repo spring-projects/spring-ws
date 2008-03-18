@@ -106,7 +106,7 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
      */
 
     public final boolean hasFault() throws IOException {
-        return getResponseCode() == HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR;
+        return HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR == getResponseCode();
     }
 
     public final void setFault(boolean fault) {
