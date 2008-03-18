@@ -530,17 +530,16 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      * @throws IOException in case of I/O errors
      */
     protected boolean hasError(WebServiceConnection connection, WebServiceMessage request) throws IOException {
-        if (connection.hasError()) {
-            // this could be a fault rather than an error
-            if (connection instanceof FaultAwareWebServiceConnection) {
-                FaultAwareWebServiceConnection faultConnection = (FaultAwareWebServiceConnection) connection;
-                if (faultConnection.hasFault() && request instanceof FaultAwareWebServiceMessage) {
-                    return false;
-                }
-            }
-            return true;
+        if (!connection.hasError()) {
+            return false;
         }
-        return false;
+        if (checkConnectionForFault && connection instanceof FaultAwareWebServiceConnection) {
+            FaultAwareWebServiceConnection faultConnection = (FaultAwareWebServiceConnection) connection;
+            return !(faultConnection.hasFault() && request instanceof FaultAwareWebServiceMessage);
+        }
+        else {
+            return checkConnectionForFault;
+        }
     }
 
     /**
@@ -673,7 +672,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
         private final WebServiceMessageCallback callback;
 
-        public WebServiceMessageCallbackMessageExtractor(WebServiceMessageCallback callback) {
+        private WebServiceMessageCallbackMessageExtractor(WebServiceMessageCallback callback) {
             this.callback = callback;
         }
 
@@ -688,7 +687,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
         private final SourceExtractor sourceExtractor;
 
-        public SourceExtractorMessageExtractor(SourceExtractor sourceExtractor) {
+        private SourceExtractorMessageExtractor(SourceExtractor sourceExtractor) {
             this.sourceExtractor = sourceExtractor;
         }
 
@@ -696,6 +695,5 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
             return sourceExtractor.extractData(message.getPayloadSource());
         }
     }
-
 
 }
