@@ -44,6 +44,9 @@ import org.custommonkey.xmlunit.XMLTestCase;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+
 import org.springframework.util.StringUtils;
 import org.springframework.ws.client.WebServiceTransportException;
 import org.springframework.ws.pox.dom.DomPoxMessageFactory;
@@ -54,8 +57,6 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.http.CommonsHttpMessageSender;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 public class WebServiceTemplateIntegrationTest extends XMLTestCase {
 
@@ -68,6 +69,9 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
         Context jettyContext = new Context(jettyServer, "/");
         jettyContext.addServlet(new ServletHolder(new EchoSoapServlet()), "/soap/echo");
         jettyContext.addServlet(new ServletHolder(new SoapFaultServlet()), "/soap/fault");
+        SoapFaultServlet badRequestFault = new SoapFaultServlet();
+        badRequestFault.setSc(400);
+        jettyContext.addServlet(new ServletHolder(badRequestFault), "/soap/badRequestFault");
         jettyContext.addServlet(new ServletHolder(new NoResponseSoapServlet()), "/soap/noResponse");
         jettyContext.addServlet(new ServletHolder(new PoxServlet()), "/pox");
         jettyContext.addServlet(new ServletHolder(new ErrorServlet(404)), "/errors/notfound");
@@ -81,6 +85,10 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
 
     public void testAxiom() throws Exception {
         testSoap(new AxiomSoapMessageFactory());
+    }
+
+    public void testWithSaaj() throws Exception {
+        testSoap(new SaajSoapMessageFactory(MessageFactory.newInstance()));
     }
 
     public void testPox() throws Exception {
@@ -99,16 +107,13 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
             //expected
         }
         try {
-            template.sendSourceAndReceiveToResult("http://localhost:8888/errors/server", new StringSource(content), result);
+            template.sendSourceAndReceiveToResult("http://localhost:8888/errors/server", new StringSource(content),
+                    result);
             fail("WebServiceTransportException expected");
         }
         catch (WebServiceTransportException ex) {
             //expected
         }
-    }
-
-    public void testWithSaaj() throws Exception {
-        testSoap(new SaajSoapMessageFactory(MessageFactory.newInstance()));
     }
 
     private void testSoap(SoapMessageFactory messageFactory)
@@ -119,8 +124,8 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
         StringResult result = new StringResult();
         template.sendSourceAndReceiveToResult("http://localhost:8888/soap/echo", new StringSource(content), result);
         assertXMLEqual(content, result.toString());
-        boolean b = template.sendSourceAndReceiveToResult("http://localhost:8888/soap/noResponse", new StringSource(content),
-                new StringResult());
+        boolean b = template.sendSourceAndReceiveToResult("http://localhost:8888/soap/noResponse",
+                new StringSource(content), new StringResult());
         assertFalse("Invalid result", b);
         try {
             template.sendSourceAndReceiveToResult("http://localhost:8888/errors/notfound", new StringSource(content),
@@ -131,12 +136,23 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
             //expected
         }
         try {
-            template.sendSourceAndReceiveToResult("http://localhost:8888/soap/fault", new StringSource(content), result);
+            template.sendSourceAndReceiveToResult("http://localhost:8888/soap/fault", new StringSource(content),
+                    result);
             fail("SoapFaultClientException expected");
         }
         catch (SoapFaultClientException ex) {
             //expected
         }
+        template.setCheckConnectionForFault(false);
+        try {
+            template.sendSourceAndReceiveToResult("http://localhost:8888/soap/badRequestFault",
+                    new StringSource(content), result);
+            fail("SoapFaultClientException expected");
+        }
+        catch (SoapFaultClientException ex) {
+            //expected
+        }
+        template.setCheckConnectionForFault(true);
     }
 
     /** Servlet that returns and error message for a given status code. */
@@ -144,7 +160,7 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
 
         private int sc;
 
-        public ErrorServlet(int sc) {
+        private ErrorServlet(int sc) {
             this.sc = sc;
         }
 
@@ -185,6 +201,12 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
 
         protected MessageFactory msgFactory = null;
 
+        private int sc = -1;
+
+        public void setSc(int sc) {
+            this.sc = sc;
+        }
+
         public void init(ServletConfig servletConfig) throws ServletException {
             super.init(servletConfig);
             try {
@@ -200,16 +222,21 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
                 MimeHeaders headers = getHeaders(req);
                 SOAPMessage request = msgFactory.createMessage(headers, req.getInputStream());
                 SOAPMessage reply = onMessage(request);
+                if (sc != -1) {
+                    resp.setStatus(sc);
+                }
                 if (reply != null) {
                     if (reply.saveRequired()) {
                         reply.saveChanges();
                     }
-                    resp.setStatus(!reply.getSOAPBody().hasFault() ? HttpServletResponse.SC_OK :
-                            HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                    if (sc == -1) {
+                        resp.setStatus(!reply.getSOAPBody().hasFault() ? HttpServletResponse.SC_OK :
+                                HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                    }
                     putHeaders(reply.getMimeHeaders(), resp);
                     reply.writeTo(resp.getOutputStream());
                 }
-                else {
+                else if (sc == -1) {
                     resp.setStatus(HttpServletResponse.SC_ACCEPTED);
                 }
             }
@@ -267,4 +294,5 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
             return response;
         }
     }
+
 }
