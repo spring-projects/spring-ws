@@ -175,6 +175,15 @@
                     servlet context path as appropriate).
                 </para>
                 <programlisting><![CDATA[http://localhost:8080/spring-ws/orders.wsdl]]></programlisting>
+                <note>
+                    <para>
+                        All <interfacename>WsdlDefinition</interfacename> bean definitions are exposed by the
+                        <classname>MessageDispatcherServlet</classname> under their bean id (or bean id) with the
+                        suffix <literal>.wsdl</literal>. So if the bean id is <literal>echo</literal>, the host name
+                        is "server", and the Servlet context (war name) is "spring-ws", the WSDL can be
+                        obtained via <uri>http://server/spring-ws/echo.wsdl</uri>
+                    </para>
+                </note>
                 <para>
                     Another cool feature of the <classname>MessageDispatcherServlet</classname> (or more correctly the
                     <classname>WsdlDefinitionHandlerAdapter</classname>) is that it is able to
@@ -214,28 +223,25 @@
                     The next application context snippet shows how to create such a dynamic WSDL file:
                 </para>
                 <programlisting><![CDATA[
-<bean id="holiday" class="org.springframework.ws.wsdl.wsdl11.DynamicWsdl11Definition">
-  <property name="builder">
-    <bean class="org.springframework.ws.wsdl.wsdl11.builder.XsdBasedSoap11Wsdl4jDefinitionBuilder">
-      <property name="schema" value="/WEB-INF/xsd/Orders.xsd"/>
-      <property name="portTypeName" value="Orders"/>
-      <property name="locationUri" value="http://localhost:8080/ordersService/"/>
-    </bean>
-  </property>
+<bean id="orders" class="org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition">
+  <property name="schema" ref="schema"/>
+  <property name="portTypeName" value="Orders"/>
+  <property name="locationUri" value="http://localhost:8080/ordersService/"/>
+</bean>
+
+<bean id="schema" class="org.springframework.xml.xsd.SimpleXsdSchema">
+    <property name="xsd" value="/WEB-INF/xsd/Orders.xsd"/>
 </bean>]]></programlisting>
                 <para>
-                    The <classname>DynamicWsdl11Definition</classname> uses a
-                    <interfacename>Wsdl11DefinitionBuilder</interfacename> implementation
-                    to generate a WSDL the first time it is requested.
-                    Typically, we use a <classname>XsdBasedSoap11Wsdl4jDefinitionBuilder</classname>, which builds
-                    a WSDL from a XSD schema.  This builder iterates over all <literal>element</literal> elements
-                    found in the schema, and creates a <literal>message</literal> for elements that end with the
+                    The <classname>DefaultWsdl11Definition</classname> which builds
+                    a WSDL from a XSD schema.  This definition iterates over all <literal>element</literal> elements
+                    found in the schema, and creates a <literal>message</literal> for all elements. Next, it creates
+                    WSDL <literal>operation</literal> for all messages that end with the
                     defined request or response suffix. The default request suffix is <literal>Request</literal>;
                     the default response suffix is <literal>Response</literal>, though these can be changed by
                     setting the <property>requestSuffix</property> and <property>responseSuffix</property>
                     properties, respectively.
-                    Next, the builder combines the request and response messages into a WSDL
-                    <literal>operation</literal>s, and builds a <literal>portType</literal> based on the operations.
+                    It also builds a <literal>portType</literal>, <literal>binding</literal>, and <literal>service</literal> based on the operations.
                 </para>
                 <para>
                     For instance, if our <filename>Orders.xsd</filename> schema defines the
@@ -244,6 +250,38 @@
                     <literal>GetOrdersRequest</literal> and <literal>GetOrdersResponse</literal> message, and a
                     <literal>GetOrders</literal> operation, which is put in a <literal>Orders</literal> port type.
                 </para>
+                <para>
+                    If you want to use multiple schemas, either by includes or imports, you might want to use the
+                    <classname>CommonsXsdSchemaCollection</classname>, and refer to that from the
+                    <classname>DefaultWsdl11Definition</classname>, like so:
+                </para>
+                <programlisting><![CDATA[
+<bean id="schemaCollection" class="org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection">
+    <description>
+        This bean wrap the messages.xsd (which imports types.xsd), and inlines them as a one.
+    </description>
+    <property name="xsds">
+        <list>
+            <value>/WEB-INF/xsds/Orders.xsd</value>
+            <value>/WEB-INF/xsds/Customers.xsd</value>
+        </list>
+    </property>
+    <property name="inline" value="true"/>
+</bean>]]></programlisting>
+                <para>
+                    When the <property>inline</property> property is enabled, it folows all XSD imports and includes,
+                    and inlines them in the WSDL. This greatly simplifies the deloyment of the schemas, which still
+                    making it possible to edit them separately. 
+                </para>
+                <para>
+                    The <classname>DefaultWsdl11Definition</classname> uses WSDL providers in the
+                    <package>org.springframework.ws.wsdl.wsdl11.provider</package> package and the
+                    <classname>ProviderBasedWsdl4jDefinition</classname>
+                    to generate a WSDL the first time it is requested.
+                    Refer to the class-level Javadoc of these classes to see how you can extend this mechanism,
+                    if necessary.
+                </para>
+
             </section>
         </section>
         <section>
