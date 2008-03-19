@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
@@ -119,9 +120,7 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
         this.unmarshaller = unmarshaller;
     }
 
-    public final void afterPropertiesSet() throws Exception {
-        Assert.notNull(getMarshaller(), "marshaller is required");
-        Assert.notNull(getUnmarshaller(), "unmarshaller is required");
+    public void afterPropertiesSet() throws Exception {
         afterMarshallerSet();
     }
 
@@ -139,7 +138,9 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
     }
 
     private Object unmarshalRequest(WebServiceMessage request) throws IOException {
-        Object requestObject = MarshallingUtils.unmarshal(getUnmarshaller(), request);
+        Unmarshaller unmarshaller = getUnmarshaller();
+        Assert.notNull(unmarshaller, "No unmarshaller registered. Check configuration of endpoint.");
+        Object requestObject = MarshallingUtils.unmarshal(unmarshaller, request);
         if (logger.isDebugEnabled()) {
             logger.debug("Unmarshalled payload request to [" + requestObject + "]");
         }
@@ -161,10 +162,12 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
     }
 
     private void marshalResponse(Object responseObject, WebServiceMessage response) throws IOException {
+        Marshaller marshaller = getMarshaller();
+        Assert.notNull(marshaller, "No marshaller registered. Check configuration of endpoint.");
         if (logger.isDebugEnabled()) {
             logger.debug("Marshalling [" + responseObject + "] to response payload");
         }
-        MarshallingUtils.marshal(getMarshaller(), responseObject, response);
+        MarshallingUtils.marshal(marshaller, responseObject, response);
     }
 
     /**
@@ -184,6 +187,9 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
      * Template method that gets called after the marshaller and unmarshaller have been set.
      * <p/>
      * The default implementation does nothing.
+     *
+     * @deprecated as of Spring Web Services 1.5: {@link #afterPropertiesSet()} is no longer final, so this can safely
+     *             be overriden in subclasses
      */
     public void afterMarshallerSet() throws Exception {
     }
