@@ -957,7 +957,7 @@ public class AnnotationOrderEndpoint {
                 If any other exception occurs, it will return the default fault: a server-side fault with the exception
                 message as fault string.
             </para>
-            </section>
+        </section>
         <section>
             <title><classname>SoapFaultAnnotationExceptionResolver</classname></title>
             <para>
@@ -981,8 +981,6 @@ public class MyBusinessException extends Exception {
     }
 }]]></programlisting>
             <para>
-            </para>
-            <para>
                 Whenever the <classname>MyBusinessException</classname> is thrown with the constructor string
                 <literal>"Oops!"</literal> during endpoint invocation, it will result in the following response:
             </para>
@@ -994,5 +992,6 @@ public class MyBusinessException extends Exception {
        </SOAP-ENV:Fault>
     </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>]]></programlisting>
+        </section>
     </section>
 </chapter>
