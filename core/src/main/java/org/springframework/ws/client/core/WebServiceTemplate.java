@@ -286,24 +286,30 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     public Object marshalSendAndReceive(String uri,
                                         final Object requestPayload,
                                         final WebServiceMessageCallback requestCallback) {
-        if (getMarshaller() == null) {
-            throw new IllegalStateException("No marshaller registered. Check configuration of WebServiceTemplate.");
-        }
-        if (getUnmarshaller() == null) {
-            throw new IllegalStateException("No unmarshaller registered. Check configuration of WebServiceTemplate.");
-        }
         return sendAndReceive(uri, new WebServiceMessageCallback() {
 
             public void doWithMessage(WebServiceMessage request) throws IOException, TransformerException {
-                MarshallingUtils.marshal(getMarshaller(), requestPayload, request);
-                if (requestCallback != null) {
-                    requestCallback.doWithMessage(request);
+                if (requestPayload != null) {
+                    Marshaller marshaller = getMarshaller();
+                    if (marshaller == null) {
+                        throw new IllegalStateException(
+                                "No marshaller registered. Check configuration of WebServiceTemplate.");
+                    }
+                    MarshallingUtils.marshal(marshaller, requestPayload, request);
+                    if (requestCallback != null) {
+                        requestCallback.doWithMessage(request);
+                    }
                 }
             }
         }, new WebServiceMessageExtractor() {
 
             public Object extractData(WebServiceMessage response) throws IOException {
-                return MarshallingUtils.unmarshal(getUnmarshaller(), response);
+                Unmarshaller unmarshaller = getUnmarshaller();
+                if (unmarshaller == null) {
+                    throw new IllegalStateException(
+                            "No unmarshaller registered. Check configuration of WebServiceTemplate.");
+                }
+                return MarshallingUtils.unmarshal(unmarshaller, response);
             }
         });
     }
