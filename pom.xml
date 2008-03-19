@@ -10,7 +10,7 @@
         aims to facilitate contract-first SOAP service development, allowing for the creation of flexible web services
         using one of the many ways to manipulate XML payloads.
     </description>
-    <url>http://static.springframework.org/spring-ws/sites/1.0/</url>
+    <url>http://static.springframework.org/spring-ws/site/index.html</url>
     <issueManagement>
         <system>JIRA</system>
         <url>http://jira.springframework.org/browse/SWS</url>
