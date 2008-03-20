@@ -1,0 +1,29 @@
+SPRING WEB SERVICES CHANGELOG
+=============================
+http://www.springframework.org/spring-ws
+
+Changes in version 1.5.0 RC2
+-------------------------
+
+** Sub-task
+    * [SWS-299] - WS-Addressing Documentation
+
+** Bug
+    * [SWS-307] - org.springframework.ws.soap.security.wss4j.callback.KeyStoreCallbackHandler uses tiger specific
+				  classes
+    * [SWS-308] - WebServiceTemplate skips handling fault in response with checkConnectionForFault="false" when HTTP 
+				  status code is not 200 or 500
+
+** Improvement
+    * [SWS-179] - Create and use some wrapper around javax.xml.validation.Schema
+    * [SWS-304] - Support XsdSchema in AbstractValidatingInterceptor
+    * [SWS-306] - Document DefaultWsdl11Defintion and WSDL Provider model
+    * [SWS-310] - Add getters for ProviderBasedWsdl4jDefinition
+    * [SWS-311] - Create RequestMessage in JmsSenderConnection constructor
+    * [SWS-312] - Add FAQ entry for Websphere
+    * [SWS-313] - Rewrite Airline sample to use Spring 2.5 features
+    * [SWS-315] - Endpointsextending AbstractMarshallingPayloadEndpoint require a marshaller also for oneway style
+				  service
+
+** New Feature
+    * [SWS-84] - WS-Addressing support
