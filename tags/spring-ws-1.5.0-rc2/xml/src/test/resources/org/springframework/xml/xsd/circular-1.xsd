@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="urn:1"
+            xmlns:tns="urn:1" elementFormDefault="qualified"
+            attributeFormDefault="unqualified">
+    <xsd:include schemaLocation="circular-2.xsd"/>
+    <xsd:simpleType name="A1">
+        <xsd:restriction base="tns:B1"/>
+    </xsd:simpleType>
+    <xsd:simpleType name="A2">
+        <xsd:restriction base="xsd:string"/>
+    </xsd:simpleType>
+</xsd:schema>

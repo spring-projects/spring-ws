@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+    <description>
+        This application context contains the WS-Security and Acegi beans.
+    </description>
+
+    <aop:config>
+        <aop:pointcut id="getFrequentFlyerMileage"
+                      expression="execution(* org.springframework.ws.samples.airline.service.AirlineService+.*(..))"/>
+        <aop:advisor advice-ref="methodSecurityInterceptor" pointcut-ref="getFrequentFlyerMileage"/>
+    </aop:config>
+
+    <bean id="securityService"
+          class="org.springframework.ws.samples.airline.security.AcegiFrequentFlyerSecurityService">
+        <description>
+            A security service used to obtain Frequent Flyer information.
+        </description>
+        <constructor-arg ref="frequentFlyerDao"/>
+    </bean>
+
+    <!-- ===================== WS-SECURITY  ============================== -->
+
+    <bean id="wsSecurityInterceptor" class="org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor">
+        <description>
+            This interceptor validates incoming messages according to the policy defined in 'securityPolicy.xml'.
+            The policy defines that all incoming requests must have a UsernameToken with a password digest in it.
+            The actual authentication is performed by the Acegi callback handler.
+        </description>
+        <property name="secureResponse" value="false"/>
+        <property name="policyConfiguration"
+                  value="classpath:org/springframework/ws/samples/airline/security/securityPolicy.xml"/>
+        <property name="callbackHandler">
+            <bean class="org.springframework.ws.soap.security.xwss.callback.acegi.AcegiDigestPasswordValidationCallbackHandler">
+                <property name="userDetailsService" ref="securityService"/>
+            </bean>
+        </property>
+    </bean>
+
+
+    <!-- ======================== ACEGI AUTHENTICATION ======================= -->
+
+    <bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
+        <description>
+            A standard Acegi authentication manager.
+        </description>
+        <property name="providers">
+            <bean class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
+                <property name="userDetailsService" ref="securityService"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="loggerListener" class="org.acegisecurity.event.authentication.LoggerListener"/>
+
+    <!-- ======================== ACEGI AUTHORIZATION =========================== -->
+
+    <bean id="methodSecurityInterceptor"
+          class="org.acegisecurity.intercept.method.aopalliance.MethodSecurityInterceptor">
+        <property name="authenticationManager">
+            <ref local="authenticationManager"/>
+        </property>
+        <property name="accessDecisionManager">
+            <bean class="org.acegisecurity.vote.AffirmativeBased">
+                <property name="decisionVoters">
+                    <bean class="org.acegisecurity.vote.RoleVoter"/>
+                </property>
+            </bean>
+        </property>
+        <property name="objectDefinitionSource">
+            <bean class="org.acegisecurity.intercept.method.MethodDefinitionAttributes">
+                <property name="attributes">
+                    <bean class="org.acegisecurity.annotation.SecurityAnnotationAttributes"/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+</beans>
