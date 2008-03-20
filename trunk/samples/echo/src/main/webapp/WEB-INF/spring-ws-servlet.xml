@@ -28,7 +28,7 @@
             This interceptor validates both incoming and outgoing message contents according to the 'echo.xsd' XML
             Schema file.
         </description>
-        <property name="schema" value="/WEB-INF/echo.xsd"/>
+        <property name="xsdSchema" ref="schema"/>
         <property name="validateRequest" value="true"/>
         <property name="validateResponse" value="true"/>
     </bean>
