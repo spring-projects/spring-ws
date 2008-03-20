@@ -73,7 +73,7 @@
             <list>
                 <bean class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor"/>
                 <bean class="org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor">
-                    <property name="schemas" value="/messages.xsd"/>
+                    <property name="xsdSchemaCollection" ref="schemaCollection"/>
                     <property name="validateRequest" value="true"/>
                     <property name="validateResponse" value="true"/>
                 </bean>
