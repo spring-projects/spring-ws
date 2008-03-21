@@ -173,12 +173,6 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.ws</groupId>
-                <artifactId>spring-ws-doc</artifactId>
-                <version>${project.version}</version>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.ws</groupId>
                 <artifactId>airline</artifactId>
                 <type>war</type>
                 <version>${pom.version}</version>
