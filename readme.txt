@@ -1,4 +1,4 @@
-SPRING WEB SERVICES 1.5.0 Release Candidate 2 (March 2008)
+SPRING WEB SERVICES 1.5.0 (March 2008)
 -------------------------------
 http://www.springframework.org/spring-ws
 http://forum.springframework.org/forumdisplay.php?f=39
@@ -19,13 +19,15 @@ Spring-WS requires J2SE 1.4 or higher and J2EE 1.4 or higher.  J2SE 1.6 is requi
 Release contents:
 
 "." contains Spring-WS distribution units (jars and source zip archives), readme, and copyright
+"dist" contains the Spring-WS distribution
+"dist/modules" contains the Spring-WS modules
+
+The -with-dependencies distribution contains the following additional content:
+
+"dist/module-sources" contains the Spring-WS modules
 "docs" contains the Spring-WS reference manual and API Javadocs
-"modules" contains buildable modules
-"modules/spring-oxm" contains buildable Spring O/X Mapping sources
-"modules/spring-ws-core" contains buildable Spring-WS core sources
-"modules/spring-ws-security" contains buildable Spring-WS security sources
-"modules/spring-xml" contains buildable Spring XML utility sources, an internal library used by Spring-WS
 "samples" contains buildable Spring-WS sample application sources
+"lib" contains the Spring-WS dependencies
 
 See the readme.txt within the above directories for additional information.
 
@@ -37,40 +39,40 @@ The following distinct jar files are included in the distribution. This list spe
 third-party dependencies. Libraries in [brackets] are optional, i.e. just necessary for certain functionality. For an 
 exact list of Spring-WS project dependencies see the respective Maven2 pom.xml files.
 
-* spring-oxm-1.5.0-rc2.jar
+* spring-oxm-1.5.0.jar
 - Contents: The Spring Object/XML Mapping framework
 - Dependencies: Commons Logging, spring-beans, spring-core
                 [Log4J, JAXB 1, Castor, XMLBeans, StAX, JiBX, XStream]
 
-* spring-oxm-tiger-1.5.0-rc2.jar
+* spring-oxm-tiger-1.5.0.jar
 - Contents: The Spring Object/XML Mapping framework for Java 5
 - Dependencies: Commons Logging, spring-beans, spring-core, JAXB 2
 
-* spring-ws-core-1.5.0-rc2.jar
+* spring-ws-core-1.5.0.jar
 - Contents: The Spring-WS Core
 - Dependencies: Commons Logging, spring-beans, spring-core, spring-context, spring-oxm
                 [Log4J, spring-web, spring-webmvc, SAAJ, JDOM, StAX, Servlet API, JAF, Axiom, DOM4J, XOM, WSDL4J]
 
-* spring-ws-core-tiger-1.5.0-rc2.jar
+* spring-ws-core-tiger-1.5.0.jar
 - Contents: The Spring-WS Core for Java 5
 - Dependencies: Commons Logging, spring-beans, spring-core, spring-context, spring-core
 
-* spring-ws-support-1.5.0-rc2.jar
+* spring-ws-support-1.5.0.jar
 - Contents: The Spring-WS Support
 - Dependencies: Commons Logging, spring-beans, spring-core, spring-context, spring-core
                 [JMS, JavaMail]
 
-* spring-ws-security-1.5.0-rc2.jar
+* spring-ws-security-1.5.0.jar
 - Contents: Spring-WS Security integration
 - Dependencies: Commons Logging, spring-beans, spring-core, spring-context, spring-ws-core
                 [Log4J, xmlsdig, xmlsec, XWS-security, Acegi, WSS4J]
 
-* spring-xml-1.5.0-rc2.jar
+* spring-xml-1.5.0.jar
 - Contents: Spring XML utility framework
 - Dependencies: Commons Logging, spring-beans, spring-core
                 [StAX, Xalan, Jaxen]
 
-* spring-ws-1.5.0-rc2.jar
+* spring-ws-1.5.0.jar
 - Contents: Convenient al-in-one jar containing all of the jars described above
 
 
