@@ -420,6 +420,13 @@
                                             <version>1.0.6</version>
                                             <outputDirectory>${project.build.directory}/dependency/acegi/</outputDirectory>
                                         </artifactItem>
+                                        <!-- Spring Security -->
+                                        <artifactItem>
+                                            <groupId>org.springframework.security</groupId>
+                                            <artifactId>spring-security-core</artifactId>
+                                            <version>2.0-M2</version>
+                                            <outputDirectory>${project.build.directory}/dependency/spring-security/</outputDirectory>
+                                        </artifactItem>
                                         <!--Java EE-->
                                         <artifactItem>
                                             <groupId>javax.xml.bind</groupId>

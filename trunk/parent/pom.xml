@@ -9,9 +9,8 @@
     <distributionManagement>
         <downloadUrl>http://static.springframework.org/spring-ws/site/downloads/releases.html</downloadUrl>
         <repository>
-            <id>spring-s3</id>
-            <name>Spring Milestone Repository</name>
-            <url>s3://maven.springframework.org/milestone</url>
+            <id>local</id>
+            <url>file:///Users/arjen/Projects/Spring/repos/repo</url>
         </repository>
         <snapshotRepository>
             <id>spring-s3</id>
