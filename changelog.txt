@@ -1,0 +1,14 @@
+SPRING WEB SERVICES CHANGELOG
+=============================
+http://www.springframework.org/spring-ws
+
+Changes in version 1.0.4
+-------------------------
+
+** Bug
+    * [SWS-264] - XPathExpressionFactory should fallback to Jaxen if no JAXP 1.3 XPath implementation is available
+    * [SWS-266] - AxiomContentHandler should empty the response body before adding the transformation result
+    * [SWS-274] - Soap headers with whitespace cause java.lang.ClassCastException: com.sun.xml.messaging.saaj.soap.impl.TextImpl - Part II
+    * [SWS-275] - NAMESPACE_ERR: An attempt is made to create or change an object in a way which is incorrect with regard to namespaces.
+    * [SWS-285] - Clear SecurityContext in Acegi Callbacks
+    * [SWS-316] - Unresolvable dependency in parent pom
