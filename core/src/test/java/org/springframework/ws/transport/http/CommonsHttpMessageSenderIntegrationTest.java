@@ -16,10 +16,32 @@
 
 package org.springframework.ws.transport.http;
 
+import java.net.URI;
+
+import org.apache.commons.httpclient.ConnectTimeoutException;
+
+import org.springframework.ws.MockWebServiceMessage;
+import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.transport.WebServiceConnection;
+
 public class CommonsHttpMessageSenderIntegrationTest extends AbstractHttpWebServiceMessageSenderIntegrationTestCase {
 
     protected AbstractHttpWebServiceMessageSender createMessageSender() {
         return new CommonsHttpMessageSender();
+    }
+
+    public void testConnectionTimeout() throws Exception {
+        CommonsHttpMessageSender messageSender = new CommonsHttpMessageSender();
+        messageSender.setConnectionTimeout(1);
+        WebServiceConnection connection = messageSender.createConnection(new URI("http://example.com/"));
+        WebServiceMessage message = new MockWebServiceMessage();
+        try {
+            connection.send(message);
+            fail("ConnectTimeoutException expected");
+        }
+        catch (ConnectTimeoutException ex) {
+            // expected
+        }
     }
 
 }
