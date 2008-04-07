@@ -19,11 +19,6 @@ package org.springframework.ws.transport.http;
 import java.io.IOException;
 import java.net.URI;
 
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.Assert;
-import org.springframework.ws.transport.WebServiceConnection;
-
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpConnectionManager;
@@ -32,6 +27,11 @@ import org.apache.commons.httpclient.NTCredentials;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.PostMethod;
+
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.Assert;
+import org.springframework.ws.transport.WebServiceConnection;
 
 /**
  * <code>WebServiceMessageSender</code> implementation that uses <a href="http://jakarta.apache.org/commons/httpclient">Jakarta
@@ -50,6 +50,10 @@ import org.apache.commons.httpclient.methods.PostMethod;
 public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSender
         implements InitializingBean, DisposableBean {
 
+    private static final int DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS = (60 * 1000);
+
+    private static final int DEFAULT_READ_TIMEOUT_MILLISECONDS = (60 * 1000);
+
     private HttpClient httpClient;
 
     private Credentials credentials;
@@ -62,6 +66,8 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
      */
     public CommonsHttpMessageSender() {
         httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
+        setConnectionTimeout(DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS);
+        setReadTimeout(DEFAULT_READ_TIMEOUT_MILLISECONDS);
     }
 
     /**
@@ -97,6 +103,32 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
      */
     public void setCredentials(Credentials credentials) {
         this.credentials = credentials;
+    }
+
+    /**
+     * Sets the timeout until a connection is etablished. A value of 0 means <em>never</em> timeout.
+     *
+     * @param timeout the timeout value in milliseconds
+     * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setConnectionTimeout(int)
+     */
+    public void setConnectionTimeout(int timeout) {
+        if (timeout < 0) {
+            throw new IllegalArgumentException("timeout must be a non-negative value");
+        }
+        getHttpClient().getHttpConnectionManager().getParams().setConnectionTimeout(timeout);
+    }
+
+    /**
+     * Set the socket read timeout for the underlying HttpClient. A value of 0 means <em>never</em> timeout.
+     *
+     * @param timeout the timeout value in milliseconds
+     * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setSoTimeout(int)
+     */
+    public void setReadTimeout(int timeout) {
+        if (timeout < 0) {
+            throw new IllegalArgumentException("timeout must be a non-negative value");
+        }
+        getHttpClient().getHttpConnectionManager().getParams().setSoTimeout(timeout);
     }
 
     /**
