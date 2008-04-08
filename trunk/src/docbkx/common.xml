@@ -384,4 +384,52 @@ public class MyXPathClass {
 }]]></programlisting>
         </section>
     </section>
+    <section id="logging">
+        <title>Message Logging and Tracing</title>
+        <para>
+            When developing or debugging a Web service, it can be quite useful to look at the content of a (SOAP)
+            message when it arrives, or just before it is sent. Spring Web Services offer this functionality, via the
+            standard Commons Logging interface.
+        </para>
+        <caution>
+            <para>
+                Make sure to use Commons Logging version 1.1 or higher. Earlier versions have class loading issues, and
+                do not integrate with the Log4J TRACE level.
+            </para>
+        </caution>
+        <para>
+            To log all server-side messages, simply set the
+            <literal>org.springframework.ws.server.MessageTracing</literal> logger to level DEBUG or TRACE. On the debug
+            level, only the payload root element is logged; on the TRACE level, the entire message content.
+            If you only want to log sent messages, use the
+            <literal>org.springframework.ws.server.MessageTracing.sent</literal> logger; or
+            <literal>org.springframework.ws.server.MessageTracing.received</literal> to log received messages.
+        </para>
+        <para>
+            On the client-side, similar loggers exist:
+            <literal>org.springframework.ws.client.MessageTracing.sent</literal> and
+            <literal>org.springframework.ws.client.MessageTracing.received</literal>.
+        </para>
+        <para>
+            Here is an example <filename>log4j.properties</filename> configuration, logging the full content of
+            sent messages on the client side, and only the payload root element for client-side received messages. On
+            the server-side, the payload root is logged for both sent and received messages:
+        </para>
+        <programlisting><![CDATA[log4j.rootCategory=INFO, stdout
+log4j.logger.org.springframework.ws.client.MessageTracing.sent=TRACE
+log4j.logger.org.springframework.ws.client.MessageTracing.received=DEBUG
+
+log4j.logger.org.springframework.ws.server.MessageTracing=DEBUG
+
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%p [%c{3}] %m%n]]></programlisting>
+        <para>
+            With this configuration, a typical output will be:
+        </para>
+        <screen><![CDATA[TRACE [client.MessageTracing.sent] Sent request [<SOAP-ENV:Envelope xmlns:SOAP-ENV="...
+DEBUG [server.MessageTracing.received] Received request [SaajSoapMessage {http://example.com}request] ...
+DEBUG [server.MessageTracing.sent] Sent response [SaajSoapMessage {http://example.com}response] ...
+DEBUG [client.MessageTracing.received] Received response [SaajSoapMessage {http://example.com}response] ...]]></screen>
+    </section>
 </chapter>
