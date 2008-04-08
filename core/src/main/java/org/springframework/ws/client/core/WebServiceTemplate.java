@@ -105,9 +105,13 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     /** Log category to use for message tracing. */
     public static final String MESSAGE_TRACING_LOG_CATEGORY = "org.springframework.ws.client.MessageTracing";
 
-    /** Additional logger to use for message tracing. */
-    protected static final Log messageTracingLogger =
-            LogFactory.getLog(WebServiceTemplate.MESSAGE_TRACING_LOG_CATEGORY);
+    /** Additional logger to use for sent message tracing. */
+    protected static final Log sentMessageTracingLogger =
+            LogFactory.getLog(WebServiceTemplate.MESSAGE_TRACING_LOG_CATEGORY + ".sent");
+
+    /** Additional logger to use for received message tracing. */
+    protected static final Log receivedMessageTracingLogger =
+            LogFactory.getLog(WebServiceTemplate.MESSAGE_TRACING_LOG_CATEGORY + ".received");
 
     private Marshaller marshaller;
 
@@ -513,13 +517,13 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
     /** Sends the request in the given message context over the connection. */
     private void sendRequest(WebServiceConnection connection, WebServiceMessage request) throws IOException {
-        if (messageTracingLogger.isTraceEnabled()) {
+        if (sentMessageTracingLogger.isTraceEnabled()) {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             request.writeTo(os);
-            messageTracingLogger.trace("Sent request [" + os.toString("UTF-8") + "]");
+            sentMessageTracingLogger.trace("Sent request [" + os.toString("UTF-8") + "]");
         }
-        else if (messageTracingLogger.isDebugEnabled()) {
-            messageTracingLogger.debug("Sent request [" + request + "]");
+        else if (sentMessageTracingLogger.isDebugEnabled()) {
+            sentMessageTracingLogger.debug("Sent request [" + request + "]");
         }
         connection.send(request);
     }
@@ -563,22 +567,22 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
     private void logResponse(MessageContext messageContext) throws IOException {
         if (messageContext.hasResponse()) {
-            if (messageTracingLogger.isTraceEnabled()) {
+            if (receivedMessageTracingLogger.isTraceEnabled()) {
                 ByteArrayOutputStream requestStream = new ByteArrayOutputStream();
                 messageContext.getRequest().writeTo(requestStream);
                 ByteArrayOutputStream responseStream = new ByteArrayOutputStream();
                 messageContext.getResponse().writeTo(responseStream);
-                messageTracingLogger.trace("Received response [" + responseStream.toString("UTF-8") +
+                receivedMessageTracingLogger.trace("Received response [" + responseStream.toString("UTF-8") +
                         "] for request [" + requestStream.toString("UTF-8") + "]");
             }
-            else if (messageTracingLogger.isDebugEnabled()) {
-                messageTracingLogger.debug("Received response [" + messageContext.getResponse() + "] for request [" +
-                        messageContext.getRequest() + "]");
+            else if (receivedMessageTracingLogger.isDebugEnabled()) {
+                receivedMessageTracingLogger.debug("Received response [" + messageContext.getResponse() +
+                        "] for request [" + messageContext.getRequest() + "]");
             }
         }
         else {
             if (logger.isDebugEnabled()) {
-                messageTracingLogger
+                receivedMessageTracingLogger
                         .debug("Received no response for request [" + messageContext.getRequest() + "]");
             }
         }
