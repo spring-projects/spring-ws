@@ -52,7 +52,6 @@
                             org.apache.commons.logging*,
                             javax.activation*,
                             javax.servlet*,
-                            javax.wsdl*,
                             javax.xml.namespace*,
                             javax.xml.parsers*,
                             javax.xml.stream*,
