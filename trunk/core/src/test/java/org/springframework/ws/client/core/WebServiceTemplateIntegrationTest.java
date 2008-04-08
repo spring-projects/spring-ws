@@ -40,6 +40,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import junit.extensions.TestSetup;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
@@ -62,25 +65,10 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
 
     private WebServiceTemplate template;
 
-    private Server jettyServer;
+    private static Server jettyServer;
 
-    protected void setUp() throws Exception {
-        jettyServer = new Server(8888);
-        Context jettyContext = new Context(jettyServer, "/");
-        jettyContext.addServlet(new ServletHolder(new EchoSoapServlet()), "/soap/echo");
-        jettyContext.addServlet(new ServletHolder(new SoapFaultServlet()), "/soap/fault");
-        SoapFaultServlet badRequestFault = new SoapFaultServlet();
-        badRequestFault.setSc(400);
-        jettyContext.addServlet(new ServletHolder(badRequestFault), "/soap/badRequestFault");
-        jettyContext.addServlet(new ServletHolder(new NoResponseSoapServlet()), "/soap/noResponse");
-        jettyContext.addServlet(new ServletHolder(new PoxServlet()), "/pox");
-        jettyContext.addServlet(new ServletHolder(new ErrorServlet(404)), "/errors/notfound");
-        jettyContext.addServlet(new ServletHolder(new ErrorServlet(500)), "/errors/server");
-        jettyServer.start();
-    }
-
-    protected void tearDown() throws Exception {
-        jettyServer.stop();
+    public static Test suite() {
+        return new ServerTestSetup(new TestSuite(WebServiceTemplateIntegrationTest.class));
     }
 
     public void testAxiom() throws Exception {
@@ -292,6 +280,33 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
             SOAPBody body = response.getSOAPBody();
             body.addFault(new QName("http://schemas.xmlsoap.org/soap/envelope/", "Server"), "Server fault");
             return response;
+        }
+    }
+
+    /** A custom TestSetup to make sure that setUp() and tearDown() are only called once. */
+    private static class ServerTestSetup extends TestSetup {
+
+        private ServerTestSetup(Test test) {
+            super(test);
+        }
+
+        protected void setUp() throws Exception {
+            jettyServer = new Server(8888);
+            Context jettyContext = new Context(jettyServer, "/");
+            jettyContext.addServlet(new ServletHolder(new EchoSoapServlet()), "/soap/echo");
+            jettyContext.addServlet(new ServletHolder(new SoapFaultServlet()), "/soap/fault");
+            SoapFaultServlet badRequestFault = new SoapFaultServlet();
+            badRequestFault.setSc(400);
+            jettyContext.addServlet(new ServletHolder(badRequestFault), "/soap/badRequestFault");
+            jettyContext.addServlet(new ServletHolder(new NoResponseSoapServlet()), "/soap/noResponse");
+            jettyContext.addServlet(new ServletHolder(new PoxServlet()), "/pox");
+            jettyContext.addServlet(new ServletHolder(new ErrorServlet(404)), "/errors/notfound");
+            jettyContext.addServlet(new ServletHolder(new ErrorServlet(500)), "/errors/server");
+            jettyServer.start();
+        }
+
+        protected void tearDown() throws Exception {
+            jettyServer.stop();
         }
     }
 

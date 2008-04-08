@@ -88,8 +88,13 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
     /** Log category to use for message tracing. */
     public static final String MESSAGE_TRACING_LOG_CATEGORY = "org.springframework.ws.server.MessageTracing";
 
-    /** Additional logger to use for message tracing. */
-    protected static final Log messageTracingLogger = LogFactory.getLog(MessageDispatcher.MESSAGE_TRACING_LOG_CATEGORY);
+    /** Additional logger to use for sent message tracing. */
+    protected static final Log sentMessageTracingLogger =
+            LogFactory.getLog(MessageDispatcher.MESSAGE_TRACING_LOG_CATEGORY + ".sent");
+
+    /** Additional logger to use for received message tracing. */
+    protected static final Log receivedMessageTracingLogger =
+            LogFactory.getLog(MessageDispatcher.MESSAGE_TRACING_LOG_CATEGORY + ".received");
 
     private final DefaultStrategiesHelper defaultStrategiesHelper;
 
@@ -152,31 +157,31 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
     }
 
     public void receive(MessageContext messageContext) throws Exception {
-        if (messageTracingLogger.isTraceEnabled()) {
+        if (receivedMessageTracingLogger.isTraceEnabled()) {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             messageContext.getRequest().writeTo(os);
-            messageTracingLogger.trace("Received request [" + os.toString("UTF-8") + "]");
+            receivedMessageTracingLogger.trace("Received request [" + os.toString("UTF-8") + "]");
         }
-        else if (messageTracingLogger.isDebugEnabled()) {
-            messageTracingLogger.debug("Received request [" + messageContext.getRequest() + "]");
+        else if (receivedMessageTracingLogger.isDebugEnabled()) {
+            receivedMessageTracingLogger.debug("Received request [" + messageContext.getRequest() + "]");
         }
         dispatch(messageContext);
         if (messageContext.hasResponse()) {
-            if (messageTracingLogger.isTraceEnabled()) {
+            if (sentMessageTracingLogger.isTraceEnabled()) {
                 ByteArrayOutputStream requestStream = new ByteArrayOutputStream();
                 messageContext.getRequest().writeTo(requestStream);
                 ByteArrayOutputStream responseStream = new ByteArrayOutputStream();
                 messageContext.getResponse().writeTo(responseStream);
-                messageTracingLogger.trace("Sent response [" + responseStream.toString("UTF-8") + "] for request [" +
-                        requestStream.toString("UTF-8") + "]");
+                sentMessageTracingLogger.trace("Sent response [" + responseStream.toString("UTF-8") +
+                        "] for request [" + requestStream.toString("UTF-8") + "]");
             }
-            else if (messageTracingLogger.isDebugEnabled()) {
-                messageTracingLogger.debug("Sent response [" + messageContext.getResponse() + "] for request [" +
+            else if (sentMessageTracingLogger.isDebugEnabled()) {
+                sentMessageTracingLogger.debug("Sent response [" + messageContext.getResponse() + "] for request [" +
                         messageContext.getRequest() + "]");
             }
         }
-        else if (messageTracingLogger.isDebugEnabled()) {
-            messageTracingLogger.debug("MessageDispatcher with name '" + beanName +
+        else if (sentMessageTracingLogger.isDebugEnabled()) {
+            sentMessageTracingLogger.debug("MessageDispatcher with name '" + beanName +
                     "' sends no response for request [" + messageContext.getRequest() + "]");
         }
     }
