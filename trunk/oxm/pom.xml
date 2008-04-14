@@ -206,6 +206,17 @@
             <artifactId>xstream</artifactId>
             <optional>true</optional>
         </dependency>
+        <!-- MessageConverter -->
+        <dependency>
+            <groupId>javax.jms</groupId>
+            <artifactId>jms</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jms</artifactId>
+            <optional>true</optional>
+        </dependency>
         <!-- Test dependencies -->
         <dependency>
             <groupId>easymock</groupId>
