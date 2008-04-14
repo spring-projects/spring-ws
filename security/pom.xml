@@ -130,7 +130,7 @@
             <artifactId>xws-security</artifactId>
         </dependency>
         <dependency>
-            <groupId>xml-security</groupId>
+            <groupId>org.apache.santuario</groupId>
             <artifactId>xmlsec</artifactId>
         </dependency>
         <!-- WSS4J dependencies -->
