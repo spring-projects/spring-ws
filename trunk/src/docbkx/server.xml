@@ -433,6 +433,78 @@
 </beans>]]></programlisting>
             </para>
         </section>
+        <section>
+        	<title>Embedded HTTP Server transport</title>
+        	<para>
+        		Spring Web Services provides a transport based on Sun's JRE 1.6 
+        		<ulink url="http://java.sun.com/javase/6/docs/jre/api/net/httpserver/spec/index.html">HTTP server</ulink>.
+        		The embedded HTTP Server is a standalone server that is simple to configure. It lends itself to a lighter 
+        		alternative to conventional servlet containers.
+        	</para>
+        	<para>
+        		When using the embedded HTTP server, no external deployment descriptor is needed
+                (<filename>web.xml</filename>).
+        		You only need to define an instance of the server and configure it to handle incoming requests.
+        		The remoting module in the Core Spring Framework contains a convenient factory bean for the HTTP server:
+                the <classname>SimpleHttpServerFactoryBean</classname>.
+        		The most important property is <property>contexts</property>, which maps context paths to corresponding
+        		<interfacename>HttpHandler</interfacename>s.
+        	</para>
+        	<para>
+				Spring Web Services provides 2 implementations of the <interfacename>HttpHandler</interfacename>
+                interface: <classname>WsdlDefinitionHttpHandler</classname>
+				and <classname>WebServiceMessageReceiverHttpHandler</classname>.
+                The former maps an incoming GET request to a <interfacename>WsdlDefinition</interfacename>.
+                The latter is responsible for handling POST requests for web services messages and thus
+				needs a <interfacename>WebServiceMessageFactory</interfacename> (typically a
+                <classname>SaajSoapMessageFactory</classname>) and a
+                <interfacename>WebServiceMessageReceiver</interfacename> (typically the
+                <classname>SoapMessageDispatcher</classname>) to accomplish its task.
+        	</para>
+        	<para>
+        		To draw parallels with the servlet world, the <property>contexts</property> property plays
+        		the role of servlet mappings in <filename>web.xml</filename> and the
+                <classname>WebServiceMessageReceiverHttpHandler</classname> is the equivalent of
+                a <classname>MessageDispatcherServlet</classname>.
+        	</para>
+        	<para>
+        		The following snippet shows a simple configuration example of the HTTP server
+                transport:<programlisting><![CDATA[<beans>
+
+    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+    
+    <bean id="messageReceiver" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+        <property name="endpointMappings" ref="endpointMapping"/>
+    </bean>
+
+    <bean id="endpointMapping" class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
+        <property name="defaultEndpoint" ref="stockEndpoint"
+    </bean>
+    
+    <bean id="httpServer" class="org.springframework.remoting.support.SimpleHttpServerFactoryBean">
+        <property name="contexts">
+            <map>
+                <entry key="/StockService.wsdl" value-ref="wsdlHandler"/>
+                <entry key="/StockService" value-ref="soapHandler"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="soapHandler" class="org.springframework.ws.transport.http.WebServiceMessageReceiverHttpHandler">
+        <property name="messageFactory" ref="messageFactory"/>
+        <property name="messageReceiver" ref="messageReceiver"/>
+    </bean>
+
+    <bean id="wsdlHandler" class="org.springframework.ws.transport.http.WsdlDefinitionHttpHandler">
+        <property name="definition" ref="wsdlDefinition"/>
+    </bean>
+</beans>]]></programlisting>
+        	</para>
+        	<para>
+                For more information on the <classname>SimpleHttpServerFactoryBean</classname>, refer to the
+                <ulink url="http://static.springframework.org/spring/docs/2.5.x/api/org/springframework/remoting/support/SimpleHttpServerFactoryBean.html">Javadoc</ulink>.
+        	</para>
+        </section>
     </section>
     <section>
         <title>Endpoints</title>
