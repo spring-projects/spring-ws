@@ -77,7 +77,6 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
     public final void activate() throws Exception {
         synchronized (lifecycleMonitor) {
             active = true;
-            lifecycleMonitor.notifyAll();
         }
         onActivate();
         if (autoStartup) {
@@ -89,7 +88,6 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
     public final void start() {
         synchronized (lifecycleMonitor) {
             running = true;
-            lifecycleMonitor.notifyAll();
         }
         onStart();
     }
@@ -98,7 +96,6 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
     public final void stop() {
         synchronized (lifecycleMonitor) {
             running = false;
-            lifecycleMonitor.notifyAll();
         }
         onStop();
     }
@@ -108,7 +105,6 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
         synchronized (lifecycleMonitor) {
             running = false;
             active = false;
-            lifecycleMonitor.notifyAll();
         }
         onShutdown();
     }
