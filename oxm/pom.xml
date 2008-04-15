@@ -92,6 +92,8 @@
                             org.w3c.dom*,
                             org.springframework.xml*,
                             org.springframework.oxm*,
+                            org.springframework.jms*;version="2.0";resolution:=optional,
+                            org.springframework.web*;version="2.0";resolution:=optional,
                             org.springframework*;version="2.0",
                             *;resolution:=optional
                         </Import-Package>
@@ -113,7 +115,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <scope>test</scope>
         </dependency>
         <!-- XML handling dependencies -->
         <dependency>
@@ -217,6 +218,17 @@
             <artifactId>spring-jms</artifactId>
             <optional>true</optional>
         </dependency>
+        <!-- View -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <optional>true</optional>
+        </dependency>
         <!-- Test dependencies -->
         <dependency>
             <groupId>easymock</groupId>
@@ -228,6 +240,11 @@
             <groupId>org.codehaus.jettison</groupId>
             <artifactId>jettison</artifactId>
             <version>1.0-RC2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
