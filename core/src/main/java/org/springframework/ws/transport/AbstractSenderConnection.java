@@ -52,17 +52,6 @@ public abstract class AbstractSenderConnection extends AbstractWebServiceConnect
         }
     }
 
-    public final void close() throws IOException {
-        try {
-            if (responseInputStream != null) {
-                responseInputStream.close();
-            }
-        }
-        finally {
-            onClose();
-        }
-    }
-
     /**
      * Template method invoked from {@link #close()}. Default implementation is empty.
      *
@@ -126,10 +115,6 @@ public abstract class AbstractSenderConnection extends AbstractWebServiceConnect
 
         public Iterator getHeaders(String name) throws IOException {
             return getResponseHeaders(name);
-        }
-
-        public void close() throws IOException {
-            // defer close, some SoapMessage implementations (Axis) lazy-initialize the SOAPMessage
         }
 
     }

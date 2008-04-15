@@ -77,7 +77,8 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
             throw new URISyntaxException("", ex.getMessage());
         }
     }
-/*
+
+    /*
      * Sending request
      */
 
