@@ -63,6 +63,8 @@ public class MarshallingMessageConverterTest extends TestCase {
         sessionControl.expectAndReturn(sessionMock.createBytesMessage(), bytesMessageMock);
         marshallerMock.marshal(toBeMarshalled, new StringResult());
         marshallerControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        bytesMessageMock.writeBytes(new byte[0]);
+        bytesMessageControl.setMatcher(MockControl.ALWAYS_MATCHER);
 
         marshallerControl.replay();
         unmarshallerControl.replay();
@@ -82,6 +84,10 @@ public class MarshallingMessageConverterTest extends TestCase {
         BytesMessage bytesMessageMock = (BytesMessage) bytesMessageControl.getMock();
         Object unmarshalled = new Object();
 
+        bytesMessageControl.expectAndReturn(bytesMessageMock.getBodyLength(), 10);
+        bytesMessageMock.readBytes(new byte[0]);
+        bytesMessageControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        bytesMessageControl.setReturnValue(0);
         unmarshallerMock.unmarshal(new StringSource(""));
         unmarshallerControl.setMatcher(MockControl.ALWAYS_MATCHER);
         unmarshallerControl.setReturnValue(unmarshalled);
@@ -101,15 +107,14 @@ public class MarshallingMessageConverterTest extends TestCase {
     }
 
     public void testToTextMessage() throws Exception {
-        converter.setMarshalToTextMessage(true);
+        converter.setMarshalTo(MarshallingMessageConverter.MARSHAL_TO_TEXT_MESSAGE);
         MockControl textMessageControl = MockControl.createControl(TextMessage.class);
         TextMessage textMessageMock = (TextMessage) textMessageControl.getMock();
         Object toBeMarshalled = new Object();
 
-        sessionControl.expectAndReturn(sessionMock.createTextMessage(), textMessageMock);
+        sessionControl.expectAndReturn(sessionMock.createTextMessage(""), textMessageMock);
         marshallerMock.marshal(toBeMarshalled, new StringResult());
         marshallerControl.setMatcher(MockControl.ALWAYS_MATCHER);
-        textMessageMock.setText("");
 
         marshallerControl.replay();
         unmarshallerControl.replay();
