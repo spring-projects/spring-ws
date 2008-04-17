@@ -26,6 +26,7 @@ import junit.framework.TestCase;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.AbstractResource;
 
 public class XmlValidatorFactoryTest extends TestCase {
 
@@ -57,7 +58,7 @@ public class XmlValidatorFactoryTest extends TestCase {
         }
     }
 
-    private static class NonExistentResource implements Resource {
+    private static class NonExistentResource extends AbstractResource {
 
         public Resource createRelative(String relativePath) throws IOException {
             throw new IOException();
