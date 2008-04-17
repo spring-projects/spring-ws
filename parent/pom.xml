@@ -29,7 +29,7 @@
         <url>http://fisheye3.cenqua.com/browse/springframework/spring-ws/trunk</url>
     </scm>
     <properties>
-        <spring.version>2.5.2</spring.version>
+        <spring.version>2.5.3</spring.version>
     </properties>
     <repositories>
         <repository>

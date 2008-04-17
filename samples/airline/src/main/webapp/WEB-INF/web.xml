@@ -12,6 +12,7 @@
             classpath:org/springframework/ws/samples/airline/service/applicationContext.xml
             classpath:org/springframework/ws/samples/airline/security/applicationContext-security.xml
             classpath:org/springframework/ws/samples/airline/ws/applicationContext-ws.xml
+            classpath:org/springframework/ws/samples/airline/jms/applicationContext-jms.xml
         </param-value>
     </context-param>
     <listener>
