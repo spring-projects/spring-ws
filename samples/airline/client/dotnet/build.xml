@@ -26,7 +26,7 @@
 
     <target name="build" depends="generate">
         <mkdir dir="${bin.dir}"/>
-        <csc targettype="exe" destfile="${bin.dir}/airline.exe" references="System.Web.Services">
+        <csc targettype="exe" destfile="${bin.dir}/airline.exe" references="System.Web.Services.dll">
             <src dir="${src.dir}"/>
             <src dir="${gen.dir}"/>
         </csc>
