@@ -10,6 +10,22 @@
                 features of Axis 1 and 2.
             </answer>
         </faq>
+        < faq id="namespace_err">
+            <question>I get <tt>NAMESPACE_ERR</tt> exceptions when using Spring-WS. What can I do about it?</question>
+            <answer>
+                <p>
+                    If you get the following Exception:
+                </p>
+                <pre>
+                    NAMESPACE_ERR: An attempt is made to create or change an object in a way which is incorrect with regard to namespaces.
+                </pre>
+                <p>
+                    Most often, this exception is related to an older version of Xalan being used. Make sure to upgrade
+                    to 2.7.0.
+                </p>
+            </answer>
+        </faq>
+
     </part>
     <part id="java">
         <title>Java</title>
@@ -40,8 +56,9 @@
                     </tbody>
                 </table>
                 <p>
-                    Note that the <code>XwsSecurityInterceptor</code> requires Java 5, because an underlying library (XWSS) requires
-                    it. Instead, you can use the<code>Wss4jSecurityInterceptor</code>.
+                    If you want to use WS-Security, note that the <code>XwsSecurityInterceptor</code> requires Java 5,
+                    because an underlying library (XWSS) requires it. Instead, you can use the
+                    <code>Wss4jSecurityInterceptor</code>.
                 </p>
             </answer>
         </faq>
