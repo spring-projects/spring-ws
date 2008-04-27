@@ -17,19 +17,20 @@
 package org.springframework.ws.soap.saaj.support;
 
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 
-import org.springframework.core.CollectionFactory;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * SAX <code>ContentHandler</code> that transforms callback calls to the creation of SAAJ <code>Node</code>s and
@@ -46,7 +47,7 @@ public class SaajContentHandler implements ContentHandler {
 
     private final SOAPEnvelope envelope;
 
-    private Map namespaces = CollectionFactory.createLinkedMapIfPossible(5);
+    private Map namespaces = new LinkedHashMap();
 
     /**
      * Constructs a new instance of the <code>SaajContentHandler</code> that creates children of the given
