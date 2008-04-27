@@ -44,7 +44,8 @@ public abstract class AbstractAnnotationMethodEndpointMapping extends AbstractMe
     }
 
     public final Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if (getEndpointClass(bean).getAnnotation(getEndpointAnnotationType()) != null) {
+        Class endpointClass = getEndpointClass(bean);
+        if (endpointClass != null && endpointClass.getAnnotation(getEndpointAnnotationType()) != null) {
             registerMethods(bean);
         }
         return bean;
