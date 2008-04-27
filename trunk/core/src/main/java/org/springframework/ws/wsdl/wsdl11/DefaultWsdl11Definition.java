@@ -24,6 +24,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.ws.wsdl.wsdl11.provider.DefaultMessagesProvider;
 import org.springframework.ws.wsdl.wsdl11.provider.InliningXsdSchemaTypesProvider;
 import org.springframework.ws.wsdl.wsdl11.provider.SoapProvider;
+import org.springframework.ws.wsdl.wsdl11.provider.SuffixBasedMessagesProvider;
 import org.springframework.ws.wsdl.wsdl11.provider.SuffixBasedPortTypesProvider;
 import org.springframework.xml.xsd.XsdSchema;
 import org.springframework.xml.xsd.XsdSchemaCollection;
@@ -54,7 +55,7 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 
     private final InliningXsdSchemaTypesProvider typesProvider = new InliningXsdSchemaTypesProvider();
 
-    private final DefaultMessagesProvider messagesProvider = new DefaultMessagesProvider();
+    private final SuffixBasedMessagesProvider messagesProvider = new SuffixBasedMessagesProvider();
 
     private final SuffixBasedPortTypesProvider portTypesProvider = new SuffixBasedPortTypesProvider();
 
@@ -106,16 +107,19 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
     /** Sets the suffix used to detect request elements in the schema. */
     public void setRequestSuffix(String requestSuffix) {
         portTypesProvider.setRequestSuffix(requestSuffix);
+        messagesProvider.setRequestSuffix(requestSuffix);
     }
 
     /** Sets the suffix used to detect response elements in the schema. */
     public void setResponseSuffix(String responseSuffix) {
         portTypesProvider.setResponseSuffix(responseSuffix);
+        messagesProvider.setResponseSuffix(responseSuffix);
     }
 
     /** Sets the suffix used to detect fault elements in the schema. */
     public void setFaultSuffix(String faultSuffix) {
         portTypesProvider.setFaultSuffix(faultSuffix);
+        messagesProvider.setResponseSuffix(faultSuffix);
     }
 
     /** Indicates whether a SOAP 1.1 binding should be created. */
