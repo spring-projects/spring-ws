@@ -33,16 +33,17 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.sax.SaxUtils;
 
-public class DefaultMessagesProviderTest extends TestCase {
+public class SuffixBasedMessagesProviderTest extends TestCase {
 
-    private DefaultMessagesProvider provider;
+    private SuffixBasedMessagesProvider provider;
 
     private Definition definition;
 
     private DocumentBuilder documentBuilder;
 
     protected void setUp() throws Exception {
-        provider = new DefaultMessagesProvider();
+        provider = new SuffixBasedMessagesProvider();
+        provider.setFaultSuffix("Foo");
         WSDLFactory factory = WSDLFactory.newInstance();
         definition = factory.newDefinition();
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -68,7 +69,7 @@ public class DefaultMessagesProviderTest extends TestCase {
 
         provider.addMessages(definition);
 
-        assertEquals("Invalid amount of messages created", 3, definition.getMessages().size());
+        assertEquals("Invalid amount of messages created", 2, definition.getMessages().size());
 
         Message message = definition.getMessage(new QName(definitionNamespace, "GetOrderRequest"));
         assertNotNull("Message not created", message);
@@ -81,11 +82,5 @@ public class DefaultMessagesProviderTest extends TestCase {
         part = message.getPart("GetOrderResponse");
         assertNotNull("Part not created", part);
         assertEquals("Invalid element on part", new QName(schemaNamespace, "GetOrderResponse"), part.getElementName());
-
-        message = definition.getMessage(new QName(definitionNamespace, "GetOrderFault"));
-        assertNotNull("Message not created", message);
-        part = message.getPart("GetOrderFault");
-        assertNotNull("Part not created", part);
-        assertEquals("Invalid element on part", new QName(schemaNamespace, "GetOrderFault"), part.getElementName());
     }
 }

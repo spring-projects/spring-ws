@@ -65,7 +65,7 @@ public class DefaultMessagesProvider implements MessagesProvider {
 
     private void createMessages(Definition definition, Element schemaElement) throws WSDLException {
         String schemaTargetNamespace = schemaElement.getAttribute("targetNamespace");
-        Assert.hasText("No targetNamespace defined on schema");
+        Assert.hasText(schemaTargetNamespace, "No targetNamespace defined on schema");
         if (logger.isDebugEnabled()) {
             logger.debug("Looking for elements in schema with target namespace [" + schemaTargetNamespace + "]");
         }
@@ -75,7 +75,7 @@ public class DefaultMessagesProvider implements MessagesProvider {
             if (child.getNodeType() == Node.ELEMENT_NODE) {
                 Element childElement = (Element) child;
                 if (isMessageElement(childElement)) {
-                    QName elementName = new QName(schemaTargetNamespace, childElement.getAttribute("name"));
+                    QName elementName = new QName(schemaTargetNamespace, getElementName(childElement));
                     Message message = definition.createMessage();
                     populateMessage(definition, message, elementName);
                     Part part = definition.createPart();
@@ -86,6 +86,16 @@ public class DefaultMessagesProvider implements MessagesProvider {
                 }
             }
         }
+    }
+
+    /**
+     * Returns the name attribute of the given element.
+     *
+     * @param element the element whose name to return
+     * @return the name of the element
+     */
+    protected String getElementName(Element element) {
+        return element.getAttribute("name");
     }
 
     /**
