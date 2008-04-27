@@ -168,7 +168,7 @@ public class SaajXmlReader extends AbstractXmlReader {
 
     private void handleText(Text text) throws SAXException {
         if (getContentHandler() != null) {
-            char[] ch = text.getValue().toCharArray();
+            char[] ch = text.getValue() != null ? text.getValue().toCharArray() : new char[0];
             getContentHandler().characters(ch, 0, ch.length);
         }
     }
