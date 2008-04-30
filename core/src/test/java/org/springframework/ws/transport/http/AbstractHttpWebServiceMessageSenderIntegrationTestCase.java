@@ -35,6 +35,12 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
+import org.custommonkey.xmlunit.XMLTestCase;
+import org.custommonkey.xmlunit.XMLUnit;
+import org.mortbay.jetty.Server;
+import org.mortbay.jetty.servlet.Context;
+import org.mortbay.jetty.servlet.ServletHolder;
+
 import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
@@ -44,12 +50,6 @@ import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-
-import org.custommonkey.xmlunit.XMLTestCase;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.Context;
-import org.mortbay.jetty.servlet.ServletHolder;
 
 public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase extends XMLTestCase {
 
@@ -146,6 +146,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
     public void testSendAndReceiveFault() throws Exception {
         MyServlet servlet = new MyServlet();
         servlet.setResponseStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        servlet.setResponse(true);
         jettyContext.addServlet(new ServletHolder(servlet), "/");
         jettyServer.start();
         FaultAwareWebServiceConnection connection =

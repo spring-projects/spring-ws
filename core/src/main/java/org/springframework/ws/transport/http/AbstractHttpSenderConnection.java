@@ -79,7 +79,7 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
         return isGzipResponse() ? new GZIPInputStream(inputStream) : inputStream;
     }
 
-    /** Determine whether the given response is a GZIP response. */
+    /** Determine whether the response is a GZIP response. */
     private boolean isGzipResponse() throws IOException {
         Iterator iterator = getResponseHeaders(HttpTransportConstants.HEADER_CONTENT_ENCODING);
         if (iterator.hasNext()) {
@@ -106,7 +106,17 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
      */
 
     public final boolean hasFault() throws IOException {
-        return HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR == getResponseCode();
+        return HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR == getResponseCode() && isXmlResponse();
+    }
+
+    /** Determine whether the response is a XML message. */
+    private boolean isXmlResponse() throws IOException {
+        Iterator iterator = getResponseHeaders(HttpTransportConstants.HEADER_CONTENT_TYPE);
+        if (iterator.hasNext()) {
+            String contentType = ((String) iterator.next()).toLowerCase();
+            return contentType.indexOf("xml") != -1;
+        }
+        return false;
     }
 
     public final void setFault(boolean fault) {

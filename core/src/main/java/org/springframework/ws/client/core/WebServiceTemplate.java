@@ -121,6 +121,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
     private String defaultUri;
 
+    private boolean checkConnectionForError = true;
+
     private boolean checkConnectionForFault = true;
 
     private ClientInterceptor[] interceptors;
@@ -194,11 +196,30 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     }
 
     /**
-     * Indicates whether the {@link FaultAwareWebServiceConnection#hasFault() connection} should be checked for fault
-     * indicators (<code>true</code>), or whether we should rely on the {@link FaultAwareWebServiceMessage#hasFault()
-     * message} only (<code>false</code>). The default is <code>true</code>.
+     * Indicates whether the {@linkplain WebServiceConnection#hasError() connection} should be checked for error
+     * indicators (<code>true</code>), or whether these should be ignored (<code>false</code>). The default is
+     * <code>true</code>.
      * <p/>
-     * When using a HTTP transport, this property defines whether to check the HTTP response status code for fault
+     * When using an HTTP transport, this property defines whether to check the HTTP response status code is in the 2xx
+     * Successful range. Both the SOAP specification and the WS-I Basic Profile define that a Web service must return a
+     * "200 OK" or "202 Accepted" HTTP status code for a normal response. Setting this property to <code>false</code>
+     * allows this template to deal with non-conformant services.
+     *
+     * @see #hasError(WebServiceConnection, WebServiceMessage)
+     * @see <a href="http://www.w3.org/TR/2000/NOTE-SOAP-20000508/#_Toc478383529">SOAP 1.1 specification</a>
+     * @see <a href="http://www.ws-i.org/Profiles/BasicProfile-1.1.html#HTTP_Success_Status_Codes">WS-I Basic
+     *      Profile</a>
+     */
+    public void setCheckConnectionForError(boolean checkConnectionForError) {
+        this.checkConnectionForError = checkConnectionForError;
+    }
+
+    /**
+     * Indicates whether the {@linkplain FaultAwareWebServiceConnection#hasFault() connection} should be checked for
+     * fault indicators (<code>true</code>), or whether we should rely on the {@link
+     * FaultAwareWebServiceMessage#hasFault() message} only (<code>false</code>). The default is <code>true</code>.
+     * <p/>
+     * When using an HTTP transport, this property defines whether to check the HTTP response status code for fault
      * indicators. Both the SOAP specification and the WS-I Basic Profile define that a Web service must return a "500
      * Internal Server Error" HTTP status code if the response envelope is a Fault. Setting this property to
      * <code>false</code> allows this template to deal with non-conformant services.
@@ -540,8 +561,9 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      * @throws IOException in case of I/O errors
      */
     protected boolean hasError(WebServiceConnection connection, WebServiceMessage request) throws IOException {
-        if (connection.hasError() && checkConnectionForFault) {
-            if (connection instanceof FaultAwareWebServiceConnection) {
+        if (checkConnectionForError && connection.hasError()) {
+            // could be a fault
+            if (checkConnectionForFault && connection instanceof FaultAwareWebServiceConnection) {
                 FaultAwareWebServiceConnection faultConnection = (FaultAwareWebServiceConnection) connection;
                 return !(faultConnection.hasFault() && request instanceof FaultAwareWebServiceMessage);
             }
@@ -562,6 +584,9 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      *         WebServiceMessageExtractor)}, if any
      */
     protected Object handleError(WebServiceConnection connection, WebServiceMessage request) throws IOException {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Received error for request [" + request + "]");
+        }
         throw new WebServiceTransportException(connection.getErrorMessage());
     }
 
@@ -667,8 +692,10 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      *         WebServiceMessageExtractor)}, if any
      */
     protected Object handleFault(WebServiceConnection connection, MessageContext messageContext) throws IOException {
-        if (getFaultMessageResolver() != null) {
+        if (logger.isDebugEnabled()) {
             logger.debug("Received Fault message for request [" + messageContext.getRequest() + "]");
+        }
+        if (getFaultMessageResolver() != null) {
             getFaultMessageResolver().resolveFault(messageContext.getResponse());
             return null;
         }

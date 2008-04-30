@@ -132,6 +132,7 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
             //expected
         }
         template.setCheckConnectionForFault(false);
+        template.setCheckConnectionForError(false);
         try {
             template.sendSourceAndReceiveToResult("http://localhost:8888/soap/badRequestFault",
                     new StringSource(content), result);
