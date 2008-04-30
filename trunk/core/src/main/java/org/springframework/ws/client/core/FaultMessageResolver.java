@@ -21,7 +21,7 @@ import java.io.IOException;
 import org.springframework.ws.WebServiceMessage;
 
 /**
- * Defines the interface for objects than can resolve fault {@link WebServiceMessage}.
+ * Defines the interface for objects than can resolve fault {@link WebServiceMessage}s.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
