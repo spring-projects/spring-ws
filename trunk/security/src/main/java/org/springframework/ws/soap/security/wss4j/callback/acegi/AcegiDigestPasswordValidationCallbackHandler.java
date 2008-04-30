@@ -77,9 +77,10 @@ public class AcegiDigestPasswordValidationCallbackHandler extends AbstractWsPass
 
     protected void handleUsernameTokenPrincipal(UsernameTokenPrincipalCallback callback)
             throws IOException, UnsupportedCallbackException {
+        UserDetails user = loadUserDetails(callback.getPrincipal().getName());
         WSUsernameTokenPrincipal principal = callback.getPrincipal();
         UsernamePasswordAuthenticationToken authRequest =
-                new UsernamePasswordAuthenticationToken(principal, principal.getPassword());
+                new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), user.getAuthorities());
         if (logger.isDebugEnabled()) {
             logger.debug("Authentication success: " + authRequest.toString());
         }
