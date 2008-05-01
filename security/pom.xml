@@ -136,6 +136,7 @@
         <dependency>
             <groupId>org.acegisecurity</groupId>
             <artifactId>acegi-security</artifactId>
+            <optional>true</optional>
         </dependency>
         <!-- Spring Security dependencies -->
         <dependency>

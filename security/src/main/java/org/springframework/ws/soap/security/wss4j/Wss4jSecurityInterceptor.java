@@ -23,6 +23,7 @@ import java.util.Vector;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
+import javax.xml.soap.SOAPException;
 
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
@@ -48,6 +49,7 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.axiom.support.AxiomUtils;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
+import org.springframework.ws.soap.saaj.SaajSoapMessageException;
 import org.springframework.ws.soap.security.AbstractWsSecurityInterceptor;
 import org.springframework.ws.soap.security.WsSecuritySecurementException;
 import org.springframework.ws.soap.security.WsSecurityValidationException;
@@ -590,8 +592,14 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
     /** Converts the given {@link SoapMessage} into a {@link Document}. */
     private Document toDocument(SoapMessage soapMessage) {
         if (soapMessage instanceof SaajSoapMessage) {
-            SaajSoapMessage saajMessage = (SaajSoapMessage) soapMessage;
-            return saajMessage.getSaajMessage().getSOAPPart();
+            javax.xml.soap.SOAPMessage saajMessage = ((SaajSoapMessage) soapMessage).getSaajMessage();
+            try {
+                saajMessage.saveChanges();
+            }
+            catch (SOAPException ex) {
+                throw new SaajSoapMessageException("Could not save changes", ex);
+            }
+            return saajMessage.getSOAPPart();
         }
         else if (soapMessage instanceof AxiomSoapMessage) {
             AxiomSoapMessage axiomMessage = (AxiomSoapMessage) soapMessage;
@@ -608,7 +616,16 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
      * for a {@link SaajSoapMessage}.
      */
     private void replaceMessage(SoapMessage soapMessage, Document envelope) {
-        if (soapMessage instanceof AxiomSoapMessage) {
+        if (soapMessage instanceof SaajSoapMessage) {
+            javax.xml.soap.SOAPMessage saajMessage = ((SaajSoapMessage) soapMessage).getSaajMessage();
+            try {
+                saajMessage.saveChanges();
+            }
+            catch (SOAPException ex) {
+                throw new SaajSoapMessageException("Could not save changes", ex);
+            }
+        }
+        else if (soapMessage instanceof AxiomSoapMessage) {
             // construct a new Axiom message with the processed envelope
             AxiomSoapMessage axiomMessage = (AxiomSoapMessage) soapMessage;
             SOAPEnvelope envelopeFromDOMDocument = AxiomUtils.toEnvelope(envelope);
