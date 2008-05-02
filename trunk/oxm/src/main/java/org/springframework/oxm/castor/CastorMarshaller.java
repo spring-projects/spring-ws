@@ -26,19 +26,22 @@ import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
-import org.castor.mapping.BindingType;
-import org.castor.mapping.MappingUnmarshaller;
 import org.exolab.castor.mapping.Mapping;
 import org.exolab.castor.mapping.MappingException;
-import org.exolab.castor.mapping.MappingLoader;
-import org.exolab.castor.xml.ClassDescriptorResolverFactory;
 import org.exolab.castor.xml.MarshalException;
 import org.exolab.castor.xml.Marshaller;
 import org.exolab.castor.xml.ResolverException;
 import org.exolab.castor.xml.UnmarshalHandler;
 import org.exolab.castor.xml.Unmarshaller;
-import org.exolab.castor.xml.XMLClassDescriptorResolver;
+import org.exolab.castor.xml.XMLContext;
 import org.exolab.castor.xml.XMLException;
+import org.w3c.dom.Node;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.ext.LexicalHandler;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.AbstractMarshaller;
@@ -46,16 +49,11 @@ import org.springframework.oxm.XmlMappingException;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.dom.DomContentHandler;
+import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.stream.StaxEventContentHandler;
 import org.springframework.xml.stream.StaxEventXmlReader;
 import org.springframework.xml.stream.StaxStreamContentHandler;
 import org.springframework.xml.stream.StaxStreamXmlReader;
-import org.w3c.dom.Node;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.ext.LexicalHandler;
 
 /**
  * Implementation of the <code>Marshaller</code> interface for Castor. By default, Castor does not require any further
@@ -87,7 +85,7 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
 
     private Class targetClass;
 
-    private XMLClassDescriptorResolver classDescriptorResolver;
+    private XMLContext xmlContext;
 
     private boolean validating = false;
 
@@ -192,22 +190,51 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
             }
         }
         try {
-            classDescriptorResolver = createClassDescriptorResolver(mappingLocations, targetClass);
+            xmlContext = createXMLContext(mappingLocations, targetClass);
         }
         catch (MappingException ex) {
             throw new CastorSystemException("Could not load Castor mapping: " + ex.getMessage(), ex);
+        }
+        catch (ResolverException rex) {
+            throw new CastorSystemException("Could not load Castor mapping: " + rex.getMessage(), rex);
         }
     }
 
     /** Returns <code>true</code> for all classes, i.e. Castor supports arbitrary classes. */
     public boolean supports(Class clazz) {
-        try {
-            return classDescriptorResolver.resolve(clazz) != null;
-        }
-        catch (ResolverException e) {
-            return false;
-        }
+        return true;
     }
+
+    /**
+     * Creates the Castor <code>XMLContext</code>. Subclasses can override this to create a custom context.
+     * <p/>
+     * The default implementation loads mapping files if defined, and the target class if not defined.
+     *
+     * @return the created resolver
+     * @throws MappingException when the mapping file cannot be loaded
+     * @throws IOException      in case of I/O errors
+     * @see XMLContext#addMapping(org.exolab.castor.mapping.Mapping)
+     * @see XMLContext#addClass(Class)
+     */
+    protected XMLContext createXMLContext(Resource[] mappingLocations, Class targetClass)
+            throws MappingException, IOException, ResolverException {
+        XMLContext context = new XMLContext();
+        if (!ObjectUtils.isEmpty(mappingLocations)) {
+            Mapping mapping = new Mapping();
+            for (int i = 0; i < mappingLocations.length; i++) {
+                mapping.loadMapping(SaxUtils.createInputSource(mappingLocations[i]));
+                context.addMapping(mapping);
+            }
+        }
+        if (targetClass != null) {
+            context.addClass(targetClass);
+        }
+        return context;
+    }
+
+    //
+    // Marshalling
+    //
 
     protected final void marshalDomNode(Object graph, Node node) throws XmlMappingException {
         marshalSaxHandlers(graph, new DomContentHandler(node), null);
@@ -215,12 +242,9 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
 
     protected final void marshalSaxHandlers(Object graph, ContentHandler contentHandler, LexicalHandler lexicalHandler)
             throws XmlMappingException {
-        try {
-            marshal(graph, new Marshaller(contentHandler));
-        }
-        catch (IOException ex) {
-            throw new CastorSystemException("Could not construct Castor ContentHandler Marshaller", ex);
-        }
+        Marshaller marshaller = xmlContext.createMarshaller();
+        marshaller.setContentHandler(contentHandler);
+        marshal(graph, marshaller);
     }
 
     protected final void marshalOutputStream(Object graph, OutputStream outputStream)
@@ -229,7 +253,9 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
     }
 
     protected final void marshalWriter(Object graph, Writer writer) throws XmlMappingException, IOException {
-        marshal(graph, new Marshaller(writer));
+        Marshaller marshaller = xmlContext.createMarshaller();
+        marshaller.setWriter(writer);
+        marshal(graph, marshaller);
     }
 
     protected final void marshalXmlEventWriter(Object graph, XMLEventWriter eventWriter) throws XmlMappingException {
@@ -239,6 +265,30 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
     protected final void marshalXmlStreamWriter(Object graph, XMLStreamWriter streamWriter) throws XmlMappingException {
         marshalSaxHandlers(graph, new StaxStreamContentHandler(streamWriter), null);
     }
+
+    private void marshal(Object graph, Marshaller marshaller) {
+        try {
+            customizeMarshaller(marshaller);
+            marshaller.marshal(graph);
+        }
+        catch (XMLException ex) {
+            throw convertCastorException(ex, true);
+        }
+    }
+
+    /**
+     * Template method that allows for customizing of the given Castor {@link Marshaller}.
+     * <p/>
+     * Default implementation invokes {@link Marshaller#setValidation(boolean)} with the property set on this
+     * marshaller.
+     */
+    protected void customizeMarshaller(Marshaller marshaller) {
+        marshaller.setValidation(isValidating());
+    }
+
+    //
+    // Unmarshalling
+    //
 
     protected final Object unmarshalDomNode(Node node) throws XmlMappingException {
         try {
@@ -301,45 +351,12 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
         }
     }
 
-    /**
-     * Creates the Castor <code>XMLClassDescriptorResolver</code>. Subclasses can override this to create a custom
-     * resolver.
-     * <p/>
-     * The default implementation loads mapping files if defined, or loads the target class if not defined.
-     *
-     * @return the created resolver
-     * @throws MappingException when the mapping file cannot be loaded
-     * @throws IOException      in case of I/O errors
-     */
-    protected XMLClassDescriptorResolver createClassDescriptorResolver(Resource[] mappingLocations, Class targetClass)
-            throws MappingException, IOException {
-        XMLClassDescriptorResolver classDescriptorResolver = (XMLClassDescriptorResolver) ClassDescriptorResolverFactory
-                .createClassDescriptorResolver(BindingType.XML);
-        if (!ObjectUtils.isEmpty(mappingLocations)) {
-            Mapping mapping = new Mapping();
-            for (int i = 0; i < mappingLocations.length; i++) {
-                mapping.loadMapping(new InputSource(mappingLocations[i].getInputStream()));
-            }
-            MappingUnmarshaller mappingUnmarshaller = new MappingUnmarshaller();
-            MappingLoader mappingLoader = mappingUnmarshaller.getMappingLoader(mapping, BindingType.XML);
-            classDescriptorResolver.setMappingLoader(mappingLoader);
-            classDescriptorResolver.setClassLoader(mapping.getClassLoader());
-        }
-        else if (targetClass != null) {
-            classDescriptorResolver.setClassLoader(targetClass.getClassLoader());
-        }
-        return classDescriptorResolver;
-    }
-
     private Unmarshaller createUnmarshaller() {
-        Unmarshaller unmarshaller = null;
+        Unmarshaller unmarshaller = xmlContext.createUnmarshaller();
         if (targetClass != null) {
-            unmarshaller = new Unmarshaller(targetClass);
+            unmarshaller.setClass(targetClass);
+            unmarshaller.setClassLoader(targetClass.getClassLoader());
         }
-        else {
-            unmarshaller = new Unmarshaller();
-        }
-        unmarshaller.setResolver(classDescriptorResolver);
         customizeUnmarshaller(unmarshaller);
         return unmarshaller;
     }
@@ -356,27 +373,6 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
         unmarshaller.setWhitespacePreserve(getWhitespacePreserve());
         unmarshaller.setIgnoreExtraAttributes(getIgnoreExtraAttributes());
         unmarshaller.setIgnoreExtraElements(getIgnoreExtraElements());
-    }
-
-    private void marshal(Object graph, Marshaller marshaller) {
-        try {
-            marshaller.setResolver(classDescriptorResolver);
-            customizeMarshaller(marshaller);
-            marshaller.marshal(graph);
-        }
-        catch (XMLException ex) {
-            throw convertCastorException(ex, true);
-        }
-    }
-
-    /**
-     * Template method that allows for customizing of the given Castor {@link Marshaller}.
-     * <p/>
-     * Default implementation invokes {@link Marshaller#setValidation(boolean)} with the property set on this
-     * marshaller.
-     */
-    protected void customizeMarshaller(Marshaller marshaller) {
-        marshaller.setValidation(isValidating());
     }
 
     /**
