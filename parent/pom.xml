@@ -29,7 +29,7 @@
         <url>http://fisheye3.cenqua.com/browse/springframework/spring-ws/trunk</url>
     </scm>
     <properties>
-        <spring.version>2.5.3</spring.version>
+        <spring.version>2.5.4</spring.version>
     </properties>
     <repositories>
         <repository>
@@ -368,53 +368,7 @@
             <dependency>
                 <groupId>org.codehaus.castor</groupId>
                 <artifactId>castor</artifactId>
-                <version>1.1.2</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>adaptx</groupId>
-                        <artifactId>adaptx</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>ant</groupId>
-                        <artifactId>ant</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>cglib</groupId>
-                        <artifactId>cglib-full</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.cenqua.clover</groupId>
-                        <artifactId>clover</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>oro</groupId>
-                        <artifactId>oro</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>jakarta-regexp</groupId>
-                        <artifactId>jakarta-regexp</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>javax.servlet</groupId>
-                        <artifactId>servlet-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>javax.transaction</groupId>
-                        <artifactId>jta</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>ldapsdk</groupId>
-                        <artifactId>ldapsdk</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>log4j</groupId>
-                        <artifactId>log4j</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>xerces</groupId>
-                        <artifactId>xerces</artifactId>
-                    </exclusion>
-                </exclusions>
+                <version>1.2</version>
             </dependency>
             <!-- XMLBeans -->
             <dependency>
@@ -475,7 +429,7 @@
             <dependency>
                 <groupId>org.apache.ws.commons.axiom</groupId>
                 <artifactId>axiom-api</artifactId>
-                <version>1.2.5</version>
+                <version>1.2.7</version>
                 <exclusions>
                     <exclusion>
                         <groupId>jaxen</groupId>
@@ -498,7 +452,7 @@
             <dependency>
                 <groupId>org.apache.ws.commons.axiom</groupId>
                 <artifactId>axiom-impl</artifactId>
-                <version>1.2.5</version>
+                <version>1.2.7</version>
                 <exclusions>
                     <exclusion>
                         <groupId>jaxen</groupId>
@@ -646,7 +600,12 @@
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-core</artifactId>
-                <version>2.0.0</version>
+                <version>2.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-core-tiger</artifactId>
+                <version>2.0.1</version>
             </dependency>
             <!-- JEE dependencies -->
             <dependency>
