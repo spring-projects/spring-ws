@@ -21,6 +21,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.Iterator;
+import java.util.Properties;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamReader;
@@ -95,6 +97,8 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
 
     private boolean ignoreExtraElements = false;
 
+    private Properties namespaceMappings;
+
     /** Returns whether the Castor  {@link Unmarshaller} should ignore attributes that do not match a specific field. */
     public boolean getIgnoreExtraAttributes() {
         return ignoreExtraAttributes;
@@ -103,6 +107,8 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
     /**
      * Sets whether the Castor  {@link Unmarshaller} should ignore attributes that do not match a specific field.
      * Default is <code>true</code>: extra attributes are ignored.
+     *
+     * @see org.exolab.castor.xml.Unmarshaller#setIgnoreExtraAttributes(boolean)
      */
     public void setIgnoreExtraAttributes(boolean ignoreExtraAttributes) {
         this.ignoreExtraAttributes = ignoreExtraAttributes;
@@ -116,6 +122,8 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
     /**
      * Sets whether the Castor  {@link Unmarshaller} should ignore elements that do not match a specific field. Default
      * is <code>false</code>, extra attributes are flagged as an error.
+     *
+     * @see org.exolab.castor.xml.Unmarshaller#setIgnoreExtraElements(boolean)
      */
     public void setIgnoreExtraElements(boolean ignoreExtraElements) {
         this.ignoreExtraElements = ignoreExtraElements;
@@ -129,6 +137,8 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
     /**
      * Sets whether the Castor {@link Unmarshaller} should preserve "ignorable" whitespace. Default is
      * <code>false</code>.
+     *
+     * @see org.exolab.castor.xml.Unmarshaller#setWhitespacePreserve(boolean)
      */
     public void setWhitespacePreserve(boolean whitespacePreserve) {
         this.whitespacePreserve = whitespacePreserve;
@@ -139,9 +149,27 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
         return validating;
     }
 
-    /** Sets whether this marshaller should validate in- and outgoing documents. Default is <code>false</code>. */
+    /**
+     * Sets whether this marshaller should validate in- and outgoing documents. Default is <code>false</code>.
+     *
+     * @see Marshaller#setValidation(boolean)
+     */
     public void setValidating(boolean validating) {
         this.validating = validating;
+    }
+
+    /** Returns the namespace mappings. Property names are interpreted as namespace prefixes; values are namespace URIs. */
+    public Properties getNamespaceMappings() {
+        return namespaceMappings;
+    }
+
+    /**
+     * Sets the namespace mappings. Property names are interpreted as namespace prefixes; values are namespace URIs.
+     *
+     * @see org.exolab.castor.xml.Marshaller#setNamespaceMapping(String, String)
+     */
+    public void setNamespaceMappings(Properties namespaceMappings) {
+        this.namespaceMappings = namespaceMappings;
     }
 
     /**
@@ -280,10 +308,19 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
      * Template method that allows for customizing of the given Castor {@link Marshaller}.
      * <p/>
      * Default implementation invokes {@link Marshaller#setValidation(boolean)} with the property set on this
-     * marshaller.
+     * marshaller, and calls {@link Marshaller#setNamespaceMapping(String, String)} with the {@linkplain
+     * #setNamespaceMappings(java.util.Properties) namespace mappings}.
      */
     protected void customizeMarshaller(Marshaller marshaller) {
         marshaller.setValidation(isValidating());
+        Properties namespaceMappings = getNamespaceMappings();
+        if (namespaceMappings != null) {
+            for (Iterator iterator = namespaceMappings.keySet().iterator(); iterator.hasNext();) {
+                String prefix = (String) iterator.next();
+                String uri = namespaceMappings.getProperty(prefix);
+                marshaller.setNamespaceMapping(prefix, uri);
+            }
+        }
     }
 
     //
