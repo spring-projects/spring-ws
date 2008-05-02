@@ -321,11 +321,6 @@ public class WebServiceTemplateTest extends XMLTestCase {
         marshallerControl.setMatcher(MockControl.ALWAYS_MATCHER);
         marshallerControl.replay();
 
-        MockControl unmarshallerControl = MockControl.createControl(Unmarshaller.class);
-        Unmarshaller unmarshallerMock = (Unmarshaller) unmarshallerControl.getMock();
-        template.setUnmarshaller(unmarshallerMock);
-        unmarshallerControl.replay();
-
         connectionMock.send(null);
         connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
         connectionControl.expectAndReturn(connectionMock.hasError(), false);
@@ -338,7 +333,6 @@ public class WebServiceTemplateTest extends XMLTestCase {
 
         connectionControl.verify();
         marshallerControl.verify();
-        unmarshallerControl.verify();
     }
 
     public void testSendAndReceiveCustomUri() throws Exception {

@@ -28,14 +28,17 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeader;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -50,6 +53,9 @@ import org.mortbay.jetty.servlet.ServletHolder;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import org.springframework.oxm.Marshaller;
+import org.springframework.oxm.Unmarshaller;
+import org.springframework.oxm.XmlMappingException;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.client.WebServiceTransportException;
 import org.springframework.ws.pox.dom.DomPoxMessageFactory;
@@ -67,16 +73,18 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
 
     private static Server jettyServer;
 
+    private String messagePayload;
+
     public static Test suite() {
         return new ServerTestSetup(new TestSuite(WebServiceTemplateIntegrationTest.class));
     }
 
     public void testAxiom() throws Exception {
-        testSoap(new AxiomSoapMessageFactory());
+        doSoap(new AxiomSoapMessageFactory());
     }
 
     public void testWithSaaj() throws Exception {
-        testSoap(new SaajSoapMessageFactory(MessageFactory.newInstance()));
+        doSoap(new SaajSoapMessageFactory(MessageFactory.newInstance()));
     }
 
     public void testPox() throws Exception {
@@ -104,44 +112,131 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
         }
     }
 
-    private void testSoap(SoapMessageFactory messageFactory)
-            throws SAXException, IOException, ParserConfigurationException {
+    private void doSoap(SoapMessageFactory messageFactory) throws Exception {
         template = new WebServiceTemplate(messageFactory);
         template.setMessageSender(new CommonsHttpMessageSender());
-        String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
+        sendSourceAndReceiveToResult();
+        sendSourceAndReceiveToResultNoResponse();
+        marshalSendAndReceiveResponse();
+        marshalSendAndReceiveNoResponse();
+        notFound();
+        fault();
+        faultNonCompliant();
+    }
+
+    private void sendSourceAndReceiveToResult() throws SAXException, IOException {
+        messagePayload = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
         StringResult result = new StringResult();
-        template.sendSourceAndReceiveToResult("http://localhost:8888/soap/echo", new StringSource(content), result);
-        assertXMLEqual(content, result.toString());
+        boolean b = template.sendSourceAndReceiveToResult("http://localhost:8888/soap/echo",
+                new StringSource(messagePayload), result);
+        assertTrue("Invalid result", b);
+        assertXMLEqual(messagePayload, result.toString());
+    }
+
+    private void sendSourceAndReceiveToResultNoResponse() {
         boolean b = template.sendSourceAndReceiveToResult("http://localhost:8888/soap/noResponse",
-                new StringSource(content), new StringResult());
+                new StringSource(messagePayload), new StringResult());
         assertFalse("Invalid result", b);
+    }
+
+    private void marshalSendAndReceiveResponse() throws TransformerConfigurationException {
+        final Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        final Object requestObject = new Object();
+        Marshaller marshaller = new Marshaller() {
+
+            public void marshal(Object graph, Result result) throws XmlMappingException, IOException {
+                assertEquals("Invalid object", graph, requestObject);
+                try {
+                    transformer.transform(new StringSource(messagePayload), result);
+                }
+                catch (TransformerException e) {
+                    fail(e.getMessage());
+                }
+            }
+
+            public boolean supports(Class clazz) {
+                assertEquals("Invalid class", Object.class, clazz);
+                return true;
+            }
+        };
+        final Object responseObject = new Object();
+        Unmarshaller unmarshaller = new Unmarshaller() {
+
+            public Object unmarshal(Source source) throws XmlMappingException, IOException {
+                return responseObject;
+            }
+
+            public boolean supports(Class clazz) {
+                assertEquals("Invalid class", Object.class, clazz);
+                return true;
+            }
+        };
+        template.setMarshaller(marshaller);
+        template.setUnmarshaller(unmarshaller);
+        Object result = template.marshalSendAndReceive("http://localhost:8888/soap/echo", requestObject);
+        assertEquals("Invalid response object", responseObject, result);
+    }
+
+    private void marshalSendAndReceiveNoResponse() throws TransformerConfigurationException {
+        final Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        final Object requestObject = new Object();
+        Marshaller marshaller = new Marshaller() {
+
+            public void marshal(Object graph, Result result) throws XmlMappingException, IOException {
+                assertEquals("Invalid object", graph, requestObject);
+                try {
+                    transformer.transform(new StringSource(messagePayload), result);
+                }
+                catch (TransformerException e) {
+                    fail(e.getMessage());
+                }
+            }
+
+            public boolean supports(Class clazz) {
+                assertEquals("Invalid class", Object.class, clazz);
+                return true;
+            }
+        };
+        template.setMarshaller(marshaller);
+        Object result = template.marshalSendAndReceive("http://localhost:8888/soap/noResponse", requestObject);
+        assertNull("Invalid response object", result);
+    }
+
+    private void notFound() {
         try {
-            template.sendSourceAndReceiveToResult("http://localhost:8888/errors/notfound", new StringSource(content),
-                    new StringResult());
+            template.sendSourceAndReceiveToResult("http://localhost:8888/errors/notfound",
+                    new StringSource(messagePayload), new StringResult());
             fail("WebServiceTransportException expected");
         }
         catch (WebServiceTransportException ex) {
             //expected
         }
+    }
+
+    private void fault() {
+        Result result = new StringResult();
         try {
-            template.sendSourceAndReceiveToResult("http://localhost:8888/soap/fault", new StringSource(content),
+            template.sendSourceAndReceiveToResult("http://localhost:8888/soap/fault", new StringSource(messagePayload),
                     result);
             fail("SoapFaultClientException expected");
         }
         catch (SoapFaultClientException ex) {
             //expected
         }
+    }
+
+    private void faultNonCompliant() {
+        Result result = new StringResult();
         template.setCheckConnectionForFault(false);
         template.setCheckConnectionForError(false);
         try {
             template.sendSourceAndReceiveToResult("http://localhost:8888/soap/badRequestFault",
-                    new StringSource(content), result);
+                    new StringSource(messagePayload), result);
             fail("SoapFaultClientException expected");
         }
         catch (SoapFaultClientException ex) {
             //expected
         }
-        template.setCheckConnectionForFault(true);
     }
 
     /** Servlet that returns and error message for a given status code. */
