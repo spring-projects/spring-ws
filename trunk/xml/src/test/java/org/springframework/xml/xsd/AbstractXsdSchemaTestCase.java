@@ -85,6 +85,19 @@ public abstract class AbstractXsdSchemaTestCase extends XMLTestCase {
         assertXMLEqual("Invalid Source returned", expected, result);
     }
 
+    public void testXmlNamespace() throws Exception {
+        Resource resource = new ClassPathResource("xmlNamespace.xsd", AbstractXsdSchemaTestCase.class);
+        XsdSchema importing = createSchema(resource);
+        String namespace = "http://www.springframework.org/spring-ws/xmlNamespace";
+        assertEquals("Invalid target namespace", namespace, importing.getTargetNamespace());
+        resource = new ClassPathResource("xmlNamespace.xsd", AbstractXsdSchemaTestCase.class);
+        Document expected = documentBuilder.parse(SaxUtils.createInputSource(resource));
+        DOMResult domResult = new DOMResult();
+        transformer.transform(importing.getSource(), domResult);
+        Document result = (Document) domResult.getNode();
+        assertXMLEqual("Invalid Source returned", expected, result);
+    }
+
     public void testCreateValidator() throws Exception {
         Resource resource = new ClassPathResource("single.xsd", AbstractXsdSchemaTestCase.class);
         XsdSchema single = createSchema(resource);

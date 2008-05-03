@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            targetNamespace="http://www.springframework.org/spring-ws/include/schema"
-            xmlns="http://www.springframework.org/spring-ws/include/schema" elementFormDefault="qualified"
+            targetNamespace="http://www.springframework.org/spring-ws/xmlNamespace"
+            xmlns="http://www.springframework.org/spring-ws/xmlNamespace" elementFormDefault="qualified"
             attributeFormDefault="unqualified">
 
-    <xsd:include schemaLocation="included.xsd"/>
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
 
     <xsd:element name="GetOrderRequest">
@@ -15,6 +14,5 @@
             <xsd:attribute ref="xml:lang" use="required"/>
         </xsd:complexType>
     </xsd:element>
-
 
 </xsd:schema>
