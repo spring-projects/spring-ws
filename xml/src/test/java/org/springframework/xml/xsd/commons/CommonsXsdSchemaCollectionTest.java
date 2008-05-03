@@ -90,6 +90,15 @@ public class CommonsXsdSchemaCollectionTest extends XMLTestCase {
         assertEquals("Invalid amount of XSDs loaded", 1, schemas.length);
     }
 
+    public void testXmlNamespace() throws Exception {
+        Resource resource = new ClassPathResource("xmlNamespace.xsd", AbstractXsdSchemaTestCase.class);
+        collection.setXsds(new Resource[]{resource});
+        collection.setInline(true);
+        collection.afterPropertiesSet();
+        XsdSchema[] schemas = collection.getXsdSchemas();
+        assertEquals("Invalid amount of XSDs loaded", 1, schemas.length);
+    }
+
     public void testCreateValidator() throws Exception {
         Resource a = new ClassPathResource("A.xsd", AbstractXsdSchemaTestCase.class);
         collection.setXsds(new Resource[]{a});

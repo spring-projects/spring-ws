@@ -163,8 +163,10 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
         for (int i = 0; i < imports.getCount(); i++) {
             XmlSchemaExternal external = (XmlSchemaExternal) imports.getItem(i);
             if (external instanceof XmlSchemaImport) {
-                XmlSchema importedSchema = external.getSchema();
-                if (importedSchema != null && !processedSchemas.contains(importedSchema)) {
+                XmlSchemaImport schemaImport = (XmlSchemaImport) external;
+                XmlSchema importedSchema = schemaImport.getSchema();
+                if (!"http://www.w3.org/XML/1998/namespace".equals(schemaImport.getNamespace()) &&
+                        importedSchema != null && !processedSchemas.contains(importedSchema)) {
                     inlineIncludes(importedSchema, processedSchemas);
                     findImports(importedSchema, processedSchemas);
                     xmlSchemas.add(importedSchema);
