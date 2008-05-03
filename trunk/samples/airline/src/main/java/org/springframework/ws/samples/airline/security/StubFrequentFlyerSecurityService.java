@@ -22,7 +22,7 @@ import org.springframework.ws.samples.airline.service.NoSuchFrequentFlyerExcepti
 /**
  * Stub implementation of <code>FrequentFlyerSecurityService</code>. This implementation is used by default by {@link
  * org.springframework.ws.samples.airline.service.impl.AirlineServiceImpl}, to allow it to run without depending on
- * Acegi Security.
+ * Spring Security.
  *
  * @author Arjen Poutsma
  */

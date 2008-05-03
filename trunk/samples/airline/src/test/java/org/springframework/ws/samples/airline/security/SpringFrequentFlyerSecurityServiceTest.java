@@ -17,23 +17,24 @@
 package org.springframework.ws.samples.airline.security;
 
 import junit.framework.TestCase;
-import org.acegisecurity.context.SecurityContext;
-import org.acegisecurity.context.SecurityContextHolder;
-import org.acegisecurity.context.SecurityContextImpl;
-import org.acegisecurity.providers.TestingAuthenticationToken;
 import static org.easymock.EasyMock.*;
+
+import org.springframework.security.context.SecurityContext;
+import org.springframework.security.context.SecurityContextHolder;
+import org.springframework.security.context.SecurityContextImpl;
+import org.springframework.security.providers.TestingAuthenticationToken;
 import org.springframework.ws.samples.airline.dao.FrequentFlyerDao;
 import org.springframework.ws.samples.airline.domain.FrequentFlyer;
 
-public class AcegiFrequentFlyerSecurityServiceTest extends TestCase {
+public class SpringFrequentFlyerSecurityServiceTest extends TestCase {
 
-    private AcegiFrequentFlyerSecurityService securityService;
+    private SpringFrequentFlyerSecurityService securityService;
 
     private FrequentFlyerDao flyerDaoMock;
 
     protected void setUp() throws Exception {
         flyerDaoMock = createMock(FrequentFlyerDao.class);
-        securityService = new AcegiFrequentFlyerSecurityService(flyerDaoMock);
+        securityService = new SpringFrequentFlyerSecurityService(flyerDaoMock);
     }
 
     public void testGetCurrentlyAuthenticatedFrequentFlyer() throws Exception {
