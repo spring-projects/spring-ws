@@ -1,0 +1,22 @@
+Dear Spring community,
+
+I'm pleased to announce that Spring Web Services 1.5.1 has been released!
+
+This is the first bug fix and enhancement release in the Spring-WS 1.5 series. 
+It fixes all bugs reported since 1.5.0 and introduces various enhancements
+throughout the framework:
+
+* Introduced a Spring JMS MessageConverter that uses OXM marshallers
+* Introduced a Spring MVC View that uses OXM marshallers
+* Fixed WS-Security signatures when using WSS4J in combination with SAAJ
+  messages
+* Support for timeouts on HTTP transports
+* Support for Castor 1.2, see note below
+* Airline sample now uses Spring Security
+
+and more. Please see the changelog for details.
+
+For more information, see http://static.springframework.org/spring-ws/site/
+
+Please note that - due to a backwards compatibility issue - the
+CastorMarshaller now requires Castor 1.2 or higher.

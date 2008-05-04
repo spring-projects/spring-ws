@@ -20,8 +20,8 @@
         <artifact:dependencies pathId="classpath">
             <remoteRepository refid="main"/>
             <remoteRepository refid="java.net"/>
-            <dependency groupId="org.springframework.ws" artifactId="spring-ws-core" version="1.5.0"/>
-            <dependency groupId="org.springframework.ws" artifactId="spring-ws-security" version="1.5.0"/>
+            <dependency groupId="org.springframework.ws" artifactId="spring-ws-core" version="1.5.1"/>
+            <dependency groupId="org.springframework.ws" artifactId="spring-ws-security" version="1.5.1"/>
             <dependency groupId="com.sun.xml.messaging.saaj" artifactId="saaj-impl" version="1.3"/>
             <dependency groupId="commons-httpclient" artifactId="commons-httpclient" version="3.0.1"/>
             <dependency groupId="xmlbeans" artifactId="xbean" version="2.2.0"/>
