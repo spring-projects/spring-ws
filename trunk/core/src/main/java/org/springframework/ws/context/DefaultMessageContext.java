@@ -82,6 +82,10 @@ public class DefaultMessageContext extends AbstractMessageContext {
         response = messageFactory.createWebServiceMessage(inputStream);
     }
 
+    public WebServiceMessageFactory getMessageFactory() {
+        return messageFactory;
+    }
+
     private void checkForResponse() throws IllegalStateException {
         if (response != null) {
             throw new IllegalStateException("Response message already created");
