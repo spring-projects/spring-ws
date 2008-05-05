@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.core.Ordered;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointExceptionResolver;
@@ -30,6 +31,7 @@ import org.springframework.ws.server.EndpointExceptionResolver;
  * <p>Provides a set of mapped endpoints that the resolver should map.
  *
  * @author Arjen Poutsma
+ * @author Tareq Abed Rabbo
  * @since 1.0.0
  */
 public abstract class AbstractEndpointExceptionResolver implements EndpointExceptionResolver, Ordered {
@@ -75,6 +77,9 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
      * @see #resolveExceptionInternal(MessageContext,Object,Exception)
      */
     public final boolean resolveException(MessageContext messageContext, Object endpoint, Exception ex) {
+        if (endpoint instanceof MethodEndpoint) {
+            endpoint = ((MethodEndpoint) endpoint).getBean();
+        }
         if (mappedEndpoints != null && !mappedEndpoints.contains(endpoint)) {
             return false;
         }
