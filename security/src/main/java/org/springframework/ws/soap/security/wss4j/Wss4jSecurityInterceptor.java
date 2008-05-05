@@ -16,6 +16,8 @@
 
 package org.springframework.ws.soap.security.wss4j;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.Principal;
 import java.security.cert.X509Certificate;
@@ -23,7 +25,7 @@ import java.util.Vector;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
-import javax.xml.soap.SOAPException;
+import javax.xml.soap.MessageFactory;
 
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
@@ -44,12 +46,14 @@ import org.w3c.dom.Document;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.axiom.support.AxiomUtils;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageException;
+import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.security.AbstractWsSecurityInterceptor;
 import org.springframework.ws.soap.security.WsSecuritySecurementException;
 import org.springframework.ws.soap.security.WsSecurityValidationException;
@@ -440,7 +444,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         }
         RequestData requestData = initializeRequestData(messageContext);
 
-        Document envelopeAsDocument = toDocument(soapMessage);
+        Document envelopeAsDocument = toDocument(soapMessage, messageContext);
         try {
             // In case on signature confirmation with no other securement
             // action, we need to pass an empty securementActionsVector to avoid
@@ -485,7 +489,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
             return;
         }
 
-        Document envelopeAsDocument = toDocument(soapMessage);
+        Document envelopeAsDocument = toDocument(soapMessage, messageContext);
 
         // Header processing
         WSSecurityEngine securityEngine = WSSecurityEngine.getInstance();
@@ -590,16 +594,27 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
     }
 
     /** Converts the given {@link SoapMessage} into a {@link Document}. */
-    private Document toDocument(SoapMessage soapMessage) {
+    private Document toDocument(SoapMessage soapMessage, MessageContext messageContext) {
         if (soapMessage instanceof SaajSoapMessage) {
-            javax.xml.soap.SOAPMessage saajMessage = ((SaajSoapMessage) soapMessage).getSaajMessage();
+            SaajSoapMessage saajSoapMessage = (SaajSoapMessage) soapMessage;
+            // return saajSoapMessage.getSaajMessage().getSOAPPart(); // does not work, see SWS-345
+            Assert.isInstanceOf(DefaultMessageContext.class, messageContext);
+            DefaultMessageContext defaultMessageContext = (DefaultMessageContext) messageContext;
+            Assert.isInstanceOf(SaajSoapMessageFactory.class, defaultMessageContext.getMessageFactory());
+            MessageFactory messageFactory =
+                    ((SaajSoapMessageFactory) defaultMessageContext.getMessageFactory()).getMessageFactory();
             try {
-                saajMessage.saveChanges();
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                saajSoapMessage.writeTo(bos);
+                ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+                javax.xml.soap.SOAPMessage saajMessage =
+                        messageFactory.createMessage(saajSoapMessage.getSaajMessage().getMimeHeaders(), bis);
+                saajSoapMessage.setSaajMessage(saajMessage);
+                return saajMessage.getSOAPPart();
             }
-            catch (SOAPException ex) {
+            catch (Exception ex) {
                 throw new SaajSoapMessageException("Could not save changes", ex);
             }
-            return saajMessage.getSOAPPart();
         }
         else if (soapMessage instanceof AxiomSoapMessage) {
             AxiomSoapMessage axiomMessage = (AxiomSoapMessage) soapMessage;
@@ -612,20 +627,10 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     /**
      * Replaces the contents of the given {@link SoapMessage} with that of the document parameter. Only required when
-     * using Axiom, since the document returned by {@link #toDocument(org.springframework.ws.soap.SoapMessage)} is live
-     * for a {@link SaajSoapMessage}.
+     * using Axiom, since the document returned by {@link #toDocument} is live for a {@link SaajSoapMessage}.
      */
     private void replaceMessage(SoapMessage soapMessage, Document envelope) {
-        if (soapMessage instanceof SaajSoapMessage) {
-            javax.xml.soap.SOAPMessage saajMessage = ((SaajSoapMessage) soapMessage).getSaajMessage();
-            try {
-                saajMessage.saveChanges();
-            }
-            catch (SOAPException ex) {
-                throw new SaajSoapMessageException("Could not save changes", ex);
-            }
-        }
-        else if (soapMessage instanceof AxiomSoapMessage) {
+        if (soapMessage instanceof AxiomSoapMessage) {
             // construct a new Axiom message with the processed envelope
             AxiomSoapMessage axiomMessage = (AxiomSoapMessage) soapMessage;
             SOAPEnvelope envelopeFromDOMDocument = AxiomUtils.toEnvelope(envelope);
