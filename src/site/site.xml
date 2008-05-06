@@ -21,7 +21,7 @@
             <script type="text/javascript" language="javascript">
                 i=11692
             </script>
-            <script type="text/javascript" language="javascript" src="http://t4.trackalyzer.com/trackalyze.js"/>
+            <script type="text/javascript" language="javascript" src="http://t4.trackalyzer.com/trackalyze.js"></script>
         </head>
         <menu name="Overview">
             <item name="Home" href="index.html"/>
