@@ -92,12 +92,33 @@ public class SaajContentHandler implements ContentHandler {
             for (Iterator iterator = namespaces.keySet().iterator(); iterator.hasNext();) {
                 String namespacePrefix = (String) iterator.next();
                 String namespaceUri = (String) namespaces.get(namespacePrefix);
-                child.addNamespaceDeclaration(namespacePrefix, namespaceUri);
+                if (!findParentNamespaceDeclaration(child, namespacePrefix, namespaceUri)) {
+                    child.addNamespaceDeclaration(namespacePrefix, namespaceUri);
+                }
             }
             element = child;
         }
         catch (SOAPException ex) {
             throw new SAXException(ex);
+        }
+    }
+
+    private boolean findParentNamespaceDeclaration(SOAPElement element, String prefix, String namespaceUri) {
+        String result = element.getNamespaceURI(prefix);
+        if (namespaceUri.equals(result)) {
+            return true;
+        }
+        else {
+            try {
+                SOAPElement parent = element.getParentElement();
+                if (parent != null) {
+                    return findParentNamespaceDeclaration(parent, prefix, namespaceUri);
+                }
+            }
+            catch (UnsupportedOperationException ex) {
+                // ignore
+            }
+            return false;
         }
     }
 
