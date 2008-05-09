@@ -18,7 +18,9 @@ package org.springframework.xml.xsd.commons;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.ws.commons.schema.ValidationEventHandler;
 import org.apache.ws.commons.schema.XmlSchema;
@@ -104,14 +106,19 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 
     public void afterPropertiesSet() throws IOException {
         Assert.notEmpty(xsdResources, "'xsds' must not be empty");
+
+        Set processedIncludes = new HashSet();
+        Set processedImports = new HashSet();
+
         for (int i = 0; i < xsdResources.length; i++) {
             Assert.isTrue(xsdResources[i].exists(), xsdResources[i] + " does not exit");
-            XmlSchema xmlSchema =
-                    schemaCollection.read(SaxUtils.createInputSource(xsdResources[i]), validationEventHandler);
+            XmlSchema xmlSchema = schemaCollection
+                    .read(SaxUtils.createInputSource(xsdResources[i]), validationEventHandler);
             xmlSchemas.add(xmlSchema);
+
             if (inline) {
-                inlineIncludes(xmlSchema, new ArrayList());
-                findImports(xmlSchema, new ArrayList());
+                inlineIncludes(xmlSchema, processedIncludes, processedImports);
+                findImports(xmlSchema, processedImports, processedIncludes);
             }
         }
     }
@@ -134,18 +141,20 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
         return XmlValidatorFactory.createValidator(resources, XmlValidatorFactory.SCHEMA_W3C_XML);
     }
 
-    private void inlineIncludes(XmlSchema schema, List processedSchemas) {
-        processedSchemas.add(schema);
+    private void inlineIncludes(XmlSchema schema, Set processedIncludes, Set processedImports) {
+        processedIncludes.add(schema);
         XmlSchemaObjectCollection includes = schema.getIncludes();
         for (int i = 0; i < includes.getCount(); i++) {
-            XmlSchemaExternal external = (XmlSchemaExternal) includes.getItem(i);
+            XmlSchemaExternal external = (XmlSchemaExternal) includes
+                    .getItem(i);
             if (external instanceof XmlSchemaInclude) {
                 XmlSchema includedSchema = external.getSchema();
                 XmlSchemaObjectCollection items = schema.getItems();
-                if (!processedSchemas.contains(includedSchema)) {
-                    inlineIncludes(includedSchema, processedSchemas);
-                    findImports(includedSchema, new ArrayList());
-                    XmlSchemaObjectCollection includeItems = includedSchema.getItems();
+                if (!processedIncludes.contains(includedSchema)) {
+                    inlineIncludes(includedSchema, processedIncludes, processedImports);
+                    findImports(includedSchema, processedImports, processedIncludes);
+                    XmlSchemaObjectCollection includeItems = includedSchema
+                            .getItems();
                     for (int j = 0; j < includeItems.getCount(); j++) {
                         XmlSchemaObject includedItem = includeItems.getItem(j);
                         items.add(includedItem);
@@ -157,18 +166,18 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
         }
     }
 
-    private void findImports(XmlSchema schema, List processedSchemas) {
-        processedSchemas.add(schema);
-        XmlSchemaObjectCollection imports = schema.getIncludes();
-        for (int i = 0; i < imports.getCount(); i++) {
-            XmlSchemaExternal external = (XmlSchemaExternal) imports.getItem(i);
+    private void findImports(XmlSchema schema, Set processedImports, Set processedIncludes) {
+        processedImports.add(schema);
+        XmlSchemaObjectCollection includes = schema.getIncludes();
+        for (int i = 0; i < includes.getCount(); i++) {
+            XmlSchemaExternal external = (XmlSchemaExternal) includes.getItem(i);
             if (external instanceof XmlSchemaImport) {
                 XmlSchemaImport schemaImport = (XmlSchemaImport) external;
                 XmlSchema importedSchema = schemaImport.getSchema();
                 if (!"http://www.w3.org/XML/1998/namespace".equals(schemaImport.getNamespace()) &&
-                        importedSchema != null && !processedSchemas.contains(importedSchema)) {
-                    inlineIncludes(importedSchema, processedSchemas);
-                    findImports(importedSchema, processedSchemas);
+                        importedSchema != null && !processedImports.contains(importedSchema)) {
+                    inlineIncludes(importedSchema, processedIncludes, processedImports);
+                    findImports(importedSchema, processedImports, processedIncludes);
                     xmlSchemas.add(importedSchema);
                 }
                 // remove the schemaLocation
@@ -190,6 +199,5 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
         buffer.append('}');
         return buffer.toString();
     }
-
 
 }
