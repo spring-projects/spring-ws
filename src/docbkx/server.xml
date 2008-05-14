@@ -718,6 +718,125 @@ public class MarshallingOrderEndpoint extends AbstractMarshallingPayloadEndpoint
                 <literal>marshaller</literal> bean.
             </para>
         </section>
+        <section>
+			<title>Using Spring <interfacename>Validator</interfacename> with Marshalling Endpoints</title>
+           	<para>
+           		It is possible to use <ulink url="http://static.springframework.org/spring/docs/2.5.x/reference/validation.html#validator"><interfacename>Validator</interfacename></ulink> 
+           		objects in conjunction with marshalling endpoints in order to validate the unmarshalled payloads.
+           		Spring-WS provides 2 extensions of <classname>AbstractMarshallingPayloadEndpoint</classname> for that purpose:
+           		<classname>AbstractValidatingMarshallingPayloadEndpoint</classname> and 
+           		<classname>AbstractFaultCreatingValidatingMarshallingPayloadEndpoint</classname>. The former is the most
+           		general whereas the latter specializes in creating SOAP faults in response to validation errors. 
+           	</para>
+           	<para>
+           		Both classes support setting one or more <interfacename>Validator</interfacename> objects via the 
+           		<property>validator</property> and <property>validators</property> properties respectively.
+           		Note that all of the injected validators
+           		<emphasis role="bold">must</emphasis> support the request object (through the <methodname>supports</methodname> method)
+           		or else an <exceptionname>IllegalArgumentException</exceptionname> will be thrown.
+           	</para>
+           	<note>
+				<para>
+					The default request object name used in the validator is <literal>request</literal>.
+					The error codes are	generated in consequence. For instance, assuming a POJO with a 
+					"<property>name</property>" property of type <literal>java.lang.String</literal>,
+					calling <methodname>errors.rejectValue("name","invalidValue")</methodname> in the 
+					<methodname>validate</methodname> method of a <interfacename>Validator</interfacename>
+					 generates the following error codes:
+					<literal>invalidValue.request.name</literal>, <literal>invalidValue.name</literal>, 
+					<literal>invalidValue.java.lang.String</literal> and <literal>invalidValue</literal>.
+					 Similarly, calling <methodname>errors.reject("invalidValue")</methodname>
+					 generates  <literal>invalidValue.request</literal> and <literal>invalidValue</literal> as error codes.  
+				</para>	           	
+           	</note>           	
+           	<section>
+           		<title><classname>AbstractValidatingMarshallingPayloadEndpoint</classname></title>
+           		<para>
+           			Subclasses of <classname>AbstractValidatingMarshallingPayloadEndpoint</classname> 
+           			implement the validation error handling logic by overriding the <methodname>onValidationErrors</methodname>
+           			method. This method is called when a validation error occurs and its return value
+           			indicates whether the endpoint should continue processing the request or not.
+           		</para>
+           		<para>
+           			In the following example, a custom error POJO is marshalled and sent as a response:
+           		</para>
+           			<programlisting><![CDATA[public class MyMarshallingEndpoint extends AbstractValidatingMarshallingPayloadEndpoint{
+
+    private MessageSource messageSource;
+
+    protected Object invokeInternal(Object requestObject) throws Exception {
+    	// process the payload
+    }
+
+    protected boolean onValidationErrors(MessageContext messageContext, Object requestObject, Errors errors) {
+        FieldError error = errors.getFieldError("name");
+        CustomError customError = new CustomError();
+        String message = messageSource.getMessage(error, Locale.ENGLISH);
+        customError.setMessage(message);
+        try {
+            getMarshaller().marshal(customError, messageContext.getResponse().getPayloadResult());
+        } catch (XmlMappingException ex) {
+            // handle the exception
+        } catch (IOException ex) {
+            // handle the exception
+        }
+        return false;
+    }
+}
+]]></programlisting>
+           	</section>
+           	<section>
+           		<title><classname>AbstractFaultCreatingValidatingMarshallingPayloadEndpoint</classname></title>
+           		<para>
+           			Endpoints of this type generate a SOAP fault whenever a validation error occurs.
+           			By default, a fault detail element is generated for each validation error.
+           			The error codes are resolved using the application context message source.
+           		</para>
+           		<para>
+           			The properties of <classname>AbstractFaultCreatingValidatingMarshallingPayloadEndpoint</classname>
+           			have sensible defaults, which makes its subclasses quite simple to configure as in the following example:
+           		</para>
+					<programlisting><![CDATA[<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+    <property name="basename" value="message"/>
+</bean>
+    
+<bean id="orderValidator" class="samples.OrderValidator"/>
+
+<bean id="marshallingOrderEndpoint" class="samples.MarshallingOrderEndpoint">
+    <property name="marshaller" ref="marshaller"/>
+    <property name="unmarshaller" ref="marshaller"/>
+    <property name="validator" ref="orderValidator"/>
+</bean>
+]]></programlisting>
+				<para>
+					In case of validation error, here is how the response might look like:
+				</para>
+				<programlisting><![CDATA[<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+   <SOAP-ENV:Header/>
+   <SOAP-ENV:Body>
+      <SOAP-ENV:Fault>
+         <faultcode>SOAP-ENV:Client</faultcode>
+         <faultstring xml:lang="en">Validation error</faultstring>
+         <detail>
+            <spring-ws:ValidationError xmlns:spring-ws="http://springframework.org/spring-ws">
+                invalid user id: Ernie
+            </spring-ws:ValidationError>
+            <spring-ws:ValidationError xmlns:spring-ws="http://springframework.org/spring-ws">
+                invalid order
+            </spring-ws:ValidationError>
+         </detail>
+      </SOAP-ENV:Fault>
+   </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+]]></programlisting>				
+				<para>	
+					It is possible though to customize various aspects of the generated SOAP faults, such as the fault string
+					and the soap detail.
+					Please refer to the <ulink url="http://static.springframework.org/spring-ws/site/apidocs/org/springframework/ws/soap/server/endpoint/AbstractFaultCreatingValidatingMarshallingPayloadEndpoint.html">Javadoc</ulink> 
+					for the full list of available options.           			
+           		</para>
+           	</section>
+        </section>
         <section id="server-at-endpoint">
             <title><interfacename>@Endpoint</interfacename></title>
             <para>
