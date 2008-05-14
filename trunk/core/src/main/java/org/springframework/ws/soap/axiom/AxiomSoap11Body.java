@@ -28,6 +28,7 @@ import org.apache.axiom.soap.SOAPFault;
 import org.apache.axiom.soap.SOAPFaultCode;
 import org.apache.axiom.soap.SOAPFaultReason;
 import org.apache.axiom.soap.SOAPProcessingException;
+
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.SoapFault;
@@ -76,7 +77,7 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
                     "A fault code with namespace and local part must be specific for a custom fault code");
         }
         try {
-            detachAllBodyChildren();
+            AxiomUtils.removeContents(getAxiomBody());
             SOAPFault fault = getAxiomFactory().createSOAPFault(getAxiomBody());
             SOAPFaultCode faultCode = getAxiomFactory().createSOAPFaultCode(fault);
             setValueText(code, fault, faultCode);
@@ -115,7 +116,7 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
     private SOAPFault addStandardFault(String localName, String faultString, Locale locale) {
         Assert.notNull(faultString, "No faultString given");
         try {
-            detachAllBodyChildren();
+            AxiomUtils.removeContents(getAxiomBody());
             SOAPFault fault = getAxiomFactory().createSOAPFault(getAxiomBody());
             SOAPFaultCode faultCode = getAxiomFactory().createSOAPFaultCode(fault);
             faultCode.setText(QNameUtils.createQName(fault.getNamespace().getNamespaceURI(), localName,

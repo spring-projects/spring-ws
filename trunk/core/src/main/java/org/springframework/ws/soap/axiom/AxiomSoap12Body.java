@@ -28,6 +28,7 @@ import org.apache.axiom.soap.SOAPFaultReason;
 import org.apache.axiom.soap.SOAPFaultText;
 import org.apache.axiom.soap.SOAPFaultValue;
 import org.apache.axiom.soap.SOAPProcessingException;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.axiom.support.AxiomUtils;
@@ -79,7 +80,7 @@ class AxiomSoap12Body extends AxiomSoapBody implements Soap12Body {
     private SOAPFault addStandardFault(String localName, String faultStringOrReason, Locale locale) {
         Assert.notNull(faultStringOrReason, "No faultStringOrReason given");
         try {
-            detachAllBodyChildren();
+            AxiomUtils.removeContents(getAxiomBody());
             SOAPFault fault = getAxiomFactory().createSOAPFault(getAxiomBody());
             SOAPFaultCode code = getAxiomFactory().createSOAPFaultCode(fault);
             SOAPFaultValue value = getAxiomFactory().createSOAPFaultValue(code);

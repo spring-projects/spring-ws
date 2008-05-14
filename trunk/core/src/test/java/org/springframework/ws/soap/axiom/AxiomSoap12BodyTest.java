@@ -18,8 +18,11 @@ package org.springframework.ws.soap.axiom;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.soap.SOAPFactory;
+
 import org.springframework.ws.soap.SoapBody;
+import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.soap12.AbstractSoap12BodyTestCase;
+import org.springframework.xml.transform.StringSource;
 
 public class AxiomSoap12BodyTest extends AbstractSoap12BodyTestCase {
 
@@ -29,4 +32,16 @@ public class AxiomSoap12BodyTest extends AbstractSoap12BodyTestCase {
         return axiomSoapMessage.getSoapBody();
     }
 
+    public void testPayloadNoCaching() throws Exception {
+        AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
+        messageFactory.setPayloadCaching(false);
+        messageFactory.setSoapVersion(SoapVersion.SOAP_12);
+
+        AxiomSoapMessage axiomSoapMessage = (AxiomSoapMessage) messageFactory.createWebServiceMessage();
+        soapBody = axiomSoapMessage.getSoapBody();
+
+        String payload = "<payload xmlns='http://www.springframework.org' />";
+        transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
+        assertPayloadEqual(payload);
+    }
 }

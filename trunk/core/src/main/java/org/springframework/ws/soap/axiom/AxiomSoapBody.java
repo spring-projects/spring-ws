@@ -16,21 +16,15 @@
 
 package org.springframework.ws.soap.axiom;
 
-import java.util.Iterator;
-import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMException;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPFault;
 
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapFault;
-import org.springframework.ws.soap.axiom.support.AxiomUtils;
-import org.springframework.xml.transform.StaxSource;
 
 /**
  * Axiom-specific version of <code>org.springframework.ws.soap.Soap11Body</code>.
@@ -40,36 +34,24 @@ import org.springframework.xml.transform.StaxSource;
  */
 abstract class AxiomSoapBody extends AxiomSoapElement implements SoapBody {
 
-    private boolean payloadCaching;
+    private final Payload payload;
 
     protected AxiomSoapBody(SOAPBody axiomBody, SOAPFactory axiomFactory, boolean payloadCaching) {
         super(axiomBody, axiomFactory);
-        this.payloadCaching = payloadCaching;
+        if (payloadCaching) {
+            payload = new CachingPayload(axiomBody, axiomFactory);
+        }
+        else {
+            payload = new NonCachingPayload(axiomBody, axiomFactory);
+        }
     }
 
     public Source getPayloadSource() {
-        try {
-            OMElement payloadElement = getPayloadElement();
-            XMLStreamReader streamReader;
-            if (payloadElement == null) {
-                return null;
-            }
-            else if (payloadCaching) {
-                streamReader = payloadElement.getXMLStreamReader();
-            }
-            else {
-                streamReader = payloadElement.getXMLStreamReaderWithoutCaching();
-            }
-            return new StaxSource(streamReader);
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapBodyException(ex);
-        }
+        return payload.getSource();
     }
 
     public Result getPayloadResult() {
-        AxiomUtils.removeContents(getAxiomBody());
-        return new AxiomResult(getAxiomBody(), getAxiomFactory());
+        return payload.getResult();
     }
 
     public boolean hasFault() {
@@ -79,23 +61,6 @@ abstract class AxiomSoapBody extends AxiomSoapElement implements SoapBody {
     public SoapFault getFault() {
         SOAPFault axiomFault = getAxiomBody().getFault();
         return axiomFault != null ? new AxiomSoap11Fault(axiomFault, getAxiomFactory()) : null;
-    }
-
-    private OMElement getPayloadElement() throws OMException {
-        return getAxiomBody().getFirstElement();
-    }
-
-    protected void detachAllBodyChildren() {
-        try {
-            for (Iterator iterator = getAxiomBody().getChildElements(); iterator.hasNext();) {
-                OMElement child = (OMElement) iterator.next();
-                child.detach();
-            }
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapBodyException(ex);
-        }
-
     }
 
     protected final SOAPBody getAxiomBody() {

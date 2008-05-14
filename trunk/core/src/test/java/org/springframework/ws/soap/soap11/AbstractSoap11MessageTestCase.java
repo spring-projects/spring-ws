@@ -19,13 +19,16 @@ package org.springframework.ws.soap.soap11;
 import java.io.ByteArrayOutputStream;
 
 import junit.framework.Assert;
+
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.Resource;
 import org.springframework.ws.soap.AbstractSoapMessageTestCase;
+import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.transport.MockTransportOutputStream;
+import org.springframework.xml.transform.StringSource;
 
 public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageTestCase {
 
@@ -38,13 +41,19 @@ public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageT
     }
 
     public void testWriteToTransportOutputStream() throws Exception {
+        SoapBody body = soapMessage.getSoapBody();
+        String payload = "<payload xmlns='http://www.springframework.org' />";
+        transformer.transform(new StringSource(payload), body.getPayloadResult());
+
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         MockTransportOutputStream tos = new MockTransportOutputStream(bos);
         String soapAction = "http://springframework.org/spring-ws/Action";
         soapMessage.setSoapAction(soapAction);
         soapMessage.writeTo(tos);
         String result = bos.toString("UTF-8");
-        assertXMLEqual("<Envelope xmlns='http://schemas.xmlsoap.org/soap/envelope/'><Body/></Envelope>", result);
+        assertXMLEqual(
+                "<Envelope xmlns='http://schemas.xmlsoap.org/soap/envelope/'><Body><payload xmlns='http://www.springframework.org' /></Body></Envelope>",
+                result);
         String contentType = (String) tos.getHeaders().get("Content-Type");
         assertTrue("Invalid Content-Type set", contentType.indexOf(SoapVersion.SOAP_11.getContentType()) != -1);
         String resultSoapAction = (String) tos.getHeaders().get("SOAPAction");
@@ -63,6 +72,4 @@ public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageT
         assertTrue("Content-Type for attachment message does not contains type=\"text/xml\"",
                 contentType.indexOf("type=\"text/xml\"") != -1);
     }
-
-
 }

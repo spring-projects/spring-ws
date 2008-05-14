@@ -214,6 +214,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
                 transportOutputStream.addHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
                 transportOutputStream.addHeader(TransportConstants.HEADER_SOAP_ACTION, soapAction);
             }
+
             if (payloadCaching) {
                 axiomMessage.serialize(outputStream, format);
             }
