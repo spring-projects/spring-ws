@@ -62,7 +62,6 @@ import org.springframework.ws.pox.dom.DomPoxMessageFactory;
 import org.springframework.ws.soap.SoapMessageFactory;
 import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.ws.soap.client.SoapFaultClientException;
-import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.http.CommonsHttpMessageSender;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
@@ -83,8 +82,10 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
         doSoap(new AxiomSoapMessageFactory());
     }
 
-    public void testWithSaaj() throws Exception {
-        doSoap(new SaajSoapMessageFactory(MessageFactory.newInstance()));
+    public void testAxiomNonCaching() throws Exception {
+        AxiomSoapMessageFactory axiomFactory = new AxiomSoapMessageFactory();
+        axiomFactory.setPayloadCaching(false);
+        doSoap(axiomFactory);
     }
 
     public void testPox() throws Exception {

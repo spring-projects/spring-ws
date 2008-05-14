@@ -7,6 +7,7 @@ import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPHeader;
+
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.SoapHeader;
@@ -23,7 +24,7 @@ class AxiomSoapEnvelope extends AxiomSoapElement implements SoapEnvelope {
 
     private AxiomSoapBody body;
 
-    public AxiomSoapEnvelope(SOAPEnvelope axiomEnvelope, SOAPFactory axiomFactory, boolean payloadCaching) {
+    AxiomSoapEnvelope(SOAPEnvelope axiomEnvelope, SOAPFactory axiomFactory, boolean payloadCaching) {
         super(axiomEnvelope, axiomFactory);
         this.payloadCaching = payloadCaching;
     }
