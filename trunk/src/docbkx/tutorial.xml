@@ -658,7 +658,7 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
         <version>1.3</version>
         <scope>runtime</scope>
     </dependency>
-<dependencies>]]></programlisting>
+</dependencies>]]></programlisting>
              <para>
                 Here is how we would configure these classes in our <filename>spring-ws-servlet.xml</filename>
                 Spring XML configuration file:
