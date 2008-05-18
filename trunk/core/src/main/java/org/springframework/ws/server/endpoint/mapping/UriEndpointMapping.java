@@ -38,7 +38,7 @@ import org.springframework.ws.transport.context.TransportContextHolder;
  * http://example.com:8080/services/bookFlight=bookFlightEndpoint
  * jms://exampleQueue=getFlightsEndpoint
  * </pre>
- * The syntax is SOAP_ACTION=ENDPOINT_BEAN_NAME.
+ * The syntax is URI=ENDPOINT_BEAN_NAME.
  * <p/>
  * This endpoint mapping does not read from the request message, and therefore is more suitable for message factories
  * which directly read from the transport request (such as the {@link AxiomSoapMessageFactory} with the
