@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-
 <project name="spring-ws-echo-sample-spring-ws-client" default="build" xmlns:artifact="urn:maven-artifact-ant">
     <property name="bin.dir" value="bin"/>
     <property name="src.dir" value="src"/>
@@ -12,7 +11,7 @@
         </typedef>
 
         <artifact:dependencies pathId="classpath">
-            <dependency groupId="org.springframework.ws" artifactId="spring-ws-core" version="1.5.1"/>
+            <dependency groupId="org.springframework.ws" artifactId="spring-ws-core" version="1.5.2"/>
             <dependency groupId="com.sun.xml.messaging.saaj" artifactId="saaj-impl" version="1.3"/>
             <dependency groupId="commons-httpclient" artifactId="commons-httpclient" version="3.0.1"/>
         </artifact:dependencies>
