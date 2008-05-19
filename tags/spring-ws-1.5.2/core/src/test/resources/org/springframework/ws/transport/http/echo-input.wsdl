@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:schema="http://www.springframework.org/spring-ws/samples/echo"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  targetNamespace="http://www.springframework.org/spring-ws/samples/echo">
+    <wsdl:types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema"
+                xmlns:tns="http://www.springframework.org/spring-ws/samples/echo" attributeFormDefault="qualified"
+                elementFormDefault="qualified" targetNamespace="http://www.springframework.org/spring-ws/samples/echo">
+            <element name="echoRequest">
+                <simpleType>
+                    <restriction base="string">
+                        <pattern value="([A-Z]|[a-z])+"/>
+                    </restriction>
+                </simpleType>
+            </element>
+            <element name="echoResponse" type="string"/>
+        </schema>
+    </wsdl:types>
+    <wsdl:message name="echoResponse">
+        <wsdl:part name="echoResponse" element="schema:echoResponse"/>
+    </wsdl:message>
+    <wsdl:message name="echoRequest">
+        <wsdl:part name="echoRequest" element="schema:echoRequest"/>
+    </wsdl:message>
+    <wsdl:portType name="Echo">
+        <wsdl:operation name="echo">
+            <wsdl:input name="echoRequest" message="schema:echoRequest"/>
+            <wsdl:output name="echoResponse" message="schema:echoResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="EchoBinding" type="schema:Echo">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="echo">
+            <soap:operation soapAction="test"/>
+            <wsdl:input name="echoRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="echoResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="EchoService">
+        <wsdl:port name="EchoPort" binding="schema:EchoBinding">
+            <soap:address location="http://localhost:8080/echo/services"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

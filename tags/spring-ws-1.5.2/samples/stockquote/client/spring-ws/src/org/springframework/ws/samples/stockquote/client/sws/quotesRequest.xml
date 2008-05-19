@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StockQuoteRequest xmlns="http://www.springframework.org/spring-ws/samples/stockquote">
+    <Symbol>FABRIKAM</Symbol>
+    <Symbol>CONTOSO</Symbol>
+</StockQuoteRequest>

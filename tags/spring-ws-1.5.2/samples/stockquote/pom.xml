@@ -1,0 +1,94 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>spring-ws-samples</artifactId>
+        <groupId>org.springframework.ws</groupId>
+        <version>1.5.2</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>stockquote</artifactId>
+    <packaging>jar</packaging>
+    <name>Spring WS Stock Quote Sample</name>
+    <description>A Spring-WS sample that shows usage of WS-Addressing and the HTTP Server built into JDK 1.6.</description>
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <stylesheetfile>${basedir}/../../src/main/javadoc/javadoc.css</stylesheetfile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>java.net</id>
+            <name>Java.net Repository for Maven2</name>
+            <url>http://download.java.net/maven/1/</url>
+            <layout>legacy</layout>
+        </pluginRepository>
+    </pluginRepositories>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.sun.tools.xjc.maven2</groupId>
+                <artifactId>maven-jaxb-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <generatePackage>org.springframework.ws.samples.stockquote.schema</generatePackage>
+                    <includeSchemas>
+                        <includeSchema>stockquote.wsdl</includeSchema>
+                    </includeSchemas>
+                    <schemaDirectory>src/main/resources/org/springframework/ws/samples/stockquote/ws</schemaDirectory>
+                    <args>-wsdl</args>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>org.springframework.ws.samples.stockquote.Driver</mainClass>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+    <dependencies>
+        <!-- Spring-WS dependencies -->
+        <dependency>
+            <groupId>org.springframework.ws</groupId>
+            <artifactId>spring-ws-core-tiger</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ws</groupId>
+            <artifactId>spring-ws-support</artifactId>
+        </dependency>
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <scope>test</scope>
+            <version>2.2</version>
+        </dependency>
+    </dependencies>
+</project>
