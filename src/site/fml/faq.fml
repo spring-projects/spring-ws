@@ -10,7 +10,7 @@
                 features of Axis 1 and 2.
             </answer>
         </faq>
-        < faq id="namespace_err">
+        <faq id="namespace_err">
             <question>I get <tt>NAMESPACE_ERR</tt> exceptions when using Spring-WS. What can I do about it?</question>
             <answer>
                 <p>
