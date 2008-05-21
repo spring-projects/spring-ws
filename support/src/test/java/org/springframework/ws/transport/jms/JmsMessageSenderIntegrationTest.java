@@ -135,4 +135,27 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
         }
     }
 
+    public void testSendNoResponse() throws Exception {
+        WebServiceConnection connection = null;
+        try {
+            URI uri = new URI("jms:SenderRequestQueue?deliveryMode=NON_PERSISTENT");
+            connection = messageSender.createConnection(uri);
+            SoapMessage soapRequest = new SaajSoapMessage(messageFactory.createMessage());
+            soapRequest.setSoapAction(SOAP_ACTION);
+            connection.send(soapRequest);
+
+            BytesMessage request = (BytesMessage) jmsTemplate.receive();
+            assertNotNull("No message received", request);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            messageFactory.createMessage().writeTo(bos);
+            SoapMessage response = (SoapMessage) connection.receive(new SaajSoapMessageFactory(messageFactory));
+            assertNull("Response received", response);
+        }
+        finally {
+            if (connection != null) {
+                connection.close();
+            }
+        }
+    }
+
 }

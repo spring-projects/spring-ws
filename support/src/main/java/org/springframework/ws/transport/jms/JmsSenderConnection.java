@@ -228,7 +228,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
             if (message instanceof BytesMessage || message instanceof TextMessage) {
                 responseMessage = message;
             }
-            else {
+            else if (message != null) {
                 throw new IllegalArgumentException(
                         "Wrong message type: [" + message.getClass() + "]. Only BytesMessages can be handled.");
             }
