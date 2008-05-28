@@ -27,6 +27,7 @@ import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
 import org.apache.ws.security.WSPasswordCallback;
 import org.apache.ws.security.WSSecurityException;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 import org.springframework.ws.soap.security.wss4j.callback.AbstractWsPasswordCallbackHandler;
@@ -44,7 +45,8 @@ import org.springframework.ws.soap.security.wss4j.callback.AbstractWsPasswordCal
  * @see org.acegisecurity.ui.basicauth.BasicProcessingFilter
  * @since 1.5.0
  */
-public class AcegiPlainTextPasswordValidationCallbackHandler extends AbstractWsPasswordCallbackHandler {
+public class AcegiPlainTextPasswordValidationCallbackHandler extends AbstractWsPasswordCallbackHandler
+        implements InitializingBean {
 
     private AuthenticationManager authenticationManager;
 

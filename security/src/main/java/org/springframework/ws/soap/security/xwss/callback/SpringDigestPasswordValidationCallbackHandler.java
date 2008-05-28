@@ -23,6 +23,7 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
 import com.sun.xml.wss.impl.callback.TimestampValidationCallback;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
@@ -52,7 +53,7 @@ import org.springframework.ws.soap.security.callback.CleanupCallback;
  * @see org.springframework.security.ui.digestauth.DigestProcessingFilter
  * @since 1.5.0
  */
-public class SpringDigestPasswordValidationCallbackHandler extends AbstractCallbackHandler {
+public class SpringDigestPasswordValidationCallbackHandler extends AbstractCallbackHandler implements InitializingBean {
 
     private UserCache userCache = new NullUserCache();
 

@@ -23,6 +23,7 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 
 import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.Authentication;
 import org.springframework.security.AuthenticationException;
 import org.springframework.security.AuthenticationManager;
@@ -49,7 +50,7 @@ import org.springframework.ws.soap.security.callback.CleanupCallback;
  * @see com.sun.xml.wss.impl.callback.CertificateValidationCallback
  * @since 1.5.0
  */
-public class SpringCertificateValidationCallbackHandler extends AbstractCallbackHandler {
+public class SpringCertificateValidationCallbackHandler extends AbstractCallbackHandler implements InitializingBean {
 
     private AuthenticationManager authenticationManager;
 

@@ -22,6 +22,7 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import org.apache.ws.security.WSPasswordCallback;
 import org.apache.ws.security.WSSecurityException;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.Authentication;
 import org.springframework.security.AuthenticationException;
 import org.springframework.security.AuthenticationManager;
@@ -43,7 +44,8 @@ import org.springframework.ws.soap.security.callback.CleanupCallback;
  * @see org.springframework.security.ui.basicauth.BasicProcessingFilter
  * @since 1.5.0
  */
-public class SpringPlainTextPasswordValidationCallbackHandler extends AbstractWsPasswordCallbackHandler {
+public class SpringPlainTextPasswordValidationCallbackHandler extends AbstractWsPasswordCallbackHandler
+        implements InitializingBean {
 
     private AuthenticationManager authenticationManager;
 
