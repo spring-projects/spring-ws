@@ -28,6 +28,7 @@ import org.acegisecurity.AuthenticationManager;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.providers.x509.X509AuthenticationToken;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
@@ -48,7 +49,7 @@ import org.springframework.ws.soap.security.callback.CleanupCallback;
  * @see CertificateValidationCallback
  * @since 1.0.0
  */
-public class AcegiCertificateValidationCallbackHandler extends AbstractCallbackHandler {
+public class AcegiCertificateValidationCallbackHandler extends AbstractCallbackHandler implements InitializingBean {
 
     private AuthenticationManager authenticationManager;
 

@@ -29,6 +29,7 @@ import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.apache.ws.security.WSPasswordCallback;
 import org.apache.ws.security.WSUsernameTokenPrincipal;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataAccessException;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
@@ -47,7 +48,8 @@ import org.springframework.ws.soap.security.wss4j.callback.UsernameTokenPrincipa
  * @see org.acegisecurity.ui.digestauth.DigestProcessingFilter
  * @since 1.5.0
  */
-public class AcegiDigestPasswordValidationCallbackHandler extends AbstractWsPasswordCallbackHandler {
+public class AcegiDigestPasswordValidationCallbackHandler extends AbstractWsPasswordCallbackHandler
+        implements InitializingBean {
 
     private UserCache userCache = new NullUserCache();
 

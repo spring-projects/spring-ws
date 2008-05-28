@@ -30,6 +30,7 @@ import org.acegisecurity.userdetails.UserDetails;
 import org.acegisecurity.userdetails.UserDetailsService;
 import org.acegisecurity.userdetails.UsernameNotFoundException;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataAccessException;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
@@ -53,7 +54,7 @@ import org.springframework.ws.soap.security.xwss.callback.DefaultTimestampValida
  * @see org.acegisecurity.ui.digestauth.DigestProcessingFilter
  * @since 1.0.0
  */
-public class AcegiDigestPasswordValidationCallbackHandler extends AbstractCallbackHandler {
+public class AcegiDigestPasswordValidationCallbackHandler extends AbstractCallbackHandler implements InitializingBean {
 
     private UserCache userCache = new NullUserCache();
 

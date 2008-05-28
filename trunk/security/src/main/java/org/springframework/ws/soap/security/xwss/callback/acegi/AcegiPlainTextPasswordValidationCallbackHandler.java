@@ -27,6 +27,7 @@ import org.acegisecurity.AuthenticationManager;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
@@ -49,7 +50,8 @@ import org.springframework.ws.soap.security.callback.CleanupCallback;
  * @see org.acegisecurity.ui.basicauth.BasicProcessingFilter
  * @since 1.0.0
  */
-public class AcegiPlainTextPasswordValidationCallbackHandler extends AbstractCallbackHandler {
+public class AcegiPlainTextPasswordValidationCallbackHandler extends AbstractCallbackHandler
+        implements InitializingBean {
 
     private AuthenticationManager authenticationManager;
 
