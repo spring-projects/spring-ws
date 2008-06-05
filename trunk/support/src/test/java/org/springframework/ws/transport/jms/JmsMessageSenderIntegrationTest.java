@@ -72,6 +72,7 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
 
             BytesMessage request = (BytesMessage) jmsTemplate.receive();
             assertNotNull("No message received", request);
+            assertTrue("No message content received", request.readByte() != -1);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             messageFactory.createMessage().writeTo(bos);
             final byte[] buf = bos.toByteArray();
@@ -109,6 +110,7 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
 
             TextMessage request = (TextMessage) jmsTemplate.receive();
             assertNotNull("No message received", request);
+            assertNotNull("No message content received", request.getText());
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             messageFactory.createMessage().writeTo(bos);
             final String text = new String(bos.toByteArray(), "UTF-8");

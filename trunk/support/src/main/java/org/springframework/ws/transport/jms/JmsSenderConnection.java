@@ -16,8 +16,6 @@
 
 package org.springframework.ws.transport.jms;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -178,20 +176,13 @@ public class JmsSenderConnection extends AbstractSenderConnection {
         if (requestMessage instanceof BytesMessage) {
             return new BytesMessageOutputStream((BytesMessage) requestMessage);
         }
-        else {
-            return new ByteArrayOutputStream() {
-
-                public void close() throws IOException {
-                    String text = new String(toByteArray(), textMessageEncoding);
-                    try {
-                        ((TextMessage) requestMessage).setText(text);
-                    }
-                    catch (JMSException ex) {
-                        throw new JmsTransportException(ex);
-                    }
-                }
-            };
+        else if (requestMessage instanceof TextMessage) {
+            return new TextMessageOutputStream((TextMessage) requestMessage, textMessageEncoding);
         }
+        else {
+            throw new IllegalStateException("Unknown request message type [" + requestMessage + "]");
+        }
+
     }
 
     protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
@@ -275,17 +266,14 @@ public class JmsSenderConnection extends AbstractSenderConnection {
         if (responseMessage instanceof BytesMessage) {
             return new BytesMessageInputStream((BytesMessage) responseMessage);
         }
-        else {
-            TextMessage textMessage = (TextMessage) responseMessage;
-            try {
-                String text = textMessage.getText();
-                byte[] contents = text != null ? text.getBytes(textMessageEncoding) : new byte[0];
-                return new ByteArrayInputStream(contents);
-            }
-            catch (JMSException ex) {
-                throw new JmsTransportException(ex);
-            }
+        else if (responseMessage instanceof TextMessage) {
+            return new TextMessageInputStream((TextMessage) responseMessage, textMessageEncoding);
         }
+        else {
+            throw new IllegalStateException("Unknown response message type [" + responseMessage + "]");
+        }
+
+
     }
 
     protected void onClose() throws IOException {
