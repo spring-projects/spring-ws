@@ -16,8 +16,6 @@
 
 package org.springframework.ws.transport.jms;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -152,15 +150,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
             return new BytesMessageInputStream((BytesMessage) requestMessage);
         }
         else if (requestMessage instanceof TextMessage) {
-            TextMessage textMessage = (TextMessage) requestMessage;
-            try {
-                String text = textMessage.getText();
-                byte[] contents = text != null ? text.getBytes(textMessageEncoding) : new byte[0];
-                return new ByteArrayInputStream(contents);
-            }
-            catch (JMSException ex) {
-                throw new JmsTransportException(ex);
-            }
+            return new TextMessageInputStream((TextMessage) requestMessage, textMessageEncoding);
         }
         else {
             throw new IllegalStateException("Unknown request message type [" + requestMessage + "]");
@@ -203,21 +193,10 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
             return new BytesMessageOutputStream((BytesMessage) responseMessage);
         }
         else if (responseMessage instanceof TextMessage) {
-            return new ByteArrayOutputStream() {
-
-                public void close() throws IOException {
-                    String text = new String(toByteArray(), textMessageEncoding);
-                    try {
-                        ((TextMessage) responseMessage).setText(text);
-                    }
-                    catch (JMSException ex) {
-                        throw new JmsTransportException(ex);
-                    }
-                }
-            };
+            return new TextMessageOutputStream((TextMessage) responseMessage, textMessageEncoding);
         }
         else {
-            throw new IllegalStateException("Unknown request message type [" + responseMessage + "]");
+            throw new IllegalStateException("Unknown response message type [" + responseMessage + "]");
         }
     }
 
