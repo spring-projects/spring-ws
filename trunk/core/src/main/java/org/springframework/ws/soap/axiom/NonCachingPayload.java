@@ -35,6 +35,8 @@ import org.apache.axiom.soap.SOAPFactory;
 import org.springframework.xml.transform.StaxResult;
 
 /**
+ * Non-caching payload in Axiom.
+ *
  * @author Jim Cummings
  * @author Arjen Poutsma
  * @since 1.5.2
@@ -63,7 +65,9 @@ class NonCachingPayload extends Payload {
 
         private QName name;
 
-        private String encoding;
+        private String encoding = "UTF-8";
+
+        private int elementDepth = 0;
 
         private DelegatingStreamWriter() {
             try {
@@ -75,11 +79,11 @@ class NonCachingPayload extends Payload {
         }
 
         public void writeStartDocument() throws XMLStreamException {
-            this.encoding = "UTF-8";
+            // ignored
         }
 
         public void writeStartDocument(String version) throws XMLStreamException {
-            this.encoding = "UTF-8";
+            // ignored
         }
 
         public void writeStartDocument(String encoding, String version) throws XMLStreamException {
@@ -87,7 +91,42 @@ class NonCachingPayload extends Payload {
         }
 
         public void writeEndDocument() throws XMLStreamException {
-            delegate.writeEndDocument();
+            // ignored
+        }
+
+        public void writeStartElement(String localName) throws XMLStreamException {
+            if (name == null) {
+                name = new QName(localName);
+            }
+            elementDepth++;
+            delegate.writeStartElement(localName);
+        }
+
+        public void writeStartElement(String namespaceURI, String localName) throws XMLStreamException {
+            if (name == null) {
+                name = new QName(namespaceURI, localName);
+            }
+            elementDepth++;
+            delegate.writeStartElement(namespaceURI, localName);
+        }
+
+        public void writeStartElement(String prefix, String localName, String namespaceURI) throws XMLStreamException {
+            if (name == null) {
+                name = new QName(namespaceURI, localName, prefix);
+            }
+            elementDepth++;
+            delegate.writeStartElement(prefix, localName, namespaceURI);
+        }
+
+        public void writeEndElement() throws XMLStreamException {
+            elementDepth--;
+            delegate.writeEndElement();
+            if (elementDepth <= 0) {
+                addPayload();
+            }
+        }
+
+        private void addPayload() throws XMLStreamException {
             delegate.flush();
             if (baos.size() > 0) {
                 byte[] buf = baos.toByteArray();
@@ -97,27 +136,6 @@ class NonCachingPayload extends Payload {
                         getAxiomFactory().createOMElement(dataSource, name.getLocalPart(), namespace);
                 getAxiomBody().addChild(payloadElement);
             }
-        }
-
-        public void writeStartElement(String localName) throws XMLStreamException {
-            if (name == null) {
-                name = new QName(localName);
-            }
-            delegate.writeStartElement(localName);
-        }
-
-        public void writeStartElement(String namespaceURI, String localName) throws XMLStreamException {
-            if (name == null) {
-                name = new QName(namespaceURI, localName);
-            }
-            delegate.writeStartElement(namespaceURI, localName);
-        }
-
-        public void writeStartElement(String prefix, String localName, String namespaceURI) throws XMLStreamException {
-            if (name == null) {
-                name = new QName(namespaceURI, localName, prefix);
-            }
-            delegate.writeStartElement(prefix, localName, namespaceURI);
         }
 
         public void writeEmptyElement(String localName) throws XMLStreamException {
@@ -210,10 +228,6 @@ class NonCachingPayload extends Payload {
 
         public void writeDTD(String dtd) throws XMLStreamException {
             delegate.writeDTD(dtd);
-        }
-
-        public void writeEndElement() throws XMLStreamException {
-            delegate.writeEndElement();
         }
 
         public void writeEntityRef(String name) throws XMLStreamException {

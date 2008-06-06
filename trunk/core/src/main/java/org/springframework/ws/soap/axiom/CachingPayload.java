@@ -24,6 +24,8 @@ import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
 
 /**
+ * Caching payload in Axiom.
+ *
  * @author Arjen Poutsma
  * @since 1.5.2
  */
