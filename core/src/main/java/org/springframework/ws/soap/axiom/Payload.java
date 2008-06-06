@@ -30,6 +30,9 @@ import org.springframework.ws.soap.axiom.support.AxiomUtils;
 import org.springframework.xml.transform.StaxSource;
 
 /**
+ * Abstract base class for payloads in Axiom. Comes in two flavors: {@link CachingPayload} and {@link
+ * NonCachingPayload}.
+ *
  * @author Arjen Poutsma
  * @since 1.5.2
  */
