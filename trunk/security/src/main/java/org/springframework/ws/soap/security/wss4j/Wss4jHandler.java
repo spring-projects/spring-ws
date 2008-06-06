@@ -54,7 +54,7 @@ class Wss4jHandler extends WSHandler {
 
     private Crypto securementSignatureCrypto;
 
-    public Wss4jHandler() {
+    Wss4jHandler() {
         // set up default handler properties
         options.setProperty(WSHandlerConstants.MUST_UNDERSTAND, Boolean.toString(true));
         options.setProperty(WSHandlerConstants.ENABLE_SIGNATURE_CONFIRMATION, Boolean.toString(true));
@@ -127,7 +127,7 @@ class Wss4jHandler extends WSHandler {
             }
         }
         else {
-            callback = new WSPasswordCallback("", WSPasswordCallback.UNKNOWN);
+            callback = new WSPasswordCallback(username, WSPasswordCallback.UNKNOWN);
             callback.setPassword(securementPassword);
         }
         return callback;
