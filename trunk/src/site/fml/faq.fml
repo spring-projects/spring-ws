@@ -246,10 +246,11 @@
             <answer>
                 <p>
                     You can find the answer to this question on
-                    <a href="http://static.springframework.org/spring-ws/site/why-contract-first.html">a separate page
+                    <a href="http://static.springframework.org/spring-ws/site/reference/html/why-contract-first.html">a 
+                    separate page
                     </a>. Note that Spring-WS only requires you to write the XSD; the WSDL can be generated from that.
-                    <a href="http://static.springframework.org/spring-ws/site/tutorial/tutorial2.html">The tutorial</a>
-                    illustrates how.
+                    <a href="http://static.springframework.org/spring-ws/site/reference/html/tutorial.html">The
+                    tutorial</a> illustrates how.
                 </p>
             </answer>
         </faq>
