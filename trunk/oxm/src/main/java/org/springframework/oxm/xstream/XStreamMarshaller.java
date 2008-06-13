@@ -228,6 +228,38 @@ public class XStreamMarshaller extends AbstractMarshaller {
         }
     }
 
+    /**
+     * Adds an implicit Collection for the given type.
+     *
+     * @see XStream#addImplicitCollection(Class, String)
+     */
+    public void addImplicitCollection(String name, Class type) {
+        getXStream().addImplicitCollection(type, name);
+    }
+
+    /**
+     * Set a implicit colletion/type map, consisting of string implicit collection mapped to <code>Class</code>
+     * instances (or Strings to be converted to <code>Class</code> instances).
+     *
+     * @see org.springframework.beans.propertyeditors.ClassEditor
+     */
+    public void setImplicitCollection(Map implicitCollection) {
+        for (Iterator iterator = implicitCollection.entrySet().iterator(); iterator.hasNext();) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            // Check whether we need to convert from String to Class.
+            Class type;
+            if (entry.getValue() instanceof Class) {
+                type = (Class) entry.getValue();
+            }
+            else {
+                ClassEditor editor = new ClassEditor();
+                editor.setAsText(String.valueOf(entry.getValue()));
+                type = (Class) editor.getValue();
+            }
+            addImplicitCollection((String) entry.getKey(), type);
+        }
+    }
+
     public boolean supports(Class clazz) {
         if (ObjectUtils.isEmpty(supportedClasses)) {
             return true;
