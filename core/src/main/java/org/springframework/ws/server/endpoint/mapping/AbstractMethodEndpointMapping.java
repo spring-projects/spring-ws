@@ -25,6 +25,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.core.JdkVersion;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
@@ -143,6 +144,12 @@ public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapp
      * @return the bean class to expose
      */
     protected Class getEndpointClass(Object endpoint) {
+        if (AopUtils.isJdkDynamicProxy(endpoint)) {
+            throw new IllegalArgumentException(ClassUtils.getShortName(getClass()) +
+                    " does not work with JDK Dynamic Proxies. " +
+                    "Please use CGLIB proxies, by setting proxy-target-class=\"true\" on the aop:aspectj-autoproxy " +
+                    "or aop:config element.");
+        }
         return AopUtils.getTargetClass(endpoint);
     }
 
