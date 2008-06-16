@@ -17,8 +17,11 @@
 package org.springframework.ws.transport.http;
 
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Properties;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
+import org.apache.commons.httpclient.URIException;
 
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
@@ -42,6 +45,17 @@ public class CommonsHttpMessageSenderIntegrationTest extends AbstractHttpWebServ
         catch (ConnectTimeoutException ex) {
             // expected
         }
+    }
+
+    public void testMaxConnections() throws URISyntaxException, URIException {
+        CommonsHttpMessageSender messageSender = new CommonsHttpMessageSender();
+        messageSender.setMaxTotalConnections(2);
+        Properties maxConnectionsPerHost = new Properties();
+        maxConnectionsPerHost.setProperty("https://www.example.com", "1");
+        maxConnectionsPerHost.setProperty("http://www.example.com:8080", "7");
+        maxConnectionsPerHost.setProperty("www.springframework.org", "10");
+        maxConnectionsPerHost.setProperty("*", "5");
+        messageSender.setMaxConnectionsPerHost(maxConnectionsPerHost);
     }
 
 }
