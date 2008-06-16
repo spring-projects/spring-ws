@@ -18,12 +18,18 @@ package org.springframework.ws.transport.http;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Iterator;
+import java.util.Properties;
 
 import org.apache.commons.httpclient.Credentials;
+import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpConnectionManager;
+import org.apache.commons.httpclient.HttpURL;
+import org.apache.commons.httpclient.HttpsURL;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.NTCredentials;
+import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -129,6 +135,59 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
             throw new IllegalArgumentException("timeout must be a non-negative value");
         }
         getHttpClient().getHttpConnectionManager().getParams().setSoTimeout(timeout);
+    }
+
+    /**
+     * Sets the maximum number of connections allowed for the underlying HttpClient.
+     *
+     * @param maxTotalConnections the maximum number of connections allowed
+     * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setMaxTotalConnections(int)
+     */
+    public void setMaxTotalConnections(int maxTotalConnections) {
+        if (maxTotalConnections <= 0) {
+            throw new IllegalArgumentException("maxTotalConnections must be a positive value");
+        }
+        getHttpClient().getHttpConnectionManager().getParams().setMaxTotalConnections(maxTotalConnections);
+    }
+
+    /**
+     * Sets the maximum number of connections per host for the underlying HttpClient. The maximum number of connections
+     * per host can be set in a form accepted by the {@code java.util.Properties} class, like as follows:
+     * <pre>
+     * https://www.example.com=1
+     * http://www.example.com:8080=7
+     * www.springframework.org=10
+     * *=5
+     * </pre>
+     * The host can be specified as hostname, or as URI (with scheme and port). The special host name {@code *} can be
+     * used to specify {@link org.apache.commons.httpclient.HostConfiguration#ANY_HOST_CONFIGURATION}.
+     *
+     * @param maxConnectionsPerHost a properties object specifying the maximum number of connection
+     * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setMaxConnectionsPerHost(org.apache.commons.httpclient.HostConfiguration,
+     *      int)
+     */
+    public void setMaxConnectionsPerHost(Properties maxConnectionsPerHost) throws URIException {
+        for (Iterator iterator = maxConnectionsPerHost.keySet().iterator(); iterator.hasNext();) {
+            String host = (String) iterator.next();
+            HostConfiguration hostConfiguration = new HostConfiguration();
+            if ("*".equals(host)) {
+                hostConfiguration = HostConfiguration.ANY_HOST_CONFIGURATION;
+            }
+            else if (host.startsWith("http://")) {
+                HttpURL httpURL = new HttpURL(host);
+                hostConfiguration.setHost(httpURL);
+            }
+            else if (host.startsWith("https://")) {
+                HttpsURL httpsURL = new HttpsURL(host);
+                hostConfiguration.setHost(httpsURL);
+            }
+            else {
+                hostConfiguration.setHost(host);
+            }
+            int maxHostConnections = Integer.parseInt(maxConnectionsPerHost.getProperty(host));
+            getHttpClient().getHttpConnectionManager().getParams()
+                    .setMaxConnectionsPerHost(hostConfiguration, maxHostConnections);
+        }
     }
 
     /**
