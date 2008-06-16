@@ -18,8 +18,9 @@ package org.springframework.xml.sax;
 
 import java.io.IOException;
 
-import org.springframework.core.io.Resource;
 import org.xml.sax.InputSource;
+
+import org.springframework.core.io.Resource;
 
 /**
  * Convenient utility methods for dealing with SAX.
@@ -48,7 +49,7 @@ public abstract class SaxUtils {
     /** Retrieves the URL from the given resource as System ID. Returns <code>null</code> if it cannot be openened. */
     public static String getSystemId(Resource resource) {
         try {
-            return resource.getURL().toString();
+            return resource.getURI().toString();
         }
         catch (IOException e) {
             return null;
