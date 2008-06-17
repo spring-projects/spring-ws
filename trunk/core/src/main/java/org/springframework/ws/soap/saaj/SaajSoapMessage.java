@@ -78,6 +78,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
     public void setSaajMessage(SOAPMessage soapMessage) {
         Assert.notNull(soapMessage, "soapMessage must not be null");
         saajMessage = soapMessage;
+        envelope = null;
     }
 
     public SoapEnvelope getEnvelope() {
@@ -239,7 +240,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 
         private final Iterator saajIterator;
 
-        public SaajAttachmentIterator(Iterator saajIterator) {
+        private SaajAttachmentIterator(Iterator saajIterator) {
             this.saajIterator = saajIterator;
         }
 
