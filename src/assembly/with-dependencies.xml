@@ -22,7 +22,7 @@
             <binaries>
                 <includeDependencies>false</includeDependencies>
                 <unpack>false</unpack>
-                <outputFileNameMapping>dist/modules/${artifactId}-${version}.${extension}</outputFileNameMapping>
+                <outputFileNameMapping>dist/modules/${module.artifactId}-${module.version}.${module.extension}</outputFileNameMapping>
             </binaries>
             <sources>
                 <fileSets>
@@ -30,13 +30,17 @@
                         <directory>src/main/java</directory>
                     </fileSet>
                 </fileSets>
-                <outputDirectoryMapping>dist/module-sources/${artifactId}</outputDirectoryMapping>
+                <outputDirectoryMapping>dist/module-sources/${module.artifactId}</outputDirectoryMapping>
             </sources>
         </moduleSet>
     </moduleSets>
     <files>
         <file>
             <source>target/${artifactId}-${version}.jar</source>
+            <outputDirectory>dist</outputDirectory>
+        </file>
+        <file>
+            <source>target/${artifactId}-${version}-sources.jar</source>
             <outputDirectory>dist</outputDirectory>
         </file>
     </files>

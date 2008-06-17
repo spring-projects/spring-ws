@@ -22,7 +22,7 @@
             <binaries>
                 <includeDependencies>false</includeDependencies>
                 <unpack>false</unpack>
-                <outputFileNameMapping>dist/modules/${artifactId}-${version}.${extension}</outputFileNameMapping>
+                <outputFileNameMapping>dist/modules/${module.artifactId}-${module.version}.${module.extension}</outputFileNameMapping>
             </binaries>
         </moduleSet>
     </moduleSets>
