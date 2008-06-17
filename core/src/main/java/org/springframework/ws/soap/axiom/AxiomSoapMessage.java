@@ -53,6 +53,8 @@ import org.springframework.ws.transport.TransportOutputStream;
  */
 public class AxiomSoapMessage extends AbstractSoapMessage {
 
+    private static final String EMPTY_SOAP_ACTION = "\"\"";
+
     private SOAPMessage axiomMessage;
 
     private final SOAPFactory axiomFactory;
@@ -85,7 +87,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         axiomMessage = axiomFactory.createSOAPMessage(soapEnvelope, soapEnvelope.getBuilder());
         attachments = new Attachments();
         this.payloadCaching = payloadCaching;
-        soapAction = "\"\"";
+        soapAction = EMPTY_SOAP_ACTION;
     }
 
     /**
@@ -117,7 +119,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         axiomFactory = (SOAPFactory) soapMessage.getSOAPEnvelope().getOMFactory();
         this.attachments = attachments;
         if (!StringUtils.hasLength(soapAction)) {
-            soapAction = "\"\"";
+            soapAction = EMPTY_SOAP_ACTION;
         }
         this.soapAction = soapAction;
         this.payloadCaching = payloadCaching;
@@ -128,10 +130,16 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         return axiomMessage;
     }
 
-    /** Sets the AXIOM <code>SOAPMessage</code> that this <code>AxiomSoapMessage</code> is based on. */
+    /**
+     * Sets the AXIOM <code>SOAPMessage</code> that this <code>AxiomSoapMessage</code> is based on.
+     * <p/>
+     * Calling this method also clears the SOAP Action property.
+     */
     public final void setAxiomMessage(SOAPMessage axiomMessage) {
         Assert.notNull(axiomMessage, "'axiomMessage' must not be null");
         this.axiomMessage = axiomMessage;
+        this.envelope = null;
+        this.soapAction = EMPTY_SOAP_ACTION;
     }
 
     public SoapEnvelope getEnvelope() {
@@ -152,7 +160,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
 
     public void setSoapAction(String soapAction) {
         if (soapAction == null) {
-            soapAction = "";
+            soapAction = EMPTY_SOAP_ACTION;
         }
         if (!soapAction.startsWith("\"")) {
             soapAction = "\"" + soapAction;
