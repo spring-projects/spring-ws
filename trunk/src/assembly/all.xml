@@ -18,13 +18,9 @@
             </includes>
             <binaries>
                 <outputDirectory/>
-                <outputFileNameMapping/>
                 <includeDependencies>false</includeDependencies>
                 <unpack>true</unpack>
                 <unpackOptions>
-                    <includes>
-                        <include>**/oxm/*</include>
-                    </includes>
                     <excludes>
                         <exclude>**/spring.handlers</exclude>
                         <exclude>**/spring.schemas</exclude>

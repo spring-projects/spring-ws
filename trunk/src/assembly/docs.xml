@@ -2,12 +2,14 @@
 <component>
     <fileSets>
         <fileSet>
+            <directory>.</directory>
             <includes>
                 <include>readme.txt</include>
                 <include>license.txt</include>
                 <include>notice.txt</include>
             </includes>
+            <outputDirectory/>
+            <lineEnding>dos</lineEnding>
         </fileSet>
-        <lineEnding>dos</lineEnding>
     </fileSets>
 </component>
