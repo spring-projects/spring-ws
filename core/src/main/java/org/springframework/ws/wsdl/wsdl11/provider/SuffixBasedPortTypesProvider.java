@@ -18,6 +18,8 @@ package org.springframework.ws.wsdl.wsdl11.provider;
 
 import javax.wsdl.Message;
 
+import org.springframework.util.Assert;
+
 /**
  * Implementation of the {@link  PortTypesProvider} interface that is based on suffixes.
  *
@@ -56,6 +58,7 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
      * @see #DEFAULT_REQUEST_SUFFIX
      */
     public void setRequestSuffix(String requestSuffix) {
+        Assert.hasText(requestSuffix, "'requestSuffix' must not be empty");
         this.requestSuffix = requestSuffix;
     }
 
@@ -74,6 +77,7 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
      * @see #DEFAULT_RESPONSE_SUFFIX
      */
     public void setResponseSuffix(String responseSuffix) {
+        Assert.hasText(responseSuffix, "'responseSuffix' must not be empty");
         this.responseSuffix = responseSuffix;
     }
 
@@ -92,6 +96,7 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
      * @see #DEFAULT_FAULT_SUFFIX
      */
     public void setFaultSuffix(String faultSuffix) {
+        Assert.hasText(faultSuffix, "'faultSuffix' must not be empty");
         this.faultSuffix = faultSuffix;
     }
 

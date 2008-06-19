@@ -58,6 +58,7 @@ public class SuffixBasedMessagesProvider extends DefaultMessagesProvider {
      * @see #DEFAULT_REQUEST_SUFFIX
      */
     public void setRequestSuffix(String requestSuffix) {
+        Assert.hasText(requestSuffix, "'requestSuffix' must not be empty");
         this.requestSuffix = requestSuffix;
     }
 
@@ -76,6 +77,7 @@ public class SuffixBasedMessagesProvider extends DefaultMessagesProvider {
      * @see #DEFAULT_RESPONSE_SUFFIX
      */
     public void setResponseSuffix(String responseSuffix) {
+        Assert.hasText(responseSuffix, "'responseSuffix' must not be empty");
         this.responseSuffix = responseSuffix;
     }
 
@@ -94,6 +96,7 @@ public class SuffixBasedMessagesProvider extends DefaultMessagesProvider {
      * @see #DEFAULT_FAULT_SUFFIX
      */
     public void setFaultSuffix(String faultSuffix) {
+        Assert.hasText(faultSuffix, "'faultSuffix' must not be empty");
         this.faultSuffix = faultSuffix;
     }
 
