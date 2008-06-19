@@ -16,12 +16,12 @@
 
 package org.springframework.ws.transport.jms;
 
+import org.custommonkey.xmlunit.XMLAssert;
+
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-
-import org.custommonkey.xmlunit.XMLAssert;
 
 public class JmsIntegrationTest extends AbstractDependencyInjectionSpringContextTests {
 
@@ -35,11 +35,23 @@ public class JmsIntegrationTest extends AbstractDependencyInjectionSpringContext
         this.webServiceTemplate = webServiceTemplate;
     }
 
-    public void testJmsTransport() throws Exception {
+    protected void onTearDown() throws Exception {
+        applicationContext.close();
+        setDirty();
+    }
+
+    public void testTemporaryQueue() throws Exception {
         String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
         StringResult result = new StringResult();
         webServiceTemplate.sendSourceAndReceiveToResult(new StringSource(content), result);
         XMLAssert.assertXMLEqual("Invalid content received", content, result.toString());
-        applicationContext.close();
+    }
+
+    public void testPermanentQueue() throws Exception {
+        String url = "jms:RequestQueue?deliveryMode=NON_PERSISTENT;replyToName=ResponseQueue";
+        String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
+        StringResult result = new StringResult();
+        webServiceTemplate.sendSourceAndReceiveToResult(url, new StringSource(content), result);
+        XMLAssert.assertXMLEqual("Invalid content received", content, result.toString());
     }
 }

@@ -32,6 +32,7 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TemporaryQueue;
+import javax.jms.TemporaryTopic;
 import javax.jms.TextMessage;
 
 import org.springframework.jms.connection.ConnectionFactoryUtils;
@@ -214,7 +215,14 @@ public class JmsSenderConnection extends AbstractSenderConnection {
     protected void onReceiveBeforeRead() throws IOException {
         MessageConsumer messageConsumer = null;
         try {
-            messageConsumer = session.createConsumer(responseDestination);
+            if (responseDestination instanceof TemporaryQueue || responseDestination instanceof TemporaryTopic) {
+                messageConsumer = session.createConsumer(responseDestination);
+            }
+            else {
+                String messageId = requestMessage.getJMSMessageID().replaceAll("'", "''");
+                String messageSelector = "JMSCorrelationID = '" + messageId + "'";
+                messageConsumer = session.createConsumer(responseDestination, messageSelector);
+            }
             Message message = receiveTimeout >= 0 ? messageConsumer.receive(receiveTimeout) : messageConsumer.receive();
             if (message instanceof BytesMessage || message instanceof TextMessage) {
                 responseMessage = message;
@@ -232,6 +240,14 @@ public class JmsSenderConnection extends AbstractSenderConnection {
             if (responseDestination instanceof TemporaryQueue) {
                 try {
                     ((TemporaryQueue) responseDestination).delete();
+                }
+                catch (JMSException e) {
+                    // ignore
+                }
+            }
+            else if (responseDestination instanceof TemporaryTopic) {
+                try {
+                    ((TemporaryTopic) responseDestination).delete();
                 }
                 catch (JMSException e) {
                     // ignore
