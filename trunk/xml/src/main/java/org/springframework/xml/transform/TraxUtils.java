@@ -23,8 +23,12 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stax.StAXResult;
 import javax.xml.transform.stax.StAXSource;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import org.springframework.util.Assert;
 import org.springframework.xml.JaxpVersion;
@@ -183,6 +187,22 @@ public abstract class TraxUtils {
         }
         else {
             return new StaxSource(eventReader);
+        }
+    }
+
+    /**
+     * Returns the {@link Document} of the given {@link DOMSource}.
+     *
+     * @param source the DOM source
+     * @return the document
+     */
+    public static Document getDocument(DOMSource source) {
+        Node node = source.getNode();
+        if (node instanceof Document) {
+            return (Document) node;
+        }
+        else {
+            return node.getOwnerDocument();
         }
     }
 
