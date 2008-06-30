@@ -201,8 +201,11 @@ public abstract class TraxUtils {
         if (node instanceof Document) {
             return (Document) node;
         }
-        else {
+        else if (node != null) {
             return node.getOwnerDocument();
+        }
+        else {
+            return null;
         }
     }
 
