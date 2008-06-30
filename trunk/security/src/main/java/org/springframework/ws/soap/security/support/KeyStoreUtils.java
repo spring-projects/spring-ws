@@ -60,7 +60,7 @@ public abstract class KeyStoreUtils {
             if (StringUtils.hasLength(passwordProperty)) {
                 password = passwordProperty;
             }
-            type = System.getProperty("javax.net.ssl.trustStore");
+            type = System.getProperty("javax.net.ssl.keyStoreType");
         }
         // use the factory bean here, easier to setup
         KeyStoreFactoryBean factoryBean = new KeyStoreFactoryBean();
