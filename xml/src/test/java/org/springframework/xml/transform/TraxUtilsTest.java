@@ -18,6 +18,8 @@ package org.springframework.xml.transform;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLInputFactory;
@@ -37,6 +39,8 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.custommonkey.xmlunit.XMLTestCase;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class TraxUtilsTest extends XMLTestCase {
 
@@ -188,5 +192,16 @@ public class TraxUtilsTest extends XMLTestCase {
         StAXResult result = new StAXResult(eventWriter);
 
         assertEquals("Invalid XMLEventWriter", eventWriter, TraxUtils.getXMLEventWriter(result));
+    }
+
+    public void testGetDocument() throws Exception {
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(true);
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        Document document = documentBuilder.newDocument();
+        assertSame("Invalid document", document, TraxUtils.getDocument(new DOMSource(document)));
+        Element element = document.createElement("element");
+        document.appendChild(element);
+        assertSame("Invalid document", document, TraxUtils.getDocument(new DOMSource(element)));
     }
 }
