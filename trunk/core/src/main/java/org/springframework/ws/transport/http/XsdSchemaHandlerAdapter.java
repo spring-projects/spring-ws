@@ -36,7 +36,14 @@ import org.springframework.xml.transform.TraxUtils;
 import org.springframework.xml.xsd.XsdSchema;
 
 /**
+ * Adapter to use the {@link XsdSchema} interface with the generic <code>DispatcherServlet</code>.
+ * <p/>
+ * Reads the source from the mapped {@link XsdSchema} implementation, and writes that as the result to the
+ * <code>HttpServletResponse</code>. Allows for post-processing the schema in subclasses.
+ *
  * @author Arjen Poutsma
+ * @see XsdSchema
+ * @see #getSchemaSource(XsdSchema)
  * @since 1.5.3
  */
 public class XsdSchemaHandlerAdapter extends TransformerObjectSupport implements HandlerAdapter {
@@ -81,8 +88,7 @@ public class XsdSchemaHandlerAdapter extends TransformerObjectSupport implements
         if (HttpTransportConstants.METHOD_GET.equals(request.getMethod())) {
             response.setContentType(CONTENT_TYPE);
             Transformer transformer = createTransformer();
-            XsdSchema schema = (XsdSchema) handler;
-            Source schemaSource = schema.getSource();
+            Source schemaSource = getSchemaSource((XsdSchema) handler);
             StreamResult responseResult = new StreamResult(response.getOutputStream());
             transformer.transform(schemaSource, responseResult);
         }
@@ -91,4 +97,19 @@ public class XsdSchemaHandlerAdapter extends TransformerObjectSupport implements
         }
         return null;
     }
+
+    /**
+     * Returns the {@link Source} of the given schema. Allows for post-processing and transformation of the schema in
+     * sub-classes.
+     * <p/>
+     * Default implementation simply returns {@link XsdSchema#getSource()}.
+     *
+     * @param schema the schema
+     * @return the source of the given schema
+     * @throws Exception in case of errors
+     */
+    protected Source getSchemaSource(XsdSchema schema) throws Exception {
+        return schema.getSource();
+    }
+
 }
