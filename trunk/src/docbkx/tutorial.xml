@@ -725,7 +725,7 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
             <programlisting><![CDATA[<bean id="holiday" class="org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition">
     <property name="schema" ref="schema"/>
     <property name="portTypeName" value="HumanResource"/>
-    <property name="locationUri" value="http://localhost:8080/holidayService/"/>
+    <property name="locationUri" value="/holidayService/"/>
     <property name="targetNamespace" value="http://mycompany.com/hr/definitions"/>
 </bean>
 
@@ -756,10 +756,9 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
                 <callout arearefs="tutorial.wsdl.gen.locationUri">
                     <para>
                         We set the location where the service can be reached:
-                        <uri>http://localhost:8080/holidayService</uri>. For development, this will suffice, but
-                        obviously we need to change this to <uri>http://mycompany.com/humanresources</uri> when going
-                        live. A common way to to accomplish this is to use a Spring
-                        <classname>PropertyPlaceholderConfigurer</classname>.
+                        <uri>/holidayService/</uri>. We use a a relative URI and we instruct the framework to transform it
+                        dynamically to an absolute URI. Hence, if the service is deployed to different contexts we don't have
+                        to change the URI manually. For more information, please refer to <xref linkend="server-automatic-wsdl-exposure"/>
                     </para>
                 </callout>
                 <callout arearefs="tutorial.wsdl.gen.tns">

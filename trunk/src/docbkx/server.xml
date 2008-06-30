@@ -151,7 +151,7 @@
                 that means that it looks for '<filename>/WEB-INF/spring-ws-servlet.xml</filename>'. This file will
                 contain all of the SWS-specific beans such as endpoints, marshallers and suchlike.
             </para>
-            <section>
+            <section id="server-automatic-wsdl-exposure">
                 <title>Automatic WSDL exposure</title>
                 <para>
                     The <classname>MessageDispatcherServlet</classname> will automatically detect any

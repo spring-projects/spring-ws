@@ -38,7 +38,8 @@
     <bean id="holiday" class="org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition">
         <property name="schema" ref="schema"/>
         <property name="portTypeName" value="HumanResource"/>
-        <property name="locationUri" value="http://localhost:8080/holidayService/"/>
+        <!-- we use a relative uri that will be transformed by spring-ws dep-->
+        <property name="locationUri" value="/holidayService/"/>
         <property name="targetNamespace" value="http://mycompany.com/hr/definitions"/>
     </bean>
 
