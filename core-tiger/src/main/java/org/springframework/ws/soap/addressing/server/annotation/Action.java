@@ -40,4 +40,10 @@ public @interface Action {
     /** Signifies the value for the response WS-Addressing <code>Action</code> header that is provided by the method. */
     String output() default "";
 
+    /**
+     * Signifies the value for the fault response WS-Addressing <code>Action</code> header that is provided by the
+     * method.
+     */
+    String fault() default "";
+
 }

@@ -198,11 +198,12 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
                                                                AddressingVersion version,
                                                                MessageAddressingProperties requestMap) {
         URI responseAction = getResponseAction(endpoint, requestMap);
+        URI faultAction = getFaultAction(endpoint, requestMap);
         EndpointInterceptor[] interceptors =
                 new EndpointInterceptor[preInterceptors.length + postInterceptors.length + 1];
         System.arraycopy(preInterceptors, 0, interceptors, 0, preInterceptors.length);
-        AddressingEndpointInterceptor interceptor =
-                new AddressingEndpointInterceptor(version, messageIdStrategy, messageSenders, responseAction, null);
+        AddressingEndpointInterceptor interceptor = new AddressingEndpointInterceptor(version, messageIdStrategy,
+                messageSenders, responseAction, faultAction);
         interceptors[preInterceptors.length] = interceptor;
         System.arraycopy(postInterceptors, 0, interceptors, preInterceptors.length + 1, postInterceptors.length);
         return new SoapEndpointInvocationChain(endpoint, interceptors, actorsOrRoles, isUltimateReceiver);
@@ -230,6 +231,24 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
      */
     protected abstract Object getEndpointInternal(MessageAddressingProperties map);
 
+    /**
+     * Provides the WS-Addressing Action for response messages, given the endpoint, and request Message Addressing
+     * Properties.
+     *
+     * @param endpoint   the mapped endpoint
+     * @param requestMap the MAP for the request
+     * @return the response Action
+     */
     protected abstract URI getResponseAction(Object endpoint, MessageAddressingProperties requestMap);
+
+    /**
+     * Provides the WS-Addressing Action for response fault messages, given the endpoint, and request Message Addressing
+     * Properties.
+     *
+     * @param endpoint   the mapped endpoint
+     * @param requestMap the MAP for the request
+     * @return the response Action
+     */
+    protected abstract URI getFaultAction(Object endpoint, MessageAddressingProperties requestMap);
 
 }

@@ -96,31 +96,42 @@ public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpoin
         Class endpointClass = methodEndpoint.getMethod().getDeclaringClass();
         Address address = AnnotationUtils.findAnnotation(endpointClass, Address.class);
         if (address != null && StringUtils.hasText(address.value())) {
-            try {
-                return new URI(address.value());
-            }
-            catch (URISyntaxException e) {
-                throw new IllegalArgumentException(
-                        "Invalid Address annotation [" + address.value() + "] on [" + endpointClass + "]");
-            }
+            return getActionUri(address.value(), methodEndpoint);
         }
-        return null;
+        else {
+            return null;
+        }
     }
 
     protected URI getResponseAction(Object endpoint, MessageAddressingProperties map) {
         MethodEndpoint methodEndpoint = (MethodEndpoint) endpoint;
         Action action = methodEndpoint.getMethod().getAnnotation(Action.class);
         if (action != null && StringUtils.hasText(action.output())) {
-            try {
-                return new URI(action.output());
-            }
-            catch (URISyntaxException e) {
-                throw new IllegalArgumentException(
-                        "Invalid Action annotation [" + action.value() + "] on [" + methodEndpoint + "]");
-            }
+            return getActionUri(action.output(), methodEndpoint);
         }
         else {
             return super.getResponseAction(endpoint, map);
+        }
+    }
+
+    protected URI getFaultAction(Object endpoint, MessageAddressingProperties map) {
+        MethodEndpoint methodEndpoint = (MethodEndpoint) endpoint;
+        Action action = methodEndpoint.getMethod().getAnnotation(Action.class);
+        if (action != null && StringUtils.hasText(action.fault())) {
+            return getActionUri(action.fault(), methodEndpoint);
+        }
+        else {
+            return super.getResponseAction(endpoint, map);
+        }
+    }
+
+    private URI getActionUri(String action, MethodEndpoint methodEndpoint) {
+        try {
+            return new URI(action);
+        }
+        catch (URISyntaxException e) {
+            throw new IllegalArgumentException(
+                    "Invalid Action annotation [" + action + "] on [" + methodEndpoint + "]");
         }
     }
 
