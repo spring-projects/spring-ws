@@ -109,7 +109,8 @@ public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport imple
     }
 
     public long getLastModified(HttpServletRequest request, Object handler) {
-        return -1;
+        Source definitionSource = ((WsdlDefinition) handler).getSource();
+        return LastModifiedHelper.getLastModified(definitionSource);
     }
 
     public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)

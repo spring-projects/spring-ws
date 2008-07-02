@@ -56,31 +56,7 @@ public class XsdSchemaHandlerAdapter extends TransformerObjectSupport implements
 
     public long getLastModified(HttpServletRequest request, Object handler) {
         Source schemaSource = ((XsdSchema) handler).getSource();
-        if (schemaSource instanceof DOMSource) {
-            Document document = TraxUtils.getDocument((DOMSource) schemaSource);
-            return document != null ? getLastModified(document.getDocumentURI()) : -1;
-        }
-        else {
-            return getLastModified(schemaSource.getSystemId());
-        }
-    }
-
-    private long getLastModified(String systemId) {
-        if (StringUtils.hasText(systemId)) {
-            try {
-                URI systemIdUri = new URI(systemId);
-                if ("file".equals(systemIdUri.getScheme())) {
-                    File documentFile = new File(systemIdUri);
-                    if (documentFile.exists()) {
-                        return documentFile.lastModified();
-                    }
-                }
-            }
-            catch (URISyntaxException e) {
-                // ignore
-            }
-        }
-        return -1;
+        return LastModifiedHelper.getLastModified(schemaSource);
     }
 
     public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
