@@ -31,7 +31,8 @@ import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
  * implementations. Provides infrastructure for mapping endpoints to actions.
  * <p/>
  * By default, this mapping creates a <code>Action</code> for reply messages based on the request message, plus the
- * extra {@link #setOutputActionSuffix(String) suffix}.
+ * extra {@link #setOutputActionSuffix(String) suffix}, and a   * By default, this mapping creates a <code>Action</code>
+ * for reply messages based on the request message, plus the extra {@link #setOutputActionSuffix(String) suffix}.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
@@ -39,15 +40,25 @@ import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 public abstract class AbstractActionEndpointMapping extends AbstractAddressingEndpointMapping
         implements ApplicationContextAware {
 
-    /** The defaults suffix to add to request <code>Action</code> for reply messages. */
+    /** The defaults suffix to add to the request <code>Action</code> for reply messages. */
     public static final String DEFAULT_OUTPUT_ACTION_SUFFIX = "Response";
+
+    /** The defaults suffix to add to response <code>Action</code> for reply messages. */
+    public static final String DEFAULT_FAULT_ACTION_SUFFIX = "Fault";
 
     // keys are action URIs, values are endpoints
     private final Map endpointMap = new HashMap();
 
     private String outputActionSuffix = DEFAULT_OUTPUT_ACTION_SUFFIX;
 
+    private String faultActionSuffix = DEFAULT_OUTPUT_ACTION_SUFFIX;
+
     private ApplicationContext applicationContext;
+
+    /** Returns the suffix to add to request <code>Action</code>s for reply messages. */
+    public String getOutputActionSuffix() {
+        return outputActionSuffix;
+    }
 
     /**
      * Sets the suffix to add to request <code>Action</code>s for reply messages.
@@ -55,8 +66,23 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
      * @see #DEFAULT_OUTPUT_ACTION_SUFFIX
      */
     public void setOutputActionSuffix(String outputActionSuffix) {
-        Assert.hasText(outputActionSuffix, "'replyActionSuffix' must not be empty");
+        Assert.hasText(outputActionSuffix, "'outputActionSuffix' must not be empty");
         this.outputActionSuffix = outputActionSuffix;
+    }
+
+    /** Returns the suffix to add to request <code>Action</code>s for reply fault messages. */
+    public String getFaultActionSuffix() {
+        return faultActionSuffix;
+    }
+
+    /**
+     * Sets the suffix to add to request <code>Action</code>s for reply fault messages.
+     *
+     * @see #DEFAULT_FAULT_ACTION_SUFFIX
+     */
+    public void setFaultActionSuffix(String faultActionSuffix) {
+        Assert.hasText(faultActionSuffix, "'faultActionSuffix' must not be empty");
+        this.faultActionSuffix = faultActionSuffix;
     }
 
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -137,10 +163,21 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
     protected URI getResponseAction(Object endpoint, MessageAddressingProperties requestMap) {
         URI requestAction = requestMap.getAction();
         if (requestAction != null) {
-            return URI.create(requestAction.toString() + outputActionSuffix);
+            return URI.create(requestAction.toString() + getOutputActionSuffix());
         }
         else {
             return null;
         }
     }
+
+    protected URI getFaultAction(Object endpoint, MessageAddressingProperties requestMap) {
+        URI requestAction = requestMap.getAction();
+        if (requestAction != null) {
+            return URI.create(requestAction.toString() + getFaultActionSuffix());
+        }
+        else {
+            return null;
+        }
+    }
+
 }

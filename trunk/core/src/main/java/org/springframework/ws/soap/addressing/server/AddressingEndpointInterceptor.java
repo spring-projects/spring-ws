@@ -104,7 +104,7 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
         }
         SoapMessage reply = (SoapMessage) messageContext.getResponse();
         URI replyMessageId = getMessageId(reply);
-        URI action = !isFault ? replyAction : faultAction;
+        URI action = isFault ? faultAction : replyAction;
         MessageAddressingProperties replyMap = requestMap.getReplyProperties(replyEpr, action, replyMessageId);
         version.addAddressingHeaders(reply, replyMap);
         if (handleAnonymousAddress(messageContext, replyEpr)) {
