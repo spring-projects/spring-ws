@@ -16,11 +16,12 @@
 
 package org.springframework.ws.server.endpoint.mapping;
 
+import java.lang.reflect.Method;
+
 import junit.framework.TestCase;
+
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
-import org.springframework.ws.server.endpoint.annotation.Endpoint;
-import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 
 public class PayloadRootAnnotationMethodEndpointMappingTest extends TestCase {
 
@@ -31,7 +32,7 @@ public class PayloadRootAnnotationMethodEndpointMappingTest extends TestCase {
     protected void setUp() throws Exception {
         applicationContext = new StaticApplicationContext();
         applicationContext.registerSingleton("mapping", PayloadRootAnnotationMethodEndpointMapping.class);
-        applicationContext.registerSingleton("endpoint", MyEndpoint.class);
+        applicationContext.registerSingleton("endpoint", PayloadRootEndpoint.class);
         applicationContext.registerSingleton("other", OtherBean.class);
         applicationContext.refresh();
         mapping = (PayloadRootAnnotationMethodEndpointMapping) applicationContext.getBean("mapping");
@@ -40,30 +41,12 @@ public class PayloadRootAnnotationMethodEndpointMappingTest extends TestCase {
     public void testRegistration() throws NoSuchMethodException {
         MethodEndpoint endpoint = mapping.lookupEndpoint("{http://springframework.org/spring-ws}Request");
         assertNotNull("MethodEndpoint not registered", endpoint);
-        MethodEndpoint expected = new MethodEndpoint(applicationContext.getBean("endpoint"), "doIt", new Class[0]);
+        Method doIt = PayloadRootEndpoint.class.getMethod("doIt", new Class[0]);
+        MethodEndpoint expected = new MethodEndpoint("endpoint", applicationContext, doIt);
         assertEquals("Invalid endpoint registered", expected, endpoint);
 
         assertNull("Invalid endpoint registered",
                 mapping.lookupEndpoint("{http://springframework.org/spring-ws}Request2"));
-    }
-
-    @Endpoint
-    private static class MyEndpoint {
-
-        @PayloadRoot(localPart = "Request", namespace = "http://springframework.org/spring-ws")
-        public void doIt() {
-
-        }
-
-    }
-
-    private static class OtherBean {
-
-        @PayloadRoot(localPart = "Request2", namespace = "http://springframework.org/spring-ws")
-        public void doIt() {
-
-        }
-
     }
 
 }

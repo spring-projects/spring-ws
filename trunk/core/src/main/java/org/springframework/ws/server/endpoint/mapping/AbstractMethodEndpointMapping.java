@@ -125,6 +125,29 @@ public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapp
     }
 
     /**
+     * Helper method that registers the methods of the given class. This method iterates over the methods of the class,
+     * and calls {@link #getLookupKeyForMethod(Method)} for each. If this returns a string, the method is registered
+     * using {@link #registerEndpoint(String,MethodEndpoint)}.
+     *
+     * @see #getLookupKeyForMethod(Method)
+     */
+    protected void registerMethods(String beanName) {
+        Assert.hasText(beanName, "'beanName' must not be empty");
+        Class endpointClass = getApplicationContext().getType(beanName);
+        Method[] methods = endpointClass.getMethods();
+        for (int i = 0; i < methods.length; i++) {
+            if (JdkVersion.isAtLeastJava15() && methods[i].isSynthetic() ||
+                    methods[i].getDeclaringClass().equals(Object.class)) {
+                continue;
+            }
+            String key = getLookupKeyForMethod(methods[i]);
+            if (StringUtils.hasLength(key)) {
+                registerEndpoint(key, new MethodEndpoint(beanName, getApplicationContext(), methods[i]));
+            }
+        }
+    }
+
+    /**
      * Returns the the endpoint keys for the given method. Returns <code>null</code> if the method is not to be
      * registered, which is the default.
      *
