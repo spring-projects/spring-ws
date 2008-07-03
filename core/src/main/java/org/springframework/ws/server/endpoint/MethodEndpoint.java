@@ -19,6 +19,7 @@ package org.springframework.ws.server.endpoint;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.core.JdkVersion;
 import org.springframework.util.Assert;
 
@@ -32,9 +33,11 @@ import org.springframework.util.Assert;
  */
 public final class MethodEndpoint {
 
-    private Object bean;
+    private final Object bean;
 
-    private Method method;
+    private final Method method;
+
+    private final BeanFactory beanFactory;
 
     /**
      * Constructs a new method endpoint with the given bean and method.
@@ -47,6 +50,7 @@ public final class MethodEndpoint {
         Assert.notNull(method, "method must not be null");
         this.bean = bean;
         this.method = method;
+        this.beanFactory = null;
     }
 
     /**
@@ -62,6 +66,26 @@ public final class MethodEndpoint {
         Assert.notNull(methodName, "method must not be null");
         this.bean = bean;
         this.method = bean.getClass().getMethod(methodName, parameterTypes);
+        this.beanFactory = null;
+    }
+
+    /**
+     * Constructs a new method endpoint with the given bean name and method. The bean name will be lazily initized when
+     * {@link #invoke(Object[])} is called.
+     *
+     * @param beanName    the bean name
+     * @param beanFactory the bean factory to use for bean initialization
+     * @param method      the method
+     */
+    public MethodEndpoint(String beanName, BeanFactory beanFactory, Method method) {
+        Assert.hasText(beanName, "'beanName' must not be null");
+        Assert.notNull(beanFactory, "'beanFactory' must not be null");
+        Assert.notNull(method, "'method' must not be null");
+        Assert.isTrue(beanFactory.containsBean(beanName),
+                "Bean factory [" + beanFactory + "] does not contain bean " + "with name [" + beanName + "]");
+        this.bean = beanName;
+        this.beanFactory = beanFactory;
+        this.method = method;
     }
 
     /** Returns the object bean for this method endpoint. */
@@ -82,8 +106,13 @@ public final class MethodEndpoint {
      * @throws Exception when the method invocation results in an exception
      */
     public Object invoke(Object[] args) throws Exception {
+        Object endpoint = bean;
+        if (endpoint instanceof String) {
+            String endpointName = (String) endpoint;
+            endpoint = beanFactory.getBean(endpointName);
+        }
         try {
-            return this.method.invoke(this.bean, args);
+            return this.method.invoke(endpoint, args);
         }
         catch (InvocationTargetException ex) {
             handleInvocationTargetException(ex);

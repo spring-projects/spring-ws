@@ -19,23 +19,34 @@ package org.springframework.ws.server.endpoint.mapping;
 import java.lang.annotation.Annotation;
 
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 
 /**
  * Abstract base for {@link org.springframework.ws.server.EndpointMapping} implementations that map classes tagged with
  * an annotation. By default the annotation is {@link Endpoint}, but this can be overriden in subclasses.
  * <p/>
- * The methods of each bean carrying @Endpoint will be registered using {@link #registerMethods(Object)}.
+ * The methods of each bean carrying @Endpoint will be registered using {@link #registerMethods(String)}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
  */
-public abstract class AbstractAnnotationMethodEndpointMapping extends AbstractMethodEndpointMapping
-        implements BeanPostProcessor {
+public abstract class AbstractAnnotationMethodEndpointMapping extends AbstractMethodEndpointMapping {
 
-    public final Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        return bean;
+    private boolean detectEndpointsInAncestorContexts = false;
+
+    /**
+     * Set whether to detect endpoint beans in ancestor ApplicationContexts.
+     * <p/>
+     * Default is "false": Only endpoint beans in the current ApplicationContext will be detected, i.e. only in the
+     * context that this EndpointMapping itself is defined in (typically the current MessageDispatcherServlet's
+     * context).
+     * <p/>
+     * Switch this flag on to detect endpoint beans in ancestor contexts (typically the Spring root
+     * WebApplicationContext) as well.
+     */
+    public void setDetectEndpointsInAncestorContexts(boolean detectEndpointsInAncestorContexts) {
+        this.detectEndpointsInAncestorContexts = detectEndpointsInAncestorContexts;
     }
 
     /** Returns the 'endpoint' annotation type. Default is {@link Endpoint}. */
@@ -43,12 +54,21 @@ public abstract class AbstractAnnotationMethodEndpointMapping extends AbstractMe
         return Endpoint.class;
     }
 
-    public final Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        Class endpointClass = getEndpointClass(bean);
-        if (endpointClass != null && endpointClass.getAnnotation(getEndpointAnnotationType()) != null) {
-            registerMethods(bean);
+    protected final void initApplicationContext() throws BeansException {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Looking for endpoints in application context: " + getApplicationContext());
         }
-        return bean;
+        String[] beanNames = (this.detectEndpointsInAncestorContexts ?
+                BeanFactoryUtils.beanNamesForTypeIncludingAncestors(getApplicationContext(), Object.class) :
+                getApplicationContext().getBeanNamesForType(Object.class));
+
+        for (int i = 0; i < beanNames.length; i++) {
+            String beanName = beanNames[i];
+            Class endpointClass = getApplicationContext().getType(beanName);
+            if (endpointClass != null && endpointClass.getAnnotation(getEndpointAnnotationType()) != null) {
+                registerMethods(beanName);
+            }
+        }
     }
 
 }
