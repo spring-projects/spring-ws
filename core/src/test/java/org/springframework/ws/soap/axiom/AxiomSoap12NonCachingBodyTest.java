@@ -31,20 +31,4 @@ public class AxiomSoap12NonCachingBodyTest extends AbstractSoap12BodyTestCase {
         return axiomSoapMessage.getSoapBody();
     }
 
-    // overload the parent class version since it assumes the body has a payload ele after calling
-    // getPayloadResult, which is not true without payload caching. The paylaod ele doesn't exist until
-    // the axiomSoapMessage.writeTo() method is called in the normal call flow
-/*
-    public void testGetPayloadResultTwice() throws Exception {
-        SoapBody soapBody = createSoapBody();
-        String payload = "<payload xmlns='http://www.springframework.org' />";
-        transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
-        transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
-        DOMResult domResult = new DOMResult();
-        transformer.transform(soapBody.getPayloadSource(), domResult);
-        Element payloadElement = ((Document) domResult.getNode()).getDocumentElement();
-        assertTrue("No payload node was found", payloadElement != null);
-        assertTrue("Invalid payload local name", "payload".equals(payloadElement.getLocalName()));
-    }
-*/
 }
