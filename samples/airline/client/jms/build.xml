@@ -23,7 +23,7 @@
             <remoteRepository refid="spring-ext"/>
             <dependency groupId="javax.xml.soap" artifactId="saaj-api" version="1.3"/>
             <dependency groupId="org.apache.activemq" artifactId="activemq-core" version="4.1.1"/>
-            <dependency groupId="org.springframework.ws" artifactId="spring-ws-core" version="1.5.2"/>
+            <dependency groupId="org.springframework.ws" artifactId="spring-ws-core" version="1.5.3"/>
         </artifact:dependencies>
 
         <artifact:dependencies pathId="runtime.classpath">
@@ -31,7 +31,7 @@
             <remoteRepository refid="java.net"/>
             <remoteRepository refid="spring-ext"/>
             <dependency groupId="com.sun.xml.messaging.saaj" artifactId="saaj-impl" version="1.3"/>
-            <dependency groupId="org.springframework.ws" artifactId="spring-ws-support" version="1.5.2"/>
+            <dependency groupId="org.springframework.ws" artifactId="spring-ws-support" version="1.5.3"/>
             <dependency groupId="org.springframework" artifactId="spring-jms" version="2.5.1"/>
         </artifact:dependencies>
 
