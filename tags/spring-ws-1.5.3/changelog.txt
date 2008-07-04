@@ -2,6 +2,39 @@ SPRING WEB SERVICES CHANGELOG
 =============================
 http://www.springframework.org/spring-ws
 
+Changes in version 1.5.3
+-------------------------
+** Bug
+    * [SWS-357] - Axiom does not support SwA attachments 
+    * [SWS-358] - NPE in JmsSenderConnection.onReceiveBeforeRead() when the received Message is null
+    * [SWS-359] - Using Axiom with payload caching off sometimes creates empty soap bodies
+    * [SWS-363] - AcegiPlainTextPasswordValidationCallbackHandler doesn't implement InitializingBean
+    * [SWS-365] - wss4j-1.5.4.jar not in repository
+    * [SWS-366] - Dynamic AOP proxies for @Endpoints result in IllegalArgumentExceptions
+    * [SWS-367] - SOAP over JMS (BEA Weblogic 9.2) - empty body in SOAP responses with a jms TextMessage
+    * [SWS-370] - 'KeyStoreUtils.loadDefaultKeyStore()' issue
+    * [SWS-373] - broken links in FAQ
+    * [SWS-374] - DefaultURIResolver with witespaces
+    * [SWS-376] - SaajSoapMessage.setSaajMessage() and AxiomSoapMessage.setAxiomMessage() should clear cached fields
+    * [SWS-378] - Wss4jSecurityInterceptor.toDocument(..) causes decryption to fail when using SaajSoapMessageFactory
+    * [SWS-380] - Incorrect soap:address location="http://localhost:8080/holidayService/ for samples/tutorial - resource (/holidayService/) is not available
+    * [SWS-385] - Exceptions thrown using WS-Addressing result in Assert failure in Addressing10.addAddressingHeaders
+
+** Improvement
+    * [SWS-273] - AbstractAnnotationMethodEndpointMapping doesn't support proxied bean dependencies
+    * [SWS-361] - XStream.addImplicitCollection not supported by XStreamMarshaller
+    * [SWS-371] - Expose MaxConnectionsPerHost and TotalConnections in CommonsHttpMessageSender
+    * [SWS-377] - Create all-in-one source jar
+    * [SWS-382] - DefaultWsdl11Definition should throw exceptions when given an empty suffix
+    * [SWS-383] - JmsSenderConnection does not correlate response messages on permanent response queues
+
+** New Feature
+    * [SWS-346] - HandlerAdapter for XsdSchemas
+    * [SWS-356] - Document X509 support in Wss4jSecurityInterceptor
+
+** Task
+    * [SWS-369] - Website links broken
+
 Changes in version 1.5.2
 -------------------------
 ** Bug
@@ -13,7 +46,6 @@ Changes in version 1.5.2
     * [SWS-302] - Need to prevent parsing server-side responses and client-side requests into axiom trees if using axiom and payload caching is off
     * [SWS-329] - SaajContentHandler shouldn't repeat namespace declarations
     * [SWS-344] - Add @Endpoints support to AbstractEndpointExceptionResolver
-
 
 ** Task
     * [SWS-354] - Document AbstractValidatingMarshallingPayloadEndpoint and AbstractFaultCreatingValidatingMarshallingPayloadEndpoint
