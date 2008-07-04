@@ -83,7 +83,7 @@
                 <include>mtom/**/spring-ws-logo.png</include>
                 <include>maven-ant-tasks-*.jar</include>
                 <include>**/ant-dotnet-*.jar</include>
-                <includes>**/*.exe</includes>
+                <include>**/*.exe</include>
             </includes>
             <excludes>
                 <exclude>airline/activemq-data</exclude>

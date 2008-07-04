@@ -1,15 +1,15 @@
 Dear Spring community,
 
-I'm pleased to announce that Spring Web Services 1.5.2 has been released!
+I'm pleased to announce that Spring Web Services 1.5.3 has been released!
 
-This is the second bug fix and enhancement release in the Spring-WS 1.5 series. 
-It fixes all bugs reported since 1.5.1 and introduces various enhancements
+This is the third bug fix and enhancement release in the Spring-WS 1.5 series. 
+It fixes all bugs reported since 1.5.2 and introduces various enhancements
 throughout the framework:
 
-* Fixed WS-Security signatures when using WSS4J in combination with SAAJ
-  messages (for real this time ;) )
-* Drastically improved performance of writing to Axiom Message payloads
+* Support for receiving SOAP messages on permanent JMS queues, and various
+  other JMS transport bug fixes
+* Support for Soap with Attachments using Axiom
 
-and more. Please see the changelog for details.
+and more, including more documentation. Please see the changelog for details.
 
 For more information, see http://static.springframework.org/spring-ws/site/
