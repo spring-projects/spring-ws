@@ -18,6 +18,8 @@ package org.springframework.ws.soap.axiom;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import javax.activation.DataHandler;
 import javax.xml.stream.XMLStreamException;
@@ -26,6 +28,7 @@ import org.apache.axiom.attachments.Attachments;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMOutputFormat;
+import org.apache.axiom.om.impl.MIMEOutputUtils;
 import org.apache.axiom.om.impl.MTOMConstants;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPEnvelope;
@@ -212,22 +215,34 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
             OMOutputFormat format = new OMOutputFormat();
             format.setCharSetEncoding(charsetEncoding);
             format.setSOAP11(getVersion() == SoapVersion.SOAP_11);
-            if (!attachments.getContentIDSet().isEmpty()) {
-                format.setDoingSWA(true);
+            boolean hasAttachments = !attachments.getContentIDSet().isEmpty();
+            if (hasAttachments) {
+                if (isXopPackage()) {
+                    format.setDoOptimize(true);
+                }
+                else {
+                    format.setDoingSWA(true);
+                }
             }
             if (outputStream instanceof TransportOutputStream) {
                 TransportOutputStream transportOutputStream = (TransportOutputStream) outputStream;
                 String contentType = format.getContentType();
-                contentType += "; charset=\"" + charsetEncoding + "\"";
+                if (!hasAttachments) {
+                    contentType += "; charset=\"" + charsetEncoding + "\"";
+                }
                 transportOutputStream.addHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
                 transportOutputStream.addHeader(TransportConstants.HEADER_SOAP_ACTION, soapAction);
             }
-
-            if (payloadCaching) {
-                axiomMessage.serialize(outputStream, format);
+            if (!(format.isOptimized()) & format.isDoingSWA()) {
+                writeSwAMessage(outputStream, format);
             }
             else {
-                axiomMessage.serializeAndConsume(outputStream, format);
+                if (payloadCaching) {
+                    axiomMessage.serialize(outputStream, format);
+                }
+                else {
+                    axiomMessage.serializeAndConsume(outputStream, format);
+                }
             }
             outputStream.flush();
         }
@@ -237,6 +252,19 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         catch (OMException ex) {
             throw new AxiomSoapMessageException("Could not write message to OutputStream: " + ex.getMessage(), ex);
         }
+    }
+
+    private void writeSwAMessage(OutputStream outputStream, OMOutputFormat format)
+            throws XMLStreamException, UnsupportedEncodingException {
+        StringWriter writer = new StringWriter();
+        SOAPEnvelope envelope = axiomMessage.getSOAPEnvelope();
+        if (payloadCaching) {
+            envelope.serialize(writer, format);
+        }
+        else {
+            envelope.serializeAndConsume(writer, format);
+        }
+        MIMEOutputUtils.writeSOAPWithAttachmentsMessage(writer, outputStream, attachments, format);
     }
 
     public String toString() {
