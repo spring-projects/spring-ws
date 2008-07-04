@@ -20,6 +20,10 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.StringTokenizer;
+import javax.activation.CommandMap;
+import javax.activation.DataHandler;
+import javax.activation.MailcapCommandMap;
+import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -57,8 +61,10 @@ import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.util.StringUtils;
+import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.WebServiceTransportException;
 import org.springframework.ws.pox.dom.DomPoxMessageFactory;
+import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapMessageFactory;
 import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.ws.soap.client.SoapFaultClientException;
@@ -72,11 +78,17 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
 
     private static Server jettyServer;
 
-    private String messagePayload;
+    private String messagePayload = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
 
     public static Test suite() {
         return new ServerTestSetup(new TestSuite(WebServiceTemplateIntegrationTest.class));
     }
+
+/*
+    public void testSaaj() throws Exception {
+        doSoap(new SaajSoapMessageFactory(MessageFactory.newInstance()));
+    }
+*/
 
     public void testAxiom() throws Exception {
         doSoap(new AxiomSoapMessageFactory());
@@ -123,10 +135,10 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
         notFound();
         fault();
         faultNonCompliant();
+        attachment();
     }
 
     private void sendSourceAndReceiveToResult() throws SAXException, IOException {
-        messagePayload = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
         StringResult result = new StringResult();
         boolean b = template.sendSourceAndReceiveToResult("http://localhost:8888/soap/echo",
                 new StringSource(messagePayload), result);
@@ -240,6 +252,19 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
         }
     }
 
+    private void attachment() {
+        template.sendSourceAndReceiveToResult("http://localhost:8888/soap/attachment", new StringSource(messagePayload),
+                new WebServiceMessageCallback() {
+
+                    public void doWithMessage(WebServiceMessage message) throws IOException, TransformerException {
+                        SoapMessage soapMessage = (SoapMessage) message;
+                        final String attachmentContent = "content";
+                        soapMessage.addAttachment("attachment-1",
+                                new DataHandler(new ByteArrayDataSource(attachmentContent, "text/plain")));
+                    }
+                }, new StringResult());
+    }
+
     /** Servlet that returns and error message for a given status code. */
     private static class ErrorServlet extends HttpServlet {
 
@@ -284,7 +309,7 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
     /** Abstract SOAP Servlet */
     private abstract static class AbstractSoapServlet extends HttpServlet {
 
-        protected MessageFactory msgFactory = null;
+        protected MessageFactory messageFactory = null;
 
         private int sc = -1;
 
@@ -295,7 +320,7 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
         public void init(ServletConfig servletConfig) throws ServletException {
             super.init(servletConfig);
             try {
-                msgFactory = MessageFactory.newInstance();
+                messageFactory = MessageFactory.newInstance();
             }
             catch (SOAPException ex) {
                 throw new ServletException("Unable to create message factory" + ex.getMessage());
@@ -305,7 +330,7 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
         public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
             try {
                 MimeHeaders headers = getHeaders(req);
-                SOAPMessage request = msgFactory.createMessage(headers, req.getInputStream());
+                SOAPMessage request = messageFactory.createMessage(headers, req.getInputStream());
                 SOAPMessage reply = onMessage(request);
                 if (sc != -1) {
                     resp.setStatus(sc);
@@ -326,7 +351,7 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
                 }
             }
             catch (Exception ex) {
-                throw new ServletException("SAAJ POST failed " + ex.getMessage());
+                throw new ServletException("SAAJ POST failed " + ex.getMessage(), ex);
             }
         }
 
@@ -373,10 +398,18 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
     private static class SoapFaultServlet extends AbstractSoapServlet {
 
         protected SOAPMessage onMessage(SOAPMessage message) throws SOAPException {
-            SOAPMessage response = msgFactory.createMessage();
+            SOAPMessage response = messageFactory.createMessage();
             SOAPBody body = response.getSOAPBody();
             body.addFault(new QName("http://schemas.xmlsoap.org/soap/envelope/", "Server"), "Server fault");
             return response;
+        }
+    }
+
+    private static class AttachmentsServlet extends AbstractSoapServlet {
+
+        protected SOAPMessage onMessage(SOAPMessage message) throws SOAPException {
+            assertEquals("No attachments found", 1, message.countAttachments());
+            return null;
         }
     }
 
@@ -388,6 +421,8 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
         }
 
         protected void setUp() throws Exception {
+            removeXmlDataContentHandler();
+
             jettyServer = new Server(8888);
             Context jettyContext = new Context(jettyServer, "/");
             jettyContext.addServlet(new ServletHolder(new EchoSoapServlet()), "/soap/echo");
@@ -396,10 +431,22 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
             badRequestFault.setSc(400);
             jettyContext.addServlet(new ServletHolder(badRequestFault), "/soap/badRequestFault");
             jettyContext.addServlet(new ServletHolder(new NoResponseSoapServlet()), "/soap/noResponse");
+            jettyContext.addServlet(new ServletHolder(new AttachmentsServlet()), "/soap/attachment");
             jettyContext.addServlet(new ServletHolder(new PoxServlet()), "/pox");
             jettyContext.addServlet(new ServletHolder(new ErrorServlet(404)), "/errors/notfound");
             jettyContext.addServlet(new ServletHolder(new ErrorServlet(500)), "/errors/server");
             jettyServer.start();
+        }
+
+        /**
+         * A workaround for the faulty XmlDataContentHandler in the SAAJ RI, which cannot handle mime types such as
+         * "text/xml; charset=UTF-8", causing issues with Axiom. We basically reset the command map
+         */
+        private void removeXmlDataContentHandler() throws SOAPException {
+            MessageFactory messageFactory = MessageFactory.newInstance();
+            SOAPMessage message = messageFactory.createMessage();
+            message.createAttachmentPart();
+            CommandMap.setDefaultCommandMap(new MailcapCommandMap());
         }
 
         protected void tearDown() throws Exception {
