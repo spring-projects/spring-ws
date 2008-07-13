@@ -17,7 +17,7 @@
                     If you get the following Exception:
                 </p>
                 <pre>
-                    NAMESPACE_ERR: An attempt is made to create or change an object in a way which is incorrect with regard to namespaces.
+NAMESPACE_ERR: An attempt is made to create or change an object in a way which is incorrect with regard to namespaces.
                 </pre>
                 <p>
                     Most often, this exception is related to an older version of Xalan being used. Make sure to upgrade
@@ -118,15 +118,15 @@
                         <tr><th>Application Server</th><th>SAAJ Version</th></tr>
                         <tr><td>BEA WebLogic 8</td><td>1.1</td></tr>
                         <tr><td>BEA WebLogic 9</td><td>1.1/1.2<sup>*</sup></td></tr>
+                        <tr><td>BEA WebLogic 10</td><td>1.3<sup>**</sup></td></tr>
                         <tr><td>IBM WebSphere 6</td><td>1.2</td></tr>
                         <tr><td>SUN Glassfish 1</td><td>1.3</td></tr>
-                        <tr><td>JBoss 4.2</td><td>1.3<sup>**</sup></td></tr>
+                        <tr><td>JBoss 4.2</td><td>1.3<sup>***</sup></td></tr>
                     </tbody>
                 </table>
-                <p>* = See <a href="#saaj-weblogic9">below</a>.
-                </p>
-                <p>** = See <a href="#saaj-jboss">below</a>.
-                </p>
+                <p>* = See <a href="#saaj-weblogic9">below</a>.</p>
+                <p>** = See <a href="#saaj-weblogic10">below</a>.</p>
+                <p>*** = See <a href="#saaj-jboss">below</a>.</p>
                 <p>Additionally, Java SE 6 includes SAAJ 1.3.</p>
             </answer>
         </faq>
@@ -136,13 +136,13 @@
             <answer>
                 <p>If you get the following stack trace:</p>
                 <pre>
-                    org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'org.springframework.ws.soap.saaj.SaajSoapMessageFactory' defined in ServletContext resource [/WEB-INF/springws-servlet.xml]:
-                    Invocation of init method failed;
-                    nested exception is java.lang.NoSuchMethodError:
-                    javax.xml.soap.MessageFactory.newInstance(Ljava/lang/String;)Ljavax/xml/soap/MessageFactory;
-                    Caused by:
-                    java.lang.NoSuchMethodError:
-                    javax.xml.soap.MessageFactory.newInstance(Ljava/lang/String;)Ljavax/xml/soap/MessageFactory;
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'org.springframework.ws.soap.saaj.SaajSoapMessageFactory' defined in ServletContext resource [/WEB-INF/springws-servlet.xml]:
+Invocation of init method failed;
+nested exception is java.lang.NoSuchMethodError:
+javax.xml.soap.MessageFactory.newInstance(Ljava/lang/String;)Ljavax/xml/soap/MessageFactory;
+Caused by:
+java.lang.NoSuchMethodError:
+javax.xml.soap.MessageFactory.newInstance(Ljava/lang/String;)Ljavax/xml/soap/MessageFactory;
                 </pre>
                 <p>
                     Like most J2EE libraries, SAAJ consists of two parts: the API that consists of interfaces
@@ -164,14 +164,14 @@
             </question>
             <answer>
                 <p>
-                    Weblogic 9 has a known bug in the SAAJ 1.2 implementation: it implement all the 1.2 interfaces,
+                    WebLogic 9 has a known bug in the SAAJ 1.2 implementation: it implement all the 1.2 interfaces,
                     but throws <tt>UnsupportedOperationExceptions</tt> when you call them.
                     Confusingly, the exception message is <tt>This class does not support SAAJ 1.1</tt>, even though
                     it supports SAAJ 1.1 just fine; it just doesn't support SAAJ <strong>1.2</strong>.
                     See also<a href="http://forums.bea.com/bea/thread.jspa?threadID=600007964">this BEA forum post</a>.
                 </p>
                 <p>
-                    Spring-WS has a workaround for this, we basically use SAAJ 1.1 only when dealing with Weblogic 9.
+                    Spring-WS has a workaround for this, we basically use SAAJ 1.1 only when dealing with WebLogic 9.
                     Unfortunately, other frameworks which depend on SAAJ, such as XWSS, do not have this workaround.
                     These frameworks happily call SAAJ 1.2 methods, which throw this exception.
                 </p>
@@ -179,11 +179,36 @@
                     The solution is to not use BEA's version of SAAJ, but to use another implementation, like the one
                     from Axis 1, or SUN. In you application context, use the following:
                     <source>
-                        <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory">
-                            <property name="messageFactory">
-                                <bean class="com.sun.xml.messaging.saaj.soap.MessageFactoryImpl"/>
-                            </property>
-                        </bean>
+&lt;bean id=&quot;messageFactory&quot; class=&quot;org.springframework.ws.soap.saaj.SaajSoapMessageFactory&quot;&gt;
+    &lt;property name=&quot;messageFactory&quot;&gt;
+        &lt;bean class=&quot;com.sun.xml.messaging.saaj.soap.MessageFactoryImpl&quot;/&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
+                    </source>
+                </p>
+            </answer>
+        </faq>
+        <faq id="saaj-weblogic10">
+            <question>
+                I get an <tt>UnsupportedOperationException</tt> "This class does not support SAAJ 1.1" when I use SAAJ under WebLogic 10. What can I do about it?
+            </question>
+            <answer>
+                <p>
+                    Weblogic 10 ships with two SAAJ implementations. By default the buggy 9.x implementation is used
+                    (which lives in the package <tt>weblogic.webservice.core.soap</tt>),
+                    but there is a new implementation, which supports SAAJ 1.3
+                    (which lives in the package <tt>weblogic.xml.saaj</tt>).
+                    By looking at the DEBUG logging when Spring Web Services starts up, you can see which SAAJ
+                    implementation is used.
+                </p>
+                <p>
+                    To use this new version, you have to create a message factory bean like so:
+                    <source>
+&lt;bean id=&quot;messageFactory&quot; class=&quot;org.springframework.ws.soap.saaj.SaajSoapMessageFactory&quot;&gt;
+    &lt;property name=&quot;messageFactory&quot;&gt;
+        &lt;bean class=&quot;weblogic.xml.saaj.MessageFactoryImpl&quot;/&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
                     </source>
                 </p>
             </answer>
@@ -198,11 +223,11 @@
                     the JBoss implementation, but to use another implementation. For instance, you can use SUN's
                     reference implementation like so:
                     <source>
-                        <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory">
-                            <property name="messageFactory">
-                                <bean class="com.sun.xml.messaging.saaj.soap.ver1_1.SOAPMessageFactory1_1Impl"/>
-                            </property>
-                        </bean>
+&lt;bean id=&quot;messageFactory&quot; class=&quot;org.springframework.ws.soap.saaj.SaajSoapMessageFactory&quot;&gt;
+    &lt;property name=&quot;messageFactory&quot;&gt;
+        &lt;bean class=&quot;com.sun.xml.messaging.saaj.soap.ver1_1.SOAPMessageFactory1_1Impl&quot;/&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
                     </source>
                 </p>
             </answer>
