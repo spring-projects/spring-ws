@@ -22,7 +22,8 @@
             <para>
                 Spring's bean factory makes it easy to configure marshallers, without needing to construct JAXB context,
                 JiBX binding factories, etc. The marshallers can be configured as any other bean in your application
-                context.
+                context. Additionally, XML Schema-based configuration is available for a number of marshallers, making
+                the configuration even simpler.
             </para>
         </formalpara>
         <formalpara>
@@ -309,6 +310,43 @@ public class Application {
 ]]></programlisting>
         </para>
     </section>
+	<section>
+       	<title>XML Schema-based Configuration</title>
+       	<para>
+       		Marshallers could be configured more concisely using tags from the OXM namespace.
+       		To make these tags available, the appropriate schema has to be referenced first in the preamble of the XML configuration file.
+       		The emboldened text	in the below snippet references the OXM schema:
+       	</para>
+       	<programlisting><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    ]]><emphasis role="bold"><![CDATA[xmlns:oxm="http://www.springframework.org/schema/oxm"]]></emphasis>
+    <![CDATA[xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    ]]><emphasis role="bold"><![CDATA[http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-1.5.xsd"]]></emphasis><![CDATA[>
+]]></programlisting>
+		<para>
+			Currently, the following tags are available:
+			<itemizedlist>
+				<listitem>
+					<para><link linkend="oxm-jaxb1-xsd"><literal>jaxb1-marshaller</literal></link></para>
+				</listitem>
+				<listitem>
+					<para><link linkend="oxm-jaxb2-xsd"><literal>jaxb2-marshaller</literal></link></para>
+				</listitem>
+				<listitem>
+					<para><link linkend="oxm-xmlbeans-xsd"><literal>xmlbeans-marshaller</literal></link></para>
+				</listitem>
+				<listitem>
+					<para><link linkend="oxm-jibx-xsd"><literal>jibx-marshaller</literal></link></para>
+				</listitem>
+			</itemizedlist>
+		</para>
+		<para>
+			Each tag will be explained in its respective marshaller's section. As an example though, here is how
+			the configuration of a JAXB2 marshaller might look like:
+		</para>
+		<programlisting><![CDATA[<oxm:jaxb2-marshaller id="marshaller" contextPath="org.springframework.ws.samples.airline.schema"/>]]></programlisting>
+    </section>    
     <section id="oxm-jaxb">
         <title>JAXB</title>
         <para>
@@ -345,6 +383,48 @@ public class Application {
     ...
 
 </beans>]]></programlisting>
+	        <section id="oxm-jaxb1-xsd">
+	        	<title>XML Schema-based Configuration</title>
+	        	<para>
+	        		The <literal>jaxb1-marshaller</literal> tag configures a <classname>org.springframework.oxm.jaxb.Jaxb1Marshaller</classname>.
+	        		Here is an example:
+	        	</para>
+	        	<programlisting><![CDATA[<oxm:jaxb1-marshaller id="marshaller" contextPath="org.springframework.ws.samples.airline.schema"/>]]></programlisting>
+	        	<para>
+	        		Available attributes are:
+                    <informaltable>
+                        <tgroup cols="3">
+                        	<colspec colwidth="1.5*"/>
+                        	<colspec colwidth="4*"/>
+                        	<colspec colwidth="1*"/>
+                            <thead>
+                                <row>
+                                    <entry>Attribute</entry>
+                                    <entry>Description</entry>
+                                    <entry>Required</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><literal>id</literal></entry>
+                                    <entry>the id of the marshaller</entry>
+                                    <entry>no</entry>
+                                </row>
+                                <row>
+                                    <entry><literal>contextPath</literal></entry>
+                                    <entry>the JAXB Context path</entry>
+                                    <entry>yes</entry>
+                                </row>
+                                <row>
+                                    <entry><literal>validating</literal></entry>
+                                    <entry>indicates whether the incoming XML should be validated</entry>
+                                    <entry>no</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </informaltable>
+	        	</para>
+	        </section>
         </section>
         <section id="oxm-jaxb2">
             <title>Jaxb2Marshaller</title>
@@ -370,6 +450,52 @@ public class Application {
     ...
 
 </beans>]]></programlisting>
+			<section id="oxm-jaxb2-xsd">
+	        	<title>XML Schema-based Configuration</title>
+	        	<para>
+	        		The <literal>jaxb2-marshaller</literal> tag configures a <classname>org.springframework.oxm.jaxb.Jaxb2Marshaller</classname>.
+	        		Here is an example:
+	        	</para>
+	        	<programlisting><![CDATA[<oxm:jaxb2-marshaller id="marshaller" contextPath="org.springframework.ws.samples.airline.schema"/>]]></programlisting>
+	        	<para>
+	        		Alternatively, the list of classes to bind can be provided to the marshaller via the <literal>class-to-be-bound</literal> child tag:
+	        	</para>
+	        	<programlisting><![CDATA[<oxm:jaxb2-marshaller id="marshaller">
+    <oxm:class-to-be-bound name="org.springframework.ws.samples.airline.schema.Airport"/>
+    <oxm:class-to-be-bound name="org.springframework.ws.samples.airline.schema.Flight"/>
+    ...
+</oxm:jaxb2-marshaller>
+	        	]]></programlisting>
+	        	<para>
+	        		Available attributes are:
+                    <informaltable>
+                        <tgroup cols="3">
+                        	<colspec colwidth="1.5*"/>
+                        	<colspec colwidth="4*"/>
+                        	<colspec colwidth="1*"/>
+                            <thead>
+                                <row>
+                                    <entry>Attribute</entry>
+                                    <entry>Description</entry>
+                                    <entry>Required</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><literal>id</literal></entry>
+                                    <entry>the id of the marshaller</entry>
+                                    <entry>no</entry>
+                                </row>
+                                <row>
+                                    <entry><literal>contextPath</literal></entry>
+                                    <entry>the JAXB Context path</entry>
+                                    <entry>no</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </informaltable>
+	        	</para>
+	        </section>
         </section>
     </section>
     <section id="oxm-castor">
@@ -455,6 +581,44 @@ public class Application {
                     and not every <classname>java.lang.Object</classname>.
                 </para>
             </note>
+			<section id="oxm-xmlbeans-xsd">
+	        	<title>XML Schema-based Configuration</title>
+	        	<para>
+	        		The <literal>xmlbeans-marshaller</literal> tag configures a <classname>org.springframework.oxm.xmlbeans.XmlBeansMarshaller</classname>.
+	        		Here is an example:
+	        	</para>
+	        	<programlisting><![CDATA[<oxm:xmlbeans-marshaller id="marshaller"/>]]></programlisting>
+	        	<para>
+	        		Available attributes are:
+                    <informaltable>
+                        <tgroup cols="3">
+                        	<colspec colwidth="1.5*"/>
+                        	<colspec colwidth="4*"/>
+                        	<colspec colwidth="1*"/>
+                            <thead>
+                                <row>
+                                    <entry>Attribute</entry>
+                                    <entry>Description</entry>
+                                    <entry>Required</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><literal>id</literal></entry>
+                                    <entry>the id of the marshaller</entry>
+                                    <entry>no</entry>
+                                </row>
+                                <row>
+                                    <entry><literal>options</literal></entry>
+                                    <entry>the bean name of the XmlOptions that is to be used for this marshaller. Typically a
+                                    <classname>XmlOptionsFactoryBean</classname> definition</entry>
+                                    <entry>no</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </informaltable>
+	        	</para>
+	        </section>            
         </section>
 
 
@@ -497,6 +661,48 @@ public class Application {
                 multiple classes, you have to configure multiple <classname>JibxMarshaller</classname>s with
                 different <property>targetClass</property> property values.
             </para>
+			<section id="oxm-jibx-xsd">
+	        	<title>XML Schema-based Configuration</title>
+	        	<para>
+	        		The <literal>jibx-marshaller</literal> tag configures a <classname>org.springframework.oxm.jibx.JibxMarshaller</classname>.
+	        		Here is an example:
+	        	</para>
+	        	<programlisting><![CDATA[<oxm:jibx-marshaller id="marshaller" target-class="org.springframework.ws.samples.airline.schema.Flight"/>]]></programlisting>
+	        	<para>
+	        		Available attributes are:
+                    <informaltable>
+                        <tgroup cols="3">
+                        	<colspec colwidth="1.5*"/>
+                        	<colspec colwidth="4*"/>
+                        	<colspec colwidth="1*"/>
+                            <thead>
+                                <row>
+                                    <entry>Attribute</entry>
+                                    <entry>Description</entry>
+                                    <entry>Required</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><literal>id</literal></entry>
+                                    <entry>the id of the marshaller</entry>
+                                    <entry>no</entry>
+                                </row>
+                                <row>
+                                    <entry><literal>target-class</literal></entry>
+                                    <entry>the target class for this marshaller</entry>
+                                    <entry>yes</entry>
+                                </row>
+                                <row>
+                                    <entry><literal>bindingName</literal></entry>
+                                    <entry>the binding name used by this marshaller</entry>
+                                    <entry>no</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </informaltable>
+	        	</para>
+	        </section>            
         </section>
     </section>
     <section id="oxm-xstream">
