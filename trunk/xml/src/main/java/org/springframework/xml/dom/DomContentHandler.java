@@ -83,7 +83,7 @@ public class DomContentHandler implements ContentHandler {
                 element.setAttributeNS(attrUri, attrQname, value);
             }
         }
-        parent.appendChild(element);
+        element = (Element) parent.appendChild(element);
         elements.add(element);
     }
 
