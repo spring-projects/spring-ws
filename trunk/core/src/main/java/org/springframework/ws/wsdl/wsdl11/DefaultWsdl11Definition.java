@@ -119,7 +119,7 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
     /** Sets the suffix used to detect fault elements in the schema. */
     public void setFaultSuffix(String faultSuffix) {
         portTypesProvider.setFaultSuffix(faultSuffix);
-        messagesProvider.setResponseSuffix(faultSuffix);
+        messagesProvider.setFaultSuffix(faultSuffix);
     }
 
     /** Indicates whether a SOAP 1.1 binding should be created. */
