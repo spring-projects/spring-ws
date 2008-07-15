@@ -76,7 +76,7 @@
         </para>
         <note>
             <para>
-                Note that the XWSS requires both a SUN 1.5 JDK and the SUN SAAJ reference implementation.
+                Note that XWSS requires both a SUN 1.5 JDK and the SUN SAAJ reference implementation.
                 The WSS4J interceptor does not have these requirements (see
                 <xref linkend="security-wss4j-security-interceptor"/>).
             </para>
