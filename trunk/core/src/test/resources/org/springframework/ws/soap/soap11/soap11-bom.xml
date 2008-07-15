@@ -1,52 +1,9 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<SOAP-ENV:Header>
-	<wsse:Security MustUnderstand="1" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"><Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI="#Body"><Transforms><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>4JNrTzMDiuRPCtU2sK/xcbTLrrE=</DigestValue></Reference></SignedInfo><SignatureValue>Tr04xrUvMCBK/6QDGdoMlU0+DQzqp9UNVxgi4wTc4i8Xq+2X2YbNthz09+oU5dV5BLGsPdjGsJubKzISABjjBJQnXLH3FSHIfrwjvrkMI0eXrqUImq8FWXbWCRqs6cU4zR1tcq8XT/qaqyrZwcz0eXnwwbI1EN+/bUiU5vCHft0=</SignatureValue><KeyInfo><wsse:SecurityTokenReference xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="STRId-23110255" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"><X509Data><X509IssuerSerial><X509IssuerName>CN=AutoClickTestCert1</X509IssuerName><X509SerialNumber>322139469625571656292537585000487974943</X509SerialNumber></X509IssuerSerial></X509Data></wsse:SecurityTokenReference></KeyInfo></Signature></wsse:Security></SOAP-ENV:Header>
-	<SOAP-ENV:Body xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="body" id="Body">
-		<p:ProcessCreditApplication xmlns:p="http://www.starstandard.org/STAR/5" xmlns:clm54217="http://www.openapplications.org/oagis/9/currencycode/54217:2001" xmlns:clm5639="http://www.openapplications.org/oagis/9/languagecode/5639:1988" xmlns:clm66411="http://www.openapplications.org/oagis/9/unitcode/66411:2001" xmlns:clmIANAMIMEMediaTypes="http://www.openapplications.org/oagis/9/IANAMIMEMediaTypes:2003" xmlns:nmmacl="http://www.nmma.org/CodeLists" xmlns:p1="http://www.openapplications.org/oagis/9/codelists" xmlns:p2="http://www.starstandard.org/STAR/5/codelists" xmlns:p3="http://www.starstandard.org/STAR/5/qualifieddatatypes/1.0" xmlns:p4="http://www.openapplications.org/oagis/9" xmlns:qdt="http://www.openapplications.org/oagis/9/qualifieddatatypes/1.1" xmlns:udt="http://www.openapplications.org/oagis/9/unqualifieddatatypes/1.1" xmlns:xfUOMcl="http://www.xfront.com/UnitsOfMeasure" releaseID="5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.starstandard.org/STAR/5 ../../../../../caps-aggregator/src/main/resources/xsd/STAR/Rev5.0.4/BODs/Developer/ProcessCreditApplication.xsd ">
-			<p:ApplicationArea>
-				<p:Sender>
-					<p:ReferenceId>123123123</p:ReferenceId>
-					<p:SenderNameCode>A6</p:SenderNameCode>
-				</p:Sender>
-				<p:CreationDateTime>2008-07-10T03:28:20Z</p:CreationDateTime>
-				<p:Destination>
-					<p:DestinationNameCode>CZ</p:DestinationNameCode>
-				</p:Destination>
-			</p:ApplicationArea>
-				<p:ProcessCreditApplicationDataArea>
-					<p:Process />
-					<p:CreditApplication>
-						<p:CreditApplicationHeader>
-							<p:DocumentIdentificationGroup>
-								<p:DocumentIdentification>
-									<p:DocumentID>123</p:DocumentID>
-								</p:DocumentIdentification>
-							</p:DocumentIdentificationGroup>
-							<p:FinanceParty />
-							<p:ApplicationStatusCode>P</p:ApplicationStatusCode>
-						</p:CreditApplicationHeader>
-						<p:CreditApplicationDetail>
-							<p:Applicants>
-								<p:Applicant>
-									<p:ApplicantParty>
-										<p:PartyID />
-										<p:SpecifiedPerson>
-											<p:FamilyName>Testing</p:FamilyName>
-											<p:GivenName>Credit</p:GivenName>
-											<p:ResidenceAddress>
-												<p:CityName>Detroit</p:CityName>
-												<p:StateOrProvinceCountrySub-DivisionID>MI</p:StateOrProvinceCountrySub-DivisionID>
-												<p:Postcode>48201</p:Postcode>
-											</p:ResidenceAddress>
-										</p:SpecifiedPerson>
-									</p:ApplicantParty>
-								</p:Applicant>
-							</p:Applicants>
-						<p:ApplicationFinance />
-					</p:CreditApplicationDetail>
-				</p:CreditApplication>
-			</p:ProcessCreditApplicationDataArea>
-		</p:ProcessCreditApplication>
-	</SOAP-ENV:Body>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+                   xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <SOAP-ENV:Body>
+        <m:GetLastTradePrice xmlns:m='http://www.springframework.org/spring-ws'>
+            <symbol>DIS</symbol>
+        </m:GetLastTradePrice>
+    </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>
