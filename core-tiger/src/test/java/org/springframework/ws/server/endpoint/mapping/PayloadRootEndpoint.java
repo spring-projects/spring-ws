@@ -16,15 +16,30 @@
 
 package org.springframework.ws.server.endpoint.mapping;
 
+import javax.xml.transform.Source;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 
 @Endpoint
-class PayloadRootEndpoint {
+public class PayloadRootEndpoint {
+
+    private static final Log logger = LogFactory.getLog(PayloadRootEndpoint.class);
+
+    private boolean doItInvoked = false;
+
+    public boolean isDoItInvoked() {
+        return doItInvoked;
+    }
 
     @PayloadRoot(localPart = "Request", namespace = "http://springframework.org/spring-ws")
-    public void doIt() {
-
+    @org.springframework.ws.server.endpoint.mapping.Log
+    public void doIt(Source payload) {
+        doItInvoked = true;
+        logger.info("In doIt()");
     }
 
 }
