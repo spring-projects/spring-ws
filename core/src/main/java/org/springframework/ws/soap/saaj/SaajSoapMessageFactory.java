@@ -16,8 +16,10 @@
 
 package org.springframework.ws.soap.saaj;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PushbackInputStream;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import javax.xml.soap.MessageFactory;
@@ -146,21 +148,9 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
     }
 
     public WebServiceMessage createWebServiceMessage(InputStream inputStream) throws IOException {
-        MimeHeaders mimeHeaders = new MimeHeaders();
-        if (inputStream instanceof TransportInputStream) {
-            TransportInputStream transportInputStream = (TransportInputStream) inputStream;
-            for (Iterator headerNames = transportInputStream.getHeaderNames(); headerNames.hasNext();) {
-                String headerName = (String) headerNames.next();
-                for (Iterator headerValues = transportInputStream.getHeaders(headerName); headerValues.hasNext();) {
-                    String headerValue = (String) headerValues.next();
-                    StringTokenizer tokenizer = new StringTokenizer(headerValue, ",");
-                    while (tokenizer.hasMoreTokens()) {
-                        mimeHeaders.addHeader(headerName, tokenizer.nextToken().trim());
-                    }
-                }
-            }
-        }
+        MimeHeaders mimeHeaders = parseMimeHeaders(inputStream);
         try {
+            inputStream = checkForUtf8ByteOrderMark(inputStream);
             return new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, inputStream));
         }
         catch (SOAPException ex) {
@@ -180,6 +170,42 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
             }
             throw new SoapMessageCreationException("Could not create message from InputStream: " + ex.getMessage(), ex);
         }
+    }
+
+    private MimeHeaders parseMimeHeaders(InputStream inputStream) throws IOException {
+        MimeHeaders mimeHeaders = new MimeHeaders();
+        if (inputStream instanceof TransportInputStream) {
+            TransportInputStream transportInputStream = (TransportInputStream) inputStream;
+            for (Iterator headerNames = transportInputStream.getHeaderNames(); headerNames.hasNext();) {
+                String headerName = (String) headerNames.next();
+                for (Iterator headerValues = transportInputStream.getHeaders(headerName); headerValues.hasNext();) {
+                    String headerValue = (String) headerValues.next();
+                    StringTokenizer tokenizer = new StringTokenizer(headerValue, ",");
+                    while (tokenizer.hasMoreTokens()) {
+                        mimeHeaders.addHeader(headerName, tokenizer.nextToken().trim());
+                    }
+                }
+            }
+        }
+        return mimeHeaders;
+    }
+
+    /**
+     * Checks for the UTF-8 Byte Order Mark, and removes it if present. The SAAJ RI cannot cope with these BOMs.
+     *
+     * @see <a href="http://jira.springframework.org/browse/SWS-393">SWS-393</a>
+     * @see <a href="http://unicode.org/faq/utf_bom.html#22">UTF-8 BOMs</a>
+     */
+    private InputStream checkForUtf8ByteOrderMark(InputStream inputStream) throws IOException {
+        PushbackInputStream pushbackInputStream = new PushbackInputStream(new BufferedInputStream(inputStream), 3);
+        byte[] bom = new byte[3];
+        if (pushbackInputStream.read(bom) != -1) {
+            // check for the UTF-8 BOM, and remove it if there. See SWS-393
+            if (!(bom[0] == (byte) 0xEF && bom[1] == (byte) 0xBB && bom[2] == (byte) 0xBF)) {
+                pushbackInputStream.unread(bom);
+            }
+        }
+        return pushbackInputStream;
     }
 
     public String toString() {

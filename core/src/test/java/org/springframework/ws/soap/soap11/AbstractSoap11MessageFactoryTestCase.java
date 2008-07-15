@@ -39,7 +39,7 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
 
     public void testCreateSoapMessageNoAttachment() throws Exception {
         InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11.xml");
-        final Properties headers = new Properties();
+        Properties headers = new Properties();
         headers.setProperty("Content-Type", "text/xml");
         String soapAction = "http://springframework.org/spring-ws/Action";
         headers.setProperty("SOAPAction", soapAction);
@@ -110,6 +110,36 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
 
         Attachment attachment = soapMessage.getAttachment("<1.urn:uuid:492264AB42E57108E01176731445504@apache.org>");
         assertNotNull("No attachment read", attachment);
+    }
+
+    public void testCreateSoapMessageUtf8ByteOrderMark() throws Exception {
+        InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-utf8-bom.xml");
+        Properties headers = new Properties();
+        headers.setProperty("Content-Type", "text/xml; charset=UTF-8");
+        TransportInputStream tis = new MockTransportInputStream(is, headers);
+
+        SoapMessage message = (SoapMessage) messageFactory.createWebServiceMessage(tis);
+        assertEquals("Invalid soap version", SoapVersion.SOAP_11, message.getVersion());
+    }
+
+    public void testCreateSoapMessageUtf16BigEndianByteOrderMark() throws Exception {
+        InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-utf16-be-bom.xml");
+        Properties headers = new Properties();
+        headers.setProperty("Content-Type", "text/xml; charset=UTF-16");
+        TransportInputStream tis = new MockTransportInputStream(is, headers);
+
+        SoapMessage message = (SoapMessage) messageFactory.createWebServiceMessage(tis);
+        assertEquals("Invalid soap version", SoapVersion.SOAP_11, message.getVersion());
+    }
+
+    public void testCreateSoapMessageUtf16LittleEndianByteOrderMark() throws Exception {
+        InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-utf16-le-bom.xml");
+        Properties headers = new Properties();
+        headers.setProperty("Content-Type", "text/xml; charset=UTF-16");
+        TransportInputStream tis = new MockTransportInputStream(is, headers);
+
+        SoapMessage message = (SoapMessage) messageFactory.createWebServiceMessage(tis);
+        assertEquals("Invalid soap version", SoapVersion.SOAP_11, message.getVersion());
     }
 
 
