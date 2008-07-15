@@ -10,8 +10,7 @@
     <bean id="mapping"
           class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping"/>
 
-    <bean id="endpoint" class="org.springframework.ws.server.endpoint.mapping.PayloadRootEndpoint">
-    </bean>
+    <bean id="endpoint" class="org.springframework.ws.server.endpoint.mapping.PayloadRootEndpoint"/>
 
     <bean id="other" class="org.springframework.ws.server.endpoint.mapping.OtherBean"/>
 
