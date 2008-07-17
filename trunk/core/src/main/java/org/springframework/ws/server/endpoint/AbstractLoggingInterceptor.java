@@ -85,7 +85,7 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
      * @throws TransformerException when the payload cannot be transformed to a string
      */
     public final boolean handleRequest(MessageContext messageContext, Object endpoint) throws TransformerException {
-        if (logRequest && logger.isDebugEnabled()) {
+        if (logRequest && isLogEnabled()) {
             logMessageSource("Request: ", getSource(messageContext.getRequest()));
         }
         return true;
@@ -100,7 +100,7 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
      * @throws TransformerException when the payload cannot be transformed to a string
      */
     public boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
-        if (logResponse && logger.isDebugEnabled()) {
+        if (logResponse && isLogEnabled()) {
             logMessageSource("Response: ", getSource(messageContext.getResponse()));
         }
         return true;
@@ -111,6 +111,16 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
         return true;
     }
 
+    /**
+     * Determine whether the {@link #logger} field is enabled.
+     * <p/>
+     * Default is <code>true</code> when the "debug" level is enabled. Subclasses can override this to change the level
+     * under which logging occurs.
+     */
+    protected boolean isLogEnabled() {
+        return logger.isDebugEnabled();
+    }
+
     private Transformer createNonIndentingTransformer() throws TransformerConfigurationException {
         Transformer transformer = createTransformer();
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
@@ -118,13 +128,36 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
         return transformer;
     }
 
+    /**
+     * Logs the given {@link Source source} to the {@link #logger}, using the message as a prefix.
+     * <p/>
+     * By default, this message creates a string representation of the given source, and delegates to {@link
+     * #logMessage(String)}.
+     *
+     * @param logMessage the log message
+     * @param source     the source to be logged
+     * @throws TransformerException in case of errors
+     */
     protected void logMessageSource(String logMessage, Source source) throws TransformerException {
         if (source != null) {
             Transformer transformer = createNonIndentingTransformer();
             StringWriter writer = new StringWriter();
             transformer.transform(source, new StreamResult(writer));
-            logger.debug(logMessage + writer.toString());
+            String message = logMessage + writer.toString();
+            logMessage(message);
         }
+    }
+
+    /**
+     * Logs the given string message.
+     * <p/>
+     * By default, this method uses a "debug" level of logging. Subclasses can override this method to change the level
+     * of loging used by the logger.
+     *
+     * @param message the message
+     */
+    protected void logMessage(String message) {
+        logger.debug(message);
     }
 
     /**
