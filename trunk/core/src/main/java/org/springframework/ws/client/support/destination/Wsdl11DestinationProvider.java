@@ -100,7 +100,7 @@ public class Wsdl11DestinationProvider extends AbstractCachingDestinationProvide
             Document definitionDocument = (Document) result.getNode();
             String location = locationXPathExpression.evaluateAsString(definitionDocument);
             if (logger.isDebugEnabled()) {
-                logger.debug("Found [" + location + "] in " + wsdlResource);
+                logger.debug("Found location [" + location + "] in " + wsdlResource);
             }
             return location != null ? URI.create(location) : null;
         }
