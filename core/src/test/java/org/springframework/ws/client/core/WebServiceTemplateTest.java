@@ -510,7 +510,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
         MockControl providerControl = MockControl.createControl(DestinationProvider.class);
         DestinationProvider providerMock = (DestinationProvider) providerControl.getMock();
         final URI providerUri = new URI("http://www.springframework.org/spring-ws/destinationProvider");
-        providerControl.expectAndReturn(providerMock.getUri(), providerUri);
+        providerControl.expectAndReturn(providerMock.getDestination(), providerUri);
         template.setDestinationProvider(providerMock);
         providerControl.replay();
 
