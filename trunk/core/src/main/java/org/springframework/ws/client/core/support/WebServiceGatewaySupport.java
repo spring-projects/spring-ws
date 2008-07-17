@@ -25,6 +25,7 @@ import org.springframework.oxm.Unmarshaller;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.client.core.WebServiceTemplate;
+import org.springframework.ws.client.support.destination.DestinationProvider;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.transport.WebServiceMessageSender;
 
@@ -91,6 +92,16 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
     /** Sets the default URI used by the gateway. */
     public final void setDefaultUri(String uri) {
         webServiceTemplate.setDefaultUri(uri);
+    }
+
+    /** Returns the destination provider used by the gateway. */
+    public final DestinationProvider getDestinationProvider() {
+        return webServiceTemplate.getDestinationProvider();
+    }
+
+    /** Set the destination provider URI used by the gateway. */
+    public final void setDestinationProvider(DestinationProvider destinationProvider) {
+        webServiceTemplate.setDestinationProvider(destinationProvider);
     }
 
     /** Returns the <code>WebServiceMessageSender</code> used by the gateway. */
