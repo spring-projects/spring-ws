@@ -6,7 +6,11 @@
 
     <bean id="abstractClient" abstract="true">
         <constructor-arg ref="messagFactory"/>
-        <property name="defaultUri" value="http://localhost:8080/airline/services"/>
+        <property name="destinationProvider">
+            <bean class="org.springframework.ws.client.support.destination.Wsdl11DestinationProvider">
+                <property name="wsdl" value="http://localhost:8080/airline/airline.wsdl"/>
+            </bean>
+        </property>
     </bean>
 
     <bean id="marshaller" class="org.springframework.oxm.xmlbeans.XmlBeansMarshaller"/>
