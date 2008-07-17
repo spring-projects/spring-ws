@@ -51,12 +51,12 @@ public abstract class AbstractCachingDestinationProvider implements DestinationP
     public final URI getDestination() {
         if (cache) {
             if (cachedUri == null) {
-                cachedUri = lookupUri();
+                cachedUri = lookupDestination();
             }
             return cachedUri;
         }
         else {
-            return lookupUri();
+            return lookupDestination();
         }
     }
 
@@ -67,5 +67,5 @@ public abstract class AbstractCachingDestinationProvider implements DestinationP
      *
      * @return the destination URI
      */
-    protected abstract URI lookupUri();
+    protected abstract URI lookupDestination();
 }

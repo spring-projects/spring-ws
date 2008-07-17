@@ -92,7 +92,7 @@ public class Wsdl11DestinationProvider extends AbstractCachingDestinationProvide
                 .createXPathExpression(expression, expressionNamespaces);
     }
 
-    protected URI lookupUri() {
+    protected URI lookupDestination() {
         try {
             DOMResult result = new DOMResult();
             Transformer transformer = transformerFactory.newTransformer();
