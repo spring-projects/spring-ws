@@ -68,6 +68,7 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapMessageFactory;
 import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.ws.soap.client.SoapFaultClientException;
+import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.http.CommonsHttpMessageSender;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
@@ -84,11 +85,9 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
         return new ServerTestSetup(new TestSuite(WebServiceTemplateIntegrationTest.class));
     }
 
-/*
     public void testSaaj() throws Exception {
         doSoap(new SaajSoapMessageFactory(MessageFactory.newInstance()));
     }
-*/
 
     public void testAxiom() throws Exception {
         doSoap(new AxiomSoapMessageFactory());
