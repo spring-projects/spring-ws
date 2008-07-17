@@ -146,7 +146,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     /** Returns the default URI to be used on operations that do not have a URI parameter. */
     public String getDefaultUri() {
         if (destinationProvider != null) {
-            URI uri = destinationProvider.getUri();
+            URI uri = destinationProvider.getDestination();
             return uri != null ? uri.toString() : null;
         }
         else {
@@ -170,7 +170,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     public void setDefaultUri(final String uri) {
         destinationProvider = new DestinationProvider() {
 
-            public URI getUri() {
+            public URI getDestination() {
                 return URI.create(uri);
             }
         };

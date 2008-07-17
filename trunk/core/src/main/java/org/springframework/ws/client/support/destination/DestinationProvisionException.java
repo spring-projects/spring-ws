@@ -16,26 +16,21 @@
 
 package org.springframework.ws.client.support.destination;
 
-import java.net.URI;
+import org.springframework.ws.client.WebServiceClientException;
 
 /**
- * Strategy interface for providing a {@link org.springframework.ws.client.core.WebServiceTemplate} destination URI at
- * runtime.
- * <p/>
- * Typically implemented by providers that use WSDL, a UDDI registry, or some other form to determine the destination
- * URI.
+ * Thrown by a {@link DestinationProvider} when it cannot provide a destination.
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.client.core.WebServiceTemplate#setDestinationProvider(DestinationProvider)
  * @since 1.5.4
  */
-public interface DestinationProvider {
+public class DestinationProvisionException extends WebServiceClientException {
 
-    /**
-     * Return the destination URI.
-     *
-     * @return the destination URI
-     */
-    URI getDestination();
+    public DestinationProvisionException(String msg) {
+        super(msg);
+    }
 
+    public DestinationProvisionException(String msg, Throwable ex) {
+        super(msg, ex);
+    }
 }
