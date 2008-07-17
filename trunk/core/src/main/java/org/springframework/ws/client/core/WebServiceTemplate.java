@@ -45,6 +45,7 @@ import org.springframework.ws.client.WebServiceIOException;
 import org.springframework.ws.client.WebServiceTransformerException;
 import org.springframework.ws.client.WebServiceTransportException;
 import org.springframework.ws.client.support.WebServiceAccessor;
+import org.springframework.ws.client.support.destination.DestinationProvider;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
@@ -119,13 +120,13 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
     private FaultMessageResolver faultMessageResolver;
 
-    private String defaultUri;
-
     private boolean checkConnectionForError = true;
 
     private boolean checkConnectionForFault = true;
 
     private ClientInterceptor[] interceptors;
+
+    private DestinationProvider destinationProvider;
 
     /** Creates a new <code>WebServiceTemplate</code> using default settings. */
     public WebServiceTemplate() {
@@ -144,11 +145,19 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
     /** Returns the default URI to be used on operations that do not have a URI parameter. */
     public String getDefaultUri() {
-        return defaultUri;
+        if (destinationProvider != null) {
+            URI uri = destinationProvider.getUri();
+            return uri != null ? uri.toString() : null;
+        }
+        else {
+            return null;
+        }
     }
 
     /**
      * Set the default URI to be used on operations that do not have a URI parameter.
+     * <p/>
+     * Typically, either this property is set, or {@link #setDestinationProvider(DestinationProvider)}, but not both.
      *
      * @see #marshalSendAndReceive(Object)
      * @see #marshalSendAndReceive(Object,WebServiceMessageCallback)
@@ -158,8 +167,35 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      * @see #sendSourceAndReceive(Source,WebServiceMessageCallback,SourceExtractor)
      * @see #sendAndReceive(WebServiceMessageCallback,WebServiceMessageCallback)
      */
-    public void setDefaultUri(String uri) {
-        defaultUri = uri;
+    public void setDefaultUri(final String uri) {
+        destinationProvider = new DestinationProvider() {
+
+            public URI getUri() {
+                return URI.create(uri);
+            }
+        };
+    }
+
+    /** Returns the destination provider used on operations that do not have a URI parameter. */
+    public DestinationProvider getDestinationProvider() {
+        return destinationProvider;
+    }
+
+    /**
+     * Set the destination provider URI to be used on operations that do not have a URI parameter.
+     * <p/>
+     * Typically, either this property is set, or {@link #setDefaultUri(String)}, but not both.
+     *
+     * @see #marshalSendAndReceive(Object)
+     * @see #marshalSendAndReceive(Object,WebServiceMessageCallback)
+     * @see #sendSourceAndReceiveToResult(Source,Result)
+     * @see #sendSourceAndReceiveToResult(Source,WebServiceMessageCallback,Result)
+     * @see #sendSourceAndReceive(Source,SourceExtractor)
+     * @see #sendSourceAndReceive(Source,WebServiceMessageCallback,SourceExtractor)
+     * @see #sendAndReceive(WebServiceMessageCallback,WebServiceMessageCallback)
+     */
+    public void setDestinationProvider(DestinationProvider destinationProvider) {
+        this.destinationProvider = destinationProvider;
     }
 
     /** Returns the marshaller for this template. */
