@@ -27,6 +27,7 @@ import org.springframework.oxm.Unmarshaller;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.client.WebServiceTransportException;
+import org.springframework.ws.client.support.destination.DestinationProvider;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
@@ -52,8 +53,8 @@ public class WebServiceTemplateTest extends XMLTestCase {
         template.setMessageFactory(messageFactory);
         connectionControl = MockControl.createStrictControl(FaultAwareWebServiceConnection.class);
         connectionMock = (FaultAwareWebServiceConnection) connectionControl.getMock();
-        connectionControl.expectAndDefaultReturn(connectionMock.getUri(), new URI("mock"));
         final URI expectedUri = new URI("http://www.springframework.org/spring-ws");
+        connectionControl.expectAndDefaultReturn(connectionMock.getUri(), expectedUri);
         template.setMessageSender(new WebServiceMessageSender() {
 
             public WebServiceConnection createConnection(URI uri) throws IOException {
@@ -504,5 +505,46 @@ public class WebServiceTemplateTest extends XMLTestCase {
         connectionControl.verify();
         interceptorControl.verify();
     }
+
+    public void testDestinationResolver() throws Exception {
+        MockControl providerControl = MockControl.createControl(DestinationProvider.class);
+        DestinationProvider providerMock = (DestinationProvider) providerControl.getMock();
+        final URI providerUri = new URI("http://www.springframework.org/spring-ws/destinationProvider");
+        providerControl.expectAndReturn(providerMock.getUri(), providerUri);
+        template.setDestinationProvider(providerMock);
+        providerControl.replay();
+
+        template.setMessageSender(new WebServiceMessageSender() {
+
+            public WebServiceConnection createConnection(URI uri) throws IOException {
+                return connectionMock;
+            }
+
+            public boolean supports(URI uri) {
+                assertEquals("Invalid uri", providerUri, uri);
+                return true;
+            }
+        });
+
+        MockControl extractorControl = MockControl.createControl(WebServiceMessageExtractor.class);
+        WebServiceMessageExtractor extractorMock = (WebServiceMessageExtractor) extractorControl.getMock();
+        extractorControl.replay();
+
+        connectionControl.reset();
+        connectionControl.expectAndDefaultReturn(connectionMock.getUri(), providerUri);
+        connectionMock.send(null);
+        connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        connectionControl.expectAndReturn(connectionMock.hasError(), false);
+        connectionControl.expectAndReturn(connectionMock.receive(messageFactory), null);
+        connectionMock.close();
+        connectionControl.replay();
+
+        Object result = template.sendAndReceive(null, extractorMock);
+        assertNull("Invalid response", result);
+        extractorControl.verify();
+        connectionControl.verify();
+        providerControl.verify();
+    }
+
 
 }
