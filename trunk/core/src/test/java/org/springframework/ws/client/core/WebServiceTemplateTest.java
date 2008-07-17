@@ -69,6 +69,8 @@ public class WebServiceTemplateTest extends XMLTestCase {
     }
 
     public void testMarshalAndSendNoMarshallerSet() throws Exception {
+        connectionMock.close();
+        connectionControl.replay();
         template.setMarshaller(null);
         try {
             template.marshalSendAndReceive(new Object());
@@ -77,9 +79,12 @@ public class WebServiceTemplateTest extends XMLTestCase {
         catch (IllegalStateException ex) {
             // expected behavior
         }
+        connectionControl.verify();
     }
 
     public void testMarshalAndSendNoUnmarshallerSet() throws Exception {
+        connectionMock.close();
+        connectionControl.replay();
         template.setUnmarshaller(null);
         try {
             template.marshalSendAndReceive(new Object());
@@ -88,6 +93,7 @@ public class WebServiceTemplateTest extends XMLTestCase {
         catch (IllegalStateException ex) {
             // expected behavior
         }
+        connectionControl.verify();
     }
 
     public void testSendAndReceiveMessageResponse() throws Exception {
