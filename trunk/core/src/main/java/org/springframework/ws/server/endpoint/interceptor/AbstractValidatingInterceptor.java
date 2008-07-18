@@ -85,16 +85,18 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
     }
 
     /**
-     * Sets the schema resource to use for validation.  Setting either this property or <code>schemas</code> is
-     * required.
+     * Sets the schema resource to use for validation. Setting this property, {@link
+     * #setXsdSchemaCollection(XsdSchemaCollection) xsdSchemaCollection}, {@link #setSchema(Resource) schema}, or {@link
+     * #setSchemas(Resource[]) schemas} is required.
      */
     public void setSchema(Resource schema) {
         setSchemas(new Resource[]{schema});
     }
 
     /**
-     * Sets the schema resources to use for validation.  Setting either this property or <code>schema</code> is
-     * required.
+     * Sets the schema resources to use for validation. Setting this property, {@link
+     * #setXsdSchemaCollection(XsdSchemaCollection) xsdSchemaCollection}, {@link #setSchema(Resource) schema}, or {@link
+     * #setSchemas(Resource[]) schemas} is required.
      */
     public void setSchemas(Resource[] schemas) {
         Assert.notEmpty(schemas, "schemas must not be empty or null");
