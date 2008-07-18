@@ -16,8 +16,6 @@
 
 package org.springframework.ws;
 
-import java.io.Serializable;
-
 import org.springframework.core.NestedRuntimeException;
 
 /**
@@ -26,7 +24,7 @@ import org.springframework.core.NestedRuntimeException;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
-public abstract class WebServiceException extends NestedRuntimeException implements Serializable {
+public abstract class WebServiceException extends NestedRuntimeException {
 
     /**
      * Create a new instance of the <code>WebServiceException</code> class.
