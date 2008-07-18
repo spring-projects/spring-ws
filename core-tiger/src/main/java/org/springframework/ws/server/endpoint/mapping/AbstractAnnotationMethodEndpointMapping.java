@@ -20,6 +20,7 @@ import java.lang.annotation.Annotation;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 
 /**
@@ -65,7 +66,8 @@ public abstract class AbstractAnnotationMethodEndpointMapping extends AbstractMe
         for (int i = 0; i < beanNames.length; i++) {
             String beanName = beanNames[i];
             Class endpointClass = getApplicationContext().getType(beanName);
-            if (endpointClass != null && endpointClass.getAnnotation(getEndpointAnnotationType()) != null) {
+            if (endpointClass != null &&
+                    AnnotationUtils.findAnnotation(endpointClass, getEndpointAnnotationType()) != null) {
                 registerMethods(beanName);
             }
         }
