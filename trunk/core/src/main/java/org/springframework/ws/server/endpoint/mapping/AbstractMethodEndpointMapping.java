@@ -23,9 +23,9 @@ import java.util.Map;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContextException;
-import org.springframework.core.JdkVersion;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
@@ -109,19 +109,18 @@ public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapp
      *
      * @see #getLookupKeyForMethod(Method)
      */
-    protected void registerMethods(Object endpoint) {
+    protected void registerMethods(final Object endpoint) {
         Assert.notNull(endpoint, "'endpoint' must not be null");
-        Method[] methods = getEndpointClass(endpoint).getMethods();
-        for (int i = 0; i < methods.length; i++) {
-            if (JdkVersion.isAtLeastJava15() && methods[i].isSynthetic() ||
-                    methods[i].getDeclaringClass().equals(Object.class)) {
-                continue;
+        Class endpointClass = getEndpointClass(endpoint);
+        ReflectionUtils.doWithMethods(endpointClass, new ReflectionUtils.MethodCallback() {
+
+            public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
+                String key = getLookupKeyForMethod(method);
+                if (StringUtils.hasLength(key)) {
+                    registerEndpoint(key, new MethodEndpoint(endpoint, method));
+                }
             }
-            String key = getLookupKeyForMethod(methods[i]);
-            if (StringUtils.hasLength(key)) {
-                registerEndpoint(key, new MethodEndpoint(endpoint, methods[i]));
-            }
-        }
+        });
     }
 
     /**
@@ -131,20 +130,19 @@ public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapp
      *
      * @see #getLookupKeyForMethod(Method)
      */
-    protected void registerMethods(String beanName) {
+    protected void registerMethods(final String beanName) {
         Assert.hasText(beanName, "'beanName' must not be empty");
         Class endpointClass = getApplicationContext().getType(beanName);
-        Method[] methods = endpointClass.getMethods();
-        for (int i = 0; i < methods.length; i++) {
-            if (JdkVersion.isAtLeastJava15() && methods[i].isSynthetic() ||
-                    methods[i].getDeclaringClass().equals(Object.class)) {
-                continue;
+        ReflectionUtils.doWithMethods(endpointClass, new ReflectionUtils.MethodCallback() {
+
+            public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
+                String key = getLookupKeyForMethod(method);
+                if (StringUtils.hasLength(key)) {
+                    registerEndpoint(key, new MethodEndpoint(beanName, getApplicationContext(), method));
+                }
             }
-            String key = getLookupKeyForMethod(methods[i]);
-            if (StringUtils.hasLength(key)) {
-                registerEndpoint(key, new MethodEndpoint(beanName, getApplicationContext(), methods[i]));
-            }
-        }
+
+        });
     }
 
     /**
@@ -175,5 +173,4 @@ public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapp
         }
         return AopUtils.getTargetClass(endpoint);
     }
-
 }
