@@ -213,6 +213,7 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
     public void afterPropertiesSet() throws Exception {
         if (getCredentials() != null) {
             getHttpClient().getState().setCredentials(getAuthScope(), getCredentials());
+            getHttpClient().getParams().setAuthenticationPreemptive(true);
         }
     }
 
