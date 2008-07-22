@@ -16,6 +16,11 @@
 
 package org.springframework.xml.transform;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
@@ -23,12 +28,22 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stax.StAXResult;
 import javax.xml.transform.stax.StAXSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.ext.LexicalHandler;
 
 import org.springframework.util.Assert;
 import org.springframework.xml.JaxpVersion;
@@ -207,6 +222,211 @@ public abstract class TraxUtils {
         else {
             return null;
         }
+    }
+
+    /**
+     * Performs the given {@linkplain SourceCallback callback} operation on a {@link Source}. Supports both the JAXP 1.4
+     * {@link StAXSource} and the Spring-WS {@link StaxSource}.
+     *
+     * @param source   source to look at
+     * @param callback the callback to invoke for each kind of source
+     */
+    public static void doWithSource(Source source, SourceCallback callback)
+            throws XMLStreamException, IOException, SAXException {
+        if (source instanceof DOMSource) {
+            callback.domSource(((DOMSource) source).getNode());
+        }
+        else if (isStaxSource(source)) {
+            XMLStreamReader streamReader = getXMLStreamReader(source);
+            if (streamReader != null) {
+                callback.staxSource(streamReader);
+            }
+            else {
+                XMLEventReader eventReader = getXMLEventReader(source);
+                if (eventReader != null) {
+                    callback.staxSource(eventReader);
+                }
+                else {
+                    throw new IllegalArgumentException(
+                            "StAX source contains neither XMLStreamReader nor XMLEventReader");
+                }
+            }
+        }
+        else if (source instanceof SAXSource) {
+            SAXSource saxSource = (SAXSource) source;
+            callback.saxSource(saxSource.getXMLReader(), saxSource.getInputSource());
+        }
+        else if (source instanceof StreamSource) {
+            StreamSource streamSource = (StreamSource) source;
+            if (streamSource.getInputStream() != null) {
+                callback.streamSource(streamSource.getInputStream());
+            }
+            else if (streamSource.getReader() != null) {
+                callback.streamSource(streamSource.getReader());
+            }
+            else {
+                throw new IllegalArgumentException("StreamSource contains neither InputStream nor Reader");
+            }
+        }
+        else {
+            throw new IllegalArgumentException("Unknown Source type: " + source.getClass());
+        }
+    }
+
+    /**
+     * Performs the given {@linkplain ResultCallback callback} operation on a {@link Result}. Supports both the JAXP 1.4
+     * {@link StAXResult} and the Spring-WS {@link StaxResult}.
+     *
+     * @param result   result to look at
+     * @param callback the callback to invoke for each kind of result
+     */
+    public static void doWithResult(Result result, ResultCallback callback)
+            throws XMLStreamException, IOException, SAXException {
+        if (result instanceof DOMResult) {
+            callback.domResult(((DOMResult) result).getNode());
+        }
+        else if (isStaxResult(result)) {
+            XMLStreamWriter streamWriter = getXMLStreamWriter(result);
+            if (streamWriter != null) {
+                callback.staxResult(streamWriter);
+            }
+            else {
+                XMLEventWriter eventWriter = getXMLEventWriter(result);
+                if (eventWriter != null) {
+                    callback.staxResult(eventWriter);
+                }
+                else {
+                    throw new IllegalArgumentException(
+                            "StAX result contains neither XMLStreamWriter nor XMLEventWriter");
+                }
+            }
+        }
+        else if (result instanceof SAXResult) {
+            SAXResult saxSource = (SAXResult) result;
+            callback.saxResult(saxSource.getHandler(), saxSource.getLexicalHandler());
+        }
+        else if (result instanceof StreamResult) {
+            StreamResult streamSource = (StreamResult) result;
+            if (streamSource.getOutputStream() != null) {
+                callback.streamResult(streamSource.getOutputStream());
+            }
+            else if (streamSource.getWriter() != null) {
+                callback.streamResult(streamSource.getWriter());
+            }
+            else {
+                throw new IllegalArgumentException("StreamResult contains neither OutputStream nor Writer");
+            }
+        }
+        else {
+            throw new IllegalArgumentException("Unknown Result type: " + result.getClass());
+        }
+    }
+
+    /**
+     * Callback interface invoked on each sort of {@link Source}.
+     *
+     * @see TraxUtils#doWithSource(Source, SourceCallback)
+     */
+    public interface SourceCallback {
+
+        /**
+         * Perform an operation on the node contained in a {@link DOMSource}.
+         *
+         * @param node the node
+         */
+        void domSource(Node node);
+
+        /**
+         * Perform an operation on the {@code XMLReader} and {@code InputSource} contained in a {@link SAXSource}.
+         *
+         * @param reader      the reader, can be {@code null}
+         * @param inputSource the input source, can be {@code null}
+         */
+        void saxSource(XMLReader reader, InputSource inputSource) throws IOException, SAXException;
+
+        /**
+         * Perform an operation on the {@code XMLEventReader} contained in a JAXP 1.4 {@link StAXSource} or Spring
+         * {@link StaxSource}.
+         *
+         * @param eventReader the reader
+         */
+        void staxSource(XMLEventReader eventReader) throws XMLStreamException;
+
+        /**
+         * Perform an operation on the {@code XMLStreamReader} contained in a JAXP 1.4 {@link StAXSource} or Spring
+         * {@link StaxSource}.
+         *
+         * @param streamReader the reader
+         */
+        void staxSource(XMLStreamReader streamReader) throws XMLStreamException;
+
+        /**
+         * Perform an operation on the {@code InputStream} contained in a {@link StreamSource}.
+         *
+         * @param inputStream the input stream
+         */
+        void streamSource(InputStream inputStream) throws IOException;
+
+        /**
+         * Perform an operation on the {@code Reader} contained in a {@link StreamSource}.
+         *
+         * @param reader the reader
+         */
+        void streamSource(Reader reader) throws IOException;
+    }
+
+    /**
+     * Callback interface invoked on each sort of {@link Result}.
+     *
+     * @see TraxUtils#doWithResult(Result, ResultCallback)
+     */
+    public interface ResultCallback {
+
+        /**
+         * Perform an operation on the node contained in a {@link DOMResult}.
+         *
+         * @param node the node
+         */
+        void domResult(Node node);
+
+        /**
+         * Perform an operation on the {@code ContentHandler} and {@code LexicalHandler} contained in a {@link
+         * SAXResult}.
+         *
+         * @param contentHandler the content handler
+         * @param lexicalHandler the lexicalHandler, can be {@code null}
+         */
+        void saxResult(ContentHandler contentHandler, LexicalHandler lexicalHandler) throws IOException, SAXException;
+
+        /**
+         * Perform an operation on the {@code XMLEventWriter} contained in a JAXP 1.4 {@link StAXResult} or Spring
+         * {@link StaxResult}.
+         *
+         * @param eventWriter the writer
+         */
+        void staxResult(XMLEventWriter eventWriter) throws XMLStreamException;
+
+        /**
+         * Perform an operation on the {@code XMLStreamWriter} contained in a JAXP 1.4 {@link StAXResult} or Spring
+         * {@link StaxResult}.
+         *
+         * @param streamWriter the writer
+         */
+        void staxResult(XMLStreamWriter streamWriter) throws XMLStreamException;
+
+        /**
+         * Perform an operation on the {@code OutputStream} contained in a {@link StreamResult}.
+         *
+         * @param outputStream the output stream
+         */
+        void streamResult(OutputStream outputStream) throws IOException;
+
+        /**
+         * Perform an operation on the {@code Writer} contained in a {@link StreamResult}.
+         *
+         * @param writer the writer
+         */
+        void streamResult(Writer writer) throws IOException;
     }
 
     /** Inner class to avoid a static JAXP 1.4 dependency. */
