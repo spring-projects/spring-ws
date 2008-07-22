@@ -45,6 +45,7 @@ import com.thoughtworks.xstream.io.xml.QNameMap;
 import com.thoughtworks.xstream.io.xml.SaxWriter;
 import com.thoughtworks.xstream.io.xml.StaxReader;
 import com.thoughtworks.xstream.io.xml.StaxWriter;
+import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
 import com.thoughtworks.xstream.io.xml.XppReader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -309,7 +310,7 @@ public class XStreamMarshaller extends AbstractMarshaller {
             streamWriter = new DomWriter((Document) node);
         }
         else if (node instanceof Element) {
-            streamWriter = new DomWriter((Element) node);
+            streamWriter = new DomWriter((Element) node, node.getOwnerDocument(), new XmlFriendlyReplacer());
         }
         else {
             throw new IllegalArgumentException("DOMResult contains neither Document nor Element");
