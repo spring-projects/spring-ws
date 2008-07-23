@@ -59,6 +59,7 @@ import org.springframework.beans.propertyeditors.ClassEditor;
 import org.springframework.oxm.AbstractMarshaller;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.xml.stream.StaxEventContentHandler;
 import org.springframework.xml.stream.XmlEventStreamReader;
 
@@ -242,7 +243,7 @@ public class XStreamMarshaller extends AbstractMarshaller {
      * Set a implicit colletion/type map, consisting of string implicit collection mapped to <code>Class</code>
      * instances (or Strings to be converted to <code>Class</code> instances).
      *
-     * @see org.springframework.beans.propertyeditors.ClassEditor
+     * @see XStream#addImplicitCollection(Class, String)
      */
     public void setImplicitCollection(Map implicitCollection) {
         for (Iterator iterator = implicitCollection.entrySet().iterator(); iterator.hasNext();) {
@@ -258,6 +259,45 @@ public class XStreamMarshaller extends AbstractMarshaller {
                 type = (Class) editor.getValue();
             }
             addImplicitCollection((String) entry.getKey(), type);
+        }
+    }
+
+    /**
+     * Adds an omitted field for the given type.
+     *
+     * @param type      the type to be containing the field
+     * @param fieldName field to omitt
+     * @see XStream#omitField(Class, String)
+     */
+    public void addOmittedField(Class type, String fieldName) {
+        xstream.omitField(type, fieldName);
+    }
+
+    /**
+     * Sets a ommited field map, consisting of <code>Class</code> instances (or Strings to be converted to
+     * <code>Class</code> instances) mapped to comma separated field names.
+     *
+     * @see XStream#omitField(Class, String)
+     */
+    public void setOmittedFields(Map omittedFields) {
+        for (Iterator iterator = omittedFields.entrySet().iterator(); iterator.hasNext();) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            // Check whether we need to convert from String to Class.
+            Class type;
+            if (entry.getKey() instanceof Class) {
+                type = (Class) entry.getKey();
+            }
+            else {
+                ClassEditor editor = new ClassEditor();
+                editor.setAsText(String.valueOf(entry.getKey()));
+                type = (Class) editor.getValue();
+            }
+            // add each omitted field for the current type
+            String fieldsString = (String) entry.getValue();
+            String[] fields = StringUtils.commaDelimitedListToStringArray(fieldsString);
+            for (int i = 0; i < fields.length; i++) {
+                addOmittedField(type, fields[i]);
+            }
         }
     }
 
@@ -290,6 +330,10 @@ public class XStreamMarshaller extends AbstractMarshaller {
     public XmlMappingException convertXStreamException(Exception ex, boolean marshalling) {
         return XStreamUtils.convertXStreamException(ex, marshalling);
     }
+
+    //
+    // Marshalling
+    //
 
     /**
      * Marshals the given graph to the given XStream HierarchicalStreamWriter. Converts exceptions using
@@ -352,6 +396,10 @@ public class XStreamMarshaller extends AbstractMarshaller {
             marshal(graph, new CompactWriter(writer));
         }
     }
+
+    //
+    // Unmarshalling
+    //
 
     private Object unmarshal(HierarchicalStreamReader streamReader) {
         try {
