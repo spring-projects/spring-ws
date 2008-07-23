@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Properties;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -189,6 +190,21 @@ public class XStreamMarshallerTest extends XMLTestCase {
         marshaller.marshal(flight, result);
         String expected = "<flight flightNumber=\"42\" />";
         assertXMLEqual("Marshaller does not use attributes", expected, result.toString());
+    }
+
+    public void testOmitField() throws Exception {
+        marshaller.addOmittedField(Flight.class, "flightNumber");
+        StringResult result = new StringResult();
+        marshaller.marshal(flight, result);
+        assertXpathNotExists("/flight/flightNumber", result.toString());
+    }
+
+    public void testOmitFields() throws Exception {
+        Map omittedFieldsMap = Collections.singletonMap(Flight.class, "flightNumber");
+        marshaller.setOmittedFields(omittedFieldsMap);
+        StringResult result = new StringResult();
+        marshaller.marshal(flight, result);
+        assertXpathNotExists("/flight/flightNumber", result.toString());
     }
 
     public void testDriver() throws Exception {
