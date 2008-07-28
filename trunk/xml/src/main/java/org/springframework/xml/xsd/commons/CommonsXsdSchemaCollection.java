@@ -22,6 +22,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.ws.commons.schema.ValidationEventHandler;
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
@@ -30,11 +32,16 @@ import org.apache.ws.commons.schema.XmlSchemaImport;
 import org.apache.ws.commons.schema.XmlSchemaInclude;
 import org.apache.ws.commons.schema.XmlSchemaObject;
 import org.apache.ws.commons.schema.XmlSchemaObjectCollection;
+import org.apache.ws.commons.schema.resolver.DefaultURIResolver;
+import org.xml.sax.InputSource;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.UrlResource;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
@@ -52,7 +59,9 @@ import org.springframework.xml.xsd.XsdSchemaCollection;
  * @see <a href="http://ws.apache.org/commons/XmlSchema/">Commons XML Schema</a>
  * @since 1.5.0
  */
-public class CommonsXsdSchemaCollection implements XsdSchemaCollection, InitializingBean {
+public class CommonsXsdSchemaCollection implements XsdSchemaCollection, InitializingBean, ResourceLoaderAware {
+
+    private static final Log logger = LogFactory.getLog(CommonsXsdSchemaCollection.class);
 
     private final XmlSchemaCollection schemaCollection = new XmlSchemaCollection();
 
@@ -63,6 +72,8 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
     private boolean inline = false;
 
     private ValidationEventHandler validationEventHandler;
+
+    private ResourceLoader resourceLoader;
 
     /**
      * Constructs a new, empty instance of the <code>CommonsXsdSchemaCollection</code>.
@@ -104,16 +115,23 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
         this.validationEventHandler = validationEventHandler;
     }
 
+    public void setResourceLoader(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+    }
+
     public void afterPropertiesSet() throws IOException {
         Assert.notEmpty(xsdResources, "'xsds' must not be empty");
+
+        schemaCollection.setSchemaResolver(new ClasspathUriResolver());
 
         Set processedIncludes = new HashSet();
         Set processedImports = new HashSet();
 
         for (int i = 0; i < xsdResources.length; i++) {
-            Assert.isTrue(xsdResources[i].exists(), xsdResources[i] + " does not exit");
+            Resource xsdResource = xsdResources[i];
+            Assert.isTrue(xsdResource.exists(), xsdResource + " does not exit");
             XmlSchema xmlSchema = schemaCollection
-                    .read(SaxUtils.createInputSource(xsdResources[i]), validationEventHandler);
+                    .read(SaxUtils.createInputSource(xsdResource), validationEventHandler);
             xmlSchemas.add(xmlSchema);
 
             if (inline) {
@@ -121,6 +139,10 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
                 findImports(xmlSchema, processedImports, processedIncludes);
             }
         }
+        if (logger.isInfoEnabled()) {
+            logger.info("Loaded " + StringUtils.arrayToCommaDelimitedString(xsdResources));
+        }
+
     }
 
     public XsdSchema[] getXsdSchemas() {
@@ -198,6 +220,36 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
         }
         buffer.append('}');
         return buffer.toString();
+    }
+
+    private class ClasspathUriResolver extends DefaultURIResolver {
+
+        public InputSource resolveEntity(String namespace, String schemaLocation, String baseUri) {
+            if (resourceLoader != null) {
+                Resource resource = resourceLoader.getResource(schemaLocation);
+                if (resource.exists()) {
+                    return createInputSource(resource);
+                }
+                else {
+                    // let's try and find it on the classpath, see SWS-362
+                    String classpathLocation = ResourceLoader.CLASSPATH_URL_PREFIX + "/" + schemaLocation;
+                    resource = resourceLoader.getResource(classpathLocation);
+                    if (resource.exists()) {
+                        return createInputSource(resource);
+                    }
+                }
+            }
+            return super.resolveEntity(namespace, schemaLocation, baseUri);
+        }
+
+        private InputSource createInputSource(Resource resource) {
+            try {
+                return SaxUtils.createInputSource(resource);
+            }
+            catch (IOException ex) {
+                throw new CommonsXsdSchemaException("Could not resolve location", ex);
+            }
+        }
     }
 
 }
