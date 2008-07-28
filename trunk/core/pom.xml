@@ -129,6 +129,11 @@
             <artifactId>wstx-asl</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.schema</groupId>
+            <artifactId>XmlSchema</artifactId>
+            <scope>test</scope>
+        </dependency>
         <!-- SOAP dependencies -->
         <dependency>
             <groupId>org.apache.ws.commons.axiom</groupId>
