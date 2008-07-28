@@ -16,8 +16,6 @@
 
 package org.springframework.xml.xsd.commons;
 
-import org.apache.ws.commons.schema.XmlSchemaException;
-
 import org.springframework.xml.xsd.XsdSchemaException;
 
 /**
@@ -32,7 +30,7 @@ public class CommonsXsdSchemaException extends XsdSchemaException {
         super(message);
     }
 
-    public CommonsXsdSchemaException(String message, XmlSchemaException exception) {
+    public CommonsXsdSchemaException(String message, Throwable exception) {
         super(message, exception);
     }
 }
