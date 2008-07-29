@@ -89,7 +89,7 @@ public class InliningXsdSchemaTypesProvider extends TransformerObjectSupport imp
         XsdSchema[] schemas = schemaCollection.getXsdSchemas();
         for (int i = 0; i < schemas.length; i++) {
             if (logger.isDebugEnabled()) {
-                logger.debug("Inling " + schemas[i]);
+                logger.debug("Inlining " + schemas[i]);
             }
             if (schemas.length == 1) {
                 definition.addNamespace(SCHEMA_PREFIX, schemas[i].getTargetNamespace());
