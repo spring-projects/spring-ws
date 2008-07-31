@@ -17,12 +17,17 @@
 package org.springframework.ws.server.endpoint;
 
 import javax.xml.transform.Source;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.dom.DOMSource;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.dom4j.io.DOMReader;
 import org.dom4j.io.DocumentResult;
 import org.dom4j.io.DocumentSource;
+import org.w3c.dom.Node;
+
 import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
@@ -38,6 +43,17 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  */
 public abstract class AbstractDom4jPayloadEndpoint extends TransformerObjectSupport implements PayloadEndpoint {
 
+    private boolean alwaysTransform = false;
+
+    /**
+     * Set if the request {@link Source} should always be transformed into a new {@link DocumentResult}.
+     * <p/>
+     * Default is {@code false}, which is faster.
+     */
+    public void setAlwaysTransform(boolean alwaysTransform) {
+        this.alwaysTransform = alwaysTransform;
+    }
+
     public final Source invoke(Source request) throws Exception {
         Element requestElement = null;
         if (request != null) {
@@ -48,6 +64,38 @@ public abstract class AbstractDom4jPayloadEndpoint extends TransformerObjectSupp
         Document responseDocument = DocumentHelper.createDocument();
         Element responseElement = invokeInternal(requestElement, responseDocument);
         return responseElement != null ? new DocumentSource(responseElement) : null;
+    }
+
+    /**
+     * Returns the payload element of the given source.
+     * <p/>
+     * Default implementation checks whether the source is a {@link javax.xml.transform.dom.DOMSource}, and uses a
+     * {@link org.jdom.input.DOMBuilder} to create a JDOM {@link org.jdom.Element}. In all other cases, or when
+     * {@linkplain #setAlwaysTransform(boolean) alwaysTransform} is {@code true}, the source is transformed into a
+     * {@link org.jdom.transform.JDOMResult}, which is more expensive. If the passed source is {@code null}, {@code
+     * null} is returned.
+     *
+     * @param source the source to return the root element of; can be {@code null}
+     * @return the document element
+     * @throws javax.xml.transform.TransformerException
+     *          in case of errors
+     */
+    protected Element getDocumentElement(Source source) throws TransformerException {
+        if (source == null) {
+            return null;
+        }
+        if (!alwaysTransform && source instanceof DOMSource) {
+            Node node = ((DOMSource) source).getNode();
+            if (node.getNodeType() == Node.DOCUMENT_NODE) {
+                DOMReader domReader = new DOMReader();
+                Document document = domReader.read((org.w3c.dom.Document) node);
+                return document.getRootElement();
+            }
+        }
+        // we have no other option than to transform
+        DocumentResult dom4jResult = new DocumentResult();
+        transform(source, dom4jResult);
+        return dom4jResult.getDocument().getRootElement();
     }
 
     /**
