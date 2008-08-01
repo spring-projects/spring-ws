@@ -4,7 +4,7 @@
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws</artifactId>
     <packaging>pom</packaging>
-    <version>1.5.4</version>
+    <version>1.5.5-SNAPSHOT</version>
     <name>Spring Web Services</name>
     <description>
         Spring Web Services is a product of the Spring community focused on creating document-driven Web services. It
@@ -83,9 +83,9 @@
         </site>
     </distributionManagement>
     <scm>
-        <connection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/tags/spring-ws-1.5.4</connection>
-        <developerConnection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/tags/spring-ws-1.5.4</developerConnection>
-        <url>http://fisheye3.cenqua.com/browse/springframework/spring-ws/tags/spring-ws-1.5.4</url>
+        <connection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk</connection>
+        <developerConnection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk</developerConnection>
+        <url>http://fisheye3.cenqua.com/browse/springframework/spring-ws/trunk</url>
     </scm>
     <properties>
         <spring.version>2.5.5</spring.version>
