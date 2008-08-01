@@ -48,7 +48,7 @@ import org.springframework.ws.soap.addressing.server.annotation.Address;
  * }
  * </pre>
  * <p/>
- * If set, the {@link @Address} annotation on the endpoint class should be equal to the {@link
+ * If set, the {@link Address} annotation on the endpoint class should be equal to the {@link
  * org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo() destination} property of the
  * incominging message.
  *
