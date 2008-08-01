@@ -647,7 +647,7 @@ public class MarshallingOrderEndpoint extends AbstractMarshallingPayloadEndpoint
 
     private final OrderService orderService;
 
-    public SampleMarshallingEndpoint(OrderService orderService, Marshaller marshaller) {
+    public MarshallingOrderEndpoint(OrderService orderService, Marshaller marshaller) {
         super(marshaller);
         this.orderService = orderService;
     }
