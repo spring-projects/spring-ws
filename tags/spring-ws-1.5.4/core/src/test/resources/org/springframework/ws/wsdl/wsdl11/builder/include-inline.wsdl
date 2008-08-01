@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:schema="http://www.springframework.org/spring-ws/include/schema"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://www.springframework.org/spring-ws/include/definitions"
+                  targetNamespace="http://www.springframework.org/spring-ws/include/definitions">
+
+    <wsdl:types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                    targetNamespace="http://www.springframework.org/spring-ws/include/schema"
+                    xmlns="http://www.springframework.org/spring-ws/include/schema" elementFormDefault="qualified"
+                    attributeFormDefault="unqualified">
+
+            <xsd:include schemaLocation="included.xsd"/>
+
+            <xsd:element name="GetOrderRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="child" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="GetOrderResponse">
+        <wsdl:part name="GetOrderResponse" element="schema:GetOrderResponse"/>
+    </wsdl:message>
+    <wsdl:message name="GetOrderRequest">
+        <wsdl:part name="GetOrderRequest" element="schema:GetOrderRequest"/>
+    </wsdl:message>
+    <wsdl:portType name="Order">
+        <wsdl:operation name="GetOrder">
+            <wsdl:input message="tns:GetOrderRequest" name="GetOrderRequest"/>
+            <wsdl:output message="tns:GetOrderResponse" name="GetOrderResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="OrderBinding" type="tns:Order">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="GetOrder">
+            <soap:operation soapAction=""/>
+            <wsdl:input name="GetOrderRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="GetOrderResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="OrderService">
+        <wsdl:port binding="tns:OrderBinding" name="OrderPort">
+            <soap:address location="http://localhost:8080/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="messagFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+
+    <bean id="abstractClient" abstract="true">
+        <constructor-arg ref="messagFactory"/>
+        <property name="destinationProvider">
+            <bean class="org.springframework.ws.client.support.destination.Wsdl11DestinationProvider">
+                <property name="wsdl" value="http://localhost:8080/airline/airline.wsdl"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="marshaller" class="org.springframework.oxm.xmlbeans.XmlBeansMarshaller"/>
+
+    <bean id="getFlights" parent="abstractClient" class="org.springframework.ws.samples.airline.client.sws.GetFlights">
+        <property name="marshaller" ref="marshaller"/>
+        <property name="unmarshaller" ref="marshaller"/>
+    </bean>
+
+    <bean id="getFrequentFlyerMileage" parent="abstractClient"
+          class="org.springframework.ws.samples.airline.client.sws.GetFrequentFlyerMileage">
+        <property name="interceptors" ref="securityInterceptor"/>
+    </bean>
+
+    <bean id="securityInterceptor" class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+        <property name="securementActions" value="UsernameToken"/>
+        <property name="securementUsername" value="john"/>
+        <property name="securementPassword" value="changeme"/>
+    </bean>
+
+</beans>
