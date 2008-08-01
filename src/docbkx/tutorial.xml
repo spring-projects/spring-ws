@@ -474,7 +474,7 @@
         </para>
 <screen>mvn archetype:create -DarchetypeGroupId=org.springframework.ws \
   -DarchetypeArtifactId=spring-ws-archetype \
-  -DarchetypeVersion=1.5.3 \
+  -DarchetypeVersion=1.5.4 \
   -DgroupId=com.mycompany.hr \
   -DartifactId=holidayService
 </screen>
@@ -634,7 +634,7 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
     <dependency>
         <groupId>org.springframework.ws</groupId>
         <artifactId>spring-ws-core</artifactId>
-        <version>1.5.3</version>
+        <version>1.5.4</version>
     </dependency>
     <dependency>
         <groupId>jdom</groupId>
