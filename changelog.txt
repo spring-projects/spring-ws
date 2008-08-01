@@ -2,6 +2,35 @@ SPRING WEB SERVICES CHANGELOG
 =============================
 http://www.springframework.org/spring-ws
 
+Changes in version 1.5.4
+-------------------------
+** Bug
+    * [SWS-386] - DefaultWsdl11Definition.setFaultSuffix : responseSuffix overwritten
+    * [SWS-389] - problem with DomContentHandler
+    * [SWS-392] - AbstractMarshallingPayloadEndpoint and XStreamMarshaller produces malformed response body
+    * [SWS-393] - Incoming message with with UTF-8 BOM is failing
+    * [SWS-395] - Spring-WS support manifest has wrong version of spring xml import
+    * [SWS-396] - @Endpoint with method having any other annotation then @PayloadRoot is not mapped
+    * [SWS-401] - unable to use maven2 to use version above 1.0.4 due to missing jar: bouncycastle:bcprov-jdk15:jar:132
+    * [SWS-406] - Constructor in example for AbstractMarshallingPayloadEndpoint is wrong
+
+** Improvement
+    * [SWS-214] - Setting Basic Authentication preemptive through CommonsHttpMessageSender
+    * [SWS-224] - XStreamMarshaller is missing the call to omit fields from serialization process
+    * [SWS-372] - Missing support for interface/implementation separated JAXB classes in Jaxb2Marshaller
+    * [SWS-390] - Document OXM tags
+    * [SWS-394] - Update FAQ to reflect new SAAJ jar in WebLogic 10
+    * [SWS-397] - Add the possibility to WebServiceTemplate to extract the service URI from a WSDL
+    * [SWS-399] - Upgrade XStream dependency to 1.3
+    * [SWS-400] - Make AbstractLoggingInterceptor more extensible
+    * [SWS-404] - Do not transform request payload Sources when not necessary
+
+** New Feature
+    * [SWS-362] - WSDL generation issue when xsds import other xsds
+    * [SWS-391] - Client-side validation interceptor
+    * [SWS-398] - Add layer of indirection for obtaining WebServiceTemplate URIs
+    * [SWS-402] - Create utility for dealing with Source and Result objects
+
 Changes in version 1.5.3
 -------------------------
 ** Bug
