@@ -18,7 +18,7 @@
     </issueManagement>
     <ciManagement>
         <system>bamboo</system>
-        <url>http://build.springframework.org:8085/bamboo/</url>
+        <url>http://build.springframework.org/browse/SWS</url>
     </ciManagement>
     <inceptionYear>2005</inceptionYear>
     <developers>
