@@ -251,8 +251,8 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
             Mapping mapping = new Mapping();
             for (int i = 0; i < mappingLocations.length; i++) {
                 mapping.loadMapping(SaxUtils.createInputSource(mappingLocations[i]));
-                context.addMapping(mapping);
             }
+            context.addMapping(mapping);
         }
         if (targetClass != null) {
             context.addClass(targetClass);
