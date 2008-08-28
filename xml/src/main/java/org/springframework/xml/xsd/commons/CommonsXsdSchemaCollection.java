@@ -143,13 +143,18 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
         for (int i = 0; i < xsdResources.length; i++) {
             Resource xsdResource = xsdResources[i];
             Assert.isTrue(xsdResource.exists(), xsdResource + " does not exit");
-            XmlSchema xmlSchema = schemaCollection
-                    .read(SaxUtils.createInputSource(xsdResource), validationEventHandler);
-            xmlSchemas.add(xmlSchema);
+            try {
+                XmlSchema xmlSchema = schemaCollection
+                        .read(SaxUtils.createInputSource(xsdResource), validationEventHandler);
+                xmlSchemas.add(xmlSchema);
 
-            if (inline) {
-                inlineIncludes(xmlSchema, processedIncludes, processedImports);
-                findImports(xmlSchema, processedImports, processedIncludes);
+                if (inline) {
+                    inlineIncludes(xmlSchema, processedIncludes, processedImports);
+                    findImports(xmlSchema, processedImports, processedIncludes);
+                }
+            }
+            catch (Exception ex) {
+                throw new CommonsXsdSchemaException("Schema [" + xsdResource + "] could not be loaded", ex);
             }
         }
         if (logger.isInfoEnabled()) {

@@ -108,4 +108,16 @@ public class CommonsXsdSchemaCollectionTest extends XMLTestCase {
         XmlValidator validator = collection.createValidator();
         assertNotNull("No XmlValidator returned", validator);
     }
+
+    public void testInvalidSchema() throws Exception {
+        Resource invalid = new ClassPathResource("invalid.xsd", AbstractXsdSchemaTestCase.class);
+        collection.setXsds(new Resource[]{invalid});
+        try {
+            collection.afterPropertiesSet();
+            fail("CommonsXsdSchemaException expected");
+        }
+        catch (CommonsXsdSchemaException ex) {
+            // expected
+        }
+    }
 }
