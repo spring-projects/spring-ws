@@ -132,7 +132,10 @@ public abstract class AxiomUtils {
             }
         }
         catch (Exception ex) {
-            throw new IllegalArgumentException("Error in converting SOAP Envelope to Document", ex);
+            IllegalArgumentException iaex =
+                    new IllegalArgumentException("Error in converting SOAP Envelope to Document");
+            iaex.initCause(ex);
+            throw iaex;
         }
     }
 
@@ -164,7 +167,10 @@ public abstract class AxiomUtils {
             return stAXSOAPModelBuilder.getSOAPEnvelope();
         }
         catch (Exception ex) {
-            throw new IllegalArgumentException("Error in converting Document to SOAP Envelope", ex);
+            IllegalArgumentException iaex =
+                    new IllegalArgumentException("Error in converting Document to SOAP Envelope");
+            iaex.initCause(ex);
+            throw iaex;
         }
     }
 
