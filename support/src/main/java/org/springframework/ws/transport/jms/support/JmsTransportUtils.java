@@ -58,7 +58,7 @@ public abstract class JmsTransportUtils {
 
     private static final Pattern PRIORITY_PATTERN = Pattern.compile("priority=(\\d)");
 
-    private static final Pattern REPLY_TO_NAME_PATTERN = Pattern.compile("replyToName=(\\w+)");
+    private static final Pattern REPLY_TO_NAME_PATTERN = Pattern.compile("replyToName=([^&]+)");
 
     private JmsTransportUtils() {
     }
