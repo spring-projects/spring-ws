@@ -33,6 +33,7 @@ import org.apache.ws.commons.schema.XmlSchemaInclude;
 import org.apache.ws.commons.schema.XmlSchemaObject;
 import org.apache.ws.commons.schema.XmlSchemaObjectCollection;
 import org.apache.ws.commons.schema.resolver.DefaultURIResolver;
+import org.apache.ws.commons.schema.resolver.URIResolver;
 import org.xml.sax.InputSource;
 
 import org.springframework.beans.factory.InitializingBean;
@@ -72,6 +73,8 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
     private boolean inline = false;
 
     private ValidationEventHandler validationEventHandler;
+
+    private URIResolver uriResolver = new ClasspathUriResolver();
 
     private ResourceLoader resourceLoader;
 
@@ -115,6 +118,16 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
         this.validationEventHandler = validationEventHandler;
     }
 
+    /**
+     * Sets the WS-Commons uri resolver to use when resolving (relative) schemas.
+     * <p/>
+     * Default is an internal subclass of {@link DefaultURIResolver} which correctly handles schemas on the classpath.
+     */
+    public void setUriResolver(URIResolver uriResolver) {
+        Assert.notNull(uriResolver, "'uriResolver' must not be null");
+        this.uriResolver = uriResolver;
+    }
+
     public void setResourceLoader(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
     }
@@ -122,7 +135,7 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
     public void afterPropertiesSet() throws IOException {
         Assert.notEmpty(xsdResources, "'xsds' must not be empty");
 
-        schemaCollection.setSchemaResolver(new ClasspathUriResolver());
+        schemaCollection.setSchemaResolver(uriResolver);
 
         Set processedIncludes = new HashSet();
         Set processedImports = new HashSet();
@@ -229,6 +242,19 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
                 Resource resource = resourceLoader.getResource(schemaLocation);
                 if (resource.exists()) {
                     return createInputSource(resource);
+                }
+                else if (StringUtils.hasLength(baseUri)) {
+                    // let's try and find it relative to the baseUri, see SWS-413
+                    try {
+                        Resource baseUriResource = new UrlResource(baseUri);
+                        resource = baseUriResource.createRelative(schemaLocation);
+                        if (resource.exists()) {
+                            return createInputSource(resource);
+                        }
+                    }
+                    catch (IOException e) {
+                        // fall through to super.resolveEntity
+                    }
                 }
                 else {
                     // let's try and find it on the classpath, see SWS-362
