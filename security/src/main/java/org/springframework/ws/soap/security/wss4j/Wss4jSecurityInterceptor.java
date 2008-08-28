@@ -633,6 +633,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         if (soapMessage instanceof AxiomSoapMessage) {
             // construct a new Axiom message with the processed envelope
             AxiomSoapMessage axiomMessage = (AxiomSoapMessage) soapMessage;
+            // save the Soap Action
+            String soapAction = axiomMessage.getSoapAction();
             SOAPEnvelope envelopeFromDOMDocument = AxiomUtils.toEnvelope(envelope);
             SOAPFactory factory = (SOAPFactory) axiomMessage.getAxiomMessage().getOMFactory();
             SOAPMessage newMessage = factory.createSOAPMessage();
@@ -640,6 +642,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
             // replace the Axiom message
             axiomMessage.setAxiomMessage(newMessage);
+            // restore the Soap Action
+            axiomMessage.setSoapAction(soapAction);
         }
     }
 
