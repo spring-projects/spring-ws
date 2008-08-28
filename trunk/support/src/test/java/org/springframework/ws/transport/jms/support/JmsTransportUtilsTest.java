@@ -93,4 +93,13 @@ public class JmsTransportUtilsTest extends TestCase {
         replyToName = JmsTransportUtils.getReplyToName(uri);
         assertNull("Invalid replyToName", replyToName);
     }
+
+    public void testJndi() throws Exception {
+        URI uri = new URI("jms:jms/REQUEST_QUEUE?replyToName=jms/REPLY_QUEUE");
+        String destination = JmsTransportUtils.getDestinationName(uri);
+        assertEquals("Invalid destination name", "jms/REQUEST_QUEUE", destination);
+
+        String replyTo = JmsTransportUtils.getReplyToName(uri);
+        assertEquals("Invalid reply to name", "jms/REPLY_QUEUE", replyTo);
+    }
 }
