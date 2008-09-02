@@ -27,6 +27,6 @@ public class SaxUtilsTest extends TestCase {
         Resource resource = new FileSystemResource("/path with spaces/file with spaces.txt");
         String systemId = SaxUtils.getSystemId(resource);
         assertNotNull("No systemId returned", systemId);
-        assertEquals("Invalid system id", "file:/path%20with%20spaces/file%20with%20spaces.txt", systemId);
+        assertTrue("Invalid system id", systemId.endsWith("path%20with%20spaces/file%20with%20spaces.txt"));
     }
 }
