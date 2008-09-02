@@ -16,13 +16,21 @@
 
 package org.springframework.ws.server.endpoint.interceptor;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -30,8 +38,7 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.xml.transform.ResourceSource;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
+import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
  * Interceptor that transforms the payload of <code>WebServiceMessage</code>s using XSLT stylesheet. Allows for seperate
@@ -47,7 +54,8 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * @see #setResponseXslt(org.springframework.core.io.Resource)
  * @since 1.0.0
  */
-public class PayloadTransformingInterceptor implements EndpointInterceptor, InitializingBean {
+public class PayloadTransformingInterceptor extends TransformerObjectSupport
+        implements EndpointInterceptor, InitializingBean {
 
     private static final Log logger = LogFactory.getLog(PayloadTransformingInterceptor.class);
 
@@ -81,7 +89,7 @@ public class PayloadTransformingInterceptor implements EndpointInterceptor, Init
         if (requestTemplates != null) {
             WebServiceMessage request = messageContext.getRequest();
             Transformer transformer = requestTemplates.newTransformer();
-            transformer.transform(request.getPayloadSource(), request.getPayloadResult());
+            transformMessage(request, transformer);
             logger.debug("Request message transformed");
         }
         return true;
@@ -99,10 +107,17 @@ public class PayloadTransformingInterceptor implements EndpointInterceptor, Init
         if (responseTemplates != null) {
             WebServiceMessage response = messageContext.getResponse();
             Transformer transformer = responseTemplates.newTransformer();
-            transformer.transform(response.getPayloadSource(), response.getPayloadResult());
+            transformMessage(response, transformer);
             logger.debug("Response message transformed");
         }
         return true;
+    }
+
+    private void transformMessage(WebServiceMessage message, Transformer transformer) throws TransformerException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        transformer.transform(message.getPayloadSource(), new StreamResult(os));
+        ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+        transform(new StreamSource(is), message.getPayloadResult());
     }
 
     /** Does nothing by default. Faults are not transformed. */
