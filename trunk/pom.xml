@@ -399,7 +399,7 @@
                                         <artifactItem>
                                             <groupId>org.apache.santuario</groupId>
                                             <artifactId>xmlsec</artifactId>
-                                            <version>1.4.0</version>
+                                            <version>1.4.1</version>
                                             <outputDirectory>${project.build.directory}/dependency/wss4j/</outputDirectory>
                                         </artifactItem>
                                         <artifactItem>
