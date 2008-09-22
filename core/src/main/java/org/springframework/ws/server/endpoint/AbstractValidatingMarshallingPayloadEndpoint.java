@@ -40,18 +40,19 @@ public abstract class AbstractValidatingMarshallingPayloadEndpoint extends Abstr
     private Validator[] validators;
 
     /** Return the name of the request object for validation error codes. */
-    public final String getRequestName() {
+    public String getRequestName() {
         return requestName;
     }
 
     /** Set the name of the request object user for validation errors. */
-    public final void setRequestName(String requestName) {
+    public void setRequestName(String requestName) {
         this.requestName = requestName;
     }
 
     /** Return the primary Validator for this controller. */
-    public final Validator getValidator() {
-        return (this.validators != null && this.validators.length > 0 ? this.validators[0] : null);
+    public Validator getValidator() {
+        Validator[] validators = getValidators();
+        return (validators != null && validators.length > 0 ? validators[0] : null);
     }
 
     /**
@@ -59,21 +60,22 @@ public abstract class AbstractValidatingMarshallingPayloadEndpoint extends Abstr
      * class. If there are one or more existing validators set already when this method is called, only the specified
      * validator will be kept. Use {@link #setValidators(Validator[])} to set multiple validators.
      */
-    public final void setValidator(Validator validator) {
+    public void setValidator(Validator validator) {
         this.validators = new Validator[]{validator};
     }
 
     /** Return the Validators for this controller. */
-    public final Validator[] getValidators() {
+    public Validator[] getValidators() {
         return validators;
     }
 
     /** Set the Validators for this controller. The Validator must support the specified command class. */
-    public final void setValidators(Validator[] validators) {
+    public void setValidators(Validator[] validators) {
         this.validators = validators;
     }
 
-    protected final boolean onUnmarshalRequest(MessageContext messageContext, Object requestObject) throws Exception {
+    protected boolean onUnmarshalRequest(MessageContext messageContext, Object requestObject) throws Exception {
+        Validator[] validators = getValidators();
         if (validators != null) {
             Errors errors = new BindException(requestObject, getRequestName());
             for (int i = 0; i < validators.length; i++) {
