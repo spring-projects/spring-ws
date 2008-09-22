@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <artifactId>spring-ws-parent</artifactId>
         <groupId>org.springframework.ws</groupId>
@@ -62,6 +63,7 @@
                             org.springframework*;version="2.0",
                             *;resolution:=optional
                         </Import-Package>
+                        <Fragment-Host>org.springframework.bundle.ws.core;version="[${pom.version}, ${pom.version}]"</Fragment-Host>
                         <Implementation-Title>${pom.name}</Implementation-Title>
                         <Implementation-Version>${pom.version}</Implementation-Version>
                         <Spring-WS-Version>${pom.version}</Spring-WS-Version>
