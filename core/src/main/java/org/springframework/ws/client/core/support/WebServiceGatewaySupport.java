@@ -104,14 +104,14 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
         webServiceTemplate.setDestinationProvider(destinationProvider);
     }
 
-    /** Returns the <code>WebServiceMessageSender</code> used by the gateway. */
-    public final WebServiceMessageSender[] getMessageSender() {
-        return webServiceTemplate.getMessageSenders();
-    }
-
     /** Sets a single <code>WebServiceMessageSender</code> to be used by the gateway. */
     public final void setMessageSender(WebServiceMessageSender messageSender) {
         webServiceTemplate.setMessageSender(messageSender);
+    }
+
+    /** Returns the <code>WebServiceMessageSender</code>s used by the gateway. */
+    public final WebServiceMessageSender[] getMessageSenders() {
+        return webServiceTemplate.getMessageSenders();
     }
 
     /** Sets multiple <code>WebServiceMessageSender</code> to be used by the gateway. */
