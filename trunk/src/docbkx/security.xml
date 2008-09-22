@@ -106,10 +106,10 @@
         <para>
             Additionally, the security interceptor requires one or more<classname>CallbackHandler</classname>s to
             operate. These handlers are used to retrieve certificates, private keys, validate user credentials,
-            etc. Spring-WS offers handlers for most common security concerns, e.g. authenticating against a Acegi
-            authentication manager, signing outgoing messages based on a X509 certificate. The following sections will
-            indicate what callback handler to use for which security concern. You can set the callback handlers using
-            the
+            etc. Spring-WS offers handlers for most common security concerns, e.g. authenticating against a Spring
+            Security authentication manager, signing outgoing messages based on a X509 certificate. The following
+            sections will indicate what callback handler to use for which security concern. You can set the callback
+            handlers using the
             <methodname>callbackHandler</methodname>
             or
             <methodname>callbackHandlers</methodname>
@@ -435,50 +435,34 @@
                     </para>
                 </section>
                 <section>
-                    <title>AcegiPlainTextPasswordValidationCallbackHandler</title>
+                    <title>SpringPlainTextPasswordValidationCallbackHandler</title>
                     <para>
-                        The
-                        <classname>AcegiPlainTextPasswordValidationCallbackHandler</classname>
-                        uses the excellent
-                        <ulink
-                                url="http://acegisecurity.org/">
-                            <citetitle>Acegi Security Framework</citetitle>
-                        </ulink>
-                        to
-                        authenticate users. It is beyond the scope of this document to describe Acegi, but suffice it to say
-                        that Acegi is a full-fledged security framework. You can read more about Acegi in the
-                        <ulink
-                                url="http://acegisecurity.org/docbook/acegi.html">
-                            <citetitle>Acegi reference
-                                documentation
-                            </citetitle>
-                        </ulink>
-                        .
+                        The <classname>SpringPlainTextPasswordValidationCallbackHandler</classname> uses
+                        <ulink url="http://www.springframework.org/security"><citetitle>Spring Security</citetitle></ulink>
+                        to authenticate users. It is beyond the scope of this document to describe Spring Security,
+                        but suffice it to say that it is a full-fledged security framework.
+                        You can read more about it in the <ulink url="http://www.springframework.org/security">
+                            <citetitle>Spring Security reference documentation</citetitle>
+                        </ulink>.
                     </para>
                     <para>
-                        The
-                        <classname>AcegiPlainTextPasswordValidationCallbackHandler</classname>
-                        requires an Acegi
-                        <classname>AuthenticationManager</classname>
-                        to operate. It uses this manager to authenticate against a
-                        <classname>UsernamePasswordAuthenticationToken</classname>
-                        that it creates. If authentication is
-                        successful, the token is stored in the
-                        <classname>SecurityContextHolder</classname>. You can set the
-                        authentication manager using the
-                        <methodname>authenticationManager</methodname>
-                        property:
+                        The <classname>SpringPlainTextPasswordValidationCallbackHandler</classname> requires
+                        an <classname>AuthenticationManager</classname> to operate. It uses this manager to
+                        authenticate against a <classname>UsernamePasswordAuthenticationToken</classname>
+                        that it creates. If authentication is successful, the token is stored in the
+                        <classname>SecurityContextHolder</classname>. You can set the authentication manager using the
+                        <methodname>authenticationManager</methodname>property:
                     </para>
                     <programlisting><![CDATA[
 <beans>
-  <bean id="acegiHandler"
-      class="org.springframework.ws.soap.security.xwss.callback.acegi.AcegiPlainTextPasswordValidationCallbackHandler">
+  <bean id="springSecurityHandler"
+      class="org.springframework.ws.soap.security.xwss.callback.SpringPlainTextPasswordValidationCallbackHandler">
     <property name="authenticationManager" ref="authenticationManager"/>
   </bean>
 
-  <bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
+  <bean id="authenticationManager" class="org.springframework.security.providers.ProviderManager">
       <property name="providers">
-          <bean class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
+          <bean class="org.springframework.security.providers.dao.DaoAuthenticationProvider">
               <property name="userDetailsService" ref="userDetailsService"/>
           </bean>
       </property>
@@ -612,26 +596,21 @@
                     </para>
                 </section>
                 <section>
-                    <title>AcegiDigestPasswordValidationCallbackHandler</title>
+                    <title>SpringDigestPasswordValidationCallbackHandler</title>
                     <para>
-                        The
-                        <classname>AcegiDigestPasswordValidationCallbackHandler</classname>
-                        requires an Acegi
-                        <classname>UserDetailService</classname>
+                        The <classname>SpringDigestPasswordValidationCallbackHandler</classname>
+                        requires an Spring Security <classname>UserDetailService</classname>
                         to operate. It uses this service to retrieve the password
-                        of the user specified in the token. The digest of the password contained in this details object is
-                        then compared with the digest in the message. If they are equal, the user has successfully
-                        authenticated, and a
-                        <classname>UsernamePasswordAuthenticationToken</classname>
-                        is stored in the
-                        <classname>SecurityContextHolder</classname>. You can set the service using the
+                        of the user specified in the token. The digest of the password contained in this details object
+                        is then compared with the digest in the message. If they are equal, the user has successfully
+                        authenticated, and a <classname>UsernamePasswordAuthenticationToken</classname>
+                        is stored in the <classname>SecurityContextHolder</classname>. You can set the service using the
                         <methodname>userDetailsService</methodname>. Additionally, you can set a
-                        <methodname>userCache</methodname>
-                        property, to cache loaded user details.
+                        <methodname>userCache</methodname> property, to cache loaded user details.
                     </para>
                     <programlisting><![CDATA[
 <beans>
-    <bean class="org.springframework.ws.soap.security.xwss.callback.acegi.AcegiDigestPasswordValidationCallbackHandler">
+    <bean class="org.springframework.ws.soap.security.xwss.callback.SpringDigestPasswordValidationCallbackHandler">
         <property name="userDetailsService" ref="userDetailsService"/>
     </bean>
 
@@ -686,7 +665,7 @@
                     </para>
                     <para>
                         In Spring-WS terms, this means that the
-                        <classname>AcegiCertificateValidationCallbackHandler</classname>
+                        <classname>SpringCertificateValidationCallbackHandler</classname>
                         or
                         <classname>JaasCertificateValidationCallbackHandler</classname>
                         should be preceded by
@@ -701,7 +680,7 @@
     <property name="callbackHandlers">
         <list>
             <ref bean="keyStoreHandler"/>
-            <ref bean="acegiHandler"/>
+            <ref bean="springSecurityHandler"/>
         </list>
     </property>
 </bean>
@@ -768,36 +747,31 @@
                     </para>
                 </section>
                 <section>
-                    <title>AcegiCertificateValidationCallbackHandler</title>
+                    <title>SpringCertificateValidationCallbackHandler</title>
                     <para>
-                        The
-                        <classname>AcegiCertificateValidationCallbackHandler</classname>
-                        requires an Acegi
-                        <classname>AuthenticationManager</classname>
-                        to operate. It uses this manager to authenticate against a
-                        <classname>X509AuthenticationToken</classname>
-                        that it creates. The configured authentication
-                        manager is expected to supply a provider which can handle this token (usually an instance of
+                        The <classname>SpringCertificateValidationCallbackHandler</classname>
+                        requires an Spring Security <classname>AuthenticationManager</classname> to operate. It uses
+                        this manager to authenticate against a <classname>X509AuthenticationToken</classname>
+                        that it creates. The configured authentication manager is expected to supply a provider which
+                        can handle this token (usually an instance of
                         <classname>X509AuthenticationProvider</classname>). If authentication is succesful, the token is
-                        stored in the
-                        <classname>SecurityContextHolder</classname>. You can set the authentication manager
-                        using the
-                        <methodname>authenticationManager</methodname>
+                        stored in the <classname>SecurityContextHolder</classname>. You can set the authentication
+                        manager using the <property>authenticationManager</property>
                         property:
                     </para>
                     <programlisting><![CDATA[
 <beans>
-    <bean id="acegiCertificateHandler"
-        class="org.springframework.ws.soap.security.xwss.callback.acegi.AcegiCertificateValidationCallbackHandler">
+    <bean id="springSecurityCertificateHandler"
+        class="org.springframework.ws.soap.security.xwss.callback.SpringCertificateValidationCallbackHandler">
         <property name="authenticationManager" ref="authenticationManager"/>
     </bean>
 
     <bean id="authenticationManager"
-        class="org.acegisecurity.providers.ProviderManager">
+        class="org.springframework.security.providers.ProviderManager">
         <property name="providers">
-            <bean class="org.acegisecurity.providers.x509.X509AuthenticationProvider">
+            <bean class="org.springframework.security.providers.x509.X509AuthenticationProvider">
                 <property name="x509AuthoritiesPopulator">
-                    <bean class="org.acegisecurity.providers.x509.populator.DaoX509AuthoritiesPopulator">
+                    <bean class="org.springframework.security.providers.x509.populator.DaoX509AuthoritiesPopulator">
                         <property name="userDetailsService" ref="userDetailsService"/>
                     </bean>
                 </property>
@@ -811,14 +785,10 @@
                     <para>
                         In this case, we are using a custom user details service to obtain authentication details based on
                         the certificate. Refer to the
-                        <ulink
-                                url="http://acegisecurity.org/docbook/acegi.html">
-                            <citetitle>Acegi reference
-                                documentation
-                            </citetitle>
+                        <ulink url="http://www.springframework.org/security">
+                            <citetitle>Spring Security reference documentation</citetitle>
                         </ulink>
-                        for more information about authentication against X509
-                        certificates.
+                        for more information about authentication against X509 certificates.
                     </para>
                 </section>
                 <section>
@@ -1347,7 +1317,7 @@
             <section>
                 <title>Validating Username Token</title>
                 <para>
-                    Spring-WS provides a set of callback handlers to integrate with Acegi Security (and Spring Security).
+                    Spring-WS provides a set of callback handlers to integrate with Spring Security.
                     Additionally, a simple callback handler
                     <classname>SimplePasswordValidationCallbackHandler</classname>
                     is provided to configure users and passwords with an in-memory
@@ -1379,31 +1349,26 @@
 </bean>]]></programlisting>
                 </section>
                 <section>
-                    <title>AcegiPlainTextPasswordValidationCallbackHandler</title>
+                    <title>SpringPlainTextPasswordValidationCallbackHandler</title>
                     <para>
-                        The
-                        <classname>AcegiPlainTextPasswordValidationCallbackHandler</classname>
-                        requires an Acegi
-                        <interfacename>AuthenticationManager</interfacename>
-                        to operate. It uses this manager to
-                        authenticate against a
+                        The <classname>SpringPlainTextPasswordValidationCallbackHandler</classname> requires an Spring
+                        Security <interfacename>AuthenticationManager</interfacename> to operate. It uses this manager
+                        to authenticate against a
                         <classname>UsernamePasswordAuthenticationToken</classname>
-                        that it
-                        creates. If authentication is successful, the token is stored in the
+                        that it creates. If authentication is successful, the token is stored in the
                         <classname>SecurityContextHolder</classname>. You can set the
-                        authentication manager using the
-                        <property>authenticationManager</property>
+                        authentication manager using the <property>authenticationManager</property>
                         property:
                     </para>
                     <programlisting><![CDATA[<beans>
-  <bean id="acegiHandler"
-      class="org.springframework.ws.soap.security.wss4j.callback.acegi.AcegiPlainTextPasswordValidationCallbackHandler">
+  <bean id="springSecurityHandler"
+      class="org.springframework.ws.soap.security.wss4j.callback.SpringPlainTextPasswordValidationCallbackHandler">
     <property name="authenticationManager" ref="authenticationManager"/>
   </bean>
 
-  <bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
+  <bean id="authenticationManager" class="org.springframework.security.providers.ProviderManager">
       <property name="providers">
-          <bean class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
+          <bean class="org.springframework.security.providers.dao.DaoAuthenticationProvider">
               <property name="userDetailsService" ref="userDetailsService"/>
           </bean>
       </property>
@@ -1414,25 +1379,23 @@
 </beans>]]></programlisting>
                 </section>
                 <section>
-                    <title>AcegiDigestPasswordValidationCallbackHandler</title>
+                    <title>SpringDigestPasswordValidationCallbackHandler</title>
                     <para>
-                        The
-                        <classname>AcegiDigestPasswordValidationCallbackHandler</classname>
-                        requires an Acegi
+                        The <classname>SpringDigestPasswordValidationCallbackHandler</classname>
+                        requires an Spring Security
                         <classname>UserDetailService</classname>
                         to operate. It uses this service to retrieve the
                         password of the user specified in the token. The digest of the password contained in this
                         details object is then compared with the digest in the message. If they are equal, the user has
                         successfully authenticated, and a
                         <classname>UsernamePasswordAuthenticationToken</classname>
-                        is
-                        stored in the<classname>SecurityContextHolder</classname>. You can set the service using the
+                        is stored in the<classname>SecurityContextHolder</classname>. You can set the service using the
                         <property>userDetailsService</property>. Additionally, you can set a
                         <property>userCache</property>
                         property, to cache loaded user details.
                     </para>
                     <programlisting><![CDATA[<beans>
-    <bean class="org.springframework.ws.soap.security.wss4j.callback.acegi.AcegiDigestPasswordValidationCallbackHandler">
+    <bean class="org.springframework.ws.soap.security.wss4j.callback.SpringDigestPasswordValidationCallbackHandler">
         <property name="userDetailsService" ref="userDetailsService"/>
     </bean>
 
