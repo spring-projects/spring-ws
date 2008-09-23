@@ -140,5 +140,9 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
         faultReason.addAttribute(langAttribute);
     }
 
+    public SoapFault getFault() {
+        SOAPFault axiomFault = getAxiomBody().getFault();
+        return axiomFault != null ? new AxiomSoap11Fault(axiomFault, getAxiomFactory()) : null;
+    }
 
 }
