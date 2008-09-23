@@ -25,6 +25,8 @@ import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.soap11.Soap11Body;
+import org.springframework.ws.soap.soap12.Soap12Body;
+import org.springframework.ws.soap.soap12.Soap12Fault;
 
 /**
  * Abstract base class for SOAP-based {@link EndpointExceptionResolver} implementations that depend on {@link
@@ -71,7 +73,7 @@ public abstract class AbstractSoapFaultDefinitionExceptionResolver extends Abstr
             faultStringOrReason = StringUtils.hasLength(ex.getMessage()) ? ex.getMessage() : ex.toString();
         }
         SoapBody soapBody = ((SoapMessage) messageContext.getResponse()).getSoapBody();
-        SoapFault fault = null;
+        SoapFault fault;
 
         if (SoapFaultDefinition.SERVER.equals(definition.getFaultCode()) ||
                 SoapFaultDefinition.RECEIVER.equals(definition.getFaultCode())) {
@@ -82,13 +84,20 @@ public abstract class AbstractSoapFaultDefinitionExceptionResolver extends Abstr
             fault = soapBody.addClientOrSenderFault(faultStringOrReason, definition.getLocale());
         }
         else {
-            // custom code, only supported for SOAP 1.1
             if (soapBody instanceof Soap11Body) {
                 Soap11Body soap11Body = (Soap11Body) soapBody;
                 fault = soap11Body.addFault(definition.getFaultCode(), faultStringOrReason, definition.getLocale());
             }
+            else if (soapBody instanceof Soap12Body) {
+                Soap12Body soap12Body = (Soap12Body) soapBody;
+                Soap12Fault soap12Fault =
+                        (Soap12Fault) soap12Body.addServerOrReceiverFault(faultStringOrReason, definition
+                                .getLocale());
+                soap12Fault.addFaultSubcode(definition.getFaultCode());
+                fault = soap12Fault;
+            }
             else {
-                logger.warn("SOAP 1.2 does not allow custom FaultCodes, only SENDER or RECEIVER.");
+                throw new IllegalStateException("This class only supports SOAP 1.1 and SOAP 1.2.");
             }
         }
         if (fault != null) {
