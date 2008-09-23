@@ -21,10 +21,8 @@ import javax.xml.transform.Source;
 
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
-import org.apache.axiom.soap.SOAPFault;
 
 import org.springframework.ws.soap.SoapBody;
-import org.springframework.ws.soap.SoapFault;
 
 /**
  * Axiom-specific version of <code>org.springframework.ws.soap.Soap11Body</code>.
@@ -56,11 +54,6 @@ abstract class AxiomSoapBody extends AxiomSoapElement implements SoapBody {
 
     public boolean hasFault() {
         return getAxiomBody().hasFault();
-    }
-
-    public SoapFault getFault() {
-        SOAPFault axiomFault = getAxiomBody().getFault();
-        return axiomFault != null ? new AxiomSoap11Fault(axiomFault, getAxiomFactory()) : null;
     }
 
     protected final SOAPBody getAxiomBody() {

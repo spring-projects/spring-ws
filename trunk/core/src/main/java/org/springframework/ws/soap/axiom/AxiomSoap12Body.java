@@ -98,5 +98,9 @@ class AxiomSoap12Body extends AxiomSoapBody implements Soap12Body {
         }
     }
 
+    public SoapFault getFault() {
+        SOAPFault axiomFault = getAxiomBody().getFault();
+        return axiomFault != null ? new AxiomSoap12Fault(axiomFault, getAxiomFactory()) : null;
+    }
 
 }
