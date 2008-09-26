@@ -27,6 +27,7 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.transport.MockTransportInputStream;
 import org.springframework.ws.transport.TransportInputStream;
+import org.springframework.ws.transport.TransportConstants;
 
 public abstract class AbstractSoap12MessageFactoryTestCase extends AbstractSoapMessageFactoryTestCase {
 
@@ -40,13 +41,15 @@ public abstract class AbstractSoap12MessageFactoryTestCase extends AbstractSoapM
     public void testCreateSoapMessageNoAttachment() throws Exception {
         InputStream is = AbstractSoap12MessageFactoryTestCase.class.getResourceAsStream("soap12.xml");
         final Properties headers = new Properties();
-        headers.setProperty("Content-Type", "application/soap+xml");
+        String soapAction = "\"http://springframework.org/spring-ws/Action\"";
+        headers.setProperty(TransportConstants.HEADER_CONTENT_TYPE, "application/soap+xml; action=" + soapAction);
         TransportInputStream tis = new MockTransportInputStream(is, headers);
 
         WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
         assertTrue("Not a SoapMessage", message instanceof SoapMessage);
         SoapMessage soapMessage = (SoapMessage) message;
         assertEquals("Invalid soap version", SoapVersion.SOAP_12, soapMessage.getVersion());
+        assertEquals("Invalid soap action", soapAction, soapMessage.getSoapAction());
         assertFalse("Message is a XOP pacakge", soapMessage.isXopPackage());
     }
 

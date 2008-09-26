@@ -36,6 +36,14 @@ public interface TransportConstants {
     /** The "Content-Type" header. */
     String HEADER_CONTENT_TYPE = "Content-Type";
 
-    /** The "SOAPAction" header. */
+    /** The "SOAPAction" header, used in SOAP 1.1. */
     String HEADER_SOAP_ACTION = "SOAPAction";
+
+    /** The "action" parameter, used to set SOAP Actions in SOAP 1.2. */
+    String PARAMETER_ACTION = "action";
+
+    /**
+     * The empty SOAP action value.
+     */
+    String EMPTY_SOAP_ACTION = "\"\"";
 }
