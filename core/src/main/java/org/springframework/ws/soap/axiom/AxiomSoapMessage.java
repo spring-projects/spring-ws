@@ -43,6 +43,7 @@ import org.springframework.ws.soap.AbstractSoapMessage;
 import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
+import org.springframework.ws.soap.support.SoapUtils;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportOutputStream;
 
@@ -162,15 +163,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
     }
 
     public void setSoapAction(String soapAction) {
-        if (soapAction == null) {
-            soapAction = EMPTY_SOAP_ACTION;
-        }
-        if (!soapAction.startsWith("\"")) {
-            soapAction = "\"" + soapAction;
-        }
-        if (!soapAction.endsWith("\"")) {
-            soapAction = soapAction + "\"";
-        }
+        soapAction = SoapUtils.escapeAction(soapAction);
         this.soapAction = soapAction;
     }
 
@@ -230,8 +223,13 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
                 if (!hasAttachments) {
                     contentType += "; charset=\"" + charsetEncoding + "\"";
                 }
+                if (SoapVersion.SOAP_11 == getVersion()) {
+                    transportOutputStream.addHeader(TransportConstants.HEADER_SOAP_ACTION, soapAction);
+                }
+                else if (SoapVersion.SOAP_12 == getVersion()) {
+                    contentType += "; action=" + soapAction;
+                }
                 transportOutputStream.addHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
-                transportOutputStream.addHeader(TransportConstants.HEADER_SOAP_ACTION, soapAction);
             }
             if (!(format.isOptimized()) & format.isDoingSWA()) {
                 writeSwAMessage(outputStream, format);

@@ -82,5 +82,4 @@ public abstract class AbstractSoapMessage extends AbstractMimeMessage implements
         }
         return version;
     }
-
 }

@@ -48,6 +48,7 @@ import org.springframework.ws.soap.SoapMessageFactory;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor;
 import org.springframework.ws.soap.server.endpoint.mapping.SoapActionEndpointMapping;
+import org.springframework.ws.soap.support.SoapUtils;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportInputStream;
 
@@ -179,15 +180,17 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
     }
 
     public WebServiceMessage createWebServiceMessage(InputStream inputStream) throws IOException {
-        if (!(inputStream instanceof TransportInputStream)) {
-            throw new IllegalArgumentException("AxiomSoapMessageFactory requires a TransportInputStream");
-        }
+        Assert.isInstanceOf(TransportInputStream.class, inputStream,
+                "AxiomSoapMessageFactory requires a TransportInputStream");
         TransportInputStream transportInputStream = (TransportInputStream) inputStream;
         String contentType = getHeaderValue(transportInputStream, TransportConstants.HEADER_CONTENT_TYPE);
         if (!StringUtils.hasLength(contentType)) {
             throw new IllegalArgumentException("TransportInputStream contains no Content-Type header");
         }
         String soapAction = getHeaderValue(transportInputStream, TransportConstants.HEADER_SOAP_ACTION);
+        if (!StringUtils.hasLength(soapAction)) {
+            soapAction = SoapUtils.extractActionFromContentType(contentType);
+        }
         try {
             if (isMultiPartRelated(contentType)) {
                 return createMultiPartAxiomSoapMessage(inputStream, contentType, soapAction);
