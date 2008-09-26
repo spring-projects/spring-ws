@@ -41,7 +41,7 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
         InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11.xml");
         Properties headers = new Properties();
         headers.setProperty("Content-Type", "text/xml");
-        String soapAction = "http://springframework.org/spring-ws/Action";
+        String soapAction = "\"http://springframework.org/spring-ws/Action\"";
         headers.setProperty("SOAPAction", soapAction);
         TransportInputStream tis = new MockTransportInputStream(is, headers);
 
