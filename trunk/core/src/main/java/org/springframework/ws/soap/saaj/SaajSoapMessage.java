@@ -36,7 +36,9 @@ import org.springframework.ws.mime.AttachmentException;
 import org.springframework.ws.soap.AbstractSoapMessage;
 import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
+import org.springframework.ws.soap.support.SoapUtils;
 import org.springframework.ws.transport.TransportConstants;
 
 /**
@@ -96,22 +98,46 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 
     public String getSoapAction() {
         MimeHeaders mimeHeaders = getImplementation().getMimeHeaders(getSaajMessage());
-        String[] values = mimeHeaders.getHeader(TransportConstants.HEADER_SOAP_ACTION);
-        return ObjectUtils.isEmpty(values) ? "" : values[0];
+        if (SoapVersion.SOAP_11 == getVersion()) {
+            String[] actions = mimeHeaders.getHeader(TransportConstants.HEADER_SOAP_ACTION);
+            return ObjectUtils.isEmpty(actions) ? TransportConstants.EMPTY_SOAP_ACTION : actions[0];
+        }
+        else if (SoapVersion.SOAP_12 == getVersion()) {
+            String[] contentTypes = mimeHeaders.getHeader(TransportConstants.HEADER_CONTENT_TYPE);
+            return !ObjectUtils.isEmpty(contentTypes) ? SoapUtils.extractActionFromContentType(contentTypes[0]) :
+                    TransportConstants.EMPTY_SOAP_ACTION;
+        }
+        else {
+            throw new IllegalStateException("Unsupported SOAP version: " + getVersion());
+        }
     }
 
     public void setSoapAction(String soapAction) {
-        if (soapAction == null) {
-            soapAction = "";
-        }
         MimeHeaders mimeHeaders = getImplementation().getMimeHeaders(getSaajMessage());
-        if (!soapAction.startsWith("\"")) {
-            soapAction = "\"" + soapAction;
+        soapAction = SoapUtils.escapeAction(soapAction);
+        if (SoapVersion.SOAP_11 == getVersion()) {
+            mimeHeaders.setHeader(TransportConstants.HEADER_SOAP_ACTION, soapAction);
         }
-        if (!soapAction.endsWith("\"")) {
-            soapAction = soapAction + "\"";
+        else if (SoapVersion.SOAP_12 == getVersion()) {
+            // force save of Content Type header
+            if (saajMessage.saveRequired()) {
+                try {
+                    saajMessage.saveChanges();
+                }
+                catch (SOAPException ex) {
+                    throw new SaajSoapMessageException("Could not save message", ex);
+                }
+            }
+            String[] contentTypes = mimeHeaders.getHeader(TransportConstants.HEADER_CONTENT_TYPE);
+            String contentType = !ObjectUtils.isEmpty(contentTypes) ? contentTypes[0] : getVersion().getContentType();
+            contentType = SoapUtils.setActionInContentType(contentType, soapAction);
+            mimeHeaders.setHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
+            mimeHeaders.removeHeader(TransportConstants.HEADER_SOAP_ACTION);
         }
-        mimeHeaders.setHeader(TransportConstants.HEADER_SOAP_ACTION, soapAction);
+        else {
+            throw new IllegalStateException("Unsupported SOAP version: " + getVersion());
+        }
+
     }
 
     public void writeTo(OutputStream outputStream) throws IOException {
