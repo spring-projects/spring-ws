@@ -270,7 +270,7 @@ public class XStreamMarshaller extends AbstractMarshaller {
      * @see XStream#omitField(Class, String)
      */
     public void addOmittedField(Class type, String fieldName) {
-        xstream.omitField(type, fieldName);
+        getXStream().omitField(type, fieldName);
     }
 
     /**
