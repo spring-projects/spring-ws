@@ -178,7 +178,7 @@
                 <note>
                     <para>
                         All <interfacename>WsdlDefinition</interfacename> bean definitions are exposed by the
-                        <classname>MessageDispatcherServlet</classname> under their bean id (or bean id) with the
+                        <classname>MessageDispatcherServlet</classname> under their bean id (or bean name) with the
                         suffix <literal>.wsdl</literal>. So if the bean id is <literal>echo</literal>, the host name
                         is "server", and the Servlet context (war name) is "spring-ws", the WSDL can be
                         obtained via <uri>http://server/spring-ws/echo.wsdl</uri>
