@@ -545,6 +545,19 @@
             <interfacename>MessageEndpoint</interfacename>, though these actions are usually performed in an
             <link linkend="server-endpoint-interceptor">endpoint interceptor</link>.
         </para>
+        <note>
+            <para>
+                Endpoints, like any other Spring Bean, are scoped as a singleton by default, i.e. one instance of the
+                bean definition is created per container. Being a singleton implies that more than one thread
+                can use it, so the endpoint has to be thread safe. If you want to use a different scope, such as
+                prototype, refer to the
+                <ulink url="http://static.springframework.org/spring/docs/2.5.x/reference/beans.html#beans-factory-scopes">Spring Reference documentation</ulink>.
+            </para>
+            <para>
+                Note that all abstract base classes provided in Spring-WS (like AbstractDomPayloadEndpoint etc) are
+                thread safe. 
+            </para>
+        </note>
         <section>
             <title><classname>AbstractDomPayloadEndpoint</classname> and other DOM endpoints</title>
             <para>
