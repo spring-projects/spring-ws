@@ -549,8 +549,8 @@
             <para>
                 Endpoints, like any other Spring Bean, are scoped as a singleton by default, i.e. one instance of the
                 bean definition is created per container. Being a singleton implies that more than one thread
-                can use it, so the endpoint has to be thread safe. If you want to use a different scope, such as
-                prototype, refer to the
+                can use it at the same time, so the endpoint has to be thread safe. If you want to use a different
+                scope, such as prototype, refer to the
                 <ulink url="http://static.springframework.org/spring/docs/2.5.x/reference/beans.html#beans-factory-scopes">Spring Reference documentation</ulink>.
             </para>
             <para>
