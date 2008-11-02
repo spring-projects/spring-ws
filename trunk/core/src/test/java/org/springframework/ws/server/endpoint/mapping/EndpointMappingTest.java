@@ -18,6 +18,7 @@ package org.springframework.ws.server.endpoint.mapping;
 
 import junit.framework.TestCase;
 import org.easymock.MockControl;
+
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
@@ -124,5 +125,35 @@ public class EndpointMappingTest extends TestCase {
         contextControl.verify();
     }
 
+    public void testEndpointPrototype() throws Exception {
+        StaticApplicationContext applicationContext = new StaticApplicationContext();
+        applicationContext.registerPrototype("endpoint", MyEndpoint.class);
+
+        AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
+
+            protected Object getEndpointInternal(MessageContext message) throws Exception {
+                assertEquals("Invalid request", mockContext, message);
+                return "endpoint";
+            }
+        };
+        mapping.setApplicationContext(applicationContext);
+        contextControl.replay();
+
+        EndpointInvocationChain result = mapping.getEndpoint(mockContext);
+        assertNotNull("No endpoint returned", result);
+        result = mapping.getEndpoint(mockContext);
+        assertNotNull("No endpoint returned", result);
+        assertEquals("Prototype endpoint was not constructed twice", 2, MyEndpoint.constrCount);
+        contextControl.verify();
+    }
+
+    private static class MyEndpoint {
+
+        private static int constrCount;
+
+        private MyEndpoint() {
+            constrCount++;
+        }
+    }
 
 }
