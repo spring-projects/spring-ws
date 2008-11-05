@@ -86,7 +86,7 @@
     <scm>
         <connection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk</connection>
         <developerConnection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/trunk</developerConnection>
-        <url>http://fisheye3.cenqua.com/browse/springframework/spring-ws/trunk</url>
+        <url>https://fisheye.springframework.org/browse/spring-ws/trunk</url>
     </scm>
     <properties>
         <spring.version>2.5.6</spring.version>
