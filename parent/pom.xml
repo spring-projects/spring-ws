@@ -23,9 +23,9 @@
         </site>
     </distributionManagement>
     <scm>
-        <connection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/tags/spring-ws-1.5.5</connection>
-        <developerConnection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ws/tags/spring-ws-1.5.5</developerConnection>
-        <url>http://fisheye3.cenqua.com/browse/springframework/spring-ws/tags/spring-ws-1.5.5</url>
+        <connection>scm:svn:https://src.springframework.org/svn/spring-ws/tags/spring-ws-1.5.5</connection>
+        <developerConnection>scm:svn:https://src.springframework.org/svn/spring-ws/tags/spring-ws-1.5.5</developerConnection>
+        <url>https://fisheye.springframework.org/browse/spring-ws/tags/spring-ws-1.5.5</url>
     </scm>
     <properties>
         <spring.version>2.5.6</spring.version>
