@@ -2,6 +2,42 @@ SPRING WEB SERVICES CHANGELOG
 =============================
 http://www.springframework.org/spring-ws
 
+Changes in version 1.5.5
+-------------------------
+** Bug
+    * [SWS-405] - Spring-ws-archetype -DarchetypeVersion=1.5.3 but pom 1.5.2
+    * [SWS-408] - Incorrect URL to Bamboo in pom
+    * [SWS-410] - AxiomSoapMessage does not work fine in Spring-WS with CastorMarshaller
+    * [SWS-411] - When using permanent replyTo queues, their JNDI names can't start with jms/ in the defaultUri property of the WebServiceGateway
+    * [SWS-412] - PayloadTransformingInterceptor does not work with a DomPoxMessage - the transformation clears the document
+    * [SWS-416] - Wss4jSecurityInterceptor loosing SOAPAction header
+    * [SWS-417] - spring-ws-core-tiger should be declared as an OSGi fragment since it contributes classes to packages from spring-ws-core
+    * [SWS-418] - Castor mappings are added multiple times
+    * [SWS-419] - Packaging: Wrong castor version in distribution.
+    * [SWS-420] - AxiomSoapMessage + SOAP1.2 SoapAction
+    * [SWS-422] - Class AxiomUtils is not java 1.4 compatible
+    * [SWS-427] - AbstractEndpointExceptionResolver.resolveException() does not let subclasses have full access to the MethodEndpoint that raised an exception
+    * [SWS-432] - AxiomSoap12Body.getFault() returns object of type AxiomSoap11Fault
+    * [SWS-437] - Method addOmittedFields in XStreamMarshaller should access XStream instance via getter.
+    * [SWS-439] - Reference guide, chapter 5.3.1.1., contains typo
+
+** Improvement
+    * [SWS-409] - CommonsXsdSchemaCollection / Apache Schema exceptions do not contain enough detail
+    * [SWS-425] - Upgrade xmlsec to 1.4.1, since 1.4.0 has problems with UTF-8
+    * [SWS-433] - Extension of AbstractSoapFaultDefinitionExceptionResolver to support SOAP 1.2 faults
+    * [SWS-443] - Javadoc State Thread Safety Level PayloadEndpoint Implementers Must Support
+    * [SWS-444] - XwssMessageInterceptorEncryptTest testDecrypt() can be enabled again - problem solution known
+
+** New Feature
+    * [SWS-413] - SchemaCollection issues with classpath resources and relative schema imports
+    * [SWS-426] - Allow Wss4jSecurityInterceptor to accept arbitrary client certificate in validation phase
+
+** Refactoring
+    * [SWS-403] - bundles ws.core and ws.support have a circular dependency
+
+** Task
+    * [SWS-431] - Document Spring Security integration
+
 Changes in version 1.5.4
 -------------------------
 ** Bug
