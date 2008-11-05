@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="contactsClient" class="org.springframework.ws.samples.pox.client.sws.ContactsClient">
+        <constructor-arg ref="messageFactory"/>
+        <property name="defaultUri" value="http://localhost:8080/pox/"/>
+        <property name="request" value="classpath:org/springframework/ws/samples/pox/client/sws/contactsRequest.xml"/>
+        <property name="expression" ref="expression"/>
+    </bean>
+
+    <bean id="messageFactory" class="org.springframework.ws.pox.dom.DomPoxMessageFactory"/>
+
+    <bean id="expression" class="org.springframework.xml.xpath.XPathExpressionFactoryBean">
+        <property name="namespaces">
+            <props>
+                <prop key="tns">http://www.springframework.org/spring-ws/samples/pox</prop>
+            </props>
+        </property>
+        <property name="expression" value="/tns:ContactCount/text()"/>
+    </bean>
+
+</beans>

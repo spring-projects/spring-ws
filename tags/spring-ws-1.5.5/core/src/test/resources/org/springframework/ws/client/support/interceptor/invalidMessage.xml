@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<product xmlns="http://www.springframework.org/spring-ws/test/validation" effDate="2006-01-01">
+    <size>20</size>
+</product>

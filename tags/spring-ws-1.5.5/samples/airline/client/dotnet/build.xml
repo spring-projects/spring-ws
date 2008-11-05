@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<project name="spring-ws-airline-sample-saaj-client" default="build">
+
+    <property name="bin.dir" value="bin"/>
+    <property name="src.dir" value="src"/>
+    <property name="gen.dir" value="gen"/>
+    <property name="wsdl" value="http://localhost:8080/airline/airline.wsdl"/>
+    <property name="exe" value="bin/airline.exe"/>
+
+    <target name="init">
+        <taskdef resource="org/apache/ant/dotnet/antlib.xml">
+            <classpath>
+                <pathelement location="ant-dotnet-1.0.jar"/>
+            </classpath>
+        </taskdef>
+    </target>
+
+    <target name="generate" depends="init">
+        <mkdir dir="${gen.dir}"/>
+
+        <wsdltodotnet url="${wsdl}" destfile="${gen.dir}/AirlineService.cs"
+                      namespace="Spring.Ws.Samples.Airline.Client.DotNet"/>
+    </target>
+
+
+    <target name="build" depends="generate">
+        <mkdir dir="${bin.dir}"/>
+        <csc targettype="exe" destfile="${bin.dir}/airline.exe" references="System.Web.Services.dll">
+            <src dir="${src.dir}"/>
+            <src dir="${gen.dir}"/>
+        </csc>
+    </target>
+
+    <target name="clean">
+        <delete dir="${bin.dir}"/>
+        <delete dir="${gen.dir}"/>
+    </target>
+
+    <target name="run" depends="build">
+        <dotnetexec executable="${exe}"/>
+    </target>
+
+</project>

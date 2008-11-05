@@ -1,0 +1,18 @@
+Dear Spring community,
+
+I'm pleased to announce that Spring Web Services 1.5.4 has been released!
+
+This is the fourth bug fix and enhancement release in the Spring-WS 1.5
+series. It fixes all bugs reported since 1.5.3 and introduces various
+enhancements throughout the framework:
+
+* Client-side XSD validation in the WebServiceTemplate, which allows you to
+  make sure you conform to a provided schema.
+* Ability to point the WebServiceTemplate to a WSDL Resource, extracting the
+  location from it.
+* Major speed inprovements in the DOM-based endpoint base classes 
+  (AbstractDomPayloadEndpoint, AbstractJdomPayloadEndpoint, etc.).
+
+and more, including more documentation. Please see the changelog for details.
+
+For more information, see http://static.springframework.org/spring-ws/site/
