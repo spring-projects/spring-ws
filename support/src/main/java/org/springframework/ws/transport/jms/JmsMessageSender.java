@@ -32,6 +32,7 @@ import javax.jms.TextMessage;
 import javax.jms.Topic;
 
 import org.springframework.jms.connection.ConnectionFactoryUtils;
+import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.jms.support.destination.JmsDestinationAccessor;
 import org.springframework.util.StringUtils;
@@ -70,8 +71,7 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * <tt>jms:RequestQueue?replyToName=ResponseQueueName</tt><br> <tt>jms:Queue?messageType=TEXT_MESSAGE</blockquote>
  *
  * @author Arjen Poutsma
- * @see <a href="http://tools.ietf.org/id/draft-merrick-jms-iri-00.txt">IRI Scheme for Java(tm) Message
- *      Service 1.0</a>
+ * @see <a href="http://tools.ietf.org/id/draft-merrick-jms-iri-00.txt">IRI Scheme for Java(tm) Message Service 1.0</a>
  * @since 1.5.0
  */
 public class JmsMessageSender extends JmsDestinationAccessor implements WebServiceMessageSender {
@@ -86,10 +86,7 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 
     private String textMessageEncoding = DEFAULT_TEXT_MESSAGE_ENCODING;
 
-    /** Sets the encoding used to read from {@link TextMessage} messages. Defaults to <code>UTF-8</code>. */
-    public void setTextMessageEncoding(String textMessageEncoding) {
-        this.textMessageEncoding = textMessageEncoding;
-    }
+    private MessagePostProcessor postProcessor;
 
     /**
      * Create a new <code>JmsMessageSender</code>
@@ -121,6 +118,19 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
         this.receiveTimeout = receiveTimeout;
     }
 
+    /** Sets the encoding used to read from {@link TextMessage} messages. Defaults to <code>UTF-8</code>. */
+    public void setTextMessageEncoding(String textMessageEncoding) {
+        this.textMessageEncoding = textMessageEncoding;
+    }
+
+    /**
+     * Sets the optional {@link MessagePostProcessor} to further modify outgoing messages after the XML contents has
+     * been set.
+     */
+    public void setPostProcessor(MessagePostProcessor postProcessor) {
+        this.postProcessor = postProcessor;
+    }
+
     public WebServiceConnection createConnection(URI uri) throws IOException {
         Connection jmsConnection = null;
         Session jmsSession = null;
@@ -129,14 +139,16 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
             jmsSession = createSession(jmsConnection);
             Destination requestDestination = resolveRequestDestination(jmsSession, uri);
             Message requestMessage = createRequestMessage(jmsSession, uri);
-            JmsSenderConnection wsConnection = new JmsSenderConnection(getConnectionFactory(), jmsConnection,
-                    jmsSession, requestDestination, requestMessage);
+            JmsSenderConnection wsConnection =
+                    new JmsSenderConnection(getConnectionFactory(), jmsConnection, jmsSession, requestDestination,
+                            requestMessage);
             wsConnection.setDeliveryMode(JmsTransportUtils.getDeliveryMode(uri));
             wsConnection.setPriority(JmsTransportUtils.getPriority(uri));
             wsConnection.setReceiveTimeout(receiveTimeout);
             wsConnection.setResponseDestination(resolveResponseDestination(jmsSession, uri));
             wsConnection.setTimeToLive(JmsTransportUtils.getTimeToLive(uri));
             wsConnection.setTextMessageEncoding(textMessageEncoding);
+            wsConnection.setPostProcessor(postProcessor);
             return wsConnection;
         }
         catch (JMSException ex) {

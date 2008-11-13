@@ -28,6 +28,7 @@ import javax.xml.soap.SOAPConstants;
 
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
+import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
@@ -160,4 +161,30 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
         }
     }
 
+    public void testPostProcessor() throws Exception {
+        MessagePostProcessor processor = new MessagePostProcessor() {
+            public Message postProcessMessage(Message message) throws JMSException {
+                message.setBooleanProperty("processed", true);
+                return message;
+            }
+        };
+        JmsSenderConnection connection = null;
+        try {
+            URI uri = new URI("jms:SenderRequestQueue?deliveryMode=NON_PERSISTENT");
+            connection = (JmsSenderConnection) messageSender.createConnection(uri);
+            connection.setPostProcessor(processor);
+            SoapMessage soapRequest = new SaajSoapMessage(messageFactory.createMessage());
+            connection.send(soapRequest);
+
+            BytesMessage request = (BytesMessage) jmsTemplate.receive();
+            assertNotNull("No message received", request);
+            assertTrue("Message not processed", request.getBooleanProperty("processed"));
+        }
+        finally {
+            if (connection != null) {
+                connection.close();
+            }
+        }
+
+    }
 }
