@@ -36,6 +36,7 @@ import javax.jms.TemporaryTopic;
 import javax.jms.TextMessage;
 
 import org.springframework.jms.connection.ConnectionFactoryUtils;
+import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
@@ -60,7 +61,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 
     private final Destination requestDestination;
 
-    private final Message requestMessage;
+    private Message requestMessage;
 
     private Destination responseDestination;
 
@@ -75,6 +76,8 @@ public class JmsSenderConnection extends AbstractSenderConnection {
     private int priority;
 
     private String textMessageEncoding;
+
+    private MessagePostProcessor postProcessor;
 
     /** Constructs a new JMS connection with the given parameters. */
     protected JmsSenderConnection(ConnectionFactory connectionFactory,
@@ -133,6 +136,10 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 
     void setTextMessageEncoding(String textMessageEncoding) {
         this.textMessageEncoding = textMessageEncoding;
+    }
+
+    void setPostProcessor(MessagePostProcessor postProcessor) {
+        this.postProcessor = postProcessor;
     }
 
     /*
@@ -197,6 +204,9 @@ public class JmsSenderConnection extends AbstractSenderConnection {
                 responseDestination = session.createTemporaryQueue();
             }
             requestMessage.setJMSReplyTo(responseDestination);
+            if (postProcessor != null) {
+                requestMessage = postProcessor.postProcessMessage(requestMessage);
+            }
             connection.start();
             messageProducer.send(requestMessage);
         }
@@ -296,5 +306,4 @@ public class JmsSenderConnection extends AbstractSenderConnection {
         JmsUtils.closeSession(session);
         ConnectionFactoryUtils.releaseConnection(connection, connectionFactory, true);
     }
-
 }

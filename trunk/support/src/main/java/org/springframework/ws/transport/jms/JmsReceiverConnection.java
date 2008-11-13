@@ -29,6 +29,7 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
+import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
@@ -57,6 +58,8 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 
     private String textMessageEncoding;
 
+    private MessagePostProcessor postProcessor;
+
     private JmsReceiverConnection(Message requestMessage, Session session) {
         Assert.notNull(requestMessage, "requestMessage must not be null");
         Assert.notNull(session, "session must not be null");
@@ -83,6 +86,10 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
     protected JmsReceiverConnection(TextMessage requestMessage, String encoding, Session session) {
         this(requestMessage, session);
         this.textMessageEncoding = encoding;
+    }
+
+    void setPostProcessor(MessagePostProcessor postProcessor) {
+        this.postProcessor = postProcessor;
     }
 
     /** Returns the request message for this connection. Returns either a {@link BytesMessage} or a {@link TextMessage}. */
@@ -207,6 +214,9 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
                 messageProducer = session.createProducer(requestMessage.getJMSReplyTo());
                 messageProducer.setDeliveryMode(requestMessage.getJMSDeliveryMode());
                 messageProducer.setPriority(requestMessage.getJMSPriority());
+                if (postProcessor != null) {
+                    responseMessage = postProcessor.postProcessMessage(responseMessage);
+                }
                 messageProducer.send(responseMessage);
             }
         }

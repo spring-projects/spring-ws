@@ -21,7 +21,7 @@ import javax.jms.Message;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
-import org.springframework.ws.transport.WebServiceConnection;
+import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
 import org.springframework.ws.transport.support.SimpleWebServiceMessageReceiverObjectSupport;
 
@@ -43,9 +43,19 @@ public class JmsMessageReceiver extends SimpleWebServiceMessageReceiverObjectSup
 
     private String textMessageEncoding = DEFAULT_TEXT_MESSAGE_ENCODING;
 
+    private MessagePostProcessor postProcessor;
+
     /** Sets the encoding used to read from and write to {@link TextMessage} messages. Defaults to <code>UTF-8</code>. */
     public void setTextMessageEncoding(String textMessageEncoding) {
         this.textMessageEncoding = textMessageEncoding;
+    }
+
+    /**
+     * Sets the optional {@link MessagePostProcessor} to further modify outgoing messages after the XML contents has
+     * been set.
+     */
+    public void setPostProcessor(MessagePostProcessor postProcessor) {
+        this.postProcessor = postProcessor;
     }
 
     /**
@@ -56,7 +66,7 @@ public class JmsMessageReceiver extends SimpleWebServiceMessageReceiverObjectSup
      * @throws IllegalArgumentException when request is not a {@link BytesMessage}
      */
     protected final void handleMessage(Message request, Session session) throws Exception {
-        WebServiceConnection connection;
+        JmsReceiverConnection connection;
         if (request instanceof BytesMessage) {
             connection = new JmsReceiverConnection((BytesMessage) request, session);
         }
@@ -67,6 +77,8 @@ public class JmsMessageReceiver extends SimpleWebServiceMessageReceiverObjectSup
             throw new IllegalArgumentException("Wrong message type: [" + request.getClass() +
                     "]. Only BytesMessages or TextMessages can be handled.");
         }
+        connection.setPostProcessor(postProcessor);
+
         handleConnection(connection);
     }
 }
