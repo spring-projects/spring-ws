@@ -24,6 +24,7 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.security.WsSecurityValidationException;
 import org.springframework.ws.soap.security.wss4j.callback.SimplePasswordValidationCallbackHandler;
 
 public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCase {
@@ -50,12 +51,10 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
         Object result = getMessage(message);
         assertNotNull("No result returned", result);
 
-        for (Iterator i = message.getEnvelope().getHeader()
-                .examineAllHeaderElements(); i.hasNext();) {
+        for (Iterator i = message.getEnvelope().getHeader().examineAllHeaderElements(); i.hasNext();) {
             SoapHeaderElement element = (SoapHeaderElement) i.next();
             QName name = element.getName();
-            if (name
-                    .getNamespaceURI()
+            if (name.getNamespaceURI()
                     .equals("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd")) {
                 fail("Security Header not removed");
             }
@@ -67,5 +66,17 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
         assertXpathExists("header1 not found", "/SOAP-ENV:Envelope/SOAP-ENV:Header/header1", getDocument(message));
         assertXpathExists("header2 not found", "/SOAP-ENV:Envelope/SOAP-ENV:Header/header2", getDocument(message));
 
+    }
+
+    public void testEmptySecurityHeader() throws Exception {
+        SoapMessage message = loadMessage("emptySecurityHeader-soap.xml");
+        MessageContext messageContext = new DefaultMessageContext(message, getMessageFactory());
+        try {
+            interceptor.validateMessage(message, messageContext);
+            fail("validation must fail for an empty security header.");
+        }
+        catch (WsSecurityValidationException e) {
+            // expected
+        }
     }
 }

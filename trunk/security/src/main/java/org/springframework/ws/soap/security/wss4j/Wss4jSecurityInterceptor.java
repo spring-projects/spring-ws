@@ -45,6 +45,7 @@ import org.w3c.dom.Document;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
@@ -495,11 +496,12 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         WSSecurityEngine securityEngine = WSSecurityEngine.getInstance();
 
         try {
-            Vector results = securityEngine.processSecurityHeader(envelopeAsDocument, validationActor,
-                    validationCallbackHandler, validationSignatureCrypto, validationDecryptionCrypto);
+            Vector results = securityEngine
+                    .processSecurityHeader(envelopeAsDocument, validationActor, validationCallbackHandler,
+                            validationSignatureCrypto, validationDecryptionCrypto);
 
             // Results verification
-            if (results == null) {
+            if (CollectionUtils.isEmpty(results)) {
                 throw new Wss4jSecurityValidationException("No WS-Security header found");
             }
 
@@ -532,8 +534,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
      */
     private void updateContextWithResults(MessageContext messageContext, Vector results) {
         Vector handlerResults;
-        if ((handlerResults = (Vector) messageContext
-                .getProperty(WSHandlerConstants.RECV_RESULTS)) == null) {
+        if ((handlerResults = (Vector) messageContext.getProperty(WSHandlerConstants.RECV_RESULTS)) == null) {
             handlerResults = new Vector();
             messageContext.setProperty(WSHandlerConstants.RECV_RESULTS, handlerResults);
         }
@@ -549,8 +550,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         WSSecurityEngineResult actionResult = WSSecurityUtil.fetchActionResult(results, WSConstants.SIGN);
 
         if (actionResult != null) {
-            X509Certificate returnCert =
-                    (X509Certificate) actionResult.get(WSSecurityEngineResult.TAG_X509_CERTIFICATE);
+            X509Certificate returnCert = (X509Certificate) actionResult.get(WSSecurityEngineResult.TAG_X509_CERTIFICATE)
+                    ;
             if (!handler.verifyTrust(returnCert, requestData)) {
                 throw new Wss4jSecurityValidationException("The certificate used for the signature is not trusted");
             }
