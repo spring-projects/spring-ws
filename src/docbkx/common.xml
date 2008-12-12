@@ -205,10 +205,8 @@
                         Even though both versions of <acronym>SOAP</acronym> are quite similar in format, the 1.2
                         version is not backwards compatible with 1.1 because it uses a different XML namespace.
                         Other major differences between <acronym>SOAP</acronym> 1.1 and 1.2 include the different structure
-                        of a Fault, and the fact that <literal>SOAPAction</literal> HTTP headers are deprecated, which
-                        means that you cannot use the <link linkend="server-soap-action-endpoint-mapping">
-                        <classname>SoapActionEndpointMapping</classname></link> or the
-                        <classname>SoapActionAnnotationMethodEndpointMapping</classname>.
+                        of a Fault, and the fact that <literal>SOAPAction</literal> HTTP headers are effectively
+                        deprecated, thought they still work.
                     </para>
                     <para>
                         One important thing to note with <acronym>SOAP</acronym> version numbers, or WS-* specification
