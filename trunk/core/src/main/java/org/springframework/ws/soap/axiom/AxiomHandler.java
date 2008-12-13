@@ -147,11 +147,18 @@ class AxiomHandler implements ContentHandler, LexicalHandler {
     }
 
     public void startEntity(String name) throws SAXException {
-        charactersType = XMLStreamConstants.ENTITY_REFERENCE;
+        if (!isPredefinedEntityReference(name)) {
+            charactersType = XMLStreamConstants.ENTITY_REFERENCE;
+        }
     }
 
     public void endEntity(String name) throws SAXException {
         charactersType = XMLStreamConstants.CHARACTERS;
+    }
+
+    private boolean isPredefinedEntityReference(String name) {
+        return "lt".equals(name) || "gt".equals(name) || "amp".equals(name) || "quot".equals(name) ||
+                "apos".equals(name);
     }
 
     /*
