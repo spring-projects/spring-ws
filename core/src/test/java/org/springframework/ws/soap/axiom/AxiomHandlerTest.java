@@ -31,16 +31,20 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 public class AxiomHandlerTest extends XMLTestCase {
 
-    private static final String XML_1 = "<?xml version='1.0' encoding='UTF-8'?>" + "<?pi content?>" +
-            "<root xmlns='namespace'>" +
-            "<prefix:child xmlns:prefix='namespace2' xmlns:prefix2='namespace3' prefix2:attr='value'>content</prefix:child>" +
-            "</root>";
+    private static final String XML_1 =
+            "<?xml version='1.0' encoding='UTF-8'?>" + "<?pi content?>" + "<root xmlns='namespace'>" +
+                    "<prefix:child xmlns:prefix='namespace2' xmlns:prefix2='namespace3' prefix2:attr='value'>content</prefix:child>" +
+                    "</root>";
 
-    private static final String XML_2_EXPECTED = "<?xml version='1.0' encoding='UTF-8'?>" + "<root xmlns='namespace'>" +
-            "<child xmlns='namespace2' />" + "</root>";
+    private static final String XML_2_EXPECTED =
+            "<?xml version='1.0' encoding='UTF-8'?>" + "<root xmlns='namespace'>" + "<child xmlns='namespace2' />" +
+                    "</root>";
 
     private static final String XML_2_SNIPPET =
             "<?xml version='1.0' encoding='UTF-8'?>" + "<child xmlns='namespace2' />";
+
+    private static final String XML_3_ENTITY =
+            "<predefined-entity-reference>&lt;&gt;&amp;&quot;&apos;</predefined-entity-reference>";
 
     private AxiomHandler handler;
 
@@ -86,5 +90,15 @@ public class AxiomHandlerTest extends XMLTestCase {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         result.serialize(bos);
         assertXMLEqual("Invalid result", XML_2_EXPECTED, bos.toString("UTF-8"));
+    }
+
+    public void testContentHandlerPredefinedEntityReference() throws Exception {
+        handler = new AxiomHandler(result, factory);
+        xmlReader.setContentHandler(handler);
+        xmlReader.setProperty("http://xml.org/sax/properties/lexical-handler", handler);
+        xmlReader.parse(new InputSource(new StringReader(XML_3_ENTITY)));
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        result.serialize(bos);
+        assertXMLEqual("Invalid result", XML_3_ENTITY, bos.toString("UTF-8"));
     }
 }
