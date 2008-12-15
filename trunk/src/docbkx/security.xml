@@ -1160,9 +1160,9 @@
                 Actions are passed as a space-separated strings. Here is an example configuration:
             </para>
             <programlisting><![CDATA[<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
-    <property name="validationActions" value="UsernameToken Decrypt"/>
+    <property name="validationActions" value="UsernameToken Encrypt"/>
     ...
-    <property name="securementActions" value="Decrypt"/>
+    <property name="securementActions" value="Encrypt"/>
     ...
 </bean>]]></programlisting>
             <para>Validation actions are:</para>
