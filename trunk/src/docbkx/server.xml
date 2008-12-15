@@ -269,7 +269,7 @@
     <property name="inline" value="true"/>
 </bean>]]></programlisting>
                 <para>
-                    When the <property>inline</property> property is enabled, it folows all XSD imports and includes,
+                    When the <property>inline</property> property is enabled, it follows all XSD imports and includes,
                     and inlines them in the WSDL. This greatly simplifies the deloyment of the schemas, which still
                     making it possible to edit them separately. 
                 </para>
