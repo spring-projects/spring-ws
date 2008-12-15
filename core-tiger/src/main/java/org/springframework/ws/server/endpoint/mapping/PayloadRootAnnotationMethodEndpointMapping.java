@@ -34,7 +34,7 @@ import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
  * <pre>
  * &#64;Endpoint
  * public class MyEndpoint{
- *    &#64;Payload(localPart = "Request",
+ *    &#64;PayloadRoot(localPart = "Request",
  *                 namespace = "http://springframework.org/spring-ws")
  *    public Source doSomethingWithRequest() {
  *       ...
@@ -54,8 +54,9 @@ public class PayloadRootAnnotationMethodEndpointMapping extends AbstractAnnotati
     }
 
     protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
-        QName qName = PayloadRootUtils
-                .getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerFactory);
+        QName qName =
+                PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerFactory)
+                ;
         return qName != null ? qName.toString() : null;
     }
 
