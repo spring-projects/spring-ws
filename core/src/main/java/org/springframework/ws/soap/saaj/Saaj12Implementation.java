@@ -233,6 +233,10 @@ class Saaj12Implementation extends SaajImplementation {
         return element.getChildElements(elementName);
     }
 
+    void addNamespaceDeclaration(SOAPElement element, String prefix, String namespaceUri) throws SOAPException {
+        element.addNamespaceDeclaration(prefix, namespaceUri);
+    }
+
     public void writeTo(SOAPMessage message, OutputStream outputStream) throws SOAPException, IOException {
         if (message.saveRequired()) {
             message.saveChanges();
