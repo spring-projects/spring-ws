@@ -44,7 +44,18 @@ public abstract class AbstractSoapElementTestCase extends XMLTestCase {
         assertEquals("Invalid attribute value", value, soapElement.getAttributeValue(name));
         Iterator allAttributes = soapElement.getAllAttributes();
         assertTrue("Iterator is empty", allAttributes.hasNext());
+    }
 
+    public void testAddNamespaceDeclaration() throws Exception {
+        String prefix = "p";
+        String namespace = "http://springframework.org/spring-ws";
+        soapElement.addNamespaceDeclaration(prefix, namespace);
+    }
+
+    public void testAddDefaultNamespaceDeclaration() throws Exception {
+        String prefix = "";
+        String namespace = "http://springframework.org/spring-ws";
+        soapElement.addNamespaceDeclaration(prefix, namespace);
     }
 
 

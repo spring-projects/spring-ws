@@ -29,6 +29,7 @@ import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAPFactory;
 
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.SoapElement;
 import org.springframework.xml.transform.StaxSource;
 
@@ -110,6 +111,20 @@ class AxiomSoapElement implements SoapElement {
             }
             return results.iterator();
 
+        }
+        catch (OMException ex) {
+            throw new AxiomSoapElementException(ex);
+        }
+    }
+
+    public void addNamespaceDeclaration(String prefix, String namespaceUri) {
+        try {
+            if (StringUtils.hasLength(prefix)) {
+                getAxiomElement().declareNamespace(namespaceUri, prefix);
+            }
+            else {
+                getAxiomElement().declareDefaultNamespace(namespaceUri);
+            }
         }
         catch (OMException ex) {
             throw new AxiomSoapElementException(ex);

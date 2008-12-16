@@ -74,4 +74,13 @@ public interface SoapElement {
      */
     Iterator getAllAttributes();
 
+    /**
+     * Adds a namespace declaration with the specified prefix and URI to this element.
+     *
+     * @param prefix       the namespace prefix. Can be empty or null to declare the default namespace
+     * @param namespaceUri the namespace uri
+     * @throws SoapElementException in case of errors
+     */
+    void addNamespaceDeclaration(String prefix, String namespaceUri);
+
 }

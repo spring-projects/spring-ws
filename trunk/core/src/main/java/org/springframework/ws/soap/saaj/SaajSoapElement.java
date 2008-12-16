@@ -36,7 +36,7 @@ class SaajSoapElement implements SoapElement {
 
     private final SOAPElement element;
 
-    public SaajSoapElement(SOAPElement element) {
+    SaajSoapElement(SOAPElement element) {
         Assert.notNull(element, "element must not be null");
         this.element = element;
     }
@@ -78,6 +78,15 @@ class SaajSoapElement implements SoapElement {
 
     public Iterator getAllAttributes() {
         return getImplementation().getAllAttibutes(element);
+    }
+
+    public void addNamespaceDeclaration(String prefix, String namespaceUri) {
+        try {
+            getImplementation().addNamespaceDeclaration(element, prefix, namespaceUri);
+        }
+        catch (SOAPException ex) {
+            throw new SaajSoapElementException(ex);
+        }
     }
 
     protected final SOAPElement getSaajElement() {

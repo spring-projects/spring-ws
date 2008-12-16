@@ -82,6 +82,9 @@ abstract class SaajImplementation {
     /** Returns an iterator over all the child elements with the specified name. */
     abstract Iterator getChildElements(SOAPElement element, QName name) throws SOAPException;
 
+    /** Declares a namespace. */
+    abstract void addNamespaceDeclaration(SOAPElement element, String prefix, String namespaceUri) throws SOAPException;
+
     /*
      * SOAPMessage
      */
@@ -231,5 +234,4 @@ abstract class SaajImplementation {
 
     /** Adds a text node to the given detail entry. */
     abstract void addTextNode(DetailEntry detailEntry, String text) throws SOAPException;
-
 }

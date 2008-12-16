@@ -178,15 +178,18 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
         if (address == null) {
             return null;
         }
-        List referenceProperties = referencePropertiesExpression != null ?
-                referencePropertiesExpression.evaluateAsNodeList(node) : Collections.EMPTY_LIST;
-        List referenceParameters = referenceParametersExpression != null ?
-                referenceParametersExpression.evaluateAsNodeList(node) : Collections.EMPTY_LIST;
+        List referenceProperties =
+                referencePropertiesExpression != null ? referencePropertiesExpression.evaluateAsNodeList(node) :
+                        Collections.EMPTY_LIST;
+        List referenceParameters =
+                referenceParametersExpression != null ? referenceParametersExpression.evaluateAsNodeList(node) :
+                        Collections.EMPTY_LIST;
         return new EndpointReference(address, referenceProperties, referenceParameters);
     }
 
     public void addAddressingHeaders(SoapMessage message, MessageAddressingProperties map) {
         SoapHeader header = message.getSoapHeader();
+        header.addNamespaceDeclaration(getNamespacePrefix(), getNamespaceUri());
         // To
         if (map.getTo() != null) {
             SoapHeaderElement to = header.addHeaderElement(getToName());
