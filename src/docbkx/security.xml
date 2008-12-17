@@ -41,8 +41,10 @@
             </para>
         </formalpara>
         <para>
-            All of these three areas are implemented using the<classname>XwsSecurityInterceptor</classname>, which we
-            will describe in<xref linkend="security-xws-security-interceptor"/>.
+            All of these three areas are implemented using the <classname>XwsSecurityInterceptor</classname> or
+            <classname>Wss4jSecurityInterceptor</classname>, which we
+            will describe in <xref linkend="security-xws-security-interceptor"/> and
+            <xref linkend="security-wss4j-security-interceptor"/>, respectively
         </para>
         <note>
             <para>
@@ -57,17 +59,10 @@
             <classname>XwsSecurityInterceptor</classname>
         </title>
         <para>
-            The
-            <classname>XwsSecurityInterceptor</classname>
-            is an
-            <classname>EndpointInterceptor</classname>
-            (see<xref linkend="server-endpoint-interceptor"/>) that is based on SUN's XML and Web Services Security
+            The <classname>XwsSecurityInterceptor</classname> is an <classname>EndpointInterceptor</classname>
+            (see <xref linkend="server-endpoint-interceptor"/>) that is based on SUN's XML and Web Services Security
             package (XWSS). This WS-Security implementation is part of the Java Web Services Developer Pack
-            (
-            <ulink url="http://java.sun.com/webservices/">
-                <citetitle>Java WSDP</citetitle>
-            </ulink>
-            ).
+            (<ulink url="http://java.sun.com/webservices/"><citetitle>Java WSDP</citetitle></ulink>).
         </para>
         <para>
             Like any other endpoint interceptor, it is defined in the endpoint mapping (see
@@ -82,26 +77,17 @@
             </para>
         </note>
         <para>
-            The
-            <classname>XwsSecurityInterceptor</classname>
-            requires a
-            <emphasis>security policy file</emphasis>
+            The <classname>XwsSecurityInterceptor</classname> requires a <emphasis>security policy file</emphasis>
             to operate. This XML file tells the interceptor what security aspects to require from incoming SOAP
             messages, and what aspects to add to outgoing messages. The basic format of the policy file will be
             explained in the following sections, but you can find a more in-depth tutorial
             <ulink url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp564887">
                 <citetitle>here</citetitle>
-            </ulink>
-            .
-            You can set the policy with the
-            <methodname>policyConfiguration</methodname>
-            property, which
+            </ulink>.
+            You can set the policy with the <property>policyConfiguration</property> property, which
             requires a Spring resource. The policy file can contain multiple elements, e.g. require a
             username token on incoming messages, and sign all outgoing messages. It contains a
-            <literal>SecurityConfiguration</literal>
-            element as root (not a
-            <literal>JAXRPCSecurity</literal>
-            element).
+            <literal>SecurityConfiguration</literal> element as root (not a <literal>JAXRPCSecurity</literal> element).
         </para>
         <para>
             Additionally, the security interceptor requires one or more<classname>CallbackHandler</classname>s to
@@ -109,16 +95,11 @@
             etc. Spring-WS offers handlers for most common security concerns, e.g. authenticating against a Spring
             Security authentication manager, signing outgoing messages based on a X509 certificate. The following
             sections will indicate what callback handler to use for which security concern. You can set the callback
-            handlers using the
-            <methodname>callbackHandler</methodname>
-            or
-            <methodname>callbackHandlers</methodname>
+            handlers using the <property>callbackHandler</property> or <property>callbackHandlers</property>
             property.
         </para>
         <para>
-            Here is an example that shows how to wire the
-            <classname>XwsSecurityInterceptor</classname>
-            up:
+            Here is an example that shows how to wire the <classname>XwsSecurityInterceptor</classname> up:
             <programlisting><![CDATA[
 <beans>
     <bean id="wsSecurityInterceptor"
@@ -144,15 +125,14 @@
             <title>Keystores</title>
             <para>
                 For most cryptographic operations, you will use the standard
-                <classname>java.security.KeyStore</classname>
-                objects. This includes certificate verification, message signing, signature verification, and encryption, but
+                <classname>java.security.KeyStore</classname> objects.
+                These operations include certificate verification, message signing, signature verification, and encryption, but
                 excludes username and time-stamp verification. This section aims to give you some background knowledge on
                 keystores, and the Java tools that you can use to store keys and certificates in a keystore file. This
                 information is mostly not related to Spring-WS, but to the general cryptographic features of Java.
             </para>
             <para>
-                The
-                <classname>java.security.KeyStore</classname>
+                The <classname>java.security.KeyStore</classname>
                 class represents a storage facility for cryptographic keys
                 and certificates. It can contain three different sort of elements:
             </para>
@@ -1118,10 +1098,7 @@
             <classname>Wss4jSecurityInterceptor</classname>
         </title>
         <para>
-            The
-            <classname>Wss4jSecurityInterceptor</classname>
-            is an
-            <classname>EndpointInterceptor</classname>
+            The <classname>Wss4jSecurityInterceptor</classname> is an <classname>EndpointInterceptor</classname>
             (see<xref linkend="server-endpoint-interceptor"/>) that is based on
             <ulink url="http://ws.apache.org/wss4j/">Apache's WSS4J</ulink>.
         </para>
