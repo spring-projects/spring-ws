@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.util.Assert;
-import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.WebServiceConnection;
@@ -67,7 +66,7 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
      */
 
     public URI getUri() throws URISyntaxException {
-        return ResourceUtils.toURI(connection.getURL());
+        return new URI(StringUtils.replace(connection.getURL().toString(), " ", "%20"));
     }
 
     /*
