@@ -17,6 +17,7 @@
 package org.springframework.xml.sax;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import org.xml.sax.InputSource;
 
@@ -49,9 +50,12 @@ public abstract class SaxUtils {
     /** Retrieves the URL from the given resource as System ID. Returns <code>null</code> if it cannot be openened. */
     public static String getSystemId(Resource resource) {
         try {
-            return resource.getURI().toString();
+            return resource.getURL().toURI().toString();
         }
         catch (IOException e) {
+            return null;
+        }
+        catch (URISyntaxException e) {
             return null;
         }
     }
