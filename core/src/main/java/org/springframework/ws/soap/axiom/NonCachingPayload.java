@@ -69,6 +69,8 @@ class NonCachingPayload extends Payload {
 
         private int elementDepth = 0;
 
+        private boolean payloadAdded = false;
+
         private DelegatingStreamWriter() {
             try {
                 this.delegate = StAXUtils.createXMLStreamWriter(baos);
@@ -88,10 +90,6 @@ class NonCachingPayload extends Payload {
 
         public void writeStartDocument(String encoding, String version) throws XMLStreamException {
             this.encoding = encoding;
-        }
-
-        public void writeEndDocument() throws XMLStreamException {
-            // ignored
         }
 
         public void writeStartElement(String localName) throws XMLStreamException {
@@ -121,20 +119,22 @@ class NonCachingPayload extends Payload {
         public void writeEndElement() throws XMLStreamException {
             elementDepth--;
             delegate.writeEndElement();
-            if (elementDepth <= 0) {
-                addPayload();
-            }
+            addPayload();
         }
 
         private void addPayload() throws XMLStreamException {
-            delegate.flush();
-            if (baos.size() > 0) {
-                byte[] buf = baos.toByteArray();
-                OMDataSource dataSource = new ByteArrayDataSource(buf, encoding);
-                OMNamespace namespace = getAxiomFactory().createOMNamespace(name.getNamespaceURI(), name.getPrefix());
-                OMElement payloadElement =
-                        getAxiomFactory().createOMElement(dataSource, name.getLocalPart(), namespace);
-                getAxiomBody().addChild(payloadElement);
+            if (elementDepth <= 0 && !payloadAdded) {
+                delegate.flush();
+                if (baos.size() > 0) {
+                    byte[] buf = baos.toByteArray();
+                    OMDataSource dataSource = new ByteArrayDataSource(buf, encoding);
+                    OMNamespace namespace =
+                            getAxiomFactory().createOMNamespace(name.getNamespaceURI(), name.getPrefix());
+                    OMElement payloadElement =
+                            getAxiomFactory().createOMElement(dataSource, name.getLocalPart(), namespace);
+                    getAxiomBody().addChild(payloadElement);
+                    payloadAdded = true;
+                }
             }
         }
 
@@ -143,6 +143,7 @@ class NonCachingPayload extends Payload {
                 name = new QName(localName);
             }
             delegate.writeEmptyElement(localName);
+            addPayload();
         }
 
         public void writeEmptyElement(String namespaceURI, String localName) throws XMLStreamException {
@@ -150,6 +151,7 @@ class NonCachingPayload extends Payload {
                 name = new QName(namespaceURI, localName);
             }
             delegate.writeEmptyElement(namespaceURI, localName);
+            addPayload();
         }
 
         public void writeEmptyElement(String prefix, String localName, String namespaceURI) throws XMLStreamException {
@@ -157,11 +159,19 @@ class NonCachingPayload extends Payload {
                 name = new QName(namespaceURI, localName, prefix);
             }
             delegate.writeEmptyElement(prefix, localName, namespaceURI);
+            addPayload();
+        }
+
+        public void writeEndDocument() throws XMLStreamException {
+            elementDepth = 0;
+            delegate.writeEndDocument();
+            addPayload();
         }
 
         // Delegation
 
         public void close() throws XMLStreamException {
+            addPayload();
             delegate.close();
         }
 
