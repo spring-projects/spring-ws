@@ -21,10 +21,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
 
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -96,6 +98,18 @@ public abstract class AbstractXsdSchemaTestCase extends XMLTestCase {
         transformer.transform(importing.getSource(), domResult);
         Document result = (Document) domResult.getNode();
         assertXMLEqual("Invalid Source returned", expected, result);
+    }
+
+    public void testXmime() throws Exception {
+        Resource resource = new ClassPathResource("xmime.xsd", AbstractXsdSchemaTestCase.class);
+        XsdSchema schema = createSchema(resource);
+        String namespace = "urn:test";
+        assertEquals("Invalid target namespace", namespace, schema.getTargetNamespace());
+        Document result = (Document) ((DOMSource) schema.getSource()).getNode();
+        Element schemaElement = result.getDocumentElement();
+        Element elementElement = (Element) schemaElement.getFirstChild();
+        assertNotNull("No expectedContentTypes found",
+                elementElement.getAttributeNS("http://www.w3.org/2005/05/xmlmime", "expectedContentTypes"));
     }
 
     public void testCreateValidator() throws Exception {

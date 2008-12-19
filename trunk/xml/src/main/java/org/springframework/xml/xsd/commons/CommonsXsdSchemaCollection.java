@@ -144,8 +144,8 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
             Resource xsdResource = xsdResources[i];
             Assert.isTrue(xsdResource.exists(), xsdResource + " does not exit");
             try {
-                XmlSchema xmlSchema = schemaCollection
-                        .read(SaxUtils.createInputSource(xsdResource), validationEventHandler);
+                XmlSchema xmlSchema =
+                        schemaCollection.read(SaxUtils.createInputSource(xsdResource), validationEventHandler);
                 xmlSchemas.add(xmlSchema);
 
                 if (inline) {
@@ -167,7 +167,7 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
         XsdSchema[] result = new XsdSchema[xmlSchemas.size()];
         for (int i = 0; i < xmlSchemas.size(); i++) {
             XmlSchema xmlSchema = (XmlSchema) xmlSchemas.get(i);
-            result[i] = new CommonsXsdSchema(xmlSchema);
+            result[i] = new CommonsXsdSchema(xmlSchema, schemaCollection);
         }
         return result;
     }
@@ -185,16 +185,14 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
         processedIncludes.add(schema);
         XmlSchemaObjectCollection includes = schema.getIncludes();
         for (int i = 0; i < includes.getCount(); i++) {
-            XmlSchemaExternal external = (XmlSchemaExternal) includes
-                    .getItem(i);
+            XmlSchemaExternal external = (XmlSchemaExternal) includes.getItem(i);
             if (external instanceof XmlSchemaInclude) {
                 XmlSchema includedSchema = external.getSchema();
                 XmlSchemaObjectCollection items = schema.getItems();
                 if (!processedIncludes.contains(includedSchema)) {
                     inlineIncludes(includedSchema, processedIncludes, processedImports);
                     findImports(includedSchema, processedImports, processedIncludes);
-                    XmlSchemaObjectCollection includeItems = includedSchema
-                            .getItems();
+                    XmlSchemaObjectCollection includeItems = includedSchema.getItems();
                     for (int j = 0; j < includeItems.getCount(); j++) {
                         XmlSchemaObject includedItem = includeItems.getItem(j);
                         items.add(includedItem);

@@ -28,6 +28,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.ws.commons.schema.XmlSchema;
+import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.apache.ws.commons.schema.XmlSchemaSerializer;
 import org.w3c.dom.Document;
 
@@ -51,6 +52,8 @@ public class CommonsXsdSchema implements XsdSchema {
 
     private final XmlSchema schema;
 
+    private final XmlSchemaCollection collection;
+
     /**
      * Create a new instance of the  {@link CommonsXsdSchema} class with the specified {@link XmlSchema} reference.
      *
@@ -58,8 +61,21 @@ public class CommonsXsdSchema implements XsdSchema {
      * @throws IllegalArgumentException if the supplied <code>schema</code> is <code>null</code>
      */
     protected CommonsXsdSchema(XmlSchema schema) {
+        this(schema, null);
+    }
+
+    /**
+     * Create a new instance of the  {@link CommonsXsdSchema} class with the specified {@link XmlSchema} and {@link
+     * XmlSchemaCollection} reference.
+     *
+     * @param schema     the Commons <code>XmlSchema</code> object; must not be <code>null</code>
+     * @param collection the Commons <code>XmlSchemaCollection</code> object; can be <code>null</code>
+     * @throws IllegalArgumentException if the supplied <code>schema</code> is <code>null</code>
+     */
+    protected CommonsXsdSchema(XmlSchema schema, XmlSchemaCollection collection) {
         Assert.notNull(schema, "'schema' must not be null");
         this.schema = schema;
+        this.collection = collection;
     }
 
     public String getTargetNamespace() {
@@ -79,10 +95,13 @@ public class CommonsXsdSchema implements XsdSchema {
     public Source getSource() {
         // try to use the the package-friendly XmlSchemaSerializer first, fall back to slower stream-based version
         try {
-            XmlSchemaSerializer serializer =
-                    (XmlSchemaSerializer) BeanUtils.instantiateClass(XmlSchemaSerializer.class);
-            Document[] serializesSchemas = serializer.serializeSchema(schema, false);
-            return new DOMSource(serializesSchemas[0]);
+            XmlSchemaSerializer serializer = (XmlSchemaSerializer) BeanUtils.instantiateClass(XmlSchemaSerializer.class)
+                    ;
+            if (collection != null) {
+                serializer.setExtReg(collection.getExtReg());
+            }
+            Document[] serializedSchemas = serializer.serializeSchema(schema, false);
+            return new DOMSource(serializedSchemas[0]);
         }
         catch (BeanInstantiationException ex) {
             // ignore
