@@ -16,9 +16,14 @@
 
 package org.springframework.xml.xsd.commons;
 
+import javax.xml.transform.dom.DOMSource;
+
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.xsd.AbstractXsdSchemaTestCase;
@@ -31,5 +36,18 @@ public class CommonsXsdSchemaTest extends AbstractXsdSchemaTestCase {
         XmlSchema schema = schemaCollection.read(SaxUtils.createInputSource(resource), null);
         return new CommonsXsdSchema(schema);
     }
+
+    public void testXmime() throws Exception {
+        Resource resource = new ClassPathResource("xmime.xsd", AbstractXsdSchemaTestCase.class);
+        XsdSchema schema = createSchema(resource);
+        String namespace = "urn:test";
+        assertEquals("Invalid target namespace", namespace, schema.getTargetNamespace());
+        Document result = (Document) ((DOMSource) schema.getSource()).getNode();
+        Element schemaElement = result.getDocumentElement();
+        Element elementElement = (Element) schemaElement.getFirstChild();
+        assertNotNull("No expectedContentTypes found",
+                elementElement.getAttributeNS("http://www.w3.org/2005/05/xmlmime", "expectedContentTypes"));
+    }
+
 
 }
