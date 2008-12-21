@@ -257,7 +257,7 @@
                                         <artifactItem>
                                             <groupId>org.apache.ws.commons.schema</groupId>
                                             <artifactId>XmlSchema</artifactId>
-                                            <version>1.4.2</version>
+                                            <version>1.4.3</version>
                                             <outputDirectory>${project.build.directory}/dependency/ws-commons/</outputDirectory>
                                         </artifactItem>
                                         <!-- OXM dependencies -->
