@@ -148,6 +148,7 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
             wsConnection.setResponseDestination(resolveResponseDestination(jmsSession, uri));
             wsConnection.setTimeToLive(JmsTransportUtils.getTimeToLive(uri));
             wsConnection.setTextMessageEncoding(textMessageEncoding);
+            wsConnection.setSessionTransacted(isSessionTransacted());
             wsConnection.setPostProcessor(postProcessor);
             return wsConnection;
         }
