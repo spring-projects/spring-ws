@@ -297,7 +297,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      * @see #setMessageSender(WebServiceMessageSender)
      */
     protected void initDefaultStrategies() {
-        Resource resource = new ClassPathResource(ClassUtils.getShortName(getClass()) + ".properties", getClass());
+        Resource resource = new ClassPathResource(ClassUtils.getShortName(WebServiceTemplate.class) + ".properties",
+                WebServiceTemplate.class);
         DefaultStrategiesHelper strategiesHelper = new DefaultStrategiesHelper(resource);
         if (getMessageFactory() == null) {
             initMessageFactory(strategiesHelper);
@@ -311,8 +312,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     }
 
     private void initMessageFactory(DefaultStrategiesHelper helper) throws BeanInitializationException {
-        WebServiceMessageFactory messageFactory = (WebServiceMessageFactory) helper
-                .getDefaultStrategy(WebServiceMessageFactory.class);
+        WebServiceMessageFactory messageFactory =
+                (WebServiceMessageFactory) helper.getDefaultStrategy(WebServiceMessageFactory.class);
         setMessageFactory(messageFactory);
     }
 
@@ -633,12 +634,14 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                 messageContext.getRequest().writeTo(requestStream);
                 ByteArrayOutputStream responseStream = new ByteArrayOutputStream();
                 messageContext.getResponse().writeTo(responseStream);
-                receivedMessageTracingLogger.trace("Received response [" + responseStream.toString("UTF-8") +
-                        "] for request [" + requestStream.toString("UTF-8") + "]");
+                receivedMessageTracingLogger
+                        .trace("Received response [" + responseStream.toString("UTF-8") + "] for request [" +
+                                requestStream.toString("UTF-8") + "]");
             }
             else if (receivedMessageTracingLogger.isDebugEnabled()) {
-                receivedMessageTracingLogger.debug("Received response [" + messageContext.getResponse() +
-                        "] for request [" + messageContext.getRequest() + "]");
+                receivedMessageTracingLogger
+                        .debug("Received response [" + messageContext.getResponse() + "] for request [" +
+                                messageContext.getRequest() + "]");
             }
         }
         else {
