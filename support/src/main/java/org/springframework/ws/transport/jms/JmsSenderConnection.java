@@ -79,6 +79,8 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 
     private MessagePostProcessor postProcessor;
 
+    private boolean sessionTransacted = false;
+
     /** Constructs a new JMS connection with the given parameters. */
     protected JmsSenderConnection(ConnectionFactory connectionFactory,
                                   Connection connection,
@@ -140,6 +142,10 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 
     void setPostProcessor(MessagePostProcessor postProcessor) {
         this.postProcessor = postProcessor;
+    }
+
+    void setSessionTransacted(boolean sessionTransacted) {
+        this.sessionTransacted = sessionTransacted;
     }
 
     /*
@@ -209,6 +215,9 @@ public class JmsSenderConnection extends AbstractSenderConnection {
             }
             connection.start();
             messageProducer.send(requestMessage);
+            if (session.getTransacted() && isSessionLocallyTransacted(session)) {
+                JmsUtils.commitIfNecessary(session);
+            }
         }
         catch (JMSException ex) {
             throw new JmsTransportException(ex);
@@ -218,9 +227,14 @@ public class JmsSenderConnection extends AbstractSenderConnection {
         }
     }
 
+    /** @see org.springframework.jms.core.JmsTemplate#isSessionLocallyTransacted(Session) */
+    private boolean isSessionLocallyTransacted(Session session) {
+        return sessionTransacted && !ConnectionFactoryUtils.isSessionTransactional(session, connectionFactory);
+    }
+
     /*
-     * Receiving
-     */
+    * Receiving
+    */
 
     protected void onReceiveBeforeRead() throws IOException {
         MessageConsumer messageConsumer = null;
