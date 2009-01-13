@@ -1420,10 +1420,11 @@ public class AnnotationOrderEndpoint {
             <programlisting><![CDATA[<beans>
     <bean id="exceptionResolver"
         class="org.springframework.ws.soap.server.endpoint.SoapFaultMappingExceptionResolver">
-        <property name="defaultFault" value="SERVER">
-        </property>
+        <property name="defaultFault" value="SERVER"/>
         <property name="exceptionMappings">
-            org.springframework.oxm.ValidationFailureException=CLIENT,Invalid request
+            <value>
+                org.springframework.oxm.ValidationFailureException=CLIENT,Invalid request
+            </value>
         </property>
     </bean>
 </beans>]]></programlisting>
