@@ -16,13 +16,21 @@
 
 package org.springframework.ws.soap;
 
+import java.io.ByteArrayOutputStream;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.xml.sax.SAXParseException;
+
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.mime.AbstractMimeMessageTestCase;
 import org.springframework.ws.mime.MimeMessage;
+import org.springframework.ws.transport.MockTransportOutputStream;
+import org.springframework.ws.transport.TransportConstants;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
-import org.xml.sax.SAXParseException;
 
 public abstract class AbstractSoapMessageTestCase extends AbstractMimeMessageTestCase {
 
@@ -48,6 +56,21 @@ public abstract class AbstractSoapMessageTestCase extends AbstractMimeMessageTes
         assertEquals("Invalid default SOAP Action", "\"\"", soapMessage.getSoapAction());
         soapMessage.setSoapAction("SoapAction");
         assertEquals("Invalid SOAP Action", "\"SoapAction\"", soapMessage.getSoapAction());
+    }
+
+    public void testCharsetAttribute() throws Exception {
+        MockTransportOutputStream outputStream = new MockTransportOutputStream(new ByteArrayOutputStream());
+        soapMessage.writeTo(outputStream);
+        Map headers = outputStream.getHeaders();
+        String contentType = (String) headers.get(TransportConstants.HEADER_CONTENT_TYPE);
+        if (contentType != null) {
+            Pattern charsetPattern = Pattern.compile("charset\\s*=\\s*([^;]+)");
+            Matcher matcher = charsetPattern.matcher(contentType);
+            if (matcher.find() && matcher.groupCount() == 1) {
+                String charset = matcher.group(1).trim();
+                assertTrue("Invalid charset", charset.indexOf('"') < 0);
+            }
+        }
     }
 
     protected abstract Resource[] getSoapSchemas();
