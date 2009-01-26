@@ -74,7 +74,7 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
         Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
         SoapMessage request = (SoapMessage) messageContext.getRequest();
         MessageAddressingProperties requestMap = version.getMessageAddressingProperties(request);
-        if (!requestMap.hasRequiredProperties()) {
+        if (!version.hasRequiredProperties(requestMap)) {
             version.addMessageAddressingHeaderRequiredFault((SoapMessage) messageContext.getResponse());
             return false;
         }
@@ -119,8 +119,9 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
     private boolean handleNoneAddress(MessageContext messageContext, EndpointReference replyEpr) {
         if (replyEpr == null || version.hasNoneAddress(replyEpr)) {
             if (logger.isDebugEnabled()) {
-                logger.debug("Request " + messageContext.getRequest() + "] has [" + replyEpr +
-                        "] reply address; reply [" + messageContext.getResponse() + "] discarded");
+                logger.debug(
+                        "Request [" + messageContext.getRequest() + "] has [" + replyEpr + "] reply address; reply [" +
+                                messageContext.getResponse() + "] discarded");
             }
             messageContext.clearResponse();
             return true;
@@ -131,7 +132,7 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
     private boolean handleAnonymousAddress(MessageContext messageContext, EndpointReference replyEpr) {
         if (version.hasAnonymousAddress(replyEpr)) {
             if (logger.isDebugEnabled()) {
-                logger.debug("Request " + messageContext.getRequest() + "] has [" + replyEpr +
+                logger.debug("Request [" + messageContext.getRequest() + "] has [" + replyEpr +
                         "] reply address; sending in-band reply [" + messageContext.getResponse() + "]");
             }
             return true;
@@ -141,7 +142,7 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 
     private void sendOutOfBand(MessageContext messageContext, EndpointReference replyEpr) throws IOException {
         if (logger.isDebugEnabled()) {
-            logger.debug("Request " + messageContext.getRequest() + "] has [" + replyEpr +
+            logger.debug("Request [" + messageContext.getRequest() + "] has [" + replyEpr +
                     "] reply address; sending out-of-band reply [" + messageContext.getResponse() + "]");
         }
 

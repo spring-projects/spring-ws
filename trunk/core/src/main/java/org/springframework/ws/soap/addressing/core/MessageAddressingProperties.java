@@ -153,23 +153,4 @@ public final class MessageAddressingProperties {
     public MessageAddressingProperties getReplyProperties(EndpointReference epr, URI action, URI messageId) {
         return new MessageAddressingProperties(epr, action, messageId, this.messageId);
     }
-
-    /**
-     * Indicates whether is {@link MessageAddressingProperties} has all required properties.
-     *
-     * @return <code>true</code> if the to and action properties have been set, and - if a reply or fault endpoint has
-     *         been set - also checks for the message id
-     */
-    public boolean hasRequiredProperties() {
-        if (to == null) {
-            return false;
-        }
-        if (action == null) {
-            return false;
-        }
-        if (replyTo != null || faultTo != null) {
-            return messageId != null;
-        }
-        return true;
-    }
 }
