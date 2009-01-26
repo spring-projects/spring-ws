@@ -221,7 +221,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
                 TransportOutputStream transportOutputStream = (TransportOutputStream) outputStream;
                 String contentType = format.getContentType();
                 if (!hasAttachments) {
-                    contentType += "; charset=\"" + charsetEncoding + "\"";
+                    contentType += "; charset=" + charsetEncoding;
                 }
                 if (SoapVersion.SOAP_11 == getVersion()) {
                     transportOutputStream.addHeader(TransportConstants.HEADER_SOAP_ACTION, soapAction);
