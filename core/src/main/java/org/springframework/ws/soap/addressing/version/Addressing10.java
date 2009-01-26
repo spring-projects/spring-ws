@@ -43,12 +43,27 @@ public class Addressing10 extends AbstractAddressingVersion {
         super.addAddressingHeaders(message, map);
     }
 
+    public boolean hasRequiredProperties(MessageAddressingProperties map) {
+        if (map.getAction() == null) {
+            return false;
+        }
+        if (map.getReplyTo() != null || map.getFaultTo() != null) {
+            return map.getMessageId() != null;
+        }
+        return true;
+
+    }
+
     protected String getNamespaceUri() {
         return NAMESPACE_URI;
     }
 
     protected QName getReferencePropertiesName() {
         return null;
+    }
+
+    protected URI getDefaultTo() {
+        return getAnonymous();
     }
 
     protected EndpointReference getDefaultReplyTo(EndpointReference from) {

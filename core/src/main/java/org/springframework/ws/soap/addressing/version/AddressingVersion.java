@@ -56,9 +56,17 @@ public interface AddressingVersion {
      */
     boolean understands(SoapHeaderElement headerElement);
 
-    /*
-     * Address URIs
+    /**
+     * Indicates whether the given {@link MessageAddressingProperties} has all required properties.
+     *
+     * @return <code>true</code> if the to and action properties have been set, and - if a reply or fault endpoint has
+     *         been set - also checks for the message id
      */
+    boolean hasRequiredProperties(MessageAddressingProperties map);
+
+    /*
+    * Address URIs
+    */
 
     /**
      * Indicates whether the given endpoint reference has a Anonymous address. This address is used to indicate that a

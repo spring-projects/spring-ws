@@ -36,11 +36,11 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 
 public abstract class AbstractAddressingInterceptorTestCase extends AbstractWsAddressingTestCase {
 
-    private AddressingEndpointInterceptor interceptor;
+    protected AddressingEndpointInterceptor interceptor;
 
-    private MockControl strategyControl;
+    protected MockControl strategyControl;
 
-    private MessageIdStrategy strategyMock;
+    protected MessageIdStrategy strategyMock;
 
     protected final void onSetUp() throws Exception {
         strategyControl = MockControl.createControl(MessageIdStrategy.class);
@@ -148,8 +148,9 @@ public abstract class AbstractAddressingInterceptorTestCase extends AbstractWsAd
 
         URI replyAction = new URI("urn:replyAction");
         URI faultAction = new URI("urn:replyAction");
-        interceptor = new AddressingEndpointInterceptor(getVersion(), strategyMock,
-                new WebServiceMessageSender[]{senderMock}, replyAction, faultAction);
+        interceptor =
+                new AddressingEndpointInterceptor(getVersion(), strategyMock, new WebServiceMessageSender[]{senderMock},
+                        replyAction, faultAction);
 
         MockControl connectionControl = MockControl.createControl(WebServiceConnection.class);
         WebServiceConnection connectionMock = (WebServiceConnection) connectionControl.getMock();

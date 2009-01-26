@@ -123,6 +123,9 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
     public MessageAddressingProperties getMessageAddressingProperties(SoapMessage message) {
         Element headerElement = getSoapHeaderElement(message);
         URI to = getUri(headerElement, toExpression);
+        if (to == null) {
+            to = getDefaultTo();
+        }
         EndpointReference from = getEndpointReference(fromExpression.evaluateAsNode(headerElement));
         EndpointReference replyTo = getEndpointReference(replyToExpression.evaluateAsNode(headerElement));
         if (replyTo == null) {
@@ -391,6 +394,9 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
     protected QName getAddressName() {
         return QNameUtils.createQName(getNamespaceUri(), "Address", getNamespacePrefix());
     }
+
+    /** Returns the default To URI. */
+    protected abstract URI getDefaultTo();
 
     /** Returns the default ReplyTo EPR. Can be based on the From EPR, or the anonymous URI. */
     protected abstract EndpointReference getDefaultReplyTo(EndpointReference from);
