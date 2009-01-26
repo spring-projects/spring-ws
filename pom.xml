@@ -361,13 +361,13 @@
                                         <artifactItem>
                                             <groupId>org.apache.ws.commons.axiom</groupId>
                                             <artifactId>axiom-api</artifactId>
-                                            <version>1.2.7</version>
+                                            <version>1.2.8</version>
                                             <outputDirectory>${project.build.directory}/dependency/ws-commons/</outputDirectory>
                                         </artifactItem>
                                         <artifactItem>
                                             <groupId>org.apache.ws.commons.axiom</groupId>
                                             <artifactId>axiom-impl</artifactId>
-                                            <version>1.2.7</version>
+                                            <version>1.2.8</version>
                                             <outputDirectory>${project.build.directory}/dependency/ws-commons/</outputDirectory>
                                         </artifactItem>
                                         <artifactItem>
