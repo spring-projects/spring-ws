@@ -87,20 +87,6 @@
                     </archive>
                 </configuration>
             </plugin>
-            <!-- IDEs -->
-            <plugin>
-                <artifactId>maven-eclipse-plugin</artifactId>
-                <configuration>
-                    <downloadSources>true</downloadSources>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-idea-plugin</artifactId>
-                <configuration>
-                    <downloadSources>true</downloadSources>
-                    <downloadJavadocs>true</downloadJavadocs>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
     <reporting>
@@ -523,14 +509,9 @@
                 <version>2.0</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.santuario</groupId>
-                <artifactId>xmlsec</artifactId>
-                <version>1.4.1</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.ws.security</groupId>
                 <artifactId>wss4j</artifactId>
-                <version>1.5.4</version>
+                <version>1.5.5</version>
                 <exclusions>
                     <exclusion>
                         <groupId>axis</groupId>
@@ -542,7 +523,7 @@
                     </exclusion>
                     <exclusion>
                         <groupId>xerces</groupId>
-                        <artifactId>xercecImpl</artifactId>
+                        <artifactId>xercesImpl</artifactId>
                     </exclusion>
                     <exclusion>
                         <groupId>xml-apis</groupId>
