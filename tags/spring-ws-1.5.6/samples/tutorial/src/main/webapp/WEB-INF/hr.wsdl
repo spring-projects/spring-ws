@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2007 the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!--This WSDL file is here for illustration purposes. It is not used by the holidayService, which dynamically creates
+    the WSDL based on the hr.xsd schema. The dynamically created WSDL is very similar to this WSDL, however. -->
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:schema="http://mycompany.com/hr/schemas"
+                  xmlns:tns="http://mycompany.com/hr/definitions"
+                  targetNamespace="http://mycompany.com/hr/definitions">
+    <wsdl:types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:import namespace="http://mycompany.com/hr/schemas" schemaLocation="hr.xsd"/>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="HolidayRequest">
+        <wsdl:part element="schema:HolidayRequest" name="HolidayRequest">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="HumanResource">
+        <wsdl:operation name="Holiday">
+            <wsdl:input message="tns:HolidayRequest" name="HolidayRequest">
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="HumanResourceBinding" type="tns:HumanResource">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="Holiday">
+            <soap:operation soapAction=""/>
+            <wsdl:input name="HolidayRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="HumanResourceService">
+        <wsdl:port binding="tns:HumanResourceBinding" name="HumanResourcePort">
+            <soap:address location="http://localhost:8080/holidayService/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
