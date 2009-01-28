@@ -322,13 +322,13 @@
                                         <artifactItem>
                                             <groupId>org.jibx</groupId>
                                             <artifactId>jibx-run</artifactId>
-                                            <version>1.1.5</version>
+                                            <version>1.1.6a</version>
                                             <outputDirectory>${project.build.directory}/dependency/jibx/</outputDirectory>
                                         </artifactItem>
                                         <artifactItem>
                                             <groupId>org.jibx</groupId>
                                             <artifactId>jibx-bind</artifactId>
-                                            <version>1.1.5</version>
+                                            <version>1.1.6a</version>
                                             <outputDirectory>${project.build.directory}/dependency/jibx/</outputDirectory>
                                         </artifactItem>
                                         <artifactItem>
@@ -404,8 +404,8 @@
                                         </artifactItem>
                                         <artifactItem>
                                             <groupId>bouncycastle</groupId>
-                                            <artifactId>bcprov-jdk13</artifactId>
-                                            <version>132</version>
+                                            <artifactId>bcprov-jdk14</artifactId>
+                                            <version>140</version>
                                             <outputDirectory>${project.build.directory}/dependency/wss4j/</outputDirectory>
                                         </artifactItem>
                                         <artifactItem>
