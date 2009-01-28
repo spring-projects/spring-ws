@@ -1,15 +1,15 @@
 Dear Spring community,
 
-I'm pleased to announce that Spring Web Services 1.5.5 has been released!
+I'm pleased to announce that Spring Web Services 1.5.6 has been released!
 
 This is the latest bug fix and enhancement release in the Spring-WS 1.5
-series. It fixes all bugs reported since 1.5.4 and introduces various
+series. It fixes all bugs reported since 1.5.5 and introduces various
 enhancements throughout the framework:
 
-* Various OSGi manifest fixes.
-* JDK 1.4 compativility.
-* Improvements of the JMS transport when using JNDI destinations
+* WSS4J improvements.
+* WS-Addressing fixes.
+* Upgrades to Axiom 1.2.8, WSS4J 1.5.5, and Jibx 1.1..6a
 
-and more, including more documentation. Please see the changelog for details.
+and more. Please see the changelog for details.
 
 For more information, see http://static.springframework.org/spring-ws/site/
