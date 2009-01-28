@@ -8,7 +8,7 @@ enhancements throughout the framework:
 
 * WSS4J improvements.
 * WS-Addressing fixes.
-* Upgrades to Axiom 1.2.8, WSS4J 1.5.5, and Jibx 1.1..6a
+* Upgrades to Axiom 1.2.8, WSS4J 1.5.5, and Jibx 1.1.6a
 
 and more. Please see the changelog for details.
 
