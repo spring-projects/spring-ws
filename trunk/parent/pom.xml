@@ -4,7 +4,7 @@
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.5.6-SNAPSHOT</version>
+    <version>1.5.6</version>
     <name>Spring Web Services - Parent</name>
     <distributionManagement>
         <downloadUrl>http://static.springframework.org/spring-ws/site/downloads/releases.html</downloadUrl>
