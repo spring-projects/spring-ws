@@ -2,6 +2,45 @@ SPRING WEB SERVICES CHANGELOG
 =============================
 http://www.springframework.org/spring-ws
 
+Changes in version 1.5.6
+-------------------------
+** Bug
+    * [SWS-430] - WSDL is renedered without resolving dynamic attributes managed using a PropertyPlaceHolderConfigurer object
+    * [SWS-434] - JibxMarshaller - marshalSaxHandlers
+    * [SWS-440] - WebServiceTemplate still creates a connection even if a ClientInterceptor sets a Response
+    * [SWS-442] - Generated WSDL file does not contain xmime attribute "expectedContentTypes" present in xsd files.
+    * [SWS-447] - xmlsec-1.4.1 library upgrade from v. 1.4.0 breaks response encryption with Wss4jSecurityInterceptor in spring-ws 1.5.5 release.
+    * [SWS-448] - Wss4jSecurityInterceptor accept messages when <wsse:header> is empty
+    * [SWS-449] - Spelling mistake in documentation
+    * [SWS-455] - Mangled predefined xml 'special character' entities when using AxiomSoapMessageFactory and extending AbstractStaxStreamPayloadEndpoint
+    * [SWS-456] - Wss4jSecurityInterceptor example specifies invalid Validation Action and Securement Action
+    * [SWS-457] - AxiomSoapMessageFactory payloadCaching=false causes org.springframework.ws.soap.axiom.AxiomSoapEnvelope.getBody()  to fail
+    * [SWS-464] - The use of WS Addressing results in malformed SOAP messages
+    * [SWS-465] - Optional WS-Addressing request headers being treated as mandatory
+    * [SWS-467] - Issues while generating of WSDL using SpringWS1.5 and spring-core2.0
+    * [SWS-469] - Content type not set accouring to Http specification, RFC 2616
+    * [SWS-471] - Invalid xml in SoapFaultMappingExceptionResolver example, section 5.6.1
+    * [SWS-473] - JmsSenderConnection does not commit transaction after send, leading to messages never being sent if sessionTransacted is true
+
+** Improvement
+    * [SWS-360] - All-in-one jar doesn't contain correct spring.handlers
+    * [SWS-375] - Add callback functionality to transport connections
+    * [SWS-450] - XwsSecurityInterceptor always requires a callback handler
+    * [SWS-462] - JavaDoc fix for PayloadRootAnnotationMethodEndpointMapping
+    * [SWS-463] - Update Jibx dependency to 1.1.6a
+    * [SWS-470] - Unwanted property file after extending WebServiceTemplate
+    * [SWS-475] - Upgrade to Axiom 1.2.8
+    * [SWS-476] - java.lang.NoClassDefFoundError: com/sun/org/apache/xml/internal/security/Init
+
+
+** Refactoring
+    * [SWS-459] - Spring 1.5.x should depend on Spring 2.0.x as a minimum requirement
+
+** Task
+    * [SWS-460] - Correct the documentation about SoapAction in section 4.1.3.3
+    * [SWS-477] - Upgrade to Wss4j 1.5.5
+    * [SWS-478] - Sync up copied dependencies for the "with dependencies" distribution
+
 Changes in version 1.5.5
 -------------------------
 ** Bug
