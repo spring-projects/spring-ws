@@ -15,7 +15,7 @@
    Alternatively, this acknowledgement may appear in the software itself,
    if and wherever such third-party acknowledgements normally appear.
 
-   The names "Spring" and "Spring Framework" must not be used to
-   endorse or promote products derived from this software without
-   prior written permission. For written permission, please contact
-   rod.johnson@springsource.com or juergen.hoeller@springsource.com.
+   The names "Spring", "Spring Framework", and "Spring Web Services" must
+   not be used to endorse or promote products derived from this software
+   without prior written permission. For written permission, please contact
+   enquiries@springsource.com.
