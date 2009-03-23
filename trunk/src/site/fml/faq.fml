@@ -29,6 +29,14 @@ NAMESPACE_ERR: An attempt is made to create or change an object in a way which i
     </part>
     <part id="java">
         <title>Java</title>
+        <faq id="java-1.3">
+            <question>Does Spring-WS run under Java 1.3?</question>
+            <answer>
+                <p>
+                    Spring Web Services requires Java 1.4 or higher.
+                </p>
+            </answer>
+        </faq>
         <faq id="java-1.4">
             <question>Does Spring-WS work under Java 1.4?</question>
             <answer>
