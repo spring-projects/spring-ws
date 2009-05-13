@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <artifactId>spring-ws-parent</artifactId>
         <groupId>org.springframework.ws</groupId>
@@ -63,9 +64,9 @@
                         <phase>generate-test-sources</phase>
                         <configuration>
                             <tasks>
-                                <ant antfile="${basedir}/build-maven2.xml" inheritRefs="true">
-                                    <property name="maven.test.skip" value="${maven.test.skip}" />
-                                    <target name="generate-test-sources" />
+                                <ant antfile="${basedir}/build-maven2.xml" inheritRefs="true"
+                                     target="generate-test-sources">
+                                    <property name="maven.test.skip" value="${maven.test.skip}"/>
                                 </ant>
                             </tasks>
                             <testSourceRoot>${project.build.directory}/generated-sources/test/java</testSourceRoot>
