@@ -568,7 +568,7 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
 
     private final HumanResourceService humanResourceService;
 
-    public HolidayEndpoint(HumanResourceService humanResourceService) {
+    public HolidayEndpoint(HumanResourceService humanResourceService) throws JDOMException {
         this.humanResourceService = humanResourceService;
         Namespace namespace = Namespace.getNamespace("hr", "http://mycompany.com/hr/schemas");
         startDateExpression = XPath.newInstance("//hr:StartDate");
