@@ -36,13 +36,13 @@ import org.springframework.ws.soap.soap12.Soap12Fault;
  */
 class SaajSoap12Body extends SaajSoapBody implements Soap12Body {
 
-    public SaajSoap12Body(SOAPBody body) {
+    SaajSoap12Body(SOAPBody body) {
         super(body);
     }
 
     public SoapFault getFault() {
         SOAPFault fault = getImplementation().getFault(getSaajBody());
-        return new SaajSoap12Fault(fault);
+        return fault != null ? new SaajSoap12Fault(fault) : null;
     }
 
     public SoapFault addClientOrSenderFault(String faultString, Locale locale) {

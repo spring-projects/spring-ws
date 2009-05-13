@@ -36,13 +36,13 @@ import org.springframework.ws.soap.soap11.Soap11Fault;
  */
 class SaajSoap11Body extends SaajSoapBody implements Soap11Body {
 
-    public SaajSoap11Body(SOAPBody body) {
+    SaajSoap11Body(SOAPBody body) {
         super(body);
     }
 
     public SoapFault getFault() {
         SOAPFault fault = getImplementation().getFault(getSaajBody());
-        return new SaajSoap11Fault(fault);
+        return fault != null ? new SaajSoap11Fault(fault) : null;
     }
 
     public Soap11Fault addFault(QName faultCode, String faultString, Locale faultStringLocale) {
