@@ -111,7 +111,7 @@
         </dependency>
         <!-- XML handling dependencies -->
         <dependency>
-            <groupId>jdom</groupId>
+            <groupId>org.jdom</groupId>
             <artifactId>jdom</artifactId>
             <optional>true</optional>
         </dependency>
