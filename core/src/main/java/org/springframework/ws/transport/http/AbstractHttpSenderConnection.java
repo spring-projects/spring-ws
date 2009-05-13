@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.zip.GZIPInputStream;
 
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.ws.transport.AbstractSenderConnection;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
@@ -44,7 +45,11 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
     }
 
     public final String getErrorMessage() throws IOException {
-        StringBuffer buffer = new StringBuffer(getResponseMessage());
+        StringBuffer buffer = new StringBuffer();
+        String responseMessage = getResponseMessage();
+        if (StringUtils.hasLength(responseMessage)) {
+            buffer.append(responseMessage);
+        }
         buffer.append(" [");
         buffer.append(getResponseCode());
         buffer.append(']');
