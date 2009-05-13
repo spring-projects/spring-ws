@@ -251,7 +251,7 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>stax</groupId>
+            <groupId>javax.xml.stream</groupId>
             <artifactId>stax-api</artifactId>
             <scope>compile</scope>
         </dependency>
