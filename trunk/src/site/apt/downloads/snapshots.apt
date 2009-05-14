@@ -13,7 +13,7 @@ Snapshot Builds
 <repository>
     <id>spring-s3</id>
     <name>Springframework Maven SNAPSHOT Repository</name>
-    <url>http://s3.amazonaws.com/maven.springframework.org/snapshot</url>
+    <url>http://maven.springframework.org/snapshot</url>
 </repository>
 +---------------
 
