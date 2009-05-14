@@ -48,11 +48,9 @@ public abstract class Wss4jTestCase extends TestCase {
 
     protected MessageFactory messageFactory;
 
-    protected final boolean axiomTest = this.getClass().getSimpleName()
-            .startsWith("Axiom");
+    protected final boolean axiomTest = this.getClass().getSimpleName().startsWith("Axiom");
 
-    protected final boolean saajTest = this.getClass().getSimpleName()
-            .startsWith("Saaj");
+    protected final boolean saajTest = this.getClass().getSimpleName().startsWith("Saaj");
 
     protected Map namespaces;
 
@@ -77,22 +75,19 @@ public abstract class Wss4jTestCase extends TestCase {
                                           String expectedValue,
                                           String xpathExpression,
                                           Document document) {
-        XPathExpression expression = XPathExpressionFactory
-                .createXPathExpression(xpathExpression, namespaces);
+        XPathExpression expression = XPathExpressionFactory.createXPathExpression(xpathExpression, namespaces);
         String actualValue = expression.evaluateAsString(document);
         assertEquals(message, expectedValue, actualValue);
     }
 
     protected void assertXpathExists(String message, String xpathExpression, Document document) {
-        XPathExpression expression = XPathExpressionFactory
-                .createXPathExpression(xpathExpression, namespaces);
+        XPathExpression expression = XPathExpressionFactory.createXPathExpression(xpathExpression, namespaces);
         Node node = expression.evaluateAsNode(document);
         assertNotNull(message, node);
     }
 
     protected void assertXpathNotExists(String message, String xpathExpression, Document document) {
-        XPathExpression expression = XPathExpressionFactory
-                .createXPathExpression(xpathExpression, namespaces);
+        XPathExpression expression = XPathExpressionFactory.createXPathExpression(xpathExpression, namespaces);
         Node node = expression.evaluateAsNode(document);
         assertNull(message, node);
     }
@@ -119,12 +114,10 @@ public abstract class Wss4jTestCase extends TestCase {
             assertTrue("Could not load Axiom message [" + resource + "]", resource.exists());
             is = resource.getInputStream();
 
-            XMLStreamReader parser = XMLInputFactory.newInstance()
-                    .createXMLStreamReader(is);
+            XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(is);
             StAXSOAPModelBuilder builder = new StAXSOAPModelBuilder(parser, null);
-            org.apache.axiom.soap.SOAPMessage soapMessage = builder
-                    .getSoapMessage();
-            return new AxiomSoapMessage(soapMessage, "", true);
+            org.apache.axiom.soap.SOAPMessage soapMessage = builder.getSoapMessage();
+            return new AxiomSoapMessage(soapMessage, "", true, true);
         }
         finally {
             is.close();
@@ -144,13 +137,11 @@ public abstract class Wss4jTestCase extends TestCase {
 
     protected void setMessage(SoapMessage soapMessage, Object message) {
         if (soapMessage instanceof SaajSoapMessage) {
-            ((SaajSoapMessage) soapMessage)
-                    .setSaajMessage((SOAPMessage) message);
+            ((SaajSoapMessage) soapMessage).setSaajMessage((SOAPMessage) message);
             return;
         }
         if (soapMessage instanceof AxiomSoapMessage) {
-            ((AxiomSoapMessage) soapMessage)
-                    .setAxiomMessage((org.apache.axiom.soap.SOAPMessage) message);
+            ((AxiomSoapMessage) soapMessage).setAxiomMessage((org.apache.axiom.soap.SOAPMessage) message);
             return;
         }
         throw new IllegalArgumentException("Illegal message: " + message);

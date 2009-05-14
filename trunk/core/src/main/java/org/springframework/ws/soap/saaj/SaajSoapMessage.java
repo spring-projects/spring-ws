@@ -51,11 +51,13 @@ import org.springframework.ws.transport.TransportConstants;
  */
 public class SaajSoapMessage extends AbstractSoapMessage {
 
+    private static final String CONTENT_TYPE_XOP = "application/xop+xml";
+
     private SOAPMessage saajMessage;
 
     private SoapEnvelope envelope;
 
-    private static final String CONTENT_TYPE_XOP = "application/xop+xml";
+    private final boolean langAttributeOnSoap11FaulString;
 
     /**
      * Create a new <code>SaajSoapMessage</code> based on the given SAAJ <code>SOAPMessage</code>.
@@ -63,12 +65,24 @@ public class SaajSoapMessage extends AbstractSoapMessage {
      * @param soapMessage the SAAJ SOAPMessage
      */
     public SaajSoapMessage(SOAPMessage soapMessage) {
+        this(soapMessage, true);
+    }
+
+    /**
+     * Create a new <code>SaajSoapMessage</code> based on the given SAAJ <code>SOAPMessage</code>.
+     *
+     * @param soapMessage the SAAJ SOAPMessage
+     * @param langAttributeOnSoap11FaulString
+     *                    whether a {@code xml:lang} attribute is allowed on SOAP 1.1 {@code <faultstring>} elements
+     */
+    public SaajSoapMessage(SOAPMessage soapMessage, boolean langAttributeOnSoap11FaulString) {
         Assert.notNull(soapMessage, "soapMessage must not be null");
         MimeHeaders headers = getImplementation().getMimeHeaders(soapMessage);
         if (ObjectUtils.isEmpty(headers.getHeader(TransportConstants.HEADER_SOAP_ACTION))) {
             headers.addHeader(TransportConstants.HEADER_SOAP_ACTION, "\"\"");
         }
         saajMessage = soapMessage;
+        this.langAttributeOnSoap11FaulString = langAttributeOnSoap11FaulString;
     }
 
     /** Return the SAAJ <code>SOAPMessage</code> that this <code>SaajSoapMessage</code> is based on. */
@@ -87,7 +101,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         if (envelope == null) {
             try {
                 SOAPEnvelope saajEnvelope = getImplementation().getEnvelope(getSaajMessage());
-                envelope = new SaajSoapEnvelope(saajEnvelope);
+                envelope = new SaajSoapEnvelope(saajEnvelope, langAttributeOnSoap11FaulString);
             }
             catch (SOAPException ex) {
                 throw new SaajSoapEnvelopeException(ex);

@@ -44,4 +44,5 @@ public class AxiomSoap11BodyTest extends AbstractSoap11BodyTestCase {
         transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
         assertPayloadEqual(payload);
     }
+
 }

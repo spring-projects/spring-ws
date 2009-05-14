@@ -71,13 +71,15 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
 
     private String soapAction;
 
+    private final boolean langAttributeOnSoap11FaulString;
+
     /**
      * Create a new, empty <code>AxiomSoapMessage</code>.
      *
      * @param soapFactory the AXIOM SOAPFactory
      */
     public AxiomSoapMessage(SOAPFactory soapFactory) {
-        this(soapFactory, true);
+        this(soapFactory, true, true);
     }
 
     /**
@@ -85,12 +87,13 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
      *
      * @param soapFactory the AXIOM SOAPFactory
      */
-    public AxiomSoapMessage(SOAPFactory soapFactory, boolean payloadCaching) {
+    public AxiomSoapMessage(SOAPFactory soapFactory, boolean payloadCaching, boolean langAttributeOnSoap11FaulString) {
         SOAPEnvelope soapEnvelope = soapFactory.getDefaultEnvelope();
         axiomFactory = soapFactory;
         axiomMessage = axiomFactory.createSOAPMessage(soapEnvelope, soapEnvelope.getBuilder());
         attachments = new Attachments();
         this.payloadCaching = payloadCaching;
+        this.langAttributeOnSoap11FaulString = langAttributeOnSoap11FaulString;
         soapAction = EMPTY_SOAP_ACTION;
     }
 
@@ -101,8 +104,11 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
      * @param soapAction     the value of the SOAP Action header
      * @param payloadCaching whether the contents of the SOAP body should be cached or not
      */
-    public AxiomSoapMessage(SOAPMessage soapMessage, String soapAction, boolean payloadCaching) {
-        this(soapMessage, new Attachments(), soapAction, payloadCaching);
+    public AxiomSoapMessage(SOAPMessage soapMessage,
+                            String soapAction,
+                            boolean payloadCaching,
+                            boolean langAttributeOnSoap11FaulString) {
+        this(soapMessage, new Attachments(), soapAction, payloadCaching, langAttributeOnSoap11FaulString);
     }
 
     /**
@@ -116,7 +122,8 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
     public AxiomSoapMessage(SOAPMessage soapMessage,
                             Attachments attachments,
                             String soapAction,
-                            boolean payloadCaching) {
+                            boolean payloadCaching,
+                            boolean langAttributeOnSoap11FaulString) {
         Assert.notNull(soapMessage, "'soapMessage' must not be null");
         Assert.notNull(attachments, "'attachments' must not be null");
         axiomMessage = soapMessage;
@@ -127,6 +134,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         }
         this.soapAction = soapAction;
         this.payloadCaching = payloadCaching;
+        this.langAttributeOnSoap11FaulString = langAttributeOnSoap11FaulString;
     }
 
     /** Return the AXIOM <code>SOAPMessage</code> that this <code>AxiomSoapMessage</code> is based on. */
@@ -149,7 +157,8 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
     public SoapEnvelope getEnvelope() {
         if (envelope == null) {
             try {
-                envelope = new AxiomSoapEnvelope(axiomMessage.getSOAPEnvelope(), axiomFactory, payloadCaching);
+                envelope = new AxiomSoapEnvelope(axiomMessage.getSOAPEnvelope(), axiomFactory, payloadCaching,
+                        langAttributeOnSoap11FaulString);
             }
             catch (SOAPProcessingException ex) {
                 throw new AxiomSoapEnvelopeException(ex);

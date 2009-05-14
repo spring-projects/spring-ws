@@ -101,6 +101,8 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
     // use SOAP 1.1 by default
     private SOAPFactory soapFactory = new SOAP11Factory();
 
+    private boolean langAttributeOnSoap11FaulString = true;
+
     /** Default constructor. */
     public AxiomSoapMessageFactory() {
         inputFactory = XMLInputFactory.newInstance();
@@ -165,6 +167,18 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
         }
     }
 
+    /**
+     * Defines whether a {@code xml:lang} attribute should be set on SOAP 1.1 {@code <faultstring>} elements.
+     * <p/>
+     * The default is {@code true}, to comply with WS-I, but this flag can be set to {@code false} to the older W3C SOAP
+     * 1.1 specification.
+     *
+     * @see <a href="http://www.ws-i.org/Profiles/BasicProfile-1.1.html#SOAP_Fault_Language">WS-I Basic Profile 1.1</a>
+     */
+    public void setLangAttributeOnSoap11FaulString(boolean langAttributeOnSoap11FaulString) {
+        this.langAttributeOnSoap11FaulString = langAttributeOnSoap11FaulString;
+    }
+
     public void afterPropertiesSet() throws Exception {
         if (logger.isInfoEnabled()) {
             logger.info(payloadCaching ? "Enabled payload caching" : "Disabled payload caching");
@@ -176,7 +190,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
     }
 
     public WebServiceMessage createWebServiceMessage() {
-        return new AxiomSoapMessage(soapFactory, payloadCaching);
+        return new AxiomSoapMessage(soapFactory, payloadCaching, langAttributeOnSoap11FaulString);
     }
 
     public WebServiceMessage createWebServiceMessage(InputStream inputStream) throws IOException {
@@ -227,15 +241,16 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
         String envelopeNamespace = getSoapEnvelopeNamespace(contentType);
         StAXSOAPModelBuilder builder = new StAXSOAPModelBuilder(reader, soapFactory, envelopeNamespace);
         SOAPMessage soapMessage = builder.getSoapMessage();
-        return new AxiomSoapMessage(soapMessage, soapAction, payloadCaching);
+        return new AxiomSoapMessage(soapMessage, soapAction, payloadCaching, langAttributeOnSoap11FaulString);
     }
 
     /** Creates an AxiomSoapMessage with attachments. */
     private AxiomSoapMessage createMultiPartAxiomSoapMessage(InputStream inputStream,
                                                              String contentType,
                                                              String soapAction) throws XMLStreamException {
-        Attachments attachments = new Attachments(inputStream, contentType, attachmentCaching,
-                attachmentCacheDir.getAbsolutePath(), Integer.toString(attachmentCacheThreshold));
+        Attachments attachments =
+                new Attachments(inputStream, contentType, attachmentCaching, attachmentCacheDir.getAbsolutePath(),
+                        Integer.toString(attachmentCacheThreshold));
         XMLStreamReader reader = inputFactory.createXMLStreamReader(attachments.getSOAPPartInputStream(),
                 getCharSetEncoding(attachments.getSOAPPartContentType()));
         StAXSOAPModelBuilder builder;
@@ -251,7 +266,8 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
             throw new AxiomSoapMessageCreationException(
                     "Unknown attachment type: [" + attachments.getAttachmentSpecType() + "]");
         }
-        return new AxiomSoapMessage(builder.getSoapMessage(), attachments, soapAction, payloadCaching);
+        return new AxiomSoapMessage(builder.getSoapMessage(), attachments, soapAction, payloadCaching,
+                langAttributeOnSoap11FaulString);
     }
 
     private String getSoapEnvelopeNamespace(String contentType) {
