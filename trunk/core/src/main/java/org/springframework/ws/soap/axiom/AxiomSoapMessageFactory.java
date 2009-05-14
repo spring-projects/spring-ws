@@ -199,7 +199,10 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
         TransportInputStream transportInputStream = (TransportInputStream) inputStream;
         String contentType = getHeaderValue(transportInputStream, TransportConstants.HEADER_CONTENT_TYPE);
         if (!StringUtils.hasLength(contentType)) {
-            logger.debug("TransportInputStream has no Content-Type header; defaulting to text/xml");
+            if (logger.isDebugEnabled()) {
+                logger.debug("TransportInputStream has no Content-Type header; defaulting to \"" +
+                        SoapVersion.SOAP_11.getContentType() + "\"");
+            }
             contentType = SoapVersion.SOAP_11.getContentType();
         }
         String soapAction = getHeaderValue(transportInputStream, TransportConstants.HEADER_SOAP_ACTION);
