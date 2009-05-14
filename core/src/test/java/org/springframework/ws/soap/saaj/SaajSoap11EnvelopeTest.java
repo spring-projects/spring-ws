@@ -28,6 +28,6 @@ public class SaajSoap11EnvelopeTest extends AbstractSoap11EnvelopeTestCase {
     protected SoapEnvelope createSoapEnvelope() throws Exception {
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
         SOAPMessage saajMessage = messageFactory.createMessage();
-        return new SaajSoapEnvelope(saajMessage.getSOAPPart().getEnvelope());
+        return new SaajSoapEnvelope(saajMessage.getSOAPPart().getEnvelope(), true);
     }
 }

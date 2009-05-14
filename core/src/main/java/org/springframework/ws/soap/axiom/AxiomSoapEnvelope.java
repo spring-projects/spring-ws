@@ -24,9 +24,15 @@ class AxiomSoapEnvelope extends AxiomSoapElement implements SoapEnvelope {
 
     private AxiomSoapBody body;
 
-    AxiomSoapEnvelope(SOAPEnvelope axiomEnvelope, SOAPFactory axiomFactory, boolean payloadCaching) {
+    private final boolean langAttributeOnSoap11FaulString;
+
+    AxiomSoapEnvelope(SOAPEnvelope axiomEnvelope,
+                      SOAPFactory axiomFactory,
+                      boolean payloadCaching,
+                      boolean langAttributeOnSoap11FaulString) {
         super(axiomEnvelope, axiomFactory);
         this.payloadCaching = payloadCaching;
+        this.langAttributeOnSoap11FaulString = langAttributeOnSoap11FaulString;
     }
 
     public SoapHeader getHeader() {
@@ -59,7 +65,8 @@ class AxiomSoapEnvelope extends AxiomSoapElement implements SoapEnvelope {
                 SOAPBody axiomBody = getAxiomEnvelope().getBody();
                 String namespaceURI = getAxiomEnvelope().getNamespace().getNamespaceURI();
                 if (SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(namespaceURI)) {
-                    body = new AxiomSoap11Body(axiomBody, getAxiomFactory(), payloadCaching);
+                    body = new AxiomSoap11Body(axiomBody, getAxiomFactory(), payloadCaching,
+                            langAttributeOnSoap11FaulString);
                 }
                 else if (SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(namespaceURI)) {
                     body = new AxiomSoap12Body(axiomBody, getAxiomFactory(), payloadCaching);

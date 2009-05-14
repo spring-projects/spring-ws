@@ -45,8 +45,14 @@ import org.springframework.xml.namespace.QNameUtils;
  */
 class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
 
-    AxiomSoap11Body(SOAPBody axiomBody, SOAPFactory axiomFactory, boolean payloadCaching) {
+    private final boolean langAttributeOnSoap11FaulString;
+
+    AxiomSoap11Body(SOAPBody axiomBody,
+                    SOAPFactory axiomFactory,
+                    boolean payloadCaching,
+                    boolean langAttributeOnSoap11FaulString) {
         super(axiomBody, axiomFactory, payloadCaching);
+        this.langAttributeOnSoap11FaulString = langAttributeOnSoap11FaulString;
     }
 
     public SoapFault addMustUnderstandFault(String faultString, Locale locale) {
@@ -69,12 +75,15 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
         return new AxiomSoap11Fault(fault, getAxiomFactory());
     }
 
-    public Soap11Fault addFault(QName code, String faultString, Locale locale) {
+    public Soap11Fault addFault(QName code, String faultString, Locale faultStringLocale) {
         Assert.notNull(code, "No faultCode given");
         Assert.hasLength(faultString, "faultString cannot be empty");
         if (!StringUtils.hasLength(code.getNamespaceURI())) {
             throw new IllegalArgumentException(
                     "A fault code with namespace and local part must be specific for a custom fault code");
+        }
+        if (!langAttributeOnSoap11FaulString) {
+            faultStringLocale = null;
         }
         try {
             AxiomUtils.removeContents(getAxiomBody());
@@ -82,8 +91,8 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
             SOAPFaultCode faultCode = getAxiomFactory().createSOAPFaultCode(fault);
             setValueText(code, fault, faultCode);
             SOAPFaultReason faultReason = getAxiomFactory().createSOAPFaultReason(fault);
-            if (locale != null) {
-                addLangAttribute(locale, faultReason);
+            if (faultStringLocale != null) {
+                addLangAttribute(faultStringLocale, faultReason);
             }
             faultReason.setText(faultString);
             return new AxiomSoap11Fault(fault, getAxiomFactory());
@@ -92,7 +101,6 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
         catch (SOAPProcessingException ex) {
             throw new AxiomSoapFaultException(ex);
         }
-
     }
 
     private void setValueText(QName code, SOAPFault fault, SOAPFaultCode faultCode) {

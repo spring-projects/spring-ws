@@ -23,6 +23,7 @@ import javax.xml.stream.XMLStreamReader;
 import junit.framework.TestCase;
 import org.apache.axiom.soap.SOAPMessage;
 import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
+
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapFaultDetail;
 
@@ -57,13 +58,13 @@ public class AxiomSoapFaultDetailTest extends TestCase {
         StAXSOAPModelBuilder builder = new StAXSOAPModelBuilder(parser);
         SOAPMessage soapMessage = builder.getSoapMessage();
 
-        failingMessage = new AxiomSoapMessage(soapMessage, null, false);
+        failingMessage = new AxiomSoapMessage(soapMessage, null, false, true);
 
         parser = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(SUCCEEDING_FAULT));
         builder = new StAXSOAPModelBuilder(parser);
         soapMessage = builder.getSoapMessage();
 
-        succeedingMessage = new AxiomSoapMessage(soapMessage, null, false);
+        succeedingMessage = new AxiomSoapMessage(soapMessage, null, false, true);
 
     }
 

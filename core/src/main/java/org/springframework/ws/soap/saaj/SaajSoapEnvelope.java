@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.saaj;
 
 import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
@@ -39,8 +40,11 @@ class SaajSoapEnvelope extends SaajSoapElement implements SoapEnvelope {
 
     private SaajSoapHeader header;
 
-    public SaajSoapEnvelope(SOAPEnvelope envelope) {
-        super(envelope);
+    private final boolean langAttributeOnSoap11FaulString;
+
+    SaajSoapEnvelope(SOAPElement element, boolean langAttributeOnSoap11FaulString) {
+        super(element);
+        this.langAttributeOnSoap11FaulString = langAttributeOnSoap11FaulString;
     }
 
     public SoapBody getBody() {
@@ -49,7 +53,7 @@ class SaajSoapEnvelope extends SaajSoapElement implements SoapEnvelope {
                 SOAPBody saajBody = getImplementation().getBody(getSaajEnvelope());
                 if (getImplementation().getName(saajBody).getNamespaceURI()
                         .equals(SoapVersion.SOAP_11.getEnvelopeNamespaceUri())) {
-                    body = new SaajSoap11Body(saajBody);
+                    body = new SaajSoap11Body(saajBody, langAttributeOnSoap11FaulString);
                 }
                 else {
                     body = new SaajSoap12Body(saajBody);

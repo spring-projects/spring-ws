@@ -36,8 +36,11 @@ import org.springframework.ws.soap.soap11.Soap11Fault;
  */
 class SaajSoap11Body extends SaajSoapBody implements Soap11Body {
 
-    SaajSoap11Body(SOAPBody body) {
+    private final boolean langAttributeOnSoap11FaulString;
+
+    SaajSoap11Body(SOAPBody body, boolean langAttributeOnSoap11FaulString) {
         super(body);
+        this.langAttributeOnSoap11FaulString = langAttributeOnSoap11FaulString;
     }
 
     public SoapFault getFault() {
@@ -50,6 +53,9 @@ class SaajSoap11Body extends SaajSoapBody implements Soap11Body {
         Assert.hasLength(faultString, "faultString cannot be empty");
         Assert.hasLength(faultCode.getLocalPart(), "faultCode's localPart cannot be empty");
         Assert.hasLength(faultCode.getNamespaceURI(), "faultCode's namespaceUri cannot be empty");
+        if (!langAttributeOnSoap11FaulString) {
+            faultStringLocale = null;
+        }
         try {
             getImplementation().removeContents(getSaajBody());
             SOAPFault saajFault =
