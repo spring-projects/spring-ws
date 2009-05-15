@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="mtomClient" class="org.springframework.ws.samples.mtom.client.sws.MtomClient">
+        <property name="defaultUri" value="http://localhost:8080/mtom/services"/>
+        <property name="marshaller" ref="marshaller"/>
+        <property name="unmarshaller" ref="marshaller"/>
+    </bean>
+
+    <bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name="contextPath" value="org.springframework.ws.samples.mtom.client.sws"/>
+        <property name="mtomEnabled" value="true"/>
+    </bean>
+
+</beans>
