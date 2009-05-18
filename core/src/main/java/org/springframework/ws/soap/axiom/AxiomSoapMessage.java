@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,6 +72,8 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
     private String soapAction;
 
     private final boolean langAttributeOnSoap11FaulString;
+
+    private OMOutputFormat outputFormat;
 
     /**
      * Create a new, empty <code>AxiomSoapMessage</code>.
@@ -154,6 +156,15 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         this.soapAction = EMPTY_SOAP_ACTION;
     }
 
+    /**
+     * Sets the {@link OMOutputFormat} to be used when writing the message.
+     *
+     * @see #writeTo(java.io.OutputStream)
+     */
+    public void setOutputFormat(OMOutputFormat outputFormat) {
+        this.outputFormat = outputFormat;
+    }
+
     public SoapEnvelope getEnvelope() {
         if (envelope == null) {
             try {
@@ -212,24 +223,13 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
 
     public void writeTo(OutputStream outputStream) throws IOException {
         try {
-            String charsetEncoding = axiomMessage.getCharsetEncoding();
 
-            OMOutputFormat format = new OMOutputFormat();
-            format.setCharSetEncoding(charsetEncoding);
-            format.setSOAP11(getVersion() == SoapVersion.SOAP_11);
-            boolean hasAttachments = !attachments.getContentIDSet().isEmpty();
-            if (hasAttachments) {
-                if (isXopPackage()) {
-                    format.setDoOptimize(true);
-                }
-                else {
-                    format.setDoingSWA(true);
-                }
-            }
+            OMOutputFormat outputFormat = getOutputFormat();
             if (outputStream instanceof TransportOutputStream) {
                 TransportOutputStream transportOutputStream = (TransportOutputStream) outputStream;
-                String contentType = format.getContentType();
-                if (!hasAttachments) {
+                String contentType = outputFormat.getContentType();
+                if (!(outputFormat.isDoingSWA() || outputFormat.isOptimized())) {
+                    String charsetEncoding = axiomMessage.getCharsetEncoding();
                     contentType += "; charset=" + charsetEncoding;
                 }
                 if (SoapVersion.SOAP_11 == getVersion()) {
@@ -240,15 +240,15 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
                 }
                 transportOutputStream.addHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
             }
-            if (!(format.isOptimized()) & format.isDoingSWA()) {
-                writeSwAMessage(outputStream, format);
+            if (!(outputFormat.isOptimized()) & outputFormat.isDoingSWA()) {
+                writeSwAMessage(outputStream, outputFormat);
             }
             else {
                 if (payloadCaching) {
-                    axiomMessage.serialize(outputStream, format);
+                    axiomMessage.serialize(outputStream, outputFormat);
                 }
                 else {
-                    axiomMessage.serializeAndConsume(outputStream, format);
+                    axiomMessage.serializeAndConsume(outputStream, outputFormat);
                 }
             }
             outputStream.flush();
@@ -258,6 +258,26 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         }
         catch (OMException ex) {
             throw new AxiomSoapMessageException("Could not write message to OutputStream: " + ex.getMessage(), ex);
+        }
+    }
+
+    private OMOutputFormat getOutputFormat() {
+        if (outputFormat != null) {
+            return outputFormat;
+        }
+        else {
+            String charsetEncoding = axiomMessage.getCharsetEncoding();
+
+            OMOutputFormat outputFormat = new OMOutputFormat();
+            outputFormat.setCharSetEncoding(charsetEncoding);
+            outputFormat.setSOAP11(getVersion() == SoapVersion.SOAP_11);
+            if (isXopPackage()) {
+                outputFormat.setDoOptimize(true);
+            }
+            else if (!attachments.getContentIDSet().isEmpty()) {
+                outputFormat.setDoingSWA(true);
+            }
+            return outputFormat;
         }
     }
 
