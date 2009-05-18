@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.Locale;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -235,6 +236,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
     }
 
     private boolean isMultiPartRelated(String contentType) {
+        contentType = contentType.toLowerCase(Locale.ENGLISH);
         return contentType.indexOf(MULTI_PART_RELATED_CONTENT_TYPE) != -1;
     }
 

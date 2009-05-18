@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,12 +32,12 @@ public class StubImageRepository implements ImageRepository {
     private Map<String, Image> images = new HashMap<String, Image>();
 
     public Image readImage(String name) throws IOException {
-        logger.info("Streaming image " + name);
+        logger.info("Loading image " + name);
         return images.get(name);
     }
 
     public void storeImage(String name, Image image) throws IOException {
-        logger.info("Storing image " + name);
+        logger.info("Storing image " + name + " [" + image.getWidth(null) + "x" + image.getHeight(null) + "]");
         images.put(name, image);
     }
 }
