@@ -17,10 +17,18 @@
 package org.springframework.ws.soap.axiom;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 
+import org.custommonkey.xmlunit.XMLAssert;
+import org.custommonkey.xmlunit.XMLUnit;
+
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.soap.soap11.AbstractSoap11MessageFactoryTestCase;
@@ -30,7 +38,11 @@ import org.springframework.xml.transform.StringResult;
 
 public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryTestCase {
 
+    private Transformer transformer;
+
     protected WebServiceMessageFactory createMessageFactory() throws Exception {
+        transformer = TransformerFactory.newInstance().newTransformer();
+
         AxiomSoapMessageFactory factory = new AxiomSoapMessageFactory();
         factory.afterPropertiesSet();
         return factory;
@@ -47,7 +59,6 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
         TransportInputStream tis = new MockTransportInputStream(new ByteArrayInputStream(xml.getBytes()));
         WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
 
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
         StringResult result = new StringResult();
         transformer.transform(message.getPayloadSource(), result);
         transformer.transform(message.getPayloadSource(), result);
@@ -64,7 +75,6 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
         TransportInputStream tis = new MockTransportInputStream(new ByteArrayInputStream(xml.getBytes()));
         WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
 
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
         StringResult result = new StringResult();
         transformer.transform(message.getPayloadSource(), result);
         try {
@@ -76,5 +86,23 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
         }
     }
 
+    public void testSWS502() throws Exception {
+        AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
+        messageFactory.setPayloadCaching(false);
+        messageFactory.afterPropertiesSet();
+
+        Resource resource = new ClassPathResource("SWS-502.xml", getClass());
+        String expected = FileCopyUtils.copyToString(new InputStreamReader(resource.getInputStream()));
+        InputStream inputStream = resource.getInputStream();
+        TransportInputStream tis = new MockTransportInputStream(inputStream);
+        AxiomSoapMessage message = (AxiomSoapMessage) messageFactory.createWebServiceMessage(tis);
+
+        StringResult result = new StringResult();
+        transformer.transform(message.getEnvelope().getSource(), result);
+
+        XMLUnit.setIgnoreWhitespace(true);
+        XMLAssert.assertXMLEqual(expected, result.toString());
+
+    }
 
 }
