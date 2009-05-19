@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,13 +60,13 @@ public class SimplePasswordValidationCallbackHandler extends AbstractWsPasswordC
     }
 
     protected void handleUsernameToken(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
-        String identifier = callback.getIdentifer();
+        String identifier = callback.getIdentifier();
         callback.setPassword(users.getProperty(identifier));
     }
 
     protected void handleUsernameTokenUnknown(WSPasswordCallback callback)
             throws IOException, UnsupportedCallbackException {
-        String identifier = callback.getIdentifer();
+        String identifier = callback.getIdentifier();
         String storedPassword = users.getProperty(identifier);
         String givenPassword = callback.getPassword();
         if (storedPassword == null || !storedPassword.equals(givenPassword)) {

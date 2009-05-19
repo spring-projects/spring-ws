@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ public class SpringPlainTextPasswordValidationCallbackHandler extends AbstractWs
 
     protected void handleUsernameTokenUnknown(WSPasswordCallback callback)
             throws IOException, UnsupportedCallbackException {
-        String identifier = callback.getIdentifer();
+        String identifier = callback.getIdentifier();
         try {
             Authentication authResult = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(identifier, callback.getPassword()));
