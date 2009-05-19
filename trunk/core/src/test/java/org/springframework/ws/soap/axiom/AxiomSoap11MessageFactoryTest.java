@@ -18,7 +18,6 @@ package org.springframework.ws.soap.axiom;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -26,9 +25,6 @@ import javax.xml.transform.TransformerFactory;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.soap.soap11.AbstractSoap11MessageFactoryTestCase;
@@ -91,17 +87,26 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
         messageFactory.setPayloadCaching(false);
         messageFactory.afterPropertiesSet();
 
-        Resource resource = new ClassPathResource("SWS-502.xml", getClass());
-        String expected = FileCopyUtils.copyToString(new InputStreamReader(resource.getInputStream()));
-        InputStream inputStream = resource.getInputStream();
-        TransportInputStream tis = new MockTransportInputStream(inputStream);
-        AxiomSoapMessage message = (AxiomSoapMessage) messageFactory.createWebServiceMessage(tis);
+        String payload =
+                "<ns1:sendMessageResponse xmlns:ns1='urn:Sole' xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' soapenv:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'>" +
+                        "<sendMessageReturn xsi:type='soapenc:string' xmlns:soapenc='http://schemas.xmlsoap.org/soap/encoding/'>" +
+                        "<![CDATA[<?xml version='1.0' encoding='UTF-8'?>" + "<PDresponse>" +
+                        "<isStatusOK>true</isStatusOK>" + "<status>0</status>" +
+                        "<payLoad><![CDATA[<?xml version='1.0' encoding='UTF-8'?><response>ok</response>]]]]>><![CDATA[</payLoad>" +
+                        "</PDresponse>]]></sendMessageReturn>" + "</ns1:sendMessageResponse>";
+        String envelope =
+                "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'><soapenv:Body>" +
+                        payload + "</soapenv:Body></soapenv:Envelope>";
+
+        InputStream inputStream = new ByteArrayInputStream(envelope.getBytes("UTF-8"));
+        AxiomSoapMessage message =
+                (AxiomSoapMessage) messageFactory.createWebServiceMessage(new MockTransportInputStream(inputStream));
 
         StringResult result = new StringResult();
-        transformer.transform(message.getEnvelope().getSource(), result);
+        transformer.transform(message.getPayloadSource(), result);
 
         XMLUnit.setIgnoreWhitespace(true);
-        XMLAssert.assertXMLEqual(expected, result.toString());
+        XMLAssert.assertXMLEqual(payload, result.toString());
 
     }
 
