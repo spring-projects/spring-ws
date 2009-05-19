@@ -87,16 +87,15 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
         messageFactory.setPayloadCaching(false);
         messageFactory.afterPropertiesSet();
 
-        String payload =
-                "<ns1:sendMessageResponse xmlns:ns1='urn:Sole' xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' soapenv:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'>" +
+        String envelope =
+                "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'><soapenv:Body>" +
+                        "<ns1:sendMessageResponse xmlns:ns1='urn:Sole' soapenv:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'>" +
                         "<sendMessageReturn xsi:type='soapenc:string' xmlns:soapenc='http://schemas.xmlsoap.org/soap/encoding/'>" +
                         "<![CDATA[<?xml version='1.0' encoding='UTF-8'?>" + "<PDresponse>" +
                         "<isStatusOK>true</isStatusOK>" + "<status>0</status>" +
                         "<payLoad><![CDATA[<?xml version='1.0' encoding='UTF-8'?><response>ok</response>]]]]>><![CDATA[</payLoad>" +
-                        "</PDresponse>]]></sendMessageReturn>" + "</ns1:sendMessageResponse>";
-        String envelope =
-                "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'><soapenv:Body>" +
-                        payload + "</soapenv:Body></soapenv:Envelope>";
+                        "</PDresponse>]]></sendMessageReturn>" + "</ns1:sendMessageResponse>" +
+                        "</soapenv:Body></soapenv:Envelope>";
 
         InputStream inputStream = new ByteArrayInputStream(envelope.getBytes("UTF-8"));
         AxiomSoapMessage message =
@@ -106,7 +105,14 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
         transformer.transform(message.getPayloadSource(), result);
 
         XMLUnit.setIgnoreWhitespace(true);
-        XMLAssert.assertXMLEqual(payload, result.toString());
+        String expectedPayload =
+                "<ns1:sendMessageResponse xmlns:ns1='urn:Sole' xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' soapenv:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'>" +
+                        "<sendMessageReturn xsi:type='soapenc:string' xmlns:soapenc='http://schemas.xmlsoap.org/soap/encoding/'>" +
+                        "<![CDATA[<?xml version='1.0' encoding='UTF-8'?>" + "<PDresponse>" +
+                        "<isStatusOK>true</isStatusOK>" + "<status>0</status>" +
+                        "<payLoad><![CDATA[<?xml version='1.0' encoding='UTF-8'?><response>ok</response>]]]]>><![CDATA[</payLoad>" +
+                        "</PDresponse>]]></sendMessageReturn>" + "</ns1:sendMessageResponse>";
+        XMLAssert.assertXMLEqual(expectedPayload, result.toString());
 
     }
 
