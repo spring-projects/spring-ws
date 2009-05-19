@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import org.springframework.util.StringUtils;
 import org.springframework.xml.namespace.QNameUtils;
+import org.springframework.xml.namespace.SimpleNamespaceContext;
 
 /**
  * SAX <code>XMLReader</code> that reads from a StAX <code>XMLStreamReader</code>.  Reads from an
@@ -43,6 +44,8 @@ import org.springframework.xml.namespace.QNameUtils;
 public class StaxStreamXmlReader extends AbstractStaxXmlReader {
 
     private final XMLStreamReader reader;
+
+    private final SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext();
 
     /**
      * Constructs a new instance of the <code>StaxStreamXmlReader</code> that reads from the given
@@ -139,14 +142,33 @@ public class StaxStreamXmlReader extends AbstractStaxXmlReader {
                     if (prefix == null) {
                         prefix = "";
                     }
-                    getContentHandler().startPrefixMapping(prefix, reader.getNamespaceURI(i));
+                    startPrefixMapping(prefix, reader.getNamespaceURI(i));
                 }
-                getContentHandler().startElement(qName.getNamespaceURI(), qName.getLocalPart(),
-                        QNameUtils.toQualifiedName(qName), getAttributes());
+                for (int i = 0; i < reader.getAttributeCount(); i++) {
+                    String prefix = reader.getAttributePrefix(i);
+                    if (prefix == null) {
+                        prefix = "";
+                    }
+                    String namespace = reader.getAttributeNamespace(i);
+                    if (namespace == null) {
+                        continue;
+                    }
+                    startPrefixMapping(prefix, namespace);
+                }
+                getContentHandler()
+                        .startElement(qName.getNamespaceURI(), qName.getLocalPart(), QNameUtils.toQualifiedName(qName),
+                                getAttributes());
             }
             else {
                 getContentHandler().startElement("", "", QNameUtils.toQualifiedName(qName), getAttributes());
             }
+        }
+    }
+
+    private void startPrefixMapping(String prefix, String namespace) throws SAXException {
+        if (!namespaceContext.getNamespaceURI(prefix).equals(namespace)) {
+            getContentHandler().startPrefixMapping(prefix, namespace);
+            namespaceContext.bindNamespaceUri(prefix, namespace);
         }
     }
 
@@ -162,6 +184,7 @@ public class StaxStreamXmlReader extends AbstractStaxXmlReader {
                         prefix = "";
                     }
                     getContentHandler().endPrefixMapping(prefix);
+                    namespaceContext.removeBinding(prefix);
                 }
             }
             else {
@@ -180,8 +203,7 @@ public class StaxStreamXmlReader extends AbstractStaxXmlReader {
             getLexicalHandler().startCDATA();
         }
         if (getContentHandler() != null) {
-            getContentHandler()
-                    .characters(reader.getTextCharacters(), reader.getTextStart(), reader.getTextLength());
+            getContentHandler().characters(reader.getTextCharacters(), reader.getTextStart(), reader.getTextLength());
         }
         if (XMLStreamConstants.CDATA == reader.getEventType() && getLexicalHandler() != null) {
             getLexicalHandler().endCDATA();
