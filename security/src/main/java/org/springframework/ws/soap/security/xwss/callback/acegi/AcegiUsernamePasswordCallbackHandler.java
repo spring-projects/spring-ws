@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,13 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import com.sun.xml.wss.impl.callback.PasswordCallback;
 import com.sun.xml.wss.impl.callback.UsernameCallback;
 import org.acegisecurity.Authentication;
-import org.acegisecurity.context.SecurityContext;
 import org.acegisecurity.context.SecurityContextHolder;
 
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
 /**
- * Callback handler that adds username/password information to a mesage using an Acegi {@link SecurityContext}.
+ * Callback handler that adds username/password information to a mesage using an Acegi {@link
+ * org.acegisecurity.context.SecurityContext SecurityContext}.
  * <p/>
  * This class handles <code>UsernameCallback</code>s and <code>PasswordCallback</code>s, and throws an
  * <code>UnsupportedCallbackException</code> for others
