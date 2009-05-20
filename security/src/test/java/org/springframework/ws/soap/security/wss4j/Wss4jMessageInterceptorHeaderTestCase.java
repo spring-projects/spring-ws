@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap.security.wss4j;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
 import java.util.Properties;
 import javax.xml.namespace.QName;
@@ -78,5 +79,41 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
         catch (WsSecurityValidationException e) {
             // expected
         }
+    }
+
+    public void testPreserveCustomHeaders() throws Exception {
+        interceptor.setSecurementActions("UsernameToken");
+        interceptor.setSecurementUsername("Bert");
+        interceptor.setSecurementPassword("Ernie");
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        SoapMessage message = loadMessage("customHeader-soap.xml");
+        MessageContext messageContext = new DefaultMessageContext(message, getMessageFactory());
+        message.writeTo(os);
+        String document = os.toString("UTF-8");
+        assertXpathEvaluatesTo("Header 1 does not exist", "test1", "/SOAP-ENV:Envelope/SOAP-ENV:Header/test:header1",
+                document);
+        assertXpathNotExists("Header 2 exist", "/SOAP-ENV:Envelope/SOAP-ENV:Header/test:header2", document);
+
+        interceptor.secureMessage(message, messageContext);
+
+        SoapHeaderElement element = message.getSoapHeader().addHeaderElement(new QName("http://test", "header2"));
+        element.setText("test2");
+
+        os = new ByteArrayOutputStream();
+        message.writeTo(os);
+        document = os.toString("UTF-8");
+        assertXpathEvaluatesTo("Header 1 does not exist", "test1", "/SOAP-ENV:Envelope/SOAP-ENV:Header/test:header1",
+                document);
+        assertXpathEvaluatesTo("Header 2 does not exist", "test2", "/SOAP-ENV:Envelope/SOAP-ENV:Header/test:header2",
+                document);
+
+        os = new ByteArrayOutputStream();
+        message.writeTo(os);
+        document = os.toString("UTF-8");
+        assertXpathEvaluatesTo("Header 1 does not exist", "test1", "/SOAP-ENV:Envelope/SOAP-ENV:Header/test:header1",
+                document);
+        assertXpathEvaluatesTo("Header 2 does not exist", "test2", "/SOAP-ENV:Envelope/SOAP-ENV:Header/test:header2",
+                document);
     }
 }
