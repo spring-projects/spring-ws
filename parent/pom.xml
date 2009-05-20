@@ -4,7 +4,7 @@
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.5.7</version>
+    <version>1.5.8-SNAPSHOT</version>
     <name>Spring Web Services - Parent</name>
     <distributionManagement>
         <downloadUrl>http://static.springframework.org/spring-ws/site/downloads/releases.html</downloadUrl>
@@ -23,9 +23,9 @@
         </site>
     </distributionManagement>
     <scm>
-        <connection>scm:svn:https://src.springframework.org/svn/spring-ws/tags/spring-ws-1.5.7</connection>
-        <developerConnection>scm:svn:https://src.springframework.org/svn/spring-ws/tags/spring-ws-1.5.7</developerConnection>
-        <url>https://fisheye.springframework.org/browse/spring-ws/tags/spring-ws-1.5.7</url>
+        <connection>scm:svn:https://src.springframework.org/svn/spring-ws/tags/spring-ws-1.5.6</connection>
+        <developerConnection>scm:svn:https://src.springframework.org/svn/spring-ws/tags/spring-ws-1.5.6</developerConnection>
+        <url>https://fisheye.springframework.org/browse/spring-ws/tags/spring-ws-1.5.6</url>
     </scm>
     <properties>
         <spring.version>2.5.6</spring.version>
