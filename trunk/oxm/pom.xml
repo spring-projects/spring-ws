@@ -76,12 +76,12 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>1.2.0</version>
+                <version>1.4.3</version>
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>org.springframework.bundle.ws.oxm</Bundle-SymbolicName>
-                        <Export-Package>org.springframework.oxm*</Export-Package>
+                        <Export-Package>org.springframework.oxm*;version="${pom.version}"</Export-Package>
                         <Import-Package>
                             org.apache.commons.logging*,
                             javax.xml.parsers*,
@@ -89,16 +89,16 @@
                             javax.xml.transform*,
                             org.xml.sax*,
                             org.w3c.dom*,
-                            org.springframework.xml*,
-                            org.springframework.oxm*,
-                            org.springframework.jms*;version="2.0";resolution:=optional,
-                            org.springframework.web*;version="2.0";resolution:=optional,
-                            org.springframework*;version="2.0",
+                            org.springframework.xml*;version="${pom.version}",
+                            org.springframework.oxm*;version="${pom.version}",
+                            org.springframework.jms*;version="[2.0,3.0)";resolution:=optional,
+                            org.springframework.web*;version="[2.0,3.0)";resolution:=optional,
+                            org.springframework*;version="[2.0,3.0)",
                             *;resolution:=optional
                         </Import-Package>
                         <Implementation-Title>${pom.name}</Implementation-Title>
-                        <Implementation-Version>${pom.version}</Implementation-Version>
                         <Spring-WS-Version>${pom.version}</Spring-WS-Version>
+                        <Bundle-Vendor>SpringSource</Bundle-Vendor>
                     </instructions>
                 </configuration>
             </plugin>
