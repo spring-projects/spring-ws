@@ -2,6 +2,30 @@ SPRING WEB SERVICES CHANGELOG
 =============================
 http://www.springframework.org/spring-ws
 
+Changes in version 1.5.7
+-------------------------
+** Bug
+    * [SWS-482] - java.lang.IllegalStateException: Connection factory has been shutdown
+    * [SWS-483] - Wss4j 1.5.5 stripping custom SOAP headers after 1.5.6 upgrade
+    * [SWS-484] - Missing version qualifiers on Export-Package entries
+    * [SWS-486] - SaajSoap11Body.getFault() does not conforms to interface specification - if no fault is present IllegalArgumentException is thrown instead of returning null.
+    * [SWS-494] - AbstractHttpSenderConnection  getErrorMessage() 
+    * [SWS-496] - SpringWS client does not send Mtom attachments - it inlines them instead.
+    * [SWS-497] - JDOM exception when parsing odd SOAP message with SaajSoapMessageFactor
+    * [SWS-500] - remove amazonaws repository urls from spring-ws-parent pom
+    * [SWS-502] - Soap envelope rpc-encoded namespace issue 
+    * [SWS-506] - All-in-one jar contains different namespace in spring.handlers than the module jars
+    * [SWS-509] - Namespace prefix in attribute value not resolved correctly
+    * [SWS-514] - SpringPlainTextPasswordValidationCallbackHandler doesn't override handleUsernameToken
+
+** Improvement
+    * [SWS-485] - xml:lang="en" attribute in <faultstring> element is not compliant to SOAP/1.1 schema
+    * [SWS-488] - Export-Packages in MANIFEST.MF are not versioned
+    * [SWS-490] - log Exceptions in SoapFaultMappingExceptionResolver (like spring webmvc SimpleMappingExceptionResolver)
+    * [SWS-492] - Maven POM uses incorrect stax-api dependency
+    * [SWS-498] - 3.6.1. Handling the XML Message tutorial with wrong code
+    * [SWS-510] - AxiomSoapMessageFactory throws IllegalArgument when Content-Type is not set
+
 Changes in version 1.5.6
 -------------------------
 ** Bug
