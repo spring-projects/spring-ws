@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@ package org.springframework.ws.soap.axiom.support;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.Locale;
 import javax.xml.namespace.QName;
@@ -164,13 +166,31 @@ public abstract class AxiomUtils {
 
             StAXSOAPModelBuilder stAXSOAPModelBuilder =
                     new StAXSOAPModelBuilder(XMLInputFactory.newInstance().createXMLStreamReader(bis), null);
-            return stAXSOAPModelBuilder.getSOAPEnvelope();
+            SOAPEnvelope envelope = stAXSOAPModelBuilder.getSOAPEnvelope();
+
+            // Necessary to build a correct Axiom tree, see SWS-483
+            envelope.serialize(new NullOutputStream());
+
+            return envelope;
         }
         catch (Exception ex) {
             IllegalArgumentException iaex =
                     new IllegalArgumentException("Error in converting Document to SOAP Envelope");
             iaex.initCause(ex);
             throw iaex;
+        }
+    }
+
+    /** OutputStream that does nothing. */
+    private static class NullOutputStream extends OutputStream {
+
+        public void write(int b) throws IOException {
+        }
+
+        public void write(byte[] b) throws IOException {
+        }
+
+        public void write(byte[] b, int off, int len) throws IOException {
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
 package org.springframework.ws.soap.security.wss4j;
 
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Properties;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.transform.dom.DOMSource;
 
 import junit.framework.TestCase;
 import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
@@ -41,8 +41,8 @@ import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.ws.soap.axiom.support.AxiomUtils;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
-import org.springframework.xml.xpath.XPathExpression;
-import org.springframework.xml.xpath.XPathExpressionFactory;
+import org.springframework.xml.transform.StringSource;
+import org.springframework.xml.xpath.Jaxp13XPathTemplate;
 
 public abstract class Wss4jTestCase extends TestCase {
 
@@ -52,22 +52,26 @@ public abstract class Wss4jTestCase extends TestCase {
 
     protected final boolean saajTest = this.getClass().getSimpleName().startsWith("Saaj");
 
-    protected Map namespaces;
+    protected Jaxp13XPathTemplate xpathTemplate = new Jaxp13XPathTemplate();
 
     protected final void setUp() throws Exception {
         if (!axiomTest && !saajTest) {
             throw new IllegalArgumentException("test class name must statrt with either Axiom or Saaj");
         }
         messageFactory = MessageFactory.newInstance();
-        namespaces = new HashMap();
-        namespaces.put("SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/");
-        namespaces.put("wsse", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd");
-        namespaces.put("ds", "http://www.w3.org/2000/09/xmldsig#");
-        namespaces.put("xenc", "http://www.w3.org/2001/04/xmlenc#");
+        Properties namespaces = new Properties();
+        namespaces.setProperty("SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/");
+        namespaces.setProperty("wsse",
+                "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd");
+        namespaces.setProperty("ds", "http://www.w3.org/2000/09/xmldsig#");
+        namespaces.setProperty("xenc", "http://www.w3.org/2001/04/xmlenc#");
 //        namespaces.put("wsse11", "http://docs.oasis-open.org/wss/2005/xx/oasis-2005xx-wss-wssecurity-secext-1.1.xsd");
-        namespaces.put("wsse11", "http://docs.oasis-open.org/wss/oasis-wss-wssecurity-secext-1.1.xsd");
-        namespaces.put("echo", "http://www.springframework.org/spring-ws/samples/echo");
-        namespaces.put("wsu", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd");
+        namespaces.setProperty("wsse11", "http://docs.oasis-open.org/wss/oasis-wss-wssecurity-secext-1.1.xsd");
+        namespaces.setProperty("echo", "http://www.springframework.org/spring-ws/samples/echo");
+        namespaces.setProperty("wsu",
+                "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd");
+        namespaces.setProperty("test", "http://test");
+        xpathTemplate.setNamespaces(namespaces);
         onSetup();
     }
 
@@ -75,20 +79,30 @@ public abstract class Wss4jTestCase extends TestCase {
                                           String expectedValue,
                                           String xpathExpression,
                                           Document document) {
-        XPathExpression expression = XPathExpressionFactory.createXPathExpression(xpathExpression, namespaces);
-        String actualValue = expression.evaluateAsString(document);
+        String actualValue = xpathTemplate.evaluateAsString(xpathExpression, new DOMSource(document));
+        assertEquals(message, expectedValue, actualValue);
+    }
+
+    protected void assertXpathEvaluatesTo(String message,
+                                          String expectedValue,
+                                          String xpathExpression,
+                                          String document) {
+        String actualValue = xpathTemplate.evaluateAsString(xpathExpression, new StringSource(document));
         assertEquals(message, expectedValue, actualValue);
     }
 
     protected void assertXpathExists(String message, String xpathExpression, Document document) {
-        XPathExpression expression = XPathExpressionFactory.createXPathExpression(xpathExpression, namespaces);
-        Node node = expression.evaluateAsNode(document);
+        Node node = xpathTemplate.evaluateAsNode(xpathExpression, new DOMSource(document));
         assertNotNull(message, node);
     }
 
     protected void assertXpathNotExists(String message, String xpathExpression, Document document) {
-        XPathExpression expression = XPathExpressionFactory.createXPathExpression(xpathExpression, namespaces);
-        Node node = expression.evaluateAsNode(document);
+        Node node = xpathTemplate.evaluateAsNode(xpathExpression, new DOMSource(document));
+        assertNull(message, node);
+    }
+
+    protected void assertXpathNotExists(String message, String xpathExpression, String document) {
+        Node node = xpathTemplate.evaluateAsNode(xpathExpression, new StringSource(document));
         assertNull(message, node);
     }
 
