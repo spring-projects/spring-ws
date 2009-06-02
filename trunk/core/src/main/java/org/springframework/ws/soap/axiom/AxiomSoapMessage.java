@@ -232,13 +232,17 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
                     String charsetEncoding = axiomMessage.getCharsetEncoding();
                     contentType += "; charset=" + charsetEncoding;
                 }
-                if (SoapVersion.SOAP_11 == getVersion()) {
+                SoapVersion version = getVersion();
+                if (SoapVersion.SOAP_11 == version) {
                     transportOutputStream.addHeader(TransportConstants.HEADER_SOAP_ACTION, soapAction);
+                    transportOutputStream.addHeader(TransportConstants.HEADER_ACCEPT, version.getContentType());
                 }
-                else if (SoapVersion.SOAP_12 == getVersion()) {
+                else if (SoapVersion.SOAP_12 == version) {
                     contentType += "; action=" + soapAction;
+                    transportOutputStream.addHeader(TransportConstants.HEADER_ACCEPT, version.getContentType());
                 }
                 transportOutputStream.addHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
+
             }
             if (!(outputFormat.isOptimized()) & outputFormat.isDoingSWA()) {
                 writeSwAMessage(outputStream, outputFormat);

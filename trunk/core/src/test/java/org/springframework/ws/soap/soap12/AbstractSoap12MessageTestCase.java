@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,8 +58,11 @@ public abstract class AbstractSoap12MessageTestCase extends AbstractSoapMessageT
                 result);
         String contentType = (String) tos.getHeaders().get(TransportConstants.HEADER_CONTENT_TYPE);
         assertTrue("Invalid Content-Type set", contentType.indexOf(SoapVersion.SOAP_12.getContentType()) != -1);
-        assertNull(TransportConstants.HEADER_SOAP_ACTION + " header must not be found", tos.getHeaders().get(TransportConstants.HEADER_SOAP_ACTION));
+        assertNull(TransportConstants.HEADER_SOAP_ACTION + " header must not be found",
+                tos.getHeaders().get(TransportConstants.HEADER_SOAP_ACTION));
         assertTrue("Invalid Content-Type set", contentType.indexOf(soapAction) != -1);
+        String resultAccept = (String) tos.getHeaders().get("Accept");
+        assertNotNull("Invalid accept header", resultAccept);
     }
 
     public void testWriteToTransportResponseAttachment() throws Exception {
@@ -74,5 +77,5 @@ public abstract class AbstractSoap12MessageTestCase extends AbstractSoapMessageT
         assertTrue("Content-Type for attachment message does not contains type=\"application/soap+xml\"",
                 contentType.indexOf("type=\"application/soap+xml\"") != -1);
     }
-    
+
 }

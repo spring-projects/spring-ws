@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,9 @@ package org.springframework.ws.transport;
  */
 public interface TransportConstants {
 
+    /** The "Accept" header. */
+    String HEADER_ACCEPT = "Accept";
+
     /** The "Content-Id" header. */
     String HEADER_CONTENT_ID = "Content-Id";
 
@@ -42,8 +45,6 @@ public interface TransportConstants {
     /** The "action" parameter, used to set SOAP Actions in SOAP 1.2. */
     String PARAMETER_ACTION = "action";
 
-    /**
-     * The empty SOAP action value.
-     */
+    /** The empty SOAP action value. */
     String EMPTY_SOAP_ACTION = "\"\"";
 }
