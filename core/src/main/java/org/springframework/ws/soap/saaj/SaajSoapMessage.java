@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -155,6 +155,10 @@ public class SaajSoapMessage extends AbstractSoapMessage {
     }
 
     public void writeTo(OutputStream outputStream) throws IOException {
+        MimeHeaders mimeHeaders = getImplementation().getMimeHeaders(getSaajMessage());
+        if (ObjectUtils.isEmpty(mimeHeaders.getHeader(TransportConstants.HEADER_ACCEPT))) {
+            mimeHeaders.setHeader(TransportConstants.HEADER_ACCEPT, getVersion().getContentType());
+        }
         try {
             getImplementation().writeTo(getSaajMessage(), outputStream);
             outputStream.flush();

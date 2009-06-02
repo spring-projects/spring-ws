@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,6 +58,8 @@ public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageT
         assertTrue("Invalid Content-Type set", contentType.indexOf(SoapVersion.SOAP_11.getContentType()) != -1);
         String resultSoapAction = (String) tos.getHeaders().get("SOAPAction");
         assertEquals("Invalid soap action", "\"" + soapAction + "\"", resultSoapAction);
+        String resultAccept = (String) tos.getHeaders().get("Accept");
+        assertNotNull("Invalid accept header", resultAccept);
     }
 
     public void testWriteToTransportResponseAttachment() throws Exception {
