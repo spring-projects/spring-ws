@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package org.springframework.ws.transport.support;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.scheduling.commonj.WorkManagerTaskExecutor;
 import org.springframework.util.ClassUtils;
 
 /**
@@ -43,7 +42,7 @@ public abstract class AbstractAsyncStandaloneMessageReceiver extends AbstractSta
      * SimpleAsyncTaskExecutor}, starting up a number of new threads.
      * <p/>
      * Specify an alternative task executor for integration with an existing thread pool, such as the {@link
-     * WorkManagerTaskExecutor} to integrate with WebSphere or WebLogic.
+     * org.springframework.scheduling.commonj.WorkManagerTaskExecutor} to integrate with WebSphere or WebLogic.
      */
     public void setTaskExecutor(TaskExecutor taskExecutor) {
         this.taskExecutor = taskExecutor;
