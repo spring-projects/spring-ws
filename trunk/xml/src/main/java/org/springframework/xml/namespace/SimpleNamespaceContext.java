@@ -102,6 +102,13 @@ public class SimpleNamespaceContext implements NamespaceContext {
         Assert.notNull(namespaceUri, "No namespaceUri given");
         if (XMLConstants.DEFAULT_NS_PREFIX.equals(prefix)) {
             defaultNamespaceUri = namespaceUri;
+        } else if (XMLConstants.XML_NS_PREFIX.equals(prefix)) {
+            Assert.isTrue(XMLConstants.XML_NS_URI.equals(namespaceUri), "Prefix \"" + prefix +
+                    "\" bound to namespace \"" + namespaceUri + "\" (should be \"" + XMLConstants.XML_NS_URI + "\")");
+        } else if (XMLConstants.XMLNS_ATTRIBUTE.equals(prefix)) {
+            Assert.isTrue(XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(namespaceUri), "Prefix \"" + prefix +
+                    "\" bound to namespace \"" + namespaceUri + "\" (should be \"" +
+                    XMLConstants.XMLNS_ATTRIBUTE_NS_URI + "\")");
         }
         else {
             prefixToNamespaceUri.put(prefix, namespaceUri);
@@ -112,6 +119,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
     /** Removes all declared prefixes. */
     public void clear() {
         prefixToNamespaceUri.clear();
+        namespaceUriToPrefixes.clear();
     }
 
     /**
