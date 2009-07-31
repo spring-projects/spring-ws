@@ -59,6 +59,8 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 
     private final boolean langAttributeOnSoap11FaulString;
 
+    private SaajImplementation implementation;
+
     /**
      * Create a new <code>SaajSoapMessage</code> based on the given SAAJ <code>SOAPMessage</code>.
      *
@@ -77,12 +79,12 @@ public class SaajSoapMessage extends AbstractSoapMessage {
      */
     public SaajSoapMessage(SOAPMessage soapMessage, boolean langAttributeOnSoap11FaulString) {
         Assert.notNull(soapMessage, "soapMessage must not be null");
+        saajMessage = soapMessage;
+        this.langAttributeOnSoap11FaulString = langAttributeOnSoap11FaulString;
         MimeHeaders headers = getImplementation().getMimeHeaders(soapMessage);
         if (ObjectUtils.isEmpty(headers.getHeader(TransportConstants.HEADER_SOAP_ACTION))) {
             headers.addHeader(TransportConstants.HEADER_SOAP_ACTION, "\"\"");
         }
-        saajMessage = soapMessage;
-        this.langAttributeOnSoap11FaulString = langAttributeOnSoap11FaulString;
     }
 
     /** Return the SAAJ <code>SOAPMessage</code> that this <code>SaajSoapMessage</code> is based on. */
@@ -169,7 +171,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
     }
 
     public boolean isXopPackage() {
-        if (SaajUtils.getSaajVersion() >= SaajUtils.SAAJ_13) {
+        if (SaajUtils.getSaajVersion(saajMessage) >= SaajUtils.SAAJ_13) {
             SOAPPart saajPart = saajMessage.getSOAPPart();
             String[] contentTypes = saajPart.getMimeHeader(TransportConstants.HEADER_CONTENT_TYPE);
             for (int i = 0; i < contentTypes.length; i++) {
@@ -182,7 +184,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
     }
 
     public boolean convertToXopPackage() {
-        if (SaajUtils.getSaajVersion() >= SaajUtils.SAAJ_13) {
+        if (SaajUtils.getSaajVersion(saajMessage) >= SaajUtils.SAAJ_13) {
             convertMessageToXop();
             convertPartToXop();
             return true;
@@ -244,19 +246,22 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         return new SaajAttachment(saajAttachment);
     }
 
-    protected SaajImplementation getImplementation() {
-        if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_13) {
-            return Saaj13Implementation.getInstance();
+    protected final SaajImplementation getImplementation() {
+        if (implementation == null) {
+            if (SaajUtils.getSaajVersion(saajMessage) == SaajUtils.SAAJ_13) {
+                implementation = Saaj13Implementation.getInstance();
+            }
+            else if (SaajUtils.getSaajVersion(saajMessage) == SaajUtils.SAAJ_12) {
+                implementation = Saaj12Implementation.getInstance();
+            }
+            else if (SaajUtils.getSaajVersion(saajMessage) == SaajUtils.SAAJ_11) {
+                implementation = Saaj11Implementation.getInstance();
+            }
+            else {
+                throw new IllegalStateException("Could not find SAAJ on the classpath");
+            }
         }
-        else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_12) {
-            return Saaj12Implementation.getInstance();
-        }
-        else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_11) {
-            return Saaj11Implementation.getInstance();
-        }
-        else {
-            throw new IllegalStateException("Could not find SAAJ on the classpath");
-        }
+        return implementation;
     }
 
     public String toString() {

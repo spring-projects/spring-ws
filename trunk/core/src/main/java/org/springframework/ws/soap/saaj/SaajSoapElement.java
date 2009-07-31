@@ -36,6 +36,8 @@ class SaajSoapElement implements SoapElement {
 
     private final SOAPElement element;
 
+    private SaajImplementation implementation;
+
     SaajSoapElement(SOAPElement element) {
         Assert.notNull(element, "element must not be null");
         this.element = element;
@@ -94,17 +96,20 @@ class SaajSoapElement implements SoapElement {
     }
 
     protected final SaajImplementation getImplementation() {
-        if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_13) {
-            return Saaj13Implementation.getInstance();
+        if (implementation == null) {
+            if (SaajUtils.getSaajVersion(element) == SaajUtils.SAAJ_13) {
+                implementation = Saaj13Implementation.getInstance();
+            }
+            else if (SaajUtils.getSaajVersion(element) == SaajUtils.SAAJ_12) {
+                implementation = Saaj12Implementation.getInstance();
+            }
+            else if (SaajUtils.getSaajVersion(element) == SaajUtils.SAAJ_11) {
+                implementation = Saaj11Implementation.getInstance();
+            }
+            else {
+                throw new IllegalStateException("Could not find SAAJ on the classpath");
+            }
         }
-        else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_12) {
-            return Saaj12Implementation.getInstance();
-        }
-        else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_11) {
-            return Saaj11Implementation.getInstance();
-        }
-        else {
-            throw new IllegalStateException("Could not find SAAJ on the classpath");
-        }
+        return implementation;
     }
 }
