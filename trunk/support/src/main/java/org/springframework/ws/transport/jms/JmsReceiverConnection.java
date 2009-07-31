@@ -92,6 +92,8 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
         this.postProcessor = postProcessor;
     }
 
+    
+
     /** Returns the request message for this connection. Returns either a {@link BytesMessage} or a {@link TextMessage}. */
     public Message getRequestMessage() {
         return requestMessage;
@@ -179,7 +181,11 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
             else {
                 throw new IllegalStateException("Unknown request message type [" + requestMessage + "]");
             }
-            responseMessage.setJMSCorrelationID(requestMessage.getJMSMessageID());
+            String correlation = requestMessage.getJMSCorrelationID();
+            if (correlation == null) {
+                correlation = requestMessage.getJMSMessageID();
+            }
+            responseMessage.setJMSCorrelationID(correlation);
         }
         catch (JMSException ex) {
             throw new JmsTransportException("Could not create response message", ex);
