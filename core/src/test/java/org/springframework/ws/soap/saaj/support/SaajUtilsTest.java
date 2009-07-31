@@ -25,9 +25,10 @@ import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPMessage;
 
 import org.custommonkey.xmlunit.XMLTestCase;
+import org.w3c.dom.Document;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StringUtils;
-import org.w3c.dom.Document;
 
 public class SaajUtilsTest extends XMLTestCase {
 
@@ -114,4 +115,5 @@ public class SaajUtilsTest extends XMLTestCase {
     public void testGetSaajVersion() throws Exception {
         assertEquals("Invalid SAAJ version", SaajUtils.SAAJ_13, SaajUtils.getSaajVersion());
     }
+
 }
