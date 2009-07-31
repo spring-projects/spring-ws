@@ -17,7 +17,7 @@
             </activation>
             <dependencies>
                 <dependency>
-                    <groupId>stax</groupId>
+                    <groupId>javax.xml.stream</groupId>                    
                     <artifactId>stax-api</artifactId>
                 </dependency>
             </dependencies>
