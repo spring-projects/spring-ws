@@ -33,7 +33,7 @@ public class SaajSoap11BodyTest extends AbstractSoap11BodyTestCase {
         return new SaajSoap11Body(saajMessage.getSOAPPart().getEnvelope().getBody(), true);
     }
 
-    public void testLangAttributeOnSoap11FaulString() throws Exception {
+    public void testLangAttributeOnSoap11FaultString() throws Exception {
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
         SOAPMessage saajMessage = messageFactory.createMessage();
 
