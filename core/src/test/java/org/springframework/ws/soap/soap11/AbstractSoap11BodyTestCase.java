@@ -90,6 +90,21 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
                 "</faultactor>" + "</SOAP-ENV:Fault>");
     }
 
+    public void testAddFaultNoPrefix() throws Exception {
+        QName faultCode = new QName("http://www.springframework.org", "fault");
+        String faultString = "faultString";
+        Soap11Fault fault = ((Soap11Body) soapBody).addFault(faultCode, faultString, Locale.ENGLISH);
+        assertNotNull("Null returned", fault);
+        assertTrue("SoapBody has no fault", soapBody.hasFault());
+        assertNotNull("SoapBody has no fault", soapBody.getFault());
+        assertEquals("Invalid fault code", faultCode, fault.getFaultCode());
+        assertEquals("Invalid fault string", faultString, fault.getFaultStringOrReason());
+        assertEquals("Invalid fault string locale", Locale.ENGLISH, fault.getFaultStringLocale());
+        String actor = "http://www.springframework.org/actor";
+        fault.setFaultActorOrRole(actor);
+        assertEquals("Invalid fault actor", actor, fault.getFaultActorOrRole());
+    }
+
     public void testAddFaultWithDetail() throws Exception {
         QName faultCode = new QName("http://www.springframework.org", "fault", "spring");
         String faultString = "faultString";

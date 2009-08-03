@@ -114,7 +114,7 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
         else if (StringUtils.hasLength(code.getNamespaceURI())) {
             OMNamespace namespace = fault.findNamespace(code.getNamespaceURI(), null);
             if (namespace == null) {
-                throw new IllegalArgumentException("Could not resolve namespace of code [" + code + "]");
+                namespace = fault.declareNamespace(code.getNamespaceURI(), "");
             }
             code = QNameUtils.createQName(code.getNamespaceURI(), code.getLocalPart(), namespace.getPrefix());
         }
