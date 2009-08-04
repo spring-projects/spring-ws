@@ -92,7 +92,7 @@
                             javax.xml.transform*,
                             org.springframework.xml*;version="${pom.version}",
                             org.springframework.oxm*;version="${pom.version}",
-                            org.springframework*;version="[2.0,3.0)",
+                            org.springframework*;version="[2.0,3.1.0)",
                             *;resolution:=optional
                         </Import-Package>
                         <Fragment-Host>org.springframework.bundle.ws.oxm</Fragment-Host>
