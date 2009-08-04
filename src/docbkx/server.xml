@@ -308,6 +308,7 @@
     ...
 
     <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
+    
 </beans>]]></programlisting>
                 Note that by explicitly adding the <classname>WebServiceMessageReceiverHandlerAdapter</classname>,
                 the dispatcher servlet does not load the default adapters, and is unable to handle standard Spring-MVC
@@ -325,6 +326,35 @@
                         </itemizedlist>
                     </para>
                 </footnote>
+            </para>
+            <para>
+                In a similar fashion, you can wire up a <classname>WsdlDefinitionHandlerAdapter</classname> to make sure
+                the <classname>DispatcherServlet</classname> can handle implementations of the
+                <interfacename>WsdlDefinition</interfacename> interface:
+                <programlisting>&lt;beans&gt;
+
+    &lt;bean class=&quot;org.springframework.ws.transport.http.WebServiceMessageReceiverHandlerAdapter&quot;/&gt;
+
+    <emphasis role="bold">&lt;bean class=&quot;org.springframework.ws.transport.http.WsdlDefinitionHandlerAdapter&quot;/&gt;</emphasis>
+
+    &lt;bean class=&quot;org.springframework.web.servlet.handler.SimpleUrlHandlerMapping&quot;&gt;
+        &lt;property name=&quot;mappings&quot;&gt;
+           &lt;props&gt;
+             <emphasis role="bold">&lt;prop key=&quot;*.wsdl&quot;&gt;myServiceDefinition&lt;/prop&gt;</emphasis>
+           &lt;/props&gt;
+        &lt;/property&gt;
+        &lt;property name=&quot;defaultHandler&quot; ref=&quot;messageDispatcher&quot;/&gt;
+    &lt;/bean&gt;
+
+    &lt;bean id=&quot;messageDispatcher&quot; class=&quot;org.springframework.ws.soap.server.SoapMessageDispatcher&quot;/&gt;
+
+    <emphasis role="bold">&lt;bean id=&quot;myServiceDefinition&quot; class=&quot;org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition&quot;&gt;
+       &lt;prop name=&quot;wsdl&quot; value=&quot;/WEB-INF/myServiceDefintion.wsdl&quot;/&gt;
+    &lt;/bean&gt;</emphasis>
+
+    ...
+
+&lt;/beans&gt;</programlisting>
             </para>
         </section>
         <section>
