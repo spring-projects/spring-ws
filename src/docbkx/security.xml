@@ -1722,7 +1722,7 @@
                     <literal>Encrypt</literal>
                     action be added
                     to the
-                    <property>securementActions</property>
+                    <property>validationActions</property>
                     property. The rest of the configuration
                     depends on the key information that appears in the message
                     <footnote>
