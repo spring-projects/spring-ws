@@ -324,6 +324,20 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         handler.setOption(WSHandlerConstants.SIGNATURE_PARTS, securementSignatureParts);
     }
 
+    /**
+     * The user's name for signature.
+     * <p/>
+     * This name is used as the alias name in the keystore to get user's
+     * certificate and private key to perform signing.
+     * <p/>
+     * If this parameter is not set, then the signature
+     * function falls back to the alias specified by {@link #setSecurementUsername(String)}.
+     * <p/>
+     */
+    public void setSecurementSignatureUser(String securementSignatureUser) {
+        handler.setOption(WSHandlerConstants.SIGNATURE_USER, securementSignatureUser);
+    }
+
     /** Sets the username for securement username token or/and the alias of the private key for securement signature */
     public void setSecurementUsername(String securementUsername) {
         this.securementUsername = securementUsername;

@@ -97,4 +97,20 @@ public abstract class Wss4jMessageInterceptorSignTestCase extends Wss4jTestCase 
 
     }
 
+    public void testSignResponseWithSignatureUser() throws Exception {
+        interceptor.setSecurementActions("Signature");
+        interceptor.setEnableSignatureConfirmation(false);
+        interceptor.setSecurementPassword("123456");
+        interceptor.setSecurementSignatureUser("rsaKey");
+        SoapMessage message = loadMessage("empty-soap.xml");
+        MessageContext messageContext = getMessageContext(message);
+
+        interceptor.secureMessage(message, messageContext);
+
+        Document document = getDocument(message);
+        assertXpathExists("Absent SignatureConfirmation element",
+                "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/ds:Signature", document);
+
+
+    }
 }
