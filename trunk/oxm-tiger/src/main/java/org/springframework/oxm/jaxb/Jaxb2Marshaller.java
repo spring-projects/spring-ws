@@ -250,8 +250,8 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
             }
             String packageName = className.substring(0, lastDotIndex);
             String[] contextPaths = StringUtils.tokenizeToStringArray(getContextPath(), ":");
-            for (int i = 0; i < contextPaths.length; i++) {
-                if (contextPaths[i].equals(packageName)) {
+            for (String contextPath : contextPaths) {
+                if (contextPath.equals(packageName)) {
                     return true;
                 }
             }
@@ -267,8 +267,9 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
      * JAXBContext
      */
 
+    @Override
     protected JAXBContext createJaxbContext() throws Exception {
-        if (JaxbUtils.getJaxbVersion() < JaxbUtils.JAXB_2) {
+        if (JaxbUtils.getJaxbVersion(classLoader) < JaxbUtils.JAXB_2) {
             throw new IllegalStateException(
                     "Cannot use Jaxb2Marshaller in combination with JAXB 1.0. Use Jaxb1Marshaller instead.");
         }
@@ -330,6 +331,7 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
      * Marshaller/Unmarshaller
      */
 
+    @Override
     protected void initJaxbMarshaller(Marshaller marshaller) throws JAXBException {
         if (schema != null) {
             marshaller.setSchema(schema);
@@ -338,12 +340,13 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
             marshaller.setListener(marshallerListener);
         }
         if (adapters != null) {
-            for (int i = 0; i < adapters.length; i++) {
-                marshaller.setAdapter(adapters[i]);
+            for (XmlAdapter adapter : adapters) {
+                marshaller.setAdapter(adapter);
             }
         }
     }
 
+    @Override
     protected void initJaxbUnmarshaller(Unmarshaller unmarshaller) throws JAXBException {
         if (schema != null) {
             unmarshaller.setSchema(schema);
@@ -352,8 +355,8 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
             unmarshaller.setListener(unmarshallerListener);
         }
         if (adapters != null) {
-            for (int i = 0; i < adapters.length; i++) {
-                unmarshaller.setAdapter(adapters[i]);
+            for (XmlAdapter adapter : adapters) {
+                unmarshaller.setAdapter(adapter);
             }
         }
     }
@@ -450,10 +453,11 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
 
         private final MimeContainer mimeContainer;
 
-        public Jaxb2AttachmentMarshaller(MimeContainer mimeContainer) {
+        private Jaxb2AttachmentMarshaller(MimeContainer mimeContainer) {
             this.mimeContainer = mimeContainer;
         }
 
+        @Override
         public String addMtomAttachment(byte[] data,
                                         int offset,
                                         int length,
@@ -464,6 +468,7 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
             return addMtomAttachment(new DataHandler(dataSource), elementNamespace, elementLocalName);
         }
 
+        @Override
         public String addMtomAttachment(DataHandler dataHandler, String elementNamespace, String elementLocalName) {
             String host = getHost(elementNamespace, dataHandler);
             String contentId = UUID.randomUUID() + "@" + host;
@@ -488,6 +493,7 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
             return dataHandler.getName();
         }
 
+        @Override
         public String addSwaRefAttachment(DataHandler dataHandler) {
             String contentId = UUID.randomUUID() + "@" + dataHandler.getName();
             mimeContainer.addAttachment(contentId, dataHandler);
@@ -504,10 +510,11 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
 
         private final MimeContainer mimeContainer;
 
-        public Jaxb2AttachmentUnmarshaller(MimeContainer mimeContainer) {
+        private Jaxb2AttachmentUnmarshaller(MimeContainer mimeContainer) {
             this.mimeContainer = mimeContainer;
         }
 
+        @Override
         public byte[] getAttachmentAsByteArray(String cid) {
             try {
                 DataHandler dataHandler = getAttachmentAsDataHandler(cid);
@@ -518,6 +525,7 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
             }
         }
 
+        @Override
         public DataHandler getAttachmentAsDataHandler(String contentId) {
             if (contentId.startsWith("cid:")) {
                 contentId = contentId.substring("cid:".length());
@@ -551,7 +559,7 @@ public class Jaxb2Marshaller extends AbstractJaxbMarshaller
 
         private int length;
 
-        public ByteArrayDataSource(String contentType, byte[] data, int offset, int length) {
+        private ByteArrayDataSource(String contentType, byte[] data, int offset, int length) {
             this.contentType = contentType;
             this.data = data;
             this.offset = offset;
