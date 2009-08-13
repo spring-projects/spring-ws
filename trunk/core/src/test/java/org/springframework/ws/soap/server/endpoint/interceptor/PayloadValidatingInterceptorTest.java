@@ -18,6 +18,7 @@ package org.springframework.ws.soap.server.endpoint.interceptor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 import java.util.Locale;
 import javax.xml.XMLConstants;
 import javax.xml.soap.MessageFactory;
@@ -35,6 +36,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
+import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.transport.TransportInputStream;
+import org.springframework.ws.transport.MockTransportInputStream;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
@@ -301,7 +305,24 @@ public class PayloadValidatingInterceptorTest extends XMLTestCase {
         boolean result = interceptor.handleRequest(context, null);
         assertTrue("Invalid response from interceptor", result);
         assertFalse("Response set", context.hasResponse());
+    }
 
+    public void testAxiom() throws Exception {
+        AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
+        messageFactory.setPayloadCaching(true);
+        interceptor.setValidateRequest(true);
+        messageFactory.afterPropertiesSet();
+
+        PayloadValidatingInterceptor interceptor = new PayloadValidatingInterceptor();
+        interceptor.setSchema(new ClassPathResource("codexws.xsd", getClass()));
+        interceptor.afterPropertiesSet();
+
+        Resource resource = new ClassPathResource("axiom.xml", getClass());
+        TransportInputStream tis = new MockTransportInputStream(resource.getInputStream());
+        WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
+        MessageContext messageContext = new DefaultMessageContext(message,  messageFactory);
+        interceptor.handleRequest(messageContext, null);
+        
     }
 
 }
