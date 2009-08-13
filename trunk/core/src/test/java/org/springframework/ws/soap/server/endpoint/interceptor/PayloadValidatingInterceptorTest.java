@@ -319,8 +319,9 @@ public class PayloadValidatingInterceptorTest extends XMLTestCase {
         Resource resource = new ClassPathResource("axiom.xml", getClass());
         TransportInputStream tis = new MockTransportInputStream(resource.getInputStream());
         WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
-        MessageContext messageContext = new DefaultMessageContext(message, messageFactory);
-        interceptor.handleRequest(messageContext, null);
+        MessageContext context = new DefaultMessageContext(message, messageFactory);
+        boolean result = interceptor.handleRequest(context, null);
+        assertTrue("Invalid response from interceptor", result);
 
     }
 
