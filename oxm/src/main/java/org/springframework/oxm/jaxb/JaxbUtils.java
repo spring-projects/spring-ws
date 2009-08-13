@@ -44,7 +44,7 @@ public abstract class JaxbUtils {
             ClassUtils.forName(JAXB_2_CLASS_NAME);
             jaxbVersion = JAXB_2;
         }
-        catch (ClassNotFoundException ex1) {
+        catch (ClassNotFoundException ex) {
             // leave JAXB 1 as default
         }
     }
@@ -58,6 +58,23 @@ public abstract class JaxbUtils {
      */
     public static int getJaxbVersion() {
         return jaxbVersion;
+    }
+
+    /**
+     * Gets the major JAXB version. This means we can do things like if <code>(getJaxbVersion() &lt;= JAXB_2)</code>.
+     *
+     * @return a code comparable to the JAXP_XX codes in this class
+     * @see #JAXB_1
+     * @see #JAXB_2
+     */
+    public static int getJaxbVersion(ClassLoader classLoader) {
+        try {
+            ClassUtils.forName(JAXB_2_CLASS_NAME, classLoader);
+            return JAXB_2;
+        }
+        catch (ClassNotFoundException ex) {
+            return JAXB_1;
+        }
     }
 
     /**
