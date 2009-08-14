@@ -101,4 +101,40 @@ public class SimpleNamespaceContextTest extends TestCase {
         context.setBindings(Collections.singletonMap("prefix", "namespace"));
         assertEquals("Invalid namespace uri", "namespace", context.getNamespaceURI("prefix"));
     }
+
+    public void testRemoveBinding() {
+        context.clear();
+        String prefix1 = "prefix1";
+        String prefix2 = "prefix2";
+        String namespaceUri = "namespaceUri";
+        context.bindNamespaceUri(prefix1,  namespaceUri);
+        context.bindNamespaceUri(prefix2,  namespaceUri);
+        Iterator iter = context.getPrefixes(namespaceUri);
+        assertTrue("iterator is empty", iter.hasNext());
+        assertEquals(prefix1, iter.next());
+        assertTrue("iterator is empty", iter.hasNext());
+        assertEquals(prefix2, iter.next());
+        assertFalse("iterator not empty", iter.hasNext());
+
+        context.removeBinding(prefix1);
+
+        iter = context.getPrefixes(namespaceUri);
+        assertTrue("iterator is empty", iter.hasNext());
+        assertEquals(prefix2, iter.next());
+        assertFalse("iterator not empty", iter.hasNext());
+
+        context.removeBinding(prefix2);
+
+        iter = context.getPrefixes(namespaceUri);
+        assertFalse("iterator not empty", iter.hasNext());
+    }
+
+    public void testHasBinding() {
+        context.clear();
+        String prefix = "prefix";
+        assertFalse("Context has binding", context.hasBinding(prefix));
+        String namespaceUri = "namespaceUri";
+        context.bindNamespaceUri(prefix, namespaceUri);
+        assertTrue("Context has no binding", context.hasBinding(prefix));
+    }
 }

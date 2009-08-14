@@ -1,16 +1,34 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
     <soapenv:Body>
         <GetMetadataKeysResponse xmlns="http://codex.corp.obade.com/codex/schemas">
             <metadatakeylist>
                 <metadatakey>
-                    <id>15</id>
-                    <key>Jmeter</key>
+                    <id>1319</id>
+                    <key>000</key>
                     <constraints>
                         <productlist/>
                         <versionlist/>
                         <subproductlist/>
-                        <platformlist/>
+                        <platformlist>
+                            <platform name="aix" id="7" description="IBM AIX"/>
+                            <platform name="winmobile" id="14" description="Windows Mobile"/>
+                            <platform name="osx10-64" id="11"
+                                description="Mac OS X 10.x (64-bit CPU)"/>
+                            <platform name="osx10" id="2" description="Mac OS X 10.x"/>
+                            <platform name="hpux" id="4" description="HPUX Platform"/>
+                            <platform name="independent" id="10" description="Platform Independent"/>
+                            <platform name="iphone" id="13" description="iPhone OS"/>
+                            <platform name="linux64" id="12" description="Linux OS (64-bit CPU)"/>
+                            <platform name="solaris" id="5" description="Sun Solaris OS"/>
+                            <platform name="linux" id="6" description="Linux OS"/>
+                            <platform name="air" id="9" description="Air Applications"/>
+                            <platform name="win32" id="1" description="Windows OS (32-bit CPU)"/>
+                            <platform name="java" id="8" description="Java VM"/>
+                            <platform name="win64" id="3" description="Windows OS (64-bit CPU)"/>
+                            <platform name="flash" id="0"
+                                description="For products built on Flash or Flex"/>
+                        </platformlist>
                         <compilertargetlist/>
                         <licensemodellist/>
                         <formatlist/>
@@ -21,8 +39,8 @@
                     </constraints>
                 </metadatakey>
                 <metadatakey>
-                    <id>92</id>
-                    <key>InScopeKey_4</key>
+                    <id>1317</id>
+                    <key>000 Certification Levels</key>
                     <constraints>
                         <productlist/>
                         <versionlist/>
@@ -31,100 +49,25 @@
                         <compilertargetlist/>
                         <licensemodellist/>
                         <formatlist/>
-                        <certificationlevellist/>
+                        <certificationlevellist>
+                            <certificationlevel name="Build Failed" id="-10" color="999999"/>
+                            <certificationlevel name="Pre Release" id="30" color="0000FF"/>
+                            <certificationlevel name="Not Tested" id="0" color="000000"/>
+                            <certificationlevel name="Product Team Only" id="10" color="FF0000"/>
+                            <certificationlevel name="Testing Failed" id="-5" color="999999"/>
+                            <certificationlevel name="Release Candidate" id="40" color="00FFFF"/>
+                            <certificationlevel name="Golden Master" id="50" color="FF00FF"/>
+                            <certificationlevel name="Milestone" id="25" color="006400"/>
+                            <certificationlevel name="Integration Ready" id="20" color="A52A2A"/>
+                        </certificationlevellist>
                         <statuslist/>
                         <languagelist/>
                         <dateconstraint/>
                     </constraints>
                 </metadatakey>
                 <metadatakey>
-                    <id>102</id>
-                    <key>GenericMetadata_02</key>
-                    <constraints>
-                        <productlist/>
-                        <versionlist/>
-                        <subproductlist/>
-                        <platformlist/>
-                        <compilertargetlist/>
-                        <licensemodellist/>
-                        <formatlist/>
-                        <certificationlevellist/>
-                        <statuslist/>
-                        <languagelist/>
-                        <dateconstraint/>
-                    </constraints>
-                </metadatakey>
-                <metadatakey>
-                    <id>118</id>
-                    <key>c0ff2857-ba32-4a51-817a-a2ebc7c1c543</key>
-                    <constraints>
-                        <productlist/>
-                        <versionlist/>
-                        <subproductlist/>
-                        <platformlist/>
-                        <compilertargetlist/>
-                        <licensemodellist/>
-                        <formatlist/>
-                        <certificationlevellist/>
-                        <statuslist/>
-                        <languagelist/>
-                        <dateconstraint/>
-                    </constraints>
-                </metadatakey>
-                <metadatakey>
-                    <id>5</id>
-                    <key>0a854989-4583-4122-b803-29e8b18f3521</key>
-                    <constraints>
-                        <productlist/>
-                        <versionlist/>
-                        <subproductlist/>
-                        <platformlist/>
-                        <compilertargetlist/>
-                        <licensemodellist/>
-                        <formatlist/>
-                        <certificationlevellist/>
-                        <statuslist/>
-                        <languagelist/>
-                        <dateconstraint/>
-                    </constraints>
-                </metadatakey>
-                <metadatakey>
-                    <id>3</id>
-                    <key>fa9e3938-b00e-4b7d-bae4-5c59df73ed22</key>
-                    <constraints>
-                        <productlist/>
-                        <versionlist/>
-                        <subproductlist/>
-                        <platformlist/>
-                        <compilertargetlist/>
-                        <licensemodellist/>
-                        <formatlist/>
-                        <certificationlevellist/>
-                        <statuslist/>
-                        <languagelist/>
-                        <dateconstraint/>
-                    </constraints>
-                </metadatakey>
-                <metadatakey>
-                    <id>2</id>
-                    <key>OBADEIPNumber</key>
-                    <constraints>
-                        <productlist/>
-                        <versionlist/>
-                        <subproductlist/>
-                        <platformlist/>
-                        <compilertargetlist/>
-                        <licensemodellist/>
-                        <formatlist/>
-                        <certificationlevellist/>
-                        <statuslist/>
-                        <languagelist/>
-                        <dateconstraint/>
-                    </constraints>
-                </metadatakey>
-                <metadatakey>
-                    <id>101</id>
-                    <key>GenericMetdata_04</key>
+                    <id>1300</id>
+                    <key>00 Admin Global Key</key>
                     <constraints>
                         <productlist/>
                         <versionlist/>
@@ -141,7 +84,7 @@
                 </metadatakey>
                 <metadatakey>
                     <id>1</id>
-                    <key>OBADECode</key>
+                    <key>obadeCode</key>
                     <constraints>
                         <productlist/>
                         <versionlist/>
@@ -157,8 +100,8 @@
                     </constraints>
                 </metadatakey>
                 <metadatakey>
-                    <id>7</id>
-                    <key>e2428c7f-1639-46d9-bace-41d0231a15e3</key>
+                    <id>182</id>
+                    <key>BuildVersion</key>
                     <constraints>
                         <productlist/>
                         <versionlist/>
@@ -174,8 +117,116 @@
                     </constraints>
                 </metadatakey>
                 <metadatakey>
-                    <id>9</id>
-                    <key>32c2252b-b564-45f3-8257-8d6af7c5b4dc</key>
+                    <id>1318</id>
+                    <key>000 Statuses</key>
+                    <constraints>
+                        <productlist/>
+                        <versionlist/>
+                        <subproductlist/>
+                        <platformlist/>
+                        <compilertargetlist/>
+                        <licensemodellist/>
+                        <formatlist/>
+                        <certificationlevellist/>
+                        <statuslist>
+                            <status name="Available" isavailable="true" id="1"/>
+                            <status name="Pending" isavailable="false" id="2"/>
+                            <status name="Deleted" isavailable="false" id="0"/>
+                            <status name="Pending Platform Group" isavailable="false" id="3"/>
+                            <status name="Inactive" isavailable="false" id="4"/>
+                        </statuslist>
+                        <languagelist/>
+                        <dateconstraint/>
+                    </constraints>
+                </metadatakey>
+                <metadatakey>
+                    <id>1308</id>
+                    <key>00 Non Admin Scoped Key</key>
+                    <constraints>
+                        <productlist/>
+                        <versionlist/>
+                        <subproductlist/>
+                        <platformlist/>
+                        <compilertargetlist/>
+                        <licensemodellist/>
+                        <formatlist/>
+                        <certificationlevellist/>
+                        <statuslist/>
+                        <languagelist/>
+                        <dateconstraint/>
+                    </constraints>
+                </metadatakey>
+                <metadatakey>
+                    <id>1307</id>
+                    <key>00 Non Admin Global Key</key>
+                    <constraints>
+                        <productlist/>
+                        <versionlist/>
+                        <subproductlist/>
+                        <platformlist/>
+                        <compilertargetlist/>
+                        <licensemodellist/>
+                        <formatlist/>
+                        <certificationlevellist/>
+                        <statuslist/>
+                        <languagelist/>
+                        <dateconstraint/>
+                    </constraints>
+                </metadatakey>
+                <metadatakey>
+                    <id>1314</id>
+                    <key>000 Compiler Targets</key>
+                    <constraints>
+                        <productlist/>
+                        <versionlist/>
+                        <subproductlist/>
+                        <platformlist/>
+                        <compilertargetlist/>
+                        <licensemodellist/>
+                        <formatlist/>
+                        <certificationlevellist/>
+                        <statuslist/>
+                        <languagelist/>
+                        <dateconstraint/>
+                    </constraints>
+                </metadatakey>
+                <metadatakey>
+                    <id>2</id>
+                    <key>obadeIPNumber</key>
+                    <constraints>
+                        <productlist/>
+                        <versionlist/>
+                        <subproductlist/>
+                        <platformlist/>
+                        <compilertargetlist/>
+                        <licensemodellist/>
+                        <formatlist/>
+                        <certificationlevellist/>
+                        <statuslist/>
+                        <languagelist/>
+                        <dateconstraint/>
+                    </constraints>
+                </metadatakey>
+                <metadatakey>
+                    <id>183</id>
+                    <key>Sources</key>
+                    <constraints>
+                        <productlist/>
+                        <versionlist/>
+                        <subproductlist/>
+                        <platformlist/>
+                        <compilertargetlist/>
+                        <licensemodellist/>
+                        <formatlist/>
+                        <certificationlevellist/>
+                        <statuslist/>
+                        <languagelist/>
+                        <dateconstraint/>
+                    </constraints>
+                </metadatakey>
+                <metadatakey>
+                    <id>294</id>
+                    <key>Disc Part Number</key>
                     <constraints>
                         <productlist/>
                         <versionlist/>
@@ -192,7 +243,7 @@
                 </metadatakey>
                 <metadatakey>
                     <id>11</id>
-                    <key>3582d17e-bcaf-44f8-8fda-f623babc25b2</key>
+                    <key>Checksum</key>
                     <constraints>
                         <productlist/>
                         <versionlist/>
@@ -208,8 +259,125 @@
                     </constraints>
                 </metadatakey>
                 <metadatakey>
-                    <id>13</id>
-                    <key>862ba9d6-be01-4ea6-99da-90102af83e29</key>
+                    <id>1320</id>
+                    <key>000 Languages</key>
+                    <constraints>
+                        <productlist/>
+                        <versionlist/>
+                        <subproductlist/>
+                        <platformlist/>
+                        <compilertargetlist/>
+                        <licensemodellist/>
+                        <formatlist/>
+                        <certificationlevellist/>
+                        <statuslist/>
+                        <languagelist>
+                            <language name="International English" id="3" code="en_GB"/>
+                            <language name="Swedish" id="57" code="sv_SV"/>
+                            <language name="Chinese,Simplified" id="18" code="zh_CN"/>
+                            <language name="Korean" id="17" code="ko_KR"/>
+                            <language name="Arabic" id="28" code="ar_AE"/>
+                            <language name="Czech" id="20" code="cs_CZ"/>
+                            <language name="International English" id="37" code="en_IE"/>
+                            <language name="Serbo-Croatian" id="52" code="sh_YU"/>
+                            <language name="nl_NO" id="62" code="nl_NO"/>
+                            <language name="Japanese" id="7" code="ja_JP"/>
+                            <language name="Russian" id="25" code="ru_RU"/>
+                            <language name="English,International" id="35" code="en_inatl"/>
+                            <language name="Estonian" id="39" code="et_EE"/>
+                            <language name="English (Middle East)" id="38" code="en_ME"/>
+                            <language name="Bulgarian" id="30" code="bg_BG"/>
+                            <language name="Romanian" id="24" code="ro_RO"/>
+                            <language name="Belarusian" id="29" code="be_BY"/>
+                            <language name="Ukranian" id="59" code="uk_UA"/>
+                            <language name="Portuguese,Brazilian" id="11" code="pt_BR"/>
+                            <language name="English" id="33" code="en_XC"/>
+                            <language name="(many)" id="1" code="mul"/>
+                            <language name="Spanish (Mexico)" id="10" code="es_MX"/>
+                            <language name="Catalan" id="31" code="ca_ES"/>
+                            <language name="Turkish" id="26" code="tr_TR"/>
+                            <language name="Latvian" id="46" code="lv_LV"/>
+                            <language name="Portuguese" id="51" code="pt_PT"/>
+                            <language name="Danish" id="12" code="da_DK"/>
+                            <language name="Spanish (Latin America)" id="56" code="es_LA"/>
+                            <language name="Hungarian" id="22" code="hu_HU"/>
+                            <language name="New Norwegian" id="49" code="nn_NO"/>
+                            <language name="Spanish" id="55" code="es_QM"/>
+                            <language name="Spanish" id="9" code="es_ES"/>
+                            <language name="Polish" id="23" code="pl_PL"/>
+                            <language name="English" id="34" code="en_XM"/>
+                            <language name="Slovakia" id="53" code="sk_SK"/>
+                            <language name="Vietnamese" id="60" code="vi_VN"/>
+                            <language name="French (Canada)" id="6" code="fr_CA"/>
+                            <language name="Hebrew" id="43" code="iw_IL"/>
+                            <language name="French" id="40" code="fr_XM"/>
+                            <language name="Albanian" id="27" code="sq_AL"/>
+                            <language name="Norwegian" id="50" code="no_NO"/>
+                            <language name="French (Middle East)" id="41" code="fr_ME"/>
+                            <language name="Thai" id="58" code="th_TH"/>
+                            <language name="French" id="5" code="fr_FR"/>
+                            <language name="German" id="4" code="de_DE"/>
+                            <language name="U.S. English" id="2" code="en_US"/>
+                            <language name="Italian" id="8" code="it_IT"/>
+                            <language name="Swedish" id="16" code="sv_SE"/>
+                            <language name="Macedonian" id="48" code="mk_MK"/>
+                            <language name="Icelandic" id="45" code="is_IS"/>
+                            <language name="Hebrew" id="42" code="he_IL"/>
+                            <language name="Greek" id="21" code="el_GR"/>
+                            <language name="Finnish" id="14" code="fi_FI"/>
+                            <language name="Dutch" id="13" code="nl_NL"/>
+                            <language name="en_HD" id="61" code="en_HD"/>
+                            <language name="Chinese,Traditional" id="19" code="zh_TW"/>
+                            <language name="English (Central Europe)" id="36" code="en_CE"/>
+                            <language name="Croatian" id="32" code="hr_HR"/>
+                            <language name="Hindi" id="44" code="hi_IN"/>
+                            <language name="Lithuanian" id="47" code="lt_LT"/>
+                            <language name="za_CN" id="63" code="za_CN"/>
+                            <language name="Norwegian" id="15" code="nb_NO"/>
+                            <language name="Slovenian" id="54" code="sl_SI"/>
+                        </languagelist>
+                        <dateconstraint/>
+                    </constraints>
+                </metadatakey>
+                <metadatakey>
+                    <id>1322</id>
+                    <key>000 Formats</key>
+                    <constraints>
+                        <productlist/>
+                        <versionlist/>
+                        <subproductlist/>
+                        <platformlist/>
+                        <compilertargetlist/>
+                        <licensemodellist/>
+                        <formatlist>
+                            <format name="DVD Image Set" id="9"/>
+                            <format name="Patch" id="7"/>
+                            <format name="Raw Build" id="2"/>
+                            <format name="RIBS Installer - Reduced" id="6"/>
+                            <format name="RIBS Installer - Multi-disc" id="5"/>
+                            <format name="Web Archive" id="12"/>
+                            <format name="DDP" id="16"/>
+                            <format name="DVD Image" id="8"/>
+                            <format name="Air Archive" id="14"/>
+                            <format name="Java Archive" id="13"/>
+                            <format name="CD Image" id="18"/>
+                            <format name="Installer" id="3"/>
+                            <format name="DVD9 Image" id="17"/>
+                            <format name="Folder" id="1"/>
+                            <format name="Symbols" id="10"/>
+                            <format name="ESD" id="11"/>
+                            <format name="Enterprise Archive" id="15"/>
+                            <format name="RIBS Installer" id="4"/>
+                        </formatlist>
+                        <certificationlevellist/>
+                        <statuslist/>
+                        <languagelist/>
+                        <dateconstraint/>
+                    </constraints>
+                </metadatakey>
+                <metadatakey>
+                    <id>1174</id>
+                    <key>Lou</key>
                     <constraints>
                         <productlist/>
                         <versionlist/>
@@ -225,8 +393,9 @@
                     </constraints>
                 </metadatakey>
                 <metadatakey>
-                    <id>99</id>
-                    <key>InScopeKey_11</key>
+                    <id>1377</id>
+                    <key>Long Global Key
+                        cDTBnlbjNWhSNpHuUcjZvBbzIDOKTIQIksQQNyixKoAMHreSVWqHGLuCxPHuIkvbmFvxuWwBzZgrFsDLbgyPhwPsWqApUyqzcspQpBRFuULXphERrKfYJCouNqYODAlziWWGfbvHhzfDdxjcsxZMQVrtJzIxVRDVjTgNCXIaVaZgIANvJIvTyBLDRD</key>
                     <constraints>
                         <productlist/>
                         <versionlist/>
@@ -242,8 +411,32 @@
                     </constraints>
                 </metadatakey>
                 <metadatakey>
-                    <id>17</id>
-                    <key>Jmeter-Global2</key>
+                    <id>1321</id>
+                    <key>000 License Models</key>
+                    <constraints>
+                        <productlist/>
+                        <versionlist/>
+                        <subproductlist/>
+                        <platformlist/>
+                        <compilertargetlist/>
+                        <licensemodellist>
+                            <licensemodel name="Universal" id="4"/>
+                            <licensemodel name="Retail" id="1"/>
+                            <licensemodel name="None" id="0"/>
+                            <licensemodel name="Trial" id="3"/>
+                            <licensemodel name="Volume" id="2"/>
+                            <licensemodel name="Educational" id="5"/>
+                        </licensemodellist>
+                        <formatlist/>
+                        <certificationlevellist/>
+                        <statuslist/>
+                        <languagelist/>
+                        <dateconstraint/>
+                    </constraints>
+                </metadatakey>
+                <metadatakey>
+                    <id>1330</id>
+                    <key>00 Admin Dates After Test</key>
                     <constraints>
                         <productlist/>
                         <versionlist/>
@@ -260,8 +453,8 @@
                 </metadatakey>
             </metadatakeylist>
             <performancedata>
-                <response>4547</response>
-                <meanresponse>7525.500</meanresponse>
+                <response>4697</response>
+                <meanresponse>7606.000</meanresponse>
             </performancedata>
         </GetMetadataKeysResponse>
     </soapenv:Body>

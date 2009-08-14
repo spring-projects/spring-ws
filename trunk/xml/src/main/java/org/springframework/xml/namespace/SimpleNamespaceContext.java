@@ -118,6 +118,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
 
     /** Removes all declared prefixes. */
     public void clear() {
+        defaultNamespaceUri = "";
         prefixToNamespaceUri.clear();
         namespaceUriToPrefixes.clear();
     }
@@ -161,10 +162,18 @@ public class SimpleNamespaceContext implements NamespaceContext {
             defaultNamespaceUri = "";
         }
         else {
-            String namespaceUri = (String) namespaceUriToPrefixes.get(prefix);
+            String namespaceUri = (String) prefixToNamespaceUri.get(prefix);
             List prefixes = getPrefixesInternal(namespaceUri);
             prefixes.remove(prefix);
-            namespaceUriToPrefixes.remove(prefixes);
+        }
+    }
+
+    public boolean hasBinding(String prefix) {
+        if (XMLConstants.DEFAULT_NS_PREFIX.equals(prefix)) {
+            return !defaultNamespaceUri.equals("");
+        }
+        else {
+            return prefixToNamespaceUri.containsKey(prefix);
         }
     }
 }
