@@ -183,13 +183,19 @@ public class StaxStreamXmlReader extends AbstractStaxXmlReader {
                     if (prefix == null) {
                         prefix = "";
                     }
-                    getContentHandler().endPrefixMapping(prefix);
-                    namespaceContext.removeBinding(prefix);
+                    endPrefixMapping(prefix);
                 }
             }
             else {
                 getContentHandler().endElement("", "", QNameUtils.toQualifiedName(qName));
             }
+        }
+    }
+
+    private void endPrefixMapping(String prefix) throws SAXException {
+        if (namespaceContext.hasBinding(prefix)) {
+            getContentHandler().endPrefixMapping(prefix);
+            namespaceContext.removeBinding(prefix);
         }
     }
 
