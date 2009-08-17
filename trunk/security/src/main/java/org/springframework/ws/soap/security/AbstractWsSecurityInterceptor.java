@@ -26,6 +26,7 @@ import org.springframework.util.Assert;
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.server.EndpointExceptionResolver;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapHeaderElement;
@@ -35,8 +36,9 @@ import org.springframework.ws.soap.soap11.Soap11Body;
 
 /**
  * Interceptor base class for interceptors that handle WS-Security. Can be used on the server side, registered in a
- * {@link org.springframework.ws.server.endpoint.mapping.AbstractEndpointMapping#setInterceptors(org.springframework.ws.server.EndpointInterceptor[]) endpoint mapping};
- * or on the client side, on the {@link org.springframework.ws.client.core.WebServiceTemplate#setInterceptors(ClientInterceptor[]) web service template}.
+ * {@link org.springframework.ws.server.endpoint.mapping.AbstractEndpointMapping#setInterceptors(org.springframework.ws.server.EndpointInterceptor[])
+ * endpoint mapping}; or on the client side, on the {@link org.springframework.ws.client.core.WebServiceTemplate#setInterceptors(ClientInterceptor[])
+ * web service template}.
  * <p/>
  * Subclasses of this base class can be configured to secure incoming and secure outgoing messages. By default, both are
  * on.
@@ -60,6 +62,8 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 
     private boolean validateResponse = true;
 
+    private EndpointExceptionResolver exceptionResolver;
+
     /** Indicates whether server-side incoming request are to be validated. Defaults to <code>true</code>. */
     public void setValidateRequest(boolean validateRequest) {
         this.validateRequest = validateRequest;
@@ -78,6 +82,11 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
     /** Indicates whether client-side incoming responses are to be validated. Defaults to <code>true</code>. */
     public void setValidateResponse(boolean validateResponse) {
         this.validateResponse = validateResponse;
+    }
+
+    /** Provide an {@link EndpointExceptionResolver} for resolving validation exceptions. */
+    public void setExceptionResolver(EndpointExceptionResolver exceptionResolver) {
+        this.exceptionResolver = exceptionResolver;
     }
 
     /*
@@ -252,8 +261,16 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
         if (logger.isWarnEnabled()) {
             logger.warn("Could not validate request: " + ex.getMessage());
         }
-        SoapBody response = ((SoapMessage) messageContext.getResponse()).getSoapBody();
-        response.addClientOrSenderFault(ex.getMessage(), Locale.ENGLISH);
+        if (exceptionResolver != null) {
+            exceptionResolver.resolveException(messageContext, null, ex);
+        }
+        else {
+            if (logger.isDebugEnabled()) {
+                logger.debug("No exception resolver present, creating basic soap fault");
+            }
+            SoapBody response = ((SoapMessage) messageContext.getResponse()).getSoapBody();
+            response.addClientOrSenderFault(ex.getMessage(), Locale.ENGLISH);
+        }
         return false;
     }
 
