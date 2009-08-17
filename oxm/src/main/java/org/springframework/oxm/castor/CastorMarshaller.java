@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -99,6 +99,10 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
 
     private Properties namespaceMappings;
 
+    private boolean suppressNamespaces = false;
+
+    private boolean suppressXsiType = false;
+
     /** Returns whether the Castor  {@link Unmarshaller} should ignore attributes that do not match a specific field. */
     public boolean getIgnoreExtraAttributes() {
         return ignoreExtraAttributes;
@@ -191,11 +195,39 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
         this.mappingLocations = mappingLocations;
     }
 
+    /** Returns whether this marshaller should output namespaces. */
+    public boolean isSuppressNamespaces() {
+        return suppressNamespaces;
+    }
+
+    /**
+     * Sets whether this marshaller should output namespaces. The default is {@code false}, i.e. namespaces are
+     * written.
+     *
+     * @see org.exolab.castor.xml.Marshaller#setSuppressNamespaces(boolean)
+     */
+    public void setSuppressNamespaces(boolean suppressNamespaces) {
+        this.suppressNamespaces = suppressNamespaces;
+    }
+
+    /** Sets whether this marshaller should output the xsi:type attribute. */
+    public boolean isSuppressXsiType() {
+        return suppressXsiType;
+    }
+
+    /**
+     * Sets whether this marshaller should output the {@code xsi:type} attribute. The default is {@code false}, i.e. the
+     * {@code xsi:type} is written.
+     *
+     * @see org.exolab.castor.xml.Marshaller#setSuppressXSIType(boolean)
+     */
+    public void setSuppressXsiType(boolean suppressXsiType) {
+        this.suppressXsiType = suppressXsiType;
+    }
+
     /**
      * Sets the Castor target class. If this property is set, this <code>CastorMarshaller</code> is tied to this one
      * specific class. Use a mapping file for unmarshalling multiple classes.
-     * <p/>
-     * You cannot set both this property and the mapping (location).
      */
     public void setTargetClass(Class targetClass) {
         this.targetClass = targetClass;
@@ -313,6 +345,8 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
      */
     protected void customizeMarshaller(Marshaller marshaller) {
         marshaller.setValidation(isValidating());
+        marshaller.setSuppressNamespaces(isSuppressNamespaces());
+        marshaller.setSuppressXSIType(isSuppressXsiType());
         Properties namespaceMappings = getNamespaceMappings();
         if (namespaceMappings != null) {
             for (Iterator iterator = namespaceMappings.keySet().iterator(); iterator.hasNext();) {
