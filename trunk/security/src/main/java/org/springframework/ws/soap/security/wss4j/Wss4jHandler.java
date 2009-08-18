@@ -64,6 +64,10 @@ class Wss4jHandler extends WSHandler {
         return super.checkReceiverResults(wsResult, actions);
     }
 
+    protected boolean checkReceiverResultsAnyOrder(Vector wsResult, Vector actions) {
+        return super.checkReceiverResultsAnyOrder(wsResult, actions);
+    }
+
     void setOption(String key, String value) {
         options.setProperty(key, value);
     }
