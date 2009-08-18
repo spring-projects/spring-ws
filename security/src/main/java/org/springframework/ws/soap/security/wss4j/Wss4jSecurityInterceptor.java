@@ -519,9 +519,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
                 throw new Wss4jSecurityValidationException("No WS-Security header found");
             }
 
-            if (!handler.checkReceiverResults(results, validationActionsVector)) {
-                throw new Wss4jSecurityValidationException("Security processing failed (actions mismatch)");
-            }
+            checkResults(results, validationActionsVector);
 
             // puts the results in the context
             // useful for Signature Confirmation
@@ -540,6 +538,20 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         replaceMessage(soapMessage, envelopeAsDocument);
 
         soapMessage.getEnvelope().getHeader().removeHeaderElement(WS_SECURITY_NAME);
+    }
+
+    /**
+     * Checks whether the received headers match the configured validation actions. Subclasses could override this method
+     * for custom verification behavior.
+     * @param results the results of the validation function
+     * @param validationActionsVector the decoded validation actions
+     * @throws Wss4jSecurityValidationException if the results are deemed invalid
+     */
+    protected void checkResults(Vector results, Vector validationActionsVector)
+            throws Wss4jSecurityValidationException {
+        if (!handler.checkReceiverResults(results, validationActionsVector)) {
+            throw new Wss4jSecurityValidationException("Security processing failed (actions mismatch)");
+        }
     }
 
     /**
