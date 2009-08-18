@@ -549,7 +549,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
      */
     protected void checkResults(Vector results, Vector validationActionsVector)
             throws Wss4jSecurityValidationException {
-        if (!handler.checkReceiverResults(results, validationActionsVector)) {
+        if (!handler.checkReceiverResultsAnyOrder(results, validationActionsVector)) {
             throw new Wss4jSecurityValidationException("Security processing failed (actions mismatch)");
         }
     }
