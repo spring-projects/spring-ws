@@ -311,12 +311,6 @@
                                             <version>2.1.5</version>
                                             <outputDirectory>${project.build.directory}/dependency/jaxb/</outputDirectory>
                                         </artifactItem>
-                                        <artifactItem>
-                                            <groupId>org.apache.xmlbeans</groupId>
-                                            <artifactId>xmlbeans</artifactId>
-                                            <version>2.4.0</version>
-                                            <outputDirectory>${project.build.directory}/dependency/xmlbeans/</outputDirectory>
-                                        </artifactItem>
                                         <!-- JiBX -->
                                         <artifactItem>
                                             <groupId>org.jibx</groupId>
@@ -345,9 +339,9 @@
                                         </artifactItem>
                                         <!--XMLBeans-->
                                         <artifactItem>
-                                            <groupId>xmlbeans</groupId>
-                                            <artifactId>xbean</artifactId>
-                                            <version>2.2.0</version>
+                                            <groupId>org.apache.xmlbeans</groupId>
+                                            <artifactId>xmlbeans</artifactId>
+                                            <version>2.4.0</version>
                                             <outputDirectory>${project.build.directory}/dependency/xmlbeans/</outputDirectory>
                                         </artifactItem>
                                         <!-- SOAP dependencies -->
