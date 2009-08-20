@@ -178,8 +178,8 @@
         </dependency>
         <!-- XMLBeans -->
         <dependency>
-            <groupId>xmlbeans</groupId>
-            <artifactId>xbean</artifactId>
+            <groupId>org.apache.xmlbeans</groupId>
+            <artifactId>xmlbeans</artifactId>
             <optional>true</optional>
         </dependency>
         <!-- JiBX -->
