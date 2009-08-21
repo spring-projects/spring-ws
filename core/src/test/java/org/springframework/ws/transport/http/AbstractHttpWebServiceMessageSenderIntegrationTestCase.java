@@ -19,6 +19,7 @@ package org.springframework.ws.transport.http;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.zip.GZIPOutputStream;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
@@ -50,6 +51,7 @@ import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
+import org.springframework.beans.factory.InitializingBean;
 
 public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase extends XMLTestCase {
 
@@ -91,6 +93,9 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
         jettyServer = new Server(8888);
         jettyContext = new Context(jettyServer, "/");
         messageSender = createMessageSender();
+        if (messageSender instanceof InitializingBean) {
+            ((InitializingBean) messageSender).afterPropertiesSet();
+        }
         XMLUnit.setIgnoreWhitespace(true);
         saajMessageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
         messageFactory = new SaajSoapMessageFactory(saajMessageFactory);
@@ -103,6 +108,10 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
         if (jettyServer.isRunning()) {
             jettyServer.stop();
         }
+    }
+
+    public void testSupports() throws URISyntaxException {
+        assertTrue("Message sender does not support HTTP url", messageSender.supports(new URI(URI_STRING)));
     }
 
     public void testSendAndReceiveResponse() throws Exception {

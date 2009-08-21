@@ -18,6 +18,9 @@ package org.springframework.ws.transport.http;
 
 import java.net.URI;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
@@ -28,6 +31,11 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  * @since 1.0.0
  */
 public abstract class AbstractHttpWebServiceMessageSender implements WebServiceMessageSender {
+
+    /**
+     * Logger available to subclasses.
+     */
+    protected final Log logger = LogFactory.getLog(getClass());
 
     private boolean acceptGzipEncoding = true;
 
