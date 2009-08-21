@@ -29,4 +29,10 @@ public class HttpTransportException extends TransportException {
     public HttpTransportException(String msg) {
         super(msg);
     }
+
+    protected HttpTransportException(String msg, Throwable cause) {
+        super(msg);
+        initCause(cause);
+    }
+
 }

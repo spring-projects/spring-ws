@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,21 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.transport;
-
-import java.io.IOException;
+package org.springframework.ws.transport.http;
 
 /**
- * Abstract base class for exceptions related to the transport layer.
+ * Exception that is thrown when an error occurs in the HTTP transport.
  *
  * @author Arjen Poutsma
- * @since 1.0.0
+ * @since 1.5.8
  */
-public abstract class TransportException extends IOException {
+public class HttpsTransportException extends HttpTransportException {
 
-    protected TransportException(String msg) {
+    public HttpsTransportException(String msg) {
         super(msg);
     }
 
-    protected TransportException(String msg, Throwable cause) {
-        super(msg);
-        initCause(cause);
+    public HttpsTransportException(String msg, Throwable cause) {
+        super(msg, cause);
     }
-
 }

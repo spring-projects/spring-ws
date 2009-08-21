@@ -46,16 +46,31 @@ public class HttpUrlConnectionMessageSender extends AbstractHttpWebServiceMessag
         }
         else {
             HttpURLConnection httpURLConnection = (HttpURLConnection) connection;
-            httpURLConnection.setRequestMethod(HttpTransportConstants.METHOD_POST);
-            httpURLConnection.setUseCaches(false);
-            httpURLConnection.setDoInput(true);
-            httpURLConnection.setDoOutput(true);
-            if (isAcceptGzipEncoding()) {
-                httpURLConnection.setRequestProperty(HttpTransportConstants.HEADER_ACCEPT_ENCODING,
-                        HttpTransportConstants.CONTENT_ENCODING_GZIP);
-            }
+            prepareConnection(httpURLConnection);
             return new HttpUrlConnection(httpURLConnection);
         }
     }
+
+    /**
+     * Template method for preparing the given {@link java.net.HttpURLConnection}.
+     * <p/>
+     * The default implementation prepares the connection for input and output, sets the HTTP method to POST, disables
+     * caching, and sets the {@code Accept-Encoding} header to gzip, if {@linkplain #setAcceptGzipEncoding(boolean)
+     * applicable}.
+     *
+     * @param connection the connection to prepare
+     * @throws IOException in case of I/O errors
+     */
+    protected void prepareConnection(HttpURLConnection connection) throws IOException {
+        connection.setRequestMethod(HttpTransportConstants.METHOD_POST);
+        connection.setUseCaches(false);
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+        if (isAcceptGzipEncoding()) {
+            connection.setRequestProperty(HttpTransportConstants.HEADER_ACCEPT_ENCODING,
+                    HttpTransportConstants.CONTENT_ENCODING_GZIP);
+        }
+    }
+
 
 }
