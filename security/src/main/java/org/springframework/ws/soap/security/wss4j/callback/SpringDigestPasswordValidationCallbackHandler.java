@@ -33,6 +33,7 @@ import org.springframework.security.userdetails.UserDetailsService;
 import org.springframework.security.userdetails.UsernameNotFoundException;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
+import org.springframework.ws.soap.security.support.SpringSecurityUtils;
 
 /**
  * Callback handler that validates a password digest using an Spring Security <code>UserDetailsService</code>. Logic
@@ -71,6 +72,7 @@ public class SpringDigestPasswordValidationCallbackHandler extends AbstractWsPas
         String identifier = callback.getIdentifier();
         UserDetails user = loadUserDetails(identifier);
         if (user != null) {
+            SpringSecurityUtils.checkUserValidity(user);
             callback.setPassword(user.getPassword());
         }
     }

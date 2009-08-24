@@ -19,6 +19,7 @@ package org.springframework.ws.soap.security.xwss.callback.acegi;
 import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
 import junit.framework.TestCase;
 import org.acegisecurity.GrantedAuthority;
+import org.acegisecurity.DisabledException;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.providers.TestingAuthenticationToken;
 import org.acegisecurity.userdetails.User;
@@ -91,6 +92,18 @@ public class AcegiDigestPasswordValidationCallbackHandlerTest extends TestCase {
         assertFalse("Authenticated", authenticated);
         assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
         control.verify();
+    }
+
+    public void testAuthenticateUserDigestDisbaled() throws Exception {
+        User user = new User(username, "Ernie", false, true, true, true, new GrantedAuthority[0]);
+        control.expectAndReturn(mock.loadUserByUsername(username), user);
+        control.replay();
+        try {
+            callbackHandler.handleInternal(callback);
+            fail("disabled user authenticated");
+        } catch (
+                DisabledException expected) {
+        }
     }
 
     public void testCleanUp() throws Exception {

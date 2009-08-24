@@ -35,6 +35,7 @@ import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 import org.springframework.ws.soap.security.wss4j.callback.AbstractWsPasswordCallbackHandler;
 import org.springframework.ws.soap.security.wss4j.callback.UsernameTokenPrincipalCallback;
+import org.springframework.ws.soap.security.support.AcegiUtils;
 
 /**
  * Callback handler that validates a password digest using an Acegi <code>UserDetailsService</code>. Logic based on
@@ -73,6 +74,7 @@ public class AcegiDigestPasswordValidationCallbackHandler extends AbstractWsPass
         String identifier = callback.getIdentifier();
         UserDetails user = loadUserDetails(identifier);
         if (user != null) {
+            AcegiUtils.checkUserValidity(user);
             callback.setPassword(user.getPassword());
         }
     }
