@@ -44,6 +44,7 @@ import org.springframework.ws.soap.security.wss4j.callback.AbstractWsPasswordCal
  * @see org.acegisecurity.providers.UsernamePasswordAuthenticationToken
  * @see org.acegisecurity.ui.basicauth.BasicProcessingFilter
  * @since 1.5.0
+ * @deprecated As of Spring-WS 1.5, in favor of Spring Security
  */
 public class AcegiPlainTextPasswordValidationCallbackHandler extends AbstractWsPasswordCallbackHandler
         implements InitializingBean {
