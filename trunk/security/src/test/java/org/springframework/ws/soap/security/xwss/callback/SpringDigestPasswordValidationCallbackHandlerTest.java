@@ -21,6 +21,7 @@ import junit.framework.TestCase;
 import org.easymock.MockControl;
 
 import org.springframework.security.GrantedAuthority;
+import org.springframework.security.DisabledException;
 import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.providers.TestingAuthenticationToken;
 import org.springframework.security.userdetails.User;
@@ -91,6 +92,18 @@ public class SpringDigestPasswordValidationCallbackHandlerTest extends TestCase 
         assertFalse("Authenticated", authenticated);
         assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
         control.verify();
+    }
+
+    public void testAuthenticateUserDigestDisbaled() throws Exception {
+        User user = new User(username, "Ernie", false, true, true, true, new GrantedAuthority[0]);
+        control.expectAndReturn(mock.loadUserByUsername(username), user);
+        control.replay();
+        try {
+            callbackHandler.handleInternal(callback);
+            fail("disabled user authenticated");
+        } catch (
+                DisabledException expected) {
+        }
     }
 
     public void testCleanUp() throws Exception {
