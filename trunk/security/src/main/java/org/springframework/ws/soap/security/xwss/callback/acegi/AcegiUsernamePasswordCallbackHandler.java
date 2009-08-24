@@ -36,6 +36,7 @@ import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
  *
  * @author Arjen Poutsma
  * @since 1.5.0
+ * @deprecated As of Spring-WS 1.5, in favor of Spring Security
  */
 public class AcegiUsernamePasswordCallbackHandler extends AbstractCallbackHandler {
 

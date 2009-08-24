@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,6 +49,7 @@ import org.springframework.ws.soap.security.callback.CleanupCallback;
  * @see com.sun.xml.wss.impl.callback.PasswordValidationCallback.PlainTextPasswordRequest
  * @see org.acegisecurity.ui.basicauth.BasicProcessingFilter
  * @since 1.0.0
+ * @deprecated As of Spring-WS 1.5, in favor of Spring Security
  */
 public class AcegiPlainTextPasswordValidationCallbackHandler extends AbstractCallbackHandler
         implements InitializingBean {
@@ -98,8 +99,9 @@ public class AcegiPlainTextPasswordValidationCallbackHandler extends AbstractCal
             PasswordValidationCallback.PlainTextPasswordRequest plainTextRequest =
                     (PasswordValidationCallback.PlainTextPasswordRequest) request;
             try {
-                Authentication authResult = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                        plainTextRequest.getUsername(), plainTextRequest.getPassword()));
+                Authentication authResult = authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(plainTextRequest.getUsername(),
+                                plainTextRequest.getPassword()));
                 if (logger.isDebugEnabled()) {
                     logger.debug("Authentication success: " + authResult.toString());
                 }

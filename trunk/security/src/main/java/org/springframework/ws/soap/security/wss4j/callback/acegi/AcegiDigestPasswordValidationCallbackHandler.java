@@ -33,9 +33,9 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataAccessException;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
+import org.springframework.ws.soap.security.support.AcegiUtils;
 import org.springframework.ws.soap.security.wss4j.callback.AbstractWsPasswordCallbackHandler;
 import org.springframework.ws.soap.security.wss4j.callback.UsernameTokenPrincipalCallback;
-import org.springframework.ws.soap.security.support.AcegiUtils;
 
 /**
  * Callback handler that validates a password digest using an Acegi <code>UserDetailsService</code>. Logic based on
@@ -48,6 +48,7 @@ import org.springframework.ws.soap.security.support.AcegiUtils;
  * @see org.acegisecurity.userdetails.UserDetailsService
  * @see org.acegisecurity.ui.digestauth.DigestProcessingFilter
  * @since 1.5.0
+ * @deprecated As of Spring-WS 1.5, in favor of Spring Security
  */
 public class AcegiDigestPasswordValidationCallbackHandler extends AbstractWsPasswordCallbackHandler
         implements InitializingBean {
