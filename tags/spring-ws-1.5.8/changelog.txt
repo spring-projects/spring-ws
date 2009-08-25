@@ -2,6 +2,37 @@ SPRING WEB SERVICES CHANGELOG
 =============================
 http://www.springframework.org/spring-ws
 
+Changes in version 1.5.8
+-------------------------
+** Bug
+    * [SWS-517] - Soap response validation errors after update to 1.5.7
+    * [SWS-518] - Echo sample application fails to build due to missing dependency
+    * [SWS-520] - HTTP Accept header field contains invalid type, and omits text/xml
+    * [SWS-521] - UnsupportedOperationException During Validation After Upgrade From 1.5.6 to 1.5.7
+    * [SWS-523] - CLONE -Namespace prefix in attribute value not resolved correctly
+    * [SWS-545] - IllegalArgumentException on AxiomSoap11Body.addFault
+    * [SWS-546] - 7.3.6.1. Decryption
+    * [SWS-550] - Jaxb2Marshaller.createJaxbContext() doesn't respect provided classloader when checking JAXB version
+    * [SWS-555] - Check User's status in SpringDigestPasswordValidationCallbackHandler 
+
+** Improvement
+    * [SWS-515] - Validate WSS headers using new checkReceiverResultsAnyOrder method in WSHandler.
+    * [SWS-524] - Wss4j security header validation: make header elements check overriddable
+    * [SWS-525] - SaajSoapMessage can get wrong SAAJ version
+    * [SWS-527] - Document use of WsdlDefinition when not using MessageDispatcherServlet
+    * [SWS-534] - Request JMS correlation id field not used to set response message JMS correlation id
+    * [SWS-541] - Update OSGi headers to accept Spring 3.0
+    * [SWS-547] - Wss4jSecurityInterceptor: support for securement signature user setting via WSHandlerConstants.SIGNATURE_USER
+    * [SWS-548] - Expose suppressNamespace and suppressXSIType as properties to CastorMarshaller
+
+** New Feature
+    * [SWS-468] - Add a new HttpsUrlConnectionMessageSender implementation to allow customization of certificate management
+    * [SWS-549] - integrate AbstractWsSecurityInterceptor with EndpointExceptionResolver
+
+** Task
+    * [SWS-516] - Upgrade wss4j to 1.5.8
+    * [SWS-553] - Upgrade XMLBeans to 2.4.0
+
 Changes in version 1.5.7
 -------------------------
 ** Bug
