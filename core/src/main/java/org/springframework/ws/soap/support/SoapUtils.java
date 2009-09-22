@@ -38,8 +38,8 @@ public abstract class SoapUtils {
 
     /** Escapes the given SOAP action to be surrounded by quotes. */
     public static String escapeAction(String soapAction) {
-        if (soapAction == null) {
-            soapAction = "";
+        if (!StringUtils.hasLength(soapAction)) {
+            soapAction = "\"\"";
         }
         if (!soapAction.startsWith("\"")) {
             soapAction = "\"" + soapAction;

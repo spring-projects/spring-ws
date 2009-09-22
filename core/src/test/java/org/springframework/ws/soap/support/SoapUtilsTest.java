@@ -36,4 +36,19 @@ public class SoapUtilsTest extends TestCase {
         assertEquals("Invalid SOAP action", soapAction, result);
     }
 
+    public void testEscapeAction() throws Exception {
+        String result = SoapUtils.escapeAction("action");
+        assertEquals("Invalid SOAP action", "\"action\"", result);
+
+        result = SoapUtils.escapeAction("\"action\"");
+        assertEquals("Invalid SOAP action", "\"action\"", result);
+
+        result = SoapUtils.escapeAction("");
+        assertEquals("Invalid SOAP action", "\"\"", result);
+
+        result = SoapUtils.escapeAction(null);
+        assertEquals("Invalid SOAP action", "\"\"", result);
+
+    }
+
 }
