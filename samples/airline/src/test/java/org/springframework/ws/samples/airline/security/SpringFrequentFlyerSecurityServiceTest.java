@@ -23,6 +23,7 @@ import org.springframework.security.context.SecurityContext;
 import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.context.SecurityContextImpl;
 import org.springframework.security.providers.TestingAuthenticationToken;
+import org.springframework.security.GrantedAuthority;
 import org.springframework.ws.samples.airline.dao.FrequentFlyerDao;
 import org.springframework.ws.samples.airline.domain.FrequentFlyer;
 
@@ -40,7 +41,7 @@ public class SpringFrequentFlyerSecurityServiceTest extends TestCase {
     public void testGetCurrentlyAuthenticatedFrequentFlyer() throws Exception {
         FrequentFlyer frequentFlyer = new FrequentFlyer("john");
         FrequentFlyerDetails detail = new FrequentFlyerDetails(frequentFlyer);
-        TestingAuthenticationToken token = new TestingAuthenticationToken(detail, null, null);
+        TestingAuthenticationToken token = new TestingAuthenticationToken(detail, null, (GrantedAuthority[])null);
         SecurityContext context = new SecurityContextImpl();
         context.setAuthentication(token);
         SecurityContextHolder.setContext(context);
