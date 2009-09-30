@@ -1617,8 +1617,7 @@
                 <para>
                     Furthermore, the signature algorithm can be defined
                     via the
-                    <property>securementSignatureAlgorithm</property>
-                    (Currently this parameter is ignored - SHA1RSA is the only supported algorithm).
+                    <property>securementSignatureAlgorithm</property>.
                 </para>
                 <para>
                     The key identifier type to use can be customized via the
