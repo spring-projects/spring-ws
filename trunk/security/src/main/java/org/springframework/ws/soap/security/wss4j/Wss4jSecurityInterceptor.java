@@ -276,8 +276,9 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
     }
 
     /**
-     * Defines which signature algorithm to use. Currently this parameter is ignored - SHA1RSA is the only supported
-     * algorithm, will be enhanced soon.
+     * Defines which signature algorithm to use.
+     * @see WSConstants#RSA
+     * @see WSConstants#DSA
      */
     public void setSecurementSignatureAlgorithm(String securementSignatureAlgorithm) {
         handler.setOption(WSHandlerConstants.SIG_ALGO, securementSignatureAlgorithm);
