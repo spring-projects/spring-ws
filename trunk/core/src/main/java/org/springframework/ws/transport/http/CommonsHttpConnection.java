@@ -28,6 +28,7 @@ import java.util.Iterator;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.URIException;
+import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.PostMethod;
 
@@ -50,6 +51,8 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 
     private ByteArrayOutputStream requestBuffer;
 
+    private MultiThreadedHttpConnectionManager connectionManager;
+
     protected CommonsHttpConnection(HttpClient httpClient, PostMethod postMethod) {
         Assert.notNull(httpClient, "httpClient must not be null");
         Assert.notNull(postMethod, "postMethod must not be null");
@@ -63,6 +66,9 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 
     public void onClose() throws IOException {
         postMethod.releaseConnection();
+        if (connectionManager != null) {
+            connectionManager.shutdown();
+        }
     }
 
     /*
@@ -97,7 +103,19 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
     protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
         postMethod.setRequestEntity(new ByteArrayRequestEntity(requestBuffer.toByteArray()));
         requestBuffer = null;
-        httpClient.executeMethod(postMethod);
+        try {
+            httpClient.executeMethod(postMethod);
+        } catch (IllegalStateException ex) {
+            if ("Connection factory has been shutdown.".equals(ex.getMessage())) {
+                // The application context has been closed, resulting in a connection factory shutdown and an ISE.
+                // Let's create a new connection factory for this connection only.
+                connectionManager = new MultiThreadedHttpConnectionManager();
+                httpClient.setHttpConnectionManager(connectionManager);
+                httpClient.executeMethod(postMethod);
+            } else {
+                throw ex;
+            }
+        }
     }
 
     /*

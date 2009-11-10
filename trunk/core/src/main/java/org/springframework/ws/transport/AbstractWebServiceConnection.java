@@ -33,7 +33,10 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
 
     private TransportOutputStream tos;
 
+    private boolean closed = false;
+
     public final void send(WebServiceMessage message) throws IOException {
+        checkClosed();
         onSendBeforeWrite(message);
         tos = createTransportOutputStream();
         if (tos == null) {
@@ -78,6 +81,7 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
     }
 
     public final WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException {
+        checkClosed();
         onReceiveBeforeRead();
         tis = createTransportInputStream();
         if (tis == null) {
@@ -138,8 +142,15 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
             }
         }
         onClose();
+        closed = true;
         if (ioex != null) {
             throw ioex;
+        }
+    }
+
+    private void checkClosed() {
+        if (closed) {
+            throw new IllegalStateException("Connection has been closed and cannot be reused.");
         }
     }
 

@@ -24,6 +24,7 @@ import java.util.Properties;
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpConnectionManager;
 import org.apache.commons.httpclient.HttpURL;
 import org.apache.commons.httpclient.HttpsURL;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
@@ -33,6 +34,7 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.PostMethod;
 
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.transport.WebServiceConnection;
@@ -51,7 +53,8 @@ import org.springframework.ws.transport.WebServiceConnection;
  * @see #setCredentials(Credentials)
  * @since 1.0.0
  */
-public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSender implements InitializingBean {
+public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSender
+        implements InitializingBean, DisposableBean {
 
     private static final int DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS = (60 * 1000);
 
@@ -211,6 +214,13 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
         if (getCredentials() != null) {
             getHttpClient().getState().setCredentials(getAuthScope(), getCredentials());
             getHttpClient().getParams().setAuthenticationPreemptive(true);
+        }
+    }
+
+    public void destroy() throws Exception {
+        HttpConnectionManager connectionManager = getHttpClient().getHttpConnectionManager();
+        if (connectionManager instanceof MultiThreadedHttpConnectionManager) {
+            ((MultiThreadedHttpConnectionManager) connectionManager).shutdown();
         }
     }
 
