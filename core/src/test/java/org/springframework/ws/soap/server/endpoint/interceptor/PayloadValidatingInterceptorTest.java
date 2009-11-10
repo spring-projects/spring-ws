@@ -325,4 +325,22 @@ public class PayloadValidatingInterceptorTest extends XMLTestCase {
 
     }
 
+    public void testMultipleNamespacesAxiom() throws Exception {
+        AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
+        messageFactory.setPayloadCaching(true);
+        messageFactory.afterPropertiesSet();
+
+        PayloadValidatingInterceptor interceptor = new PayloadValidatingInterceptor();
+        interceptor.setSchema(new ClassPathResource("multipleNamespaces.xsd", getClass()));
+        interceptor.afterPropertiesSet();
+
+        Resource resource = new ClassPathResource("multipleNamespaces.xml", getClass());
+        TransportInputStream tis = new MockTransportInputStream(resource.getInputStream());
+        WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
+        MessageContext context = new DefaultMessageContext(message, messageFactory);
+        boolean result = interceptor.handleRequest(context, null);
+        assertTrue("Invalid response from interceptor", result);
+
+    }
+
 }
