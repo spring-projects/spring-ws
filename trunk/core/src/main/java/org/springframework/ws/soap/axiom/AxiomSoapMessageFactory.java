@@ -81,9 +81,9 @@ import org.springframework.ws.transport.TransportInputStream;
  */
 public class AxiomSoapMessageFactory implements SoapMessageFactory, InitializingBean {
 
-    private static final String CHAR_SET_ENCODING = "charset";
+    private static final String CHARSET_PARAMETER = "charset";
 
-    private static final String DEFAULT_CHAR_SET_ENCODING = "UTF-8";
+    private static final String DEFAULT_CHARSET_ENCODING = "UTF-8";
 
     private static final String MULTI_PART_RELATED_CONTENT_TYPE = "multipart/related";
 
@@ -295,26 +295,29 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
      * @return the character set encoding
      */
     protected String getCharSetEncoding(String contentType) {
-        int index = contentType.indexOf(CHAR_SET_ENCODING);
-        if (index == -1) {
-            return DEFAULT_CHAR_SET_ENCODING;
+        int charSetIdx = contentType.indexOf(CHARSET_PARAMETER);
+        if (charSetIdx == -1) {
+            return DEFAULT_CHARSET_ENCODING;
         }
-        int idx = contentType.indexOf("=", index);
+        int eqIdx = contentType.indexOf("=", charSetIdx);
 
-        int indexOfSemiColon = contentType.indexOf(";", idx);
+        int indexOfSemiColon = contentType.indexOf(";", eqIdx);
         String value;
 
         if (indexOfSemiColon > 0) {
-            value = contentType.substring(idx + 1, indexOfSemiColon);
+            value = contentType.substring(eqIdx + 1, indexOfSemiColon);
         }
         else {
-            value = contentType.substring(idx + 1, contentType.length()).trim();
+            value = contentType.substring(eqIdx + 1, contentType.length()).trim();
         }
-        if (value.charAt(0) == '"' && value.charAt(value.length() - 1) == '"') {
-            return value.substring(1, value.length() - 1);
+        if (value.startsWith("\"")) {
+            value = value.substring(1);
+        }
+        if (value.endsWith("\"")) {
+            return value.substring(0, value.length() - 1);
         }
         if ("null".equalsIgnoreCase(value)) {
-            return DEFAULT_CHAR_SET_ENCODING;
+            return DEFAULT_CHARSET_ENCODING;
         }
         else {
             return value.trim();

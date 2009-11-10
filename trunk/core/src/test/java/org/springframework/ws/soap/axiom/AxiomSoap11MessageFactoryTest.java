@@ -44,6 +44,14 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
         return factory;
     }
 
+    public void testGetCharsetEncoding() {
+        AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
+
+        assertEquals("Invalid charset", "utf-8", messageFactory.getCharSetEncoding("text/html; charset=utf-8"));
+        assertEquals("Invalid charset", "utf-8", messageFactory.getCharSetEncoding("application/xop+xml;type=text/xml; charset=utf-8"));
+        assertEquals("Invalid charset", "utf-8", messageFactory.getCharSetEncoding("application/xop+xml;type=\"text/xml; charset=utf-8\""));
+    }
+
     public void testRepetitiveReadCaching() throws Exception {
         AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
         messageFactory.setPayloadCaching(true);
@@ -82,6 +90,9 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
         }
     }
 
+    /**
+     * See http://jira.springframework.org/browse/SWS-502
+     */
     public void testSWS502() throws Exception {
         AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
         messageFactory.setPayloadCaching(false);
