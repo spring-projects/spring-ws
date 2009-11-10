@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import org.springframework.xml.namespace.QNameEditor;
  * <p/>
  * Instead of supplying a custom fault code, you can use the constants <code>SERVER</code> or <code>RECEIVER</code>
  * indicate a <code>Server</code>/<code>Receiver</code> fault, or <code>CLIENT</code> or <code>SENDER</code>
- * to<code>Client</code>/<code>Sender</code> fault respectivaly.
+ * to<code>Client</code>/<code>Sender</code> fault respectively.
  * <p/>
  * For example:
  * <pre>
