@@ -57,7 +57,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 
     private SoapEnvelope envelope;
 
-    private final boolean langAttributeOnSoap11FaulString;
+    private final boolean langAttributeOnSoap11FaultString;
 
     private SaajImplementation implementation;
 
@@ -74,13 +74,13 @@ public class SaajSoapMessage extends AbstractSoapMessage {
      * Create a new <code>SaajSoapMessage</code> based on the given SAAJ <code>SOAPMessage</code>.
      *
      * @param soapMessage the SAAJ SOAPMessage
-     * @param langAttributeOnSoap11FaulString
+     * @param langAttributeOnSoap11FaultString
      *                    whether a {@code xml:lang} attribute is allowed on SOAP 1.1 {@code <faultstring>} elements
      */
-    public SaajSoapMessage(SOAPMessage soapMessage, boolean langAttributeOnSoap11FaulString) {
+    public SaajSoapMessage(SOAPMessage soapMessage, boolean langAttributeOnSoap11FaultString) {
         Assert.notNull(soapMessage, "soapMessage must not be null");
         saajMessage = soapMessage;
-        this.langAttributeOnSoap11FaulString = langAttributeOnSoap11FaulString;
+        this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
         MimeHeaders headers = getImplementation().getMimeHeaders(soapMessage);
         if (ObjectUtils.isEmpty(headers.getHeader(TransportConstants.HEADER_SOAP_ACTION))) {
             headers.addHeader(TransportConstants.HEADER_SOAP_ACTION, "\"\"");
@@ -103,7 +103,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         if (envelope == null) {
             try {
                 SOAPEnvelope saajEnvelope = getImplementation().getEnvelope(getSaajMessage());
-                envelope = new SaajSoapEnvelope(saajEnvelope, langAttributeOnSoap11FaulString);
+                envelope = new SaajSoapEnvelope(saajEnvelope, langAttributeOnSoap11FaultString);
             }
             catch (SOAPException ex) {
                 throw new SaajSoapEnvelopeException(ex);

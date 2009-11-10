@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 
     private String messageFactoryProtocol;
 
-    private boolean langAttributeOnSoap11FaulString = true;
+    private boolean langAttributeOnSoap11FaultString = true;
 
     /** Default, empty constructor. */
     public SaajSoapMessageFactory() {
@@ -90,8 +90,8 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
      *
      * @see <a href="http://www.ws-i.org/Profiles/BasicProfile-1.1.html#SOAP_Fault_Language">WS-I Basic Profile 1.1</a>
      */
-    public void setLangAttributeOnSoap11FaulString(boolean langAttributeOnSoap11FaulString) {
-        this.langAttributeOnSoap11FaulString = langAttributeOnSoap11FaulString;
+    public void setlangAttributeOnSoap11FaultString(boolean langAttributeOnSoap11FaultString) {
+        this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
     }
 
     public void setSoapVersion(SoapVersion version) {
@@ -154,7 +154,7 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 
     public WebServiceMessage createWebServiceMessage() {
         try {
-            return new SaajSoapMessage(messageFactory.createMessage(), langAttributeOnSoap11FaulString);
+            return new SaajSoapMessage(messageFactory.createMessage(), langAttributeOnSoap11FaultString);
         }
         catch (SOAPException ex) {
             throw new SoapMessageCreationException("Could not create empty message: " + ex.getMessage(), ex);
@@ -177,7 +177,7 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
                 mimeHeaders.setHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
                 try {
                     return new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, inputStream),
-                            langAttributeOnSoap11FaulString);
+                            langAttributeOnSoap11FaultString);
                 }
                 catch (SOAPException e) {
                     // fall-through
