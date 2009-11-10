@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -250,8 +250,9 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
     }
 
     /**
-     * Handles an invalid SOAP message. Default implementation logs the given exception, and creates a SOAP 1.1 Client
-     * or SOAP 1.2 Sender Fault with the exception message as fault string, and returns <code>false</code>.
+     * Handles an invalid SOAP message. Default implementation logs the given exception, delegates to the set {@link
+     * #setExceptionResolver(EndpointExceptionResolver) exceptionResolver} if any, or creates a SOAP 1.1 Client or SOAP
+     * 1.2 Sender Fault with the exception message as fault string, and returns <code>false</code>.
      *
      * @param ex             the validation exception
      * @param messageContext the message context
