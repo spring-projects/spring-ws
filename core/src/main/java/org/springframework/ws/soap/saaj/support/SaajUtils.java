@@ -42,6 +42,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.ws.soap.saaj.SaajSoapMessageException;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.xml.namespace.QNameUtils;
 
@@ -153,12 +154,14 @@ public abstract class SaajUtils {
      */
     public static int getSaajVersion(SOAPMessage soapMessage) {
         Assert.notNull(soapMessage, "'soapMessage' must not be null");
+        SOAPEnvelope soapEnvelope;
         try {
-            return getSaajVersion(soapMessage.getSOAPPart().getEnvelope());
+        	soapEnvelope = soapMessage.getSOAPPart().getEnvelope();
         }
-        catch (SOAPException e) {
-            return SAAJ_11;
+        catch (SOAPException ex) {
+        	throw new SaajSoapMessageException("Could not access envelope: " + ex.getMessage(), ex);
         }
+        return getSaajVersion(soapEnvelope);
     }
 
     /**
