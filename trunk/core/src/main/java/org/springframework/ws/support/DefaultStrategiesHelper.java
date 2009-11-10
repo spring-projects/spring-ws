@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,7 +92,7 @@ public class DefaultStrategiesHelper {
 
     /**
      * Create a list of strategy objects for the given strategy interface. Strategies are retrieved from the
-     * <code>Properties</code> object given at construction-time. It instantiates the strategy objects and satisifies
+     * <code>Properties</code> object given at construction-time. It instantiates the strategy objects and satisfies
      * <code>ApplicationContextAware</code> with the supplied context if necessary.
      *
      * @param strategyInterface  the strategy interface
