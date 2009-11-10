@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,14 +45,14 @@ import org.springframework.xml.namespace.QNameUtils;
  */
 class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
 
-    private final boolean langAttributeOnSoap11FaulString;
+    private final boolean langAttributeOnSoap11FaultString;
 
     AxiomSoap11Body(SOAPBody axiomBody,
                     SOAPFactory axiomFactory,
                     boolean payloadCaching,
-                    boolean langAttributeOnSoap11FaulString) {
+                    boolean langAttributeOnSoap11FaultString) {
         super(axiomBody, axiomFactory, payloadCaching);
-        this.langAttributeOnSoap11FaulString = langAttributeOnSoap11FaulString;
+        this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
     }
 
     public SoapFault addMustUnderstandFault(String faultString, Locale locale) {
@@ -82,7 +82,7 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
             throw new IllegalArgumentException(
                     "A fault code with namespace and local part must be specific for a custom fault code");
         }
-        if (!langAttributeOnSoap11FaulString) {
+        if (!langAttributeOnSoap11FaultString) {
             faultStringLocale = null;
         }
         try {

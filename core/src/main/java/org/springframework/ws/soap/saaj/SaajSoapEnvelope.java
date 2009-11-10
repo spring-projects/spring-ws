@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,11 +40,11 @@ class SaajSoapEnvelope extends SaajSoapElement implements SoapEnvelope {
 
     private SaajSoapHeader header;
 
-    private final boolean langAttributeOnSoap11FaulString;
+    private final boolean langAttributeOnSoap11FaultString;
 
-    SaajSoapEnvelope(SOAPElement element, boolean langAttributeOnSoap11FaulString) {
+    SaajSoapEnvelope(SOAPElement element, boolean langAttributeOnSoap11FaultString) {
         super(element);
-        this.langAttributeOnSoap11FaulString = langAttributeOnSoap11FaulString;
+        this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
     }
 
     public SoapBody getBody() {
@@ -53,7 +53,7 @@ class SaajSoapEnvelope extends SaajSoapElement implements SoapEnvelope {
                 SOAPBody saajBody = getImplementation().getBody(getSaajEnvelope());
                 if (getImplementation().getName(saajBody).getNamespaceURI()
                         .equals(SoapVersion.SOAP_11.getEnvelopeNamespaceUri())) {
-                    body = new SaajSoap11Body(saajBody, langAttributeOnSoap11FaulString);
+                    body = new SaajSoap11Body(saajBody, langAttributeOnSoap11FaultString);
                 }
                 else {
                     body = new SaajSoap12Body(saajBody);

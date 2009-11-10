@@ -1,3 +1,19 @@
+/*
+ * Copyright 2002-2009 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.springframework.ws.soap.axiom;
 
 import org.apache.axiom.om.OMException;
@@ -24,15 +40,15 @@ class AxiomSoapEnvelope extends AxiomSoapElement implements SoapEnvelope {
 
     private AxiomSoapBody body;
 
-    private final boolean langAttributeOnSoap11FaulString;
+    private final boolean langAttributeOnSoap11FaultString;
 
     AxiomSoapEnvelope(SOAPEnvelope axiomEnvelope,
                       SOAPFactory axiomFactory,
                       boolean payloadCaching,
-                      boolean langAttributeOnSoap11FaulString) {
+                      boolean langAttributeOnSoap11FaultString) {
         super(axiomEnvelope, axiomFactory);
         this.payloadCaching = payloadCaching;
-        this.langAttributeOnSoap11FaulString = langAttributeOnSoap11FaulString;
+        this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
     }
 
     public SoapHeader getHeader() {
@@ -66,7 +82,7 @@ class AxiomSoapEnvelope extends AxiomSoapElement implements SoapEnvelope {
                 String namespaceURI = getAxiomEnvelope().getNamespace().getNamespaceURI();
                 if (SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(namespaceURI)) {
                     body = new AxiomSoap11Body(axiomBody, getAxiomFactory(), payloadCaching,
-                            langAttributeOnSoap11FaulString);
+                            langAttributeOnSoap11FaultString);
                 }
                 else if (SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(namespaceURI)) {
                     body = new AxiomSoap12Body(axiomBody, getAxiomFactory(), payloadCaching);

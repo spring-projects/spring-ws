@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,11 +36,11 @@ import org.springframework.ws.soap.soap11.Soap11Fault;
  */
 class SaajSoap11Body extends SaajSoapBody implements Soap11Body {
 
-    private final boolean langAttributeOnSoap11FaulString;
+    private final boolean langAttributeOnSoap11FaultString;
 
-    SaajSoap11Body(SOAPBody body, boolean langAttributeOnSoap11FaulString) {
+    SaajSoap11Body(SOAPBody body, boolean langAttributeOnSoap11FaultString) {
         super(body);
-        this.langAttributeOnSoap11FaulString = langAttributeOnSoap11FaulString;
+        this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
     }
 
     public SoapFault getFault() {
@@ -53,7 +53,7 @@ class SaajSoap11Body extends SaajSoapBody implements Soap11Body {
         Assert.hasLength(faultString, "faultString cannot be empty");
         Assert.hasLength(faultCode.getLocalPart(), "faultCode's localPart cannot be empty");
         Assert.hasLength(faultCode.getNamespaceURI(), "faultCode's namespaceUri cannot be empty");
-        if (!langAttributeOnSoap11FaulString) {
+        if (!langAttributeOnSoap11FaultString) {
             faultStringLocale = null;
         }
         try {
