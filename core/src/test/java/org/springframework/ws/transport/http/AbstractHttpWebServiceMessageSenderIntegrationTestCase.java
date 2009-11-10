@@ -81,15 +81,16 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
 
     private Context jettyContext;
 
-    private static final String URI_STRING = "http://localhost:8888/";
-
     private MessageFactory saajMessageFactory;
 
     private TransformerFactory transformerFactory;
 
     private WebServiceMessageFactory messageFactory;
 
+    private URI connectionUri;
+
     protected final void setUp() throws Exception {
+        connectionUri = new URI("http://localhost:8888/");
         jettyServer = new Server(8888);
         jettyContext = new Context(jettyServer, "/");
         messageSender = createMessageSender();
@@ -111,7 +112,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
     }
 
     public void testSupports() throws URISyntaxException {
-        assertTrue("Message sender does not support HTTP url", messageSender.supports(new URI(URI_STRING)));
+        assertTrue("Message sender does not support HTTP url", messageSender.supports(connectionUri));
     }
 
     public void testSendAndReceiveResponse() throws Exception {
@@ -159,7 +160,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
         jettyContext.addServlet(new ServletHolder(servlet), "/");
         jettyServer.start();
         FaultAwareWebServiceConnection connection =
-                (FaultAwareWebServiceConnection) messageSender.createConnection(new URI(URI_STRING));
+                (FaultAwareWebServiceConnection) messageSender.createConnection(connectionUri);
         SOAPMessage request = createRequest();
         try {
             connection.send(new SaajSoapMessage(request));
@@ -171,11 +172,15 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
         }
     }
 
+    public void testReuseClosedConnection() throws Exception {
+
+    }
+
     private void validateResponse(Servlet servlet) throws Exception {
         jettyContext.addServlet(new ServletHolder(servlet), "/");
         jettyServer.start();
         FaultAwareWebServiceConnection connection =
-                (FaultAwareWebServiceConnection) messageSender.createConnection(new URI(URI_STRING));
+                (FaultAwareWebServiceConnection) messageSender.createConnection(connectionUri);
         SOAPMessage request = createRequest();
         try {
             connection.send(new SaajSoapMessage(request));
@@ -201,7 +206,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
         jettyContext.addServlet(new ServletHolder(servlet), "/");
         jettyServer.start();
 
-        WebServiceConnection connection = messageSender.createConnection(new URI(URI_STRING));
+        WebServiceConnection connection = messageSender.createConnection(connectionUri);
         SOAPMessage request = createRequest();
         try {
             connection.send(new SaajSoapMessage(request));

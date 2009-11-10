@@ -16,15 +16,28 @@
 
 package org.springframework.ws.transport.http;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Properties;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.soap.MessageFactory;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.URIException;
+import org.mortbay.jetty.Server;
+import org.mortbay.jetty.servlet.Context;
+import org.mortbay.jetty.servlet.ServletHolder;
 
+import org.springframework.context.support.StaticApplicationContext;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
+import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
 
 public class CommonsHttpMessageSenderIntegrationTest extends AbstractHttpWebServiceMessageSenderIntegrationTestCase {
@@ -57,5 +70,53 @@ public class CommonsHttpMessageSenderIntegrationTest extends AbstractHttpWebServ
         maxConnectionsPerHost.setProperty("*", "5");
         messageSender.setMaxConnectionsPerHost(maxConnectionsPerHost);
     }
+
+    public void testContextClose() throws Exception {
+        MessageFactory messageFactory = MessageFactory.newInstance();
+        Server jettyServer = new Server(8888);
+        Context jettyContext = new Context(jettyServer, "/");
+        jettyContext.addServlet(new ServletHolder(new EchoServlet()), "/");
+        jettyServer.start();
+        WebServiceConnection connection = null;
+        try {
+
+            StaticApplicationContext appContext = new StaticApplicationContext();
+            appContext.registerSingleton("messageSender", CommonsHttpMessageSender.class);
+            appContext.refresh();
+
+            CommonsHttpMessageSender messageSender = (CommonsHttpMessageSender) appContext
+                    .getBean("messageSender", CommonsHttpMessageSender.class);
+            connection = messageSender.createConnection(new URI("http://localhost:8888/"));
+
+            appContext.close();
+
+            connection.send(new SaajSoapMessage(messageFactory.createMessage()));
+            connection.receive(new SaajSoapMessageFactory(messageFactory));
+        }
+        finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (IOException ex) {
+                    // ignore
+                }
+            }
+            if (jettyServer.isRunning()) {
+                jettyServer.stop();
+            }
+        }
+
+    }
+
+    private class EchoServlet extends HttpServlet {
+
+        protected void doPost(HttpServletRequest request, HttpServletResponse response)
+                throws ServletException, IOException {
+            response.setContentType("text/xml");
+            FileCopyUtils.copy(request.getInputStream(), response.getOutputStream());
+
+        }
+    }
+
 
 }
