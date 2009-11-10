@@ -16,10 +16,13 @@
 
 package org.springframework.ws.soap.saaj.support;
 
+import java.io.InputStream;
+
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.soap.MessageFactory;
+import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPMessage;
@@ -28,7 +31,9 @@ import org.custommonkey.xmlunit.XMLTestCase;
 import org.w3c.dom.Document;
 
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
+import org.springframework.ws.soap.saaj.SaajSoapMessageException;
 
 public class SaajUtilsTest extends XMLTestCase {
 
@@ -114,6 +119,26 @@ public class SaajUtilsTest extends XMLTestCase {
 
     public void testGetSaajVersion() throws Exception {
         assertEquals("Invalid SAAJ version", SaajUtils.SAAJ_13, SaajUtils.getSaajVersion());
+    }
+    
+    public void testGetSaajVersionInvalidEnvelope() throws Exception {
+        Resource resource = new ClassPathResource("invalidNamespaceReferenceSoapMessage.xml", getClass());
+    	InputStream in = null;
+    	try {
+            in = resource.getInputStream();
+            MimeHeaders headers = new MimeHeaders();
+            SOAPMessage soapMessage = messageFactory.createMessage(headers, in);
+			SaajUtils.getSaajVersion(soapMessage);
+    		fail("Should have thrown SaajSoapMessageException as message envelope is invalid and cannot be accessed.");
+    	}
+    	catch (SaajSoapMessageException e) {
+    		// expected
+    	}
+        finally {
+            if (in != null) {
+                in.close();
+            }
+        }
     }
 
 }
