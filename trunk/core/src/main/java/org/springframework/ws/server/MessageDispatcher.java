@@ -1,5 +1,5 @@
 /*
- * Copyright 2005, 2006 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -172,8 +172,9 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
                 messageContext.getRequest().writeTo(requestStream);
                 ByteArrayOutputStream responseStream = new ByteArrayOutputStream();
                 messageContext.getResponse().writeTo(responseStream);
-                sentMessageTracingLogger.trace("Sent response [" + responseStream.toString("UTF-8") +
-                        "] for request [" + requestStream.toString("UTF-8") + "]");
+                sentMessageTracingLogger
+                        .trace("Sent response [" + responseStream.toString("UTF-8") + "] for request [" +
+                                requestStream.toString("UTF-8") + "]");
             }
             else if (sentMessageTracingLogger.isDebugEnabled()) {
                 sentMessageTracingLogger.debug("Sent response [" + messageContext.getResponse() + "] for request [" +
@@ -181,8 +182,9 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
             }
         }
         else if (sentMessageTracingLogger.isDebugEnabled()) {
-            sentMessageTracingLogger.debug("MessageDispatcher with name '" + beanName +
-                    "' sends no response for request [" + messageContext.getRequest() + "]");
+            sentMessageTracingLogger
+                    .debug("MessageDispatcher with name '" + beanName + "' sends no response for request [" +
+                            messageContext.getRequest() + "]");
         }
     }
 
@@ -295,7 +297,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
     }
 
     /**
-     * Determine an error <code>SOAPMessage</code> respone via the registered <code>EndpointExceptionResolvers</code>.
+     * Determine an error <code>SOAPMessage</code> response via the registered <code>EndpointExceptionResolvers</code>.
      * Most likely, the response contains a <code>SOAPFault</code>. If no suitable resolver was found, the exception is
      * rethrown.
      *
@@ -378,7 +380,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
     }
 
     /**
-     * Initialize the <code>EndpointExceptionResolver</code> used by this class. If no resolver beans are explictely set
+     * Initialize the <code>EndpointExceptionResolver</code> used by this class. If no resolver beans are explicitly set
      * by using the <code>endpointExceptionResolvers</code> property, we use the default strategies.
      *
      * @see #setEndpointExceptionResolvers(java.util.List)
@@ -416,8 +418,8 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
                 Collections.sort(endpointMappings, new OrderComparator());
             }
             else {
-                endpointMappings = defaultStrategiesHelper
-                        .getDefaultStrategies(EndpointMapping.class, applicationContext);
+                endpointMappings =
+                        defaultStrategiesHelper.getDefaultStrategies(EndpointMapping.class, applicationContext);
                 if (logger.isDebugEnabled()) {
                     logger.debug("No EndpointMappings found, using defaults");
                 }
