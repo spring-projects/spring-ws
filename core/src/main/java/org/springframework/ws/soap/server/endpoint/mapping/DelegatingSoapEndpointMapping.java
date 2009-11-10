@@ -76,8 +76,13 @@ public class DelegatingSoapEndpointMapping implements InitializingBean, SoapEndp
      */
     public EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception {
         EndpointInvocationChain delegateChain = delegate.getEndpoint(messageContext);
-        return new SoapEndpointInvocationChain(delegateChain.getEndpoint(), delegateChain.getInterceptors(),
-                actorsOrRoles, isUltimateReceiver);
+        if (delegateChain != null) {
+            return new SoapEndpointInvocationChain(delegateChain.getEndpoint(), delegateChain.getInterceptors(),
+                    actorsOrRoles, isUltimateReceiver);
+        }
+        else {
+            return null;
+        }
     }
 
     public void afterPropertiesSet() throws Exception {
