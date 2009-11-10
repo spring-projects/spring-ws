@@ -48,7 +48,8 @@ public class SimpleNamespaceContextTest extends TestCase {
     }
 
     public void testGetPrefix() {
-        assertEquals("Invalid prefix for default namespace", XMLConstants.DEFAULT_NS_PREFIX, context.getPrefix(""));
+        context.bindDefaultNamespaceUri("defaultNamespaceURI");
+        assertEquals("Invalid prefix for default namespace", XMLConstants.DEFAULT_NS_PREFIX, context.getPrefix("defaultNamespaceURI"));
         assertEquals("Invalid prefix for bound namespace", "prefix", context.getPrefix("namespaceURI"));
         assertNull("Invalid prefix for unbound namespace", context.getPrefix("unbound"));
         assertEquals("Invalid prefix for namespace", XMLConstants.XML_NS_PREFIX, context
@@ -58,7 +59,8 @@ public class SimpleNamespaceContextTest extends TestCase {
     }
 
     public void testGetPrefixes() {
-        assertPrefixes("", XMLConstants.DEFAULT_NS_PREFIX);
+        context.bindDefaultNamespaceUri("defaultNamespaceURI");
+        assertPrefixes("defaultNamespaceURI", XMLConstants.DEFAULT_NS_PREFIX);
         assertPrefixes("namespaceURI", "prefix");
         assertFalse("Invalid prefix for unbound namespace", context.getPrefixes("unbound").hasNext());
         assertPrefixes(XMLConstants.XML_NS_URI, XMLConstants.XML_NS_PREFIX);
@@ -137,4 +139,21 @@ public class SimpleNamespaceContextTest extends TestCase {
         context.bindNamespaceUri(prefix, namespaceUri);
         assertTrue("Context has no binding", context.hasBinding(prefix));
     }
+
+    public void testDefaultNamespaceMultiplePrefixes() {
+        String defaultNamespace = "http://springframework.org/spring-ws";
+        context.bindDefaultNamespaceUri(defaultNamespace);
+        context.bindNamespaceUri("prefix", defaultNamespace);
+        assertEquals("Invalid prefix", XMLConstants.DEFAULT_NS_PREFIX, context.getPrefix(defaultNamespace));
+        Iterator iterator = context.getPrefixes(defaultNamespace);
+        assertNotNull("getPrefixes returns null", iterator);
+        assertTrue("iterator is empty", iterator.hasNext());
+        String result = (String) iterator.next();
+        assertTrue("Invalid prefix", result.equals(XMLConstants.DEFAULT_NS_PREFIX) || result.equals("prefix"));
+        assertTrue("iterator is empty", iterator.hasNext());
+        result = (String) iterator.next();
+        assertTrue("Invalid prefix", result.equals(XMLConstants.DEFAULT_NS_PREFIX) || result.equals("prefix"));
+        assertFalse("iterator contains more than two values", iterator.hasNext());
+    }
+
 }

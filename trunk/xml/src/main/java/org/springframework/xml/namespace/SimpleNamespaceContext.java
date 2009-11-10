@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 
@@ -42,8 +44,6 @@ public class SimpleNamespaceContext implements NamespaceContext {
     /** Maps a <code>String</code> namespaceUri to a <code>List</code> of prefixes */
     private Map namespaceUriToPrefixes = new HashMap();
 
-    private String defaultNamespaceUri = "";
-
     public String getNamespaceURI(String prefix) {
         Assert.notNull(prefix, "prefix is null");
         if (XMLConstants.XML_NS_PREFIX.equals(prefix)) {
@@ -52,13 +52,10 @@ public class SimpleNamespaceContext implements NamespaceContext {
         else if (XMLConstants.XMLNS_ATTRIBUTE.equals(prefix)) {
             return XMLConstants.XMLNS_ATTRIBUTE_NS_URI;
         }
-        else if (XMLConstants.DEFAULT_NS_PREFIX.equals(prefix)) {
-            return defaultNamespaceUri;
-        }
         else if (prefixToNamespaceUri.containsKey(prefix)) {
             return (String) prefixToNamespaceUri.get(prefix);
         }
-        return "";
+        return XMLConstants.NULL_NS_URI;
     }
 
     public String getPrefix(String namespaceUri) {
@@ -100,9 +97,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
     public void bindNamespaceUri(String prefix, String namespaceUri) {
         Assert.notNull(prefix, "No prefix given");
         Assert.notNull(namespaceUri, "No namespaceUri given");
-        if (XMLConstants.DEFAULT_NS_PREFIX.equals(prefix)) {
-            defaultNamespaceUri = namespaceUri;
-        } else if (XMLConstants.XML_NS_PREFIX.equals(prefix)) {
+        if (XMLConstants.XML_NS_PREFIX.equals(prefix)) {
             Assert.isTrue(XMLConstants.XML_NS_URI.equals(namespaceUri), "Prefix \"" + prefix +
                     "\" bound to namespace \"" + namespaceUri + "\" (should be \"" + XMLConstants.XML_NS_URI + "\")");
         } else if (XMLConstants.XMLNS_ATTRIBUTE.equals(prefix)) {
@@ -118,7 +113,6 @@ public class SimpleNamespaceContext implements NamespaceContext {
 
     /** Removes all declared prefixes. */
     public void clear() {
-        defaultNamespaceUri = "";
         prefixToNamespaceUri.clear();
         namespaceUriToPrefixes.clear();
     }
@@ -129,14 +123,13 @@ public class SimpleNamespaceContext implements NamespaceContext {
      * @return the declared prefixes
      */
     public Iterator getBoundPrefixes() {
-        return prefixToNamespaceUri.keySet().iterator();
+        Set prefixes = new HashSet(prefixToNamespaceUri.keySet());
+        prefixes.remove(XMLConstants.DEFAULT_NS_PREFIX);
+        return prefixes.iterator();
     }
 
     private List getPrefixesInternal(String namespaceUri) {
-        if (defaultNamespaceUri.equals(namespaceUri)) {
-            return Collections.singletonList(XMLConstants.DEFAULT_NS_PREFIX);
-        }
-        else if (XMLConstants.XML_NS_URI.equals(namespaceUri)) {
+        if (XMLConstants.XML_NS_URI.equals(namespaceUri)) {
             return Collections.singletonList(XMLConstants.XML_NS_PREFIX);
         }
         else if (XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(namespaceUri)) {
@@ -158,22 +151,12 @@ public class SimpleNamespaceContext implements NamespaceContext {
      * @param prefix the prefix to be removed
      */
     public void removeBinding(String prefix) {
-        if (XMLConstants.DEFAULT_NS_PREFIX.equals(prefix)) {
-            defaultNamespaceUri = "";
-        }
-        else {
-            String namespaceUri = (String) prefixToNamespaceUri.get(prefix);
-            List prefixes = getPrefixesInternal(namespaceUri);
-            prefixes.remove(prefix);
-        }
+        String namespaceUri = (String) prefixToNamespaceUri.get(prefix);
+        List prefixes = getPrefixesInternal(namespaceUri);
+        prefixes.remove(prefix);
     }
 
     public boolean hasBinding(String prefix) {
-        if (XMLConstants.DEFAULT_NS_PREFIX.equals(prefix)) {
-            return !defaultNamespaceUri.equals("");
-        }
-        else {
-            return prefixToNamespaceUri.containsKey(prefix);
-        }
+        return prefixToNamespaceUri.containsKey(prefix);
     }
 }
