@@ -17,6 +17,7 @@
 package org.springframework.ws.server;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -157,27 +158,25 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
     }
 
     public void receive(MessageContext messageContext) throws Exception {
+        // Let's keep a reference to the request content as it came in, it might be changed by interceptors in dispatch()
+        String requestContent = "";
         if (receivedMessageTracingLogger.isTraceEnabled()) {
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            messageContext.getRequest().writeTo(os);
-            receivedMessageTracingLogger.trace("Received request [" + os.toString("UTF-8") + "]");
+            requestContent = getMessageContent(messageContext.getRequest());
+            receivedMessageTracingLogger.trace("Received request [" + requestContent + "]");
         }
         else if (receivedMessageTracingLogger.isDebugEnabled()) {
             receivedMessageTracingLogger.debug("Received request [" + messageContext.getRequest() + "]");
         }
         dispatch(messageContext);
         if (messageContext.hasResponse()) {
+            WebServiceMessage response = messageContext.getResponse();
             if (sentMessageTracingLogger.isTraceEnabled()) {
-                ByteArrayOutputStream requestStream = new ByteArrayOutputStream();
-                messageContext.getRequest().writeTo(requestStream);
-                ByteArrayOutputStream responseStream = new ByteArrayOutputStream();
-                messageContext.getResponse().writeTo(responseStream);
-                sentMessageTracingLogger
-                        .trace("Sent response [" + responseStream.toString("UTF-8") + "] for request [" +
-                                requestStream.toString("UTF-8") + "]");
+                String responseContent = getMessageContent(response);
+                sentMessageTracingLogger.trace("Sent response [" + responseContent + "] for request [" +
+                                requestContent + "]");
             }
             else if (sentMessageTracingLogger.isDebugEnabled()) {
-                sentMessageTracingLogger.debug("Sent response [" + messageContext.getResponse() + "] for request [" +
+                sentMessageTracingLogger.debug("Sent response [" + response + "] for request [" +
                         messageContext.getRequest() + "]");
             }
         }
@@ -186,6 +185,12 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
                     .debug("MessageDispatcher with name '" + beanName + "' sends no response for request [" +
                             messageContext.getRequest() + "]");
         }
+    }
+
+    private String getMessageContent(WebServiceMessage message) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        message.writeTo(bos);
+        return bos.toString("UTF-8");
     }
 
     /**
