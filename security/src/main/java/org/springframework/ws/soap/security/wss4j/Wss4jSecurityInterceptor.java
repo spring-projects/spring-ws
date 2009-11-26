@@ -123,7 +123,9 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     private int timeToLive = 300;
 
-    private Wss4jHandler handler = new Wss4jHandler();
+    private final Wss4jHandler handler = new Wss4jHandler();
+
+    private final WSSecurityEngine securityEngine = WSSecurityEngine.getInstance();
 
     public void setSecurementActions(String securementActions) {
         this.securementActions = securementActions;
@@ -434,6 +436,10 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         handler.setOption(WSHandlerConstants.ADD_UT_ELEMENTS, securementUsernameTokenElements);
     }
 
+    public void setAllowQualifiedPasswordTypes(boolean allowQualifiedPasswordTypes) {
+        securityEngine.getWssConfig().setAllowNamespaceQualifiedPasswordTypes(allowQualifiedPasswordTypes);
+    }
+
     public void afterPropertiesSet() throws Exception {
         Assert.isTrue(validationActions != null || securementActions != null,
                 "validationActions or securementActions are required");
@@ -508,7 +514,6 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         Document envelopeAsDocument = toDocument(soapMessage, messageContext);
 
         // Header processing
-        WSSecurityEngine securityEngine = WSSecurityEngine.getInstance();
 
         try {
             Vector results = securityEngine
