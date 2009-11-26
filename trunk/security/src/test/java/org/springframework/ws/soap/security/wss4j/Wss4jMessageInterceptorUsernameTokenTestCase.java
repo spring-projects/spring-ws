@@ -25,6 +25,7 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j.callback.SimplePasswordValidationCallbackHandler;
+import org.springframework.ws.soap.security.WsSecurityValidationException;
 
 public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4jTestCase {
 
@@ -48,6 +49,28 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
         MessageContext messageContext = new DefaultMessageContext(message, getMessageFactory());
         interceptor.validateMessage(message, messageContext);
         assertValidateUsernameToken(message);
+    }
+
+    public void testValidateUsernameTokenAcceptQualifiedType() throws Exception {
+        Wss4jSecurityInterceptor interceptor = prepareInterceptor("UsernameToken", true, false);
+        interceptor.setAllowQualifiedPasswordTypes(true);
+        SoapMessage message = loadMessage("usernameTokenPlainTextQualifiedType-soap.xml");
+        MessageContext messageContext = new DefaultMessageContext(message, getMessageFactory());
+        interceptor.validateMessage(message, messageContext);
+        assertValidateUsernameToken(message);
+    }
+
+    public void testValidateUsernameTokenRejectQualifiedType() throws Exception {
+        Wss4jSecurityInterceptor interceptor = prepareInterceptor("UsernameToken", true, false);
+        interceptor.setAllowQualifiedPasswordTypes(false);
+        SoapMessage message = loadMessage("usernameTokenPlainTextQualifiedType-soap.xml");
+        MessageContext messageContext = new DefaultMessageContext(message, getMessageFactory());
+        try {
+            interceptor.validateMessage(message, messageContext);
+            fail("Qualified password type was not rejected");
+        } catch (WsSecurityValidationException e) {
+            // expected
+        }
     }
 
     public void testAddUsernameTokenPlainText() throws Exception {
@@ -115,13 +138,9 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
         SimplePasswordValidationCallbackHandler callbackHandler = new SimplePasswordValidationCallbackHandler();
         callbackHandler.setUsers(users);
         if (digest) {
-//            callbackHandler.setPasswordDigestRequired(true);
-//            callbackHandler.setPasswordPlainTextRequired(false);
             interceptor.setSecurementPasswordType(WSConstants.PW_DIGEST);
         }
         else {
-//            callbackHandler.setPasswordDigestRequired(false);
-//            callbackHandler.setPasswordPlainTextRequired(true);
             interceptor.setSecurementPasswordType(WSConstants.PW_TEXT);
         }
         interceptor.setValidationCallbackHandler(callbackHandler);
