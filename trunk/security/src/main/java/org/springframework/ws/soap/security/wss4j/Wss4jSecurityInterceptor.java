@@ -436,10 +436,6 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         handler.setOption(WSHandlerConstants.ADD_UT_ELEMENTS, securementUsernameTokenElements);
     }
 
-    public void setAllowQualifiedPasswordTypes(boolean allowQualifiedPasswordTypes) {
-        securityEngine.getWssConfig().setAllowNamespaceQualifiedPasswordTypes(allowQualifiedPasswordTypes);
-    }
-
     public void afterPropertiesSet() throws Exception {
         Assert.isTrue(validationActions != null || securementActions != null,
                 "validationActions or securementActions are required");
@@ -454,6 +450,9 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         }
         // securement actions are not to be validated at start up as they could
         // be configured dynamically via the message context
+
+        // allow for qualified password types for .Net interoperability
+        securityEngine.getWssConfig().setAllowNamespaceQualifiedPasswordTypes(true);
     }
 
     protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)

@@ -51,26 +51,12 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
         assertValidateUsernameToken(message);
     }
 
-    public void testValidateUsernameTokenAcceptQualifiedType() throws Exception {
+    public void testValidateUsernameTokenWithQualifiedType() throws Exception {
         Wss4jSecurityInterceptor interceptor = prepareInterceptor("UsernameToken", true, false);
-        interceptor.setAllowQualifiedPasswordTypes(true);
         SoapMessage message = loadMessage("usernameTokenPlainTextQualifiedType-soap.xml");
         MessageContext messageContext = new DefaultMessageContext(message, getMessageFactory());
         interceptor.validateMessage(message, messageContext);
         assertValidateUsernameToken(message);
-    }
-
-    public void testValidateUsernameTokenRejectQualifiedType() throws Exception {
-        Wss4jSecurityInterceptor interceptor = prepareInterceptor("UsernameToken", true, false);
-        interceptor.setAllowQualifiedPasswordTypes(false);
-        SoapMessage message = loadMessage("usernameTokenPlainTextQualifiedType-soap.xml");
-        MessageContext messageContext = new DefaultMessageContext(message, getMessageFactory());
-        try {
-            interceptor.validateMessage(message, messageContext);
-            fail("Qualified password type was not rejected");
-        } catch (WsSecurityValidationException e) {
-            // expected
-        }
     }
 
     public void testAddUsernameTokenPlainText() throws Exception {
