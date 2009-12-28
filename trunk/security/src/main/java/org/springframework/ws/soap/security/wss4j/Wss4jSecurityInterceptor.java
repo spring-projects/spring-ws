@@ -121,7 +121,9 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     private boolean enableSignatureConfirmation;
 
-    private int timeToLive = 300;
+    private int validationTimeToLive = 300;
+
+    private int securementTimeToLive = 300;
 
     private final Wss4jHandler handler = new Wss4jHandler();
 
@@ -346,12 +348,27 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         this.securementUsername = securementUsername;
     }
 
-    /** Sets the server-side time to live */
-    public void setTimeToLive(int timeToLive) {
-        if (timeToLive <= 0) {
+    /** Sets the time to live on the outgoing message */
+    public void setSecurementTimeToLive(int securementTimeToLive) {
+        if (securementTimeToLive <= 0) {
             throw new IllegalArgumentException("timeToLive must be positive");
         }
-        this.timeToLive = timeToLive;
+        this.securementTimeToLive = securementTimeToLive;
+    }
+
+    /** Sets the server-side time to live */
+    public void setValidationTimeToLive(int validationTimeToLive) {
+        if (validationTimeToLive <= 0) {
+            throw new IllegalArgumentException("timeToLive must be positive");
+        }
+        this.validationTimeToLive = validationTimeToLive;
+    }
+
+    /** Sets the server-side time to live
+     * @deprecated Use  {@link #setValidationTimeToLive(int)} instead.
+     * */
+    public void setTimeToLive(int timeToLive) {
+        setValidationTimeToLive(timeToLive);
     }
 
     /** Sets the validation actions to be executed by the interceptor. */
@@ -497,6 +514,9 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         else {
             requestData.setUsername(securementUsername);
         }
+
+        requestData.setTimeToLive(securementTimeToLive);
+
         return requestData;
     }
 
@@ -596,12 +616,11 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         if (actionResult != null) {
             Timestamp timestamp = (Timestamp) actionResult.get(WSSecurityEngineResult.TAG_TIMESTAMP);
             if (timestamp != null && timestampStrict) {
-                if (!handler.verifyTimestamp(timestamp, timeToLive)) {
+                if (!handler.verifyTimestamp(timestamp, validationTimeToLive)) {
                     throw new Wss4jSecurityValidationException("Invalid timestamp : " + timestamp.getID());
                 }
             }
         }
-
     }
 
     private void processPrincipal(Vector results) {

@@ -65,7 +65,6 @@ public abstract class Wss4jTestCase extends TestCase {
                 "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd");
         namespaces.setProperty("ds", "http://www.w3.org/2000/09/xmldsig#");
         namespaces.setProperty("xenc", "http://www.w3.org/2001/04/xmlenc#");
-//        namespaces.put("wsse11", "http://docs.oasis-open.org/wss/2005/xx/oasis-2005xx-wss-wssecurity-secext-1.1.xsd");
         namespaces.setProperty("wsse11", "http://docs.oasis-open.org/wss/oasis-wss-wssecurity-secext-1.1.xsd");
         namespaces.setProperty("echo", "http://www.springframework.org/spring-ws/samples/echo");
         namespaces.setProperty("wsu",
