@@ -17,12 +17,21 @@
 package org.springframework.ws.soap.security.wss4j;
 
 import java.lang.reflect.Field;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
 
 import org.w3c.dom.Document;
 
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.security.WsSecurityValidationException;
+import org.springframework.xml.transform.StringResult;
 
 public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTestCase {
 
@@ -50,36 +59,41 @@ public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTest
                 getDocument(message));
     }
 
-    public void testValidateTimestampWithTtl() throws Exception {
-        Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor() {
-            public void setTimeToLive(int t) {
-                try {
-                    Field ttl = Wss4jSecurityInterceptor.class
-                            .getDeclaredField("timeToLive");
-                    ttl.setAccessible(true);
-                    ttl.set(this, new Integer(t));
-
-                }
-                catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        };
+    public void testValidateTimestampWithExpiredTtl() throws Exception {
+        Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
         interceptor.setValidationActions("Timestamp");
-        interceptor.setTimeToLive(-10);
-        interceptor.setTimestampStrict(true);
         interceptor.afterPropertiesSet();
-        SoapMessage message = getMessageWithTimestamp();
+        SoapMessage message = loadMessage("expiredTimestamp-soap.xml");
         MessageContext context = new DefaultMessageContext(message, getMessageFactory());
-
         try {
             interceptor.validateMessage(message, context);
+            fail();
         }
-        catch (Wss4jSecurityValidationException ex) {
+        catch (WsSecurityValidationException e) {
             // expected
-            return;
         }
-        fail("Time to live validation failed");
+    }
+
+    public void testSecureTimestampWithCustomTtl() throws Exception {
+        int ttlInSeconds = 1;
+        Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
+        interceptor.setSecurementActions("Timestamp");
+        interceptor.setTimestampStrict(true);
+        interceptor.setSecurementTimeToLive(ttlInSeconds);
+        interceptor.afterPropertiesSet();
+        SoapMessage message = loadMessage("empty-soap.xml");
+        MessageContext context = new DefaultMessageContext(message, getMessageFactory());
+        interceptor.secureMessage(message, context);
+        
+        String created = xpathTemplate.evaluateAsString("/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsu:Timestamp/wsu:Created/text()",
+                message.getEnvelope().getSource());
+        String expires = xpathTemplate.evaluateAsString("/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsu:Timestamp/wsu:Expires/text()",
+                message.getEnvelope().getSource());
+
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS'Z'");
+
+        long actualTtl = format.parse(expires).getTime() - format.parse(created).getTime();
+        assertEquals("invalid ttl", 1000 * ttlInSeconds, actualTtl);
     }
 
     private SoapMessage getMessageWithTimestamp() throws Exception {
