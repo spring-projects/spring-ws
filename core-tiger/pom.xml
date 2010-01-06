@@ -44,8 +44,6 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>1.4.3</version>
-                <extensions>true</extensions>
                 <configuration>
                     <excludeDependencies>true</excludeDependencies>
                     <instructions>
@@ -56,10 +54,10 @@
                             javax.xml.namespace*,
                             javax.xml.transform*,
                             org.w3c.dom*,
-                            org.springframework.xml*;version="${pom.version}",
-                            org.springframework.oxm*;version="${pom.version}",
-                            org.springframework.ws*;version="${pom.version}",
-                            org.springframework*;version="[2.0,3.1.0)",
+                            org.springframework.xml*;version="[${pom.version},${pom.version}]",
+                            org.springframework.oxm*;version="[${pom.version},${pom.version}]",
+                            org.springframework.ws*;version="[${pom.version},${pom.version}]",
+                            org.springframework*;version="[2.0,4.0)",
                             *;resolution:=optional
                         </Import-Package>
                         <Fragment-Host>org.springframework.bundle.ws.core</Fragment-Host>
