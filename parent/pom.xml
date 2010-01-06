@@ -23,9 +23,9 @@
         </site>
     </distributionManagement>
     <scm>
-        <connection>scm:svn:https://src.springframework.org/svn/spring-ws/tags/spring-ws-1.5.6</connection>
-        <developerConnection>scm:svn:https://src.springframework.org/svn/spring-ws/tags/spring-ws-1.5.6</developerConnection>
-        <url>https://fisheye.springframework.org/browse/spring-ws/tags/spring-ws-1.5.6</url>
+        <connection>scm:svn:https://src.springframework.org/svn/spring-ws/trunk</connection>
+        <developerConnection>scm:svn:https://src.springframework.org/svn/spring-ws/trunk</developerConnection>
+        <url>https://fisheye.springframework.org/browse/spring-ws/trunk</url>
     </scm>
     <properties>
         <spring.version>2.5.6</spring.version>
