@@ -133,6 +133,24 @@ public class ActionCallback implements WebServiceMessageCallback {
     }
 
     /**
+     * Returns the WS-Addressing version
+     * @return
+     */
+    public AddressingVersion getVersion() {
+        return version;
+    }
+
+    /**
+     * Returns the message id strategy used for creating WS-Addressing MessageIds.
+     * <p/>
+     * By default, the {@link UuidMessageIdStrategy} is used on Java 5 and higher, and the {@link
+     * RandomGuidMessageIdStrategy} on Java 1.4.
+     */
+    public MessageIdStrategy getMessageIdStrategy() {
+        return messageIdStrategy;
+    }
+
+    /**
      * Sets the message id strategy used for creating WS-Addressing MessageIds.
      * <p/>
      * By default, the {@link UuidMessageIdStrategy} is used on Java 5 and higher, and the {@link
@@ -143,17 +161,63 @@ public class ActionCallback implements WebServiceMessageCallback {
         this.messageIdStrategy = messageIdStrategy;
     }
 
+    /**
+     * Returns the {@code Action}.
+     * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getAction()
+     */
+    public URI getAction() {
+        return action;
+    }
+
+    /**
+     * Returns the {@code From}.
+     * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getFrom()
+     */
+    public EndpointReference getFrom() {
+        return from;
+    }
+
+    /**
+     * Sets the {@code From}.
+     * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getFrom()
+     */
     public void setFrom(EndpointReference from) {
         this.from = from;
     }
 
+    /**
+     * Returns the {@code ReplyTo}.
+     * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getReplyTo()
+     */
+    public EndpointReference getReplyTo() {
+        return replyTo;
+    }
+
+    /**
+     * Sets the {@code ReplyTo}.
+     * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getReplyTo()
+     */
     public void setReplyTo(EndpointReference replyTo) {
         this.replyTo = replyTo;
     }
 
+    /**
+     * Returns the {@code FaultTo}.
+     * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getFaultTo()
+     */
+    public EndpointReference getFaultTo() {
+        return faultTo;
+    }
+
+    /**
+     * Sets the {@code FaultTo}.
+     * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getFaultTo()
+     */
     public void setFaultTo(EndpointReference faultTo) {
         this.faultTo = faultTo;
     }
+
+
 
     /**
      * Returns the <code>Destination</code> for outgoing messages.
@@ -182,10 +246,9 @@ public class ActionCallback implements WebServiceMessageCallback {
     public void doWithMessage(WebServiceMessage message) throws IOException, TransformerException {
         Assert.isInstanceOf(SoapMessage.class, message);
         SoapMessage soapMessage = (SoapMessage) message;
-        URI to = getTo();
-        URI messageId = messageIdStrategy.newMessageId(soapMessage);
+        URI messageId = getMessageIdStrategy().newMessageId(soapMessage);
         MessageAddressingProperties map =
-                new MessageAddressingProperties(to, from, replyTo, faultTo, action, messageId);
+                new MessageAddressingProperties(getTo(), getFrom(), getReplyTo(), getFaultTo(), getAction(), messageId);
         version.addAddressingHeaders(soapMessage, map);
     }
 
