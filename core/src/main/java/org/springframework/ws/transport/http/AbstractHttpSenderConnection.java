@@ -60,7 +60,9 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
      * Receiving response
      */
     protected final boolean hasResponse() throws IOException {
-        if (HttpTransportConstants.STATUS_ACCEPTED == getResponseCode()) {
+        int responseCode = getResponseCode();
+        if (HttpTransportConstants.STATUS_ACCEPTED == responseCode ||
+                HttpTransportConstants.STATUS_NO_CONTENT == responseCode) {
             return false;
         }
         long contentLength = getResponseContentLength();

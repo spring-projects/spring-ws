@@ -41,6 +41,9 @@ public interface HttpTransportConstants extends TransportConstants {
     /** The "202 Accepted" status code. */
     int STATUS_ACCEPTED = 202;
 
+    /** The "204 No Content" status code. */
+    int STATUS_NO_CONTENT = 204;
+
     /** The "404 Not Found" status code. */
     int STATUS_NOT_FOUND = 404;
 
