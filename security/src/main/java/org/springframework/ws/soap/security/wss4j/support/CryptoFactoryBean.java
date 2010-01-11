@@ -82,11 +82,11 @@ public class CryptoFactoryBean implements FactoryBean, BeanClassLoaderAware, Ini
      * This property maps to the WSS4J <code>org.apache.ws.security.crypto.merlin.file</code> property.
      *
      * @param location the key store location
-     * @throws java.io.IOException when the resource cannot be openened
+     * @throws java.io.IOException when the resource cannot be opened
      */
     public void setKeyStoreLocation(Resource location) throws IOException {
-        File keystoreFile = location.getFile();
-        this.configuration.setProperty("org.apache.ws.security.crypto.merlin.file", keystoreFile.getAbsolutePath());
+        File keyStoreFile = location.getFile();
+        this.configuration.setProperty("org.apache.ws.security.crypto.merlin.file", keyStoreFile.getAbsolutePath());
     }
 
     /**
