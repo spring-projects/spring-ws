@@ -183,23 +183,24 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 
     private void inlineIncludes(XmlSchema schema, Set processedIncludes, Set processedImports) {
         processedIncludes.add(schema);
-        XmlSchemaObjectCollection includes = schema.getIncludes();
-        for (int i = 0; i < includes.getCount(); i++) {
-            XmlSchemaExternal external = (XmlSchemaExternal) includes.getItem(i);
-            if (external instanceof XmlSchemaInclude) {
-                XmlSchema includedSchema = external.getSchema();
-                XmlSchemaObjectCollection items = schema.getItems();
+
+        XmlSchemaObjectCollection schemaItems = schema.getItems();
+        for (int i = 0; i < schemaItems.getCount(); i++) {
+            XmlSchemaObject schemaObject = schemaItems.getItem(i);
+            if (schemaObject instanceof XmlSchemaInclude) {
+                XmlSchema includedSchema = ((XmlSchemaInclude) schemaObject).getSchema();
                 if (!processedIncludes.contains(includedSchema)) {
                     inlineIncludes(includedSchema, processedIncludes, processedImports);
                     findImports(includedSchema, processedImports, processedIncludes);
                     XmlSchemaObjectCollection includeItems = includedSchema.getItems();
                     for (int j = 0; j < includeItems.getCount(); j++) {
                         XmlSchemaObject includedItem = includeItems.getItem(j);
-                        items.add(includedItem);
+                        schemaItems.add(includedItem);
                     }
                 }
                 // remove the <include/>
-                items.remove(external);
+                schemaItems.removeAt(i);
+                i--;
             }
         }
     }

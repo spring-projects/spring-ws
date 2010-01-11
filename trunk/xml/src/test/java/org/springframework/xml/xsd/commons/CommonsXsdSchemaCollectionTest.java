@@ -120,4 +120,29 @@ public class CommonsXsdSchemaCollectionTest extends XMLTestCase {
             // expected
         }
     }
+
+    public void testIncludesAndImports() throws Exception {
+        Resource hr = new ClassPathResource("hr.xsd", getClass());
+        collection.setXsds(new Resource[]{hr});
+        collection.setInline(true);
+        collection.afterPropertiesSet();
+
+        XsdSchema[] schemas = collection.getXsdSchemas();
+        assertEquals("Invalid amount of XSDs loaded", 2, schemas.length);
+
+        assertEquals("Invalid target namespace", "http://mycompany.com/hr/schemas", schemas[0].getTargetNamespace());
+        Resource hr_employee = new ClassPathResource("hr_employee.xsd", getClass());
+        Document expected = documentBuilder.parse(SaxUtils.createInputSource(hr_employee));
+        DOMResult domResult = new DOMResult();
+        transformer.transform(schemas[0].getSource(), domResult);
+        assertXMLEqual("Invalid XSD generated", expected, (Document) domResult.getNode());
+
+        assertEquals("Invalid target namespace", "http://mycompany.com/hr/schemas/holiday", schemas[1].getTargetNamespace());
+        Resource holiday = new ClassPathResource("holiday.xsd", getClass());
+        expected = documentBuilder.parse(SaxUtils.createInputSource(holiday));
+        domResult = new DOMResult();
+        transformer.transform(schemas[1].getSource(), domResult);
+        assertXMLEqual("Invalid XSD generated", expected, (Document) domResult.getNode());
+
+    }
 }
