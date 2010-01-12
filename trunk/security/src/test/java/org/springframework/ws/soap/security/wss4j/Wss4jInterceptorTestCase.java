@@ -25,9 +25,9 @@ import org.springframework.ws.soap.security.WsSecurityValidationException;
 public abstract class Wss4jInterceptorTestCase extends Wss4jTestCase {
 
     public void testhandleRequest() throws Exception {
-        SoapMessage request = loadMessage("empty-soap.xml");
+        SoapMessage request = loadSoap11Message("empty-soap.xml");
         final Object requestMessage = getMessage(request);
-        SoapMessage validatedRequest = loadMessage("empty-soap.xml");
+        SoapMessage validatedRequest = loadSoap11Message("empty-soap.xml");
         final Object validatedRequestMessage = getMessage(validatedRequest);
         Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor() {
             protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
@@ -41,13 +41,13 @@ public abstract class Wss4jInterceptorTestCase extends Wss4jTestCase {
                 setMessage(soapMessage, validatedRequestMessage);
             }
         };
-        MessageContext context = new DefaultMessageContext(request, getMessageFactory());
+        MessageContext context = new DefaultMessageContext(request, getSoap11MessageFactory());
         interceptor.handleRequest(context, null);
         assertEquals("Invalid request", validatedRequestMessage, getMessage((SoapMessage) context.getRequest()));
     }
 
     public void testhandleResponse() throws Exception {
-        SoapMessage securedResponse = loadMessage("empty-soap.xml");
+        SoapMessage securedResponse = loadSoap11Message("empty-soap.xml");
         final Object securedResponseMessage = getMessage(securedResponse);
 
         Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor() {
@@ -63,8 +63,8 @@ public abstract class Wss4jInterceptorTestCase extends Wss4jTestCase {
             }
 
         };
-        SoapMessage request = loadMessage("empty-soap.xml");
-        MessageContext context = new DefaultMessageContext(request, getMessageFactory());
+        SoapMessage request = loadSoap11Message("empty-soap.xml");
+        MessageContext context = new DefaultMessageContext(request, getSoap11MessageFactory());
         context.getResponse();
         interceptor.handleResponse(context, null);
         assertEquals("Invalid response", securedResponseMessage, getMessage((SoapMessage) context.getResponse()));

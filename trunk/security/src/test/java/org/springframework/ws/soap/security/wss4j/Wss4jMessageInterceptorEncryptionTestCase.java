@@ -61,8 +61,8 @@ public abstract class Wss4jMessageInterceptorEncryptionTestCase extends Wss4jTes
     }
 
     public void testDecryptRequest() throws Exception {
-        SoapMessage message = loadMessage("encrypted-soap.xml");
-        MessageContext messageContext = new DefaultMessageContext(message, getMessageFactory());
+        SoapMessage message = loadSoap11Message("encrypted-soap.xml");
+        MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
         interceptor.validateMessage(message, messageContext);
         Document document = getDocument((SoapMessage) messageContext.getRequest());
         assertXpathEvaluatesTo("Decryption error", "Hello", "/SOAP-ENV:Envelope/SOAP-ENV:Body/echo:echoRequest/text()",
@@ -72,8 +72,8 @@ public abstract class Wss4jMessageInterceptorEncryptionTestCase extends Wss4jTes
     }
 
     public void testEncryptResponse() throws Exception {
-        SoapMessage message = loadMessage("empty-soap.xml");
-        MessageContext messageContext = getMessageContext(message);
+        SoapMessage message = loadSoap11Message("empty-soap.xml");
+        MessageContext messageContext = getSoap11MessageContext(message);
         interceptor.setSecurementEncryptionUser("rsakey");
         interceptor.secureMessage(message, messageContext);
         Document document = getDocument(message);

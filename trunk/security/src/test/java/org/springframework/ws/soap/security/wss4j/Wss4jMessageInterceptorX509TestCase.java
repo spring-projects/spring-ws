@@ -52,8 +52,8 @@ public abstract class Wss4jMessageInterceptorX509TestCase extends Wss4jTestCase 
 
         interceptor.setSecurementPassword("123456");
         interceptor.setSecurementUsername("rsaKey");
-        SoapMessage message = loadMessage("empty-soap.xml");
-        MessageContext messageContext = getMessageContext(message);
+        SoapMessage message = loadSoap11Message("empty-soap.xml");
+        MessageContext messageContext = getSoap11MessageContext(message);
 
         interceptor.setSecurementSignatureKeyIdentifier("DirectReference");
 

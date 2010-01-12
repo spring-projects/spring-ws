@@ -29,8 +29,8 @@ public abstract class Wss4jMessageInterceptorUsernameTokenSignatureTestCase exte
         interceptor.setSecurementUsername("Bert");
         interceptor.setSecurementPassword("Ernie");
         interceptor.afterPropertiesSet();
-        SoapMessage message = loadMessage("empty-soap.xml");
-        MessageContext context = getMessageContext(message);
+        SoapMessage message = loadSoap11Message("empty-soap.xml");
+        MessageContext context = getSoap11MessageContext(message);
         interceptor.secureMessage(message, context);
 
         Document doc = getDocument(message);
