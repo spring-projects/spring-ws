@@ -257,16 +257,14 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
                         }
                     }
                     catch (IOException e) {
-                        // fall through to super.resolveEntity
+                        // fall through
                     }
                 }
-                else {
-                    // let's try and find it on the classpath, see SWS-362
-                    String classpathLocation = ResourceLoader.CLASSPATH_URL_PREFIX + "/" + schemaLocation;
-                    resource = resourceLoader.getResource(classpathLocation);
-                    if (resource.exists()) {
-                        return createInputSource(resource);
-                    }
+                // let's try and find it on the classpath, see SWS-362
+                String classpathLocation = ResourceLoader.CLASSPATH_URL_PREFIX + "/" + schemaLocation;
+                resource = resourceLoader.getResource(classpathLocation);
+                if (resource.exists()) {
+                    return createInputSource(resource);
                 }
             }
             return super.resolveEntity(namespace, schemaLocation, baseUri);
