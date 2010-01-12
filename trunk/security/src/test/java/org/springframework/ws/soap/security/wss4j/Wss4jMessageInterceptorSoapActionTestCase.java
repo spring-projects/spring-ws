@@ -24,16 +24,18 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j.callback.SimplePasswordValidationCallbackHandler;
+import org.springframework.ws.WebServiceMessageFactory;
 
 public abstract class Wss4jMessageInterceptorSoapActionTestCase extends Wss4jTestCase {
 
     private static final String SOAP_ACTION = "\"http://test\"";
 
-    private Properties users = new Properties();
+    private Properties users;
 
     private Wss4jSecurityInterceptor interceptor;
 
     protected void onSetup() throws Exception {
+        users = new Properties();
         users.setProperty("Bert", "Ernie");
         interceptor = new Wss4jSecurityInterceptor();
         interceptor.setValidationActions("UsernameToken");
@@ -47,9 +49,20 @@ public abstract class Wss4jMessageInterceptorSoapActionTestCase extends Wss4jTes
     }
 
     public void testPreserveSoapActionOnValidation() throws Exception {
-        SoapMessage message = loadMessage("usernameTokenPlainText-soap.xml");
+        SoapMessage message = loadSoap11Message("usernameTokenPlainText-soap.xml");
         message.setSoapAction(SOAP_ACTION);
-        MessageContext messageContext = new DefaultMessageContext(message, getMessageFactory());
+        MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
+        interceptor.validateMessage(message, messageContext);
+
+        assertNotNull("Soap Action must not be null", message.getSoapAction());
+        assertEquals("Soap Action is different from expected", SOAP_ACTION, message.getSoapAction());
+    }
+
+    public void testPreserveSoap12ActionOnValidation() throws Exception {
+        SoapMessage message = loadSoap12Message("usernameTokenPlainText-soap12.xml");
+        message.setSoapAction(SOAP_ACTION);
+        WebServiceMessageFactory messageFactory = getSoap12MessageFactory();
+        MessageContext messageContext = new DefaultMessageContext(message, messageFactory);
         interceptor.validateMessage(message, messageContext);
 
         assertNotNull("Soap Action must not be null", message.getSoapAction());
@@ -57,15 +70,30 @@ public abstract class Wss4jMessageInterceptorSoapActionTestCase extends Wss4jTes
     }
 
     public void testPreserveSoapActionOnSecurement() throws Exception {
-        SoapMessage message = loadMessage("empty-soap.xml");
+        SoapMessage message = loadSoap11Message("empty-soap.xml");
         message.setSoapAction(SOAP_ACTION);
         interceptor.setSecurementUsername("Bert");
         interceptor.setSecurementPassword("Ernie");
-        MessageContext messageContext = getMessageContext(message);
+        MessageContext messageContext = getSoap11MessageContext(message);
         interceptor.secureMessage(message, messageContext);
 
         assertNotNull("Soap Action must not be null", message.getSoapAction());
         assertEquals("Soap Action is different from expected", SOAP_ACTION, message.getSoapAction());
 
     }
+
+    public void testPreserveSoap12ActionOnSecurement() throws Exception {
+        SoapMessage message = loadSoap12Message("empty-soap12.xml");
+        message.setSoapAction(SOAP_ACTION);
+        interceptor.setSecurementUsername("Bert");
+        interceptor.setSecurementPassword("Ernie");
+        MessageContext messageContext = getSoap12MessageContext(message);
+        interceptor.secureMessage(message, messageContext);
+
+        assertNotNull("Soap Action must not be null", message.getSoapAction());
+        assertEquals("Soap Action is different from expected", SOAP_ACTION, message.getSoapAction());
+
+    }
+
+
 }
