@@ -55,9 +55,9 @@ public abstract class Wss4jMessageInterceptorSignTestCase extends Wss4jTestCase 
     }
 
     public void testValidateCertificate() throws Exception {
-        SoapMessage message = loadMessage("signed-soap.xml");
+        SoapMessage message = loadSoap11Message("signed-soap.xml");
 
-        MessageContext messageContext = new DefaultMessageContext(message, getMessageFactory());
+        MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
         interceptor.validateMessage(message, messageContext);
         Object result = getMessage(message);
         assertNotNull("No result returned", result);
@@ -66,8 +66,8 @@ public abstract class Wss4jMessageInterceptorSignTestCase extends Wss4jTestCase 
     }
 
     public void testValidateCertificateWithSignatureConfirmation() throws Exception {
-        SoapMessage message = loadMessage("signed-soap.xml");
-        MessageContext messageContext = getMessageContext(message);
+        SoapMessage message = loadSoap11Message("signed-soap.xml");
+        MessageContext messageContext = getSoap11MessageContext(message);
         interceptor.setEnableSignatureConfirmation(true);
         interceptor.validateMessage(message, messageContext);
         WebServiceMessage response = messageContext.getResponse();
@@ -83,8 +83,8 @@ public abstract class Wss4jMessageInterceptorSignTestCase extends Wss4jTestCase 
         interceptor.setEnableSignatureConfirmation(false);
         interceptor.setSecurementPassword("123456");
         interceptor.setSecurementUsername("rsaKey");
-        SoapMessage message = loadMessage("empty-soap.xml");
-        MessageContext messageContext = getMessageContext(message);
+        SoapMessage message = loadSoap11Message("empty-soap.xml");
+        MessageContext messageContext = getSoap11MessageContext(message);
 
         // interceptor.setSecurementSignatureKeyIdentifier("IssuerSerial");
 
@@ -102,8 +102,8 @@ public abstract class Wss4jMessageInterceptorSignTestCase extends Wss4jTestCase 
         interceptor.setEnableSignatureConfirmation(false);
         interceptor.setSecurementPassword("123456");
         interceptor.setSecurementSignatureUser("rsaKey");
-        SoapMessage message = loadMessage("empty-soap.xml");
-        MessageContext messageContext = getMessageContext(message);
+        SoapMessage message = loadSoap11Message("empty-soap.xml");
+        MessageContext messageContext = getSoap11MessageContext(message);
 
         interceptor.secureMessage(message, messageContext);
 

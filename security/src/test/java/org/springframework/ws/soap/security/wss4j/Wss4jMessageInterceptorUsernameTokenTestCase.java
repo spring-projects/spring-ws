@@ -25,7 +25,6 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j.callback.SimplePasswordValidationCallbackHandler;
-import org.springframework.ws.soap.security.WsSecurityValidationException;
 
 public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4jTestCase {
 
@@ -37,24 +36,24 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
 
     public void testValidateUsernameTokenPlainText() throws Exception {
         Wss4jSecurityInterceptor interceptor = prepareInterceptor("UsernameToken", true, false);
-        SoapMessage message = loadMessage("usernameTokenPlainText-soap.xml");
-        MessageContext messageContext = new DefaultMessageContext(message, getMessageFactory());
+        SoapMessage message = loadSoap11Message("usernameTokenPlainText-soap.xml");
+        MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
         interceptor.validateMessage(message, messageContext);
         assertValidateUsernameToken(message);
     }
 
     public void testValidateUsernameTokenDigest() throws Exception {
         Wss4jSecurityInterceptor interceptor = prepareInterceptor("UsernameToken", true, true);
-        SoapMessage message = loadMessage("usernameTokenDigest-soap.xml");
-        MessageContext messageContext = new DefaultMessageContext(message, getMessageFactory());
+        SoapMessage message = loadSoap11Message("usernameTokenDigest-soap.xml");
+        MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
         interceptor.validateMessage(message, messageContext);
         assertValidateUsernameToken(message);
     }
 
     public void testValidateUsernameTokenWithQualifiedType() throws Exception {
         Wss4jSecurityInterceptor interceptor = prepareInterceptor("UsernameToken", true, false);
-        SoapMessage message = loadMessage("usernameTokenPlainTextQualifiedType-soap.xml");
-        MessageContext messageContext = new DefaultMessageContext(message, getMessageFactory());
+        SoapMessage message = loadSoap11Message("usernameTokenPlainTextQualifiedType-soap.xml");
+        MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
         interceptor.validateMessage(message, messageContext);
         assertValidateUsernameToken(message);
     }
@@ -63,9 +62,9 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
         Wss4jSecurityInterceptor interceptor = prepareInterceptor("UsernameToken", false, false);
         interceptor.setSecurementUsername("Bert");
         interceptor.setSecurementPassword("Ernie");
-        SoapMessage message = loadMessage("empty-soap.xml");
+        SoapMessage message = loadSoap11Message("empty-soap.xml");
 
-        MessageContext messageContext = getMessageContext(message);
+        MessageContext messageContext = getSoap11MessageContext(message);
 
         interceptor.secureMessage(message, messageContext);
         assertAddUsernameTokenPlainText(message);
@@ -75,9 +74,9 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
         Wss4jSecurityInterceptor interceptor = prepareInterceptor("UsernameToken", false, true);
         interceptor.setSecurementUsername("Bert");
         interceptor.setSecurementPassword("Ernie");
-        SoapMessage message = loadMessage("empty-soap.xml");
+        SoapMessage message = loadSoap11Message("empty-soap.xml");
 
-        MessageContext messageContext = getMessageContext(message);
+        MessageContext messageContext = getSoap11MessageContext(message);
         interceptor.secureMessage(message, messageContext);
         assertAddUsernameTokenDigest(message);
     }

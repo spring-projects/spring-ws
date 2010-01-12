@@ -16,14 +16,8 @@
 
 package org.springframework.ws.soap.security.wss4j;
 
-import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
 
 import org.w3c.dom.Document;
 
@@ -31,7 +25,6 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.WsSecurityValidationException;
-import org.springframework.xml.transform.StringResult;
 
 public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTestCase {
 
@@ -39,8 +32,8 @@ public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTest
         Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
         interceptor.setSecurementActions("Timestamp");
         interceptor.afterPropertiesSet();
-        SoapMessage message = loadMessage("empty-soap.xml");
-        MessageContext context = getMessageContext(message);
+        SoapMessage message = loadSoap11Message("empty-soap.xml");
+        MessageContext context = getSoap11MessageContext(message);
         interceptor.secureMessage(message, context);
         Document document = getDocument(message);
         assertXpathExists("timestamp header not found",
@@ -53,7 +46,7 @@ public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTest
         interceptor.afterPropertiesSet();
         SoapMessage message = getMessageWithTimestamp();
 
-        MessageContext context = new DefaultMessageContext(message, getMessageFactory());
+        MessageContext context = new DefaultMessageContext(message, getSoap11MessageFactory());
         interceptor.validateMessage(message, context);
         assertXpathNotExists("Security Header not removed", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security",
                 getDocument(message));
@@ -63,8 +56,8 @@ public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTest
         Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
         interceptor.setValidationActions("Timestamp");
         interceptor.afterPropertiesSet();
-        SoapMessage message = loadMessage("expiredTimestamp-soap.xml");
-        MessageContext context = new DefaultMessageContext(message, getMessageFactory());
+        SoapMessage message = loadSoap11Message("expiredTimestamp-soap.xml");
+        MessageContext context = new DefaultMessageContext(message, getSoap11MessageFactory());
         try {
             interceptor.validateMessage(message, context);
             fail();
@@ -81,8 +74,8 @@ public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTest
         interceptor.setTimestampStrict(true);
         interceptor.setSecurementTimeToLive(ttlInSeconds);
         interceptor.afterPropertiesSet();
-        SoapMessage message = loadMessage("empty-soap.xml");
-        MessageContext context = new DefaultMessageContext(message, getMessageFactory());
+        SoapMessage message = loadSoap11Message("empty-soap.xml");
+        MessageContext context = new DefaultMessageContext(message, getSoap11MessageFactory());
         interceptor.secureMessage(message, context);
         
         String created = xpathTemplate.evaluateAsString("/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsu:Timestamp/wsu:Created/text()",
@@ -100,8 +93,8 @@ public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTest
         Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
         interceptor.setSecurementActions("Timestamp");
         interceptor.afterPropertiesSet();
-        SoapMessage message = loadMessage("empty-soap.xml");
-        MessageContext context = getMessageContext(message);
+        SoapMessage message = loadSoap11Message("empty-soap.xml");
+        MessageContext context = getSoap11MessageContext(message);
         interceptor.secureMessage(message, context);
         return message;
     }

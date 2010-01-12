@@ -46,8 +46,8 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
     }
 
     public void testValidateUsernameTokenPlainText() throws Exception {
-        SoapMessage message = loadMessage("usernameTokenPlainTextWithHeaders-soap.xml");
-        MessageContext messageContext = new DefaultMessageContext(message, getMessageFactory());
+        SoapMessage message = loadSoap11Message("usernameTokenPlainTextWithHeaders-soap.xml");
+        MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
         interceptor.validateMessage(message, messageContext);
         Object result = getMessage(message);
         assertNotNull("No result returned", result);
@@ -70,8 +70,8 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
     }
 
     public void testEmptySecurityHeader() throws Exception {
-        SoapMessage message = loadMessage("emptySecurityHeader-soap.xml");
-        MessageContext messageContext = new DefaultMessageContext(message, getMessageFactory());
+        SoapMessage message = loadSoap11Message("emptySecurityHeader-soap.xml");
+        MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
         try {
             interceptor.validateMessage(message, messageContext);
             fail("validation must fail for an empty security header.");
@@ -87,8 +87,8 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
         interceptor.setSecurementPassword("Ernie");
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        SoapMessage message = loadMessage("customHeader-soap.xml");
-        MessageContext messageContext = new DefaultMessageContext(message, getMessageFactory());
+        SoapMessage message = loadSoap11Message("customHeader-soap.xml");
+        MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
         message.writeTo(os);
         String document = os.toString("UTF-8");
         assertXpathEvaluatesTo("Header 1 does not exist", "test1", "/SOAP-ENV:Envelope/SOAP-ENV:Header/test:header1",
