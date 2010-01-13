@@ -34,6 +34,10 @@ public class SoapUtilsTest extends TestCase {
         contentType = "application/soap+xml; action=" + soapAction + " ; charset=UTF-8";
         result = SoapUtils.extractActionFromContentType(contentType);
         assertEquals("Invalid SOAP action", soapAction, result);
+
+        contentType = "application/soap+xml; charset=UTF-8; action=" + soapAction;
+        result = SoapUtils.extractActionFromContentType(contentType);
+        assertEquals("Invalid SOAP action", soapAction, result);
     }
 
     public void testEscapeAction() throws Exception {
@@ -48,6 +52,20 @@ public class SoapUtilsTest extends TestCase {
 
         result = SoapUtils.escapeAction(null);
         assertEquals("Invalid SOAP action", "\"\"", result);
+
+    }
+
+    public void testSetActionInContentType() throws Exception {
+        String soapAction = "http://springframework.org/spring-ws/Action";
+        String contentType = "application/soap+xml";
+
+        String result = SoapUtils.setActionInContentType(contentType, soapAction);
+        assertEquals("Invalid SOAP action", soapAction, SoapUtils.extractActionFromContentType(result));
+
+        String anotherSoapAction = "http://springframework.org/spring-ws/AnotherAction";
+        String contentTypeWithAction = "application/soap+xml; action=http://springframework.org/spring-ws/Action";
+        result = SoapUtils.setActionInContentType(contentTypeWithAction, anotherSoapAction);
+        assertEquals("Invalid SOAP action", anotherSoapAction, SoapUtils.extractActionFromContentType(result));
 
     }
 
