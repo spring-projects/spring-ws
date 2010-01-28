@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap.addressing.core;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +30,9 @@ import java.util.List;
  * @see <a href="http://www.w3.org/TR/ws-addr-core/#msgaddrprops">Message Addressing Properties</a>
  * @since 1.5.0
  */
-public final class MessageAddressingProperties {
+public final class MessageAddressingProperties implements Serializable {
+
+    private static final long serialVersionUID = -6980663311446506672L;
 
     private final URI to;
 
