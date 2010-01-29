@@ -1,0 +1,2 @@
+http\://www.springframework.org/schema/oxm/spring-oxm-1.5.xsd=/org/springframework/oxm/config/spring-oxm-1.5.xsd
+http\://www.springframework.org/schema/web-services/web-services-1.5.xsd=/org/springframework/ws/config/web-services-1.5.xsd

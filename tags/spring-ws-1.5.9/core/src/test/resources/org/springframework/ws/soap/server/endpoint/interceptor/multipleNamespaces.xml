@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body>
+        <r:GetAllRuleSetsRequest xmlns="http://springframework.org/spring-ws"
+                                 xmlns:r="http://springframework.org/spring-ws"/>
+    </soapenv:Body>
+</soapenv:Envelope>

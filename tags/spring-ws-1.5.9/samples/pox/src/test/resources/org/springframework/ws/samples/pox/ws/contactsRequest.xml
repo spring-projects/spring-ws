@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Contacts xmlns="http://www.springframework.org/spring-ws/samples/pox">
+    <Contact>
+        <Name>John Doe</Name>
+        <Phone>626-555-3456</Phone>
+    </Contact>
+    <Contact>
+        <Name>Jane Doe</Name>
+        <Phone>626-555-6543</Phone>
+    </Contact>
+</Contacts>
