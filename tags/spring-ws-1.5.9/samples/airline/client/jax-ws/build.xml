@@ -14,7 +14,7 @@
         </typedef>
 
         <artifact:remoteRepository id="main" url="http://repo1.maven.org/maven2/"/>
-        <artifact:remoteRepository id="java.net.1" url="https://maven-repository.dev.java.net/nonav/repository"
+        <artifact:remoteRepository id="java.net.1" url="http://download.java.net/maven/1/"
                                    layout="legacy"/>
         <artifact:remoteRepository id="java.net.2" url="http://download.java.net/maven/2/"/>
 
