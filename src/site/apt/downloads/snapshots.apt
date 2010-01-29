@@ -23,7 +23,7 @@ Snapshot Builds
 <dependency>
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws-core</artifactId>
-    <version>1.5.8-SNAPSHOT</version>
+    <version>1.5.10-SNAPSHOT</version>
 </dependency>
 +---------------
 
