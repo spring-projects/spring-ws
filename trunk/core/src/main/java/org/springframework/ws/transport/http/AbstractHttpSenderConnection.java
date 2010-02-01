@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,6 +59,7 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
     /*
      * Receiving response
      */
+    @Override
     protected final boolean hasResponse() throws IOException {
         int responseCode = getResponseCode();
         if (HttpTransportConstants.STATUS_ACCEPTED == responseCode ||
@@ -75,6 +76,7 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
         return contentLength > 0;
     }
 
+    @Override
     protected final InputStream getResponseInputStream() throws IOException {
         InputStream inputStream;
         if (responseBuffer != null) {

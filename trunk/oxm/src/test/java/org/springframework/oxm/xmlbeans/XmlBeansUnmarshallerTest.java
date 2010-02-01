@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.oxm.xmlbeans;
 
 import java.io.StringReader;
@@ -31,10 +32,12 @@ import org.springframework.xml.transform.StringSource;
 
 public class XmlBeansUnmarshallerTest extends AbstractUnmarshallerTestCase {
 
+    @Override
     protected Unmarshaller createUnmarshaller() throws Exception {
         return new XmlBeansMarshaller();
     }
 
+    @Override
     protected void testFlights(Object o) {
         FlightsDocument flightsDocument = (FlightsDocument) o;
         assertNotNull("FlightsDocument is null", flightsDocument);
@@ -43,6 +46,7 @@ public class XmlBeansUnmarshallerTest extends AbstractUnmarshallerTestCase {
         testFlight(flights.getFlightArray(0));
     }
 
+    @Override
     protected void testFlight(Object o) {
         FlightType flight = null;
         if (o instanceof FlightType) {
@@ -56,6 +60,7 @@ public class XmlBeansUnmarshallerTest extends AbstractUnmarshallerTestCase {
         assertEquals("Number is invalid", 42L, flight.getNumber());
     }
 
+    @Override
     public void testUnmarshalPartialStaxSourceXmlStreamReader() throws Exception {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(INPUT_STRING));

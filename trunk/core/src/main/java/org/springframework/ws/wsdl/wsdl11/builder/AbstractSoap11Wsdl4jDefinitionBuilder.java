@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,6 +77,7 @@ public abstract class AbstractSoap11Wsdl4jDefinitionBuilder extends AbstractBind
     }
 
     /** Adds the WSDL SOAP namespace to the definition. */
+    @Override
     protected void populateDefinition(Definition definition) throws WSDLException {
         definition.addNamespace(WSDL_SOAP_PREFIX, WSDL_SOAP_NAMESPACE_URI);
     }
@@ -89,6 +90,7 @@ public abstract class AbstractSoap11Wsdl4jDefinitionBuilder extends AbstractBind
      * @param portType the corresponding <code>PortType</code>
      * @throws WSDLException in case of errors
      */
+    @Override
     protected void populateBinding(Binding binding, PortType portType) throws WSDLException {
         super.populateBinding(binding, portType);
         SOAPBinding soapBinding = (SOAPBinding) createSoapExtension(Binding.class, "binding");
@@ -120,6 +122,7 @@ public abstract class AbstractSoap11Wsdl4jDefinitionBuilder extends AbstractBind
      * @param bindingOperation the WSDL4J <code>BindingOperation</code>
      * @throws WSDLException in case of errors
      */
+    @Override
     protected void populateBindingOperation(BindingOperation bindingOperation, Operation operation)
             throws WSDLException {
         super.populateBindingOperation(bindingOperation, operation);
@@ -147,6 +150,7 @@ public abstract class AbstractSoap11Wsdl4jDefinitionBuilder extends AbstractBind
      * @param bindingInput the WSDL4J <code>BindingInput</code>
      * @throws WSDLException in case of errors
      */
+    @Override
     protected void populateBindingInput(BindingInput bindingInput, Input input) throws WSDLException {
         super.populateBindingInput(bindingInput, input);
         SOAPBody soapBody = (SOAPBody) createSoapExtension(BindingInput.class, "body");
@@ -160,6 +164,7 @@ public abstract class AbstractSoap11Wsdl4jDefinitionBuilder extends AbstractBind
      * @param bindingOutput the WSDL4J <code>BindingOutput</code>
      * @throws WSDLException in case of errors
      */
+    @Override
     protected void populateBindingOutput(BindingOutput bindingOutput, Output output) throws WSDLException {
         super.populateBindingOutput(bindingOutput, output);
         SOAPBody soapBody = (SOAPBody) createSoapExtension(BindingOutput.class, "body");
@@ -173,6 +178,7 @@ public abstract class AbstractSoap11Wsdl4jDefinitionBuilder extends AbstractBind
      * @param bindingFault the WSDL4J <code>BindingFault</code>
      * @throws WSDLException in case of errors
      */
+    @Override
     protected void populateBindingFault(BindingFault bindingFault, Fault fault) throws WSDLException {
         super.populateBindingFault(bindingFault, fault);
         SOAPFault soapFault = (SOAPFault) createSoapExtension(BindingFault.class, "fault");
@@ -212,6 +218,7 @@ public abstract class AbstractSoap11Wsdl4jDefinitionBuilder extends AbstractBind
      * @param port the WSDL4J <code>Port</code>
      * @throws WSDLException in case of errors
      */
+    @Override
     protected void populatePort(Port port, Binding binding) throws WSDLException {
         super.populatePort(port, binding);
         SOAPAddress soapAddress = (SOAPAddress) createSoapExtension(Port.class, "address");

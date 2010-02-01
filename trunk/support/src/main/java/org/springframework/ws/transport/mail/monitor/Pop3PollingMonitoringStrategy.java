@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,12 +41,14 @@ public class Pop3PollingMonitoringStrategy extends PollingMonitoringStrategy {
         super.setDeleteMessages(true);
     }
 
+    @Override
     public void setDeleteMessages(boolean deleteMessages) {
     }
 
     /**
      * Re-opens the folder, if it closed.
      */
+    @Override
     protected void afterSleep(Folder folder) throws MessagingException {
         if (!folder.isOpen()) {
             folder.open(Folder.READ_WRITE);
@@ -56,6 +58,7 @@ public class Pop3PollingMonitoringStrategy extends PollingMonitoringStrategy {
     /**
      * Simply returns {@link Folder#getMessages()}.
      */
+    @Override
     protected Message[] searchForNewMessages(Folder folder) throws MessagingException {
         return folder.getMessages();
     }
@@ -67,6 +70,7 @@ public class Pop3PollingMonitoringStrategy extends PollingMonitoringStrategy {
      * @param messages the messages to delete
      * @throws MessagingException in case of JavaMail errors
      */
+    @Override
     protected void deleteMessages(Folder folder, Message[] messages) throws MessagingException {
         super.deleteMessages(folder, messages);
         // expunge deleted mails, and make sure we've retrieved them before closing the folder

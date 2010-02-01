@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,14 +46,17 @@ public abstract class TransportInputStream extends InputStream {
         return inputStream;
     }
 
+    @Override
     public void close() throws IOException {
         getInputStream().close();
     }
 
+    @Override
     public int available() throws IOException {
         return getInputStream().available();
     }
 
+    @Override
     public synchronized void mark(int readlimit) {
         try {
             getInputStream().mark(readlimit);
@@ -63,6 +66,7 @@ public abstract class TransportInputStream extends InputStream {
         }
     }
 
+    @Override
     public boolean markSupported() {
         try {
             return getInputStream().markSupported();
@@ -72,22 +76,27 @@ public abstract class TransportInputStream extends InputStream {
         }
     }
 
+    @Override
     public int read(byte b[]) throws IOException {
         return getInputStream().read(b);
     }
 
+    @Override
     public int read(byte b[], int off, int len) throws IOException {
         return getInputStream().read(b, off, len);
     }
 
+    @Override
     public synchronized void reset() throws IOException {
         getInputStream().reset();
     }
 
+    @Override
     public long skip(long n) throws IOException {
         return getInputStream().skip(n);
     }
 
+    @Override
     public int read() throws IOException {
         return getInputStream().read();
     }

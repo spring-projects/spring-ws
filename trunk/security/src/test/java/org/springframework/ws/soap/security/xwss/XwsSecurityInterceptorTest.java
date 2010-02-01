@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ public class XwsSecurityInterceptorTest extends TestCase {
 
     private MessageFactory messageFactory;
 
+    @Override
     protected void setUp() throws Exception {
         messageFactory = MessageFactory.newInstance();
     }
@@ -41,11 +42,13 @@ public class XwsSecurityInterceptorTest extends TestCase {
         final SOAPMessage validatedRequest = messageFactory.createMessage();
         XwsSecurityInterceptor interceptor = new XwsSecurityInterceptor() {
 
+            @Override
             protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
                     throws XwsSecuritySecurementException {
                 fail("secure not expected");
             }
 
+            @Override
             protected void validateMessage(SoapMessage message, MessageContext messageContext)
                     throws WsSecurityValidationException {
                 SaajSoapMessage saajSoapMessage = (SaajSoapMessage) message;
@@ -64,12 +67,14 @@ public class XwsSecurityInterceptorTest extends TestCase {
         final SOAPMessage securedResponse = messageFactory.createMessage();
         XwsSecurityInterceptor interceptor = new XwsSecurityInterceptor() {
 
+            @Override
             protected void secureMessage(SoapMessage message, MessageContext messageContext)
                     throws XwsSecuritySecurementException {
                 SaajSoapMessage saajSoapMessage = (SaajSoapMessage) message;
                 saajSoapMessage.setSaajMessage(securedResponse);
             }
 
+            @Override
             protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
                     throws WsSecurityValidationException {
                 fail("validate not expected");
@@ -89,6 +94,7 @@ public class XwsSecurityInterceptorTest extends TestCase {
         final SOAPMessage securedRequest = messageFactory.createMessage();
         XwsSecurityInterceptor interceptor = new XwsSecurityInterceptor() {
 
+            @Override
             protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
                     throws XwsSecuritySecurementException {
                 SaajSoapMessage saajSoapMessage = (SaajSoapMessage) soapMessage;
@@ -96,6 +102,7 @@ public class XwsSecurityInterceptorTest extends TestCase {
                 saajSoapMessage.setSaajMessage(securedRequest);
             }
 
+            @Override
             protected void validateMessage(SoapMessage message, MessageContext messageContext)
                     throws WsSecurityValidationException {
                 fail("validate not expected");
@@ -112,11 +119,13 @@ public class XwsSecurityInterceptorTest extends TestCase {
         final SOAPMessage validatedResponse = messageFactory.createMessage();
         XwsSecurityInterceptor interceptor = new XwsSecurityInterceptor() {
 
+            @Override
             protected void secureMessage(SoapMessage message, MessageContext messageContext)
                     throws XwsSecuritySecurementException {
                 fail("secure not expected");
             }
 
+            @Override
             protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
                     throws WsSecurityValidationException {
                 SaajSoapMessage saajSoapMessage = (SaajSoapMessage) soapMessage;

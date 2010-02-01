@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -273,6 +273,7 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
             this.sc = sc;
         }
 
+        @Override
         protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
             resp.sendError(sc);
         }
@@ -285,6 +286,7 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
 
         private TransformerFactory transformerFactory;
 
+        @Override
         public void init(ServletConfig servletConfig) throws ServletException {
             super.init(servletConfig);
             documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -292,6 +294,7 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
             transformerFactory = TransformerFactory.newInstance();
         }
 
+        @Override
         public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
             try {
                 DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -316,6 +319,7 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
             this.sc = sc;
         }
 
+        @Override
         public void init(ServletConfig servletConfig) throws ServletException {
             super.init(servletConfig);
             try {
@@ -326,6 +330,7 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
             }
         }
 
+        @Override
         public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
             try {
                 MimeHeaders headers = getHeaders(req);
@@ -382,6 +387,7 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
 
     private static class EchoSoapServlet extends AbstractSoapServlet {
 
+        @Override
         protected SOAPMessage onMessage(SOAPMessage message) throws SOAPException {
             return message;
         }
@@ -389,6 +395,7 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
 
     private static class NoResponseSoapServlet extends AbstractSoapServlet {
 
+        @Override
         protected SOAPMessage onMessage(SOAPMessage message) throws SOAPException {
             return null;
         }
@@ -396,6 +403,7 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
 
     private static class SoapFaultServlet extends AbstractSoapServlet {
 
+        @Override
         protected SOAPMessage onMessage(SOAPMessage message) throws SOAPException {
             SOAPMessage response = messageFactory.createMessage();
             SOAPBody body = response.getSOAPBody();
@@ -406,6 +414,7 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
 
     private static class AttachmentsServlet extends AbstractSoapServlet {
 
+        @Override
         protected SOAPMessage onMessage(SOAPMessage message) throws SOAPException {
             assertEquals("No attachments found", 1, message.countAttachments());
             return null;
@@ -419,6 +428,7 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
             super(test);
         }
 
+        @Override
         protected void setUp() throws Exception {
             removeXmlDataContentHandler();
 
@@ -448,6 +458,7 @@ public class WebServiceTemplateIntegrationTest extends XMLTestCase {
             CommandMap.setDefaultCommandMap(new MailcapCommandMap());
         }
 
+        @Override
         protected void tearDown() throws Exception {
             jettyServer.stop();
         }

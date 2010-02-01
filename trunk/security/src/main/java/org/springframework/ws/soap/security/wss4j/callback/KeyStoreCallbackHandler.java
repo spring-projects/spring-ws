@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,10 +82,12 @@ public class KeyStoreCallbackHandler extends AbstractWsPasswordCallbackHandler i
         }
     }
 
+    @Override
     protected void handleDecrypt(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
         callback.setPassword(privateKeyPassword);
     }
 
+    @Override
     protected void handleKeyName(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
         try {
             String identifier = callback.getIdentifier();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,6 +87,7 @@ public class XPathPayloadEndpointMapping extends AbstractMapBasedEndpointMapping
         transformerFactory = TransformerFactory.newInstance();
     }
 
+    @Override
     protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
         Element payloadElement = getMessagePayloadElement(messageContext.getRequest());
         return expression.evaluateAsString(payloadElement);
@@ -99,6 +100,7 @@ public class XPathPayloadEndpointMapping extends AbstractMapBasedEndpointMapping
         return (Element) domResult.getNode().getFirstChild();
     }
 
+    @Override
     protected boolean validateLookupKey(String key) {
         return StringUtils.hasLength(key);
     }

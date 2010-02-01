@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,18 +21,22 @@ import org.w3c.dom.Element;
 
 public class DomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 
+    @Override
     protected PayloadEndpoint createNoResponseEndpoint() throws Exception {
         return new AbstractDomPayloadEndpoint() {
 
+            @Override
             protected Element invokeInternal(Element requestElement, Document document) throws Exception {
                 return null;
             }
         };
     }
 
+    @Override
     protected PayloadEndpoint createResponseEndpoint() throws Exception {
         return new AbstractDomPayloadEndpoint() {
 
+            @Override
             protected Element invokeInternal(Element requestElement, Document responseDocument) throws Exception {
                 assertNotNull("No requestElement passed", requestElement);
                 assertNotNull("No responseDocument passed", responseDocument);
@@ -43,9 +47,11 @@ public class DomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
         };
     }
 
+    @Override
     protected PayloadEndpoint createNoRequestEndpoint() throws Exception {
         return new AbstractDomPayloadEndpoint() {
 
+            @Override
             protected Element invokeInternal(Element requestElement, Document responseDocument) throws Exception {
                 assertNull("RequestElement passed", requestElement);
                 return null;

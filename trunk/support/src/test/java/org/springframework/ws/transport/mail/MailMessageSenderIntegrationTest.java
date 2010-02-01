@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ public class MailMessageSenderIntegrationTest extends TestCase {
 
     private static final String SOAP_ACTION = "http://springframework.org/DoIt";
 
+    @Override
     protected void setUp() throws Exception {
         messageSender = new MailMessageSender();
         messageSender.setFrom("Spring-WS SOAP Client <client@example.com>");
@@ -45,6 +46,7 @@ public class MailMessageSenderIntegrationTest extends TestCase {
         messageSender.afterPropertiesSet();
     }
 
+    @Override
     protected void tearDown() throws Exception {
         Mailbox.clearAll();
     }

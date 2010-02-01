@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
         assertEquals("Invalid soap version", SoapVersion.SOAP_11, soapMessage.getVersion());
     }
 
+    @Override
     public void testCreateSoapMessageNoAttachment() throws Exception {
         InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11.xml");
         Properties headers = new Properties();
@@ -53,6 +54,7 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
         assertFalse("Message a XOP pacakge", soapMessage.isXopPackage());
     }
 
+    @Override
     public void testCreateSoapMessageSwA() throws Exception {
         InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-attachment.bin");
         Properties headers = new Properties();
@@ -72,6 +74,7 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
         assertEquals("Invalid content id", "interface21", attachment.getContentId());
     }
 
+    @Override
     public void testCreateSoapMessageMtom() throws Exception {
         InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-mtom.bin");
         Properties headers = new Properties();

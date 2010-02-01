@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,6 +67,7 @@ public abstract class AbstractBindingWsdl4jDefinitionBuilder extends AbstractWsd
      * @see #populateBindingOutput(BindingOutput, Output)
      * @see #populateBindingFault(BindingFault, Fault)
      */
+    @Override
     public void buildBindings(Definition definition) throws WSDLException {
         for (Iterator iterator = definition.getPortTypes().values().iterator(); iterator.hasNext();) {
             PortType portType = (PortType) iterator.next();
@@ -207,6 +208,7 @@ public abstract class AbstractBindingWsdl4jDefinitionBuilder extends AbstractWsd
      * @throws WSDLException in case of errors
      * @see #populatePort(Port, Binding)
      */
+    @Override
     public void buildServices(Definition definition) throws WSDLException {
         Service service = definition.createService();
         populateService(service);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -153,24 +153,30 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
             super(content);
         }
 
+        @Override
         public void write(String str) {
             content.append(str);
         }
 
+        @Override
         public void write(int c) {
             content.append((char) c);
         }
 
+        @Override
         public void write(String str, int off, int len) {
             content.append(str.substring(off, off + len));
         }
 
+        @Override
         public void close() throws IOException {
         }
 
+        @Override
         public void flush() {
         }
 
+        @Override
         public void write(char cbuf[], int off, int len) {
             if (off < 0 || off > cbuf.length || len < 0 || off + len > cbuf.length || off + len < 0) {
                 throw new IndexOutOfBoundsException();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,6 +74,7 @@ public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEnd
     }
 
     /** Supports methods with @XPathParam parameters, and return either <code>Source</code> or nothing. */
+    @Override
     protected boolean supportsInternal(MethodEndpoint methodEndpoint) {
         Method method = methodEndpoint.getMethod();
         if (!(Source.class.isAssignableFrom(method.getReturnType()) || Void.TYPE.equals(method.getReturnType()))) {
@@ -105,6 +106,7 @@ public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEnd
                 String.class.isAssignableFrom(clazz);
     }
 
+    @Override
     protected void invokeInternal(MessageContext messageContext, MethodEndpoint methodEndpoint) throws Exception {
         Element payloadElement = getRootElement(messageContext.getRequest().getPayloadSource());
         Object[] args = getMethodArguments(payloadElement, methodEndpoint.getMethod());

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2005-2010 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.springframework.ws.transport.http;
 
 import java.io.ByteArrayInputStream;
@@ -31,6 +47,7 @@ public class MessageDispatcherServletTest extends XMLTestCase {
 
     private MessageDispatcherServlet servlet;
 
+    @Override
     protected void setUp() throws Exception {
         config = new MockServletConfig(new MockServletContext(), "spring-ws");
         servlet = new MessageDispatcherServlet();
@@ -77,6 +94,7 @@ public class MessageDispatcherServletTest extends XMLTestCase {
 
     private static class DetectWebApplicationContext extends StaticWebApplicationContext {
 
+        @Override
         public void refresh() throws BeansException, IllegalStateException {
             registerSingleton("payloadMapping", PayloadRootQNameEndpointMapping.class);
             registerSingleton("payloadAdapter", PayloadEndpointAdapter.class);
@@ -87,6 +105,7 @@ public class MessageDispatcherServletTest extends XMLTestCase {
 
     private static class WsdlDefinitionWebApplicationContext extends StaticWebApplicationContext {
 
+        @Override
         public void refresh() throws BeansException, IllegalStateException {
             MutablePropertyValues mpv = new MutablePropertyValues();
             mpv.addPropertyValue("wsdl", new ClassPathResource("wsdl11-input.wsdl", getClass()));

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,14 +44,17 @@ public class MockTransportInputStream extends TransportInputStream {
         headers = new Properties();
     }
 
+    @Override
     protected InputStream createInputStream() throws IOException {
         return inputStream;
     }
 
+    @Override
     public Iterator getHeaderNames() throws IOException {
         return headers.keySet().iterator();
     }
 
+    @Override
     public Iterator getHeaders(String name) throws IOException {
         String[] values = StringUtils.delimitedListToStringArray(headers.getProperty(name), ", ");
         return Arrays.asList(values).iterator();

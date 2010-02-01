@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,11 @@ import org.dom4j.Element;
 
 public class Dom4jPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 
+    @Override
     protected PayloadEndpoint createResponseEndpoint() {
         return new AbstractDom4jPayloadEndpoint() {
 
+            @Override
             protected Element invokeInternal(Element requestElement, Document responseDocument) throws Exception {
                 assertNotNull("No requestElement passed", requestElement);
                 assertNotNull("No responseDocument passed", responseDocument);
@@ -34,18 +36,22 @@ public class Dom4jPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
         };
     }
 
+    @Override
     protected PayloadEndpoint createNoResponseEndpoint() throws Exception {
         return new AbstractDom4jPayloadEndpoint() {
 
+            @Override
             protected Element invokeInternal(Element requestElement, Document responseDocument) throws Exception {
                 return null;
             }
         };
     }
 
+    @Override
     protected PayloadEndpoint createNoRequestEndpoint() throws Exception {
         return new AbstractDom4jPayloadEndpoint() {
 
+            @Override
             protected Element invokeInternal(Element requestElement, Document responseDocument) throws Exception {
                 assertNull("RequestElement passed", requestElement);
                 return null;

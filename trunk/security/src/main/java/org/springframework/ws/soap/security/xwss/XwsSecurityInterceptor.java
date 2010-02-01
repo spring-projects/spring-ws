@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,6 +125,7 @@ public class XwsSecurityInterceptor extends AbstractWsSecurityInterceptor implem
      * @throws XwsSecuritySecurementException in case of errors
      * @throws IllegalArgumentException       when soapMessage is not a <code>SaajSoapMessage</code>
      */
+    @Override
     protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
             throws XwsSecuritySecurementException {
         Assert.isTrue(soapMessage instanceof SaajSoapMessage, "XwsSecurityInterceptor requires a SaajSoapMessage. " +
@@ -150,6 +151,7 @@ public class XwsSecurityInterceptor extends AbstractWsSecurityInterceptor implem
      * @throws XwsSecurityValidationException in case of errors
      * @throws IllegalArgumentException       when soapMessage is not a <code>SaajSoapMessage</code>
      */
+    @Override
     protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
             throws WsSecurityValidationException {
         Assert.isTrue(soapMessage instanceof SaajSoapMessage, "XwsSecurityInterceptor requires a SaajSoapMessage. " +
@@ -168,6 +170,7 @@ public class XwsSecurityInterceptor extends AbstractWsSecurityInterceptor implem
         }
     }
 
+    @Override
     protected void cleanUp() {
         if (callbackHandler != null) {
             try {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,41 +72,50 @@ class Saaj11Implementation extends SaajImplementation {
         return INSTANCE;
     }
 
+    @Override
     public QName getName(SOAPElement element) {
         return SaajUtils.toQName(element.getElementName());
     }
 
+    @Override
     public Source getSource(SOAPElement element) {
         return new SAXSource(new SaajXmlReader(element), new InputSource());
     }
 
+    @Override
     public Result getResult(SOAPElement element) {
         return new SAXResult(new SaajContentHandler(element));
     }
 
+    @Override
     public String getText(SOAPElement element) {
         return element.getValue();
     }
 
+    @Override
     public void setText(SOAPElement element, String content) throws SOAPException {
         element.addTextNode(content);
     }
 
+    @Override
     public void addAttribute(SOAPElement element, QName name, String value) throws SOAPException {
         Name attributeName = SaajUtils.toName(name, element);
         element.addAttribute(attributeName, value);
     }
 
+    @Override
     public void removeAttribute(SOAPElement element, QName name) throws SOAPException {
         Name attributeName = SaajUtils.toName(name, element);
         element.removeAttribute(attributeName);
     }
 
+    @Override
     public String getAttributeValue(SOAPElement element, QName name) throws SOAPException {
         Name attributeName = SaajUtils.toName(name, element);
         return element.getAttributeValue(attributeName);
     }
 
+    @Override
     public Iterator getAllAttibutes(SOAPElement element) {
         List results = new ArrayList();
         for (Iterator iterator = element.getAllAttributes(); iterator.hasNext();) {
@@ -116,6 +125,7 @@ class Saaj11Implementation extends SaajImplementation {
         return results.iterator();
     }
 
+    @Override
     public QName getFaultCode(SOAPFault fault) {
         String code = fault.getFaultCode();
         int idx = code.indexOf(':');
@@ -133,16 +143,19 @@ class Saaj11Implementation extends SaajImplementation {
         return true;
     }
 
+    @Override
     public DetailEntry addDetailEntry(Detail detail, QName name) throws SOAPException {
         Name detailEntryName = SaajUtils.toName(name, detail);
         return detail.addDetailEntry(detailEntryName);
     }
 
+    @Override
     public SOAPHeaderElement addHeaderElement(SOAPHeader header, QName name) throws SOAPException {
         Name saajName = SaajUtils.toName(name, header);
         return header.addHeaderElement(saajName);
     }
 
+    @Override
     public SOAPFault addFault(SOAPBody body, QName faultCode, String faultString, Locale locale) throws SOAPException {
         SOAPFault fault = body.addFault();
         if (StringUtils.hasLength(faultCode.getNamespaceURI()) &&
@@ -161,26 +174,31 @@ class Saaj11Implementation extends SaajImplementation {
     }
 
     /** Returns the envelope of the given message. */
+    @Override
     public SOAPEnvelope getEnvelope(SOAPMessage message) throws SOAPException {
         return message.getSOAPPart().getEnvelope();
     }
 
     /** Returns the header of the given envelope. */
+    @Override
     public SOAPHeader getHeader(SOAPEnvelope envelope) throws SOAPException {
         return envelope.getHeader();
     }
 
     /** Returns the body of the given envelope. */
+    @Override
     public SOAPBody getBody(SOAPEnvelope envelope) throws SOAPException {
         return envelope.getBody();
     }
 
     /** Returns all header elements. */
+    @Override
     public Iterator examineAllHeaderElements(SOAPHeader header) {
         return header.getChildElements();
     }
 
     /** Returns all header elements for which the must understand attribute is true, given the actor or role. */
+    @Override
     public Iterator examineMustUnderstandHeaderElements(SOAPHeader header, String actorOrRole) {
         List result = new ArrayList();
         for (Iterator iterator = header.examineHeaderElements(actorOrRole); iterator.hasNext();) {
@@ -193,74 +211,89 @@ class Saaj11Implementation extends SaajImplementation {
     }
 
     /** Returns the SOAP 1.1 actor or SOAP 1.2 role attribute for the given header element. */
+    @Override
     public String getActorOrRole(SOAPHeaderElement headerElement) {
         return headerElement.getActor();
     }
 
     /** Sets the SOAP 1.1 actor or SOAP 1.2 role attribute for the given header element. */
+    @Override
     public void setActorOrRole(SOAPHeaderElement headerElement, String actorOrRole) {
         headerElement.setActor(actorOrRole);
     }
 
     /** Gets the must understand attribute for the given header element. */
+    @Override
     public boolean getMustUnderstand(SOAPHeaderElement headerElement) {
         return headerElement.getMustUnderstand();
     }
 
     /** Sets the must understand attribute for the given header element. */
+    @Override
     public void setMustUnderstand(SOAPHeaderElement headerElement, boolean mustUnderstand) {
         headerElement.setMustUnderstand(mustUnderstand);
     }
 
     /** Returns <code>true</code> if the body has a fault, <code>false</code> otherwise. */
+    @Override
     public boolean hasFault(SOAPBody body) {
         return body.hasFault();
     }
 
     /** Returns the fault for the given body, if any. */
+    @Override
     public SOAPFault getFault(SOAPBody body) {
         return body.getFault();
     }
 
     /** Returns the actor for the given fault. */
+    @Override
     public String getFaultActor(SOAPFault fault) {
         return fault.getFaultActor();
     }
 
     /** Sets the actor for the given fault. */
+    @Override
     public void setFaultActor(SOAPFault fault, String actorOrRole) throws SOAPException {
         fault.setFaultActor(actorOrRole);
     }
 
     /** Returns the fault string for the given fault. */
+    @Override
     public String getFaultString(SOAPFault fault) {
         return fault.getFaultString();
     }
 
     /** Returns the fault string language for the given fault. */
+    @Override
     public Locale getFaultStringLocale(SOAPFault fault) {
         return Locale.ENGLISH;
     }
 
     /** Returns the fault detail for the given fault. */
+    @Override
     public Detail getFaultDetail(SOAPFault fault) {
         return fault.getDetail();
     }
 
     /** Adds a fault detail for the given fault. */
+    @Override
     public Detail addFaultDetail(SOAPFault fault) throws SOAPException {
         return fault.addDetail();
     }
 
+    @Override
     public void addTextNode(DetailEntry detailEntry, String text) throws SOAPException {
         detailEntry.addTextNode(text);
     }
 
     /** Returns an iteration over all detail entries. */
+    @Override
     public Iterator getDetailEntries(Detail detail) {
         return detail.getDetailEntries();
     }
 
+    @Override
     public SOAPElement getFirstBodyElement(SOAPBody body) {
         for (Iterator iterator = body.getChildElements(); iterator.hasNext();) {
             Object child = iterator.next();
@@ -271,6 +304,7 @@ class Saaj11Implementation extends SaajImplementation {
         return null;
     }
 
+    @Override
     public void removeContents(SOAPElement element) {
         for (Iterator iterator = element.getChildElements(); iterator.hasNext();) {
             iterator.next();
@@ -278,15 +312,18 @@ class Saaj11Implementation extends SaajImplementation {
         }
     }
 
+    @Override
     Iterator getChildElements(SOAPElement element, QName name) throws SOAPException {
         Name elementName = SaajUtils.toName(name, element);
         return element.getChildElements(elementName);
     }
 
+    @Override
     void addNamespaceDeclaration(SOAPElement element, String prefix, String namespaceUri) throws SOAPException {
         element.addNamespaceDeclaration(prefix, namespaceUri);
     }
 
+    @Override
     public void writeTo(SOAPMessage message, OutputStream outputStream) throws SOAPException, IOException {
         if (message.saveRequired()) {
             message.saveChanges();
@@ -310,18 +347,22 @@ class Saaj11Implementation extends SaajImplementation {
 
     }
 
+    @Override
     public MimeHeaders getMimeHeaders(SOAPMessage message) {
         return message.getMimeHeaders();
     }
 
+    @Override
     public Iterator getAttachments(SOAPMessage message) {
         return message.getAttachments();
     }
 
+    @Override
     public Iterator getAttachment(SOAPMessage message, MimeHeaders mimeHeaders) {
         return message.getAttachments(mimeHeaders);
     }
 
+    @Override
     public AttachmentPart addAttachmentPart(SOAPMessage message, DataHandler dataHandler) {
         AttachmentPart attachmentPart = message.createAttachmentPart(dataHandler);
         message.addAttachmentPart(attachmentPart);
@@ -332,42 +373,52 @@ class Saaj11Implementation extends SaajImplementation {
     // Unsupported
     //
 
+    @Override
     public String getFaultRole(SOAPFault fault) {
         throw new UnsupportedOperationException("SAAJ 1.1 does not support SOAP 1.2");
     }
 
+    @Override
     public void setFaultRole(SOAPFault fault, String role) {
         throw new UnsupportedOperationException("SAAJ 1.1 does not support SOAP 1.2");
     }
 
+    @Override
     public SOAPHeaderElement addNotUnderstoodHeaderElement(SOAPHeader header, QName name) {
         throw new UnsupportedOperationException("SAAJ 1.1 does not support SOAP 1.2");
     }
 
+    @Override
     public SOAPHeaderElement addUpgradeHeaderElement(SOAPHeader header, String[] supportedSoapUris) {
         throw new UnsupportedOperationException("SAAJ 1.1 does not support SOAP 1.2");
     }
 
+    @Override
     public Iterator getFaultSubcodes(SOAPFault fault) {
         throw new UnsupportedOperationException("SAAJ 1.1 does not support SOAP 1.2");
     }
 
+    @Override
     public void appendFaultSubcode(SOAPFault fault, QName subcode) {
         throw new UnsupportedOperationException("SAAJ 1.1 does not support SOAP 1.2");
     }
 
+    @Override
     public String getFaultNode(SOAPFault fault) {
         throw new UnsupportedOperationException("SAAJ 1.1 does not support SOAP 1.2");
     }
 
+    @Override
     public void setFaultNode(SOAPFault fault, String uri) {
         throw new UnsupportedOperationException("SAAJ 1.1 does not support SOAP 1.2");
     }
 
+    @Override
     public String getFaultReasonText(SOAPFault fault, Locale locale) {
         throw new UnsupportedOperationException("SAAJ 1.1 does not support SOAP 1.2");
     }
 
+    @Override
     public void setFaultReasonText(SOAPFault fault, Locale locale, String text) {
         throw new UnsupportedOperationException("SAAJ 1.1 does not support SOAP 1.2");
     }

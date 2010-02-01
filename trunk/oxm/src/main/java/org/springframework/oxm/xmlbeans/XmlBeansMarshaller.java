@@ -1,3 +1,19 @@
+/*
+ * Copyright 2005-2010 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.springframework.oxm.xmlbeans;
 
 import java.io.IOException;
@@ -88,6 +104,7 @@ public class XmlBeansMarshaller extends AbstractMarshaller {
         return XmlObject.class.isAssignableFrom(clazz);
     }
 
+    @Override
     protected final void marshalDomNode(Object graph, Node node) throws XmlMappingException {
         Document document = node.getNodeType() == Node.DOCUMENT_NODE ? (Document) node : node.getOwnerDocument();
         Node xmlBeansNode = ((XmlObject) graph).newDomNode(getXmlOptions());
@@ -99,11 +116,13 @@ public class XmlBeansMarshaller extends AbstractMarshaller {
         }
     }
 
+    @Override
     protected final void marshalOutputStream(Object graph, OutputStream outputStream)
             throws XmlMappingException, IOException {
         ((XmlObject) graph).save(outputStream, getXmlOptions());
     }
 
+    @Override
     protected final void marshalSaxHandlers(Object graph, ContentHandler contentHandler, LexicalHandler lexicalHandler)
             throws XmlMappingException {
         try {
@@ -114,20 +133,24 @@ public class XmlBeansMarshaller extends AbstractMarshaller {
         }
     }
 
+    @Override
     protected final void marshalWriter(Object graph, Writer writer) throws XmlMappingException, IOException {
         ((XmlObject) graph).save(writer, getXmlOptions());
     }
 
+    @Override
     protected final void marshalXmlEventWriter(Object graph, XMLEventWriter eventWriter) {
         ContentHandler contentHandler = new StaxEventContentHandler(eventWriter);
         marshalSaxHandlers(graph, contentHandler, null);
     }
 
+    @Override
     protected final void marshalXmlStreamWriter(Object graph, XMLStreamWriter streamWriter) throws XmlMappingException {
         ContentHandler contentHandler = new StaxStreamContentHandler(streamWriter);
         marshalSaxHandlers(graph, contentHandler, null);
     }
 
+    @Override
     protected final Object unmarshalDomNode(Node node) throws XmlMappingException {
         try {
             XmlObject object = XmlObject.Factory.parse(node, getXmlOptions());
@@ -139,6 +162,7 @@ public class XmlBeansMarshaller extends AbstractMarshaller {
         }
     }
 
+    @Override
     protected final Object unmarshalInputStream(InputStream inputStream) throws XmlMappingException, IOException {
         try {
             XmlObject object = XmlObject.Factory.parse(inputStream, getXmlOptions());
@@ -150,6 +174,7 @@ public class XmlBeansMarshaller extends AbstractMarshaller {
         }
     }
 
+    @Override
     protected final Object unmarshalReader(Reader reader) throws XmlMappingException, IOException {
         try {
             XmlObject object = XmlObject.Factory.parse(reader, getXmlOptions());
@@ -161,6 +186,7 @@ public class XmlBeansMarshaller extends AbstractMarshaller {
         }
     }
 
+    @Override
     protected final Object unmarshalSaxReader(XMLReader xmlReader, InputSource inputSource)
             throws XmlMappingException, IOException {
         XmlSaxHandler saxHandler = XmlObject.Factory.newXmlSaxHandler(getXmlOptions());
@@ -188,6 +214,7 @@ public class XmlBeansMarshaller extends AbstractMarshaller {
         }
     }
 
+    @Override
     protected final Object unmarshalXmlEventReader(XMLEventReader eventReader) throws XmlMappingException {
         XMLReader reader = new StaxEventXmlReader(eventReader);
         try {
@@ -198,6 +225,7 @@ public class XmlBeansMarshaller extends AbstractMarshaller {
         }
     }
 
+    @Override
     protected final Object unmarshalXmlStreamReader(XMLStreamReader streamReader) throws XmlMappingException {
         try {
             XmlObject object = XmlObject.Factory.parse(streamReader, getXmlOptions());

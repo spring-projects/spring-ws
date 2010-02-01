@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,12 +39,14 @@ import org.springframework.ws.soap.server.SoapMessageDispatcher;
 
 public class MessageMethodEndpointAdapter extends AbstractMethodEndpointAdapter {
 
+    @Override
     protected boolean supportsInternal(MethodEndpoint methodEndpoint) {
         Method method = methodEndpoint.getMethod();
         return Void.TYPE.isAssignableFrom(method.getReturnType()) && method.getParameterTypes().length == 1 &&
                 MessageContext.class.isAssignableFrom(method.getParameterTypes()[0]);
     }
 
+    @Override
     protected void invokeInternal(MessageContext messageContext, MethodEndpoint methodEndpoint) throws Exception {
         methodEndpoint.invoke(new Object[]{messageContext});
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -124,6 +124,7 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
                 "Setting either 'keyManagers' or 'trustManagers' is required");
     }
 
+    @Override
     protected void prepareConnection(HttpURLConnection connection) throws IOException {
         super.prepareConnection(connection);
         if (connection instanceof HttpsURLConnection) {

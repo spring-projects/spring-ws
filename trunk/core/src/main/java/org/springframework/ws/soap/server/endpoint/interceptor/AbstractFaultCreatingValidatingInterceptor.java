@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -148,6 +148,7 @@ public abstract class AbstractFaultCreatingValidatingInterceptor extends Abstrac
      * @param errors         the validation errors
      * @return <code>true</code> to continue processing the request, <code>false</code> (the default) otherwise
      */
+    @Override
     protected boolean handleRequestValidationErrors(MessageContext messageContext, SAXParseException[] errors)
             throws TransformerException {
         for (int i = 0; i < errors.length; i++) {

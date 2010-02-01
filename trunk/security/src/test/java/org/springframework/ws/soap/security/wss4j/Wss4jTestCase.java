@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.ws.soap.security.wss4j;
 
 import java.io.InputStream;
@@ -58,6 +59,7 @@ public abstract class Wss4jTestCase extends TestCase {
 
     protected Jaxp13XPathTemplate xpathTemplate = new Jaxp13XPathTemplate();
 
+    @Override
     protected final void setUp() throws Exception {
         if (!axiomTest && !saajTest) {
             throw new IllegalArgumentException("test class name must statrt with either Axiom or Saaj");
@@ -254,6 +256,7 @@ public abstract class Wss4jTestCase extends TestCase {
 
     protected MessageContext getSoap11MessageContext(final SoapMessage response) throws Exception {
         return new DefaultMessageContext(response, getSoap11MessageFactory()) {
+            @Override
             public WebServiceMessage getResponse() {
                 return response;
             }
@@ -262,6 +265,7 @@ public abstract class Wss4jTestCase extends TestCase {
 
     protected MessageContext getSoap12MessageContext(final SoapMessage response) throws Exception {
         return new DefaultMessageContext(response, getSoap12MessageFactory()) {
+            @Override
             public WebServiceMessage getResponse() {
                 return response;
             }

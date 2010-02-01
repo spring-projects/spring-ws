@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ class BytesMessageInputStream extends InputStream {
         this.message = message;
     }
 
+    @Override
     public int read(byte b[]) throws IOException {
         try {
             return message.readBytes(b);
@@ -48,6 +49,7 @@ class BytesMessageInputStream extends InputStream {
         }
     }
 
+    @Override
     public int read(byte b[], int off, int len) throws IOException {
         if (off == 0) {
             try {
@@ -62,6 +64,7 @@ class BytesMessageInputStream extends InputStream {
         }
     }
 
+    @Override
     public int read() throws IOException {
         try {
             return message.readByte();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.oxm.castor;
 
 import javax.xml.transform.sax.SAXResult;
@@ -25,6 +26,7 @@ import org.xml.sax.ContentHandler;
 
 public class CastorMarshallerTest extends AbstractMarshallerTestCase {
 
+    @Override
     protected Marshaller createMarshaller() throws Exception {
         CastorMarshaller marshaller = new CastorMarshaller();
         ClassPathResource mappingLocation = new ClassPathResource("mapping.xml", CastorMarshaller.class);
@@ -33,6 +35,7 @@ public class CastorMarshallerTest extends AbstractMarshallerTestCase {
         return marshaller;
     }
 
+    @Override
     protected Object createFlights() {
         Flight flight = new Flight();
         flight.setNumber(42L);

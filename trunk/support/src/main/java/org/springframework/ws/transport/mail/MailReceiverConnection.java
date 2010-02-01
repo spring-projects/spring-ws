@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -133,6 +133,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
     * Receiving
     */
 
+    @Override
     protected Iterator getRequestHeaderNames() throws IOException {
         try {
             List headers = new ArrayList();
@@ -148,6 +149,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
         }
     }
 
+    @Override
     protected Iterator getRequestHeaders(String name) throws IOException {
         try {
             String[] headers = requestMessage.getHeader(name);
@@ -158,6 +160,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
         }
     }
 
+    @Override
     protected InputStream getRequestInputStream() throws IOException {
         try {
             return requestMessage.getInputStream();
@@ -167,6 +170,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
         }
     }
 
+    @Override
     protected void addResponseHeader(String name, String value) throws IOException {
         try {
             responseMessage.addHeader(name, value);
@@ -179,6 +183,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
         }
     }
 
+    @Override
     protected OutputStream getResponseOutputStream() throws IOException {
         return responseBuffer;
     }
@@ -187,6 +192,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
      * Sending
      */
 
+    @Override
     protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
         try {
             responseMessage = requestMessage.reply(false);
@@ -199,6 +205,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
         }
     }
 
+    @Override
     protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
         Transport transport = null;
         try {

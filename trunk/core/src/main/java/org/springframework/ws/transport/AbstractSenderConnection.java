@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ public abstract class AbstractSenderConnection extends AbstractWebServiceConnect
 
     private TransportInputStream responseInputStream;
 
+    @Override
     protected final TransportOutputStream createTransportOutputStream() throws IOException {
         if (requestOutputStream == null) {
             requestOutputStream = new RequestTransportOutputStream();
@@ -40,6 +41,7 @@ public abstract class AbstractSenderConnection extends AbstractWebServiceConnect
         return requestOutputStream;
     }
 
+    @Override
     protected final TransportInputStream createTransportInputStream() throws IOException {
         if (hasResponse()) {
             if (responseInputStream == null) {
@@ -57,6 +59,7 @@ public abstract class AbstractSenderConnection extends AbstractWebServiceConnect
      *
      * @throws IOException if an I/O error occurs when closing this connection
      */
+    @Override
     protected void onClose() throws IOException {
     }
 
@@ -93,10 +96,12 @@ public abstract class AbstractSenderConnection extends AbstractWebServiceConnect
     /** Implementation of <code>TransportInputStream</code> for receiving-side connections. */
     class RequestTransportOutputStream extends TransportOutputStream {
 
+        @Override
         public void addHeader(String name, String value) throws IOException {
             addRequestHeader(name, value);
         }
 
+        @Override
         protected OutputStream createOutputStream() throws IOException {
             return getRequestOutputStream();
         }
@@ -105,14 +110,17 @@ public abstract class AbstractSenderConnection extends AbstractWebServiceConnect
     /** Implementation of {@link TransportInputStream} for client-side HTTP. */
     class ResponseTransportInputStream extends TransportInputStream {
 
+        @Override
         protected InputStream createInputStream() throws IOException {
             return getResponseInputStream();
         }
 
+        @Override
         public Iterator getHeaderNames() throws IOException {
             return getResponseHeaderNames();
         }
 
+        @Override
         public Iterator getHeaders(String name) throws IOException {
             return getResponseHeaders(name);
         }

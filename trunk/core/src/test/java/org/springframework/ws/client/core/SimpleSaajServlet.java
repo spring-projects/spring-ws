@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@ public class SimpleSaajServlet extends HttpServlet {
 
     private MessageFactory msgFactory = null;
 
+    @Override
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
         try {
@@ -77,6 +78,7 @@ public class SimpleSaajServlet extends HttpServlet {
         }
     }
 
+    @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             MimeHeaders headers = getHeaders(req);

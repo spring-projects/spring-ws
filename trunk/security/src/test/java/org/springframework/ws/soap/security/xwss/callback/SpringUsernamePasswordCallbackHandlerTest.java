@@ -1,5 +1,5 @@
 /*
- * Copyright ${YEAR} the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,12 +28,14 @@ public class SpringUsernamePasswordCallbackHandlerTest extends TestCase {
 
     private SpringUsernamePasswordCallbackHandler handler;
 
+    @Override
     protected void setUp() throws Exception {
         handler = new SpringUsernamePasswordCallbackHandler();
         Authentication authentication = new UsernamePasswordAuthenticationToken("Bert", "Ernie");
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         SecurityContextHolder.clearContext();
     }

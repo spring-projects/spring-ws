@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -348,6 +348,7 @@ public class XStreamMarshaller extends AbstractMarshaller {
         }
     }
 
+    @Override
     protected void marshalDomNode(Object graph, Node node) throws XmlMappingException {
         HierarchicalStreamWriter streamWriter;
         if (node instanceof Document) {
@@ -362,11 +363,13 @@ public class XStreamMarshaller extends AbstractMarshaller {
         marshal(graph, streamWriter);
     }
 
+    @Override
     protected void marshalXmlEventWriter(Object graph, XMLEventWriter eventWriter) throws XmlMappingException {
         ContentHandler contentHandler = new StaxEventContentHandler(eventWriter);
         marshalSaxHandlers(graph, contentHandler, null);
     }
 
+    @Override
     protected void marshalXmlStreamWriter(Object graph, XMLStreamWriter streamWriter) throws XmlMappingException {
         try {
             marshal(graph, new StaxWriter(new QNameMap(), streamWriter));
@@ -376,11 +379,13 @@ public class XStreamMarshaller extends AbstractMarshaller {
         }
     }
 
+    @Override
     protected void marshalOutputStream(Object graph, OutputStream outputStream)
             throws XmlMappingException, IOException {
         marshalWriter(graph, new OutputStreamWriter(outputStream, getEncoding()));
     }
 
+    @Override
     protected void marshalSaxHandlers(Object graph, ContentHandler contentHandler, LexicalHandler lexicalHandler)
             throws XmlMappingException {
         SaxWriter saxWriter = new SaxWriter();
@@ -388,6 +393,7 @@ public class XStreamMarshaller extends AbstractMarshaller {
         marshal(graph, saxWriter);
     }
 
+    @Override
     protected void marshalWriter(Object graph, Writer writer) throws XmlMappingException, IOException {
         if (streamDriver != null) {
             marshal(graph, streamDriver.createWriter(writer));
@@ -410,6 +416,7 @@ public class XStreamMarshaller extends AbstractMarshaller {
         }
     }
 
+    @Override
     protected Object unmarshalDomNode(Node node) throws XmlMappingException {
         HierarchicalStreamReader streamReader;
         if (node instanceof Document) {
@@ -424,6 +431,7 @@ public class XStreamMarshaller extends AbstractMarshaller {
         return unmarshal(streamReader);
     }
 
+    @Override
     protected Object unmarshalXmlEventReader(XMLEventReader eventReader) throws XmlMappingException {
         try {
             XMLStreamReader streamReader = new XmlEventStreamReader(eventReader);
@@ -434,14 +442,17 @@ public class XStreamMarshaller extends AbstractMarshaller {
         }
     }
 
+    @Override
     protected Object unmarshalXmlStreamReader(XMLStreamReader streamReader) throws XmlMappingException {
         return unmarshal(new StaxReader(new QNameMap(), streamReader));
     }
 
+    @Override
     protected Object unmarshalInputStream(InputStream inputStream) throws XmlMappingException, IOException {
         return unmarshalReader(new InputStreamReader(inputStream, getEncoding()));
     }
 
+    @Override
     protected Object unmarshalReader(Reader reader) throws XmlMappingException, IOException {
         if (streamDriver != null) {
             return unmarshal(streamDriver.createReader(reader));
@@ -451,6 +462,7 @@ public class XStreamMarshaller extends AbstractMarshaller {
         }
     }
 
+    @Override
     protected Object unmarshalSaxReader(XMLReader xmlReader, InputSource inputSource)
             throws XmlMappingException, IOException {
         throw new UnsupportedOperationException(

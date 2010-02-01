@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,6 +68,7 @@ public class TcpReceiverConnection extends AbstractReceiverConnection {
     protected InputStream getRequestInputStream() throws IOException {
         return new FilterInputStream(socket.getInputStream()) {
 
+            @Override
             public void close() throws IOException {
                 // don't close the socket
                 socket.shutdownInput();
@@ -81,6 +82,7 @@ public class TcpReceiverConnection extends AbstractReceiverConnection {
     protected OutputStream getResponseOutputStream() throws IOException {
         return new FilterOutputStream(socket.getOutputStream()) {
 
+            @Override
             public void close() throws IOException {
                 // don't close the socket
                 socket.shutdownOutput();

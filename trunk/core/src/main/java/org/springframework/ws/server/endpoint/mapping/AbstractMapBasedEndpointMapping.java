@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -102,6 +102,7 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
      *
      * @return the looked up endpoint, or <code>null</code>
      */
+    @Override
     protected final Object getEndpointInternal(MessageContext messageContext) throws Exception {
         String key = getLookupKeyForMessage(messageContext);
         if (!StringUtils.hasLength(key)) {
@@ -161,6 +162,7 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
      * @see #setMappings(java.util.Properties)
      * @see #setRegisterBeanNames(boolean)
      */
+    @Override
     protected final void initApplicationContext() throws BeansException {
         for (Iterator iter = temporaryEndpointMap.keySet().iterator(); iter.hasNext();) {
             String key = (String) iter.next();

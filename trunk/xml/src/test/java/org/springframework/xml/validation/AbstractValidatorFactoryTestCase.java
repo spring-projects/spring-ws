@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ public abstract class AbstractValidatorFactoryTestCase extends TestCase {
 
     private InputStream invalidInputStream;
 
+    @Override
     protected void setUp() throws Exception {
         Resource[] schemaResource =
                 new Resource[]{new ClassPathResource("schema.xsd", AbstractValidatorFactoryTestCase.class)};
@@ -47,6 +48,7 @@ public abstract class AbstractValidatorFactoryTestCase extends TestCase {
         invalidInputStream = AbstractValidatorFactoryTestCase.class.getResourceAsStream("invalidDocument.xml");
     }
 
+    @Override
     protected void tearDown() throws Exception {
         validInputStream.close();
         invalidInputStream.close();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.oxm.jibx;
 
 import org.springframework.oxm.AbstractUnmarshallerTestCase;
@@ -20,6 +21,7 @@ import org.springframework.oxm.Unmarshaller;
 
 public class JibxUnmarshallerTest extends AbstractUnmarshallerTestCase {
 
+    @Override
     protected Unmarshaller createUnmarshaller() throws Exception {
         JibxMarshaller unmarshaller = new JibxMarshaller();
         unmarshaller.setTargetClass(Flights.class);
@@ -27,6 +29,7 @@ public class JibxUnmarshallerTest extends AbstractUnmarshallerTestCase {
         return unmarshaller;
     }
 
+    @Override
     protected void testFlights(Object o) {
         Flights flights = (Flights) o;
         assertNotNull("Flights is null", flights);
@@ -34,12 +37,14 @@ public class JibxUnmarshallerTest extends AbstractUnmarshallerTestCase {
         testFlight(flights.getFlight(0));
     }
 
+    @Override
     protected void testFlight(Object o) {
         FlightType flight = (FlightType) o;
         assertNotNull("Flight is null", flight);
         assertEquals("Number is invalid", 42L, flight.getNumber());
     }
 
+    @Override
     public void testUnmarshalPartialStaxSourceXmlStreamReader() throws Exception {
         // JiBX does not support reading XML fragments, hence the override here
     }

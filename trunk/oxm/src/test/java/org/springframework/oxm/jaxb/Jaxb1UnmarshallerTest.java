@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.oxm.jaxb;
 
 import org.springframework.oxm.AbstractUnmarshallerTestCase;
@@ -22,6 +23,7 @@ import org.springframework.oxm.jaxb1.Flights;
 
 public class Jaxb1UnmarshallerTest extends AbstractUnmarshallerTestCase {
 
+    @Override
     protected Unmarshaller createUnmarshaller() throws Exception {
         Jaxb1Marshaller marshaller = new Jaxb1Marshaller();
         marshaller.setContextPath("org.springframework.oxm.jaxb1");
@@ -30,6 +32,7 @@ public class Jaxb1UnmarshallerTest extends AbstractUnmarshallerTestCase {
         return marshaller;
     }
 
+    @Override
     protected void testFlights(Object o) {
         Flights flights = (Flights) o;
         assertNotNull("Flights is null", flights);
@@ -37,6 +40,7 @@ public class Jaxb1UnmarshallerTest extends AbstractUnmarshallerTestCase {
         testFlight(flights.getFlight().get(0));
     }
 
+    @Override
     protected void testFlight(Object o) {
         FlightType flight = (FlightType) o;
         assertNotNull("Flight is null", flight);

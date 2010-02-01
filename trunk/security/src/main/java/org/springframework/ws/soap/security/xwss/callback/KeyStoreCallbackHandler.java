@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -229,6 +229,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
         }
     }
 
+    @Override
     protected final void handleAliasPrivKeyCertRequest(SignatureKeyCallback callback,
                                                        SignatureKeyCallback.AliasPrivKeyCertRequest request)
             throws IOException {
@@ -238,6 +239,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
         request.setX509Certificate(certificate);
     }
 
+    @Override
     protected final void handleAliasSymmetricKeyRequest(DecryptionKeyCallback callback,
                                                         DecryptionKeyCallback.AliasSymmetricKeyRequest request)
             throws IOException {
@@ -249,6 +251,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
     // Encryption
     //
 
+    @Override
     protected final void handleAliasSymmetricKeyRequest(EncryptionKeyCallback callback,
                                                         EncryptionKeyCallback.AliasSymmetricKeyRequest request)
             throws IOException {
@@ -256,6 +259,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
         request.setSymmetricKey(secretKey);
     }
 
+    @Override
     protected final void handleAliasX509CertificateRequest(EncryptionKeyCallback callback,
                                                            EncryptionKeyCallback.AliasX509CertificateRequest request)
             throws IOException {
@@ -267,6 +271,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
     // Certificate validation
     //
 
+    @Override
     protected final void handleCertificateValidationCallback(CertificateValidationCallback callback) {
         callback.setValidator(new KeyStoreCertificateValidator());
     }
@@ -275,6 +280,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
     // Signing
     //
 
+    @Override
     protected final void handleDefaultPrivKeyCertRequest(SignatureKeyCallback callback,
                                                          SignatureKeyCallback.DefaultPrivKeyCertRequest request)
             throws IOException {
@@ -284,6 +290,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
         request.setX509Certificate(certificate);
     }
 
+    @Override
     protected final void handleDefaultX509CertificateRequest(EncryptionKeyCallback callback,
                                                              EncryptionKeyCallback.DefaultX509CertificateRequest request)
             throws IOException {
@@ -291,6 +298,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
         request.setX509Certificate(certificate);
     }
 
+    @Override
     protected final void handlePublicKeyBasedPrivKeyCertRequest(SignatureKeyCallback callback,
                                                                 SignatureKeyCallback.PublicKeyBasedPrivKeyCertRequest request)
             throws IOException {
@@ -303,6 +311,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
     //
     // Decryption
     //
+    @Override
     protected final void handlePublicKeyBasedPrivKeyRequest(DecryptionKeyCallback callback,
                                                             DecryptionKeyCallback.PublicKeyBasedPrivKeyRequest request)
             throws IOException {
@@ -310,6 +319,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
         request.setPrivateKey(key);
     }
 
+    @Override
     protected final void handlePublicKeyBasedRequest(EncryptionKeyCallback callback,
                                                      EncryptionKeyCallback.PublicKeyBasedRequest request)
             throws IOException {
@@ -317,6 +327,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
         request.setX509Certificate(certificate);
     }
 
+    @Override
     protected final void handlePublicKeyBasedRequest(SignatureVerificationKeyCallback callback,
                                                      SignatureVerificationKeyCallback.PublicKeyBasedRequest request)
             throws IOException {
@@ -324,6 +335,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
         request.setX509Certificate(certificate);
     }
 
+    @Override
     protected final void handleX509CertificateBasedRequest(DecryptionKeyCallback callback,
                                                            DecryptionKeyCallback.X509CertificateBasedRequest request)
             throws IOException {
@@ -331,6 +343,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
         request.setPrivateKey(privKey);
     }
 
+    @Override
     protected final void handleX509IssuerSerialBasedRequest(DecryptionKeyCallback callback,
                                                             DecryptionKeyCallback.X509IssuerSerialBasedRequest request)
             throws IOException {
@@ -338,6 +351,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
         request.setPrivateKey(key);
     }
 
+    @Override
     protected final void handleX509IssuerSerialBasedRequest(SignatureVerificationKeyCallback callback,
                                                             SignatureVerificationKeyCallback.X509IssuerSerialBasedRequest request)
             throws IOException {
@@ -345,6 +359,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
         request.setX509Certificate(certificate);
     }
 
+    @Override
     protected final void handleX509SubjectKeyIdentifierBasedRequest(DecryptionKeyCallback callback,
                                                                     DecryptionKeyCallback.X509SubjectKeyIdentifierBasedRequest request)
             throws IOException {
@@ -356,6 +371,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
     // Signature verification
     //
 
+    @Override
     protected final void handleX509SubjectKeyIdentifierBasedRequest(SignatureVerificationKeyCallback callback,
                                                                     SignatureVerificationKeyCallback.X509SubjectKeyIdentifierBasedRequest request)
             throws IOException {

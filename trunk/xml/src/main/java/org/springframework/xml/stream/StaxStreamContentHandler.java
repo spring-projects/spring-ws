@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,33 +51,41 @@ public class StaxStreamContentHandler extends AbstractStaxContentHandler {
     public void setDocumentLocator(Locator locator) {
     }
 
+    @Override
     protected void charactersInternal(char[] ch, int start, int length) throws XMLStreamException {
         streamWriter.writeCharacters(ch, start, length);
     }
 
+    @Override
     protected void endDocumentInternal() throws XMLStreamException {
         streamWriter.writeEndDocument();
     }
 
+    @Override
     protected void endElementInternal(QName name, SimpleNamespaceContext namespaceContext) throws XMLStreamException {
         streamWriter.writeEndElement();
     }
 
+    @Override
     protected void ignorableWhitespaceInternal(char[] ch, int start, int length) throws XMLStreamException {
         streamWriter.writeCharacters(ch, start, length);
     }
 
+    @Override
     protected void processingInstructionInternal(String target, String data) throws XMLStreamException {
         streamWriter.writeProcessingInstruction(target, data);
     }
 
+    @Override
     protected void skippedEntityInternal(String name) {
     }
 
+    @Override
     protected void startDocumentInternal() throws XMLStreamException {
         streamWriter.writeStartDocument();
     }
 
+    @Override
     protected void startElementInternal(QName name, Attributes attributes, SimpleNamespaceContext namespaceContext)
             throws XMLStreamException {
         streamWriter.writeStartElement(QNameUtils.getPrefix(name), name.getLocalPart(), name.getNamespaceURI());

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ public abstract class AbstractMessageEndpointTestCase extends AbstractEndpointTe
 
     private MessageEndpoint endpoint;
 
+    @Override
     protected final void setUp() throws Exception {
         endpoint = createResponseEndpoint();
     }
@@ -51,6 +52,7 @@ public abstract class AbstractMessageEndpointTestCase extends AbstractEndpointTe
         assertFalse("Response message created", context.hasResponse());
     }
 
+    @Override
     protected final void testSource(Source requestSource) throws Exception {
         MessageContext context =
                 new DefaultMessageContext(new MockWebServiceMessage(requestSource), new MockWebServiceMessageFactory());

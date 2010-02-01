@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ public class CallbackHandlerChain extends AbstractCallbackHandler {
         return callbackHandlers;
     }
 
+    @Override
     protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
         boolean allUnsupported = true;
         for (int i = 0; i < callbackHandlers.length; i++) {

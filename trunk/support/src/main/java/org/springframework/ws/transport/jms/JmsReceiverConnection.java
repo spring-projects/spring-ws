@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -136,6 +136,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
      * Receiving
      */
 
+    @Override
     protected Iterator getRequestHeaderNames() throws IOException {
         try {
             return JmsTransportUtils.getHeaderNames(requestMessage);
@@ -145,6 +146,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
         }
     }
 
+    @Override
     protected Iterator getRequestHeaders(String name) throws IOException {
         try {
             return JmsTransportUtils.getHeaders(requestMessage, name);
@@ -154,6 +156,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
         }
     }
 
+    @Override
     protected InputStream getRequestInputStream() throws IOException {
         if (requestMessage instanceof BytesMessage) {
             return new BytesMessageInputStream((BytesMessage) requestMessage);
@@ -170,6 +173,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
      * Sending
      */
 
+    @Override
     protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
         try {
             if (requestMessage instanceof BytesMessage) {
@@ -192,6 +196,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
         }
     }
 
+    @Override
     protected void addResponseHeader(String name, String value) throws IOException {
         try {
             JmsTransportUtils.addHeader(responseMessage, name, value);
@@ -201,6 +206,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
         }
     }
 
+    @Override
     protected OutputStream getResponseOutputStream() throws IOException {
         if (responseMessage instanceof BytesMessage) {
             return new BytesMessageOutputStream((BytesMessage) responseMessage);
@@ -213,6 +219,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
         }
     }
 
+    @Override
     protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
         MessageProducer messageProducer = null;
         try {

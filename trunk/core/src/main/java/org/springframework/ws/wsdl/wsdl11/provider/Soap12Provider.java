@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -138,6 +138,7 @@ public class Soap12Provider extends DefaultConcretePartProvider {
      * @param definition the WSDL4J <code>Definition</code>
      * @param binding    the WSDL4J <code>Binding</code>
      */
+    @Override
     protected void populateBinding(Definition definition, Binding binding) throws WSDLException {
         definition.addNamespace(SOAP_12_NAMESPACE_PREFIX, SOAP_12_NAMESPACE_URI);
         super.populateBinding(definition, binding);
@@ -176,6 +177,7 @@ public class Soap12Provider extends DefaultConcretePartProvider {
      * @param bindingFault the WSDL4J <code>BindingFault</code>
      * @param fault        the corresponding WSDL4J <code>Fault</code> @throws WSDLException in case of errors
      */
+    @Override
     protected void populateBindingFault(Definition definition, BindingFault bindingFault, Fault fault)
             throws WSDLException {
         super.populateBindingFault(definition, bindingFault, fault);
@@ -212,6 +214,7 @@ public class Soap12Provider extends DefaultConcretePartProvider {
      * @param bindingInput the WSDL4J <code>BindingInput</code>
      * @param input        the corresponding WSDL4J <code>Input</code> @throws WSDLException in case of errors
      */
+    @Override
     protected void populateBindingInput(Definition definition, BindingInput bindingInput, Input input)
             throws WSDLException {
         super.populateBindingInput(definition, bindingInput, input);
@@ -245,6 +248,7 @@ public class Soap12Provider extends DefaultConcretePartProvider {
      * @param bindingOperation the WSDL4J <code>BindingOperation</code>
      * @throws javax.wsdl.WSDLException in case of errors
      */
+    @Override
     protected void populateBindingOperation(Definition definition, BindingOperation bindingOperation)
             throws WSDLException {
         super.populateBindingOperation(definition, bindingOperation);
@@ -285,6 +289,7 @@ public class Soap12Provider extends DefaultConcretePartProvider {
      * @param bindingOutput the WSDL4J <code>BindingOutput</code>
      * @param output        the corresponding WSDL4J <code>Output</code> @throws WSDLException in case of errors
      */
+    @Override
     protected void populateBindingOutput(Definition definition, BindingOutput bindingOutput, Output output)
             throws WSDLException {
         super.populateBindingOutput(definition, bindingOutput, output);
@@ -303,6 +308,7 @@ public class Soap12Provider extends DefaultConcretePartProvider {
      * @param port the WSDL4J <code>Port</code>
      * @throws WSDLException in case of errors
      */
+    @Override
     protected void populatePort(Definition definition, Port port) throws WSDLException {
         for (Iterator iterator = port.getBinding().getExtensibilityElements().iterator(); iterator.hasNext();) {
             if (iterator.next() instanceof SOAP12Binding) {

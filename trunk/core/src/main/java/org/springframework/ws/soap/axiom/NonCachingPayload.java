@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,10 +49,12 @@ class NonCachingPayload extends Payload {
         super(axiomBody, axiomFactory);
     }
 
+    @Override
     public Result getResultInternal() {
         return new StaxResult(new DelegatingStreamWriter());
     }
 
+    @Override
     protected XMLStreamReader getStreamReader(OMElement payloadElement) {
         return payloadElement.getXMLStreamReaderWithoutCaching();
     }

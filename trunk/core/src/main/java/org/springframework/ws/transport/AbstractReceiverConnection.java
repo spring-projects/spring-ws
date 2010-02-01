@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ public abstract class AbstractReceiverConnection extends AbstractWebServiceConne
 
     private TransportOutputStream responseOutputStream;
 
+    @Override
     protected final TransportInputStream createTransportInputStream() throws IOException {
         if (requestInputStream == null) {
             requestInputStream = new RequestTransportInputStream();
@@ -40,6 +41,7 @@ public abstract class AbstractReceiverConnection extends AbstractWebServiceConne
         return requestInputStream;
     }
 
+    @Override
     protected final TransportOutputStream createTransportOutputStream() throws IOException {
         if (responseOutputStream == null) {
             responseOutputStream = new ResponseTransportOutputStream();
@@ -52,6 +54,7 @@ public abstract class AbstractReceiverConnection extends AbstractWebServiceConne
      *
      * @throws IOException if an I/O error occurs when closing this connection
      */
+    @Override
     protected void onClose() throws IOException {
     }
 
@@ -85,14 +88,17 @@ public abstract class AbstractReceiverConnection extends AbstractWebServiceConne
     /** Implementation of <code>TransportInputStream</code> for receiving-side connections. */
     private class RequestTransportInputStream extends TransportInputStream {
 
+        @Override
         protected InputStream createInputStream() throws IOException {
             return getRequestInputStream();
         }
 
+        @Override
         public Iterator getHeaderNames() throws IOException {
             return getRequestHeaderNames();
         }
 
+        @Override
         public Iterator getHeaders(String name) throws IOException {
             return getRequestHeaders(name);
         }
@@ -102,10 +108,12 @@ public abstract class AbstractReceiverConnection extends AbstractWebServiceConne
     /** Implementation of <code>TransportOutputStream</code> for sending-side connections. */
     private class ResponseTransportOutputStream extends TransportOutputStream {
 
+        @Override
         public void addHeader(String name, String value) throws IOException {
             addResponseHeader(name, value);
         }
 
+        @Override
         protected OutputStream createOutputStream() throws IOException {
             return getResponseOutputStream();
         }

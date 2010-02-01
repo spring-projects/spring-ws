@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -218,6 +218,7 @@ public class XsdBasedSoap12Wsdl4jDefinitionBuilder extends AbstractSoap12Wsdl4jD
     }
 
     /** Adds the target namespace and schema namespace to the definition. */
+    @Override
     protected void populateDefinition(Definition definition) throws WSDLException {
         super.populateDefinition(definition);
         definition.setTargetNamespace(targetNamespace);
@@ -228,6 +229,7 @@ public class XsdBasedSoap12Wsdl4jDefinitionBuilder extends AbstractSoap12Wsdl4jD
     }
 
     /** Does nothing. */
+    @Override
     protected void buildImports(Definition definition) throws WSDLException {
     }
 
@@ -239,6 +241,7 @@ public class XsdBasedSoap12Wsdl4jDefinitionBuilder extends AbstractSoap12Wsdl4jD
      * @param definition the WSDL4J <code>Definition</code>
      * @throws WSDLException in case of errors
      */
+    @Override
     protected void buildTypes(Definition definition) throws WSDLException {
         Types types = definition.createTypes();
         Schema schema = (Schema) createExtension(Types.class, XsdSchemaHelper.SCHEMA_NAME);
@@ -276,6 +279,7 @@ public class XsdBasedSoap12Wsdl4jDefinitionBuilder extends AbstractSoap12Wsdl4jD
      * @param definition the WSDL4J <code>Definition</code>
      * @throws WSDLException in case of errors
      */
+    @Override
     protected void buildMessages(Definition definition) throws WSDLException {
         List elementDeclarations = schemaHelper.getElementDeclarations(followIncludeImport);
         for (Iterator iterator = elementDeclarations.iterator(); iterator.hasNext();) {
@@ -368,6 +372,7 @@ public class XsdBasedSoap12Wsdl4jDefinitionBuilder extends AbstractSoap12Wsdl4jD
         part.setName(elementName.getLocalPart());
     }
 
+    @Override
     protected void buildPortTypes(Definition definition) throws WSDLException {
         PortType portType = definition.createPortType();
         populatePortType(portType);
@@ -500,6 +505,7 @@ public class XsdBasedSoap12Wsdl4jDefinitionBuilder extends AbstractSoap12Wsdl4jD
     }
 
     /** Sets the name of the service to the name of the port type, with "Service" appended to it. */
+    @Override
     protected void populateService(Service service) throws WSDLException {
         service.setQName(new QName(targetNamespace, portTypeName + SERVICE_SUFFIX));
     }

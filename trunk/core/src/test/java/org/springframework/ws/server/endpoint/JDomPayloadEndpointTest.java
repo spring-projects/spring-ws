@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,18 +21,22 @@ import org.jdom.Namespace;
 
 public class JDomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 
+    @Override
     protected PayloadEndpoint createNoResponseEndpoint() throws Exception {
         return new AbstractJDomPayloadEndpoint() {
 
+            @Override
             protected Element invokeInternal(Element requestElement) throws Exception {
                 return null;
             }
         };
     }
 
+    @Override
     protected PayloadEndpoint createResponseEndpoint() throws Exception {
         return new AbstractJDomPayloadEndpoint() {
 
+            @Override
             protected Element invokeInternal(Element requestElement) throws Exception {
                 assertNotNull("No requestElement passed", requestElement);
                 assertEquals("Invalid request element", REQUEST_ELEMENT, requestElement.getName());
@@ -42,9 +46,11 @@ public class JDomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
         };
     }
 
+    @Override
     protected PayloadEndpoint createNoRequestEndpoint() throws Exception {
         return new AbstractJDomPayloadEndpoint() {
 
+            @Override
             protected Element invokeInternal(Element requestElement) throws Exception {
                 assertNull("RequestElement passed", requestElement);
                 return null;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,14 +37,17 @@ class XPathEndpointsBeanDefinitionParser extends AbstractSimpleBeanDefinitionPar
     private static final String XPATH_PARAM_ANNOTATION_METHOD_ENDPOINT_ADAPTER_CLASS_NAME =
             "org.springframework.ws.server.endpoint.adapter.XPathParamAnnotationMethodEndpointAdapter";
 
+    @Override
     protected boolean shouldGenerateIdAsFallback() {
         return true;
     }
 
+    @Override
     protected String getBeanClassName(Element element) {
         return XPATH_PARAM_ANNOTATION_METHOD_ENDPOINT_ADAPTER_CLASS_NAME;
     }
 
+    @Override
     protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder beanDefinitionBuilder) {
         List namespaceElements = DomUtils.getChildElementsByTagName(element, "namespace");
         if (!namespaceElements.isEmpty()) {

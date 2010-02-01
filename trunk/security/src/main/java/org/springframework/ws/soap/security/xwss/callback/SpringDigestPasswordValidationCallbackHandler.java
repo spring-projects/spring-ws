@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,6 +81,7 @@ public class SpringDigestPasswordValidationCallbackHandler extends AbstractCallb
      * @throws javax.security.auth.callback.UnsupportedCallbackException
      *          when the callback is not supported
      */
+    @Override
     protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
         if (callback instanceof PasswordValidationCallback) {
             PasswordValidationCallback passwordCallback = (PasswordValidationCallback) callback;
@@ -136,6 +137,7 @@ public class SpringDigestPasswordValidationCallbackHandler extends AbstractCallb
             this.user = user;
         }
 
+        @Override
         public boolean validate(PasswordValidationCallback.Request request)
                 throws PasswordValidationCallback.PasswordValidationException {
             if (super.validate(request)) {
