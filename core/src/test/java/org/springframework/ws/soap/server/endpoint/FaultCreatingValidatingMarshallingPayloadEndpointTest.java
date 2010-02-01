@@ -1,5 +1,5 @@
 /*
- * Copyright ${YEAR} the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,7 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest extends TestC
 
     private ResourceBundleMessageSource messageSource;
 
+    @Override
     protected void setUp() throws Exception {
         this.messageSource = new ResourceBundleMessageSource();
         this.messageSource.setBasename("org.springframework.ws.soap.server.endpoint.messages");
@@ -63,6 +64,7 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest extends TestC
         AbstractFaultCreatingValidatingMarshallingPayloadEndpoint endpoint =
                 new AbstractFaultCreatingValidatingMarshallingPayloadEndpoint() {
 
+                    @Override
                     protected Object invokeInternal(Object requestObject) throws Exception {
                         fail("No expected");
                         return null;
@@ -103,6 +105,7 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest extends TestC
         AbstractFaultCreatingValidatingMarshallingPayloadEndpoint endpoint =
                 new AbstractFaultCreatingValidatingMarshallingPayloadEndpoint() {
 
+                    @Override
                     protected Object invokeInternal(Object requestObject) throws Exception {
                         return null;
                     }

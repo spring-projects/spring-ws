@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,24 +43,30 @@ import org.springframework.xml.transform.StringSource;
  */
 public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCase {
 
+    @Override
     protected MessageEndpoint createNoResponseEndpoint() {
         return new AbstractStaxStreamPayloadEndpoint() {
+            @Override
             protected void invokeInternal(XMLStreamReader streamReader, XMLStreamWriter streamWriter) throws Exception {
                 assertNotNull("No StreamReader passed", streamReader);
             }
         };
     }
 
+    @Override
     protected MessageEndpoint createNoRequestPayloadEndpoint() {
         return new AbstractStaxStreamPayloadEndpoint() {
+            @Override
             protected void invokeInternal(XMLStreamReader streamReader, XMLStreamWriter streamWriter) throws Exception {
                 assertNull("StreamReader passed", streamReader);
             }
         };
     }
 
+    @Override
     protected MessageEndpoint createResponseEndpoint() {
         return new AbstractStaxStreamPayloadEndpoint() {
+            @Override
             protected void invokeInternal(XMLStreamReader streamReader, XMLStreamWriter streamWriter) throws Exception {
                 assertNotNull("No streamReader passed", streamReader);
                 assertNotNull("No streamWriter passed", streamReader);
@@ -79,6 +85,7 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
                 streamWriter.close();
             }
 
+            @Override
             protected XMLOutputFactory createXmlOutputFactory() {
                 XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
                 outputFactory.setProperty("javax.xml.stream.isRepairingNamespaces", Boolean.TRUE);

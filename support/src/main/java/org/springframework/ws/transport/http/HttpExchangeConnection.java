@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,15 +92,18 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
      * Receiving request
      */
 
+    @Override
     protected Iterator getRequestHeaderNames() throws IOException {
         return httpExchange.getRequestHeaders().keySet().iterator();
     }
 
+    @Override
     protected Iterator getRequestHeaders(String name) throws IOException {
         List headers = httpExchange.getRequestHeaders().get(name);
         return headers != null ? headers.iterator() : Collections.EMPTY_LIST.iterator();
     }
 
+    @Override
     protected InputStream getRequestInputStream() throws IOException {
         return httpExchange.getRequestBody();
     }
@@ -109,10 +112,12 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
      * Sending response
      */
 
+    @Override
     protected void addResponseHeader(String name, String value) throws IOException {
         httpExchange.getResponseHeaders().add(name, value);
     }
 
+    @Override
     protected OutputStream getResponseOutputStream() throws IOException {
         if (chunkedEncoding) {
             httpExchange.sendResponseHeaders(responseStatusCode, 0);
@@ -126,6 +131,7 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
         }
     }
 
+    @Override
     protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
         if (!chunkedEncoding) {
             byte[] buf = responseBuffer.toByteArray();
@@ -136,6 +142,7 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
         responseBuffer = null;
     }
 
+    @Override
     public void onClose() throws IOException {
         if (responseStatusCode == HttpTransportConstants.STATUS_ACCEPTED ||
                 responseStatusCode == HttpTransportConstants.STATUS_NOT_FOUND) {

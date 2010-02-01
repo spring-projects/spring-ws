@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,18 +20,22 @@ import nu.xom.Element;
 
 public class XomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 
+    @Override
     protected PayloadEndpoint createNoResponseEndpoint() throws Exception {
         return new AbstractXomPayloadEndpoint() {
 
+            @Override
             protected Element invokeInternal(Element requestElement) throws Exception {
                 return null;
             }
         };
     }
 
+    @Override
     protected PayloadEndpoint createResponseEndpoint() throws Exception {
         return new AbstractXomPayloadEndpoint() {
 
+            @Override
             protected Element invokeInternal(Element requestElement) throws Exception {
                 assertNotNull("No requestElement passed", requestElement);
                 assertEquals("Invalid request element", REQUEST_ELEMENT, requestElement.getLocalName());
@@ -41,9 +45,11 @@ public class XomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
         };
     }
 
+    @Override
     protected PayloadEndpoint createNoRequestEndpoint() throws Exception {
         return new AbstractXomPayloadEndpoint() {
 
+            @Override
             protected Element invokeInternal(Element requestElement) throws Exception {
                 assertNull("RequestElement passed", requestElement);
                 return null;
@@ -51,6 +57,7 @@ public class XomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
         };
     }
 
+    @Override
     public void testStaxSourceEventReader() throws Exception {
         // overriden, because XOM doesn not support it
     }

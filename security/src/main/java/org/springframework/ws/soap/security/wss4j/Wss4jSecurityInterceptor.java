@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -472,6 +472,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         securityEngine.getWssConfig().setAllowNamespaceQualifiedPasswordTypes(true);
     }
 
+    @Override
     protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
             throws WsSecuritySecurementException {
         if (securementAction == WSConstants.NO_SECURITY && !enableSignatureConfirmation) {
@@ -520,6 +521,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         return requestData;
     }
 
+    @Override
     protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
             throws WsSecurityValidationException {
         if (logger.isDebugEnabled()) {
@@ -698,6 +700,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         }
     }
 
+    @Override
     protected void cleanUp() {
         if (validationCallbackHandler != null) {
             try {

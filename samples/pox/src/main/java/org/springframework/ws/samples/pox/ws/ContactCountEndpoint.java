@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,6 +64,7 @@ public class ContactCountEndpoint extends AbstractSaxPayloadEndpoint {
 
         private int contactCount = 0;
 
+        @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes)
                 throws SAXException {
             if (NAMESPACE_URI.equals(uri) && CONTANT_NAME.equals(localName)) {

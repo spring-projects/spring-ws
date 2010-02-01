@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ public class PayloadLoggingInterceptorTest extends TestCase {
 
     private MessageContext messageContext;
 
+    @Override
     protected void setUp() throws Exception {
         interceptor = new PayloadLoggingInterceptor();
         appender = new CountingAppender();
@@ -48,6 +49,7 @@ public class PayloadLoggingInterceptorTest extends TestCase {
         appender.reset();
     }
 
+    @Override
     protected void tearDown() throws Exception {
         BasicConfigurator.resetConfiguration();
         ClassPathResource resource = new ClassPathResource("log4j.properties");
@@ -96,6 +98,7 @@ public class PayloadLoggingInterceptorTest extends TestCase {
             count = 0;
         }
 
+        @Override
         protected void append(LoggingEvent loggingEvent) {
             count++;
         }

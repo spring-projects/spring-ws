@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,6 +64,7 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
         return postMethod;
     }
 
+    @Override
     public void onClose() throws IOException {
         postMethod.releaseConnection();
         if (connectionManager != null) {
@@ -88,18 +89,22 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
      * Sending request
      */
 
+    @Override
     protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
         requestBuffer = new ByteArrayOutputStream();
     }
 
+    @Override
     protected void addRequestHeader(String name, String value) throws IOException {
         postMethod.addRequestHeader(name, value);
     }
 
+    @Override
     protected OutputStream getRequestOutputStream() throws IOException {
         return requestBuffer;
     }
 
+    @Override
     protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
         postMethod.setRequestEntity(new ByteArrayRequestEntity(requestBuffer.toByteArray()));
         requestBuffer = null;
@@ -122,22 +127,27 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
      * Receiving response
      */
 
+    @Override
     protected int getResponseCode() throws IOException {
         return postMethod.getStatusCode();
     }
 
+    @Override
     protected String getResponseMessage() throws IOException {
         return postMethod.getStatusText();
     }
 
+    @Override
     protected long getResponseContentLength() throws IOException {
         return postMethod.getResponseContentLength();
     }
 
+    @Override
     protected InputStream getRawResponseInputStream() throws IOException {
         return postMethod.getResponseBodyAsStream();
     }
 
+    @Override
     protected Iterator getResponseHeaderNames() throws IOException {
         Header[] headers = postMethod.getResponseHeaders();
         String[] names = new String[headers.length];
@@ -147,6 +157,7 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
         return Arrays.asList(names).iterator();
     }
 
+    @Override
     protected Iterator getResponseHeaders(String name) throws IOException {
         Header[] headers = postMethod.getResponseHeaders(name);
         String[] values = new String[headers.length];

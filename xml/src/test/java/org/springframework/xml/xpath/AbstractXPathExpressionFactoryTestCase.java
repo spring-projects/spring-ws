@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ public abstract class AbstractXPathExpressionFactoryTestCase extends TestCase {
 
     private Map namespaces = new HashMap();
 
+    @Override
     protected void setUp() throws Exception {
         namespaces.put("prefix1", "namespace1");
         namespaces.put("prefix2", "namespace2");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,7 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
         return connection;
     }
 
+    @Override
     public void onClose() {
         connection.disconnect();
     }
@@ -73,14 +74,17 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
      * Sending request
      */
 
+    @Override
     protected void addRequestHeader(String name, String value) throws IOException {
         connection.addRequestProperty(name, value);
     }
 
+    @Override
     protected OutputStream getRequestOutputStream() throws IOException {
         return connection.getOutputStream();
     }
 
+    @Override
     protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
         connection.connect();
     }
@@ -89,10 +93,12 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
      * Receiving response
      */
 
+    @Override
     protected long getResponseContentLength() throws IOException {
         return connection.getContentLength();
     }
 
+    @Override
     protected Iterator getResponseHeaderNames() throws IOException {
         List headerNames = new ArrayList();
         // Header field 0 is the status line, so we start at 1
@@ -108,6 +114,7 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
         return headerNames.iterator();
     }
 
+    @Override
     protected Iterator getResponseHeaders(String name) throws IOException {
         String headerField = connection.getHeaderField(name);
         if (headerField == null) {
@@ -119,14 +126,17 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
         }
     }
 
+    @Override
     protected int getResponseCode() throws IOException {
         return connection.getResponseCode();
     }
 
+    @Override
     protected String getResponseMessage() throws IOException {
         return connection.getResponseMessage();
     }
 
+    @Override
     protected InputStream getRawResponseInputStream() throws IOException {
         if (connection.getResponseCode() / 100 != 2) {
             return connection.getErrorStream();

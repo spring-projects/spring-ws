@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,10 +60,12 @@ public class XmlValidatorFactoryTest extends TestCase {
 
     private static class NonExistentResource extends AbstractResource {
 
+        @Override
         public Resource createRelative(String relativePath) throws IOException {
             throw new IOException();
         }
 
+        @Override
         public boolean exists() {
             return false;
         }
@@ -72,22 +74,27 @@ public class XmlValidatorFactoryTest extends TestCase {
             return null;
         }
 
+        @Override
         public File getFile() throws IOException {
             throw new IOException();
         }
 
+        @Override
         public String getFilename() {
             return null;
         }
 
+        @Override
         public URL getURL() throws IOException {
             throw new IOException();
         }
 
+        @Override
         public URI getURI() throws IOException {
             throw new IOException();
         }
 
+        @Override
         public boolean isOpen() {
             return false;
         }
@@ -96,6 +103,7 @@ public class XmlValidatorFactoryTest extends TestCase {
             throw new IOException();
         }
 
+        @Override
         public boolean isReadable() {
             return false;
         }

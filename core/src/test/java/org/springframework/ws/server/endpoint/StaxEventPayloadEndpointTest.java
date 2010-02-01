@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,8 +32,10 @@ import javax.xml.stream.util.XMLEventConsumer;
  */
 public class StaxEventPayloadEndpointTest extends AbstractMessageEndpointTestCase {
 
+    @Override
     protected MessageEndpoint createNoResponseEndpoint() {
         return new AbstractStaxEventPayloadEndpoint() {
+            @Override
             protected void invokeInternal(XMLEventReader eventReader,
                                           XMLEventConsumer eventWriter,
                                           XMLEventFactory eventFactory) throws Exception {
@@ -42,9 +44,11 @@ public class StaxEventPayloadEndpointTest extends AbstractMessageEndpointTestCas
         };
     }
 
+    @Override
     protected MessageEndpoint createNoRequestPayloadEndpoint() {
         return new AbstractStaxEventPayloadEndpoint() {
 
+            @Override
             protected void invokeInternal(XMLEventReader eventReader,
                                           XMLEventConsumer eventWriter,
                                           XMLEventFactory eventFactory) throws Exception {
@@ -53,9 +57,11 @@ public class StaxEventPayloadEndpointTest extends AbstractMessageEndpointTestCas
         };
     }
 
+    @Override
     protected MessageEndpoint createResponseEndpoint() {
         return new AbstractStaxEventPayloadEndpoint() {
 
+            @Override
             protected void invokeInternal(XMLEventReader eventReader,
                                           XMLEventConsumer eventWriter,
                                           XMLEventFactory eventFactory) throws XMLStreamException {

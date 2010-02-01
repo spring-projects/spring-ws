@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,12 +78,14 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
      * @see #setInterceptors(org.springframework.ws.server.EndpointInterceptor[])
      * @see #setActorsOrRoles(String[])
      */
+    @Override
     protected final EndpointInvocationChain createEndpointInvocationChain(MessageContext messageContext,
                                                                           Object endpoint,
                                                                           EndpointInterceptor[] interceptors) {
         return new SoapEndpointInvocationChain(endpoint, interceptors, actorsOrRoles, isUltimateReceiver);
     }
 
+    @Override
     protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
         if (messageContext.getRequest() instanceof SoapMessage) {
             SoapMessage request = (SoapMessage) messageContext.getRequest();
@@ -101,6 +103,7 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
         }
     }
 
+    @Override
     protected String getLookupKeyForMethod(Method method) {
         SoapAction soapAction = method.getAnnotation(SoapAction.class);
         return soapAction != null ? soapAction.value() : null;

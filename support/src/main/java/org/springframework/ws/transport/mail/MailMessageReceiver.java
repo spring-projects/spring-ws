@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -131,6 +131,7 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
         this.monitoringStrategy = monitoringStrategy;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(storeUri, "Property 'storeUri' is required");
         Assert.notNull(transportUri, "Property 'transportUri' is required");
@@ -150,11 +151,13 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
         super.afterPropertiesSet();
     }
 
+    @Override
     protected void onActivate() throws MessagingException {
         openSession();
         openFolder();
     }
 
+    @Override
     protected void onStart() {
         if (logger.isInfoEnabled()) {
             logger.info("Starting mail receiver [" + MailTransportUtils.toPasswordProtectedString(storeUri) + "]");
@@ -162,6 +165,7 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
         execute(new MonitoringRunnable());
     }
 
+    @Override
     protected void onStop() {
         if (logger.isInfoEnabled()) {
             logger.info("Stopping mail receiver [" + MailTransportUtils.toPasswordProtectedString(storeUri) + "]");
@@ -169,6 +173,7 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
         closeFolder();
     }
 
+    @Override
     protected void onShutdown() {
         if (logger.isInfoEnabled()) {
             logger.info("Shutting down mail receiver [" + MailTransportUtils.toPasswordProtectedString(storeUri) + "]");

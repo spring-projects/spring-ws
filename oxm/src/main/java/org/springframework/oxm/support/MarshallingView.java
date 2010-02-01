@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,10 +82,12 @@ public class MarshallingView extends AbstractUrlBasedView {
         this.modelKey = modelKey;
     }
 
+    @Override
     protected void initApplicationContext() throws BeansException {
         Assert.notNull(marshaller, "Property 'marshaller' is required");
     }
 
+    @Override
     protected void renderMergedOutputModel(Map model, HttpServletRequest request, HttpServletResponse response)
             throws Exception {
         Object toBeMarshalled = locateToBeMarshalled(model);

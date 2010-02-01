@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ public class Addressing200408 extends AbstractAddressingVersion {
 
     private static final String NAMESPACE_URI = "http://schemas.xmlsoap.org/ws/2004/08/addressing";
 
+    @Override
     public void addAddressingHeaders(SoapMessage message, MessageAddressingProperties map) {
         Assert.notNull(map.getAction(), "'Action' is required");
         Assert.notNull(map.getTo(), "'To' is required");
@@ -57,38 +58,47 @@ public class Addressing200408 extends AbstractAddressingVersion {
         return true;
     }
 
+    @Override
     protected final URI getAnonymous() {
         return URI.create(NAMESPACE_URI + "/role/anonymous");
     }
 
+    @Override
     protected final String getInvalidAddressingHeaderFaultReason() {
         return "A message information header is not valid and the message cannot be processed.";
     }
 
+    @Override
     protected final QName getInvalidAddressingHeaderFaultSubcode() {
         return QNameUtils.createQName(NAMESPACE_URI, "InvalidMessageInformationHeader", getNamespacePrefix());
     }
 
+    @Override
     protected final String getMessageAddressingHeaderRequiredFaultReason() {
         return "A required message information header, To, MessageID, or Action, is not present.";
     }
 
+    @Override
     protected final QName getMessageAddressingHeaderRequiredFaultSubcode() {
         return QNameUtils.createQName(NAMESPACE_URI, "MessageInformationHeaderRequired", getNamespacePrefix());
     }
 
+    @Override
     protected final String getNamespaceUri() {
         return NAMESPACE_URI;
     }
 
+    @Override
     protected URI getDefaultTo() {
         return null;
     }
 
+    @Override
     protected final EndpointReference getDefaultReplyTo(EndpointReference from) {
         return from;
     }
 
+    @Override
     protected final URI getNone() {
         return null;
     }

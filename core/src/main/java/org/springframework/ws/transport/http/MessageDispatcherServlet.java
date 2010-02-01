@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -215,6 +215,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
         this.transformWsdlLocations = transformWsdlLocations;
     }
 
+    @Override
     protected void doService(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
             throws Exception {
         WsdlDefinition definition = getWsdlDefinition(httpServletRequest);
@@ -230,6 +231,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
         messageReceiverHandlerAdapter.handle(httpServletRequest, httpServletResponse, messageReceiver);
     }
 
+    @Override
     protected void initFrameworkServlet() throws ServletException, BeansException {
         initMessageReceiverHandlerAdapter();
         initWsdlDefinitionHandlerAdapter();
@@ -239,6 +241,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
         initXsdSchemas();
     }
 
+    @Override
     protected long getLastModified(HttpServletRequest httpServletRequest) {
         WsdlDefinition definition = getWsdlDefinition(httpServletRequest);
         if (definition != null) {

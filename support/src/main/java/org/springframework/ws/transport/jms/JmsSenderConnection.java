@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -177,6 +177,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
      * Sending
      */
 
+    @Override
     protected void addRequestHeader(String name, String value) throws IOException {
         try {
             JmsTransportUtils.addHeader(requestMessage, name, value);
@@ -186,6 +187,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
         }
     }
 
+    @Override
     protected OutputStream getRequestOutputStream() throws IOException {
         if (requestMessage instanceof BytesMessage) {
             return new BytesMessageOutputStream((BytesMessage) requestMessage);
@@ -199,6 +201,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 
     }
 
+    @Override
     protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
         MessageProducer messageProducer = null;
         try {
@@ -236,6 +239,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
     * Receiving
     */
 
+    @Override
     protected void onReceiveBeforeRead() throws IOException {
         MessageConsumer messageConsumer = null;
         try {
@@ -280,10 +284,12 @@ public class JmsSenderConnection extends AbstractSenderConnection {
         }
     }
 
+    @Override
     protected boolean hasResponse() throws IOException {
         return responseMessage != null;
     }
 
+    @Override
     protected Iterator getResponseHeaderNames() throws IOException {
         try {
             return JmsTransportUtils.getHeaderNames(responseMessage);
@@ -293,6 +299,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
         }
     }
 
+    @Override
     protected Iterator getResponseHeaders(String name) throws IOException {
         try {
             return JmsTransportUtils.getHeaders(responseMessage, name);
@@ -302,6 +309,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
         }
     }
 
+    @Override
     protected InputStream getResponseInputStream() throws IOException {
         if (responseMessage instanceof BytesMessage) {
             return new BytesMessageInputStream((BytesMessage) responseMessage);
@@ -316,6 +324,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 
     }
 
+    @Override
     protected void onClose() throws IOException {
         JmsUtils.closeSession(session);
         ConnectionFactoryUtils.releaseConnection(connection, connectionFactory, true);

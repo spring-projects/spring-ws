@@ -1,5 +1,5 @@
 /*
- * Copyright ${YEAR} the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,6 +48,7 @@ public abstract class AbstractActionCallbackTestCase extends AbstractWsAddressin
 
     private WebServiceConnection connectionMock;
 
+    @Override
     protected final void onSetUp() throws Exception {
         strategyControl = MockControl.createControl(MessageIdStrategy.class);
         strategyMock = (MessageIdStrategy) strategyControl.getMock();
@@ -58,6 +59,7 @@ public abstract class AbstractActionCallbackTestCase extends AbstractWsAddressin
         TransportContextHolder.setTransportContext(transportContext);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         TransportContextHolder.setTransportContext(null);
     }

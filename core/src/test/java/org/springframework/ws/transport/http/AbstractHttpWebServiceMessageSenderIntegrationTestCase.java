@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,6 +89,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
 
     private URI connectionUri;
 
+    @Override
     protected final void setUp() throws Exception {
         connectionUri = new URI("http://localhost:8888/");
         jettyServer = new Server(8888);
@@ -105,6 +106,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
 
     protected abstract AbstractHttpWebServiceMessageSender createMessageSender();
 
+    @Override
     protected final void tearDown() throws Exception {
         if (jettyServer.isRunning()) {
             jettyServer.stop();
@@ -253,6 +255,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
             this.gzip = gzip;
         }
 
+        @Override
         protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
                 throws ServletException, IOException {
             try {

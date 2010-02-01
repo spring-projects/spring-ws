@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
 
     private Wss4jSecurityInterceptor interceptor;
 
+    @Override
     protected void onSetup() throws Exception {
         Properties users = new Properties();
         users.setProperty("Bert", "Ernie");

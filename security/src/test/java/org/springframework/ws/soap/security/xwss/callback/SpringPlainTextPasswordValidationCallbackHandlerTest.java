@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@ public class SpringPlainTextPasswordValidationCallbackHandlerTest extends TestCa
 
     private String password;
 
+    @Override
     protected void setUp() throws Exception {
         callbackHandler = new SpringPlainTextPasswordValidationCallbackHandler();
         control = MockControl.createControl(AuthenticationManager.class);
@@ -55,6 +56,7 @@ public class SpringPlainTextPasswordValidationCallbackHandlerTest extends TestCa
         callback = new PasswordValidationCallback(request);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         SecurityContextHolder.clearContext();
     }

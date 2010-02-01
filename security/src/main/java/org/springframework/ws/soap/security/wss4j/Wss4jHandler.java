@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,10 +60,12 @@ class Wss4jHandler extends WSHandler {
         options.setProperty(WSHandlerConstants.ENABLE_SIGNATURE_CONFIRMATION, Boolean.toString(true));
     }
 
+    @Override
     protected boolean checkReceiverResults(Vector wsResult, Vector actions) {
         return super.checkReceiverResults(wsResult, actions);
     }
 
+    @Override
     protected boolean checkReceiverResultsAnyOrder(Vector wsResult, Vector actions) {
         return super.checkReceiverResultsAnyOrder(wsResult, actions);
     }
@@ -76,6 +78,7 @@ class Wss4jHandler extends WSHandler {
         options.setProperty(key, Boolean.toString(value));
     }
 
+    @Override
     public Object getOption(String key) {
         return options.getProperty(key);
     }
@@ -97,6 +100,7 @@ class Wss4jHandler extends WSHandler {
     }
 
     /** Gets the password first from securementCallbackHandler, then from securementPassword if not found. */
+    @Override
     public WSPasswordCallback getPassword(String username,
                                           int doAction,
                                           String clsProp,
@@ -137,39 +141,48 @@ class Wss4jHandler extends WSHandler {
         return callback;
     }
 
+    @Override
     public String getPassword(Object msgContext) {
         return securementPassword;
     }
 
+    @Override
     public Object getProperty(Object msgContext, String key) {
         return ((MessageContext) msgContext).getProperty(key);
     }
 
+    @Override
     protected Crypto loadEncryptionCrypto(RequestData reqData) throws WSSecurityException {
         return securementEncryptionCrypto;
     }
 
+    @Override
     public Crypto loadSignatureCrypto(RequestData reqData) throws WSSecurityException {
         return securementSignatureCrypto;
     }
 
+    @Override
     public void setPassword(Object msgContext, String password) {
         securementPassword = password;
     }
 
+    @Override
     public void setProperty(Object msgContext, String key, Object value) {
         ((MessageContext) msgContext).setProperty(key, value);
     }
 
+    @Override
     protected void doSenderAction(int doAction, Document doc, RequestData reqData, Vector actions, boolean isRequest)
             throws WSSecurityException {
         super.doSenderAction(doAction, doc, reqData, actions, isRequest);
     }
 
+    @Override
     protected boolean verifyTimestamp(Timestamp timestamp, int timeToLive) throws WSSecurityException {
         return super.verifyTimestamp(timestamp, timeToLive);
     }
 
+    @Override
     protected boolean verifyTrust(X509Certificate cert, RequestData reqData) throws WSSecurityException {
         return super.verifyTrust(cert, reqData);
     }

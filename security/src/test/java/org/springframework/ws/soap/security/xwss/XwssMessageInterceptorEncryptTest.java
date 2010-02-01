@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ public class XwssMessageInterceptorEncryptTest extends AbstractXwssMessageInterc
         interceptor.setPolicyConfiguration(new ClassPathResource("encrypt-config.xml", getClass()));
         CallbackHandler handler = new AbstractCallbackHandler() {
 
+            @Override
             protected void handleInternal(Callback callback) {
                 if (callback instanceof EncryptionKeyCallback) {
                     EncryptionKeyCallback keyCallback = (EncryptionKeyCallback) callback;
@@ -67,6 +68,7 @@ public class XwssMessageInterceptorEncryptTest extends AbstractXwssMessageInterc
         interceptor.setPolicyConfiguration(new ClassPathResource("encrypt-alias-config.xml", getClass()));
         CallbackHandler handler = new AbstractCallbackHandler() {
 
+            @Override
             protected void handleInternal(Callback callback) {
                 if (callback instanceof EncryptionKeyCallback) {
                     EncryptionKeyCallback keyCallback = (EncryptionKeyCallback) callback;
@@ -101,6 +103,7 @@ public class XwssMessageInterceptorEncryptTest extends AbstractXwssMessageInterc
         interceptor.setPolicyConfiguration(new ClassPathResource("decrypt-config.xml", getClass()));
         CallbackHandler handler = new AbstractCallbackHandler() {
 
+            @Override
             protected void handleInternal(Callback callback) {
                 if (callback instanceof DecryptionKeyCallback) {
                     DecryptionKeyCallback keyCallback = (DecryptionKeyCallback) callback;

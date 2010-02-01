@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,6 +89,7 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
         this.applicationContext = applicationContext;
     }
 
+    @Override
     protected final Object getEndpointInternal(MessageAddressingProperties map) {
         URI action = map.getAction();
         if (logger.isDebugEnabled()) {
@@ -160,6 +161,7 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
         }
     }
 
+    @Override
     protected URI getResponseAction(Object endpoint, MessageAddressingProperties requestMap) {
         URI requestAction = requestMap.getAction();
         if (requestAction != null) {
@@ -170,6 +172,7 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
         }
     }
 
+    @Override
     protected URI getFaultAction(Object endpoint, MessageAddressingProperties requestMap) {
         URI requestAction = requestMap.getAction();
         if (requestAction != null) {

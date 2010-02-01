@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,11 +30,13 @@ public abstract class Wss4jInterceptorTestCase extends Wss4jTestCase {
         SoapMessage validatedRequest = loadSoap11Message("empty-soap.xml");
         final Object validatedRequestMessage = getMessage(validatedRequest);
         Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor() {
+            @Override
             protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
                     throws WsSecuritySecurementException {
                 fail("secure not expected");
             }
 
+            @Override
             protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
                     throws WsSecurityValidationException {
                 assertEquals("Invalid message", requestMessage, getMessage(soapMessage));
@@ -52,11 +54,13 @@ public abstract class Wss4jInterceptorTestCase extends Wss4jTestCase {
 
         Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor() {
 
+            @Override
             protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
                     throws WsSecuritySecurementException {
                 setMessage(soapMessage, securedResponseMessage);
             }
 
+            @Override
             protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
                     throws WsSecurityValidationException {
                 fail("validate not expected");

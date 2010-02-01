@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,10 +46,12 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
 
     private static final String SOAP_ACTION = "\"http://springframework.org/DoIt\"";
 
+    @Override
     protected void onSetUp() throws Exception {
         messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
     }
 
+    @Override
     protected String[] getConfigLocations() {
         return new String[]{"classpath:org/springframework/ws/transport/jms/jms-sender-applicationContext.xml"};
     }

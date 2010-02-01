@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.oxm.castor;
 
 import java.io.IOException;
@@ -296,10 +297,12 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
     // Marshalling
     //
 
+    @Override
     protected final void marshalDomNode(Object graph, Node node) throws XmlMappingException {
         marshalSaxHandlers(graph, new DomContentHandler(node), null);
     }
 
+    @Override
     protected final void marshalSaxHandlers(Object graph, ContentHandler contentHandler, LexicalHandler lexicalHandler)
             throws XmlMappingException {
         Marshaller marshaller = xmlContext.createMarshaller();
@@ -307,21 +310,25 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
         marshal(graph, marshaller);
     }
 
+    @Override
     protected final void marshalOutputStream(Object graph, OutputStream outputStream)
             throws XmlMappingException, IOException {
         marshalWriter(graph, new OutputStreamWriter(outputStream, encoding));
     }
 
+    @Override
     protected final void marshalWriter(Object graph, Writer writer) throws XmlMappingException, IOException {
         Marshaller marshaller = xmlContext.createMarshaller();
         marshaller.setWriter(writer);
         marshal(graph, marshaller);
     }
 
+    @Override
     protected final void marshalXmlEventWriter(Object graph, XMLEventWriter eventWriter) throws XmlMappingException {
         marshalSaxHandlers(graph, new StaxEventContentHandler(eventWriter), null);
     }
 
+    @Override
     protected final void marshalXmlStreamWriter(Object graph, XMLStreamWriter streamWriter) throws XmlMappingException {
         marshalSaxHandlers(graph, new StaxStreamContentHandler(streamWriter), null);
     }
@@ -361,6 +368,7 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
     // Unmarshalling
     //
 
+    @Override
     protected final Object unmarshalDomNode(Node node) throws XmlMappingException {
         try {
             return createUnmarshaller().unmarshal(node);
@@ -370,6 +378,7 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
         }
     }
 
+    @Override
     protected final Object unmarshalInputStream(InputStream inputStream) throws XmlMappingException, IOException {
         try {
             return createUnmarshaller().unmarshal(new InputSource(inputStream));
@@ -379,6 +388,7 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
         }
     }
 
+    @Override
     protected final Object unmarshalReader(Reader reader) throws XmlMappingException, IOException {
         try {
             return createUnmarshaller().unmarshal(new InputSource(reader));
@@ -388,6 +398,7 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
         }
     }
 
+    @Override
     protected final Object unmarshalXmlEventReader(XMLEventReader eventReader) {
         XMLReader reader = new StaxEventXmlReader(eventReader);
         try {
@@ -398,6 +409,7 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
         }
     }
 
+    @Override
     protected final Object unmarshalSaxReader(XMLReader xmlReader, InputSource inputSource)
             throws XmlMappingException, IOException {
         UnmarshalHandler unmarshalHandler = createUnmarshaller().createHandler();
@@ -412,6 +424,7 @@ public class CastorMarshaller extends AbstractMarshaller implements Initializing
         }
     }
 
+    @Override
     protected final Object unmarshalXmlStreamReader(XMLStreamReader streamReader) {
         XMLReader reader = new StaxStreamXmlReader(streamReader);
         try {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,10 +33,12 @@ class XmlBeansMarshallerBeanDefinitionParser extends AbstractSingleBeanDefinitio
 
     public static final String XML_BEANS_MARSHALLER_CLASS_NAME = "org.springframework.oxm.xmlbeans.XmlBeansMarshaller";
 
+    @Override
     protected String getBeanClassName(Element element) {
         return XML_BEANS_MARSHALLER_CLASS_NAME;
     }
 
+    @Override
     protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder beanDefinitionBuilder) {
         String optionsName = element.getAttribute("options");
         if (StringUtils.hasText(optionsName)) {

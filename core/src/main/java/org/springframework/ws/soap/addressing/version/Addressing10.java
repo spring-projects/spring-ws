@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ public class Addressing10 extends AbstractAddressingVersion {
 
     private static final String NAMESPACE_URI = "http://www.w3.org/2005/08/addressing";
 
+    @Override
     public void addAddressingHeaders(SoapMessage message, MessageAddressingProperties map) {
         Assert.notNull(map.getAction(), "'Action' is required");
         super.addAddressingHeaders(message, map);
@@ -54,42 +55,52 @@ public class Addressing10 extends AbstractAddressingVersion {
 
     }
 
+    @Override
     protected String getNamespaceUri() {
         return NAMESPACE_URI;
     }
 
+    @Override
     protected QName getReferencePropertiesName() {
         return null;
     }
 
+    @Override
     protected URI getDefaultTo() {
         return getAnonymous();
     }
 
+    @Override
     protected EndpointReference getDefaultReplyTo(EndpointReference from) {
         return new EndpointReference(getAnonymous());
     }
 
+    @Override
     protected final URI getAnonymous() {
         return URI.create(NAMESPACE_URI + "/anonymous");
     }
 
+    @Override
     protected final URI getNone() {
         return URI.create(NAMESPACE_URI + "/none");
     }
 
+    @Override
     protected final QName getMessageAddressingHeaderRequiredFaultSubcode() {
         return QNameUtils.createQName(NAMESPACE_URI, "MessageAddressingHeaderRequired", getNamespacePrefix());
     }
 
+    @Override
     protected final String getMessageAddressingHeaderRequiredFaultReason() {
         return "A required header representing a Message Addressing Property is not present";
     }
 
+    @Override
     protected QName getInvalidAddressingHeaderFaultSubcode() {
         return QNameUtils.createQName(NAMESPACE_URI, "InvalidAddressingHeader", getNamespacePrefix());
     }
 
+    @Override
     protected String getInvalidAddressingHeaderFaultReason() {
         return "A header representing a Message Addressing Property is not valid and the message cannot be processed";
     }

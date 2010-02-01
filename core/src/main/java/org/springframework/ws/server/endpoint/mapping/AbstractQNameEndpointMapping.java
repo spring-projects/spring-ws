@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import org.springframework.xml.namespace.QNameUtils;
  */
 public abstract class AbstractQNameEndpointMapping extends AbstractMapBasedEndpointMapping {
 
+    @Override
     protected final String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
         QName qName = resolveQName(messageContext);
         return qName != null ? qName.toString() : null;
@@ -41,6 +42,7 @@ public abstract class AbstractQNameEndpointMapping extends AbstractMapBasedEndpo
      */
     protected abstract QName resolveQName(MessageContext messageContext) throws Exception;
 
+    @Override
     protected boolean validateLookupKey(String key) {
         return QNameUtils.validateQName(key);
     }

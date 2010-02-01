@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,6 +100,7 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
         this.faultSuffix = faultSuffix;
     }
 
+    @Override
     protected String getOperationName(Message message) {
         String messageName = getMessageName(message);
         if (messageName != null) {
@@ -125,6 +126,7 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
      * @param message the message
      * @return <code>true</code> if to be included as input; <code>false</code> otherwise
      */
+    @Override
     protected boolean isInputMessage(Message message) {
         String messageName = getMessageName(message);
         return messageName != null && messageName.endsWith(getRequestSuffix());
@@ -139,6 +141,7 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
      * @param message the message
      * @return <code>true</code> if to be included as output; <code>false</code> otherwise
      */
+    @Override
     protected boolean isOutputMessage(Message message) {
         String messageName = getMessageName(message);
         return messageName != null && messageName.endsWith(getResponseSuffix());
@@ -152,6 +155,7 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
      * @param message the message
      * @return <code>true</code> if to be included as fault; <code>false</code> otherwise
      */
+    @Override
     protected boolean isFaultMessage(Message message) {
         String messageName = getMessageName(message);
         return messageName != null && messageName.endsWith(getFaultSuffix());

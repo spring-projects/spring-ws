@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -129,6 +129,7 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
         Assert.notNull(getUnmarshaller(), "unmarshaller is required");
     }
 
+    @Override
     protected void invokeInternal(MessageContext messageContext, MethodEndpoint methodEndpoint) throws Exception {
         WebServiceMessage request = messageContext.getRequest();
         Object requestObject = unmarshalRequest(request);
@@ -161,6 +162,7 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
      * @see Marshaller#supports(Class)
      * @see Unmarshaller#supports(Class)
      */
+    @Override
     protected boolean supportsInternal(MethodEndpoint methodEndpoint) {
         Method method = methodEndpoint.getMethod();
         return supportsReturnType(method) && supportsParameters(method);

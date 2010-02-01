@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ public class XwssMessageInterceptorUsernameTokenTest extends AbstractXwssMessage
         interceptor.setPolicyConfiguration(new ClassPathResource("usernameToken-digest-config.xml", getClass()));
         CallbackHandler handler = new AbstractCallbackHandler() {
 
+            @Override
             protected void handleInternal(Callback callback) {
                 if (callback instanceof UsernameCallback) {
                     ((UsernameCallback) callback).setUsername("Bert");
@@ -65,6 +66,7 @@ public class XwssMessageInterceptorUsernameTokenTest extends AbstractXwssMessage
         interceptor.setPolicyConfiguration(new ClassPathResource("usernameToken-plainText-config.xml", getClass()));
         CallbackHandler handler = new AbstractCallbackHandler() {
 
+            @Override
             protected void handleInternal(Callback callback) {
                 if (callback instanceof UsernameCallback) {
                     ((UsernameCallback) callback).setUsername("Bert");
@@ -96,6 +98,7 @@ public class XwssMessageInterceptorUsernameTokenTest extends AbstractXwssMessage
                 .setPolicyConfiguration(new ClassPathResource("requireUsernameToken-plainText-config.xml", getClass()));
         CallbackHandler handler = new AbstractCallbackHandler() {
 
+            @Override
             protected void handleInternal(Callback callback) {
                 if (callback instanceof PasswordValidationCallback) {
                     PasswordValidationCallback validationCallback = (PasswordValidationCallback) callback;
@@ -133,6 +136,7 @@ public class XwssMessageInterceptorUsernameTokenTest extends AbstractXwssMessage
         interceptor.setPolicyConfiguration(new ClassPathResource("requireUsernameToken-digest-config.xml", getClass()));
         CallbackHandler handler = new AbstractCallbackHandler() {
 
+            @Override
             protected void handleInternal(Callback callback) {
                 if (callback instanceof PasswordValidationCallback) {
                     PasswordValidationCallback validationCallback = (PasswordValidationCallback) callback;

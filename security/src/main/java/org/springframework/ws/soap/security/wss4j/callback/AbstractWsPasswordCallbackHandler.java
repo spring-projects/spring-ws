@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ public abstract class AbstractWsPasswordCallbackHandler extends AbstractCallback
      * @throws IOException                  in case of I/O errors
      * @throws UnsupportedCallbackException when the callback is not supported
      */
+    @Override
     protected final void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
         if (callback instanceof WSPasswordCallback) {
             WSPasswordCallback passwordCallback = (WSPasswordCallback) callback;

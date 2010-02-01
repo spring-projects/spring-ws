@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,6 +68,7 @@ public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpoin
      * Returns the action value for the specified method. Default implementation looks for the {@link Action} annotation
      * value.
      */
+    @Override
     protected URI getActionForMethod(Method method) {
         Action action = method.getAnnotation(Action.class);
         if (action != null && StringUtils.hasText(action.value())) {
@@ -91,6 +92,7 @@ public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpoin
      * @param endpoint the method endpoint to return the address for
      * @return the endpoint address; or <code>null</code> to ignore the destination property
      */
+    @Override
     protected URI getEndpointAddress(Object endpoint) {
         MethodEndpoint methodEndpoint = (MethodEndpoint) endpoint;
         Class endpointClass = methodEndpoint.getMethod().getDeclaringClass();
@@ -103,6 +105,7 @@ public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpoin
         }
     }
 
+    @Override
     protected URI getResponseAction(Object endpoint, MessageAddressingProperties map) {
         MethodEndpoint methodEndpoint = (MethodEndpoint) endpoint;
         Action action = methodEndpoint.getMethod().getAnnotation(Action.class);
@@ -114,6 +117,7 @@ public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpoin
         }
     }
 
+    @Override
     protected URI getFaultAction(Object endpoint, MessageAddressingProperties map) {
         MethodEndpoint methodEndpoint = (MethodEndpoint) endpoint;
         Action action = methodEndpoint.getMethod().getAnnotation(Action.class);

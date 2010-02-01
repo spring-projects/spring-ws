@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ class BytesMessageOutputStream extends OutputStream {
         this.message = message;
     }
 
+    @Override
     public void write(byte b[]) throws IOException {
         try {
             message.writeBytes(b);
@@ -47,6 +48,7 @@ class BytesMessageOutputStream extends OutputStream {
         }
     }
 
+    @Override
     public void write(byte b[], int off, int len) throws IOException {
         try {
             message.writeBytes(b, off, len);
@@ -56,6 +58,7 @@ class BytesMessageOutputStream extends OutputStream {
         }
     }
 
+    @Override
     public void write(int b) throws IOException {
         try {
             message.writeByte((byte) b);

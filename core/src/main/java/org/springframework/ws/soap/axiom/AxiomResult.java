@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,6 +44,7 @@ class AxiomResult extends SAXResult {
      *
      * @throws UnsupportedOperationException always
      */
+    @Override
     public void setHandler(ContentHandler handler) {
         throw new UnsupportedOperationException("setHandler is not supported");
     }
@@ -53,6 +54,7 @@ class AxiomResult extends SAXResult {
      *
      * @throws UnsupportedOperationException always
      */
+    @Override
     public void setLexicalHandler(LexicalHandler handler) {
         throw new UnsupportedOperationException("setLexicalHandler is not supported");
     }

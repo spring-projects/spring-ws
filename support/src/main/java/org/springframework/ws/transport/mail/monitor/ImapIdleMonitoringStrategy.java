@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ public class ImapIdleMonitoringStrategy extends AbstractMonitoringStrategy {
 
     private MessageCountListener messageCountListener;
 
+    @Override
     protected void waitForNewMessages(Folder folder) throws MessagingException, InterruptedException {
         Assert.isInstanceOf(IMAPFolder.class, folder);
         IMAPFolder imapFolder = (IMAPFolder) folder;
@@ -61,6 +62,7 @@ public class ImapIdleMonitoringStrategy extends AbstractMonitoringStrategy {
 
     private void createMessageCountListener() {
         messageCountListener = new MessageCountAdapter() {
+            @Override
             public void messagesAdded(MessageCountEvent e) {
                 Message[] messages = e.getMessages();
                 for (int i = 0; i < messages.length; i++) {

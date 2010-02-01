@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,6 +47,7 @@ public class PayloadValidatingInterceptor extends AbstractValidatingInterceptor 
      * @param request the request message
      * @return the part of the message that is to validated, or <code>null</code> not to validate anything
      */
+    @Override
     protected Source getValidationRequestSource(WebServiceMessage request) {
         return request.getPayloadSource();
     }
@@ -57,6 +58,7 @@ public class PayloadValidatingInterceptor extends AbstractValidatingInterceptor 
      * @param response the response message
      * @return the part of the message that is to validated, or <code>null</code> not to validate anything
      */
+    @Override
     protected Source getValidationResponseSource(WebServiceMessage response) {
         return response.getPayloadSource();
     }

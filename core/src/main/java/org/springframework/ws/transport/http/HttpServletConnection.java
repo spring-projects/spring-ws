@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,14 +97,17 @@ public class HttpServletConnection extends AbstractReceiverConnection
     * Receiving request
     */
 
+    @Override
     protected Iterator getRequestHeaderNames() throws IOException {
         return new EnumerationIterator(getHttpServletRequest().getHeaderNames());
     }
 
+    @Override
     protected Iterator getRequestHeaders(String name) throws IOException {
         return new EnumerationIterator(getHttpServletRequest().getHeaders(name));
     }
 
+    @Override
     protected InputStream getRequestInputStream() throws IOException {
         return getHttpServletRequest().getInputStream();
     }
@@ -113,18 +116,22 @@ public class HttpServletConnection extends AbstractReceiverConnection
     * Sending response
     */
 
+    @Override
     protected void addResponseHeader(String name, String value) throws IOException {
         getHttpServletResponse().addHeader(name, value);
     }
 
+    @Override
     protected OutputStream getResponseOutputStream() throws IOException {
         return getHttpServletResponse().getOutputStream();
     }
 
+    @Override
     protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
         statusCodeSet = true;
     }
 
+    @Override
     public void onClose() throws IOException {
         if (!statusCodeSet) {
             getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_ACCEPTED);

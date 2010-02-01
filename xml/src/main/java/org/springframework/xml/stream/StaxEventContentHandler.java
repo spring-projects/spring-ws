@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,14 +77,17 @@ public class StaxEventContentHandler extends AbstractStaxContentHandler {
         this.locator = locator;
     }
 
+    @Override
     protected void startDocumentInternal() throws XMLStreamException {
         consumeEvent(eventFactory.createStartDocument());
     }
 
+    @Override
     protected void endDocumentInternal() throws XMLStreamException {
         consumeEvent(eventFactory.createEndDocument());
     }
 
+    @Override
     protected void startElementInternal(QName name, Attributes atts, SimpleNamespaceContext namespaceContext)
             throws XMLStreamException {
         List attributes = getAttributes(atts);
@@ -92,19 +95,23 @@ public class StaxEventContentHandler extends AbstractStaxContentHandler {
         consumeEvent(eventFactory.createStartElement(name, attributes.iterator(), namespaces.iterator()));
     }
 
+    @Override
     protected void endElementInternal(QName name, SimpleNamespaceContext namespaceContext) throws XMLStreamException {
         List namespaces = createNamespaces(namespaceContext);
         consumeEvent(eventFactory.createEndElement(name, namespaces.iterator()));
     }
 
+    @Override
     protected void charactersInternal(char[] ch, int start, int length) throws XMLStreamException {
         consumeEvent(eventFactory.createCharacters(new String(ch, start, length)));
     }
 
+    @Override
     protected void ignorableWhitespaceInternal(char[] ch, int start, int length) throws XMLStreamException {
         consumeEvent(eventFactory.createIgnorableSpace(new String(ch, start, length)));
     }
 
+    @Override
     protected void processingInstructionInternal(String target, String data) throws XMLStreamException {
         consumeEvent(eventFactory.createProcessingInstruction(target, data));
     }
@@ -146,6 +153,7 @@ public class StaxEventContentHandler extends AbstractStaxContentHandler {
     // No operation
     //
 
+    @Override
     protected void skippedEntityInternal(String name) throws XMLStreamException {
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ public class StaxStreamXmlReaderTest extends AbstractStaxXmlReaderTestCase {
 
     public static final String CONTENT = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
 
+    @Override
     protected AbstractStaxXmlReader createStaxXmlReader(InputStream inputStream) throws XMLStreamException {
         return new StaxStreamXmlReader(inputFactory.createXMLStreamReader(inputStream));
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,6 +51,7 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
 
     private ContentHandler contentHandler;
 
+    @Override
     protected void setUp() throws Exception {
         inputFactory = XMLInputFactory.newInstance();
         standardReader = XMLReaderFactory.createXMLReader();
@@ -142,6 +143,7 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
     /** Easymock <code>ArgumentMatcher</code> implementation that matches SAX arguments. */
     protected static class SaxArgumentMatcher extends AbstractMatcher {
 
+        @Override
         public boolean matches(Object[] expected, Object[] actual) {
             if (expected == actual) {
                 return true;
@@ -169,6 +171,7 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
             }
         }
 
+        @Override
         protected boolean argumentMatches(Object expected, Object actual) {
             if (expected instanceof char[]) {
                 return Arrays.equals((char[]) expected, (char[]) actual);
@@ -201,6 +204,7 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
             }
         }
 
+        @Override
         public String toString(Object[] arguments) {
             if (arguments != null && arguments.length == 3 && arguments[0] instanceof char[] &&
                     arguments[1] instanceof Integer && arguments[2] instanceof Integer) {
@@ -212,6 +216,7 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
             }
         }
 
+        @Override
         protected String argumentToString(Object argument) {
             if (argument instanceof char[]) {
                 char[] array = (char[]) argument;

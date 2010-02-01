@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,6 +53,7 @@ public abstract class AbstractStaxXmlReader extends AbstractXmlReader {
 
     private Boolean isStandalone;
 
+    @Override
     public boolean getFeature(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
         if (NAMESPACES_FEATURE_NAME.equals(name)) {
             return namespacesFeature;
@@ -73,6 +74,7 @@ public abstract class AbstractStaxXmlReader extends AbstractXmlReader {
         }
     }
 
+    @Override
     public void setFeature(String name, boolean value) throws SAXNotRecognizedException, SAXNotSupportedException {
         if (NAMESPACES_FEATURE_NAME.equals(name)) {
             this.namespacesFeature = value;

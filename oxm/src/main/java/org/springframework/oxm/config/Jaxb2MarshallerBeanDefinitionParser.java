@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,10 +37,12 @@ class Jaxb2MarshallerBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 
     private static final String JAXB2_MARSHALLER_CLASS_NAME = "org.springframework.oxm.jaxb.Jaxb2Marshaller";
 
+    @Override
     protected String getBeanClassName(Element element) {
         return JAXB2_MARSHALLER_CLASS_NAME;
     }
 
+    @Override
     protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder beanDefinitionBuilder) {
         String contextPath = element.getAttribute("contextPath");
         if (StringUtils.hasText(contextPath)) {

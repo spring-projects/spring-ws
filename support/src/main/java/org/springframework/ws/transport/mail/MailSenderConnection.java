@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -144,6 +144,7 @@ public class MailSenderConnection extends AbstractSenderConnection {
     /*
     * Sending
     */
+    @Override
     protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
         try {
             requestMessage = new MimeMessage(session);
@@ -162,6 +163,7 @@ public class MailSenderConnection extends AbstractSenderConnection {
         }
     }
 
+    @Override
     protected void addRequestHeader(String name, String value) throws IOException {
         try {
             requestMessage.addHeader(name, value);
@@ -174,10 +176,12 @@ public class MailSenderConnection extends AbstractSenderConnection {
         }
     }
 
+    @Override
     protected OutputStream getRequestOutputStream() throws IOException {
         return requestBuffer;
     }
 
+    @Override
     protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
         Transport transport = null;
         try {
@@ -200,6 +204,7 @@ public class MailSenderConnection extends AbstractSenderConnection {
      * Receiving
      */
 
+    @Override
     protected void onReceiveBeforeRead() throws IOException {
         try {
             String requestMessageId = requestMessage.getMessageID();
@@ -244,10 +249,12 @@ public class MailSenderConnection extends AbstractSenderConnection {
         }
     }
 
+    @Override
     protected boolean hasResponse() throws IOException {
         return responseMessage != null;
     }
 
+    @Override
     protected Iterator getResponseHeaderNames() throws IOException {
         try {
             List headers = new ArrayList();
@@ -263,6 +270,7 @@ public class MailSenderConnection extends AbstractSenderConnection {
         }
     }
 
+    @Override
     protected Iterator getResponseHeaders(String name) throws IOException {
         try {
             String[] headers = responseMessage.getHeader(name);
@@ -274,6 +282,7 @@ public class MailSenderConnection extends AbstractSenderConnection {
         }
     }
 
+    @Override
     protected InputStream getResponseInputStream() throws IOException {
         try {
             return responseMessage.getDataHandler().getInputStream();
@@ -291,6 +300,7 @@ public class MailSenderConnection extends AbstractSenderConnection {
         return null;
     }
 
+    @Override
     public void onClose() throws IOException {
         MailTransportUtils.closeFolder(folder, deleteAfterReceive);
         MailTransportUtils.closeService(store);

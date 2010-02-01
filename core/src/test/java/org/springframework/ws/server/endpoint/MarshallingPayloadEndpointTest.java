@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,6 +52,7 @@ public class MarshallingPayloadEndpointTest extends XMLTestCase {
 
     private WebServiceMessageFactory factoryMock;
 
+    @Override
     protected void setUp() throws Exception {
         MockWebServiceMessage request = new MockWebServiceMessage("<request/>");
         transformer = TransformerFactory.newInstance().newTransformer();
@@ -63,6 +64,7 @@ public class MarshallingPayloadEndpointTest extends XMLTestCase {
 
     public void testInvoke() throws Exception {
         Unmarshaller unmarshaller = new SimpleMarshaller() {
+            @Override
             public Object unmarshal(Source source) throws XmlMappingException {
                 try {
                     StringWriter writer = new StringWriter();
@@ -77,6 +79,7 @@ public class MarshallingPayloadEndpointTest extends XMLTestCase {
             }
         };
         Marshaller marshaller = new SimpleMarshaller() {
+            @Override
             public void marshal(Object graph, Result result) throws XmlMappingException {
                 assertEquals("Invalid graph", "result", graph);
                 try {
@@ -88,6 +91,7 @@ public class MarshallingPayloadEndpointTest extends XMLTestCase {
             }
         };
         AbstractMarshallingPayloadEndpoint endpoint = new AbstractMarshallingPayloadEndpoint() {
+            @Override
             protected Object invokeInternal(Object requestObject) throws Exception {
                 assertEquals("Invalid request object", new Long(42), requestObject);
                 return "result";
@@ -110,6 +114,7 @@ public class MarshallingPayloadEndpointTest extends XMLTestCase {
 
     public void testInvokeNullResponse() throws Exception {
         Unmarshaller unmarshaller = new SimpleMarshaller() {
+            @Override
             public Object unmarshal(Source source) throws XmlMappingException {
                 try {
                     StringWriter writer = new StringWriter();
@@ -124,11 +129,13 @@ public class MarshallingPayloadEndpointTest extends XMLTestCase {
             }
         };
         Marshaller marshaller = new SimpleMarshaller() {
+            @Override
             public void marshal(Object graph, Result result) throws XmlMappingException {
                 fail("marshal not expected");
             }
         };
         AbstractMarshallingPayloadEndpoint endpoint = new AbstractMarshallingPayloadEndpoint() {
+            @Override
             protected Object invokeInternal(Object requestObject) throws Exception {
                 assertEquals("Invalid request object", new Long(42), requestObject);
                 return null;
@@ -148,6 +155,7 @@ public class MarshallingPayloadEndpointTest extends XMLTestCase {
         context = new DefaultMessageContext(request, factoryMock);
         AbstractMarshallingPayloadEndpoint endpoint = new AbstractMarshallingPayloadEndpoint() {
 
+            @Override
             protected Object invokeInternal(Object requestObject) throws Exception {
                 assertNull("No request expected", requestObject);
                 return null;
@@ -187,6 +195,7 @@ public class MarshallingPayloadEndpointTest extends XMLTestCase {
         messageControl.replay();
 
         AbstractMarshallingPayloadEndpoint endpoint = new AbstractMarshallingPayloadEndpoint() {
+            @Override
             protected Object invokeInternal(Object requestObject) throws Exception {
                 assertEquals("Invalid request object", new Long(42), requestObject);
                 return "result";

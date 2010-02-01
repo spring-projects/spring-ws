@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -173,6 +173,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
     // Supported Marshalling
     //
 
+    @Override
     protected void marshalOutputStream(Object graph, OutputStream outputStream)
             throws XmlMappingException, IOException {
         try {
@@ -184,6 +185,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
         }
     }
 
+    @Override
     protected void marshalWriter(Object graph, Writer writer) throws XmlMappingException, IOException {
         try {
             IMarshallingContext marshallingContext = createMarshallingContext();
@@ -194,6 +196,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
         }
     }
 
+    @Override
     protected void marshalXmlStreamWriter(Object graph, XMLStreamWriter streamWriter) throws XmlMappingException {
         try {
             MarshallingContext marshallingContext = (MarshallingContext) createMarshallingContext();
@@ -210,6 +213,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
     // Unsupported Marshalling
     //
 
+    @Override
     protected void marshalDomNode(Object graph, Node node) throws XmlMappingException {
         try {
             // JiBX does not support DOM natively, so we write to a buffer first, and transform that to the Node
@@ -227,6 +231,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
         }
     }
 
+    @Override
     protected void marshalSaxHandlers(Object graph, ContentHandler contentHandler, LexicalHandler lexicalHandler)
             throws XmlMappingException {
         try {
@@ -247,6 +252,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
         }
     }
 
+    @Override
     protected void marshalXmlEventWriter(Object graph, XMLEventWriter eventWriter) {
         ContentHandler contentHandler = new StaxEventContentHandler(eventWriter);
         marshalSaxHandlers(graph, contentHandler, null);
@@ -256,6 +262,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
     // Unmarshalling
     //
 
+    @Override
     protected Object unmarshalInputStream(InputStream inputStream) throws XmlMappingException, IOException {
         try {
             IUnmarshallingContext unmarshallingContext = createUnmarshallingContext();
@@ -266,6 +273,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
         }
     }
 
+    @Override
     protected Object unmarshalReader(Reader reader) throws XmlMappingException, IOException {
         try {
             IUnmarshallingContext unmarshallingContext = createUnmarshallingContext();
@@ -276,6 +284,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
         }
     }
 
+    @Override
     protected Object unmarshalXmlStreamReader(XMLStreamReader streamReader) {
         try {
             UnmarshallingContext unmarshallingContext = (UnmarshallingContext) createUnmarshallingContext();
@@ -288,6 +297,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
         }
     }
 
+    @Override
     protected Object unmarshalXmlEventReader(XMLEventReader eventReader) {
         try {
             XMLStreamReader streamReader = new XmlEventStreamReader(eventReader);
@@ -302,6 +312,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
     // Unsupported Unmarshalling
     //
 
+    @Override
     protected Object unmarshalDomNode(Node node) throws XmlMappingException {
         try {
             Transformer transformer = transformerFactory.newTransformer();
@@ -318,6 +329,7 @@ public class JibxMarshaller extends AbstractMarshaller implements InitializingBe
         }
     }
 
+    @Override
     protected Object unmarshalSaxReader(XMLReader xmlReader, InputSource inputSource)
             throws XmlMappingException, IOException {
         try {

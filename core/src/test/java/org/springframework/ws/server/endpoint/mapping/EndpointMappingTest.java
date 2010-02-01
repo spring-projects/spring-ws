@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ public class EndpointMappingTest extends TestCase {
 
     private MockControl contextControl;
 
+    @Override
     protected void setUp() throws Exception {
         contextControl = MockControl.createControl(MessageContext.class);
         mockContext = (MessageContext) contextControl.getMock();
@@ -39,6 +40,7 @@ public class EndpointMappingTest extends TestCase {
     public void testDefaultEndpoint() throws Exception {
         Object defaultEndpoint = new Object();
         AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
+            @Override
             protected Object getEndpointInternal(MessageContext givenRequest) throws Exception {
                 assertEquals("Invalid request passed", mockContext, givenRequest);
                 return null;
@@ -56,6 +58,7 @@ public class EndpointMappingTest extends TestCase {
     public void testEndpoint() throws Exception {
         final Object endpoint = new Object();
         AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
+            @Override
             protected Object getEndpointInternal(MessageContext givenRequest) throws Exception {
                 assertEquals("Invalid request passed", mockContext, givenRequest);
                 return endpoint;
@@ -73,6 +76,7 @@ public class EndpointMappingTest extends TestCase {
         final Object endpoint = new Object();
         EndpointInterceptor interceptor = new EndpointInterceptorAdapter();
         AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
+            @Override
             protected Object getEndpointInternal(MessageContext givenRequest) throws Exception {
                 assertEquals("Invalid request passed", mockContext, givenRequest);
                 return endpoint;
@@ -92,6 +96,7 @@ public class EndpointMappingTest extends TestCase {
 
         AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
 
+            @Override
             protected Object getEndpointInternal(MessageContext message) throws Exception {
                 assertEquals("Invalid request", mockContext, message);
                 return "endpoint";
@@ -111,6 +116,7 @@ public class EndpointMappingTest extends TestCase {
 
         AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
 
+            @Override
             protected Object getEndpointInternal(MessageContext message) throws Exception {
                 assertEquals("Invalid request", mockContext, message);
                 return "noSuchBean";
@@ -131,6 +137,7 @@ public class EndpointMappingTest extends TestCase {
 
         AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
 
+            @Override
             protected Object getEndpointInternal(MessageContext message) throws Exception {
                 assertEquals("Invalid request", mockContext, message);
                 return "endpoint";

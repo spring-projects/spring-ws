@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,6 +62,7 @@ public class SaajXmlReader extends AbstractXmlReader {
         this.startNode = startNode;
     }
 
+    @Override
     public boolean getFeature(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
         if (NAMESPACES_FEATURE_NAME.equals(name)) {
             return namespacesFeature;
@@ -74,6 +75,7 @@ public class SaajXmlReader extends AbstractXmlReader {
         }
     }
 
+    @Override
     public void setFeature(String name, boolean value) throws SAXNotRecognizedException, SAXNotSupportedException {
         if (NAMESPACES_FEATURE_NAME.equals(name)) {
             this.namespacesFeature = value;

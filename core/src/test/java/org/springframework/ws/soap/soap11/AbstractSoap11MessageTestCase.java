@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,14 +32,17 @@ import org.springframework.xml.transform.StringSource;
 
 public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageTestCase {
 
+    @Override
     protected final Resource[] getSoapSchemas() {
         return new Resource[]{new ClassPathResource("soap11.xsd", AbstractSoap11MessageTestCase.class)};
     }
 
+    @Override
     public void testGetVersion() throws Exception {
         Assert.assertEquals("Invalid SOAP version", SoapVersion.SOAP_11, soapMessage.getVersion());
     }
 
+    @Override
     public void testWriteToTransportOutputStream() throws Exception {
         SoapBody body = soapMessage.getSoapBody();
         String payload = "<payload xmlns='http://www.springframework.org' />";
@@ -62,6 +65,7 @@ public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageT
         assertNotNull("Invalid accept header", resultAccept);
     }
 
+    @Override
     public void testWriteToTransportResponseAttachment() throws Exception {
         InputStreamSource inputStreamSource = new ByteArrayResource("contents".getBytes("UTF-8"));
         soapMessage.addAttachment("contentId", inputStreamSource, "text/plain");
