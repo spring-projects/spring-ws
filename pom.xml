@@ -101,15 +101,6 @@
     </modules>
     <profiles>
         <profile>
-            <id>jdk15-jdk16</id>
-            <activation>
-                <jdk>!1.4</jdk>
-            </activation>
-            <modules>
-                <module>core-tiger</module>
-            </modules>
-        </profile>
-        <profile>
             <id>samples</id>
             <modules>
                 <module>samples</module>
