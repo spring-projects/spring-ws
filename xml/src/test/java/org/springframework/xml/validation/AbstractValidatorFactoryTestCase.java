@@ -24,6 +24,10 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.transform.ResourceSource;
@@ -31,7 +35,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXParseException;
 
-public abstract class AbstractValidatorFactoryTestCase extends TestCase {
+public abstract class AbstractValidatorFactoryTestCase {
 
     private XmlValidator validator;
 
@@ -39,8 +43,8 @@ public abstract class AbstractValidatorFactoryTestCase extends TestCase {
 
     private InputStream invalidInputStream;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         Resource[] schemaResource =
                 new Resource[]{new ClassPathResource("schema.xsd", AbstractValidatorFactoryTestCase.class)};
         validator = createValidator(schemaResource, XmlValidatorFactory.SCHEMA_W3C_XML);
@@ -48,64 +52,72 @@ public abstract class AbstractValidatorFactoryTestCase extends TestCase {
         invalidInputStream = AbstractValidatorFactoryTestCase.class.getResourceAsStream("invalidDocument.xml");
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         validInputStream.close();
         invalidInputStream.close();
     }
 
     protected abstract XmlValidator createValidator(Resource[] schemaResources, String schemaLanguage) throws Exception;
 
+    @Test
     public void testHandleValidMessageStream() throws Exception {
         SAXParseException[] errors = validator.validate(new StreamSource(validInputStream));
-        assertNotNull("Null returned for errors", errors);
-        assertEquals("ValidationErrors returned", 0, errors.length);
+        Assert.assertNotNull("Null returned for errors", errors);
+        Assert.assertEquals("ValidationErrors returned", 0, errors.length);
     }
 
+    @Test
     public void testValidateTwice() throws Exception {
         validator.validate(new StreamSource(validInputStream));
         validInputStream = AbstractValidatorFactoryTestCase.class.getResourceAsStream("validDocument.xml");
         validator.validate(new StreamSource(validInputStream));
     }
 
+    @Test
     public void testHandleInvalidMessageStream() throws Exception {
         SAXParseException[] errors = validator.validate(new StreamSource(invalidInputStream));
-        assertNotNull("Null returned for errors", errors);
-        assertEquals("ValidationErrors returned", 3, errors.length);
+        Assert.assertNotNull("Null returned for errors", errors);
+        Assert.assertEquals("ValidationErrors returned", 3, errors.length);
     }
 
+    @Test
     public void testHandleValidMessageSax() throws Exception {
         SAXParseException[] errors = validator.validate(new SAXSource(new InputSource(validInputStream)));
-        assertNotNull("Null returned for errors", errors);
-        assertEquals("ValidationErrors returned", 0, errors.length);
+        Assert.assertNotNull("Null returned for errors", errors);
+        Assert.assertEquals("ValidationErrors returned", 0, errors.length);
     }
 
+    @Test
     public void testHandleInvalidMessageSax() throws Exception {
         SAXParseException[] errors = validator.validate(new SAXSource(new InputSource(invalidInputStream)));
-        assertNotNull("Null returned for errors", errors);
-        assertEquals("ValidationErrors returned", 3, errors.length);
+        Assert.assertNotNull("Null returned for errors", errors);
+        Assert.assertEquals("ValidationErrors returned", 3, errors.length);
     }
 
+    @Test
     public void testHandleValidMessageDom() throws Exception {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
         Document document = documentBuilderFactory.newDocumentBuilder()
                 .parse(new InputSource(validInputStream));
         SAXParseException[] errors = validator.validate(new DOMSource(document));
-        assertNotNull("Null returned for errors", errors);
-        assertEquals("ValidationErrors returned", 0, errors.length);
+        Assert.assertNotNull("Null returned for errors", errors);
+        Assert.assertEquals("ValidationErrors returned", 0, errors.length);
     }
 
+    @Test
     public void testHandleInvalidMessageDom() throws Exception {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
         Document document = documentBuilderFactory.newDocumentBuilder()
                 .parse(new InputSource(invalidInputStream));
         SAXParseException[] errors = validator.validate(new DOMSource(document));
-        assertNotNull("Null returned for errors", errors);
-        assertEquals("ValidationErrors returned", 3, errors.length);
+        Assert.assertNotNull("Null returned for errors", errors);
+        Assert.assertEquals("ValidationErrors returned", 3, errors.length);
     }
 
+    @Test
     public void testMultipleSchemasValidMessage() throws Exception {
         Resource[] schemaResources = new Resource[]{
                 new ClassPathResource("multipleSchemas1.xsd", AbstractValidatorFactoryTestCase.class),
@@ -115,12 +127,12 @@ public abstract class AbstractValidatorFactoryTestCase extends TestCase {
         Source document = new ResourceSource(
                 new ClassPathResource("multipleSchemas1.xml", AbstractValidatorFactoryTestCase.class));
         SAXParseException[] errors = validator.validate(document);
-        assertEquals("ValidationErrors returned", 0, errors.length);
+        Assert.assertEquals("ValidationErrors returned", 0, errors.length);
         validator = createValidator(schemaResources, XmlValidatorFactory.SCHEMA_W3C_XML);
         document = new ResourceSource(
                 new ClassPathResource("multipleSchemas2.xml", AbstractValidatorFactoryTestCase.class));
         errors = validator.validate(document);
-        assertEquals("ValidationErrors returned", 0, errors.length);
+        Assert.assertEquals("ValidationErrors returned", 0, errors.length);
     }
 
 }

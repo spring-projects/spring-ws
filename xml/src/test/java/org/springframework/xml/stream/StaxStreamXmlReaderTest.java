@@ -24,9 +24,12 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.easymock.MockControl;
+import org.junit.Test;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.helpers.AttributesImpl;
+
+import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings("Since15")
 public class StaxStreamXmlReaderTest extends AbstractStaxXmlReaderTestCase {
@@ -38,6 +41,7 @@ public class StaxStreamXmlReaderTest extends AbstractStaxXmlReaderTestCase {
         return new StaxStreamXmlReader(inputFactory.createXMLStreamReader(inputStream));
     }
 
+    @Test
     public void testPartial() throws Exception {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(CONTENT));

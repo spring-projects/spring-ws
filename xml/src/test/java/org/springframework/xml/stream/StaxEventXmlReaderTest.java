@@ -23,6 +23,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 
 import org.easymock.MockControl;
+import org.junit.Test;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.helpers.AttributesImpl;
@@ -37,6 +38,7 @@ public class StaxEventXmlReaderTest extends AbstractStaxXmlReaderTestCase {
         return new StaxEventXmlReader(inputFactory.createXMLEventReader(inputStream));
     }
 
+    @Test
     public void testPartial() throws Exception {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader(CONTENT));

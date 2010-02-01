@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,17 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 
+import junit.framework.TestCase;
 import org.custommonkey.xmlunit.XMLTestCase;
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class StringResultTest extends XMLTestCase {
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 
+public class StringResultTest {
+
+    @Test
     public void testStringResult() throws Exception {
         Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
         Element element = document.createElementNS("namespace", "prefix:localName");

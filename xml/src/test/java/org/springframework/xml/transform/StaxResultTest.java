@@ -24,10 +24,16 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 
+import junit.framework.TestCase;
 import org.custommonkey.xmlunit.XMLTestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 
 @SuppressWarnings("Since15")
-public class StaxResultTest extends XMLTestCase {
+public class StaxResultTest {
 
     private static final String XML = "<root xmlns='namespace'><child/></root>";
 
@@ -35,31 +41,33 @@ public class StaxResultTest extends XMLTestCase {
 
     private XMLOutputFactory inputFactory;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         transformer = transformerFactory.newTransformer();
         inputFactory = XMLOutputFactory.newInstance();
     }
 
+    @Test
     public void testStreamWriterSource() throws Exception {
         StringWriter stringWriter = new StringWriter();
         XMLStreamWriter streamWriter = inputFactory.createXMLStreamWriter(stringWriter);
         Source source = new StringSource(XML);
         StaxResult result = new StaxResult(streamWriter);
-        assertEquals("Invalid streamWriter returned", streamWriter, result.getXMLStreamWriter());
-        assertNull("EventWriter returned", result.getXMLEventWriter());
+        Assert.assertEquals("Invalid streamWriter returned", streamWriter, result.getXMLStreamWriter());
+        Assert.assertNull("EventWriter returned", result.getXMLEventWriter());
         transformer.transform(source, result);
         assertXMLEqual("Invalid result", XML, stringWriter.toString());
     }
 
+    @Test
     public void testEventWriterSource() throws Exception {
         StringWriter stringWriter = new StringWriter();
         XMLEventWriter eventWriter = inputFactory.createXMLEventWriter(stringWriter);
         Source source = new StringSource(XML);
         StaxResult result = new StaxResult(eventWriter);
-        assertEquals("Invalid eventWriter returned", eventWriter, result.getXMLEventWriter());
-        assertNull("StreamWriter returned", result.getXMLStreamWriter());
+        Assert.assertEquals("Invalid eventWriter returned", eventWriter, result.getXMLEventWriter());
+        Assert.assertNull("StreamWriter returned", result.getXMLStreamWriter());
         transformer.transform(source, result);
         assertXMLEqual("Invalid result", XML, stringWriter.toString());
     }

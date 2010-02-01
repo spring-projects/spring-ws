@@ -1,5 +1,5 @@
 /*
- * Copyright ${YEAR} the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,18 @@ package org.springframework.xml.sax;
 
 import junit.framework.TestCase;
 
+import org.junit.Assert;
+import org.junit.Test;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
-public class SaxUtilsTest extends TestCase {
+public class SaxUtilsTest {
 
+    @Test
     public void testGetSystemId() throws Exception {
         Resource resource = new FileSystemResource("/path with spaces/file with spaces.txt");
         String systemId = SaxUtils.getSystemId(resource);
-        assertNotNull("No systemId returned", systemId);
-        assertTrue("Invalid system id", systemId.endsWith("path%20with%20spaces/file%20with%20spaces.txt"));
+        Assert.assertNotNull("No systemId returned", systemId);
+        Assert.assertTrue("Invalid system id", systemId.endsWith("path%20with%20spaces/file%20with%20spaces.txt"));
     }
 }

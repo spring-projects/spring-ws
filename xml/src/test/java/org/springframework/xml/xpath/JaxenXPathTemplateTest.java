@@ -18,7 +18,6 @@ package org.springframework.xml.xpath;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 public class JaxenXPathTemplateTest extends AbstractXPathTemplateTestCase {
 

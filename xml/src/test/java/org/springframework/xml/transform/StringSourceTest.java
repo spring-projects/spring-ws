@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,18 +22,21 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
 import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 import org.w3c.dom.Element;
 
-public class StringSourceTest extends TestCase {
+public class StringSourceTest {
 
+    @Test
     public void testStringSource() throws TransformerException {
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         String content = "<prefix:content xmlns:prefix='namespace'/>";
         DOMResult result = new DOMResult();
         transformer.transform(new StringSource(content), result);
         Element rootElement = (Element) result.getNode().getFirstChild();
-        assertEquals("Invalid local name", "content", rootElement.getLocalName());
-        assertEquals("Invalid prefix", "prefix", rootElement.getPrefix());
-        assertEquals("Invalid namespace", "namespace", rootElement.getNamespaceURI());
+        Assert.assertEquals("Invalid local name", "content", rootElement.getLocalName());
+        Assert.assertEquals("Invalid prefix", "prefix", rootElement.getPrefix());
+        Assert.assertEquals("Invalid namespace", "namespace", rootElement.getNamespaceURI());
     }
 }

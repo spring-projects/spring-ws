@@ -22,12 +22,15 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 
+import junit.framework.TestCase;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.springframework.xml.transform.StaxSource;
 import org.springframework.xml.transform.StringResult;
 
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+
 @SuppressWarnings("Since15")
-public class XmlEventStreamReaderTest extends XMLTestCase {
+public class XmlEventStreamReaderTest extends TestCase {
 
     private static final String XML =
             "<?pi content?><root xmlns='namespace'><prefix:child xmlns:prefix='namespace2'>content</prefix:child></root>";

@@ -18,7 +18,8 @@ package org.springframework.ws.client.support.destination;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -38,7 +39,7 @@ import org.springframework.xml.xpath.XPathExpressionFactory;
  * Implementation of the {@link DestinationProvider} that resolves a destination URI from a WSDL file.
  * <p/>
  * The extraction relies on an XPath expression to locate the URI. By default, the {@link
- * #DEFAULT_WSDL_LOCATION_EXPRESSION} will be used, but this expression can be overriden by setting the {@link
+ * #DEFAULT_WSDL_LOCATION_EXPRESSION} will be used, but this expression can be overridden by setting the {@link
  * #setLocationExpression(String) locationExpression} property.
  *
  * @author Tareq Abed Rabbo
@@ -53,16 +54,16 @@ public class Wsdl11DestinationProvider extends AbstractCachingDestinationProvide
 
     private static TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
-    private Properties expressionNamespaces = new Properties();
+    private Map<String, String> expressionNamespaces = new HashMap<String, String>();
 
     private XPathExpression locationXPathExpression;
 
     private Resource wsdlResource;
 
     public Wsdl11DestinationProvider() {
-        expressionNamespaces.setProperty("wsdl", "http://schemas.xmlsoap.org/wsdl/");
-        expressionNamespaces.setProperty("soap", "http://schemas.xmlsoap.org/wsdl/soap/");
-        expressionNamespaces.setProperty("soap12", "http://schemas.xmlsoap.org/wsdl/soap12/");
+        expressionNamespaces.put("wsdl", "http://schemas.xmlsoap.org/wsdl/");
+        expressionNamespaces.put("soap", "http://schemas.xmlsoap.org/wsdl/soap/");
+        expressionNamespaces.put("soap12", "http://schemas.xmlsoap.org/wsdl/soap12/");
 
         locationXPathExpression = XPathExpressionFactory
                 .createXPathExpression(DEFAULT_WSDL_LOCATION_EXPRESSION, expressionNamespaces);

@@ -25,6 +25,8 @@ import javax.xml.stream.XMLStreamException;
 import junit.framework.TestCase;
 import org.easymock.AbstractMatcher;
 import org.easymock.MockControl;
+import org.junit.Before;
+import org.junit.Test;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -40,7 +42,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.xml.sax.SaxUtils;
 
 @SuppressWarnings("Since15")
-public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
+public abstract class AbstractStaxXmlReaderTestCase {
 
     protected static XMLInputFactory inputFactory;
 
@@ -52,8 +54,8 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
 
     private ContentHandler contentHandler;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         inputFactory = XMLInputFactory.newInstance();
         standardReader = XMLReaderFactory.createXMLReader();
         contentHandlerControl = MockControl.createStrictControl(ContentHandler.class);
@@ -65,6 +67,7 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
         testContentHandler = new ClassPathResource("testContentHandler.xml", getClass());
     }
 
+    @Test
     public void testContentHandlerNamespacesNoPrefixes() throws SAXException, IOException, XMLStreamException {
         standardReader.setFeature("http://xml.org/sax/features/namespaces", true);
         standardReader.setFeature("http://xml.org/sax/features/namespace-prefixes", false);
@@ -81,6 +84,7 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
         contentHandlerControl.verify();
     }
 
+    @Test
     public void testContentHandlerNamespacesPrefixes() throws SAXException, IOException, XMLStreamException {
         standardReader.setFeature("http://xml.org/sax/features/namespaces", true);
         standardReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
@@ -97,6 +101,7 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
         contentHandlerControl.verify();
     }
 
+    @Test
     public void testContentHandlerNoNamespacesPrefixes() throws SAXException, IOException, XMLStreamException {
         standardReader.setFeature("http://xml.org/sax/features/namespaces", false);
         standardReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
@@ -113,6 +118,7 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
         contentHandlerControl.verify();
     }
 
+    @Test
     public void testLexicalHandler() throws SAXException, IOException, XMLStreamException {
 
         MockControl lexicalHandlerControl = MockControl.createStrictControl(LexicalHandler.class);

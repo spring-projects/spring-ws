@@ -19,26 +19,32 @@ package org.springframework.xml.namespace;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class QNameEditorTest extends TestCase {
+public class QNameEditorTest {
 
     private QNameEditor editor;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         editor = new QNameEditor();
     }
 
+    @Test
     public void testNamespaceLocalPartPrefix() throws Exception {
         QName qname = new QName("namespace", "localpart", "prefix");
         doTest(qname);
     }
 
+    @Test
     public void testNamespaceLocalPart() throws Exception {
         QName qname = new QName("namespace", "localpart");
         doTest(qname);
     }
 
+    @Test
     public void testLocalPart() throws Exception {
         QName qname = new QName("localpart");
         doTest(qname);
@@ -47,13 +53,13 @@ public class QNameEditorTest extends TestCase {
     private void doTest(QName qname) {
         editor.setValue(qname);
         String text = editor.getAsText();
-        assertNotNull("getAsText returns null", text);
+        Assert.assertNotNull("getAsText returns null", text);
         editor.setAsText(text);
         QName result = (QName) editor.getValue();
-        assertNotNull("getValue returns null", result);
-        assertEquals("Parsed QName local part is not equal to original", qname.getLocalPart(), result.getLocalPart());
-        assertEquals("Parsed QName prefix is not equal to original", qname.getPrefix(), result.getPrefix());
-        assertEquals("Parsed QName namespace is not equal to original", qname.getNamespaceURI(),
+        Assert.assertNotNull("getValue returns null", result);
+        Assert.assertEquals("Parsed QName local part is not equal to original", qname.getLocalPart(), result.getLocalPart());
+        Assert.assertEquals("Parsed QName prefix is not equal to original", qname.getPrefix(), result.getPrefix());
+        Assert.assertEquals("Parsed QName namespace is not equal to original", qname.getNamespaceURI(),
                 result.getNamespaceURI());
     }
 }
