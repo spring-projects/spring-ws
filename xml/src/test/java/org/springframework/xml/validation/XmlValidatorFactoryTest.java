@@ -22,13 +22,12 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 
-import junit.framework.TestCase;
+import org.springframework.core.io.AbstractResource;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.AbstractResource;
 
 public class XmlValidatorFactoryTest {
 

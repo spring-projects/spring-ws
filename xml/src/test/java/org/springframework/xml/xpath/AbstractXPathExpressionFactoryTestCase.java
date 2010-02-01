@@ -24,11 +24,11 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import junit.framework.TestCase;
+import org.springframework.util.StringUtils;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;

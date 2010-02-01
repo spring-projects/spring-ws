@@ -20,11 +20,10 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
-import junit.framework.TestCase;
-import org.custommonkey.xmlunit.XMLTestCase;
+import org.springframework.core.io.ClassPathResource;
+
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Element;
 
 public class ResourceSourceTest {

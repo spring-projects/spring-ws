@@ -24,8 +24,6 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 
-import junit.framework.TestCase;
-import org.custommonkey.xmlunit.XMLTestCase;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

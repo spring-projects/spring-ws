@@ -34,12 +34,12 @@ import javax.xml.stream.events.ProcessingInstruction;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
+import org.springframework.util.StringUtils;
+import org.springframework.xml.namespace.QNameUtils;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-
-import org.springframework.util.StringUtils;
-import org.springframework.xml.namespace.QNameUtils;
 
 /**
  * SAX <code>XMLReader</code> that reads from a StAX <code>XMLEventReader</code>. Consumes <code>XMLEvents</code> from

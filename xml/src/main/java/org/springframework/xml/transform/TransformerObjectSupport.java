@@ -24,10 +24,10 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
+import org.springframework.util.Assert;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.springframework.util.Assert;
 
 /**
  * Convenient base class for objects that use a <code>Transformer</code>. Subclasses can call {@link

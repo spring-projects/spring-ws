@@ -16,16 +16,12 @@
 
 package org.springframework.xml.xpath;
 
-import java.util.Enumeration;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
 
 /**
  * Spring {@link FactoryBean} for {@link XPathExpression} object. Facilitates injection of XPath expressions into

@@ -21,7 +21,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
-import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.Element;

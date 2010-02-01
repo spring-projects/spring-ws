@@ -22,10 +22,10 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 
-import junit.framework.TestCase;
-import org.custommonkey.xmlunit.XMLTestCase;
 import org.springframework.xml.transform.StaxSource;
 import org.springframework.xml.transform.StringResult;
+
+import junit.framework.TestCase;
 
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 

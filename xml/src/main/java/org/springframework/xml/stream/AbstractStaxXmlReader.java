@@ -19,6 +19,8 @@ package org.springframework.xml.stream;
 import javax.xml.stream.Location;
 import javax.xml.stream.XMLStreamException;
 
+import org.springframework.xml.sax.AbstractXmlReader;
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
@@ -26,8 +28,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.SAXParseException;
-
-import org.springframework.xml.sax.AbstractXmlReader;
 
 /**
  * Abstract base class for SAX <code>XMLReader</code> implementations that use StAX as a basis.

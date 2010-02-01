@@ -22,7 +22,10 @@ import java.util.Arrays;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 
-import junit.framework.TestCase;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.xml.sax.SaxUtils;
+
 import org.easymock.AbstractMatcher;
 import org.easymock.MockControl;
 import org.junit.Before;
@@ -36,10 +39,6 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.XMLReaderFactory;
-
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.xml.sax.SaxUtils;
 
 @SuppressWarnings("Since15")
 public abstract class AbstractStaxXmlReaderTestCase {

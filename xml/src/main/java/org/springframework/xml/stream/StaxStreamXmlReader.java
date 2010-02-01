@@ -21,13 +21,13 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
-
 import org.springframework.util.StringUtils;
 import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.namespace.SimpleNamespaceContext;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * SAX <code>XMLReader</code> that reads from a StAX <code>XMLStreamReader</code>.  Reads from an

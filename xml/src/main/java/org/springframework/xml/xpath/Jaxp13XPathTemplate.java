@@ -29,14 +29,14 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import javax.xml.xpath.XPathFactoryConfigurationException;
 
+import org.springframework.xml.namespace.SimpleNamespaceContext;
+import org.springframework.xml.transform.TraxUtils;
+
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-
-import org.springframework.xml.namespace.SimpleNamespaceContext;
-import org.springframework.xml.transform.TraxUtils;
 
 /**
  * Implementation of {@link XPathOperations} that uses JAXP 1.3. JAXP 1.3 is part of Java SE since 1.5.
