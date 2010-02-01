@@ -37,7 +37,7 @@ public abstract class AbstractXPathExpressionFactoryTestCase extends TestCase {
 
     private Document namespacesDocument;
 
-    private Map namespaces = new HashMap();
+    private Map<String, String> namespaces = new HashMap<String, String>();
 
     @Override
     protected void setUp() throws Exception {
@@ -140,14 +140,14 @@ public abstract class AbstractXPathExpressionFactoryTestCase extends TestCase {
 
     public void testEvaluateAsNodeListNamespaces() throws IOException, SAXException {
         XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child/*", namespaces);
-        List results = expression.evaluateAsNodeList(namespacesDocument);
+        List<Node> results = expression.evaluateAsNodeList(namespacesDocument);
         assertNotNull("Invalid result", results);
         assertEquals("Invalid amount of results", 3, results.size());
     }
 
     public void testEvaluateAsNodeListNoNamespaces() throws IOException, SAXException {
         XPathExpression expression = createXPathExpression("/root/child/*");
-        List results = expression.evaluateAsNodeList(noNamespacesDocument);
+        List<Node> results = expression.evaluateAsNodeList(noNamespacesDocument);
         assertNotNull("Invalid result", results);
         assertEquals("Invalid amount of results", 3, results.size());
     }
@@ -179,8 +179,8 @@ public abstract class AbstractXPathExpressionFactoryTestCase extends TestCase {
 
     public void testEvaluateAsObject() throws Exception {
         XPathExpression expression = createXPathExpression("/root/child");
-        String result = (String) expression.evaluateAsObject(noNamespacesDocument, new NodeMapper() {
-            public Object mapNode(Node node, int nodeNum) throws DOMException {
+        String result = expression.evaluateAsObject(noNamespacesDocument, new NodeMapper<String>() {
+            public String mapNode(Node node, int nodeNum) throws DOMException {
                 return node.getLocalName();
             }
         });
@@ -190,8 +190,8 @@ public abstract class AbstractXPathExpressionFactoryTestCase extends TestCase {
 
     public void testEvaluate() throws Exception {
         XPathExpression expression = createXPathExpression("/root/child/*");
-        List results = expression.evaluate(noNamespacesDocument, new NodeMapper() {
-            public Object mapNode(Node node, int nodeNum) throws DOMException {
+        List<String> results = expression.evaluate(noNamespacesDocument, new NodeMapper<String>() {
+            public String mapNode(Node node, int nodeNum) throws DOMException {
                 return node.getLocalName();
             }
         });
@@ -214,5 +214,5 @@ public abstract class AbstractXPathExpressionFactoryTestCase extends TestCase {
 
     protected abstract XPathExpression createXPathExpression(String expression);
 
-    protected abstract XPathExpression createXPathExpression(String expression, Map namespaces);
+    protected abstract XPathExpression createXPathExpression(String expression, Map<String, String> namespaces);
 }

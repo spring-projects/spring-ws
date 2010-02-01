@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,8 +83,8 @@ public abstract class XmlValidatorFactory {
         Assert.hasLength(schemaLanguage, "No schema language provided");
         Assert.isTrue(SCHEMA_W3C_XML.equals(schemaLanguage) || SCHEMA_RELAX_NG.equals(schemaLanguage),
                 "Invalid schema language: " + schemaLanguage);
-        for (int i = 0; i < schemaResources.length; i++) {
-            Assert.isTrue(schemaResources[i].exists(), "schema [" + schemaResources[i] + "] does not exist");
+        for (Resource schemaResource : schemaResources) {
+            Assert.isTrue(schemaResource.exists(), "schema [" + schemaResource + "] does not exist");
         }
         if (JaxpVersion.getJaxpVersion() >= JaxpVersion.JAXP_13) {
             logger.trace("Creating JAXP 1.3 XmlValidator");

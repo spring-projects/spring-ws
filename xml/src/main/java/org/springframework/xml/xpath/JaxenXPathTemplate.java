@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,8 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
         }
     }
 
-    public List evaluateAsNodeList(String expression, Source context) throws XPathException {
+    @SuppressWarnings("unchecked")
+    public List<Node> evaluateAsNodeList(String expression, Source context) throws XPathException {
         try {
             XPath xpath = createXPath(expression);
             Element element = getRootElement(context);
@@ -110,7 +111,7 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
         }
     }
 
-    public Object evaluateAsObject(String expression, Source context, NodeMapper nodeMapper) throws XPathException {
+    public <T> T evaluateAsObject(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException {
         try {
             XPath xpath = createXPath(expression);
             Element element = getRootElement(context);
@@ -136,12 +137,12 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
         }
     }
 
-    public List evaluate(String expression, Source context, NodeMapper nodeMapper) throws XPathException {
+    public <T> List<T> evaluate(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException {
         try {
             XPath xpath = createXPath(expression);
             Element element = getRootElement(context);
-            List nodes = (List) xpath.selectNodes(element);
-            List results = new ArrayList(nodes.size());
+            List<?> nodes = xpath.selectNodes(element);
+            List<T> results = new ArrayList<T>(nodes.size());
             for (int i = 0; i < nodes.size(); i++) {
                 Node node = (Node) nodes.get(i);
                 try {

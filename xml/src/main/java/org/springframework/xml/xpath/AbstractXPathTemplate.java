@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package org.springframework.xml.xpath;
 
+import java.util.Map;
 import java.util.Properties;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
@@ -35,15 +36,15 @@ import org.w3c.dom.Node;
  */
 public abstract class AbstractXPathTemplate extends TransformerObjectSupport implements XPathOperations {
 
-    private Properties namespaces;
+    private Map<String, String> namespaces;
 
     /** Returns namespaces used in the XPath expression. */
-    public Properties getNamespaces() {
+    public Map<String, String> getNamespaces() {
         return namespaces;
     }
 
     /** Sets namespaces used in the XPath expression. Maps prefixes to namespaces. */
-    public void setNamespaces(Properties namespaces) {
+    public void setNamespaces(Map<String, String> namespaces) {
         this.namespaces = namespaces;
     }
 
@@ -53,7 +54,7 @@ public abstract class AbstractXPathTemplate extends TransformerObjectSupport imp
     }
 
     /** Static inner class that adapts a {@link NodeCallbackHandler} to the interface of {@link NodeMapper}. */
-    private static class NodeCallbackHandlerNodeMapper implements NodeMapper {
+    private static class NodeCallbackHandlerNodeMapper implements NodeMapper<Object> {
 
         private final NodeCallbackHandler callbackHandler;
 

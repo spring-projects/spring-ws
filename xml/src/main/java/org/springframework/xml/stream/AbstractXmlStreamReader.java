@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import org.springframework.util.Assert;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
+@SuppressWarnings("Since15")
 public abstract class AbstractXmlStreamReader implements XMLStreamReader {
 
     public String getElementText() throws XMLStreamException {
@@ -36,11 +37,11 @@ public abstract class AbstractXmlStreamReader implements XMLStreamReader {
             throw new XMLStreamException("parser must be on START_ELEMENT to read next text", getLocation());
         }
         int eventType = next();
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder builder = new StringBuilder();
         while (eventType != XMLStreamConstants.END_ELEMENT) {
             if (eventType == XMLStreamConstants.CHARACTERS || eventType == XMLStreamConstants.CDATA ||
                     eventType == XMLStreamConstants.SPACE || eventType == XMLStreamConstants.ENTITY_REFERENCE) {
-                buffer.append(getText());
+                builder.append(getText());
             }
             else
             if (eventType == XMLStreamConstants.PROCESSING_INSTRUCTION || eventType == XMLStreamConstants.COMMENT) {
@@ -58,7 +59,7 @@ public abstract class AbstractXmlStreamReader implements XMLStreamReader {
             }
             eventType = next();
         }
-        return buffer.toString();
+        return builder.toString();
     }
 
     public String getAttributeLocalName(int index) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,12 +45,12 @@ public abstract class TransformerObjectSupport {
 
     private TransformerFactory transformerFactory;
 
-    private Class transformerFactoryClass;
+    private Class<? extends TransformerFactory> transformerFactoryClass;
 
     /**
      * Specify the {@code TransformerFactory} class to use.
      */
-    public void setTransformerFactoryClass(Class transformerFactoryClass) {
+    public void setTransformerFactoryClass(Class<? extends TransformerFactory> transformerFactoryClass) {
         Assert.isAssignable(TransformerFactory.class, transformerFactoryClass);
         this.transformerFactoryClass = transformerFactoryClass;
     }
@@ -66,10 +66,10 @@ public abstract class TransformerObjectSupport {
      * @see #setTransformerFactoryClass
      * @see #getTransformerFactory()
      */
-    protected TransformerFactory newTransformerFactory(Class transformerFactoryClass) {
+    protected TransformerFactory newTransformerFactory(Class<? extends TransformerFactory> transformerFactoryClass) {
         if (transformerFactoryClass != null) {
             try {
-                return (TransformerFactory) transformerFactoryClass.newInstance();
+                return transformerFactoryClass.newInstance();
             }
             catch (Exception ex) {
                 throw new TransformerFactoryConfigurationError(ex, "Could not instantiate TransformerFactory");

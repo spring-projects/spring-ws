@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import javax.xml.stream.events.XMLEvent;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
+@SuppressWarnings("Since15")
 public class XmlEventStreamReader extends AbstractXmlStreamReader {
 
     private XMLEvent event;
@@ -97,7 +98,7 @@ public class XmlEventStreamReader extends AbstractXmlStreamReader {
     }
 
     public int getNamespaceCount() {
-        Iterator namespaces;
+        Iterator<?> namespaces;
         if (event.isStartElement()) {
             namespaces = event.asStartElement().getNamespaces();
         }
@@ -151,7 +152,7 @@ public class XmlEventStreamReader extends AbstractXmlStreamReader {
         if (!event.isStartElement()) {
             throw new IllegalStateException();
         }
-        Iterator attributes = event.asStartElement().getAttributes();
+        Iterator<?> attributes = event.asStartElement().getAttributes();
         return countIterator(attributes);
     }
 
@@ -201,7 +202,7 @@ public class XmlEventStreamReader extends AbstractXmlStreamReader {
         }
     }
 
-    private int countIterator(Iterator iterator) {
+    private int countIterator(Iterator<?> iterator) {
         int count = 0;
         while (iterator.hasNext()) {
             iterator.next();
@@ -215,7 +216,7 @@ public class XmlEventStreamReader extends AbstractXmlStreamReader {
             throw new IllegalStateException();
         }
         int count = 0;
-        Iterator attributes = event.asStartElement().getAttributes();
+        Iterator<?> attributes = event.asStartElement().getAttributes();
         while (attributes.hasNext()) {
             Attribute attribute = (Attribute) attributes.next();
             if (count == index) {
@@ -229,7 +230,7 @@ public class XmlEventStreamReader extends AbstractXmlStreamReader {
     }
 
     private Namespace getNamespace(int index) {
-        Iterator namespaces;
+        Iterator<?> namespaces;
         if (event.isStartElement()) {
             namespaces = event.asStartElement().getNamespaces();
         }

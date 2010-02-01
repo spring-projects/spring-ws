@@ -46,6 +46,7 @@ import org.springframework.xml.stream.StaxStreamContentHandler;
  * @see javax.xml.transform.Transformer
  * @since 1.0.0
  */
+@SuppressWarnings("Since15")
 public class StaxResult extends SAXResult {
 
     private XMLEventWriter eventWriter;

@@ -41,6 +41,7 @@ import org.springframework.xml.namespace.SimpleNamespaceContext;
  * @see #setErrorHandler(org.xml.sax.ErrorHandler)
  * @since 1.0.0
  */
+@SuppressWarnings("Since15")
 public class StaxStreamXmlReader extends AbstractStaxXmlReader {
 
     private final XMLStreamReader reader;

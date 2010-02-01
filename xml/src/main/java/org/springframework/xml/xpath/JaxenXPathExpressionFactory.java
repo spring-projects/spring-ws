@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ abstract class JaxenXPathExpressionFactory {
      * @return the compiled <code>XPathExpression</code>
      * @throws XPathParseException when the given expression cannot be parsed
      */
-    public static XPathExpression createXPathExpression(String expression, Map namespaces) {
+    public static XPathExpression createXPathExpression(String expression, Map<String, String> namespaces) {
         try {
             XPath xpath = new DOMXPath(expression);
             xpath.setNamespaceContext(new SimpleNamespaceContext(namespaces));
@@ -119,7 +119,8 @@ abstract class JaxenXPathExpressionFactory {
             }
         }
 
-        public List evaluateAsNodeList(Node node) {
+        @SuppressWarnings("unchecked")
+        public List<Node> evaluateAsNodeList(Node node) {
             try {
                 return xpath.selectNodes(node);
             }
@@ -128,7 +129,7 @@ abstract class JaxenXPathExpressionFactory {
             }
         }
 
-        public Object evaluateAsObject(Node context, NodeMapper nodeMapper) throws XPathException {
+        public <T> T evaluateAsObject(Node context, NodeMapper<T> nodeMapper) throws XPathException {
             try {
                 Node result = (Node) xpath.selectSingleNode(context);
                 if (result != null) {
@@ -148,10 +149,10 @@ abstract class JaxenXPathExpressionFactory {
             }
         }
 
-        public List evaluate(Node context, NodeMapper nodeMapper) throws XPathException {
+        public <T> List<T> evaluate(Node context, NodeMapper<T> nodeMapper) throws XPathException {
             try {
-                List nodes = xpath.selectNodes(context);
-                List results = new ArrayList(nodes.size());
+                List<?> nodes = xpath.selectNodes(context);
+                List<T> results = new ArrayList<T>(nodes.size());
                 for (int i = 0; i < nodes.size(); i++) {
                     Node node = (Node) nodes.get(i);
                     try {

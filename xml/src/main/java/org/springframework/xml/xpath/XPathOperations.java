@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ public interface XPathOperations {
      * @throws XPathException in case of XPath errors
      * @see <a href="http://www.w3.org/TR/xpath#node-sets">XPath specification</a>
      */
-    List evaluateAsNodeList(String expression, Source context) throws XPathException;
+    List<Node> evaluateAsNodeList(String expression, Source context) throws XPathException;
 
     /**
      * Evaluates the given expression as a <code>double</code>. Returns the evaluation of the expression, or {@link
@@ -105,7 +105,7 @@ public interface XPathOperations {
      * @throws XPathException in case of XPath errors
      * @see <a href="http://www.w3.org/TR/xpath#node-sets">XPath specification</a>
      */
-    Object evaluateAsObject(String expression, Source context, NodeMapper nodeMapper) throws XPathException;
+    <T> T evaluateAsObject(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException;
 
     /**
      * Evaluates the given expression, mapping each result {@link Node} objects to a Java object via a {@link
@@ -118,7 +118,7 @@ public interface XPathOperations {
      * @throws XPathException in case of XPath errors
      * @see <a href="http://www.w3.org/TR/xpath#node-sets">XPath specification</a>
      */
-    List evaluate(String expression, Source context, NodeMapper nodeMapper) throws XPathException;
+    <T> List<T> evaluate(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException;
 
     /**
      * Evaluates the given expression, handling the result {@link Node} objects on a per-node basis with a {@link

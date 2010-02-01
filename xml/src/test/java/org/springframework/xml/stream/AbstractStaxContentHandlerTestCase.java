@@ -26,6 +26,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+@SuppressWarnings("Since15")
 public abstract class AbstractStaxContentHandlerTestCase extends XMLTestCase {
 
     private static final String XML_CONTENT_HANDLER =

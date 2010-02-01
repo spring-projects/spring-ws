@@ -26,6 +26,7 @@ import org.custommonkey.xmlunit.XMLTestCase;
 import org.springframework.xml.transform.StaxSource;
 import org.springframework.xml.transform.StringResult;
 
+@SuppressWarnings("Since15")
 public class XmlEventStreamReaderTest extends XMLTestCase {
 
     private static final String XML =

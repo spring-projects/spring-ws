@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ public interface XPathExpression {
      * @throws XPathException in case of XPath errors
      * @see <a href="http://www.w3.org/TR/xpath#node-sets">XPath specification</a>
      */
-    List evaluateAsNodeList(Node node) throws XPathException;
+    List<Node> evaluateAsNodeList(Node node) throws XPathException;
 
     /**
      * Evaluates the given expression as a number (<code>double</code>). Returns the numeric evaluation of the
@@ -95,7 +95,7 @@ public interface XPathExpression {
      * @throws XPathException in case of XPath errors
      * @see <a href="http://www.w3.org/TR/xpath#node-sets">XPath specification</a>
      */
-    Object evaluateAsObject(Node node, NodeMapper nodeMapper) throws XPathException;
+    <T> T evaluateAsObject(Node node, NodeMapper<T> nodeMapper) throws XPathException;
 
     /**
      * Evaluates the given expression, mapping each result {@link Node} objects to a Java object via a {@link
@@ -107,5 +107,5 @@ public interface XPathExpression {
      * @throws XPathException in case of XPath errors
      * @see <a href="http://www.w3.org/TR/xpath#node-sets">XPath specification</a>
      */
-    List evaluate(Node node, NodeMapper nodeMapper) throws XPathException;
+    <T> List<T> evaluate(Node node, NodeMapper<T> nodeMapper) throws XPathException;
 }

@@ -53,6 +53,7 @@ import org.springframework.xml.namespace.QNameUtils;
  * @see #setErrorHandler(org.xml.sax.ErrorHandler)
  * @since 1.0.0
  */
+@SuppressWarnings("Since15")
 public class StaxEventXmlReader extends AbstractStaxXmlReader {
 
     private final XMLEventReader reader;
@@ -145,7 +146,7 @@ public class StaxEventXmlReader extends AbstractStaxXmlReader {
         if (getContentHandler() != null) {
             QName qName = startElement.getName();
             if (hasNamespacesFeature()) {
-                for (Iterator i = startElement.getNamespaces(); i.hasNext();) {
+                for (Iterator<?> i = startElement.getNamespaces(); i.hasNext();) {
                     Namespace namespace = (Namespace) i.next();
                     getContentHandler().startPrefixMapping(namespace.getPrefix(), namespace.getNamespaceURI());
                 }
@@ -188,7 +189,7 @@ public class StaxEventXmlReader extends AbstractStaxXmlReader {
             if (hasNamespacesFeature()) {
                 getContentHandler()
                         .endElement(qName.getNamespaceURI(), qName.getLocalPart(), QNameUtils.toQualifiedName(qName));
-                for (Iterator i = endElement.getNamespaces(); i.hasNext();) {
+                for (Iterator<?> i = endElement.getNamespaces(); i.hasNext();) {
                     Namespace namespace = (Namespace) i.next();
                     getContentHandler().endPrefixMapping(namespace.getPrefix());
                 }
@@ -256,7 +257,7 @@ public class StaxEventXmlReader extends AbstractStaxXmlReader {
     private Attributes getAttributes(StartElement event) {
         AttributesImpl attributes = new AttributesImpl();
 
-        for (Iterator i = event.getAttributes(); i.hasNext();) {
+        for (Iterator<?> i = event.getAttributes(); i.hasNext();) {
             Attribute attribute = (Attribute) i.next();
             QName qName = attribute.getName();
             String namespace = qName.getNamespaceURI();
@@ -271,7 +272,7 @@ public class StaxEventXmlReader extends AbstractStaxXmlReader {
                     attribute.getValue());
         }
         if (hasNamespacePrefixesFeature()) {
-            for (Iterator i = event.getNamespaces(); i.hasNext();) {
+            for (Iterator<?> i = event.getNamespaces(); i.hasNext();) {
                 Namespace namespace = (Namespace) i.next();
                 String prefix = namespace.getPrefix();
                 String namespaceUri = namespace.getNamespaceURI();

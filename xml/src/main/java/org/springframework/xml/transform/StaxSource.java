@@ -46,6 +46,7 @@ import org.springframework.xml.stream.StaxStreamXmlReader;
  * @see javax.xml.transform.Transformer
  * @since 1.0.0
  */
+@SuppressWarnings("Since15")
 public class StaxSource extends SAXSource {
 
     private XMLEventReader eventReader;
