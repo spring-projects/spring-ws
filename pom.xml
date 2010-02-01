@@ -106,7 +106,6 @@
                 <jdk>!1.4</jdk>
             </activation>
             <modules>
-                <module>oxm-tiger</module>
                 <module>core-tiger</module>
             </modules>
         </profile>
