@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="vm://localhost?broker.persistent=false"/>
+    </bean>
+
+    <bean id="requestQueue" class="org.apache.activemq.command.ActiveMQQueue">
+        <property name="physicalName" value="RequestQueue"/>
+    </bean>
+
+    <bean id="requestTopic" class="org.apache.activemq.command.ActiveMQTopic">
+        <property name="physicalName" value="RequestTopic"/>
+    </bean>
+
+    <bean id="responseQueue" class="org.apache.activemq.command.ActiveMQQueue">
+        <property name="physicalName" value="ResponseQueue"/>
+    </bean>
+
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="connectionFactory"/>
+    </bean>
+
+    <bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="destination" ref="requestQueue"/>
+        <property name="messageListener" ref="messageListener"/>
+    </bean>
+
+    <bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="destination" ref="requestTopic"/>
+        <property name="messageListener" ref="messageListener"/>
+    </bean>
+
+    <bean id="messageListener" class="org.springframework.ws.transport.jms.WebServiceMessageListener">
+        <property name="messageFactory">
+            <bean class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+        </property>
+        <property name="messageReceiver" ref="messageReceiver"/>
+    </bean>
+
+    <bean id="messageReceiver" class="org.springframework.ws.transport.SimpleTestingMessageReceiver"/>
+
+
+</beans>

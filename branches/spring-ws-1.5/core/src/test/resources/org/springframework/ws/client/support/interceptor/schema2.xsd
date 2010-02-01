@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="qualified"
+        targetNamespace="http://springws.cas.de" xmlns:tns="http://springws.cas.de">
+
+    <complexType name="CasDataType">
+        <sequence>
+            <element name="key" type="long" nillable="false" minOccurs="1" maxOccurs="1"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="AddressDataType">
+        <complexContent>
+            <extension base="tns:CasDataType">
+                <sequence>
+                    <element name="firstName" nillable="true" minOccurs="0" type="string"/>
+                    <element name="lastName" nillable="true" minOccurs="0" type="string"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <complexType name="ArrayOfCasDataTypes">
+        <sequence>
+            <element name="casDataType" type="tns:CasDataType" nillable="false" minOccurs="1" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+
+    <element name="createDataTypesRequest" type="tns:ArrayOfCasDataTypes"/>
+
+    <element name="createDataTypesResponse" type="tns:ArrayOfCasDataTypes"/>
+
+</schema>
