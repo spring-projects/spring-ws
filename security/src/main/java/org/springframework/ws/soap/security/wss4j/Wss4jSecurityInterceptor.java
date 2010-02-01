@@ -366,7 +366,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     /** Sets the server-side time to live
      * @deprecated Use  {@link #setValidationTimeToLive(int)} instead.
-     * */
+     */
+    @Deprecated
     public void setTimeToLive(int timeToLive) {
         setValidationTimeToLive(timeToLive);
     }
