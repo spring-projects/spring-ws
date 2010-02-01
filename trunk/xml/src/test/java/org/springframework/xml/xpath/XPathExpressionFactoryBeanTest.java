@@ -17,23 +17,27 @@
 package org.springframework.xml.xpath;
 
 import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class XPathExpressionFactoryBeanTest extends TestCase {
+public class XPathExpressionFactoryBeanTest {
 
     private XPathExpressionFactoryBean factoryBean;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         factoryBean = new XPathExpressionFactoryBean();
     }
 
+    @Test
     public void testFactoryBean() throws Exception {
         factoryBean.setExpression("/root");
         factoryBean.afterPropertiesSet();
         Object result = factoryBean.getObject();
-        assertNotNull("No result obtained", result);
-        assertTrue("No XPathExpression returned", result instanceof XPathExpression);
-        assertTrue("Not a singleton", factoryBean.isSingleton());
-        assertEquals("Not a XPathExpresison", XPathExpression.class, factoryBean.getObjectType());
+        Assert.assertNotNull("No result obtained", result);
+        Assert.assertTrue("No XPathExpression returned", result instanceof XPathExpression);
+        Assert.assertTrue("Not a singleton", factoryBean.isSingleton());
+        Assert.assertEquals("Not a XPathExpresison", XPathExpression.class, factoryBean.getObjectType());
     }
 }

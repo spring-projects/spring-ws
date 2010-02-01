@@ -21,24 +21,30 @@ import java.io.StringWriter;
 import java.io.Writer;
 import javax.xml.stream.XMLStreamException;
 
+import junit.framework.TestCase;
 import org.custommonkey.xmlunit.XMLTestCase;
+import org.junit.Before;
+import org.junit.Test;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+
 @SuppressWarnings("Since15")
-public abstract class AbstractStaxContentHandlerTestCase extends XMLTestCase {
+public abstract class AbstractStaxContentHandlerTestCase {
 
     private static final String XML_CONTENT_HANDLER =
             "<?xml version='1.0' encoding='UTF-8'?><?pi content?><root xmlns='namespace'><prefix:child xmlns:prefix='namespace2' prefix:attr='value'>content</prefix:child></root>";
 
     private XMLReader xmlReader;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         xmlReader = XMLReaderFactory.createXMLReader();
     }
 
+    @Test
     public void testContentHandler() throws Exception {
         StringWriter stringWriter = new StringWriter();
         AbstractStaxContentHandler handler = createStaxContentHandler(stringWriter);
@@ -48,6 +54,7 @@ public abstract class AbstractStaxContentHandlerTestCase extends XMLTestCase {
         assertXMLEqual("Invalid result", XML_CONTENT_HANDLER, stringWriter.toString());
     }
 
+    @Test
     public void testContentHandlerNamespacePrefixes() throws Exception {
         StringWriter stringWriter = new StringWriter();
         AbstractStaxContentHandler handler = createStaxContentHandler(stringWriter);

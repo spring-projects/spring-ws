@@ -24,10 +24,16 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 
+import junit.framework.TestCase;
 import org.custommonkey.xmlunit.XMLTestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 
 @SuppressWarnings("Since15")
-public class StaxSourceTest extends XMLTestCase {
+public class StaxSourceTest {
 
     private static final String XML = "<root xmlns='namespace'><child/></root>";
 
@@ -35,28 +41,30 @@ public class StaxSourceTest extends XMLTestCase {
 
     private XMLInputFactory inputFactory;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         transformer = transformerFactory.newTransformer();
         inputFactory = XMLInputFactory.newInstance();
     }
 
+    @Test
     public void testStreamReaderSource() throws Exception {
         XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(XML));
         StaxSource source = new StaxSource(streamReader);
-        assertEquals("Invalid streamReader returned", streamReader, source.getXMLStreamReader());
-        assertNull("EventReader returned", source.getXMLEventReader());
+        Assert.assertEquals("Invalid streamReader returned", streamReader, source.getXMLStreamReader());
+        Assert.assertNull("EventReader returned", source.getXMLEventReader());
         Result result = new StringResult();
         transformer.transform(source, result);
         assertXMLEqual("Invalid result", XML, result.toString());
     }
 
+    @Test
     public void testEventReaderSource() throws Exception {
         XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader(XML));
         StaxSource source = new StaxSource(eventReader);
-        assertEquals("Invalid eventReader returned", eventReader, source.getXMLEventReader());
-        assertNull("StreamReader returned", source.getXMLStreamReader());
+        Assert.assertEquals("Invalid eventReader returned", eventReader, source.getXMLEventReader());
+        Assert.assertNull("StreamReader returned", source.getXMLStreamReader());
         Result result = new StringResult();
         transformer.transform(source, result);
         assertXMLEqual("Invalid result", XML, result.toString());

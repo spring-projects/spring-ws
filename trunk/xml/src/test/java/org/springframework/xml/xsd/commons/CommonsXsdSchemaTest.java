@@ -20,6 +20,7 @@ import javax.xml.transform.dom.DOMSource;
 
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -28,6 +29,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.xsd.AbstractXsdSchemaTestCase;
 import org.springframework.xml.xsd.XsdSchema;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class CommonsXsdSchemaTest extends AbstractXsdSchemaTestCase {
 
@@ -38,6 +42,7 @@ public class CommonsXsdSchemaTest extends AbstractXsdSchemaTestCase {
         return new CommonsXsdSchema(schema);
     }
 
+    @Test
     public void testXmime() throws Exception {
         Resource resource = new ClassPathResource("xmime.xsd", AbstractXsdSchemaTestCase.class);
         XsdSchema schema = createSchema(resource);

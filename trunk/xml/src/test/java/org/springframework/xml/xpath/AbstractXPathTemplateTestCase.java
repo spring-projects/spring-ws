@@ -27,6 +27,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.transform.ResourceSource;
@@ -35,7 +38,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-public abstract class AbstractXPathTemplateTestCase extends TestCase {
+public abstract class AbstractXPathTemplateTestCase {
 
     XPathOperations template;
 
@@ -43,8 +46,8 @@ public abstract class AbstractXPathTemplateTestCase extends TestCase {
 
     private Source nonamespaces;
 
-    @Override
-    protected final void setUp() throws Exception {
+    @Before
+    public final void setUp() throws Exception {
         template = createTemplate();
         namespaces = new ResourceSource(new ClassPathResource("namespaces.xml", AbstractXPathTemplateTestCase.class));
         nonamespaces =
@@ -53,60 +56,71 @@ public abstract class AbstractXPathTemplateTestCase extends TestCase {
 
     protected abstract XPathOperations createTemplate() throws Exception;
 
+    @Test
     public void testEvaluateAsBoolean() {
         boolean result = template.evaluateAsBoolean("/root/child/boolean", nonamespaces);
-        assertTrue("Invalid result", result);
+        Assert.assertTrue("Invalid result", result);
     }
 
+    @Test
     public void testEvaluateAsBooleanNamespaces() {
         boolean result = template.evaluateAsBoolean("/prefix1:root/prefix2:child/prefix2:boolean", namespaces);
-        assertTrue("Invalid result", result);
+        Assert.assertTrue("Invalid result", result);
     }
 
+    @Test
     public void testEvaluateAsDouble() {
         double result = template.evaluateAsDouble("/root/child/number", nonamespaces);
-        assertEquals("Invalid result", 42D, result, 0D);
+        Assert.assertEquals("Invalid result", 42D, result, 0D);
     }
 
+    @Test
     public void testEvaluateAsDoubleNamespaces() {
         double result = template.evaluateAsDouble("/prefix1:root/prefix2:child/prefix2:number", namespaces);
-        assertEquals("Invalid result", 42D, result, 0D);
+        Assert.assertEquals("Invalid result", 42D, result, 0D);
     }
 
+    @Test
     public void testEvaluateAsNode() {
         Node result = template.evaluateAsNode("/root/child", nonamespaces);
-        assertNotNull("Invalid result", result);
-        assertEquals("Invalid localname", "child", result.getLocalName());
+        Assert.assertNotNull("Invalid result", result);
+        Assert.assertEquals("Invalid localname", "child", result.getLocalName());
     }
 
+    @Test
     public void testEvaluateAsNodeNamespaces() {
         Node result = template.evaluateAsNode("/prefix1:root/prefix2:child", namespaces);
-        assertNotNull("Invalid result", result);
-        assertEquals("Invalid localname", "child", result.getLocalName());
+        Assert.assertNotNull("Invalid result", result);
+        Assert.assertEquals("Invalid localname", "child", result.getLocalName());
     }
 
+    @Test
     public void testEvaluateAsNodes() {
         List<Node> results = template.evaluateAsNodeList("/root/child/*", nonamespaces);
-        assertNotNull("Invalid result", results);
-        assertEquals("Invalid amount of results", 3, results.size());
+        Assert.assertNotNull("Invalid result", results);
+        Assert.assertEquals("Invalid amount of results", 3, results.size());
     }
 
+    @Test
     public void testEvaluateAsNodesNamespaces() {
         List<Node> results = template.evaluateAsNodeList("/prefix1:root/prefix2:child/*", namespaces);
-        assertNotNull("Invalid result", results);
-        assertEquals("Invalid amount of results", 3, results.size());
+        Assert.assertNotNull("Invalid result", results);
+        Assert.assertEquals("Invalid amount of results", 3, results.size());
     }
 
+    @Test
     public void testEvaluateAsStringNamespaces() throws IOException, SAXException {
         String result = template.evaluateAsString("/prefix1:root/prefix2:child/prefix2:text", namespaces);
-        assertEquals("Invalid result", "text", result);
+        Assert.assertEquals("Invalid result", "text", result);
     }
 
+    @Test
     public void testEvaluateAsString() throws IOException, SAXException {
         String result = template.evaluateAsString("/root/child/text", nonamespaces);
-        assertEquals("Invalid result", "text", result);
+        Assert.assertEquals("Invalid result", "text", result);
     }
 
+    @Test
     public void testEvaluateDomSource() throws IOException, SAXException, ParserConfigurationException {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
@@ -115,45 +129,49 @@ public abstract class AbstractXPathTemplateTestCase extends TestCase {
                 new ClassPathResource("nonamespaces.xml", AbstractXPathTemplateTestCase.class)));
 
         String result = template.evaluateAsString("/root/child/text", new DOMSource(document));
-        assertEquals("Invalid result", "text", result);
+        Assert.assertEquals("Invalid result", "text", result);
     }
 
+    @Test
     public void testEvaluateStreamSource() throws IOException, SAXException, ParserConfigurationException {
         InputStream in = AbstractXPathTemplateTestCase.class.getResourceAsStream("nonamespaces.xml");
         String result = template.evaluateAsString("/root/child/text", new StreamSource(in));
-        assertEquals("Invalid result", "text", result);
+        Assert.assertEquals("Invalid result", "text", result);
     }
 
+    @Test
     public void testInvalidExpression() {
         try {
             template.evaluateAsBoolean("\\", namespaces);
-            fail("No XPathException thrown");
+            Assert.fail("No XPathException thrown");
         }
         catch (XPathException ex) {
             // Expected behaviour
         }
     }
 
+    @Test
     public void testEvaluateAsObject() throws Exception {
         String result = (String) template.evaluateAsObject("/root/child", nonamespaces, new NodeMapper<String>() {
             public String mapNode(Node node, int nodeNum) throws DOMException {
                 return node.getLocalName();
             }
         });
-        assertNotNull("Invalid result", result);
-        assertEquals("Invalid localname", "child", result);
+        Assert.assertNotNull("Invalid result", result);
+        Assert.assertEquals("Invalid localname", "child", result);
     }
 
+    @Test
     public void testEvaluate() throws Exception {
         List<String> results = template.evaluate("/root/child/*", nonamespaces, new NodeMapper<String>() {
             public String mapNode(Node node, int nodeNum) throws DOMException {
                 return node.getLocalName();
             }
         });
-        assertNotNull("Invalid result", results);
-        assertEquals("Invalid amount of results", 3, results.size());
-        assertEquals("Invalid first result", "text", results.get(0));
-        assertEquals("Invalid first result", "number", results.get(1));
-        assertEquals("Invalid first result", "boolean", results.get(2));
+        Assert.assertNotNull("Invalid result", results);
+        Assert.assertEquals("Invalid amount of results", 3, results.size());
+        Assert.assertEquals("Invalid first result", "text", results.get(0));
+        Assert.assertEquals("Invalid first result", "number", results.get(1));
+        Assert.assertEquals("Invalid first result", "boolean", results.get(2));
     }
 }

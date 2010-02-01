@@ -20,14 +20,19 @@ import java.io.StringReader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import junit.framework.TestCase;
 import org.custommonkey.xmlunit.XMLTestCase;
+import org.junit.Before;
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-public class DomContentHandlerTest extends XMLTestCase {
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+
+public class DomContentHandlerTest {
 
     private static final String XML_1 = "<?xml version='1.0' encoding='UTF-8'?>" + "<?pi content?>" +
             "<root xmlns='namespace'>" +
@@ -50,8 +55,8 @@ public class DomContentHandlerTest extends XMLTestCase {
 
     private DocumentBuilder documentBuilder;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
         documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -59,6 +64,7 @@ public class DomContentHandlerTest extends XMLTestCase {
         xmlReader = XMLReaderFactory.createXMLReader();
     }
 
+    @Test
     public void testContentHandlerDocumentNamespacePrefixes() throws Exception {
         xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
         handler = new DomContentHandler(result);
@@ -68,6 +74,7 @@ public class DomContentHandlerTest extends XMLTestCase {
         assertXMLEqual("Invalid result", expected, result);
     }
 
+    @Test
     public void testContentHandlerDocumentNoNamespacePrefixes() throws Exception {
         handler = new DomContentHandler(result);
         expected = documentBuilder.parse(new InputSource(new StringReader(XML_1)));
@@ -76,6 +83,7 @@ public class DomContentHandlerTest extends XMLTestCase {
         assertXMLEqual("Invalid result", expected, result);
     }
 
+    @Test
     public void testContentHandlerElement() throws Exception {
         Element rootElement = result.createElementNS("namespace", "root");
         result.appendChild(rootElement);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,21 +20,25 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
+import junit.framework.TestCase;
 import org.custommonkey.xmlunit.XMLTestCase;
+import org.junit.Assert;
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Element;
 
-public class ResourceSourceTest extends XMLTestCase {
+public class ResourceSourceTest {
 
+    @Test
     public void testStringSource() throws Exception {
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         DOMResult result = new DOMResult();
         ResourceSource source = new ResourceSource(new ClassPathResource("resourceSource.xml", getClass()));
         transformer.transform(source, result);
         Element rootElement = (Element) result.getNode().getFirstChild();
-        assertEquals("Invalid local name", "content", rootElement.getLocalName());
-        assertEquals("Invalid prefix", "prefix", rootElement.getPrefix());
-        assertEquals("Invalid namespace", "namespace", rootElement.getNamespaceURI());
+        Assert.assertEquals("Invalid local name", "content", rootElement.getLocalName());
+        Assert.assertEquals("Invalid prefix", "prefix", rootElement.getPrefix());
+        Assert.assertEquals("Invalid namespace", "namespace", rootElement.getNamespaceURI());
     }
 
 }

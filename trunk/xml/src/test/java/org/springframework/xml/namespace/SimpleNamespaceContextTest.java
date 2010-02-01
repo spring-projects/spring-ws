@@ -22,90 +22,100 @@ import java.util.Iterator;
 import javax.xml.XMLConstants;
 
 import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class SimpleNamespaceContextTest extends TestCase {
+public class SimpleNamespaceContextTest {
 
     private SimpleNamespaceContext context;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         context = new SimpleNamespaceContext();
         context.bindNamespaceUri("prefix", "namespaceURI");
     }
 
+    @Test
     public void testGetNamespaceURI() {
-        assertEquals("Invalid namespaceURI for default namespace", "", context
+        Assert.assertEquals("Invalid namespaceURI for default namespace", "", context
                 .getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX));
         String defaultNamespaceUri = "defaultNamespace";
         context.bindNamespaceUri(XMLConstants.DEFAULT_NS_PREFIX, defaultNamespaceUri);
-        assertEquals("Invalid namespaceURI for default namespace", defaultNamespaceUri, context
+        Assert.assertEquals("Invalid namespaceURI for default namespace", defaultNamespaceUri, context
                 .getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX));
-        assertEquals("Invalid namespaceURI for bound prefix", "namespaceURI", context.getNamespaceURI("prefix"));
-        assertEquals("Invalid namespaceURI for unbound prefix", "", context.getNamespaceURI("unbound"));
-        assertEquals("Invalid namespaceURI for namespace prefix", XMLConstants.XML_NS_URI, context
+        Assert.assertEquals("Invalid namespaceURI for bound prefix", "namespaceURI", context.getNamespaceURI("prefix"));
+        Assert.assertEquals("Invalid namespaceURI for unbound prefix", "", context.getNamespaceURI("unbound"));
+        Assert.assertEquals("Invalid namespaceURI for namespace prefix", XMLConstants.XML_NS_URI, context
                 .getNamespaceURI(XMLConstants.XML_NS_PREFIX));
-        assertEquals("Invalid namespaceURI for attribute prefix", XMLConstants.XMLNS_ATTRIBUTE_NS_URI, context
+        Assert.assertEquals("Invalid namespaceURI for attribute prefix", XMLConstants.XMLNS_ATTRIBUTE_NS_URI, context
                 .getNamespaceURI(XMLConstants.XMLNS_ATTRIBUTE));
 
     }
 
+    @Test
     public void testGetPrefix() {
         context.bindDefaultNamespaceUri("defaultNamespaceURI");
-        assertEquals("Invalid prefix for default namespace", XMLConstants.DEFAULT_NS_PREFIX, context.getPrefix("defaultNamespaceURI"));
-        assertEquals("Invalid prefix for bound namespace", "prefix", context.getPrefix("namespaceURI"));
-        assertNull("Invalid prefix for unbound namespace", context.getPrefix("unbound"));
-        assertEquals("Invalid prefix for namespace", XMLConstants.XML_NS_PREFIX, context
+        Assert.assertEquals("Invalid prefix for default namespace", XMLConstants.DEFAULT_NS_PREFIX, context.getPrefix("defaultNamespaceURI"));
+        Assert.assertEquals("Invalid prefix for bound namespace", "prefix", context.getPrefix("namespaceURI"));
+        Assert.assertNull("Invalid prefix for unbound namespace", context.getPrefix("unbound"));
+        Assert.assertEquals("Invalid prefix for namespace", XMLConstants.XML_NS_PREFIX, context
                 .getPrefix(XMLConstants.XML_NS_URI));
-        assertEquals("Invalid prefix for attribute namespace", XMLConstants.XMLNS_ATTRIBUTE, context
+        Assert.assertEquals("Invalid prefix for attribute namespace", XMLConstants.XMLNS_ATTRIBUTE, context
                 .getPrefix(XMLConstants.XMLNS_ATTRIBUTE_NS_URI));
     }
 
+    @Test
     public void testGetPrefixes() {
         context.bindDefaultNamespaceUri("defaultNamespaceURI");
         assertPrefixes("defaultNamespaceURI", XMLConstants.DEFAULT_NS_PREFIX);
         assertPrefixes("namespaceURI", "prefix");
-        assertFalse("Invalid prefix for unbound namespace", context.getPrefixes("unbound").hasNext());
+        Assert.assertFalse("Invalid prefix for unbound namespace", context.getPrefixes("unbound").hasNext());
         assertPrefixes(XMLConstants.XML_NS_URI, XMLConstants.XML_NS_PREFIX);
         assertPrefixes(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, XMLConstants.XMLNS_ATTRIBUTE);
     }
 
+    @Test
     public void testMultiplePrefixes() {
         context.bindNamespaceUri("prefix1", "namespace");
         context.bindNamespaceUri("prefix2", "namespace");
         Iterator<String> iterator = context.getPrefixes("namespace");
-        assertNotNull("getPrefixes returns null", iterator);
-        assertTrue("iterator is empty", iterator.hasNext());
+        Assert.assertNotNull("getPrefixes returns null", iterator);
+        Assert.assertTrue("iterator is empty", iterator.hasNext());
         String result = (String) iterator.next();
-        assertTrue("Invalid prefix", result.equals("prefix1") || result.equals("prefix2"));
-        assertTrue("iterator is empty", iterator.hasNext());
+        Assert.assertTrue("Invalid prefix", result.equals("prefix1") || result.equals("prefix2"));
+        Assert.assertTrue("iterator is empty", iterator.hasNext());
         result = (String) iterator.next();
-        assertTrue("Invalid prefix", result.equals("prefix1") || result.equals("prefix2"));
-        assertFalse("iterator contains more than two values", iterator.hasNext());
+        Assert.assertTrue("Invalid prefix", result.equals("prefix1") || result.equals("prefix2"));
+        Assert.assertFalse("iterator contains more than two values", iterator.hasNext());
     }
 
     private void assertPrefixes(String namespaceUri, String prefix) {
         Iterator<String> iterator = context.getPrefixes(namespaceUri);
-        assertNotNull("getPrefixes returns null", iterator);
-        assertTrue("iterator is empty", iterator.hasNext());
+        Assert.assertNotNull("getPrefixes returns null", iterator);
+        Assert.assertTrue("iterator is empty", iterator.hasNext());
         String result = (String) iterator.next();
-        assertEquals("Invalid prefix", prefix, result);
-        assertFalse("iterator contains multiple values", iterator.hasNext());
+        Assert.assertEquals("Invalid prefix", prefix, result);
+        Assert.assertFalse("iterator contains multiple values", iterator.hasNext());
     }
 
+    @Test
     public void testGetBoundPrefixes() throws Exception {
         Iterator<String> iterator = context.getBoundPrefixes();
-        assertNotNull("getPrefixes returns null", iterator);
-        assertTrue("iterator is empty", iterator.hasNext());
+        Assert.assertNotNull("getPrefixes returns null", iterator);
+        Assert.assertTrue("iterator is empty", iterator.hasNext());
         String result = (String) iterator.next();
-        assertEquals("Invalid prefix", "prefix", result);
-        assertFalse("iterator contains multiple values", iterator.hasNext());
+        Assert.assertEquals("Invalid prefix", "prefix", result);
+        Assert.assertFalse("iterator contains multiple values", iterator.hasNext());
     }
 
+    @Test
     public void testSetBindings() throws Exception {
         context.setBindings(Collections.singletonMap("prefix", "namespace"));
-        assertEquals("Invalid namespace uri", "namespace", context.getNamespaceURI("prefix"));
+        Assert.assertEquals("Invalid namespace uri", "namespace", context.getNamespaceURI("prefix"));
     }
 
+    @Test
     public void testRemoveBinding() {
         context.clear();
         String prefix1 = "prefix1";
@@ -114,48 +124,50 @@ public class SimpleNamespaceContextTest extends TestCase {
         context.bindNamespaceUri(prefix1,  namespaceUri);
         context.bindNamespaceUri(prefix2,  namespaceUri);
         Iterator<String> iter = context.getPrefixes(namespaceUri);
-        assertTrue("iterator is empty", iter.hasNext());
-        assertEquals(prefix1, iter.next());
-        assertTrue("iterator is empty", iter.hasNext());
-        assertEquals(prefix2, iter.next());
-        assertFalse("iterator not empty", iter.hasNext());
+        Assert.assertTrue("iterator is empty", iter.hasNext());
+        Assert.assertEquals(prefix1, iter.next());
+        Assert.assertTrue("iterator is empty", iter.hasNext());
+        Assert.assertEquals(prefix2, iter.next());
+        Assert.assertFalse("iterator not empty", iter.hasNext());
 
         context.removeBinding(prefix1);
 
         iter = context.getPrefixes(namespaceUri);
-        assertTrue("iterator is empty", iter.hasNext());
-        assertEquals(prefix2, iter.next());
-        assertFalse("iterator not empty", iter.hasNext());
+        Assert.assertTrue("iterator is empty", iter.hasNext());
+        Assert.assertEquals(prefix2, iter.next());
+        Assert.assertFalse("iterator not empty", iter.hasNext());
 
         context.removeBinding(prefix2);
 
         iter = context.getPrefixes(namespaceUri);
-        assertFalse("iterator not empty", iter.hasNext());
+        Assert.assertFalse("iterator not empty", iter.hasNext());
     }
 
+    @Test
     public void testHasBinding() {
         context.clear();
         String prefix = "prefix";
-        assertFalse("Context has binding", context.hasBinding(prefix));
+        Assert.assertFalse("Context has binding", context.hasBinding(prefix));
         String namespaceUri = "namespaceUri";
         context.bindNamespaceUri(prefix, namespaceUri);
-        assertTrue("Context has no binding", context.hasBinding(prefix));
+        Assert.assertTrue("Context has no binding", context.hasBinding(prefix));
     }
 
+    @Test
     public void testDefaultNamespaceMultiplePrefixes() {
         String defaultNamespace = "http://springframework.org/spring-ws";
         context.bindDefaultNamespaceUri(defaultNamespace);
         context.bindNamespaceUri("prefix", defaultNamespace);
-        assertEquals("Invalid prefix", XMLConstants.DEFAULT_NS_PREFIX, context.getPrefix(defaultNamespace));
+        Assert.assertEquals("Invalid prefix", XMLConstants.DEFAULT_NS_PREFIX, context.getPrefix(defaultNamespace));
         Iterator<String> iterator = context.getPrefixes(defaultNamespace);
-        assertNotNull("getPrefixes returns null", iterator);
-        assertTrue("iterator is empty", iterator.hasNext());
+        Assert.assertNotNull("getPrefixes returns null", iterator);
+        Assert.assertTrue("iterator is empty", iterator.hasNext());
         String result = (String) iterator.next();
-        assertTrue("Invalid prefix", result.equals(XMLConstants.DEFAULT_NS_PREFIX) || result.equals("prefix"));
-        assertTrue("iterator is empty", iterator.hasNext());
+        Assert.assertTrue("Invalid prefix", result.equals(XMLConstants.DEFAULT_NS_PREFIX) || result.equals("prefix"));
+        Assert.assertTrue("iterator is empty", iterator.hasNext());
         result = (String) iterator.next();
-        assertTrue("Invalid prefix", result.equals(XMLConstants.DEFAULT_NS_PREFIX) || result.equals("prefix"));
-        assertFalse("iterator contains more than two values", iterator.hasNext());
+        Assert.assertTrue("Invalid prefix", result.equals(XMLConstants.DEFAULT_NS_PREFIX) || result.equals("prefix"));
+        Assert.assertFalse("iterator contains more than two values", iterator.hasNext());
     }
 
 }

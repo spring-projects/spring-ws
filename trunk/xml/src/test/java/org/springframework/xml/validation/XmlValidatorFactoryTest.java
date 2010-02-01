@@ -24,34 +24,39 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
+import org.junit.Assert;
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.AbstractResource;
 
-public class XmlValidatorFactoryTest extends TestCase {
+public class XmlValidatorFactoryTest {
 
+    @Test
     public void testCreateValidator() throws Exception {
         Resource resource = new ClassPathResource("schema.xsd", AbstractValidatorFactoryTestCase.class);
         XmlValidator validator = XmlValidatorFactory.createValidator(resource, XmlValidatorFactory.SCHEMA_W3C_XML);
-        assertNotNull("No validator returned", validator);
+        Assert.assertNotNull("No validator returned", validator);
     }
 
+    @Test
     public void testNonExistentResource() throws Exception {
         Resource resource = new NonExistentResource();
         try {
             XmlValidatorFactory.createValidator(resource, XmlValidatorFactory.SCHEMA_W3C_XML);
-            fail("IllegalArgumentException expected");
+            Assert.fail("IllegalArgumentException expected");
         }
         catch (IllegalArgumentException ex) {
             // expected
         }
     }
 
+    @Test
     public void testInvalidSchemaLanguage() throws Exception {
         Resource resource = new ClassPathResource("schema.xsd", AbstractValidatorFactoryTestCase.class);
         try {
             XmlValidatorFactory.createValidator(resource, "bla");
-            fail("IllegalArgumentException expected");
+            Assert.fail("IllegalArgumentException expected");
         }
         catch (IllegalArgumentException ex) {
             // expected
