@@ -21,10 +21,10 @@ import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.sax.SAXResult;
 
-import org.xml.sax.ContentHandler;
-
 import org.springframework.xml.stream.StaxEventContentHandler;
 import org.springframework.xml.stream.StaxStreamContentHandler;
+
+import org.xml.sax.ContentHandler;
 
 /**
  * Implementation of the <code>Result</code> tagging interface for StAX writers. Can be constructed with a

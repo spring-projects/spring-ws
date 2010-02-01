@@ -22,6 +22,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ResourceLoaderAware;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.UrlResource;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+import org.springframework.xml.sax.SaxUtils;
+import org.springframework.xml.validation.XmlValidator;
+import org.springframework.xml.validation.XmlValidatorFactory;
+import org.springframework.xml.xsd.XsdSchema;
+import org.springframework.xml.xsd.XsdSchemaCollection;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ws.commons.schema.ValidationEventHandler;
@@ -35,19 +48,6 @@ import org.apache.ws.commons.schema.XmlSchemaObjectCollection;
 import org.apache.ws.commons.schema.resolver.DefaultURIResolver;
 import org.apache.ws.commons.schema.resolver.URIResolver;
 import org.xml.sax.InputSource;
-
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ResourceLoaderAware;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.UrlResource;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-import org.springframework.xml.sax.SaxUtils;
-import org.springframework.xml.validation.XmlValidator;
-import org.springframework.xml.validation.XmlValidatorFactory;
-import org.springframework.xml.xsd.XsdSchema;
-import org.springframework.xml.xsd.XsdSchemaCollection;
 
 /**
  * Implementation of the {@link XsdSchemaCollection} that uses Apache WS-Commons XML Schema.

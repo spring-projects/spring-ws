@@ -45,8 +45,6 @@ import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import junit.framework.TestCase;
-import org.custommonkey.xmlunit.XMLTestCase;
 import org.easymock.MockControl;
 import org.junit.Assert;
 import org.junit.Test;

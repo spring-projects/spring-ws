@@ -19,11 +19,11 @@ package org.springframework.xml.validation;
 import javax.xml.XMLConstants;
 import javax.xml.validation.Schema;
 
-import junit.framework.TestCase;
-import org.junit.Assert;
-import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 public class SchemaLoaderUtilsTest {
 

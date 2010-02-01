@@ -20,8 +20,6 @@ import java.io.StringReader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import junit.framework.TestCase;
-import org.custommonkey.xmlunit.XMLTestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;

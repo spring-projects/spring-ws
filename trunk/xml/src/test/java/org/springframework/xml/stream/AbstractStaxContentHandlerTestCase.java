@@ -21,8 +21,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 import javax.xml.stream.XMLStreamException;
 
-import junit.framework.TestCase;
-import org.custommonkey.xmlunit.XMLTestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.InputSource;

@@ -19,12 +19,12 @@ package org.springframework.xml.xpath;
 import java.util.Collections;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.xml.JaxpVersion;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Factory for compiled <code>XPathExpression</code>s, being aware of JAXP 1.3+ XPath functionality, and Jaxen. Mainly

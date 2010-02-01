@@ -37,6 +37,9 @@ import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.springframework.util.Assert;
+import org.springframework.xml.JaxpVersion;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.ContentHandler;
@@ -44,9 +47,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
-
-import org.springframework.util.Assert;
-import org.springframework.xml.JaxpVersion;
 
 /**
  * Convenient utility methods for dealing with TrAX.
