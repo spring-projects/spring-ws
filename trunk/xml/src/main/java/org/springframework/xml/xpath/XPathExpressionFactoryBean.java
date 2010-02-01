@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,16 @@
 
 package org.springframework.xml.xpath;
 
+import java.util.Enumeration;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 /**
  * Spring {@link FactoryBean} for {@link XPathExpression} object. Facilitates injection of XPath expressions into
@@ -34,7 +39,7 @@ import org.springframework.util.Assert;
  */
 public class XPathExpressionFactoryBean implements FactoryBean, InitializingBean {
 
-    private Properties namespaces;
+    private Map<String, String> namespaces;
 
     private String expressionString;
 
@@ -46,13 +51,13 @@ public class XPathExpressionFactoryBean implements FactoryBean, InitializingBean
     }
 
     /** Sets the namespaces for the expressions. The given properties binds string prefixes to string namespaces. */
-    public void setNamespaces(Properties namespaces) {
+    public void setNamespaces(Map<String, String> namespaces) {
         this.namespaces = namespaces;
     }
 
     public void afterPropertiesSet() throws IllegalStateException, XPathParseException {
         Assert.notNull(expressionString, "expression is required");
-        if (namespaces == null || namespaces.isEmpty()) {
+        if (CollectionUtils.isEmpty(namespaces)) {
             expression = XPathExpressionFactory.createXPathExpression(expressionString);
         }
         else {
@@ -64,7 +69,7 @@ public class XPathExpressionFactoryBean implements FactoryBean, InitializingBean
         return expression;
     }
 
-    public Class getObjectType() {
+    public Class<?> getObjectType() {
         return XPathExpression.class;
     }
 

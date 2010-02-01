@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import org.xml.sax.SAXException;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
+@SuppressWarnings("Since15")
 public abstract class AbstractStaxContentHandler implements ContentHandler {
 
     private SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext();

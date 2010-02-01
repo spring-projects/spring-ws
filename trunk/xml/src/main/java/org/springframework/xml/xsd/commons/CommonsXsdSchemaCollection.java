@@ -66,7 +66,7 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 
     private final XmlSchemaCollection schemaCollection = new XmlSchemaCollection();
 
-    private final List xmlSchemas = new ArrayList();
+    private final List<XmlSchema> xmlSchemas = new ArrayList<XmlSchema>();
 
     private Resource[] xsdResources;
 
@@ -137,11 +137,10 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 
         schemaCollection.setSchemaResolver(uriResolver);
 
-        Set processedIncludes = new HashSet();
-        Set processedImports = new HashSet();
+        Set<XmlSchema> processedIncludes = new HashSet<XmlSchema>();
+        Set<XmlSchema> processedImports = new HashSet<XmlSchema>();
 
-        for (int i = 0; i < xsdResources.length; i++) {
-            Resource xsdResource = xsdResources[i];
+        for (Resource xsdResource : xsdResources) {
             Assert.isTrue(xsdResource.exists(), xsdResource + " does not exit");
             try {
                 XmlSchema xmlSchema =
@@ -166,7 +165,7 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
     public XsdSchema[] getXsdSchemas() {
         XsdSchema[] result = new XsdSchema[xmlSchemas.size()];
         for (int i = 0; i < xmlSchemas.size(); i++) {
-            XmlSchema xmlSchema = (XmlSchema) xmlSchemas.get(i);
+            XmlSchema xmlSchema = xmlSchemas.get(i);
             result[i] = new CommonsXsdSchema(xmlSchema, schemaCollection);
         }
         return result;
@@ -175,13 +174,13 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
     public XmlValidator createValidator() throws IOException {
         Resource[] resources = new Resource[xmlSchemas.size()];
         for (int i = xmlSchemas.size() - 1; i >= 0; i--) {
-            XmlSchema xmlSchema = (XmlSchema) xmlSchemas.get(i);
+            XmlSchema xmlSchema = xmlSchemas.get(i);
             resources[i] = new UrlResource(xmlSchema.getSourceURI());
         }
         return XmlValidatorFactory.createValidator(resources, XmlValidatorFactory.SCHEMA_W3C_XML);
     }
 
-    private void inlineIncludes(XmlSchema schema, Set processedIncludes, Set processedImports) {
+    private void inlineIncludes(XmlSchema schema, Set<XmlSchema> processedIncludes, Set<XmlSchema> processedImports) {
         processedIncludes.add(schema);
 
         XmlSchemaObjectCollection schemaItems = schema.getItems();
@@ -205,7 +204,7 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
         }
     }
 
-    private void findImports(XmlSchema schema, Set processedImports, Set processedIncludes) {
+    private void findImports(XmlSchema schema, Set<XmlSchema> processedImports, Set<XmlSchema> processedIncludes) {
         processedImports.add(schema);
         XmlSchemaObjectCollection includes = schema.getIncludes();
         for (int i = 0; i < includes.getCount(); i++) {
@@ -226,17 +225,17 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
     }
 
     public String toString() {
-        StringBuffer buffer = new StringBuffer("CommonsXsdSchemaCollection");
-        buffer.append('{');
+        StringBuilder builder = new StringBuilder("CommonsXsdSchemaCollection");
+        builder.append('{');
         for (int i = 0; i < xmlSchemas.size(); i++) {
-            XmlSchema schema = (XmlSchema) xmlSchemas.get(i);
-            buffer.append(schema.getTargetNamespace());
+            XmlSchema schema = xmlSchemas.get(i);
+            builder.append(schema.getTargetNamespace());
             if (i < xmlSchemas.size() - 1) {
-                buffer.append(',');
+                builder.append(',');
             }
         }
-        buffer.append('}');
-        return buffer.toString();
+        builder.append('}');
+        return builder.toString();
     }
 
     private class ClasspathUriResolver extends DefaultURIResolver {

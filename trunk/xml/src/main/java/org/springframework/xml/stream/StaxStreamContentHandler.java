@@ -34,6 +34,7 @@ import org.xml.sax.Locator;
  * @see XMLStreamWriter
  * @since 1.0.0
  */
+@SuppressWarnings("Since15")
 public class StaxStreamContentHandler extends AbstractStaxContentHandler {
 
     private final XMLStreamWriter streamWriter;
@@ -94,8 +95,8 @@ public class StaxStreamContentHandler extends AbstractStaxContentHandler {
             streamWriter.writeNamespace("", defaultNamespaceUri);
             streamWriter.setDefaultNamespace(defaultNamespaceUri);
         }
-        for (Iterator iterator = namespaceContext.getBoundPrefixes(); iterator.hasNext();) {
-            String prefix = (String) iterator.next();
+        for (Iterator<String> iterator = namespaceContext.getBoundPrefixes(); iterator.hasNext();) {
+            String prefix = iterator.next();
             streamWriter.writeNamespace(prefix, namespaceContext.getNamespaceURI(prefix));
             streamWriter.setPrefix(prefix, namespaceContext.getNamespaceURI(prefix));
         }

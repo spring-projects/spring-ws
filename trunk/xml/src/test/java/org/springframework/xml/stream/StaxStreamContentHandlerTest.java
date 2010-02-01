@@ -20,6 +20,7 @@ import java.io.Writer;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 
+@SuppressWarnings("Since15")
 public class StaxStreamContentHandlerTest extends AbstractStaxContentHandlerTestCase {
 
     @Override

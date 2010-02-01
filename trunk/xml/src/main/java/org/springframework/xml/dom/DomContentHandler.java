@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ public class DomContentHandler implements ContentHandler {
 
     private final Document document;
 
-    private final List elements = new ArrayList();
+    private final List<Element> elements = new ArrayList<Element>();
 
     private final Node node;
 
@@ -65,7 +65,7 @@ public class DomContentHandler implements ContentHandler {
 
     private Node getParent() {
         if (!elements.isEmpty()) {
-            return (Node) elements.get(elements.size() - 1);
+            return elements.get(elements.size() - 1);
         }
         else {
             return node;

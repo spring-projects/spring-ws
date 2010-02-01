@@ -27,6 +27,7 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.helpers.AttributesImpl;
 
+@SuppressWarnings("Since15")
 public class StaxEventXmlReaderTest extends AbstractStaxXmlReaderTestCase {
 
     public static final String CONTENT = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";

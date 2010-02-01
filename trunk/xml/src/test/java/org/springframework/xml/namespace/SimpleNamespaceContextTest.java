@@ -72,7 +72,7 @@ public class SimpleNamespaceContextTest extends TestCase {
     public void testMultiplePrefixes() {
         context.bindNamespaceUri("prefix1", "namespace");
         context.bindNamespaceUri("prefix2", "namespace");
-        Iterator iterator = context.getPrefixes("namespace");
+        Iterator<String> iterator = context.getPrefixes("namespace");
         assertNotNull("getPrefixes returns null", iterator);
         assertTrue("iterator is empty", iterator.hasNext());
         String result = (String) iterator.next();
@@ -84,7 +84,7 @@ public class SimpleNamespaceContextTest extends TestCase {
     }
 
     private void assertPrefixes(String namespaceUri, String prefix) {
-        Iterator iterator = context.getPrefixes(namespaceUri);
+        Iterator<String> iterator = context.getPrefixes(namespaceUri);
         assertNotNull("getPrefixes returns null", iterator);
         assertTrue("iterator is empty", iterator.hasNext());
         String result = (String) iterator.next();
@@ -93,7 +93,7 @@ public class SimpleNamespaceContextTest extends TestCase {
     }
 
     public void testGetBoundPrefixes() throws Exception {
-        Iterator iterator = context.getBoundPrefixes();
+        Iterator<String> iterator = context.getBoundPrefixes();
         assertNotNull("getPrefixes returns null", iterator);
         assertTrue("iterator is empty", iterator.hasNext());
         String result = (String) iterator.next();
@@ -113,7 +113,7 @@ public class SimpleNamespaceContextTest extends TestCase {
         String namespaceUri = "namespaceUri";
         context.bindNamespaceUri(prefix1,  namespaceUri);
         context.bindNamespaceUri(prefix2,  namespaceUri);
-        Iterator iter = context.getPrefixes(namespaceUri);
+        Iterator<String> iter = context.getPrefixes(namespaceUri);
         assertTrue("iterator is empty", iter.hasNext());
         assertEquals(prefix1, iter.next());
         assertTrue("iterator is empty", iter.hasNext());
@@ -147,7 +147,7 @@ public class SimpleNamespaceContextTest extends TestCase {
         context.bindDefaultNamespaceUri(defaultNamespace);
         context.bindNamespaceUri("prefix", defaultNamespace);
         assertEquals("Invalid prefix", XMLConstants.DEFAULT_NS_PREFIX, context.getPrefix(defaultNamespace));
-        Iterator iterator = context.getPrefixes(defaultNamespace);
+        Iterator<String> iterator = context.getPrefixes(defaultNamespace);
         assertNotNull("getPrefixes returns null", iterator);
         assertTrue("iterator is empty", iterator.hasNext());
         String result = (String) iterator.next();

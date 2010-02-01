@@ -16,16 +16,17 @@
 
 package org.springframework.xml.xpath;
 
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Jaxp13XPathTemplateTest extends AbstractXPathTemplateTestCase {
 
     @Override
     protected XPathOperations createTemplate() throws Exception {
         Jaxp13XPathTemplate template = new Jaxp13XPathTemplate();
-        Properties namespaces = new Properties();
-        namespaces.setProperty("prefix1", "namespace1");
-        namespaces.setProperty("prefix2", "namespace2");
+        Map<String, String> namespaces = new HashMap<String, String>();
+        namespaces.put("prefix1", "namespace1");
+        namespaces.put("prefix2", "namespace2");
         template.setNamespaces(namespaces);
         return template;
     }

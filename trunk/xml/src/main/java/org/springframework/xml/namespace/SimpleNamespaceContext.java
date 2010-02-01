@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,10 +39,11 @@ import org.springframework.util.Assert;
  */
 public class SimpleNamespaceContext implements NamespaceContext {
 
-    private Map prefixToNamespaceUri = new HashMap();
+    private Map<String, String> prefixToNamespaceUri = new HashMap<String, String>();
 
     /** Maps a <code>String</code> namespaceUri to a <code>List</code> of prefixes */
-    private Map namespaceUriToPrefixes = new HashMap();
+    // TODO: replace with MultiValuedMap
+    private Map<String, List<String>> namespaceUriToPrefixes = new HashMap<String, List<String>>();
 
     public String getNamespaceURI(String prefix) {
         Assert.notNull(prefix, "prefix is null");
@@ -53,17 +54,17 @@ public class SimpleNamespaceContext implements NamespaceContext {
             return XMLConstants.XMLNS_ATTRIBUTE_NS_URI;
         }
         else if (prefixToNamespaceUri.containsKey(prefix)) {
-            return (String) prefixToNamespaceUri.get(prefix);
+            return prefixToNamespaceUri.get(prefix);
         }
         return XMLConstants.NULL_NS_URI;
     }
 
     public String getPrefix(String namespaceUri) {
-        List prefixes = getPrefixesInternal(namespaceUri);
-        return prefixes.isEmpty() ? null : (String) prefixes.get(0);
+        List<String> prefixes = getPrefixesInternal(namespaceUri);
+        return prefixes.isEmpty() ? null : prefixes.get(0);
     }
 
-    public Iterator getPrefixes(String namespaceUri) {
+    public Iterator<String> getPrefixes(String namespaceUri) {
         return getPrefixesInternal(namespaceUri).iterator();
     }
 
@@ -72,10 +73,9 @@ public class SimpleNamespaceContext implements NamespaceContext {
      *
      * @param bindings the bindings
      */
-    public void setBindings(Map bindings) {
-        for (Iterator iterator = bindings.entrySet().iterator(); iterator.hasNext();) {
-            Map.Entry entry = (Map.Entry) iterator.next();
-            bindNamespaceUri((String) entry.getKey(), (String) entry.getValue());
+    public void setBindings(Map<String, String> bindings) {
+        for (Map.Entry<String, String> entry : bindings.entrySet()) {
+            bindNamespaceUri(entry.getKey(), entry.getValue());
         }
     }
 
@@ -122,13 +122,13 @@ public class SimpleNamespaceContext implements NamespaceContext {
      *
      * @return the declared prefixes
      */
-    public Iterator getBoundPrefixes() {
-        Set prefixes = new HashSet(prefixToNamespaceUri.keySet());
+    public Iterator<String> getBoundPrefixes() {
+        Set<String> prefixes = new HashSet<String>(prefixToNamespaceUri.keySet());
         prefixes.remove(XMLConstants.DEFAULT_NS_PREFIX);
         return prefixes.iterator();
     }
 
-    private List getPrefixesInternal(String namespaceUri) {
+    private List<String> getPrefixesInternal(String namespaceUri) {
         if (XMLConstants.XML_NS_URI.equals(namespaceUri)) {
             return Collections.singletonList(XMLConstants.XML_NS_PREFIX);
         }
@@ -136,9 +136,9 @@ public class SimpleNamespaceContext implements NamespaceContext {
             return Collections.singletonList(XMLConstants.XMLNS_ATTRIBUTE);
         }
         else {
-            List list = (List) namespaceUriToPrefixes.get(namespaceUri);
+            List<String> list = namespaceUriToPrefixes.get(namespaceUri);
             if (list == null) {
-                list = new ArrayList();
+                list = new ArrayList<String>();
                 namespaceUriToPrefixes.put(namespaceUri, list);
             }
             return list;
@@ -151,8 +151,8 @@ public class SimpleNamespaceContext implements NamespaceContext {
      * @param prefix the prefix to be removed
      */
     public void removeBinding(String prefix) {
-        String namespaceUri = (String) prefixToNamespaceUri.get(prefix);
-        List prefixes = getPrefixesInternal(namespaceUri);
+        String namespaceUri = prefixToNamespaceUri.get(prefix);
+        List<String> prefixes = getPrefixesInternal(namespaceUri);
         prefixes.remove(prefix);
     }
 

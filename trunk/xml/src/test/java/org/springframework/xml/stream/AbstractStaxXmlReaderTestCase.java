@@ -39,6 +39,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.sax.SaxUtils;
 
+@SuppressWarnings("Since15")
 public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
 
     protected static XMLInputFactory inputFactory;
@@ -157,10 +158,10 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
             if (expected.length == 3 && expected[0] instanceof char[] && expected[1] instanceof Integer &&
                     expected[2] instanceof Integer) {
                 // handling of the character(char[], int, int) methods
-                String expectedString = new String((char[]) expected[0], ((Integer) expected[1]).intValue(),
-                        ((Integer) expected[2]).intValue());
-                String actualString = new String((char[]) actual[0], ((Integer) actual[1]).intValue(),
-                        ((Integer) actual[2]).intValue());
+                String expectedString = new String((char[]) expected[0], (Integer) expected[1],
+                        (Integer) expected[2]);
+                String actualString = new String((char[]) actual[0], (Integer) actual[1],
+                        (Integer) actual[2]);
                 return expectedString.equals(actualString);
             }
             else if (expected.length == 1 && (expected[0] instanceof Locator)) {
@@ -208,8 +209,8 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
         public String toString(Object[] arguments) {
             if (arguments != null && arguments.length == 3 && arguments[0] instanceof char[] &&
                     arguments[1] instanceof Integer && arguments[2] instanceof Integer) {
-                return new String((char[]) arguments[0], ((Integer) arguments[1]).intValue(),
-                        ((Integer) arguments[2]).intValue());
+                return new String((char[]) arguments[0], (Integer) arguments[1],
+                        (Integer) arguments[2]);
             }
             else {
                 return super.toString(arguments);
@@ -220,20 +221,20 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
         protected String argumentToString(Object argument) {
             if (argument instanceof char[]) {
                 char[] array = (char[]) argument;
-                StringBuffer buffer = new StringBuffer();
-                for (int i = 0; i < array.length; i++) {
-                    buffer.append(array[i]);
+                StringBuilder builder = new StringBuilder();
+                for (char anArray : array) {
+                    builder.append(anArray);
                 }
-                return buffer.toString();
+                return builder.toString();
             }
             else if (argument instanceof Attributes) {
                 Attributes attributes = (Attributes) argument;
-                StringBuffer buffer = new StringBuffer("[");
+                StringBuilder builder = new StringBuilder("[");
                 for (int i = 0; i < attributes.getLength(); i++) {
                     if (attributes.getURI(i).length() != 0) {
-                        buffer.append('{');
-                        buffer.append(attributes.getURI(i));
-                        buffer.append('}');
+                        builder.append('{');
+                        builder.append(attributes.getURI(i));
+                        builder.append('}');
                     }
 //                    if (attributes.getLocalName(i).length() != 0) {
 //                        buffer.append('[');
@@ -241,25 +242,25 @@ public abstract class AbstractStaxXmlReaderTestCase extends TestCase {
 //                        buffer.append(']');
 //                    }
                     if (attributes.getQName(i).length() != 0) {
-                        buffer.append(attributes.getQName(i));
+                        builder.append(attributes.getQName(i));
                     }
-                    buffer.append('=');
-                    buffer.append(attributes.getValue(i));
+                    builder.append('=');
+                    builder.append(attributes.getValue(i));
                     if (i < attributes.getLength() - 1) {
-                        buffer.append(", ");
+                        builder.append(", ");
                     }
                 }
-                buffer.append(']');
-                return buffer.toString();
+                builder.append(']');
+                return builder.toString();
             }
             else if (argument instanceof Locator) {
                 Locator locator = (Locator) argument;
-                StringBuffer buffer = new StringBuffer("[");
-                buffer.append(locator.getLineNumber());
-                buffer.append(',');
-                buffer.append(locator.getColumnNumber());
-                buffer.append(']');
-                return buffer.toString();
+                StringBuilder builder = new StringBuilder("[");
+                builder.append(locator.getLineNumber());
+                builder.append(',');
+                builder.append(locator.getColumnNumber());
+                builder.append(']');
+                return builder.toString();
             }
             else {
                 return super.argumentToString(argument);

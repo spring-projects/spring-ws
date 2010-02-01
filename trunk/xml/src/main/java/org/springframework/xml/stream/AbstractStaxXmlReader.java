@@ -39,6 +39,7 @@ import org.springframework.xml.sax.AbstractXmlReader;
  * @see #setErrorHandler(org.xml.sax.ErrorHandler)
  * @since 1.0.0
  */
+@SuppressWarnings("Since15")
 public abstract class AbstractStaxXmlReader extends AbstractXmlReader {
 
     private static final String NAMESPACES_FEATURE_NAME = "http://xml.org/sax/features/namespaces";
@@ -63,7 +64,7 @@ public abstract class AbstractStaxXmlReader extends AbstractXmlReader {
         }
         else if (IS_STANDALONE_FEATURE_NAME.equals(name)) {
             if (isStandalone != null) {
-                return isStandalone.booleanValue();
+                return isStandalone;
             }
             else {
                 throw new SAXNotSupportedException("startDocument() callback not completed yet");

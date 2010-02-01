@@ -86,13 +86,13 @@ public abstract class AbstractXPathTemplateTestCase extends TestCase {
     }
 
     public void testEvaluateAsNodes() {
-        List results = template.evaluateAsNodeList("/root/child/*", nonamespaces);
+        List<Node> results = template.evaluateAsNodeList("/root/child/*", nonamespaces);
         assertNotNull("Invalid result", results);
         assertEquals("Invalid amount of results", 3, results.size());
     }
 
     public void testEvaluateAsNodesNamespaces() {
-        List results = template.evaluateAsNodeList("/prefix1:root/prefix2:child/*", namespaces);
+        List<Node> results = template.evaluateAsNodeList("/prefix1:root/prefix2:child/*", namespaces);
         assertNotNull("Invalid result", results);
         assertEquals("Invalid amount of results", 3, results.size());
     }
@@ -135,8 +135,8 @@ public abstract class AbstractXPathTemplateTestCase extends TestCase {
     }
 
     public void testEvaluateAsObject() throws Exception {
-        String result = (String) template.evaluateAsObject("/root/child", nonamespaces, new NodeMapper() {
-            public Object mapNode(Node node, int nodeNum) throws DOMException {
+        String result = (String) template.evaluateAsObject("/root/child", nonamespaces, new NodeMapper<String>() {
+            public String mapNode(Node node, int nodeNum) throws DOMException {
                 return node.getLocalName();
             }
         });
@@ -145,8 +145,8 @@ public abstract class AbstractXPathTemplateTestCase extends TestCase {
     }
 
     public void testEvaluate() throws Exception {
-        List results = template.evaluate("/root/child/*", nonamespaces, new NodeMapper() {
-            public Object mapNode(Node node, int nodeNum) throws DOMException {
+        List<String> results = template.evaluate("/root/child/*", nonamespaces, new NodeMapper<String>() {
+            public String mapNode(Node node, int nodeNum) throws DOMException {
                 return node.getLocalName();
             }
         });

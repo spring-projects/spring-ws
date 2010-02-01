@@ -26,6 +26,7 @@ import javax.xml.transform.TransformerFactory;
 
 import org.custommonkey.xmlunit.XMLTestCase;
 
+@SuppressWarnings("Since15")
 public class StaxSourceTest extends XMLTestCase {
 
     private static final String XML = "<root xmlns='namespace'><child/></root>";

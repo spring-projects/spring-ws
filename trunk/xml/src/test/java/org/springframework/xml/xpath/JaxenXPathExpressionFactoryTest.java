@@ -29,7 +29,7 @@ public class JaxenXPathExpressionFactoryTest extends AbstractXPathExpressionFact
     }
 
     @Override
-    protected XPathExpression createXPathExpression(String expression, Map namespaces) {
+    protected XPathExpression createXPathExpression(String expression, Map<String, String> namespaces) {
         return JaxenXPathExpressionFactory.createXPathExpression(expression, namespaces);
     }
 

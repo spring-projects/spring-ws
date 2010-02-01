@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@ abstract class Jaxp13XPathExpressionFactory {
      * @return the compiled <code>XPathExpression</code>
      * @throws XPathParseException when the given expression cannot be parsed
      */
-    public static XPathExpression createXPathExpression(String expression, Map namespaces) {
+    public static XPathExpression createXPathExpression(String expression, Map<String, String> namespaces) {
         try {
             XPath xpath = xpathFactory.newXPath();
             SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext();
@@ -100,7 +100,7 @@ abstract class Jaxp13XPathExpressionFactory {
             return (String) evaluate(node, XPathConstants.STRING);
         }
 
-        public List evaluateAsNodeList(Node node) {
+        public List<Node> evaluateAsNodeList(Node node) {
             NodeList nodeList = (NodeList) evaluate(node, XPathConstants.NODESET);
             return toNodeList(nodeList);
         }
@@ -117,8 +117,8 @@ abstract class Jaxp13XPathExpressionFactory {
             }
         }
 
-        private List toNodeList(NodeList nodeList) {
-            List result = new ArrayList(nodeList.getLength());
+        private List<Node> toNodeList(NodeList nodeList) {
+            List<Node> result = new ArrayList<Node>(nodeList.getLength());
             for (int i = 0; i < nodeList.getLength(); i++) {
                 result.add(nodeList.item(i));
             }
@@ -126,20 +126,18 @@ abstract class Jaxp13XPathExpressionFactory {
         }
 
         public double evaluateAsNumber(Node node) {
-            Double result = (Double) evaluate(node, XPathConstants.NUMBER);
-            return result.doubleValue();
+            return (Double) evaluate(node, XPathConstants.NUMBER);
         }
 
         public boolean evaluateAsBoolean(Node node) {
-            Boolean result = (Boolean) evaluate(node, XPathConstants.BOOLEAN);
-            return result.booleanValue();
+            return (Boolean) evaluate(node, XPathConstants.BOOLEAN);
         }
 
         public Node evaluateAsNode(Node node) {
             return (Node) evaluate(node, XPathConstants.NODE);
         }
 
-        public Object evaluateAsObject(Node node, NodeMapper nodeMapper) throws XPathException {
+        public <T> T evaluateAsObject(Node node, NodeMapper<T> nodeMapper) throws XPathException {
             Node result = (Node) evaluate(node, XPathConstants.NODE);
             if (result != null) {
                 try {
@@ -154,9 +152,9 @@ abstract class Jaxp13XPathExpressionFactory {
             }
         }
 
-        public List evaluate(Node node, NodeMapper nodeMapper) throws XPathException {
+        public <T> List<T> evaluate(Node node, NodeMapper<T> nodeMapper) throws XPathException {
             NodeList nodes = (NodeList) evaluate(node, XPathConstants.NODESET);
-            List results = new ArrayList(nodes.getLength());
+            List<T> results = new ArrayList<T>(nodes.getLength());
             for (int i = 0; i < nodes.getLength(); i++) {
                 try {
                     results.add(nodeMapper.mapNode(nodes.item(i), i));

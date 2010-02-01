@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import org.w3c.dom.Node;
  * @see XPathExpression#evaluateAsObject(org.w3c.dom.Node,NodeMapper)
  * @since 1.0.0
  */
-public interface NodeMapper {
+public interface NodeMapper<T> {
 
     /**
      * Maps a single node to an arbitrary object.
@@ -41,6 +41,6 @@ public interface NodeMapper {
      * @return object for the current node
      * @throws DOMException in case of DOM errors
      */
-    Object mapNode(Node node, int nodeNum) throws DOMException;
+    T mapNode(Node node, int nodeNum) throws DOMException;
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ public abstract class XPathExpressionFactory {
      */
     public static XPathExpression createXPathExpression(String expression)
             throws IllegalStateException, XPathParseException {
-        return createXPathExpression(expression, Collections.EMPTY_MAP);
+        return createXPathExpression(expression, Collections.<String, String>emptyMap());
     }
 
     /**
@@ -84,7 +84,7 @@ public abstract class XPathExpressionFactory {
      * @throws IllegalStateException if neither JAXP 1.3+, or Jaxen are available
      * @throws XPathParseException   if the given expression cannot be parsed
      */
-    public static XPathExpression createXPathExpression(String expression, Map namespaces)
+    public static XPathExpression createXPathExpression(String expression, Map<String, String> namespaces)
             throws IllegalStateException, XPathParseException {
         Assert.hasLength(expression, "expression is empty");
         if (jaxp13Available) {

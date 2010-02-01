@@ -158,10 +158,10 @@ abstract class Jaxp10ValidatorFactory {
     /** <code>DefaultHandler</code> extension that stores errors and fatal errors in a list. */
     private static class ValidationErrorHandler extends DefaultHandler {
 
-        private List errors = new ArrayList();
+        private List<SAXParseException> errors = new ArrayList<SAXParseException>();
 
         private SAXParseException[] getErrors() {
-            return (SAXParseException[]) errors.toArray(new SAXParseException[errors.size()]);
+            return errors.toArray(new SAXParseException[errors.size()]);
         }
 
         @Override

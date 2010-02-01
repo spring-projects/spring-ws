@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,13 +83,13 @@ public class CommonsXsdSchema implements XsdSchema {
     }
 
     public QName[] getElementNames() {
-        List result = new ArrayList();
-        Iterator iterator = schema.getElements().getNames();
+        List<QName> result = new ArrayList<QName>();
+        Iterator<?> iterator = schema.getElements().getNames();
         while (iterator.hasNext()) {
             QName name = (QName) iterator.next();
             result.add(name);
         }
-        return (QName[]) result.toArray(new QName[result.size()]);
+        return result.toArray(new QName[result.size()]);
     }
 
     public Source getSource() {
@@ -126,11 +126,11 @@ public class CommonsXsdSchema implements XsdSchema {
     }
 
     public String toString() {
-        StringBuffer buffer = new StringBuffer("CommonsXsdSchema");
-        buffer.append('{');
-        buffer.append(getTargetNamespace());
-        buffer.append('}');
-        return buffer.toString();
+        StringBuilder builder = new StringBuilder("CommonsXsdSchema");
+        builder.append('{');
+        builder.append(getTargetNamespace());
+        builder.append('}');
+        return builder.toString();
     }
 
 }

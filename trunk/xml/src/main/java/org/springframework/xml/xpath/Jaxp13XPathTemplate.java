@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,16 +66,16 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 
     public boolean evaluateAsBoolean(String expression, Source context) throws XPathException {
         Boolean result = (Boolean) evaluate(expression, context, XPathConstants.BOOLEAN);
-        return result != null && result.booleanValue();
+        return result != null && result;
     }
 
     public Node evaluateAsNode(String expression, Source context) throws XPathException {
         return (Node) evaluate(expression, context, XPathConstants.NODE);
     }
 
-    public List evaluateAsNodeList(String expression, Source context) throws XPathException {
+    public List<Node> evaluateAsNodeList(String expression, Source context) throws XPathException {
         NodeList result = (NodeList) evaluate(expression, context, XPathConstants.NODESET);
-        List nodes = new ArrayList(result.getLength());
+        List<Node> nodes = new ArrayList<Node>(result.getLength());
         for (int i = 0; i < result.getLength(); i++) {
             nodes.add(result.item(i));
         }
@@ -84,14 +84,14 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 
     public double evaluateAsDouble(String expression, Source context) throws XPathException {
         Double result = (Double) evaluate(expression, context, XPathConstants.NUMBER);
-        return result != null ? result.doubleValue() : Double.NaN;
+        return result != null ? result : Double.NaN;
     }
 
     public String evaluateAsString(String expression, Source context) throws XPathException {
         return (String) evaluate(expression, context, XPathConstants.STRING);
     }
 
-    public Object evaluateAsObject(String expression, Source context, NodeMapper nodeMapper) throws XPathException {
+    public <T> T evaluateAsObject(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException {
         Node node = evaluateAsNode(expression, context);
         if (node != null) {
             try {
@@ -106,9 +106,9 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
         }
     }
 
-    public List evaluate(String expression, Source context, NodeMapper nodeMapper) throws XPathException {
+    public <T> List<T> evaluate(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException {
         NodeList nodes = (NodeList) evaluate(expression, context, XPathConstants.NODESET);
-        List results = new ArrayList(nodes.getLength());
+        List<T> results = new ArrayList<T>(nodes.getLength());
         for (int i = 0; i < nodes.getLength(); i++) {
             try {
                 results.add(nodeMapper.mapNode(nodes.item(i), i));

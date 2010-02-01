@@ -26,7 +26,7 @@ public class Jaxp13XPathExpressionFactoryTest extends AbstractXPathExpressionFac
     }
 
     @Override
-    protected XPathExpression createXPathExpression(String expression, Map namespaces) {
+    protected XPathExpression createXPathExpression(String expression, Map<String, String> namespaces) {
         return Jaxp13XPathExpressionFactory.createXPathExpression(expression, namespaces);
     }
 }

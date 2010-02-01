@@ -24,6 +24,8 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.Location;
 import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.events.Attribute;
+import javax.xml.stream.events.Namespace;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.stream.util.XMLEventConsumer;
 
@@ -42,6 +44,7 @@ import org.xml.sax.Locator;
  * @see XMLEventConsumer
  * @since 1.0.0
  */
+@SuppressWarnings("Since15")
 public class StaxEventContentHandler extends AbstractStaxContentHandler {
 
     private final XMLEventFactory eventFactory;
@@ -90,14 +93,14 @@ public class StaxEventContentHandler extends AbstractStaxContentHandler {
     @Override
     protected void startElementInternal(QName name, Attributes atts, SimpleNamespaceContext namespaceContext)
             throws XMLStreamException {
-        List attributes = getAttributes(atts);
-        List namespaces = createNamespaces(namespaceContext);
+        List<Attribute> attributes = getAttributes(atts);
+        List<Namespace> namespaces = createNamespaces(namespaceContext);
         consumeEvent(eventFactory.createStartElement(name, attributes.iterator(), namespaces.iterator()));
     }
 
     @Override
     protected void endElementInternal(QName name, SimpleNamespaceContext namespaceContext) throws XMLStreamException {
-        List namespaces = createNamespaces(namespaceContext);
+        List<Namespace> namespaces = createNamespaces(namespaceContext);
         consumeEvent(eventFactory.createEndElement(name, namespaces.iterator()));
     }
 
@@ -124,22 +127,22 @@ public class StaxEventContentHandler extends AbstractStaxContentHandler {
     }
 
     /** Creates and returns a list of <code>NameSpace</code> objects from the <code>NamespaceContext</code>. */
-    private List createNamespaces(SimpleNamespaceContext namespaceContext) {
-        List namespaces = new ArrayList();
+    private List<Namespace> createNamespaces(SimpleNamespaceContext namespaceContext) {
+        List<Namespace> namespaces = new ArrayList<Namespace>();
         String defaultNamespaceUri = namespaceContext.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX);
         if (StringUtils.hasLength(defaultNamespaceUri)) {
             namespaces.add(eventFactory.createNamespace(defaultNamespaceUri));
         }
-        for (Iterator iterator = namespaceContext.getBoundPrefixes(); iterator.hasNext();) {
-            String prefix = (String) iterator.next();
+        for (Iterator<String> iterator = namespaceContext.getBoundPrefixes(); iterator.hasNext();) {
+            String prefix = iterator.next();
             String namespaceUri = namespaceContext.getNamespaceURI(prefix);
             namespaces.add(eventFactory.createNamespace(prefix, namespaceUri));
         }
         return namespaces;
     }
 
-    private List getAttributes(Attributes attributes) {
-        List list = new ArrayList();
+    private List<Attribute> getAttributes(Attributes attributes) {
+        List<Attribute> list = new ArrayList<Attribute>();
         for (int i = 0; i < attributes.getLength(); i++) {
             QName name = QNameUtils.toQName(attributes.getURI(i), attributes.getQName(i));
             if (!("xmlns".equals(name.getLocalPart()) || "xmlns".equals(QNameUtils.getPrefix(name)))) {
