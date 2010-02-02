@@ -16,9 +16,10 @@
 
 package org.springframework.ws.transport.http;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.Source;
@@ -81,7 +82,7 @@ public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport imple
 
     private static final Log logger = LogFactory.getLog(WsdlDefinitionHandlerAdapter.class);
 
-    private Properties expressionNamespaces = new Properties();
+    private Map<String, String> expressionNamespaces = new HashMap<String, String>();
 
     private String locationExpression = DEFAULT_LOCATION_EXPRESSION;
 

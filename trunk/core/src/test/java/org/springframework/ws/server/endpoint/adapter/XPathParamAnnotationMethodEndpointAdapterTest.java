@@ -16,14 +16,13 @@
 
 package org.springframework.ws.server.endpoint.adapter;
 
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
-import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
@@ -32,11 +31,15 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.annotation.XPathParam;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
+
+import junit.framework.TestCase;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+
+import static org.easymock.EasyMock.*;
 
 public class XPathParamAnnotationMethodEndpointAdapterTest extends TestCase {
 
@@ -148,9 +151,9 @@ public class XPathParamAnnotationMethodEndpointAdapterTest extends TestCase {
 
         replay(requestMock, factoryMock);
 
-        Properties namespaces = new Properties();
-        namespaces.setProperty("root", rootNamespace);
-        namespaces.setProperty("child", childNamespace);
+        Map<String, String> namespaces = new HashMap<String, String>();
+        namespaces.put("root", rootNamespace);
+        namespaces.put("child", childNamespace);
         adapter.setNamespaces(namespaces);
 
         MessageContext messageContext = new DefaultMessageContext(requestMock, factoryMock);
