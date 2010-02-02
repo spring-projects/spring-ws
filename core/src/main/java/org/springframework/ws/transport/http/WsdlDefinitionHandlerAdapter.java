@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,11 +27,6 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerAdapter;
@@ -40,6 +35,11 @@ import org.springframework.ws.wsdl.WsdlDefinition;
 import org.springframework.xml.transform.TransformerObjectSupport;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
 
 /**
  * Adapter to use the <code>WsdlDefinition</code> interface with the generic <code>DispatcherServlet</code>.
@@ -161,7 +161,7 @@ public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport imple
      * This method is only called when the <code>transformLocations</code> property is true.
      */
     protected String transformLocation(String location, HttpServletRequest request) {
-        StringBuffer url = new StringBuffer(request.getScheme());
+        StringBuilder url = new StringBuilder(request.getScheme());
         url.append("://").append(request.getServerName()).append(':').append(request.getServerPort());
         if (location.startsWith("/")) {
             // a relative path, prepend the context path

@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -199,12 +199,12 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         String[] oldContentTypes = mimeHeaders.getHeader(TransportConstants.HEADER_CONTENT_TYPE);
         String oldContentType =
                 !ObjectUtils.isEmpty(oldContentTypes) ? oldContentTypes[0] : getVersion().getContentType();
-        StringBuffer buffer = new StringBuffer(CONTENT_TYPE_XOP);
-        buffer.append(";type=");
-        buffer.append('"');
-        buffer.append(oldContentType);
-        buffer.append('"');
-        mimeHeaders.setHeader(TransportConstants.HEADER_CONTENT_TYPE, buffer.toString());
+        StringBuilder builder = new StringBuilder(CONTENT_TYPE_XOP);
+        builder.append(";type=");
+        builder.append('"');
+        builder.append(oldContentType);
+        builder.append('"');
+        mimeHeaders.setHeader(TransportConstants.HEADER_CONTENT_TYPE, builder.toString());
     }
 
     private void convertPartToXop() {
@@ -212,12 +212,12 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         String[] oldContentTypes = saajPart.getMimeHeader(TransportConstants.HEADER_CONTENT_TYPE);
         String oldContentType =
                 !ObjectUtils.isEmpty(oldContentTypes) ? oldContentTypes[0] : getVersion().getContentType();
-        StringBuffer buffer = new StringBuffer(CONTENT_TYPE_XOP);
-        buffer.append(";type=");
-        buffer.append('"');
-        buffer.append(oldContentType);
-        buffer.append('"');
-        saajPart.setMimeHeader(TransportConstants.HEADER_CONTENT_TYPE, buffer.toString());
+        StringBuilder builder = new StringBuilder(CONTENT_TYPE_XOP);
+        builder.append(";type=");
+        builder.append('"');
+        builder.append(oldContentType);
+        builder.append('"');
+        saajPart.setMimeHeader(TransportConstants.HEADER_CONTENT_TYPE, builder.toString());
     }
 
     public Iterator getAttachments() throws AttachmentException {
@@ -265,7 +265,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
     }
 
     public String toString() {
-        StringBuffer buffer = new StringBuffer("SaajSoapMessage");
+        StringBuilder builder = new StringBuilder("SaajSoapMessage");
         try {
             SOAPEnvelope envelope = getImplementation().getEnvelope(saajMessage);
             if (envelope != null) {
@@ -273,8 +273,8 @@ public class SaajSoapMessage extends AbstractSoapMessage {
                 if (body != null) {
                     SOAPElement bodyElement = getImplementation().getFirstBodyElement(body);
                     if (bodyElement != null) {
-                        buffer.append(' ');
-                        buffer.append(getImplementation().getName(bodyElement));
+                        builder.append(' ');
+                        builder.append(getImplementation().getName(bodyElement));
                     }
                 }
             }
@@ -282,7 +282,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         catch (SOAPException ex) {
             // ignore
         }
-        return buffer.toString();
+        return builder.toString();
     }
 
     private static class SaajAttachmentIterator implements Iterator {

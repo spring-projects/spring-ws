@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,6 @@ import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
@@ -39,6 +36,9 @@ import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportInputStream;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * SAAJ-specific implementation of the {@link org.springframework.ws.WebServiceMessageFactory WebServiceMessageFactory}.
@@ -224,13 +224,13 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
     }
 
     public String toString() {
-        StringBuffer buffer = new StringBuffer("SaajSoapMessageFactory[");
-        buffer.append(SaajUtils.getSaajVersionString());
+        StringBuilder builder = new StringBuilder("SaajSoapMessageFactory[");
+        builder.append(SaajUtils.getSaajVersionString());
         if (SaajUtils.getSaajVersion() >= SaajUtils.SAAJ_13) {
-            buffer.append(',');
-            buffer.append(messageFactoryProtocol);
+            builder.append(',');
+            builder.append(messageFactoryProtocol);
         }
-        buffer.append(']');
-        return buffer.toString();
+        builder.append(']');
+        return builder.toString();
     }
 }
