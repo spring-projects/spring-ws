@@ -45,15 +45,15 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
     }
 
     public final String getErrorMessage() throws IOException {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder builder = new StringBuilder();
         String responseMessage = getResponseMessage();
         if (StringUtils.hasLength(responseMessage)) {
-            buffer.append(responseMessage);
+            builder.append(responseMessage);
         }
-        buffer.append(" [");
-        buffer.append(getResponseCode());
-        buffer.append(']');
-        return buffer.toString();
+        builder.append(" [");
+        builder.append(getResponseCode());
+        builder.append(']');
+        return builder.toString();
     }
 
     /*

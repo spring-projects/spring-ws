@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,17 @@ import java.util.Iterator;
 import javax.activation.DataHandler;
 import javax.xml.stream.XMLStreamException;
 
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+import org.springframework.ws.mime.Attachment;
+import org.springframework.ws.soap.AbstractSoapMessage;
+import org.springframework.ws.soap.SoapEnvelope;
+import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.SoapVersion;
+import org.springframework.ws.soap.support.SoapUtils;
+import org.springframework.ws.transport.TransportConstants;
+import org.springframework.ws.transport.TransportOutputStream;
+
 import org.apache.axiom.attachments.Attachments;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
@@ -35,17 +46,6 @@ import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPMessage;
 import org.apache.axiom.soap.SOAPProcessingException;
-
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-import org.springframework.ws.mime.Attachment;
-import org.springframework.ws.soap.AbstractSoapMessage;
-import org.springframework.ws.soap.SoapEnvelope;
-import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.SoapVersion;
-import org.springframework.ws.soap.support.SoapUtils;
-import org.springframework.ws.transport.TransportConstants;
-import org.springframework.ws.transport.TransportOutputStream;
 
 /**
  * AXIOM-specific implementation of the {@link SoapMessage} interface. Created via the {@link AxiomSoapMessageFactory},
@@ -299,7 +299,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
     }
 
     public String toString() {
-        StringBuffer buffer = new StringBuffer("AxiomSoapMessage");
+        StringBuilder builder = new StringBuilder("AxiomSoapMessage");
         if (payloadCaching) {
             try {
                 SOAPEnvelope envelope = axiomMessage.getSOAPEnvelope();
@@ -308,8 +308,8 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
                     if (body != null) {
                         OMElement bodyElement = body.getFirstElement();
                         if (bodyElement != null) {
-                            buffer.append(' ');
-                            buffer.append(bodyElement.getQName());
+                            builder.append(' ');
+                            builder.append(bodyElement.getQName());
                         }
                     }
                 }
@@ -318,7 +318,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
                 // ignore
             }
         }
-        return buffer.toString();
+        return builder.toString();
     }
 
     private class AxiomAttachmentIterator implements Iterator {

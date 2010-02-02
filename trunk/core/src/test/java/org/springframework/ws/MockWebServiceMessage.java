@@ -139,12 +139,12 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
     }
 
     public String toString() {
-        StringBuffer buffer = new StringBuffer("MockWebServiceMessage {");
+        StringBuilder builder = new StringBuilder("MockWebServiceMessage {");
         if (content != null) {
-            buffer.append(content);
+            builder.append(content);
         }
-        buffer.append('}');
-        return buffer.toString();
+        builder.append('}');
+        return builder.toString();
     }
 
     private class StringBufferWriter extends Writer {

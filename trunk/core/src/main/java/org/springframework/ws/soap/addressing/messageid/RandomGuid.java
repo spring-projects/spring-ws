@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -131,7 +131,7 @@ public class RandomGuid {
     /** Method to generate the random GUID. */
     private void getRandomGuid(boolean secure) {
         MessageDigest md5;
-        StringBuffer sbValueBeforeMD5 = new StringBuffer();
+        StringBuilder sbValueBeforeMD5 = new StringBuilder();
 
         try {
             md5 = MessageDigest.getInstance("MD5");
@@ -166,15 +166,15 @@ public class RandomGuid {
         md5.update(valueBeforeMD5.getBytes());
 
         byte[] array = md5.digest();
-        StringBuffer sb = new StringBuffer();
-        for (int j = 0; j < array.length; ++j) {
-            int b = array[j] & 0xFF;
+        StringBuilder builder = new StringBuilder();
+        for (byte anArray : array) {
+            int b = anArray & 0xFF;
             if (b < 0x10) {
-                sb.append('0');
+                builder.append('0');
             }
-            sb.append(Integer.toHexString(b));
+            builder.append(Integer.toHexString(b));
         }
-        guid = sb.toString();
+        guid = builder.toString();
     }
 
     /**
@@ -183,17 +183,17 @@ public class RandomGuid {
      */
     public String toString() {
         String raw = guid.toUpperCase();
-        StringBuffer sb = new StringBuffer();
-        sb.append(raw.substring(0, 8));
-        sb.append("-");
-        sb.append(raw.substring(8, 12));
-        sb.append("-");
-        sb.append(raw.substring(12, 16));
-        sb.append("-");
-        sb.append(raw.substring(16, 20));
-        sb.append("-");
-        sb.append(raw.substring(20));
-        return sb.toString();
+        StringBuilder builder = new StringBuilder();
+        builder.append(raw.substring(0, 8));
+        builder.append("-");
+        builder.append(raw.substring(8, 12));
+        builder.append("-");
+        builder.append(raw.substring(12, 16));
+        builder.append("-");
+        builder.append(raw.substring(16, 20));
+        builder.append("-");
+        builder.append(raw.substring(20));
+        return builder.toString();
     }
 
 }

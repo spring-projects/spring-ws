@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,15 +26,15 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
 import org.springframework.util.Assert;
 import org.springframework.ws.pox.PoxMessage;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportOutputStream;
 import org.springframework.xml.namespace.QNameUtils;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * Implementation of the <code>PoxMessage</code> interface that is based on a DOM Document.
@@ -91,13 +91,13 @@ public class DomPoxMessage implements PoxMessage {
     }
 
     public String toString() {
-        StringBuffer buffer = new StringBuffer("DomPoxMessage ");
+        StringBuilder builder = new StringBuilder("DomPoxMessage ");
         Element root = document.getDocumentElement();
         if (root != null) {
-            buffer.append(' ');
-            buffer.append(QNameUtils.getQNameForNode(root));
+            builder.append(' ');
+            builder.append(QNameUtils.getQNameForNode(root));
         }
-        return buffer.toString();
+        return builder.toString();
     }
 
     public void writeTo(OutputStream outputStream) throws IOException {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@ import javax.wsdl.xml.WSDLWriter;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
-import org.w3c.dom.Document;
-
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.wsdl.WsdlDefinitionException;
+
+import org.w3c.dom.Document;
 
 /**
  * Implementation of the <code>Wsdl11Definition</code> based on WSDL4J. A {@link javax.wsdl.Definition} can be given as
@@ -98,12 +98,12 @@ public class Wsdl4jDefinition implements Wsdl11Definition {
     }
 
     public String toString() {
-        StringBuffer buffer = new StringBuffer("Wsdl4jDefinition");
+        StringBuilder builder = new StringBuilder("Wsdl4jDefinition");
         if (definition != null && StringUtils.hasLength(definition.getTargetNamespace())) {
-            buffer.append('{');
-            buffer.append(definition.getTargetNamespace());
-            buffer.append('}');
+            builder.append('{');
+            builder.append(definition.getTargetNamespace());
+            builder.append('}');
         }
-        return buffer.toString();
+        return builder.toString();
     }
 }
