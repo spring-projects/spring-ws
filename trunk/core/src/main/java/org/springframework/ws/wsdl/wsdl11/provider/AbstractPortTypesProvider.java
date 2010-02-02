@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,11 +32,11 @@ import javax.wsdl.PortType;
 import javax.wsdl.WSDLException;
 import javax.xml.namespace.QName;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Abstract base class for {@link PortTypesProvider} implementations.
@@ -94,14 +94,15 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
     }
 
     private void createOperations(Definition definition, PortType portType) throws WSDLException {
-        Map operations = new HashMap();
-        for (Iterator iterator = definition.getMessages().values().iterator(); iterator.hasNext();) {
+        // TODO: use MultivaluedMap
+        Map<String, List<Message>> operations = new HashMap<String, List<Message>>();
+        for (Iterator<?> iterator = definition.getMessages().values().iterator(); iterator.hasNext();) {
             Message message = (Message) iterator.next();
             String operationName = getOperationName(message);
             if (StringUtils.hasText(operationName)) {
-                List messages = (List) operations.get(operationName);
+                List<Message> messages = operations.get(operationName);
                 if (messages == null) {
-                    messages = new ArrayList();
+                    messages = new ArrayList<Message>();
                     operations.put(operationName, messages);
                 }
                 messages.add(message);
@@ -110,13 +111,11 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
         if (operations.isEmpty() && logger.isWarnEnabled()) {
             logger.warn("No operations were created, make sure the WSDL contains messages");
         }
-        for (Iterator iterator = operations.keySet().iterator(); iterator.hasNext();) {
-            String operationName = (String) iterator.next();
+        for (String operationName : operations.keySet()) {
             Operation operation = definition.createOperation();
             operation.setName(operationName);
-            List messages = (List) operations.get(operationName);
-            for (Iterator messagesIterator = messages.iterator(); messagesIterator.hasNext();) {
-                Message message = (Message) messagesIterator.next();
+            List<Message> messages = operations.get(operationName);
+            for (Message message : messages) {
                 if (isInputMessage(message)) {
                     Input input = definition.createInput();
                     input.setMessage(message);

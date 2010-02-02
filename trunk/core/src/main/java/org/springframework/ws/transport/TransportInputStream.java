@@ -108,11 +108,11 @@ public abstract class TransportInputStream extends InputStream {
      * Returns an iteration over all the header names this stream contains. Returns an empty <code>Iterator</code> if
      * there are no headers.
      */
-    public abstract Iterator getHeaderNames() throws IOException;
+    public abstract Iterator<String> getHeaderNames() throws IOException;
 
     /**
      * Returns an iteration over all the string values of the specified header. Returns an empty <code>Iterator</code>
      * if there are no headers of the specified name.
      */
-    public abstract Iterator getHeaders(String name) throws IOException;
+    public abstract Iterator<String> getHeaders(String name) throws IOException;
 }

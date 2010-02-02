@@ -25,16 +25,16 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.URIException;
-import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
-import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
-import org.apache.commons.httpclient.methods.PostMethod;
-
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.WebServiceConnection;
+
+import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
+import org.apache.commons.httpclient.URIException;
+import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
+import org.apache.commons.httpclient.methods.PostMethod;
 
 /**
  * Implementation of {@link WebServiceConnection} that is based on Jakarta Commons HttpClient. Exposes a {@link
@@ -148,7 +148,7 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
     }
 
     @Override
-    protected Iterator getResponseHeaderNames() throws IOException {
+    protected Iterator<String> getResponseHeaderNames() throws IOException {
         Header[] headers = postMethod.getResponseHeaders();
         String[] names = new String[headers.length];
         for (int i = 0; i < headers.length; i++) {
@@ -158,7 +158,7 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
     }
 
     @Override
-    protected Iterator getResponseHeaders(String name) throws IOException {
+    protected Iterator<String> getResponseHeaders(String name) throws IOException {
         Header[] headers = postMethod.getResponseHeaders(name);
         String[] values = new String[headers.length];
         for (int i = 0; i < headers.length; i++) {

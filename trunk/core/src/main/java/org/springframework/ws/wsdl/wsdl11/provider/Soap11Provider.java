@@ -307,7 +307,7 @@ public class Soap11Provider extends DefaultConcretePartProvider {
      */
     @Override
     protected void populatePort(Definition definition, Port port) throws WSDLException {
-        for (Iterator iterator = port.getBinding().getExtensibilityElements().iterator(); iterator.hasNext();) {
+        for (Iterator<?> iterator = port.getBinding().getExtensibilityElements().iterator(); iterator.hasNext();) {
             if (iterator.next() instanceof SOAPBinding) {
                 // this is a SOAP 1.1 binding, create a SOAP Address for it 
                 super.populatePort(definition, port);
@@ -342,7 +342,7 @@ public class Soap11Provider extends DefaultConcretePartProvider {
      * @throws WSDLException in case of errors
      * @see ExtensionRegistry#createExtension(Class, QName)
      */
-    private ExtensibilityElement createSoapExtension(Definition definition, Class parentType, String localName)
+    private ExtensibilityElement createSoapExtension(Definition definition, Class<?> parentType, String localName)
             throws WSDLException {
         return definition.getExtensionRegistry()
                 .createExtension(parentType, new QName(SOAP_11_NAMESPACE_URI, localName));

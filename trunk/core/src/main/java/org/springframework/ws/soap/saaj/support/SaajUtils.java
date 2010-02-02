@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,10 +34,6 @@ import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
-import org.w3c.dom.Element;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
@@ -45,6 +41,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.saaj.SaajSoapMessageException;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.xml.namespace.QNameUtils;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Element;
 
 /**
  * Collection of generic utility methods to work with SAAJ. Includes conversion from SAAJ {@link Name} objects to {@link
@@ -71,7 +71,7 @@ public abstract class SaajUtils {
     private static final String SAAJ_13_CLASS_NAME = "javax.xml.soap.SAAJMetaFactory";
 
     // Maps SOAPElement class names to Integer SAAJ versions (SAAJ_11, SAAJ_12, SAAJ_13)
-    private static final Map saajVersions = Collections.synchronizedMap(new HashMap());
+    private static final Map<String, Integer> saajVersions = Collections.synchronizedMap(new HashMap<String, Integer>());
 
     private static int saajVersion = SAAJ_12;
 
@@ -175,25 +175,25 @@ public abstract class SaajUtils {
     public static int getSaajVersion(SOAPElement soapElement) {
         Assert.notNull(soapElement, "'soapElement' must not be null");
         Class soapElementClass = soapElement.getClass();
-        Integer saajVersion = (Integer) saajVersions.get(soapElementClass.getName());
+        Integer saajVersion = saajVersions.get(soapElementClass.getName());
         if (saajVersion == null) {
             if (isSaaj12(soapElement)) {
                 if (isSaaj13(soapElement)) {
-                    saajVersion = new Integer(SAAJ_13);
+                    saajVersion = SAAJ_13;
                 }
                 else {
-                    saajVersion = new Integer(SAAJ_12);
+                    saajVersion = SAAJ_12;
                 }
             } else {
-                saajVersion = new Integer(SAAJ_11);
+                saajVersion = SAAJ_11;
             }
             saajVersions.put(soapElementClass.getName(), saajVersion);
             if (logger.isTraceEnabled()) {
                 logger.trace("SOAPElement [" + soapElement.getClass().getName() + "] implements " +
-                        getSaajVersionString(saajVersion.intValue()));
+                        getSaajVersionString(saajVersion));
             }
         }
-        return saajVersion.intValue();
+        return saajVersion;
     }
 
     private static boolean isSaaj13(SOAPElement soapElement) {

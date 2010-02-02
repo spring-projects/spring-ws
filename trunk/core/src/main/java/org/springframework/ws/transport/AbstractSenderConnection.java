@@ -80,15 +80,15 @@ public abstract class AbstractSenderConnection extends AbstractWebServiceConnect
 
     /**
      * Returns an iteration over all the header names this request contains. Returns an empty <code>Iterator</code> if
-     * there areno headers.
+     * there are no headers.
      */
-    protected abstract Iterator getResponseHeaderNames() throws IOException;
+    protected abstract Iterator<String> getResponseHeaderNames() throws IOException;
 
     /**
      * Returns an iteration over all the string values of the specified header. Returns an empty <code>Iterator</code>
      * if there are no headers of the specified name.
      */
-    protected abstract Iterator getResponseHeaders(String name) throws IOException;
+    protected abstract Iterator<String> getResponseHeaders(String name) throws IOException;
 
     /** Returns the input stream to read the response from. */
     protected abstract InputStream getResponseInputStream() throws IOException;
@@ -116,12 +116,12 @@ public abstract class AbstractSenderConnection extends AbstractWebServiceConnect
         }
 
         @Override
-        public Iterator getHeaderNames() throws IOException {
+        public Iterator<String> getHeaderNames() throws IOException {
             return getResponseHeaderNames();
         }
 
         @Override
-        public Iterator getHeaders(String name) throws IOException {
+        public Iterator<String> getHeaders(String name) throws IOException {
             return getResponseHeaders(name);
         }
 

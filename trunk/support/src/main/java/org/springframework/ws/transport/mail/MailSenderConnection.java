@@ -45,15 +45,15 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.search.HeaderTerm;
 import javax.mail.search.SearchTerm;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractSenderConnection;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.mail.support.MailTransportUtils;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Implementation of {@link WebServiceConnection} that is used for client-side Mail access. Exposes a {@link Message}
@@ -255,9 +255,9 @@ public class MailSenderConnection extends AbstractSenderConnection {
     }
 
     @Override
-    protected Iterator getResponseHeaderNames() throws IOException {
+    protected Iterator<String> getResponseHeaderNames() throws IOException {
         try {
-            List headers = new ArrayList();
+            List<String> headers = new ArrayList<String>();
             Enumeration enumeration = responseMessage.getAllHeaders();
             while (enumeration.hasMoreElements()) {
                 Header header = (Header) enumeration.nextElement();
@@ -271,7 +271,7 @@ public class MailSenderConnection extends AbstractSenderConnection {
     }
 
     @Override
-    protected Iterator getResponseHeaders(String name) throws IOException {
+    protected Iterator<String> getResponseHeaders(String name) throws IOException {
         try {
             String[] headers = responseMessage.getHeader(name);
             return Arrays.asList(headers).iterator();

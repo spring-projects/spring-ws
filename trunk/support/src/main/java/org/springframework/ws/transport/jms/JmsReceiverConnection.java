@@ -137,7 +137,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
      */
 
     @Override
-    protected Iterator getRequestHeaderNames() throws IOException {
+    protected Iterator<String> getRequestHeaderNames() throws IOException {
         try {
             return JmsTransportUtils.getHeaderNames(requestMessage);
         }
@@ -147,7 +147,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
     }
 
     @Override
-    protected Iterator getRequestHeaders(String name) throws IOException {
+    protected Iterator<String> getRequestHeaders(String name) throws IOException {
         try {
             return JmsTransportUtils.getHeaders(requestMessage, name);
         }

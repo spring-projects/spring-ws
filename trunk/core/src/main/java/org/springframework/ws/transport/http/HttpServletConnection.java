@@ -98,12 +98,14 @@ public class HttpServletConnection extends AbstractReceiverConnection
     */
 
     @Override
-    protected Iterator getRequestHeaderNames() throws IOException {
+    @SuppressWarnings("unchecked")
+    protected Iterator<String> getRequestHeaderNames() throws IOException {
         return new EnumerationIterator(getHttpServletRequest().getHeaderNames());
     }
 
     @Override
-    protected Iterator getRequestHeaders(String name) throws IOException {
+    @SuppressWarnings("unchecked")
+    protected Iterator<String> getRequestHeaders(String name) throws IOException {
         return new EnumerationIterator(getHttpServletRequest().getHeaders(name));
     }
 

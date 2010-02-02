@@ -17,7 +17,6 @@
 package org.springframework.ws.transport.http;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +40,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 /**
  * Adapter to use the <code>WsdlDefinition</code> interface with the generic <code>DispatcherServlet</code>.
@@ -197,15 +197,17 @@ public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport imple
      * @see #transformLocation(String,javax.servlet.http.HttpServletRequest)
      */
     protected void transformLocations(Document definitionDocument, HttpServletRequest request) throws Exception {
-        List locationNodes = locationXPathExpression.evaluateAsNodeList(definitionDocument);
-        for (Iterator iterator = locationNodes.iterator(); iterator.hasNext();) {
-            Attr location = (Attr) iterator.next();
-            if (location != null && StringUtils.hasLength(location.getValue())) {
-                String newLocation = transformLocation(location.getValue(), request);
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Transforming [" + location.getValue() + "] to [" + newLocation + "]");
+        List<Node> locationNodes = locationXPathExpression.evaluateAsNodeList(definitionDocument);
+        for (Node locationNode : locationNodes) {
+            if (locationNode instanceof Attr) {
+                Attr location = (Attr) locationNode;
+                if (StringUtils.hasLength(location.getValue())) {
+                    String newLocation = transformLocation(location.getValue(), request);
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Transforming [" + location.getValue() + "] to [" + newLocation + "]");
+                    }
+                    location.setValue(newLocation);
                 }
-                location.setValue(newLocation);
             }
         }
     }

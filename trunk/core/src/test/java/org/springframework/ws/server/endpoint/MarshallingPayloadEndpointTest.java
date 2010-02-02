@@ -27,8 +27,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.custommonkey.xmlunit.XMLTestCase;
-import org.easymock.MockControl;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
@@ -41,6 +39,9 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.mime.MimeMessage;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
+
+import org.custommonkey.xmlunit.XMLTestCase;
+import org.easymock.MockControl;
 
 public class MarshallingPayloadEndpointTest extends XMLTestCase {
 
@@ -70,7 +71,7 @@ public class MarshallingPayloadEndpointTest extends XMLTestCase {
                     StringWriter writer = new StringWriter();
                     transformer.transform(source, new StreamResult(writer));
                     assertXMLEqual("Invalid source", "<request/>", writer.toString());
-                    return new Long(42);
+                    return 42L;
                 }
                 catch (Exception e) {
                     fail(e.getMessage());
@@ -93,7 +94,7 @@ public class MarshallingPayloadEndpointTest extends XMLTestCase {
         AbstractMarshallingPayloadEndpoint endpoint = new AbstractMarshallingPayloadEndpoint() {
             @Override
             protected Object invokeInternal(Object requestObject) throws Exception {
-                assertEquals("Invalid request object", new Long(42), requestObject);
+                assertEquals("Invalid request object", 42L, requestObject);
                 return "result";
             }
         };

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ package org.springframework.ws.transport.context;
  */
 public abstract class TransportContextHolder {
 
-    private static final ThreadLocal transportContextHolder = new TransportThreadLocal();
+    private static final ThreadLocal<TransportContext> transportContextHolder = new TransportThreadLocal();
 
     /**
      * Associate the given <code>TransportContext</code> with the current thread.
@@ -45,7 +45,7 @@ public abstract class TransportContextHolder {
         return (TransportContext) transportContextHolder.get();
     }
 
-    private static class TransportThreadLocal extends ThreadLocal {
+    private static class TransportThreadLocal extends ThreadLocal<TransportContext> {
 
         public String toString() {
             return "Transport State";

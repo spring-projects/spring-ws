@@ -25,7 +25,7 @@ import org.springframework.util.Assert;
 
 public class MockTransportOutputStream extends TransportOutputStream {
 
-    private Map headers = new HashMap();
+    private Map<String, String> headers = new HashMap<String, String>();
 
     private OutputStream outputStream;
 
@@ -39,7 +39,7 @@ public class MockTransportOutputStream extends TransportOutputStream {
         return outputStream;
     }
 
-    public Map getHeaders() {
+    public Map<String, String> getHeaders() {
         return headers;
     }
 
