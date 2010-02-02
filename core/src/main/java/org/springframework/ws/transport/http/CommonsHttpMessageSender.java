@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,11 @@ import java.net.URI;
 import java.util.Iterator;
 import java.util.Properties;
 
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.Assert;
+import org.springframework.ws.transport.WebServiceConnection;
+
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
@@ -33,11 +38,6 @@ import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.PostMethod;
-
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.Assert;
-import org.springframework.ws.transport.WebServiceConnection;
 
 /**
  * <code>WebServiceMessageSender</code> implementation that uses <a href="http://jakarta.apache.org/commons/httpclient">Jakarta
@@ -167,7 +167,7 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
      *      int)
      */
     public void setMaxConnectionsPerHost(Properties maxConnectionsPerHost) throws URIException {
-        for (Iterator iterator = maxConnectionsPerHost.keySet().iterator(); iterator.hasNext();) {
+        for (Iterator<?> iterator = maxConnectionsPerHost.keySet().iterator(); iterator.hasNext();) {
             String host = (String) iterator.next();
             HostConfiguration hostConfiguration = new HostConfiguration();
             if ("*".equals(host)) {

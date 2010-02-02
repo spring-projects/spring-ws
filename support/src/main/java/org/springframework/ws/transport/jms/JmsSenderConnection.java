@@ -290,7 +290,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
     }
 
     @Override
-    protected Iterator getResponseHeaderNames() throws IOException {
+    protected Iterator<String> getResponseHeaderNames() throws IOException {
         try {
             return JmsTransportUtils.getHeaderNames(responseMessage);
         }
@@ -300,7 +300,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
     }
 
     @Override
-    protected Iterator getResponseHeaders(String name) throws IOException {
+    protected Iterator<String> getResponseHeaders(String name) throws IOException {
         try {
             return JmsTransportUtils.getHeaders(responseMessage, name);
         }

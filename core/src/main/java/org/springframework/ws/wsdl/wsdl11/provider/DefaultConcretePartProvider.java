@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,11 +34,11 @@ import javax.wsdl.Service;
 import javax.wsdl.WSDLException;
 import javax.xml.namespace.QName;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Default implementation of the {@link BindingsProvider} and {@link ServicesProvider} interfaces.
@@ -96,7 +96,7 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
      * @see #populateBindingFault(Definition,javax.wsdl.BindingFault,javax.wsdl.Fault)
      */
     public void addBindings(Definition definition) throws WSDLException {
-        for (Iterator iterator = definition.getPortTypes().values().iterator(); iterator.hasNext();) {
+        for (Iterator<?> iterator = definition.getPortTypes().values().iterator(); iterator.hasNext();) {
             PortType portType = (PortType) iterator.next();
             Binding binding = definition.createBinding();
             binding.setPortType(portType);
@@ -136,7 +136,7 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 
     private void createBindingOperations(Definition definition, Binding binding) throws WSDLException {
         PortType portType = binding.getPortType();
-        for (Iterator operationIterator = portType.getOperations().iterator(); operationIterator.hasNext();) {
+        for (Iterator<?> operationIterator = portType.getOperations().iterator(); operationIterator.hasNext();) {
             Operation operation = (Operation) operationIterator.next();
             BindingOperation bindingOperation = definition.createBindingOperation();
             bindingOperation.setOperation(operation);
@@ -155,7 +155,7 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
                 createBindingOutput(definition, operation, bindingOperation);
                 createBindingInput(definition, operation, bindingOperation);
             }
-            for (Iterator faultIterator = operation.getFaults().values().iterator(); faultIterator.hasNext();) {
+            for (Iterator<?> faultIterator = operation.getFaults().values().iterator(); faultIterator.hasNext();) {
                 Fault fault = (Fault) faultIterator.next();
                 BindingFault bindingFault = definition.createBindingFault();
                 populateBindingFault(definition, bindingFault, fault);
@@ -284,10 +284,10 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
     }
 
     private void createPorts(Definition definition, Service service) throws WSDLException {
-        for (Iterator iterator = definition.getBindings().values().iterator(); iterator.hasNext();) {
+        for (Iterator<?> iterator = definition.getBindings().values().iterator(); iterator.hasNext();) {
             Binding binding = (Binding) iterator.next();
             Port port = null;
-            for (Iterator iterator1 = service.getPorts().values().iterator(); iterator1.hasNext();) {
+            for (Iterator<?> iterator1 = service.getPorts().values().iterator(); iterator1.hasNext();) {
                 Port existingPort = (Port) iterator1.next();
                 if (binding.equals(existingPort.getBinding())) {
                     port = existingPort;

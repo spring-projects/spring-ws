@@ -90,9 +90,9 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 
     /** Determine whether the response is a GZIP response. */
     private boolean isGzipResponse() throws IOException {
-        Iterator iterator = getResponseHeaders(HttpTransportConstants.HEADER_CONTENT_ENCODING);
+        Iterator<String> iterator = getResponseHeaders(HttpTransportConstants.HEADER_CONTENT_ENCODING);
         if (iterator.hasNext()) {
-            String encodingHeader = (String) iterator.next();
+            String encodingHeader = iterator.next();
             return encodingHeader.toLowerCase().indexOf(HttpTransportConstants.CONTENT_ENCODING_GZIP) != -1;
         }
         return false;
@@ -120,9 +120,9 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 
     /** Determine whether the response is a XML message. */
     private boolean isXmlResponse() throws IOException {
-        Iterator iterator = getResponseHeaders(HttpTransportConstants.HEADER_CONTENT_TYPE);
+        Iterator<String> iterator = getResponseHeaders(HttpTransportConstants.HEADER_CONTENT_TYPE);
         if (iterator.hasNext()) {
-            String contentType = ((String) iterator.next()).toLowerCase();
+            String contentType = iterator.next().toLowerCase();
             return contentType.indexOf("xml") != -1;
         }
         return false;

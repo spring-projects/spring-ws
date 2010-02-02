@@ -134,9 +134,9 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
     */
 
     @Override
-    protected Iterator getRequestHeaderNames() throws IOException {
+    protected Iterator<String> getRequestHeaderNames() throws IOException {
         try {
-            List headers = new ArrayList();
+            List<String> headers = new ArrayList<String>();
             Enumeration enumeration = requestMessage.getAllHeaders();
             while (enumeration.hasMoreElements()) {
                 Header header = (Header) enumeration.nextElement();
@@ -150,7 +150,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
     }
 
     @Override
-    protected Iterator getRequestHeaders(String name) throws IOException {
+    protected Iterator<String> getRequestHeaders(String name) throws IOException {
         try {
             String[] headers = requestMessage.getHeader(name);
             return Arrays.asList(headers).iterator();

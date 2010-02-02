@@ -19,19 +19,20 @@ package org.springframework.ws.transport;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Properties;
+import java.util.Map;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 public class MockTransportInputStream extends TransportInputStream {
 
-    private Properties headers;
+    private Map<String, String> headers;
 
     private InputStream inputStream;
 
-    public MockTransportInputStream(InputStream inputStream, Properties headers) {
+    public MockTransportInputStream(InputStream inputStream, Map<String, String> headers) {
         Assert.notNull(inputStream, "inputStream must not be null");
         Assert.notNull(headers, "headers must not be null");
         this.inputStream = inputStream;
@@ -41,7 +42,7 @@ public class MockTransportInputStream extends TransportInputStream {
     public MockTransportInputStream(InputStream inputStream) {
         Assert.notNull(inputStream, "inputStream must not be null");
         this.inputStream = inputStream;
-        headers = new Properties();
+        headers = new HashMap<String, String>();
     }
 
     @Override
@@ -50,13 +51,13 @@ public class MockTransportInputStream extends TransportInputStream {
     }
 
     @Override
-    public Iterator getHeaderNames() throws IOException {
+    public Iterator<String> getHeaderNames() throws IOException {
         return headers.keySet().iterator();
     }
 
     @Override
-    public Iterator getHeaders(String name) throws IOException {
-        String[] values = StringUtils.delimitedListToStringArray(headers.getProperty(name), ", ");
+    public Iterator<String> getHeaders(String name) throws IOException {
+        String[] values = StringUtils.delimitedListToStringArray(headers.get(name), ", ");
         return Arrays.asList(values).iterator();
     }
 }

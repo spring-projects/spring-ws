@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,9 +25,6 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.core.io.ClassPathResource;
@@ -61,6 +58,9 @@ import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
 import org.springframework.ws.transport.http.HttpUrlConnectionMessageSender;
 import org.springframework.ws.transport.support.TransportUtils;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <strong>The central class for client-side Web services.</strong> It provides a message-driven approach to sending and
@@ -408,7 +408,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                             return Boolean.TRUE;
                         }
                     });
-            return retVal != null && retVal.booleanValue();
+            return retVal != null && retVal;
         }
         catch (TransformerConfigurationException ex) {
             throw new WebServiceTransformerException("Could not create transformer", ex);
@@ -479,7 +479,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
         Assert.notNull(responseCallback, "responseCallback must not be null");
         Boolean result = (Boolean) sendAndReceive(uri, requestCallback,
                 new WebServiceMessageCallbackMessageExtractor(responseCallback));
-        return result != null && result.booleanValue();
+        return result != null && result;
     }
 
     public Object sendAndReceive(WebServiceMessageCallback requestCallback,

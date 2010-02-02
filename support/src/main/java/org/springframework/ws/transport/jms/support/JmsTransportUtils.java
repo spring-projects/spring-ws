@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -130,9 +130,9 @@ public abstract class JmsTransportUtils {
      * Returns an iterator over all header names in the given message. Delegates to {@link
      * #jmsPropertyToHeader(String)}.
      */
-    public static Iterator getHeaderNames(Message message) throws JMSException {
+    public static Iterator<String> getHeaderNames(Message message) throws JMSException {
         Enumeration properties = message.getPropertyNames();
-        List results = new ArrayList();
+        List<String> results = new ArrayList<String>();
         while (properties.hasMoreElements()) {
             String property = (String) properties.nextElement();
             if (property.startsWith(JmsTransportConstants.PROPERTY_PREFIX)) {
@@ -147,14 +147,14 @@ public abstract class JmsTransportUtils {
      * Returns an iterator over all the header values of the given message and header name. Delegates to {@link
      * #headerToJmsProperty(String)}.
      */
-    public static Iterator getHeaders(Message message, String name) throws JMSException {
+    public static Iterator<String> getHeaders(Message message, String name) throws JMSException {
         String propertyName = headerToJmsProperty(name);
         String value = message.getStringProperty(propertyName);
         if (value != null) {
             return Collections.singletonList(value).iterator();
         }
         else {
-            return Collections.EMPTY_LIST.iterator();
+            return Collections.<String>emptyList().iterator();
         }
     }
 

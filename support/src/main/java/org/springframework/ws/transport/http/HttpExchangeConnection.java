@@ -26,8 +26,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import com.sun.net.httpserver.HttpExchange;
-
 import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.WebServiceMessage;
@@ -35,6 +33,8 @@ import org.springframework.ws.transport.AbstractReceiverConnection;
 import org.springframework.ws.transport.EndpointAwareWebServiceConnection;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
+
+import com.sun.net.httpserver.HttpExchange;
 
 /**
  * Implementation of {@link WebServiceConnection} that is based on the Java 6 HttpServer {@link HttpExchange}.
@@ -93,14 +93,14 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
      */
 
     @Override
-    protected Iterator getRequestHeaderNames() throws IOException {
+    protected Iterator<String> getRequestHeaderNames() throws IOException {
         return httpExchange.getRequestHeaders().keySet().iterator();
     }
 
     @Override
-    protected Iterator getRequestHeaders(String name) throws IOException {
-        List headers = httpExchange.getRequestHeaders().get(name);
-        return headers != null ? headers.iterator() : Collections.EMPTY_LIST.iterator();
+    protected Iterator<String> getRequestHeaders(String name) throws IOException {
+        List<String> headers = httpExchange.getRequestHeaders().get(name);
+        return headers != null ? headers.iterator() : Collections.<String>emptyList().iterator();
     }
 
     @Override

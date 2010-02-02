@@ -36,12 +36,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
-import org.custommonkey.xmlunit.XMLTestCase;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.Context;
-import org.mortbay.jetty.servlet.ServletHolder;
-
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
@@ -51,7 +46,12 @@ import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-import org.springframework.beans.factory.InitializingBean;
+
+import org.custommonkey.xmlunit.XMLTestCase;
+import org.custommonkey.xmlunit.XMLUnit;
+import org.mortbay.jetty.Server;
+import org.mortbay.jetty.servlet.Context;
+import org.mortbay.jetty.servlet.ServletHolder;
 
 public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase extends XMLTestCase {
 
@@ -244,7 +244,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
         }
 
         public void setContentLength(int contentLength) {
-            this.contentLength = new Integer(contentLength);
+            this.contentLength = contentLength;
         }
 
         public void setResponse(boolean response) {
@@ -273,7 +273,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
                 if (response) {
                     httpServletResponse.setContentType("text/xml");
                     if (contentLength != null) {
-                        httpServletResponse.setContentLength(contentLength.intValue());
+                        httpServletResponse.setContentLength(contentLength);
                     }
                     if (gzip) {
                         httpServletResponse.addHeader("Content-Encoding", "gzip");

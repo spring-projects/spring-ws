@@ -16,7 +16,6 @@
 
 package org.springframework.ws.transport.http;
 
-import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -122,9 +121,9 @@ public class MessageDispatcherServlet extends FrameworkServlet {
     private WebServiceMessageReceiver messageReceiver;
 
     /** Keys are bean names, values are {@link WsdlDefinition WsdlDefinitions}. */
-    private Map wsdlDefinitions;
+    private Map<String, WsdlDefinition> wsdlDefinitions;
 
-    private Map xsdSchemas;
+    private Map<String, XsdSchema> xsdSchemas;
 
     private boolean transformWsdlLocations = false;
 
@@ -394,10 +393,9 @@ public class MessageDispatcherServlet extends FrameworkServlet {
         wsdlDefinitions = BeanFactoryUtils
                 .beansOfTypeIncludingAncestors(getWebApplicationContext(), WsdlDefinition.class, true, false);
         if (logger.isDebugEnabled()) {
-            for (Iterator iterator = wsdlDefinitions.entrySet().iterator(); iterator.hasNext();) {
-                Map.Entry entry = (Map.Entry) iterator.next();
-                String beanName = (String) entry.getKey();
-                WsdlDefinition definition = (WsdlDefinition) entry.getValue();
+            for (Map.Entry<String, WsdlDefinition> entry : wsdlDefinitions.entrySet()) {
+                String beanName = entry.getKey();
+                WsdlDefinition definition = entry.getValue();
                 logger.debug("Published [" + definition + "] as " + beanName + WSDL_SUFFIX_NAME);
             }
         }
@@ -408,10 +406,9 @@ public class MessageDispatcherServlet extends FrameworkServlet {
         xsdSchemas = BeanFactoryUtils
                 .beansOfTypeIncludingAncestors(getWebApplicationContext(), XsdSchema.class, true, false);
         if (logger.isDebugEnabled()) {
-            for (Iterator iterator = xsdSchemas.entrySet().iterator(); iterator.hasNext();) {
-                Map.Entry entry = (Map.Entry) iterator.next();
-                String beanName = (String) entry.getKey();
-                XsdSchema schema = (XsdSchema) entry.getValue();
+            for (Map.Entry<String, XsdSchema> entry : xsdSchemas.entrySet()) {
+                String beanName = entry.getKey();
+                XsdSchema schema = entry.getValue();
                 logger.debug("Published [" + schema + "] as " + beanName + XSD_SUFFIX_NAME);
             }
         }

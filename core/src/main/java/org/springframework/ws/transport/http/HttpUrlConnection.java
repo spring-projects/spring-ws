@@ -99,8 +99,8 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
     }
 
     @Override
-    protected Iterator getResponseHeaderNames() throws IOException {
-        List headerNames = new ArrayList();
+    protected Iterator<String> getResponseHeaderNames() throws IOException {
+        List<String> headerNames = new ArrayList<String>();
         // Header field 0 is the status line, so we start at 1
         int i = 1;
         while (true) {
@@ -115,13 +115,13 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
     }
 
     @Override
-    protected Iterator getResponseHeaders(String name) throws IOException {
+    protected Iterator<String> getResponseHeaders(String name) throws IOException {
         String headerField = connection.getHeaderField(name);
         if (headerField == null) {
-            return Collections.EMPTY_LIST.iterator();
+            return Collections.<String>emptyList().iterator();
         }
         else {
-            Set tokens = StringUtils.commaDelimitedListToSet(headerField);
+            Set<String> tokens = StringUtils.commaDelimitedListToSet(headerField);
             return tokens.iterator();
         }
     }
