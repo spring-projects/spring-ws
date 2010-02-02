@@ -18,7 +18,7 @@ package org.springframework.ws.server.endpoint.adapter;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.Properties;
+import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
@@ -34,6 +34,7 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.annotation.XPathParam;
 import org.springframework.xml.namespace.SimpleNamespaceContext;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -62,10 +63,10 @@ public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEnd
 
     private XPathFactory xpathFactory;
 
-    private Properties namespaces;
+    private Map<String, String> namespaces;
 
     /** Sets namespaces used in the XPath expression. Maps prefixes to namespaces. */
-    public void setNamespaces(Properties namespaces) {
+    public void setNamespaces(Map<String, String> namespaces) {
         this.namespaces = namespaces;
     }
 

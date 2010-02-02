@@ -16,7 +16,7 @@
 
 package org.springframework.ws.server.endpoint.mapping;
 
-import java.util.Properties;
+import java.util.Map;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -29,6 +29,7 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
+
 import org.w3c.dom.Element;
 
 /**
@@ -53,7 +54,7 @@ import org.w3c.dom.Element;
  *
  * @author Arjen Poutsma
  * @see #setExpression(String)
- * @see #setNamespaces(java.util.Properties)
+ * @see #setNamespaces(java.util.Map) 
  * @since 1.0.0
  */
 public class XPathPayloadEndpointMapping extends AbstractMapBasedEndpointMapping implements InitializingBean {
@@ -62,7 +63,7 @@ public class XPathPayloadEndpointMapping extends AbstractMapBasedEndpointMapping
 
     private XPathExpression expression;
 
-    private Properties namespaces;
+    private Map<String, String> namespaces;
 
     private TransformerFactory transformerFactory;
 
@@ -72,7 +73,7 @@ public class XPathPayloadEndpointMapping extends AbstractMapBasedEndpointMapping
     }
 
     /** Sets the namespaces bindings used in the expression. Keys are prefixes, values are namespaces. */
-    public void setNamespaces(Properties namespaces) {
+    public void setNamespaces(Map<String, String> namespaces) {
         this.namespaces = namespaces;
     }
 

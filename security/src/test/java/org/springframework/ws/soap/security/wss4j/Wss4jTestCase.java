@@ -17,20 +17,15 @@
 package org.springframework.ws.soap.security.wss4j;
 
 import java.io.InputStream;
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPConstants;
+import javax.xml.soap.SOAPMessage;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.dom.DOMSource;
-
-import junit.framework.TestCase;
-import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
-import org.apache.axiom.soap.SOAP12Constants;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -47,6 +42,12 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.xpath.Jaxp13XPathTemplate;
+
+import junit.framework.TestCase;
+import org.apache.axiom.soap.SOAP12Constants;
+import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 public abstract class Wss4jTestCase extends TestCase {
 
@@ -66,17 +67,17 @@ public abstract class Wss4jTestCase extends TestCase {
         }
         saajSoap11MessageFactory = MessageFactory.newInstance();
         saajSoap12MessageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-        Properties namespaces = new Properties();
-        namespaces.setProperty("SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/");
-        namespaces.setProperty("wsse",
+        Map<String, String> namespaces = new HashMap<String, String>();
+        namespaces.put("SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/");
+        namespaces.put("wsse",
                 "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd");
-        namespaces.setProperty("ds", "http://www.w3.org/2000/09/xmldsig#");
-        namespaces.setProperty("xenc", "http://www.w3.org/2001/04/xmlenc#");
-        namespaces.setProperty("wsse11", "http://docs.oasis-open.org/wss/oasis-wss-wssecurity-secext-1.1.xsd");
-        namespaces.setProperty("echo", "http://www.springframework.org/spring-ws/samples/echo");
-        namespaces.setProperty("wsu",
+        namespaces.put("ds", "http://www.w3.org/2000/09/xmldsig#");
+        namespaces.put("xenc", "http://www.w3.org/2001/04/xmlenc#");
+        namespaces.put("wsse11", "http://docs.oasis-open.org/wss/oasis-wss-wssecurity-secext-1.1.xsd");
+        namespaces.put("echo", "http://www.springframework.org/spring-ws/samples/echo");
+        namespaces.put("wsu",
                 "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd");
-        namespaces.setProperty("test", "http://test");
+        namespaces.put("test", "http://test");
         xpathTemplate.setNamespaces(namespaces);
         onSetup();
     }

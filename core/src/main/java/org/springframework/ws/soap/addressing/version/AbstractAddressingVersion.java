@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,11 @@ package org.springframework.ws.soap.addressing.version;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Properties;
+import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -31,10 +32,6 @@ import javax.xml.transform.Result;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.SoapFault;
@@ -51,6 +48,10 @@ import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.TransformerObjectSupport;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * Abstract base class for {@link AddressingVersion} implementations. Uses {@link XPathExpression}s to retrieve
@@ -82,8 +83,8 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
     private final XPathExpression referenceParametersExpression;
 
     protected AbstractAddressingVersion() {
-        Properties namespaces = new Properties();
-        namespaces.setProperty(getNamespacePrefix(), getNamespaceUri());
+        Map<String, String> namespaces = new HashMap<String, String>();
+        namespaces.put(getNamespacePrefix(), getNamespaceUri());
         toExpression = createNormalizedExpression(getToName(), namespaces);
         actionExpression = createNormalizedExpression(getActionName(), namespaces);
         messageIdExpression = createNormalizedExpression(getMessageIdName(), namespaces);
@@ -105,17 +106,17 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
         }
     }
 
-    private XPathExpression createExpression(QName name, Properties namespaces) {
+    private XPathExpression createExpression(QName name, Map<String, String> namespaces) {
         String expression = name.getPrefix() + ":" + name.getLocalPart();
         return XPathExpressionFactory.createXPathExpression(expression, namespaces);
     }
 
-    private XPathExpression createNormalizedExpression(QName name, Properties namespaces) {
+    private XPathExpression createNormalizedExpression(QName name, Map<String, String> namespaces) {
         String expression = "normalize-space(" + name.getPrefix() + ":" + name.getLocalPart() + ")";
         return XPathExpressionFactory.createXPathExpression(expression, namespaces);
     }
 
-    private XPathExpression createChildrenExpression(QName name, Properties namespaces) {
+    private XPathExpression createChildrenExpression(QName name, Map<String, String> namespaces) {
         String expression = name.getPrefix() + ":" + name.getLocalPart() + "/*";
         return XPathExpressionFactory.createXPathExpression(expression, namespaces);
     }
