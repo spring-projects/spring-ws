@@ -258,7 +258,7 @@ public class MailSenderConnection extends AbstractSenderConnection {
     protected Iterator<String> getResponseHeaderNames() throws IOException {
         try {
             List<String> headers = new ArrayList<String>();
-            Enumeration enumeration = responseMessage.getAllHeaders();
+            Enumeration<?> enumeration = responseMessage.getAllHeaders();
             while (enumeration.hasMoreElements()) {
                 Header header = (Header) enumeration.nextElement();
                 headers.add(header.getName());

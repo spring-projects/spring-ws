@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,11 +29,11 @@ import javax.mail.URLName;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.springframework.util.StringUtils;
 import org.springframework.ws.transport.mail.MailTransportConstants;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Collection of utility methods to work with Mail transports.
@@ -135,7 +135,7 @@ public abstract class MailTransportUtils {
         int port = name.getPort();
         String file = name.getFile();
         String ref = name.getRef();
-        StringBuffer tempURL = new StringBuffer();
+        StringBuilder tempURL = new StringBuilder();
         if (protocol != null) {
             tempURL.append(protocol).append(':');
         }

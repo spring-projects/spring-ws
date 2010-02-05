@@ -220,8 +220,8 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
                 while (isRunning()) {
                     try {
                         Message[] messages = monitoringStrategy.monitor(folder);
-                        for (int i = 0; i < messages.length; i++) {
-                            MessageHandler handler = new MessageHandler(messages[i]);
+                        for (Message message : messages) {
+                            MessageHandler handler = new MessageHandler(message);
                             execute(handler);
                         }
                     }
