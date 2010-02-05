@@ -152,11 +152,6 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.ws</groupId>
-                <artifactId>spring-oxm-tiger</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.ws</groupId>
                 <artifactId>spring-ws-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
