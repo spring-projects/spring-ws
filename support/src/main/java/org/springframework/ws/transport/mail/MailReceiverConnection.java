@@ -137,7 +137,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
     protected Iterator<String> getRequestHeaderNames() throws IOException {
         try {
             List<String> headers = new ArrayList<String>();
-            Enumeration enumeration = requestMessage.getAllHeaders();
+            Enumeration<?> enumeration = requestMessage.getAllHeaders();
             while (enumeration.hasMoreElements()) {
                 Header header = (Header) enumeration.nextElement();
                 headers.add(header.getName());

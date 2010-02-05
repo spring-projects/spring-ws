@@ -131,7 +131,7 @@ public abstract class JmsTransportUtils {
      * #jmsPropertyToHeader(String)}.
      */
     public static Iterator<String> getHeaderNames(Message message) throws JMSException {
-        Enumeration properties = message.getPropertyNames();
+        Enumeration<?> properties = message.getPropertyNames();
         List<String> results = new ArrayList<String>();
         while (properties.hasMoreElements()) {
             String property = (String) properties.nextElement();

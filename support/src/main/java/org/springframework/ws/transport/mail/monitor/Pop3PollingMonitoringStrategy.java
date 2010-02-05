@@ -74,8 +74,8 @@ public class Pop3PollingMonitoringStrategy extends PollingMonitoringStrategy {
     protected void deleteMessages(Folder folder, Message[] messages) throws MessagingException {
         super.deleteMessages(folder, messages);
         // expunge deleted mails, and make sure we've retrieved them before closing the folder
-        for (int i = 0; i < messages.length; i++) {
-            new MimeMessage((MimeMessage) messages[i]);
+        for (Message message : messages) {
+            new MimeMessage((MimeMessage) message);
         }
         MailTransportUtils.closeFolder(folder, true);
     }
