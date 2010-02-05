@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.apache.ws.security.components.crypto.Crypto;
-import org.apache.ws.security.components.crypto.CryptoFactory;
-import org.apache.ws.security.components.crypto.Merlin;
-
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
+
+import org.apache.ws.security.components.crypto.Crypto;
+import org.apache.ws.security.components.crypto.CryptoFactory;
+import org.apache.ws.security.components.crypto.Merlin;
 
 /**
  * Spring factory bean for a WSS4J {@link Crypto}. Allows for strong-typed property configuration, or configuration
@@ -42,7 +42,7 @@ import org.springframework.util.Assert;
  * @see org.apache.ws.security.components.crypto.Crypto
  * @since 1.5.0
  */
-public class CryptoFactoryBean implements FactoryBean, BeanClassLoaderAware, InitializingBean {
+public class CryptoFactoryBean implements FactoryBean<Crypto>, BeanClassLoaderAware, InitializingBean {
 
     private Properties configuration = new Properties();
 
@@ -71,7 +71,7 @@ public class CryptoFactoryBean implements FactoryBean, BeanClassLoaderAware, Ini
      *
      * @param cryptoProviderClass the crypto provider class
      */
-    public void setCryptoProvider(Class cryptoProviderClass) {
+    public void setCryptoProvider(Class<? extends Crypto> cryptoProviderClass) {
         this.configuration.setProperty(CRYPTO_PROVIDER_PROPERTY, cryptoProviderClass.getName());
     }
 
@@ -160,7 +160,7 @@ public class CryptoFactoryBean implements FactoryBean, BeanClassLoaderAware, Ini
         this.crypto = CryptoFactory.getInstance(configuration, classLoader);
     }
 
-    public Class getObjectType() {
+    public Class<Crypto> getObjectType() {
         return Crypto.class;
     }
 
@@ -168,7 +168,7 @@ public class CryptoFactoryBean implements FactoryBean, BeanClassLoaderAware, Ini
         return true;
     }
 
-    public Object getObject() throws Exception {
+    public Crypto getObject() throws Exception {
         return crypto;
     }
 

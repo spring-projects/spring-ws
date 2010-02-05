@@ -19,18 +19,13 @@ package org.springframework.ws.transport.http;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.soap.MessageFactory;
-
-import org.apache.commons.httpclient.ConnectTimeoutException;
-import org.apache.commons.httpclient.URIException;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.Context;
-import org.mortbay.jetty.servlet.ServletHolder;
 
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.util.FileCopyUtils;
@@ -39,6 +34,12 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
+
+import org.apache.commons.httpclient.ConnectTimeoutException;
+import org.apache.commons.httpclient.URIException;
+import org.mortbay.jetty.Server;
+import org.mortbay.jetty.servlet.Context;
+import org.mortbay.jetty.servlet.ServletHolder;
 
 public class CommonsHttpMessageSenderIntegrationTest extends AbstractHttpWebServiceMessageSenderIntegrationTestCase {
 
@@ -64,11 +65,11 @@ public class CommonsHttpMessageSenderIntegrationTest extends AbstractHttpWebServ
     public void testMaxConnections() throws URISyntaxException, URIException {
         CommonsHttpMessageSender messageSender = new CommonsHttpMessageSender();
         messageSender.setMaxTotalConnections(2);
-        Properties maxConnectionsPerHost = new Properties();
-        maxConnectionsPerHost.setProperty("https://www.example.com", "1");
-        maxConnectionsPerHost.setProperty("http://www.example.com:8080", "7");
-        maxConnectionsPerHost.setProperty("www.springframework.org", "10");
-        maxConnectionsPerHost.setProperty("*", "5");
+        Map<String, String> maxConnectionsPerHost = new HashMap<String, String>();
+        maxConnectionsPerHost.put("https://www.example.com", "1");
+        maxConnectionsPerHost.put("http://www.example.com:8080", "7");
+        maxConnectionsPerHost.put("www.springframework.org", "10");
+        maxConnectionsPerHost.put("*", "5");
         messageSender.setMaxConnectionsPerHost(maxConnectionsPerHost);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +21,13 @@ import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Spring factory bean for a {@link KeyStore}.
@@ -40,7 +40,7 @@ import org.springframework.util.StringUtils;
  * @see KeyStore
  * @since 1.0.0
  */
-public class KeyStoreFactoryBean implements FactoryBean, InitializingBean {
+public class KeyStoreFactoryBean implements FactoryBean<KeyStore>, InitializingBean {
 
     private static final Log logger = LogFactory.getLog(KeyStoreFactoryBean.class);
 
@@ -87,11 +87,11 @@ public class KeyStoreFactoryBean implements FactoryBean, InitializingBean {
         this.type = type;
     }
 
-    public Object getObject() {
+    public KeyStore getObject() {
         return keyStore;
     }
 
-    public Class getObjectType() {
+    public Class<KeyStore> getObjectType() {
         return KeyStore.class;
     }
 

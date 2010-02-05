@@ -17,16 +17,16 @@
 package org.springframework.ws.soap.security.wss4j.callback;
 
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
-import org.apache.ws.security.WSPasswordCallback;
-import org.apache.ws.security.WSSecurityException;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
+
+import org.apache.ws.security.WSPasswordCallback;
+import org.apache.ws.security.WSSecurityException;
 
 /**
  * Simple callback handler that validates passwords agains a in-memory <code>Properties</code> object. Password
@@ -40,19 +40,19 @@ import org.springframework.util.Assert;
 public class SimplePasswordValidationCallbackHandler extends AbstractWsPasswordCallbackHandler
         implements InitializingBean {
 
-    private Properties users = new Properties();
+    private Map<String, String > users = new HashMap<String, String>();
 
     /** Sets the users to validate against. Property names are usernames, property values are passwords. */
     public void setUsers(Properties users) {
-        this.users = users;
+        for (Map.Entry<Object, Object> entry : users.entrySet()) {
+            if (entry.getKey() instanceof String && entry.getValue() instanceof String) {
+                this.users.put((String) entry.getKey(), (String) entry.getValue());
+            }
+        }
     }
 
-    public void setUsersMap(Map users) {
-        for (Iterator iterator = users.keySet().iterator(); iterator.hasNext();) {
-            String username = (String) iterator.next();
-            String password = (String) users.get(username);
-            this.users.setProperty(username, password);
-        }
+    public void setUsersMap(Map<String, String> users) {
+        this.users = users;
     }
 
     public void afterPropertiesSet() throws Exception {
@@ -62,14 +62,14 @@ public class SimplePasswordValidationCallbackHandler extends AbstractWsPasswordC
     @Override
     protected void handleUsernameToken(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
         String identifier = callback.getIdentifier();
-        callback.setPassword(users.getProperty(identifier));
+        callback.setPassword(users.get(identifier));
     }
 
     @Override
     protected void handleUsernameTokenUnknown(WSPasswordCallback callback)
             throws IOException, UnsupportedCallbackException {
         String identifier = callback.getIdentifier();
-        String storedPassword = users.getProperty(identifier);
+        String storedPassword = users.get(identifier);
         String givenPassword = callback.getPassword();
         if (storedPassword == null || !storedPassword.equals(givenPassword)) {
             throw new WSSecurityException(WSSecurityException.FAILED_AUTHENTICATION);
