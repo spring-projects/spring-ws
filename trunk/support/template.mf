@@ -1,0 +1,33 @@
+Bundle-SymbolicName: org.springframework.ws.support
+Bundle-Name: Spring Web Services Support
+Bundle-Vendor: SpringSource
+Bundle-ManifestVersion: 2
+Fragment-Host: org.springframework.ws;bundle-version="[${version}, ${version}]"
+Import-Template: 
+ com.sun.net.httpserver.*;version="0";resolution:=optional,
+ com.sun.mail.imap.*;version="[1.4.0, 2.0.0)";resolution:=optional,
+ javax.activation.*;version="[1.1.0, 2.0.0)",
+ javax.ejb.*;version="[2.0.0, 4.0.0)";resolution:=optional,
+ javax.jms.*;version="[1.1.0, 2.0.0)",
+ javax.mail.*;version="[1.4.0, 2.0.0)",
+ javax.naming.*;version="0";resolution:=optional,
+ javax.net.ssl.*;version="0",
+ javax.xml.transform.*;version="0",
+ org.apache.commons.logging.*;version="[1.1.1, 2.0.0)",
+ org.springframework.beans.*;version="[3.0.0, 4.0.0)",
+ org.springframework.context.*;version="[3.0.0, 4.0.0)",
+ org.springframework.core.*;version="[3.0.0, 4.0.0)",
+ org.springframework.ejb.*;version="[3.0.0, 4.0.0)",
+ org.springframework.jms.*;version="[3.0.0, 4.0.0)",
+ org.springframework.jndi.*;version="[3.0.0, 4.0.0)",
+ org.springframework.scheduling.*;version="[3.0.0, 4.0.0)",
+ org.springframework.util.*;version="[3.0.0, 4.0.0)",
+ org.springframework.ws.*;version="[${version}, ${version}]",
+ org.springframework.xml.*;version="[${version}, ${version}]"
+Excluded-Imports:
+ org.springframework.ws.transport.*
+Ignored-Existing-Headers: 
+ Bnd-LastModified,
+ Import-Package,
+ Export-Package,
+ Tool

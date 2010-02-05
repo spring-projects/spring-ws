@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws-support</artifactId>
-    <packaging>bundle</packaging>
+    <packaging>jar</packaging>
     <name>Spring WS Support</name>
     <description>Spring Web Services Support package.</description>
     <repositories>
@@ -25,7 +25,7 @@
     </repositories>
     <profiles>
         <profile>
-            <id>jdk14-jdk15</id>
+            <id>jdk15</id>
             <activation>
                 <jdk>!1.6</jdk>
             </activation>
@@ -49,29 +49,8 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <configuration>
-                    <excludeDependencies>true</excludeDependencies>
-                    <instructions>
-                        <Bundle-SymbolicName>org.springframework.bundle.ws.support</Bundle-SymbolicName>
-                        <Export-Package>org.springframework.ws*;version="${pom.version}"</Export-Package>
-                        <Import-Package>
-                            org.apache.commons.logging*,
-                            javax.activation*,
-                            javax.jms*,
-                            javax.mail*,
-                            org.springframework.xml*;version="[${pom.version},${pom.version}]",
-                            org.springframework.ws*;version="[${pom.version},${pom.version}]",
-                            org.springframework*;version="[2.0,4.0)",
-                            *;resolution:=optional
-                        </Import-Package>
-                        <Fragment-Host>org.springframework.bundle.ws.core</Fragment-Host>
-                        <Implementation-Title>${pom.name}</Implementation-Title>
-                        <Spring-WS-Version>${pom.version}</Spring-WS-Version>
-                        <Bundle-Vendor>SpringSource</Bundle-Vendor>
-                    </instructions>
-                </configuration>
+                <groupId>com.springsource.bundlor</groupId>
+                <artifactId>com.springsource.bundlor.maven</artifactId>
             </plugin>
         </plugins>
     </build>
