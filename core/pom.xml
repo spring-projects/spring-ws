@@ -7,12 +7,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>spring-ws-core</artifactId>
-    <packaging>bundle</packaging>
+    <packaging>jar</packaging>
     <name>Spring WS Core</name>
     <description>Spring Web Services Core package.</description>
     <profiles>
         <profile>
-            <id>jdk14-jdk15</id>
+            <id>jdk15</id>
             <activation>
                 <jdk>!1.6</jdk>
             </activation>
@@ -40,33 +40,18 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.1</version>
                 <configuration>
-                    <instructions>
-                        <Bundle-SymbolicName>org.springframework.bundle.ws.core</Bundle-SymbolicName>
-                        <Export-Package>org.springframework.ws*;version="${pom.version}"</Export-Package>
-                        <Import-Package>
-                            org.apache.commons.logging*,
-                            javax.activation*,
-                            javax.servlet*,
-                            javax.xml.namespace*,
-                            javax.xml.parsers*,
-                            javax.xml.stream*,
-                            javax.xml.transform*,
-                            org.xml.sax*,
-                            org.w3c.dom*,
-                            org.springframework.xml*;version="[${pom.version},${pom.version}]",
-                            org.springframework.oxm*;version="[${pom.version},${pom.version}]",
-                            org.springframework.ws*;version="[${pom.version},${pom.version}]",
-                            org.springframework*;version="[2.0,4.0)",
-                            *;resolution:=optional
-                        </Import-Package>
-                        <Implementation-Title>${pom.name}</Implementation-Title>
-                        <Spring-WS-Version>${pom.version}</Spring-WS-Version>
-                        <Bundle-Vendor>SpringSource</Bundle-Vendor>
-                    </instructions>
+                    <excludes>
+                        <!--TODO: include-->
+                        <exclude>org/springframework/ws/server/endpoint/adapter/GenericMarshallingMethodEndpointAdapter.java</exclude>
+                    </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.springsource.bundlor</groupId>
+                <artifactId>com.springsource.bundlor.maven</artifactId>
             </plugin>
         </plugins>
     </build>

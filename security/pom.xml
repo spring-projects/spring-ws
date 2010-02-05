@@ -7,7 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>spring-ws-security</artifactId>
-    <packaging>bundle</packaging>
+    <packaging>jar</packaging>
     <name>Spring WS Security</name>
     <description>Spring-WS WS-Security implementation</description>
     <repositories>
@@ -25,7 +25,7 @@
     </repositories>
     <profiles>
         <profile>
-            <id>jdk14-jdk15</id>
+            <id>jdk15</id>
             <activation>
                 <jdk>!1.6</jdk>
             </activation>
@@ -47,6 +47,11 @@
     </profiles>
     <build>
         <plugins>
+            <plugin>
+                <groupId>com.springsource.bundlor</groupId>
+                <artifactId>com.springsource.bundlor.maven</artifactId>
+            </plugin>
+<!--
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
@@ -71,6 +76,7 @@
                     </instructions>
                 </configuration>
             </plugin>
+-->
         </plugins>
     </build>
     <dependencies>
