@@ -17,8 +17,9 @@
 package org.springframework.ws.soap.soap11;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Properties;
+import java.util.Map;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.mime.Attachment;
@@ -40,10 +41,10 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
     @Override
     public void testCreateSoapMessageNoAttachment() throws Exception {
         InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11.xml");
-        Properties headers = new Properties();
-        headers.setProperty("Content-Type", "text/xml");
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Content-Type", "text/xml");
         String soapAction = "\"http://springframework.org/spring-ws/Action\"";
-        headers.setProperty("SOAPAction", soapAction);
+        headers.put("SOAPAction", soapAction);
         TransportInputStream tis = new MockTransportInputStream(is, headers);
 
         WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
@@ -57,8 +58,8 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
     @Override
     public void testCreateSoapMessageSwA() throws Exception {
         InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-attachment.bin");
-        Properties headers = new Properties();
-        headers.setProperty("Content-Type",
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Content-Type",
                 "multipart/related;" + "type=\"text/xml\";" + "boundary=\"----=_Part_0_11416420.1149699787554\"");
         TransportInputStream tis = new MockTransportInputStream(is, headers);
 
@@ -77,8 +78,8 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
     @Override
     public void testCreateSoapMessageMtom() throws Exception {
         InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-mtom.bin");
-        Properties headers = new Properties();
-        headers.setProperty("Content-Type", "multipart/related;" + "start-info=\"text/xml\";" +
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Content-Type", "multipart/related;" + "start-info=\"text/xml\";" +
                 "type=\"application/xop+xml\";" + "start=\"<0.urn:uuid:492264AB42E57108E01176731445508@apache.org>\";" +
                 "boundary=\"MIMEBoundaryurn_uuid_492264AB42E57108E01176731445507\"");
         TransportInputStream tis = new MockTransportInputStream(is, headers);
@@ -97,8 +98,8 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
 
     public void testCreateSoapMessageMtomWeirdStartInfo() throws Exception {
         InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-mtom.bin");
-        Properties headers = new Properties();
-        headers.setProperty("Content-Type", "multipart/related;" + "startinfo=\"text/xml\";" +
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Content-Type", "multipart/related;" + "startinfo=\"text/xml\";" +
                 "type=\"application/xop+xml\";" + "start=\"<0.urn:uuid:492264AB42E57108E01176731445508@apache.org>\";" +
                 "boundary=\"MIMEBoundaryurn_uuid_492264AB42E57108E01176731445507\"");
         TransportInputStream tis = new MockTransportInputStream(is, headers);
@@ -117,8 +118,8 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
 
     public void testCreateSoapMessageUtf8ByteOrderMark() throws Exception {
         InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-utf8-bom.xml");
-        Properties headers = new Properties();
-        headers.setProperty("Content-Type", "text/xml; charset=UTF-8");
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Content-Type", "text/xml; charset=UTF-8");
         TransportInputStream tis = new MockTransportInputStream(is, headers);
 
         SoapMessage message = (SoapMessage) messageFactory.createWebServiceMessage(tis);
@@ -127,8 +128,8 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
 
     public void testCreateSoapMessageUtf16BigEndianByteOrderMark() throws Exception {
         InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-utf16-be-bom.xml");
-        Properties headers = new Properties();
-        headers.setProperty("Content-Type", "text/xml; charset=UTF-16");
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Content-Type", "text/xml; charset=UTF-16");
         TransportInputStream tis = new MockTransportInputStream(is, headers);
 
         SoapMessage message = (SoapMessage) messageFactory.createWebServiceMessage(tis);
@@ -137,8 +138,8 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
 
     public void testCreateSoapMessageUtf16LittleEndianByteOrderMark() throws Exception {
         InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-utf16-le-bom.xml");
-        Properties headers = new Properties();
-        headers.setProperty("Content-Type", "text/xml; charset=UTF-16");
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Content-Type", "text/xml; charset=UTF-16");
         TransportInputStream tis = new MockTransportInputStream(is, headers);
 
         SoapMessage message = (SoapMessage) messageFactory.createWebServiceMessage(tis);

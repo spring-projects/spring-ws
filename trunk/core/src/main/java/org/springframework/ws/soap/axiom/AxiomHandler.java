@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,13 @@ package org.springframework.ws.soap.axiom;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
+
+import org.springframework.util.Assert;
+import org.springframework.xml.namespace.QNameUtils;
 
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMContainer;
@@ -35,9 +37,6 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 
-import org.springframework.util.Assert;
-import org.springframework.xml.namespace.QNameUtils;
-
 /**
  * Specific SAX {@link ContentHandler} and {@link LexicalHandler} that adds the resulting AXIOM OMElement to a specified
  * parent element when <code>endDocument</code> is called. Used for returing <code>SAXResult</code>s from Axiom
@@ -46,13 +45,14 @@ import org.springframework.xml.namespace.QNameUtils;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
+@SuppressWarnings("Since15")
 class AxiomHandler implements ContentHandler, LexicalHandler {
 
     private final OMFactory factory;
 
-    private final List elements = new ArrayList();
+    private final List<OMContainer> elements = new ArrayList<OMContainer>();
 
-    private Map namespaces = new HashMap();
+    private Map<String, String> namespaces = new HashMap<String, String>();
 
     private final OMContainer container;
 
@@ -85,9 +85,8 @@ class AxiomHandler implements ContentHandler, LexicalHandler {
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
         OMContainer parent = getParent();
         OMElement element = factory.createOMElement(localName, null, parent);
-        for (Iterator iterator = namespaces.entrySet().iterator(); iterator.hasNext();) {
-            Map.Entry entry = (Map.Entry) iterator.next();
-            String prefix = (String) entry.getKey();
+        for (Map.Entry<String, String> entry : namespaces.entrySet()) {
+            String prefix = entry.getKey();
             if (prefix.length() == 0) {
                 element.declareDefaultNamespace((String) entry.getValue());
             }

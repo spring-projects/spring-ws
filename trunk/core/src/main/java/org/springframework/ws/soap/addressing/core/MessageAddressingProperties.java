@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
+
+import org.w3c.dom.Node;
 
 /**
  * Represents a set of Message Addressing Properties, as defined in the WS-Addressing specification.
@@ -48,9 +50,9 @@ public final class MessageAddressingProperties implements Serializable {
 
     private final URI relatesTo;
 
-    private final List referenceProperties;
+    private final List<Node> referenceProperties;
 
-    private final List referenceParameters;
+    private final List<Node> referenceParameters;
 
     /**
      * Constructs a new {@link MessageAddressingProperties} with the given parameters.
@@ -75,8 +77,8 @@ public final class MessageAddressingProperties implements Serializable {
         this.action = action;
         this.messageId = messageId;
         this.relatesTo = null;
-        this.referenceProperties = Collections.EMPTY_LIST;
-        this.referenceParameters = Collections.EMPTY_LIST;
+        this.referenceProperties = Collections.emptyList();
+        this.referenceParameters = Collections.emptyList();
     }
 
     /**
@@ -135,12 +137,12 @@ public final class MessageAddressingProperties implements Serializable {
     }
 
     /** Returns the endpoint properties. Returns an empty list of none are set. */
-    public List getReferenceProperties() {
+    public List<Node> getReferenceProperties() {
         return Collections.unmodifiableList(referenceProperties);
     }
 
     /** Returns the endpoint parameters. Returns an empty list of none are set. */
-    public List getReferenceParameters() {
+    public List<Node> getReferenceParameters() {
         return Collections.unmodifiableList(referenceParameters);
     }
 

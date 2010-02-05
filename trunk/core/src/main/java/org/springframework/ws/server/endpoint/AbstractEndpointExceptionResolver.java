@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,12 @@ package org.springframework.ws.server.endpoint;
 
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.springframework.core.Ordered;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointExceptionResolver;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Abstract base class for {@link EndpointExceptionResolver EndpointExceptionResolvers}.
@@ -41,7 +41,7 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
 
     private int order = Integer.MAX_VALUE;  // default: same as non-Ordered
 
-    private Set mappedEndpoints;
+    private Set<?> mappedEndpoints;
 
     private Log warnLogger;
 
@@ -53,7 +53,7 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
      * that a specified default fault will be used as fallback for all exceptions; any further
      * <code>EndpointExceptionResolvers</code> in the chain will be ignored in this case.
      */
-    public void setMappedEndpoints(Set mappedEndpoints) {
+    public void setMappedEndpoints(Set<?> mappedEndpoints) {
         this.mappedEndpoints = mappedEndpoints;
     }
 

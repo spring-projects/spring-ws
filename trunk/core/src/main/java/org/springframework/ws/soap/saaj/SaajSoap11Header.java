@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,13 @@ package org.springframework.ws.soap.saaj;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import javax.xml.soap.Node;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
 
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.soap11.Soap11Header;
 
 /**
@@ -40,17 +40,14 @@ class SaajSoap11Header extends SaajSoapHeader implements Soap11Header {
         super(header);
     }
 
-    public Iterator examineHeaderElementsToProcess(String[] actors) {
-        List result = new ArrayList();
-        Iterator iterator = getImplementation().examineAllHeaderElements(getSaajHeader());
+    public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String[] actors) {
+        List<SOAPHeaderElement> result = new ArrayList<SOAPHeaderElement>();
+        Iterator<SOAPHeaderElement> iterator = getImplementation().examineAllHeaderElements(getSaajHeader());
         while (iterator.hasNext()) {
-            Node node = (Node) iterator.next();
-            if (node instanceof SOAPHeaderElement) {
-                SOAPHeaderElement saajHeaderElement = (SOAPHeaderElement) node;
-                String headerActor = saajHeaderElement.getActor();
-                if (shouldProcess(headerActor, actors)) {
-                    result.add(saajHeaderElement);
-                }
+            SOAPHeaderElement saajHeaderElement = iterator.next();
+            String headerActor = saajHeaderElement.getActor();
+            if (shouldProcess(headerActor, actors)) {
+                result.add(saajHeaderElement);
             }
         }
         return new SaajSoapHeaderElementIterator(result.iterator());
@@ -64,8 +61,8 @@ class SaajSoap11Header extends SaajSoapHeader implements Soap11Header {
             return true;
         }
         if (!ObjectUtils.isEmpty(actors)) {
-            for (int i = 0; i < actors.length; i++) {
-                if (actors[i].equals(headerActor)) {
+            for (String actor : actors) {
+                if (actor.equals(headerActor)) {
                     return true;
                 }
             }

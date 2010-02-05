@@ -47,7 +47,7 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
     public static final String DEFAULT_FAULT_ACTION_SUFFIX = "Fault";
 
     // keys are action URIs, values are endpoints
-    private final Map endpointMap = new HashMap();
+    private final Map<URI, Object> endpointMap = new HashMap<URI, Object>();
 
     private String outputActionSuffix = DEFAULT_OUTPUT_ACTION_SUFFIX;
 

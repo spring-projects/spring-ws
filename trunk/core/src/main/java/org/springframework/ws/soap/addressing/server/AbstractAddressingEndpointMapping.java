@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -171,12 +171,12 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
     public final EndpointInvocationChain getEndpoint(MessageContext messageContext) throws TransformerException {
         Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
         SoapMessage request = (SoapMessage) messageContext.getRequest();
-        for (int i = 0; i < versions.length; i++) {
-            if (supports(versions[i], request)) {
+        for (AddressingVersion version : versions) {
+            if (supports(version, request)) {
                 if (logger.isDebugEnabled()) {
-                    logger.debug("Request [" + request + "] uses [" + versions[i] + "]");
+                    logger.debug("Request [" + request + "] uses [" + version + "]");
                 }
-                MessageAddressingProperties requestMap = versions[i].getMessageAddressingProperties(request);
+                MessageAddressingProperties requestMap = version.getMessageAddressingProperties(request);
                 if (requestMap == null) {
                     return null;
                 }
@@ -184,7 +184,7 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
                 if (endpoint == null) {
                     return null;
                 }
-                return getEndpointInvocationChain(endpoint, versions[i], requestMap);
+                return getEndpointInvocationChain(endpoint, version, requestMap);
             }
         }
         return null;
@@ -212,8 +212,8 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
     private boolean supports(AddressingVersion version, SoapMessage request) {
         SoapHeader header = request.getSoapHeader();
         if (header != null) {
-            for (Iterator iterator = header.examineAllHeaderElements(); iterator.hasNext();) {
-                SoapHeaderElement headerElement = (SoapHeaderElement) iterator.next();
+            for (Iterator<SoapHeaderElement> iterator = header.examineAllHeaderElements(); iterator.hasNext();) {
+                SoapHeaderElement headerElement = iterator.next();
                 if (version.understands(headerElement)) {
                     return true;
                 }

@@ -79,6 +79,7 @@ import org.apache.commons.logging.LogFactory;
  * @see #setPayloadCaching(boolean)
  * @since 1.0.0
  */
+@SuppressWarnings("Since15")
 public class AxiomSoapMessageFactory implements SoapMessageFactory, InitializingBean {
 
     private static final String CHARSET_PARAMETER = "charset";
@@ -228,9 +229,9 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 
     private String getHeaderValue(TransportInputStream transportInputStream, String header) throws IOException {
         String contentType = null;
-        Iterator iterator = transportInputStream.getHeaders(header);
+        Iterator<String> iterator = transportInputStream.getHeaders(header);
         if (iterator.hasNext()) {
-            contentType = (String) iterator.next();
+            contentType = iterator.next();
         }
         return contentType;
     }

@@ -43,7 +43,7 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
 public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapping {
 
     /** Keys are Strings, values are {@link MethodEndpoint}s. */
-    private final Map endpointMap = new HashMap();
+    private final Map<String, MethodEndpoint> endpointMap = new HashMap<String, MethodEndpoint>();
 
     /**
      * Lookup an endpoint for the given message. The extraction of the endpoint key is delegated to the concrete
@@ -112,7 +112,7 @@ public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapp
      */
     protected void registerMethods(final Object endpoint) {
         Assert.notNull(endpoint, "'endpoint' must not be null");
-        Class endpointClass = getEndpointClass(endpoint);
+        Class<?> endpointClass = getEndpointClass(endpoint);
         ReflectionUtils.doWithMethods(endpointClass, new ReflectionUtils.MethodCallback() {
 
             public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
@@ -133,7 +133,7 @@ public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapp
      */
     protected void registerMethods(final String beanName) {
         Assert.hasText(beanName, "'beanName' must not be empty");
-        Class endpointClass = getApplicationContext().getType(beanName);
+        Class<?> endpointClass = getApplicationContext().getType(beanName);
         ReflectionUtils.doWithMethods(endpointClass, new ReflectionUtils.MethodCallback() {
 
             public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
@@ -165,7 +165,7 @@ public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapp
      * @param endpoint the bean instance (might be an AOP proxy)
      * @return the bean class to expose
      */
-    protected Class getEndpointClass(Object endpoint) {
+    protected Class<?> getEndpointClass(Object endpoint) {
         if (AopUtils.isJdkDynamicProxy(endpoint)) {
             throw new IllegalArgumentException(ClassUtils.getShortName(getClass()) +
                     " does not work with JDK Dynamic Proxies. " +

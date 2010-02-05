@@ -174,8 +174,8 @@ public abstract class SaajUtils {
      */
     public static int getSaajVersion(SOAPElement soapElement) {
         Assert.notNull(soapElement, "'soapElement' must not be null");
-        Class soapElementClass = soapElement.getClass();
-        Integer saajVersion = saajVersions.get(soapElementClass.getName());
+        String soapElementClassName = soapElement.getClass().getName();
+        Integer saajVersion = saajVersions.get(soapElementClassName);
         if (saajVersion == null) {
             if (isSaaj12(soapElement)) {
                 if (isSaaj13(soapElement)) {
@@ -187,7 +187,7 @@ public abstract class SaajUtils {
             } else {
                 saajVersion = SAAJ_11;
             }
-            saajVersions.put(soapElementClass.getName(), saajVersion);
+            saajVersions.put(soapElementClassName, saajVersion);
             if (logger.isTraceEnabled()) {
                 logger.trace("SOAPElement [" + soapElement.getClass().getName() + "] implements " +
                         getSaajVersionString(saajVersion));
@@ -294,7 +294,7 @@ public abstract class SaajUtils {
             return envelope.createName(qName.getLocalPart(), qNamePrefix, qName.getNamespaceURI());
         }
         else if (StringUtils.hasLength(qName.getNamespaceURI())) {
-            Iterator prefixes;
+            Iterator<?> prefixes;
             if (getSaajVersion(resolveElement) == SAAJ_11) {
                 prefixes = resolveElement.getNamespacePrefixes();
             }

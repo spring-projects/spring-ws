@@ -64,9 +64,8 @@ public abstract class AbstractAnnotationMethodEndpointMapping extends AbstractMe
                 BeanFactoryUtils.beanNamesForTypeIncludingAncestors(getApplicationContext(), Object.class) :
                 getApplicationContext().getBeanNamesForType(Object.class));
 
-        for (int i = 0; i < beanNames.length; i++) {
-            String beanName = beanNames[i];
-            Class endpointClass = getApplicationContext().getType(beanName);
+        for (String beanName : beanNames) {
+            Class<?> endpointClass = getApplicationContext().getType(beanName);
             if (endpointClass != null &&
                     AnnotationUtils.findAnnotation(endpointClass, getEndpointAnnotationType()) != null) {
                 registerMethods(beanName);

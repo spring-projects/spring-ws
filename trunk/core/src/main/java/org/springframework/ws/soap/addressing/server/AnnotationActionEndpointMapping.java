@@ -95,7 +95,7 @@ public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpoin
     @Override
     protected URI getEndpointAddress(Object endpoint) {
         MethodEndpoint methodEndpoint = (MethodEndpoint) endpoint;
-        Class endpointClass = methodEndpoint.getMethod().getDeclaringClass();
+        Class<?> endpointClass = methodEndpoint.getMethod().getDeclaringClass();
         Address address = AnnotationUtils.findAnnotation(endpointClass, Address.class);
         if (address != null && StringUtils.hasText(address.value())) {
             return getActionUri(address.value(), methodEndpoint);

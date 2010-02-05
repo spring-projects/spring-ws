@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,10 +30,10 @@ import org.springframework.util.StringUtils;
 public abstract class AbstractMessageContext implements MessageContext {
 
     /**
-     * Keys are <code>Strings</code>, values are <code>Objects</code>. Lazily initalized by
+     * Keys are <code>Strings</code>, values are <code>Objects</code>. Lazily initialized by
      * <code>getProperties()</code>.
      */
-    private Map properties;
+    private Map<String, Object> properties;
 
     public boolean containsProperty(String name) {
         return getProperties().containsKey(name);
@@ -55,9 +55,9 @@ public abstract class AbstractMessageContext implements MessageContext {
         getProperties().put(name, value);
     }
 
-    private Map getProperties() {
+    private Map<String, Object> getProperties() {
         if (properties == null) {
-            properties = new HashMap();
+            properties = new HashMap<String, Object>();
         }
         return properties;
     }

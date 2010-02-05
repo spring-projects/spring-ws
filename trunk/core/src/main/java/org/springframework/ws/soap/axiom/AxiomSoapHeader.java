@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,17 +20,17 @@ import java.util.Iterator;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 
+import org.springframework.ws.soap.SoapHeader;
+import org.springframework.ws.soap.SoapHeaderElement;
+import org.springframework.ws.soap.SoapHeaderException;
+import org.springframework.xml.namespace.QNameUtils;
+
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axiom.soap.SOAPHeaderBlock;
-
-import org.springframework.ws.soap.SoapHeader;
-import org.springframework.ws.soap.SoapHeaderElement;
-import org.springframework.ws.soap.SoapHeaderException;
-import org.springframework.xml.namespace.QNameUtils;
 
 /**
  * Axiom-specific version of <code>org.springframework.ws.soap.SoapHeader</code>.
@@ -72,7 +72,8 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
         }
     }
 
-    public Iterator examineMustUnderstandHeaderElements(String role) {
+    @SuppressWarnings("unchecked")
+    public Iterator<SoapHeaderElement> examineMustUnderstandHeaderElements(String role) {
         try {
             return new AxiomSoapHeaderElementIterator(getAxiomHeader().examineMustUnderstandHeaderBlocks(role));
         }
@@ -81,7 +82,8 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
         }
     }
 
-    public Iterator examineAllHeaderElements() {
+    @SuppressWarnings("unchecked")
+    public Iterator<SoapHeaderElement> examineAllHeaderElements() {
         try {
             return new AxiomSoapHeaderElementIterator(getAxiomHeader().examineAllHeaderBlocks());
         }
@@ -90,7 +92,8 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
         }
     }
 
-    public Iterator examineHeaderElements(QName name) throws SoapHeaderException {
+    @SuppressWarnings("unchecked")
+    public Iterator<SoapHeaderElement> examineHeaderElements(QName name) throws SoapHeaderException {
         try {
             return new AxiomSoapHeaderElementIterator(getAxiomHeader().getChildrenWithName(name));
         }
@@ -103,11 +106,11 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
         return (SOAPHeader) getAxiomElement();
     }
 
-    protected class AxiomSoapHeaderElementIterator implements Iterator {
+    protected class AxiomSoapHeaderElementIterator implements Iterator<SoapHeaderElement> {
 
-        private final Iterator axiomIterator;
+        private final Iterator<SOAPHeaderBlock> axiomIterator;
 
-        protected AxiomSoapHeaderElementIterator(Iterator axiomIterator) {
+        protected AxiomSoapHeaderElementIterator(Iterator<SOAPHeaderBlock> axiomIterator) {
             this.axiomIterator = axiomIterator;
         }
 
@@ -115,9 +118,9 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
             return axiomIterator.hasNext();
         }
 
-        public Object next() {
+        public SoapHeaderElement next() {
             try {
-                SOAPHeaderBlock axiomHeaderBlock = (SOAPHeaderBlock) axiomIterator.next();
+                SOAPHeaderBlock axiomHeaderBlock = axiomIterator.next();
                 return new AxiomSoapHeaderElement(axiomHeaderBlock, getAxiomFactory());
             }
             catch (OMException ex) {

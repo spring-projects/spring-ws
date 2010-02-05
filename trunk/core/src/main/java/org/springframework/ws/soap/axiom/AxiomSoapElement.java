@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,16 +22,16 @@ import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+import org.springframework.ws.soap.SoapElement;
+import org.springframework.xml.transform.StaxSource;
+
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAPFactory;
-
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-import org.springframework.ws.soap.SoapElement;
-import org.springframework.xml.transform.StaxSource;
 
 /**
  * Axiom-specific version of {@link SoapElement}.
@@ -102,10 +102,10 @@ class AxiomSoapElement implements SoapElement {
         }
     }
 
-    public final Iterator getAllAttributes() {
+    public final Iterator<QName> getAllAttributes() {
         try {
-            List results = new ArrayList();
-            for (Iterator iterator = getAxiomElement().getAllAttributes(); iterator.hasNext();) {
+            List<QName> results = new ArrayList<QName>();
+            for (Iterator<?> iterator = getAxiomElement().getAllAttributes(); iterator.hasNext();) {
                 OMAttribute attribute = (OMAttribute) iterator.next();
                 results.add(attribute.getQName());
             }

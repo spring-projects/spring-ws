@@ -191,10 +191,10 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
         MimeHeaders mimeHeaders = new MimeHeaders();
         if (inputStream instanceof TransportInputStream) {
             TransportInputStream transportInputStream = (TransportInputStream) inputStream;
-            for (Iterator headerNames = transportInputStream.getHeaderNames(); headerNames.hasNext();) {
-                String headerName = (String) headerNames.next();
-                for (Iterator headerValues = transportInputStream.getHeaders(headerName); headerValues.hasNext();) {
-                    String headerValue = (String) headerValues.next();
+            for (Iterator<String> headerNames = transportInputStream.getHeaderNames(); headerNames.hasNext();) {
+                String headerName = headerNames.next();
+                for (Iterator<String> headerValues = transportInputStream.getHeaders(headerName); headerValues.hasNext();) {
+                    String headerValue = headerValues.next();
                     StringTokenizer tokenizer = new StringTokenizer(headerValue, ",");
                     while (tokenizer.hasMoreTokens()) {
                         mimeHeaders.addHeader(headerName, tokenizer.nextToken().trim());

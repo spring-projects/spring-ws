@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,14 +44,14 @@ public abstract class AbstractActionMethodEndpointMapping extends AbstractAction
     protected void registerMethods(Object endpoint) {
         Assert.notNull(endpoint, "'endpoint' must not be null");
         Method[] methods = AopUtils.getTargetClass(endpoint).getMethods();
-        for (int i = 0; i < methods.length; i++) {
-            if (JdkVersion.isAtLeastJava15() && methods[i].isSynthetic() ||
-                    methods[i].getDeclaringClass().equals(Object.class)) {
+        for (Method method : methods) {
+            if (JdkVersion.isAtLeastJava15() && method.isSynthetic() ||
+                    method.getDeclaringClass().equals(Object.class)) {
                 continue;
             }
-            URI action = getActionForMethod(methods[i]);
+            URI action = getActionForMethod(method);
             if (action != null) {
-                registerEndpoint(action, new MethodEndpoint(endpoint, methods[i]));
+                registerEndpoint(action, new MethodEndpoint(endpoint, method));
             }
         }
     }
@@ -67,7 +67,7 @@ public abstract class AbstractActionMethodEndpointMapping extends AbstractAction
      * @param endpoint the bean instance (might be an AOP proxy)
      * @return the bean class to expose
      */
-    protected Class getEndpointClass(Object endpoint) {
+    protected Class<?> getEndpointClass(Object endpoint) {
         return AopUtils.getTargetClass(endpoint);
     }
 

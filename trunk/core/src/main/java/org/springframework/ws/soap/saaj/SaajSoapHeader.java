@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,7 @@
 
 package org.springframework.ws.soap.saaj;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
@@ -43,14 +41,14 @@ abstract class SaajSoapHeader extends SaajSoapElement implements SoapHeader {
         super(header);
     }
 
-    public Iterator examineAllHeaderElements() throws SoapHeaderException {
-        Iterator iterator = getImplementation().examineAllHeaderElements(getSaajHeader());
-        return createSaajSoapHeaderElementIterator(iterator);
+    public Iterator<SoapHeaderElement> examineAllHeaderElements() throws SoapHeaderException {
+        Iterator<SOAPHeaderElement> iterator = getImplementation().examineAllHeaderElements(getSaajHeader());
+        return new SaajSoapHeaderElementIterator(iterator);
     }
 
-    public Iterator examineMustUnderstandHeaderElements(String actorOrRole) throws SoapHeaderException {
-        Iterator iterator = getImplementation().examineMustUnderstandHeaderElements(getSaajHeader(), actorOrRole);
-        return createSaajSoapHeaderElementIterator(iterator);
+    public Iterator<SoapHeaderElement> examineMustUnderstandHeaderElements(String actorOrRole) throws SoapHeaderException {
+        Iterator<SOAPHeaderElement> iterator = getImplementation().examineMustUnderstandHeaderElements(getSaajHeader(), actorOrRole);
+        return new SaajSoapHeaderElementIterator(iterator);
     }
 
     public SoapHeaderElement addHeaderElement(QName name) throws SoapHeaderException {
@@ -65,9 +63,9 @@ abstract class SaajSoapHeader extends SaajSoapElement implements SoapHeader {
 
     public void removeHeaderElement(QName name) throws SoapHeaderException {
         try {
-            Iterator iterator = getImplementation().getChildElements(getSaajHeader(), name);
+            Iterator<SOAPElement> iterator = getImplementation().getChildElements(getSaajHeader(), name);
             if (iterator.hasNext()) {
-                SOAPElement element = (SOAPElement) iterator.next();
+                SOAPElement element = iterator.next();
                 element.detachNode();
             }
         }
@@ -84,22 +82,11 @@ abstract class SaajSoapHeader extends SaajSoapElement implements SoapHeader {
         return getImplementation().getResult(getSaajHeader());
     }
 
-    private Iterator createSaajSoapHeaderElementIterator(Iterator iterator) {
-        List result = new ArrayList();
-        while (iterator.hasNext()) {
-            Object o = iterator.next();
-            if (o instanceof SOAPHeaderElement) {
-                result.add(o);
-            }
-        }
-        return new SaajSoapHeaderElementIterator(result.iterator());
-    }
+    protected static class SaajSoapHeaderElementIterator implements Iterator<SoapHeaderElement> {
 
-    protected static class SaajSoapHeaderElementIterator implements Iterator {
+        private final Iterator<SOAPHeaderElement> iterator;
 
-        private final Iterator iterator;
-
-        protected SaajSoapHeaderElementIterator(Iterator iterator) {
+        protected SaajSoapHeaderElementIterator(Iterator<SOAPHeaderElement> iterator) {
             Assert.notNull(iterator, "iterator must not be null");
             this.iterator = iterator;
         }
@@ -108,8 +95,8 @@ abstract class SaajSoapHeader extends SaajSoapElement implements SoapHeader {
             return iterator.hasNext();
         }
 
-        public Object next() {
-            SOAPHeaderElement saajHeaderElement = (SOAPHeaderElement) iterator.next();
+        public SoapHeaderElement next() {
+            SOAPHeaderElement saajHeaderElement = iterator.next();
             return new SaajSoapHeaderElement(saajHeaderElement);
         }
 

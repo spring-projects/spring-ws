@@ -16,7 +16,8 @@
 
 package org.springframework.ws.soap.server.endpoint;
 
-import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.springframework.util.CollectionUtils;
@@ -30,7 +31,7 @@ import org.springframework.util.CollectionUtils;
  */
 public class SoapFaultMappingExceptionResolver extends AbstractSoapFaultDefinitionExceptionResolver {
 
-    private Properties exceptionMappings;
+    private Map<String, String> exceptionMappings = new LinkedHashMap<String, String>();
 
     /**
      * Set the mappings between exception class names and SOAP Faults. The exception class name can be a substring, with
@@ -46,7 +47,11 @@ public class SoapFaultMappingExceptionResolver extends AbstractSoapFaultDefiniti
      * @see SoapFaultDefinitionEditor
      */
     public void setExceptionMappings(Properties mappings) {
-        exceptionMappings = mappings;
+        for (Map.Entry<Object, Object> entry : mappings.entrySet()) {
+            if (entry.getKey() instanceof String && entry.getValue() instanceof String) {
+                exceptionMappings.put((String)entry.getKey(), (String)entry.getValue());
+            }
+        }
     }
 
     @Override
@@ -54,12 +59,11 @@ public class SoapFaultMappingExceptionResolver extends AbstractSoapFaultDefiniti
         if (!CollectionUtils.isEmpty(exceptionMappings)) {
             String definitionText = null;
             int deepest = Integer.MAX_VALUE;
-            for (Iterator iterator = exceptionMappings.keySet().iterator(); iterator.hasNext();) {
-                String exceptionMapping = (String) iterator.next();
+            for (String exceptionMapping : exceptionMappings.keySet()) {
                 int depth = getDepth(exceptionMapping, ex);
                 if (depth >= 0 && depth < deepest) {
                     deepest = depth;
-                    definitionText = exceptionMappings.getProperty(exceptionMapping);
+                    definitionText = exceptionMappings.get(exceptionMapping);
                 }
             }
             if (definitionText != null) {
@@ -81,14 +85,15 @@ public class SoapFaultMappingExceptionResolver extends AbstractSoapFaultDefiniti
         return getDepth(exceptionMapping, ex.getClass(), 0);
     }
 
-    private int getDepth(String exceptionMapping, Class exceptionClass, int depth) {
+    @SuppressWarnings("unchecked")
+    private int getDepth(String exceptionMapping, Class<? extends Exception> exceptionClass, int depth) {
         if (exceptionClass.getName().indexOf(exceptionMapping) != -1) {
             return depth;
         }
         if (exceptionClass.equals(Throwable.class)) {
             return -1;
         }
-        return getDepth(exceptionMapping, exceptionClass.getSuperclass(), depth + 1);
+        return getDepth(exceptionMapping, (Class<? extends Exception>) exceptionClass.getSuperclass(), depth + 1);
     }
 
 }

@@ -79,8 +79,8 @@ public abstract class AbstractValidatingMarshallingPayloadEndpoint extends Abstr
         Validator[] validators = getValidators();
         if (validators != null) {
             Errors errors = new BindException(requestObject, getRequestName());
-            for (int i = 0; i < validators.length; i++) {
-                ValidationUtils.invokeValidator(validators[i], requestObject, errors);
+            for (Validator validator : validators) {
+                ValidationUtils.invokeValidator(validator, requestObject, errors);
             }
             if (errors.hasErrors()) {
                 return onValidationErrors(messageContext, requestObject, errors);

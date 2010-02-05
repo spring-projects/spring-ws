@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.xml.namespace.QName;
-import javax.xml.soap.Node;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
@@ -66,18 +65,15 @@ class SaajSoap12Header extends SaajSoapHeader implements Soap12Header {
         }
     }
 
-    public Iterator examineHeaderElementsToProcess(String[] roles, boolean isUltimateDestination)
+    public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String[] roles, boolean isUltimateDestination)
             throws SoapHeaderException {
-        List result = new ArrayList();
-        Iterator iterator = getImplementation().examineAllHeaderElements(getSaajHeader());
+        List<SOAPHeaderElement> result = new ArrayList<SOAPHeaderElement>();
+        Iterator<SOAPHeaderElement> iterator = getImplementation().examineAllHeaderElements(getSaajHeader());
         while (iterator.hasNext()) {
-            Node node = (Node) iterator.next();
-            if (node instanceof SOAPHeaderElement) {
-                SOAPHeaderElement saajHeaderElement = (SOAPHeaderElement) node;
-                String headerRole = saajHeaderElement.getRole();
-                if (shouldProcess(headerRole, roles, isUltimateDestination)) {
-                    result.add(saajHeaderElement);
-                }
+            SOAPHeaderElement saajHeaderElement = iterator.next();
+            String headerRole = saajHeaderElement.getRole();
+            if (shouldProcess(headerRole, roles, isUltimateDestination)) {
+                result.add(saajHeaderElement);
             }
         }
         return new SaajSoapHeaderElementIterator(result.iterator());
@@ -98,8 +94,8 @@ class SaajSoap12Header extends SaajSoapHeader implements Soap12Header {
             return false;
         }
         if (!ObjectUtils.isEmpty(roles)) {
-            for (int i = 0; i < roles.length; i++) {
-                if (roles[i].equals(headerRole)) {
+            for (String role : roles) {
+                if (role.equals(headerRole)) {
                     return true;
                 }
             }

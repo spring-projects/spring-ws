@@ -19,7 +19,6 @@ package org.springframework.ws.soap.addressing.server;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -52,7 +51,7 @@ import org.springframework.beans.BeansException;
 public class SimpleActionEndpointMapping extends AbstractActionEndpointMapping {
 
     // contents will be copied over to endpointMap
-    private final Map actionMap = new HashMap();
+    private final Map<URI, Object> actionMap = new HashMap();
 
     private URI address;
 
@@ -73,10 +72,8 @@ public class SimpleActionEndpointMapping extends AbstractActionEndpointMapping {
      * @param actionMap map with action URIs as keys and beans as values
      * @see #setMappings
      */
-    public void setActionMap(Map actionMap) throws URISyntaxException {
-        Iterator it = actionMap.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry entry = (Map.Entry) it.next();
+    public void setActionMap(Map<?, Object> actionMap) throws URISyntaxException {
+        for (Map.Entry<?, Object> entry : actionMap.entrySet()) {
             URI action;
             if (entry.getKey() instanceof String) {
                 action = new URI((String) entry.getKey());
@@ -115,14 +112,13 @@ public class SimpleActionEndpointMapping extends AbstractActionEndpointMapping {
      * @throws BeansException        if an endpoint couldn't be registered
      * @throws IllegalStateException if there is a conflicting endpoint registered
      */
-    protected void registerEndpoints(Map actionMap) throws BeansException {
+    protected void registerEndpoints(Map<URI, Object> actionMap) throws BeansException {
         if (actionMap.isEmpty()) {
             logger.warn("Neither 'actionMap' nor 'mappings' set on SimpleActionEndpointMapping");
         }
         else {
-            for (Iterator iterator = actionMap.entrySet().iterator(); iterator.hasNext();) {
-                Map.Entry entry = (Map.Entry) iterator.next();
-                URI action = (URI) entry.getKey();
+            for (Map.Entry<URI, Object> entry : actionMap.entrySet()) {
+                URI action = entry.getKey();
                 Object endpoint = entry.getValue();
                 // Remove whitespace from endpoint bean name.
                 if (endpoint instanceof String) {

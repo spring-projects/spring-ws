@@ -24,6 +24,8 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Result;
 
+import org.springframework.xml.transform.StaxResult;
+
 import org.apache.axiom.om.OMDataSource;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
@@ -32,8 +34,6 @@ import org.apache.axiom.om.util.StAXUtils;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
 
-import org.springframework.xml.transform.StaxResult;
-
 /**
  * Non-caching payload in Axiom.
  *
@@ -41,6 +41,7 @@ import org.springframework.xml.transform.StaxResult;
  * @author Arjen Poutsma
  * @since 1.5.2
  */
+@SuppressWarnings("Since15")
 class NonCachingPayload extends Payload {
 
     private static final int BUF_SIZE = 1024;

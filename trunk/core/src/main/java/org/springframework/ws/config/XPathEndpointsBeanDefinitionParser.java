@@ -16,7 +16,6 @@
 
 package org.springframework.ws.config;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -24,6 +23,7 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractSimpleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
+
 import org.w3c.dom.Element;
 
 /**
@@ -49,11 +49,10 @@ class XPathEndpointsBeanDefinitionParser extends AbstractSimpleBeanDefinitionPar
 
     @Override
     protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder beanDefinitionBuilder) {
-        List namespaceElements = DomUtils.getChildElementsByTagName(element, "namespace");
+        List<Element> namespaceElements = DomUtils.getChildElementsByTagName(element, "namespace");
         if (!namespaceElements.isEmpty()) {
             Properties namespaces = new Properties();
-            for (Iterator iterator = namespaceElements.iterator(); iterator.hasNext();) {
-                Element namespaceElement = (Element) iterator.next();
+            for (Element namespaceElement : namespaceElements) {
                 String prefix = namespaceElement.getAttribute("prefix");
                 String uri = namespaceElement.getAttribute("uri");
                 namespaces.setProperty(prefix, uri);

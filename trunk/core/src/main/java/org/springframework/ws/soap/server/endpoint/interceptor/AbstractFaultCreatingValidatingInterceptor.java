@@ -28,6 +28,7 @@ import org.springframework.ws.soap.SoapFaultDetail;
 import org.springframework.ws.soap.SoapFaultDetailElement;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.xml.namespace.QNameUtils;
+
 import org.xml.sax.SAXParseException;
 
 /**
@@ -151,8 +152,8 @@ public abstract class AbstractFaultCreatingValidatingInterceptor extends Abstrac
     @Override
     protected boolean handleRequestValidationErrors(MessageContext messageContext, SAXParseException[] errors)
             throws TransformerException {
-        for (int i = 0; i < errors.length; i++) {
-            logger.warn("XML validation error on request: " + errors[i].getMessage());
+        for (SAXParseException error : errors) {
+            logger.warn("XML validation error on request: " + error.getMessage());
         }
         if (messageContext.getResponse() instanceof SoapMessage) {
             SoapMessage response = (SoapMessage) messageContext.getResponse();
@@ -160,9 +161,9 @@ public abstract class AbstractFaultCreatingValidatingInterceptor extends Abstrac
             SoapFault fault = body.addClientOrSenderFault(getFaultStringOrReason(), getFaultStringOrReasonLocale());
             if (getAddValidationErrorDetail()) {
                 SoapFaultDetail detail = fault.addFaultDetail();
-                for (int i = 0; i < errors.length; i++) {
+                for (SAXParseException error : errors) {
                     SoapFaultDetailElement detailElement = detail.addFaultDetailElement(getDetailElementName());
-                    detailElement.addText(errors[i].getMessage());
+                    detailElement.addText(error.getMessage());
                 }
             }
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package org.springframework.ws.soap.saaj.support;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.xml.soap.Name;
@@ -24,13 +23,13 @@ import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 /**
  * SAX <code>ContentHandler</code> that transforms callback calls to the creation of SAAJ <code>Node</code>s and
@@ -47,7 +46,7 @@ public class SaajContentHandler implements ContentHandler {
 
     private final SOAPEnvelope envelope;
 
-    private Map namespaces = new LinkedHashMap();
+    private Map<String, String> namespaces = new LinkedHashMap<String, String>();
 
     /**
      * Constructs a new instance of the <code>SaajContentHandler</code> that creates children of the given
@@ -89,9 +88,8 @@ public class SaajContentHandler implements ContentHandler {
                     }
                 }
             }
-            for (Iterator iterator = namespaces.keySet().iterator(); iterator.hasNext();) {
-                String namespacePrefix = (String) iterator.next();
-                String namespaceUri = (String) namespaces.get(namespacePrefix);
+            for (String namespacePrefix : namespaces.keySet()) {
+                String namespaceUri = namespaces.get(namespacePrefix);
                 if (!findParentNamespaceDeclaration(child, namespacePrefix, namespaceUri)) {
                     child.addNamespaceDeclaration(namespacePrefix, namespaceUri);
                 }

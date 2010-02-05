@@ -16,11 +16,8 @@
 
 package org.springframework.ws.wsdl.wsdl11.provider;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import javax.wsdl.Definition;
 import javax.wsdl.Fault;
 import javax.wsdl.Input;
@@ -33,6 +30,8 @@ import javax.wsdl.WSDLException;
 import javax.xml.namespace.QName;
 
 import org.springframework.util.Assert;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
 import org.apache.commons.logging.Log;
@@ -94,18 +93,12 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
     }
 
     private void createOperations(Definition definition, PortType portType) throws WSDLException {
-        // TODO: use MultivaluedMap
-        Map<String, List<Message>> operations = new HashMap<String, List<Message>>();
+        MultiValueMap<String, Message> operations = new LinkedMultiValueMap<String, Message>();
         for (Iterator<?> iterator = definition.getMessages().values().iterator(); iterator.hasNext();) {
             Message message = (Message) iterator.next();
             String operationName = getOperationName(message);
             if (StringUtils.hasText(operationName)) {
-                List<Message> messages = operations.get(operationName);
-                if (messages == null) {
-                    messages = new ArrayList<Message>();
-                    operations.put(operationName, messages);
-                }
-                messages.add(message);
+                operations.add(operationName,message);
             }
         }
         if (operations.isEmpty() && logger.isWarnEnabled()) {

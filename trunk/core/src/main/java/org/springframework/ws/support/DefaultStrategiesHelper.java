@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,7 +86,7 @@ public class DefaultStrategiesHelper {
      * @return a list of corresponding strategy objects
      * @throws BeansException if initialization failed
      */
-    public List getDefaultStrategies(Class strategyInterface) throws BeanInitializationException {
+    public <T> List<T> getDefaultStrategies(Class<T> strategyInterface) throws BeanInitializationException {
         return getDefaultStrategies(strategyInterface, null);
     }
 
@@ -101,23 +101,25 @@ public class DefaultStrategiesHelper {
      * @return a list of corresponding strategy objects
      * @throws BeansException if initialization failed
      */
-    public List getDefaultStrategies(Class strategyInterface, ApplicationContext applicationContext)
+    @SuppressWarnings("unchecked")
+    public <T> List<T> getDefaultStrategies(Class<T> strategyInterface, ApplicationContext applicationContext)
             throws BeanInitializationException {
         String key = strategyInterface.getName();
         try {
-            List result;
+            List<T> result;
             String value = defaultStrategies.getProperty(key);
             if (value != null) {
                 String[] classNames = StringUtils.commaDelimitedListToStringArray(value);
-                result = new ArrayList(classNames.length);
-                for (int i = 0; i < classNames.length; i++) {
-                    Class clazz = ClassUtils.forName(classNames[i]);
-                    Object strategy = instantiateBean(clazz, applicationContext);
+                result = new ArrayList<T>(classNames.length);
+                for (String className : classNames) {
+                    Class<T> clazz =
+                            (Class<T>) ClassUtils.forName(className, DefaultStrategiesHelper.class.getClassLoader());
+                    T strategy = instantiateBean(clazz, applicationContext);
                     result.add(strategy);
                 }
             }
             else {
-                result = Collections.EMPTY_LIST;
+                result = Collections.emptyList();
             }
             Collections.sort(result, new OrderComparator());
             return result;
@@ -129,8 +131,8 @@ public class DefaultStrategiesHelper {
     }
 
     /** Instantiates the given bean, simulating the standard bean lifecycle. */
-    private Object instantiateBean(Class clazz, ApplicationContext applicationContext) {
-        Object strategy = BeanUtils.instantiateClass(clazz);
+    private <T> T instantiateBean(Class<T> clazz, ApplicationContext applicationContext) {
+        T strategy = BeanUtils.instantiateClass(clazz);
         if (strategy instanceof BeanNameAware) {
             BeanNameAware beanNameAware = (BeanNameAware) strategy;
             beanNameAware.setBeanName(clazz.getName());
@@ -180,7 +182,7 @@ public class DefaultStrategiesHelper {
      * @throws BeansException if initialization failed
      * @see #getDefaultStrategies
      */
-    public Object getDefaultStrategy(Class strategyInterface) throws BeanInitializationException {
+    public <T> T getDefaultStrategy(Class<T> strategyInterface) throws BeanInitializationException {
         return getDefaultStrategy(strategyInterface, null);
     }
 
@@ -195,9 +197,9 @@ public class DefaultStrategiesHelper {
      * @return the corresponding strategy object
      * @throws BeansException if initialization failed
      */
-    public Object getDefaultStrategy(Class strategyInterface, ApplicationContext applicationContext)
+    public <T> T getDefaultStrategy(Class<T> strategyInterface, ApplicationContext applicationContext)
             throws BeanInitializationException {
-        List result = getDefaultStrategies(strategyInterface, applicationContext);
+        List<T> result = getDefaultStrategies(strategyInterface, applicationContext);
         if (result.size() != 1) {
             throw new BeanInitializationException(
                     "Could not find exactly 1 strategy for interface [" + strategyInterface.getName() + "]");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,13 @@ import java.util.Iterator;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 
+import org.springframework.ws.soap.SoapFaultDetail;
+import org.springframework.ws.soap.SoapFaultDetailElement;
+
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPFaultDetail;
-
-import org.springframework.ws.soap.SoapFaultDetail;
-import org.springframework.ws.soap.SoapFaultDetailElement;
 
 /**
  * Axiom-specific version of <code>org.springframework.ws.soap.SoapFaultDetail</code>.
@@ -51,7 +51,7 @@ class AxiomSoapFaultDetail extends AxiomSoapElement implements SoapFaultDetail {
 
     }
 
-    public Iterator getDetailEntries() {
+    public Iterator<SoapFaultDetailElement> getDetailEntries() {
         return new AxiomSoapFaultDetailElementIterator(getAxiomFaultDetail().getChildElements());
     }
 
@@ -63,11 +63,11 @@ class AxiomSoapFaultDetail extends AxiomSoapElement implements SoapFaultDetail {
         return (SOAPFaultDetail) getAxiomElement();
     }
 
-    private class AxiomSoapFaultDetailElementIterator implements Iterator {
+    private class AxiomSoapFaultDetailElementIterator implements Iterator<SoapFaultDetailElement> {
 
-        private final Iterator axiomIterator;
+        private final Iterator<OMElement> axiomIterator;
 
-        private AxiomSoapFaultDetailElementIterator(Iterator axiomIterator) {
+        private AxiomSoapFaultDetailElementIterator(Iterator<OMElement> axiomIterator) {
             this.axiomIterator = axiomIterator;
         }
 
@@ -75,9 +75,9 @@ class AxiomSoapFaultDetail extends AxiomSoapElement implements SoapFaultDetail {
             return axiomIterator.hasNext();
         }
 
-        public Object next() {
+        public SoapFaultDetailElement next() {
             try {
-                OMElement axiomElement = (OMElement) axiomIterator.next();
+                OMElement axiomElement = axiomIterator.next();
                 return new AxiomSoapFaultDetailElement(axiomElement, getAxiomFactory());
             }
             catch (OMException ex) {
