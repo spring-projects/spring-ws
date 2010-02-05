@@ -26,6 +26,10 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLInputFactory;
 
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+import org.springframework.xml.namespace.QNameUtils;
+
 import org.apache.axiom.om.OMContainer;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
@@ -40,10 +44,6 @@ import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
 
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-import org.springframework.xml.namespace.QNameUtils;
-
 /**
  * Collection of generic utility methods to work with Axiom. Includes conversion from <code>OMNamespace</code>s to
  * <code>QName</code>s.
@@ -54,6 +54,7 @@ import org.springframework.xml.namespace.QNameUtils;
  * @see javax.xml.namespace.QName
  * @since 1.0.0
  */
+@SuppressWarnings("Since15")
 public abstract class AxiomUtils {
 
     /**
@@ -103,7 +104,7 @@ public abstract class AxiomUtils {
 
     /** Removes the contents (i.e. children) of the container. */
     public static void removeContents(OMContainer container) {
-        for (Iterator iterator = container.getChildren(); iterator.hasNext();) {
+        for (Iterator<?> iterator = container.getChildren(); iterator.hasNext();) {
             OMNode child = (OMNode) iterator.next();
             child.detach();
         }

@@ -104,7 +104,7 @@ public class SoapMessageDispatcher extends MessageDispatcher {
         if (soapHeader == null) {
             return true;
         }
-        Iterator headerIterator;
+        Iterator<SoapHeaderElement> headerIterator;
         if (soapHeader instanceof Soap11Header) {
             headerIterator = ((Soap11Header) soapHeader).examineHeaderElementsToProcess(actorsOrRoles);
         }
@@ -112,9 +112,9 @@ public class SoapMessageDispatcher extends MessageDispatcher {
             headerIterator =
                     ((Soap12Header) soapHeader).examineHeaderElementsToProcess(actorsOrRoles, isUltimateReceiver);
         }
-        List notUnderstoodHeaderNames = new ArrayList();
+        List<QName> notUnderstoodHeaderNames = new ArrayList<QName>();
         while (headerIterator.hasNext()) {
-            SoapHeaderElement headerElement = (SoapHeaderElement) headerIterator.next();
+            SoapHeaderElement headerElement = headerIterator.next();
             QName headerName = headerElement.getName();
             if (headerElement.getMustUnderstand() && logger.isDebugEnabled()) {
                 logger.debug("Handling MustUnderstand header " + headerName);
@@ -146,8 +146,7 @@ public class SoapMessageDispatcher extends MessageDispatcher {
         if (ObjectUtils.isEmpty(interceptors)) {
             return false;
         }
-        for (int i = 0; i < interceptors.length; i++) {
-            EndpointInterceptor interceptor = interceptors[i];
+        for (EndpointInterceptor interceptor : interceptors) {
             if (interceptor instanceof SoapEndpointInterceptor &&
                     ((SoapEndpointInterceptor) interceptor).understands(headerElement)) {
                 return true;
@@ -157,7 +156,7 @@ public class SoapMessageDispatcher extends MessageDispatcher {
     }
 
     private void createMustUnderstandFault(SoapMessage soapResponse,
-                                           List notUnderstoodHeaderNames,
+                                           List<QName> notUnderstoodHeaderNames,
                                            String[] actorsOrRoles) {
         if (logger.isWarnEnabled()) {
             logger.warn("Could not handle mustUnderstand headers: " +
@@ -172,8 +171,7 @@ public class SoapMessageDispatcher extends MessageDispatcher {
         SoapHeader header = soapResponse.getSoapHeader();
         if (header instanceof Soap12Header) {
             Soap12Header soap12Header = (Soap12Header) header;
-            for (Iterator iterator = notUnderstoodHeaderNames.iterator(); iterator.hasNext();) {
-                QName headerName = (QName) iterator.next();
+            for (QName headerName : notUnderstoodHeaderNames) {
                 soap12Header.addNotUnderstoodHeaderElement(headerName);
             }
         }

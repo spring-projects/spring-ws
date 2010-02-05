@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,12 @@ import java.util.Iterator;
 import java.util.List;
 import javax.xml.namespace.QName;
 
+import org.springframework.util.ObjectUtils;
+import org.springframework.ws.soap.SoapHeaderElement;
+import org.springframework.ws.soap.SoapHeaderException;
+import org.springframework.ws.soap.soap12.Soap12Header;
+import org.springframework.xml.namespace.QNameUtils;
+
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMNamespace;
@@ -29,11 +35,6 @@ import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axiom.soap.SOAPHeaderBlock;
 import org.apache.axiom.soap.SOAPProcessingException;
-import org.springframework.util.ObjectUtils;
-import org.springframework.ws.soap.SoapHeaderElement;
-import org.springframework.ws.soap.SoapHeaderException;
-import org.springframework.ws.soap.soap12.Soap12Header;
-import org.springframework.xml.namespace.QNameUtils;
 
 /**
  * Axiom-specific version of <code>org.springframework.ws.soap.Soap12Header</code>.
@@ -64,10 +65,10 @@ class AxiomSoap12Header extends AxiomSoapHeader implements Soap12Header {
     public SoapHeaderElement addUpgradeHeaderElement(String[] supportedSoapUris) {
         try {
             SOAPHeaderBlock upgrade = getAxiomHeader().addHeaderBlock("Upgrade", getAxiomHeader().getNamespace());
-            for (int i = 0; i < supportedSoapUris.length; i++) {
+            for (String supportedSoapUri : supportedSoapUris) {
                 OMElement supportedEnvelope = getAxiomFactory()
                         .createOMElement("SupportedEnvelope", getAxiomHeader().getNamespace(), upgrade);
-                OMNamespace namespace = supportedEnvelope.declareNamespace(supportedSoapUris[i], "");
+                OMNamespace namespace = supportedEnvelope.declareNamespace(supportedSoapUri, "");
                 supportedEnvelope.addAttribute("qname", namespace.getPrefix() + ":Envelope", null);
             }
             return new AxiomSoapHeaderElement(upgrade, getAxiomFactory());
@@ -77,13 +78,14 @@ class AxiomSoap12Header extends AxiomSoapHeader implements Soap12Header {
         }
     }
 
-    public Iterator examineHeaderElementsToProcess(final String[] roles, final boolean isUltimateDestination)
+    @SuppressWarnings("unchecked")
+    public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(final String[] roles, final boolean isUltimateDestination)
             throws SoapHeaderException {
         RolePlayer rolePlayer = null;
         if (!ObjectUtils.isEmpty(roles)) {
             rolePlayer = new RolePlayer() {
 
-                public List getRoles() {
+                public List<?> getRoles() {
                     return Arrays.asList(roles);
                 }
 
@@ -92,7 +94,7 @@ class AxiomSoap12Header extends AxiomSoapHeader implements Soap12Header {
                 }
             };
         }
-        Iterator result = getAxiomHeader().getHeadersToProcess(rolePlayer);
+        Iterator<SOAPHeaderBlock> result = (Iterator<SOAPHeaderBlock>)getAxiomHeader().getHeadersToProcess(rolePlayer);
         return new AxiomSoapHeaderElementIterator(result);
     }
 }

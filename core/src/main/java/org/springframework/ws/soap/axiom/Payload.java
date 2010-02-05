@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,14 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import org.springframework.util.Assert;
+import org.springframework.ws.soap.axiom.support.AxiomUtils;
+import org.springframework.xml.transform.StaxSource;
+
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
-
-import org.springframework.util.Assert;
-import org.springframework.ws.soap.axiom.support.AxiomUtils;
-import org.springframework.xml.transform.StaxSource;
 
 /**
  * Abstract base class for payloads in Axiom. Comes in two flavors: {@link CachingPayload} and {@link
@@ -36,6 +36,7 @@ import org.springframework.xml.transform.StaxSource;
  * @author Arjen Poutsma
  * @since 1.5.2
  */
+@SuppressWarnings("Since15")
 abstract class Payload {
 
     private final SOAPBody axiomBody;

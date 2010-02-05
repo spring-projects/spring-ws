@@ -28,6 +28,8 @@ import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 
 import org.springframework.util.Assert;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 /**
  * Simple <code>javax.xml.namespace.NamespaceContext</code> implementation. Follows the standard
@@ -41,9 +43,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
 
     private Map<String, String> prefixToNamespaceUri = new HashMap<String, String>();
 
-    /** Maps a <code>String</code> namespaceUri to a <code>List</code> of prefixes */
-    // TODO: replace with MultiValuedMap
-    private Map<String, List<String>> namespaceUriToPrefixes = new HashMap<String, List<String>>();
+    private MultiValueMap<String, String> namespaceUriToPrefixes = new LinkedMultiValueMap<String, String>();
 
     public String getNamespaceURI(String prefix) {
         Assert.notNull(prefix, "prefix is null");

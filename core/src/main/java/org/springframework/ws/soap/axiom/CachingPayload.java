@@ -29,6 +29,7 @@ import org.apache.axiom.soap.SOAPFactory;
  * @author Arjen Poutsma
  * @since 1.5.2
  */
+@SuppressWarnings("Since15")
 class CachingPayload extends Payload {
 
     CachingPayload(SOAPBody axiomBody, SOAPFactory axiomFactory) {

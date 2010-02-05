@@ -174,8 +174,8 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         if (SaajUtils.getSaajVersion(saajMessage) >= SaajUtils.SAAJ_13) {
             SOAPPart saajPart = saajMessage.getSOAPPart();
             String[] contentTypes = saajPart.getMimeHeader(TransportConstants.HEADER_CONTENT_TYPE);
-            for (int i = 0; i < contentTypes.length; i++) {
-                if (contentTypes[i].indexOf(CONTENT_TYPE_XOP) != -1) {
+            for (String contentType : contentTypes) {
+                if (contentType.indexOf(CONTENT_TYPE_XOP) != -1) {
                     return true;
                 }
             }
@@ -220,8 +220,8 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         saajPart.setMimeHeader(TransportConstants.HEADER_CONTENT_TYPE, builder.toString());
     }
 
-    public Iterator getAttachments() throws AttachmentException {
-        Iterator iterator = getImplementation().getAttachments(getSaajMessage());
+    public Iterator<Attachment> getAttachments() throws AttachmentException {
+        Iterator<AttachmentPart> iterator = getImplementation().getAttachments(getSaajMessage());
         return new SaajAttachmentIterator(iterator);
     }
 
@@ -229,11 +229,11 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         Assert.hasLength(contentId, "contentId must not be empty");
         MimeHeaders mimeHeaders = new MimeHeaders();
         mimeHeaders.setHeader(TransportConstants.HEADER_CONTENT_ID, contentId);
-        Iterator iterator = getImplementation().getAttachment(getSaajMessage(), mimeHeaders);
+        Iterator<AttachmentPart> iterator = getImplementation().getAttachment(getSaajMessage(), mimeHeaders);
         if (!iterator.hasNext()) {
             return null;
         }
-        AttachmentPart saajAttachment = (AttachmentPart) iterator.next();
+        AttachmentPart saajAttachment = iterator.next();
         return new SaajAttachment(saajAttachment);
     }
 
@@ -285,11 +285,11 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         return builder.toString();
     }
 
-    private static class SaajAttachmentIterator implements Iterator {
+    private static class SaajAttachmentIterator implements Iterator<Attachment> {
 
-        private final Iterator saajIterator;
+        private final Iterator<AttachmentPart> saajIterator;
 
-        private SaajAttachmentIterator(Iterator saajIterator) {
+        private SaajAttachmentIterator(Iterator<AttachmentPart> saajIterator) {
             this.saajIterator = saajIterator;
         }
 
@@ -297,8 +297,8 @@ public class SaajSoapMessage extends AbstractSoapMessage {
             return saajIterator.hasNext();
         }
 
-        public Object next() {
-            AttachmentPart saajAttachment = (AttachmentPart) saajIterator.next();
+        public Attachment next() {
+            AttachmentPart saajAttachment = saajIterator.next();
             return new SaajAttachment(saajAttachment);
         }
 

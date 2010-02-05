@@ -17,7 +17,6 @@
 package org.springframework.ws.server.endpoint.mapping;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -42,10 +41,10 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 
     private boolean registerBeanNames = false;
 
-    private final Map endpointMap = new HashMap();
+    private final Map<String, Object> endpointMap = new HashMap<String, Object>();
 
     // holds mappings set via setEndpointMap and setMappings
-    private Map temporaryEndpointMap = new HashMap();
+    private Map<String, Object> temporaryEndpointMap = new HashMap<String, Object>();
 
     /**
      * Set whether to lazily initialize endpoints. Only applicable to singleton endpoints, as prototypes are always
@@ -74,7 +73,7 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
      *
      * @throws IllegalArgumentException if the endpoint is invalid
      */
-    public final void setEndpointMap(Map endpointMap) {
+    public final void setEndpointMap(Map<String, Object> endpointMap) {
         temporaryEndpointMap.putAll(endpointMap);
     }
 
@@ -83,7 +82,11 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
      * be qualified names, for instance, or mime headers.
      */
     public void setMappings(Properties mappings) {
-        temporaryEndpointMap.putAll(mappings);
+        for (Map.Entry<Object, Object> entry : mappings.entrySet()) {
+            if (entry.getKey() instanceof String) {
+                temporaryEndpointMap.put((String) entry.getKey(), entry.getValue());
+            }
+        }
     }
 
     /** Validates the given endpoint key. Should return <code>true</code> is the given string is valid. */
@@ -164,8 +167,7 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
      */
     @Override
     protected final void initApplicationContext() throws BeansException {
-        for (Iterator iter = temporaryEndpointMap.keySet().iterator(); iter.hasNext();) {
-            String key = (String) iter.next();
+        for (String key : temporaryEndpointMap.keySet()) {
             Object endpoint = temporaryEndpointMap.get(key);
             if (!validateLookupKey(key)) {
                 throw new ApplicationContextException("Invalid key [" + key + "] for endpoint [" + endpoint + "]");
@@ -178,14 +180,14 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
                 logger.debug("Looking for endpoint mappings in application context: [" + getApplicationContext() + "]");
             }
             String[] beanNames = getApplicationContext().getBeanDefinitionNames();
-            for (int i = 0; i < beanNames.length; i++) {
-                if (validateLookupKey(beanNames[i])) {
-                    registerEndpoint(beanNames[i], beanNames[i]);
+            for (String beanName : beanNames) {
+                if (validateLookupKey(beanName)) {
+                    registerEndpoint(beanName, beanName);
                 }
-                String[] aliases = getApplicationContext().getAliases(beanNames[i]);
-                for (int j = 0; j < aliases.length; j++) {
-                    if (validateLookupKey(aliases[j])) {
-                        registerEndpoint(aliases[j], beanNames[i]);
+                String[] aliases = getApplicationContext().getAliases(beanName);
+                for (String aliase : aliases) {
+                    if (validateLookupKey(aliase)) {
+                        registerEndpoint(aliase, beanName);
                     }
                 }
             }

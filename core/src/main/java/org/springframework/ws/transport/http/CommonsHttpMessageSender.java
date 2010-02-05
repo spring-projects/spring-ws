@@ -18,8 +18,7 @@ package org.springframework.ws.transport.http;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Iterator;
-import java.util.Properties;
+import java.util.Map;
 
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -166,9 +165,8 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
      * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setMaxConnectionsPerHost(org.apache.commons.httpclient.HostConfiguration,
      *      int)
      */
-    public void setMaxConnectionsPerHost(Properties maxConnectionsPerHost) throws URIException {
-        for (Iterator<?> iterator = maxConnectionsPerHost.keySet().iterator(); iterator.hasNext();) {
-            String host = (String) iterator.next();
+    public void setMaxConnectionsPerHost(Map<String, String> maxConnectionsPerHost) throws URIException {
+        for (String host : maxConnectionsPerHost.keySet()) {
             HostConfiguration hostConfiguration = new HostConfiguration();
             if ("*".equals(host)) {
                 hostConfiguration = HostConfiguration.ANY_HOST_CONFIGURATION;
@@ -184,7 +182,7 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
             else {
                 hostConfiguration.setHost(host);
             }
-            int maxHostConnections = Integer.parseInt(maxConnectionsPerHost.getProperty(host));
+            int maxHostConnections = Integer.parseInt(maxConnectionsPerHost.get(host));
             getHttpClient().getHttpConnectionManager().getParams()
                     .setMaxConnectionsPerHost(hostConfiguration, maxHostConnections);
         }

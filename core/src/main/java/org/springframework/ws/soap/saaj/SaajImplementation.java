@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,13 +74,13 @@ abstract class SaajImplementation {
     abstract String getAttributeValue(SOAPElement element, QName name) throws SOAPException;
 
     /** Returns all attributes as an iterator of QNames. * */
-    abstract Iterator getAllAttibutes(SOAPElement element);
+    abstract Iterator<QName> getAllAttributes(SOAPElement element);
 
     /** Removes the contents (i.e. children) of the element. */
     abstract void removeContents(SOAPElement element);
 
     /** Returns an iterator over all the child elements with the specified name. */
-    abstract Iterator getChildElements(SOAPElement element, QName name) throws SOAPException;
+    abstract Iterator<SOAPElement> getChildElements(SOAPElement element, QName name) throws SOAPException;
 
     /** Declares a namespace. */
     abstract void addNamespaceDeclaration(SOAPElement element, String prefix, String namespaceUri) throws SOAPException;
@@ -99,10 +99,10 @@ abstract class SaajImplementation {
     abstract MimeHeaders getMimeHeaders(SOAPMessage message);
 
     /** Returns an iteration over all attachments in the message. */
-    abstract Iterator getAttachments(SOAPMessage message);
+    abstract Iterator<AttachmentPart> getAttachments(SOAPMessage message);
 
     /** Returns an iteration over all attachments in the message with the given headers. */
-    abstract Iterator getAttachment(SOAPMessage message, MimeHeaders mimeHeaders);
+    abstract Iterator<AttachmentPart> getAttachment(SOAPMessage message, MimeHeaders mimeHeaders);
 
     /** Adds an attachment to the given message. */
     abstract AttachmentPart addAttachmentPart(SOAPMessage message, DataHandler dataHandler);
@@ -125,10 +125,10 @@ abstract class SaajImplementation {
     abstract SOAPHeaderElement addHeaderElement(SOAPHeader header, QName name) throws SOAPException;
 
     /** Returns all header elements. */
-    abstract Iterator examineAllHeaderElements(SOAPHeader header);
+    abstract Iterator<SOAPHeaderElement> examineAllHeaderElements(SOAPHeader header);
 
     /** Returns all header elements for which the must understand attribute is true, given the actor or role. */
-    abstract Iterator examineMustUnderstandHeaderElements(SOAPHeader header, String actorOrRole);
+    abstract Iterator<SOAPHeaderElement> examineMustUnderstandHeaderElements(SOAPHeader header, String actorOrRole);
 
     /** Adds a not understood header element to the given header. */
     abstract SOAPHeaderElement addNotUnderstoodHeaderElement(SOAPHeader header, QName name) throws SOAPException;
@@ -201,7 +201,7 @@ abstract class SaajImplementation {
     abstract void setFaultRole(SOAPFault fault, String role) throws SOAPException;
 
     /** Returns the fault sub code. */
-    abstract Iterator getFaultSubcodes(SOAPFault fault);
+    abstract Iterator<QName> getFaultSubcodes(SOAPFault fault);
 
     /** Adds a fault sub code. */
     abstract void appendFaultSubcode(SOAPFault fault, QName subcode) throws SOAPException;
@@ -226,7 +226,7 @@ abstract class SaajImplementation {
     abstract DetailEntry addDetailEntry(Detail detail, QName name) throws SOAPException;
 
     /** Returns an iteration over all detail entries. */
-    abstract Iterator getDetailEntries(Detail detail);
+    abstract Iterator<DetailEntry> getDetailEntries(Detail detail);
 
     /*
      * DetailEntry

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,11 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
+import org.springframework.core.NestedRuntimeException;
+import org.springframework.xml.namespace.QNameUtils;
+import org.springframework.xml.transform.TransformerObjectSupport;
+import org.springframework.xml.transform.TraxUtils;
+
 import nu.xom.Attribute;
 import nu.xom.Builder;
 import nu.xom.Document;
@@ -45,11 +50,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-import org.springframework.core.NestedRuntimeException;
-import org.springframework.xml.namespace.QNameUtils;
-import org.springframework.xml.transform.TransformerObjectSupport;
-import org.springframework.xml.transform.TraxUtils;
-
 /**
  * Abstract base class for endpoints that handle the message payload as XOM elements. Offers the message payload as a
  * XOM <code>Element</code>, and allows subclasses to create a response by returning an <code>Element</code>.
@@ -61,6 +61,7 @@ import org.springframework.xml.transform.TraxUtils;
  * @see Element
  * @since 1.0.0
  */
+@SuppressWarnings("Since15")
 public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSupport implements PayloadEndpoint {
 
     public final Source invoke(Source request) throws Exception {

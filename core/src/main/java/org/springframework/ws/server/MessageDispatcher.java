@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
@@ -51,6 +47,9 @@ import org.springframework.ws.server.endpoint.adapter.PayloadMethodEndpointAdapt
 import org.springframework.ws.soap.server.SoapMessageDispatcher;
 import org.springframework.ws.support.DefaultStrategiesHelper;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Central dispatcher for use within Spring-WS, dispatching Web service messages to registered endpoints.
@@ -103,13 +102,13 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
     private String beanName;
 
     /** List of EndpointAdapters used in this dispatcher. */
-    private List endpointAdapters;
+    private List<EndpointAdapter> endpointAdapters;
 
     /** List of EndpointExceptionResolvers used in this dispatcher. */
-    private List endpointExceptionResolvers;
+    private List<EndpointExceptionResolver> endpointExceptionResolvers;
 
     /** List of EndpointMappings used in this dispatcher. */
-    private List endpointMappings;
+    private List<EndpointMapping> endpointMappings;
 
     /** Initializes a new instance of the <code>MessageDispatcher</code>. */
     public MessageDispatcher() {
@@ -118,32 +117,32 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
     }
 
     /** Returns the <code>EndpointAdapter</code>s to use by this <code>MessageDispatcher</code>. */
-    public List getEndpointAdapters() {
+    public List<EndpointAdapter> getEndpointAdapters() {
         return endpointAdapters;
     }
 
     /** Sets the <code>EndpointAdapter</code>s to use by this <code>MessageDispatcher</code>. */
-    public void setEndpointAdapters(List endpointAdapters) {
+    public void setEndpointAdapters(List<EndpointAdapter> endpointAdapters) {
         this.endpointAdapters = endpointAdapters;
     }
 
     /** Returns the <code>EndpointExceptionResolver</code>s to use by this <code>MessageDispatcher</code>. */
-    public List getEndpointExceptionResolvers() {
+    public List<EndpointExceptionResolver> getEndpointExceptionResolvers() {
         return endpointExceptionResolvers;
     }
 
     /** Sets the <code>EndpointExceptionResolver</code>s to use by this <code>MessageDispatcher</code>. */
-    public void setEndpointExceptionResolvers(List endpointExceptionResolvers) {
+    public void setEndpointExceptionResolvers(List<EndpointExceptionResolver> endpointExceptionResolvers) {
         this.endpointExceptionResolvers = endpointExceptionResolvers;
     }
 
     /** Returns the <code>EndpointMapping</code>s to use by this <code>MessageDispatcher</code>. */
-    public List getEndpointMappings() {
+    public List<EndpointMapping> getEndpointMappings() {
         return endpointMappings;
     }
 
     /** Sets the <code>EndpointMapping</code>s to use by this <code>MessageDispatcher</code>. */
-    public void setEndpointMappings(List endpointMappings) {
+    public void setEndpointMappings(List<EndpointMapping> endpointMappings) {
         this.endpointMappings = endpointMappings;
     }
 
@@ -250,8 +249,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
      * @return the <code>EndpointInvocationChain</code>, or <code>null</code> if no endpoint could be found.
      */
     protected EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception {
-        for (Iterator iterator = endpointMappings.iterator(); iterator.hasNext();) {
-            EndpointMapping endpointMapping = (EndpointMapping) iterator.next();
+        for (EndpointMapping endpointMapping : getEndpointMappings()) {
             EndpointInvocationChain endpoint = endpointMapping.getEndpoint(messageContext);
             if (endpoint != null) {
                 if (logger.isDebugEnabled()) {
@@ -274,8 +272,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
      * @return the adapter
      */
     protected EndpointAdapter getEndpointAdapter(Object endpoint) {
-        for (Iterator iterator = endpointAdapters.iterator(); iterator.hasNext();) {
-            EndpointAdapter endpointAdapter = (EndpointAdapter) iterator.next();
+        for (EndpointAdapter endpointAdapter : getEndpointAdapters()) {
             if (logger.isDebugEnabled()) {
                 logger.debug("Testing endpoint adapter [" + endpointAdapter + "]");
             }
@@ -313,8 +310,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
      */
     protected void processEndpointException(MessageContext messageContext, Object endpoint, Exception ex)
             throws Exception {
-        for (Iterator iterator = endpointExceptionResolvers.iterator(); iterator.hasNext();) {
-            EndpointExceptionResolver resolver = (EndpointExceptionResolver) iterator.next();
+        for (EndpointExceptionResolver resolver : getEndpointExceptionResolvers()) {
             if (resolver.resolveException(messageContext, endpoint, ex)) {
                 if (logger.isDebugEnabled()) {
                     logger.debug("Endpoint invocation resulted in exception - responding with Fault", ex);
@@ -368,7 +364,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
      */
     private void initEndpointAdapters(ApplicationContext applicationContext) throws BeansException {
         if (endpointAdapters == null) {
-            Map matchingBeans = BeanFactoryUtils
+            Map<String, EndpointAdapter> matchingBeans = BeanFactoryUtils
                     .beansOfTypeIncludingAncestors(applicationContext, EndpointAdapter.class, true, false);
             if (!matchingBeans.isEmpty()) {
                 endpointAdapters = new ArrayList(matchingBeans.values());
@@ -392,7 +388,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
      */
     private void initEndpointExceptionResolvers(ApplicationContext applicationContext) throws BeansException {
         if (endpointExceptionResolvers == null) {
-            Map matchingBeans = BeanFactoryUtils
+            Map<String, EndpointExceptionResolver> matchingBeans = BeanFactoryUtils
                     .beansOfTypeIncludingAncestors(applicationContext, EndpointExceptionResolver.class, true, false);
             if (!matchingBeans.isEmpty()) {
                 endpointExceptionResolvers = new ArrayList(matchingBeans.values());
@@ -416,7 +412,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
      */
     private void initEndpointMappings(ApplicationContext applicationContext) throws BeansException {
         if (endpointMappings == null) {
-            Map matchingBeans = BeanFactoryUtils
+            Map<String, EndpointMapping> matchingBeans = BeanFactoryUtils
                     .beansOfTypeIncludingAncestors(applicationContext, EndpointMapping.class, true, false);
             if (!matchingBeans.isEmpty()) {
                 endpointMappings = new ArrayList(matchingBeans.values());

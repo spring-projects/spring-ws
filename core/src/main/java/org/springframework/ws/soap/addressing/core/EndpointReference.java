@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,9 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 
-import org.w3c.dom.Node;
-
 import org.springframework.util.Assert;
+
+import org.w3c.dom.Node;
 
 /**
  * Represents an Endpoint Reference, as defined in the WS-Addressing specification.
@@ -38,9 +38,9 @@ public final class EndpointReference implements Serializable {
 
     private final URI address;
 
-    private final List referenceProperties;
+    private final List<Node> referenceProperties;
 
-    private final List referenceParameters;
+    private final List<Node> referenceParameters;
 
     /**
      * Creates a new instance of the {@link EndpointReference} class with the given address. The reference parameters
@@ -51,8 +51,8 @@ public final class EndpointReference implements Serializable {
     public EndpointReference(URI address) {
         Assert.notNull(address, "address must not be null");
         this.address = address;
-        this.referenceParameters = Collections.EMPTY_LIST;
-        this.referenceProperties = Collections.EMPTY_LIST;
+        this.referenceParameters = Collections.emptyList();
+        this.referenceProperties = Collections.emptyList();
     }
 
     /**
@@ -63,7 +63,7 @@ public final class EndpointReference implements Serializable {
      * @param referenceProperties the reference properties, as a list of {@link Node}
      * @param referenceParameters the reference parameters, as a list of {@link Node}
      */
-    public EndpointReference(URI address, List referenceProperties, List referenceParameters) {
+    public EndpointReference(URI address, List<Node> referenceProperties, List<Node> referenceParameters) {
         Assert.notNull(address, "address must not be null");
         Assert.notNull(referenceProperties, "referenceProperties must not be null");
         Assert.notNull(referenceParameters, "referenceParameters must not be null");
@@ -78,12 +78,12 @@ public final class EndpointReference implements Serializable {
     }
 
     /** Returns the reference properties of the endpoint, as a list of {@link Node} objects. */
-    public List getReferenceProperties() {
+    public List<Node> getReferenceProperties() {
         return referenceProperties;
     }
 
     /** Returns the reference parameters of the endpoint, as a list of {@link Node} objects. */
-    public List getReferenceParameters() {
+    public List<Node> getReferenceParameters() {
         return referenceParameters;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,6 @@ package org.springframework.ws.soap.addressing.server;
 import java.io.IOException;
 import java.net.URI;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapHeaderElement;
@@ -33,6 +30,9 @@ import org.springframework.ws.soap.addressing.version.AddressingVersion;
 import org.springframework.ws.soap.server.SoapEndpointInterceptor;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * {@link SoapEndpointInterceptor} implementation that deals with WS-Addressing headers. Stateful, and instatiated by
@@ -147,12 +147,12 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
         }
 
         boolean supported = false;
-        for (int i = 0; i < messageSenders.length; i++) {
-            if (messageSenders[i].supports(replyEpr.getAddress())) {
+        for (WebServiceMessageSender messageSender : messageSenders) {
+            if (messageSender.supports(replyEpr.getAddress())) {
                 supported = true;
                 WebServiceConnection connection = null;
                 try {
-                    connection = messageSenders[i].createConnection(replyEpr.getAddress());
+                    connection = messageSender.createConnection(replyEpr.getAddress());
                     connection.send(messageContext.getResponse());
                     break;
                 }

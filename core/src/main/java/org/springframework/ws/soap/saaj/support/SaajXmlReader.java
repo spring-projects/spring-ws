@@ -22,15 +22,15 @@ import javax.xml.soap.Node;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.Text;
 
+import org.springframework.util.StringUtils;
+import org.springframework.xml.sax.AbstractXmlReader;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.helpers.AttributesImpl;
-
-import org.springframework.util.StringUtils;
-import org.springframework.xml.sax.AbstractXmlReader;
 
 /**
  * SAX <code>XMLReader</code> that reads from a SAAJ <code>Node</code>. Consumes <code>XMLEvents</code> from an
@@ -136,7 +136,7 @@ public class SaajXmlReader extends AbstractXmlReader {
         Name elementName = element.getElementName();
         if (getContentHandler() != null) {
             if (namespacesFeature) {
-                for (Iterator iterator = element.getNamespacePrefixes(); iterator.hasNext();) {
+                for (Iterator<?> iterator = element.getNamespacePrefixes(); iterator.hasNext();) {
                     String prefix = (String) iterator.next();
                     String namespaceUri = element.getNamespaceURI(prefix);
                     getContentHandler().startPrefixMapping(prefix, namespaceUri);
@@ -149,7 +149,7 @@ public class SaajXmlReader extends AbstractXmlReader {
                 getContentHandler().startElement("", "", elementName.getQualifiedName(), getAttributes(element));
             }
         }
-        for (Iterator iterator = element.getChildElements(); iterator.hasNext();) {
+        for (Iterator<?> iterator = element.getChildElements(); iterator.hasNext();) {
             Node child = (Node) iterator.next();
             handleNode(child);
         }
@@ -157,7 +157,7 @@ public class SaajXmlReader extends AbstractXmlReader {
             if (namespacesFeature) {
                 getContentHandler()
                         .endElement(elementName.getURI(), elementName.getLocalName(), elementName.getQualifiedName());
-                for (Iterator iterator = element.getNamespacePrefixes(); iterator.hasNext();) {
+                for (Iterator<?> iterator = element.getNamespacePrefixes(); iterator.hasNext();) {
                     String prefix = (String) iterator.next();
                     getContentHandler().endPrefixMapping(prefix);
                 }
@@ -178,7 +178,7 @@ public class SaajXmlReader extends AbstractXmlReader {
     private Attributes getAttributes(SOAPElement element) {
         AttributesImpl attributes = new AttributesImpl();
 
-        for (Iterator iterator = element.getAllAttributes(); iterator.hasNext();) {
+        for (Iterator<?> iterator = element.getAllAttributes(); iterator.hasNext();) {
             Name attributeName = (Name) iterator.next();
             String namespace = attributeName.getURI();
             if (namespace == null || !namespacesFeature) {
@@ -189,7 +189,7 @@ public class SaajXmlReader extends AbstractXmlReader {
                     attributeValue);
         }
         if (namespacePrefixesFeature) {
-            for (Iterator iterator = element.getNamespacePrefixes(); iterator.hasNext();) {
+            for (Iterator<?> iterator = element.getNamespacePrefixes(); iterator.hasNext();) {
                 String prefix = (String) iterator.next();
                 String namespaceUri = element.getNamespaceURI(prefix);
                 String qName;

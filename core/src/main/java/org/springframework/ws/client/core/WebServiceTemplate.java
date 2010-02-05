@@ -312,20 +312,17 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     }
 
     private void initMessageFactory(DefaultStrategiesHelper helper) throws BeanInitializationException {
-        WebServiceMessageFactory messageFactory =
-                (WebServiceMessageFactory) helper.getDefaultStrategy(WebServiceMessageFactory.class);
+        WebServiceMessageFactory messageFactory = helper.getDefaultStrategy(WebServiceMessageFactory.class);
         setMessageFactory(messageFactory);
     }
 
     private void initMessageSenders(DefaultStrategiesHelper helper) {
-        List messageSenders = helper.getDefaultStrategies(WebServiceMessageSender.class);
-        setMessageSenders(
-                (WebServiceMessageSender[]) messageSenders.toArray(new WebServiceMessageSender[messageSenders.size()]));
+        List<WebServiceMessageSender> messageSenders = helper.getDefaultStrategies(WebServiceMessageSender.class);
+        setMessageSenders(messageSenders.toArray(new WebServiceMessageSender[messageSenders.size()]));
     }
 
     private void initFaultMessageResolver(DefaultStrategiesHelper helper) throws BeanInitializationException {
-        FaultMessageResolver faultMessageResolver =
-                (FaultMessageResolver) helper.getDefaultStrategy(FaultMessageResolver.class);
+        FaultMessageResolver faultMessageResolver = helper.getDefaultStrategy(FaultMessageResolver.class);
         setFaultMessageResolver(faultMessageResolver);
     }
 

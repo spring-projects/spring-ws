@@ -109,7 +109,8 @@ class Saaj13Implementation extends SaajImplementation {
     }
 
     @Override
-    public Iterator getFaultSubcodes(SOAPFault fault) {
+    @SuppressWarnings("unchecked")
+    public Iterator<QName> getFaultSubcodes(SOAPFault fault) {
         return fault.getFaultSubcodes();
     }
 
@@ -184,7 +185,8 @@ class Saaj13Implementation extends SaajImplementation {
     }
 
     @Override
-    public Iterator getAllAttibutes(SOAPElement element) {
+    @SuppressWarnings("unchecked")
+    public Iterator<QName> getAllAttributes(SOAPElement element) {
         return element.getAllAttributesAsQNames();
     }
 
@@ -204,12 +206,14 @@ class Saaj13Implementation extends SaajImplementation {
     }
 
     @Override
-    public Iterator examineAllHeaderElements(SOAPHeader header) {
+    @SuppressWarnings("unchecked")
+    public Iterator<SOAPHeaderElement> examineAllHeaderElements(SOAPHeader header) {
         return header.examineAllHeaderElements();
     }
 
     @Override
-    public Iterator examineMustUnderstandHeaderElements(SOAPHeader header, String actorOrRole) {
+    @SuppressWarnings("unchecked")
+    public Iterator<SOAPHeaderElement> examineMustUnderstandHeaderElements(SOAPHeader header, String actorOrRole) {
         return header.examineMustUnderstandHeaderElements(actorOrRole);
     }
 
@@ -279,13 +283,14 @@ class Saaj13Implementation extends SaajImplementation {
     }
 
     @Override
-    public Iterator getDetailEntries(Detail detail) {
+    @SuppressWarnings("unchecked")
+    public Iterator<DetailEntry> getDetailEntries(Detail detail) {
         return detail.getDetailEntries();
     }
 
     @Override
     public SOAPElement getFirstBodyElement(SOAPBody body) {
-        for (Iterator iterator = body.getChildElements(); iterator.hasNext();) {
+        for (Iterator<?> iterator = body.getChildElements(); iterator.hasNext();) {
             Object child = iterator.next();
             if (child instanceof SOAPElement) {
                 return (SOAPElement) child;
@@ -300,7 +305,8 @@ class Saaj13Implementation extends SaajImplementation {
     }
 
     @Override
-    Iterator getChildElements(SOAPElement element, QName name) throws SOAPException {
+    @SuppressWarnings("unchecked")
+    Iterator<SOAPElement> getChildElements(SOAPElement element, QName name) throws SOAPException {
         return element.getChildElements(name);
     }
 
@@ -331,7 +337,7 @@ class Saaj13Implementation extends SaajImplementation {
                     message.saveChanges();
                 }
             }
-            for (Iterator iterator = headers.getAllHeaders(); iterator.hasNext();) {
+            for (Iterator<?> iterator = headers.getAllHeaders(); iterator.hasNext();) {
                 MimeHeader mimeHeader = (MimeHeader) iterator.next();
                 transportOutputStream.addHeader(mimeHeader.getName(), mimeHeader.getValue());
             }
@@ -346,12 +352,14 @@ class Saaj13Implementation extends SaajImplementation {
     }
 
     @Override
-    public Iterator getAttachments(SOAPMessage message) {
+    @SuppressWarnings("unchecked")
+    public Iterator<AttachmentPart> getAttachments(SOAPMessage message) {
         return message.getAttachments();
     }
 
     @Override
-    public Iterator getAttachment(SOAPMessage message, MimeHeaders mimeHeaders) {
+    @SuppressWarnings("unchecked")
+    public Iterator<AttachmentPart> getAttachment(SOAPMessage message, MimeHeaders mimeHeaders) {
         return message.getAttachments(mimeHeaders);
     }
 

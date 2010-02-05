@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,11 +27,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-
 import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.TraxUtils;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 /**
  * Helper class for determining the root qualified name of a Web Service payload.
@@ -39,6 +39,7 @@ import org.springframework.xml.transform.TraxUtils;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
+@SuppressWarnings("Since15")
 public abstract class PayloadRootUtils {
 
     private PayloadRootUtils() {
@@ -53,7 +54,7 @@ public abstract class PayloadRootUtils {
      * @return the root element, or <code>null</code> if <code>source</code> is <code>null</code>
      */
     public static QName getPayloadRootQName(Source source, TransformerFactory transformerFactory)
-            throws TransformerException, XMLStreamException {
+            throws TransformerException {
         if (source == null) {
             return null;
         }
@@ -72,7 +73,12 @@ public abstract class PayloadRootUtils {
             XMLStreamReader streamReader = TraxUtils.getXMLStreamReader(source);
             if (streamReader != null) {
                 if (streamReader.getEventType() == XMLStreamConstants.START_DOCUMENT) {
-                    streamReader.nextTag();
+                    try {
+                        streamReader.nextTag();
+                    }
+                    catch (XMLStreamException ex) {
+                        throw new IllegalStateException("Could not read next tag: " + ex.getMessage(), ex);
+                    }
                 }
                 if (streamReader.getEventType() == XMLStreamConstants.START_ELEMENT ||
                         streamReader.getEventType() == XMLStreamConstants.END_ELEMENT) {

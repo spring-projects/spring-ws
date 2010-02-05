@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,8 +55,8 @@ class SaajSoapFaultDetail extends SaajSoapElement implements SoapFaultDetail {
         }
     }
 
-    public Iterator getDetailEntries() {
-        Iterator iterator = getImplementation().getDetailEntries(getSaajDetail());
+    public Iterator<SoapFaultDetailElement> getDetailEntries() {
+        Iterator<DetailEntry> iterator = getImplementation().getDetailEntries(getSaajDetail());
         return new SaajSoapFaultDetailElementIterator(iterator);
     }
 
@@ -64,11 +64,11 @@ class SaajSoapFaultDetail extends SaajSoapElement implements SoapFaultDetail {
         return (Detail) getSaajElement();
     }
 
-    private static class SaajSoapFaultDetailElementIterator implements Iterator {
+    private static class SaajSoapFaultDetailElementIterator implements Iterator<SoapFaultDetailElement> {
 
-        private final Iterator iterator;
+        private final Iterator<DetailEntry> iterator;
 
-        private SaajSoapFaultDetailElementIterator(Iterator iterator) {
+        private SaajSoapFaultDetailElementIterator(Iterator<DetailEntry> iterator) {
             Assert.notNull(iterator, "No iterator given");
             this.iterator = iterator;
         }
@@ -77,8 +77,8 @@ class SaajSoapFaultDetail extends SaajSoapElement implements SoapFaultDetail {
             return iterator.hasNext();
         }
 
-        public Object next() {
-            DetailEntry saajDetailEntry = (DetailEntry) iterator.next();
+        public SoapFaultDetailElement next() {
+            DetailEntry saajDetailEntry = iterator.next();
             return new SaajSoapFaultDetailElement(saajDetailEntry);
         }
 

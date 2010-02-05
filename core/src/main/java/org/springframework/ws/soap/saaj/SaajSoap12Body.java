@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,8 +64,8 @@ class SaajSoap12Body extends SaajSoapBody implements Soap12Body {
     public Soap12Fault addDataEncodingUnknownFault(QName[] subcodes, String reason, Locale locale) {
         QName name = new QName(SoapVersion.SOAP_12.getEnvelopeNamespaceUri(), "DataEncodingUnknown");
         Soap12Fault fault = addFault(name, reason, locale);
-        for (int i = 0; i < subcodes.length; i++) {
-            fault.addFaultSubcode(subcodes[i]);
+        for (QName subcode : subcodes) {
+            fault.addFaultSubcode(subcode);
         }
         return fault;
     }

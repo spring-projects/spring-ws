@@ -55,6 +55,7 @@ import org.apache.axiom.soap.SOAPProcessingException;
  * @see SOAPMessage
  * @since 1.0.0
  */
+@SuppressWarnings("Since15")
 public class AxiomSoapMessage extends AbstractSoapMessage {
 
     private static final String EMPTY_SOAP_ACTION = "\"\"";
@@ -210,7 +211,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         return dataHandler != null ? new AxiomAttachment(contentId, dataHandler) : null;
     }
 
-    public Iterator getAttachments() {
+    public Iterator<Attachment> getAttachments() {
         return new AxiomAttachmentIterator();
     }
 
@@ -321,10 +322,11 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
         return builder.toString();
     }
 
-    private class AxiomAttachmentIterator implements Iterator {
+    private class AxiomAttachmentIterator implements Iterator<Attachment> {
 
-        private final Iterator iterator;
+        private final Iterator<String> iterator;
 
+        @SuppressWarnings("unchecked")
         private AxiomAttachmentIterator() {
             iterator = attachments.getContentIDSet().iterator();
         }
@@ -333,8 +335,8 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
             return iterator.hasNext();
         }
 
-        public Object next() {
-            String contentId = (String) iterator.next();
+        public Attachment next() {
+            String contentId = iterator.next();
             DataHandler dataHandler = attachments.getDataHandler(contentId);
             return new AxiomAttachment(contentId, dataHandler);
         }

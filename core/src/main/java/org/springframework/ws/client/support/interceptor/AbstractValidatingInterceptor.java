@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,6 @@ package org.springframework.ws.client.support.interceptor;
 import java.io.IOException;
 import javax.xml.transform.Source;
 
-import org.xml.sax.SAXParseException;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -35,6 +33,8 @@ import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.XsdSchema;
 import org.springframework.xml.xsd.XsdSchemaCollection;
+
+import org.xml.sax.SAXParseException;
 
 /**
  * Abstract base class for {@link ClientInterceptor} implementations that validate part of the message using a schema.
@@ -97,9 +97,9 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
      */
     public void setSchemas(Resource[] schemas) {
         Assert.notEmpty(schemas, "schemas must not be empty or null");
-        for (int i = 0; i < schemas.length; i++) {
-            Assert.notNull(schemas[i], "schema must not be null");
-            Assert.isTrue(schemas[i].exists(), "schema \"" + schemas[i] + "\" does not exit");
+        for (Resource schema : schemas) {
+            Assert.notNull(schema, "schema must not be null");
+            Assert.isTrue(schema.exists(), "schema \"" + schema + "\" does not exit");
         }
         this.schemas = schemas;
     }
@@ -141,8 +141,8 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
     public void afterPropertiesSet() throws Exception {
         if (validator == null && !ObjectUtils.isEmpty(schemas)) {
             Assert.hasLength(schemaLanguage, "schemaLanguage is required");
-            for (int i = 0; i < schemas.length; i++) {
-                Assert.isTrue(schemas[i].exists(), "schema [" + schemas[i] + "] does not exist");
+            for (Resource schema : schemas) {
+                Assert.isTrue(schema.exists(), "schema [" + schema + "] does not exist");
             }
             if (logger.isInfoEnabled()) {
                 logger.info("Validating using " + StringUtils.arrayToCommaDelimitedString(schemas));
@@ -195,8 +195,8 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
      * @return <code>true</code> to continue processing the request, <code>false</code> otherwise
      */
     protected boolean handleRequestValidationErrors(MessageContext messageContext, SAXParseException[] errors) {
-        for (int i = 0; i < errors.length; i++) {
-            logger.error("XML validation error on request: " + errors[i].getMessage());
+        for (SAXParseException error : errors) {
+            logger.error("XML validation error on request: " + error.getMessage());
         }
         throw new WebServiceValidationException(errors);
     }
@@ -246,8 +246,8 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
      */
     protected boolean handleResponseValidationErrors(MessageContext messageContext, SAXParseException[] errors)
             throws WebServiceValidationException {
-        for (int i = 0; i < errors.length; i++) {
-            logger.warn("XML validation error on response: " + errors[i].getMessage());
+        for (SAXParseException error : errors) {
+            logger.warn("XML validation error on response: " + error.getMessage());
         }
         return false;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ public final class MethodEndpoint {
      * @param parameterTypes the method parameter types
      * @throws NoSuchMethodException when the method cannot be found
      */
-    public MethodEndpoint(Object bean, String methodName, Class[] parameterTypes) throws NoSuchMethodException {
+    public MethodEndpoint(Object bean, String methodName, Class<?>[] parameterTypes) throws NoSuchMethodException {
         Assert.notNull(bean, "bean must not be null");
         Assert.notNull(methodName, "method must not be null");
         this.bean = bean;

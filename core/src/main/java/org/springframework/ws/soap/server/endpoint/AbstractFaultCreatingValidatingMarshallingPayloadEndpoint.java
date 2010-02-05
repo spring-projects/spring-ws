@@ -16,7 +16,6 @@
 
 package org.springframework.ws.soap.server.endpoint;
 
-import java.util.Iterator;
 import java.util.Locale;
 import javax.xml.namespace.QName;
 
@@ -158,8 +157,7 @@ public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint
      */
     @Override
     protected final boolean onValidationErrors(MessageContext messageContext, Object requestObject, Errors errors) {
-        for (Iterator iterator = errors.getAllErrors().iterator(); iterator.hasNext();) {
-            ObjectError objectError = (ObjectError) iterator.next();
+        for (ObjectError objectError : errors.getAllErrors()) {
             String msg = messageSource.getMessage(objectError, getFaultLocale());
             logger.warn("Validation error on request object[" + requestObject + "]: " + msg);
         }
@@ -169,8 +167,7 @@ public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint
             SoapFault fault = body.addClientOrSenderFault(getFaultStringOrReason(), getFaultLocale());
             if (getAddValidationErrorDetail()) {
                 SoapFaultDetail detail = fault.addFaultDetail();
-                for (Iterator iterator = errors.getAllErrors().iterator(); iterator.hasNext();) {
-                    ObjectError objectError = (ObjectError) iterator.next();
+                for (ObjectError objectError : errors.getAllErrors()) {
                     String msg = messageSource.getMessage(objectError, getFaultLocale());
                     SoapFaultDetailElement detailElement = detail.addFaultDetailElement(getDetailElementName());
                     detailElement.addText(msg);

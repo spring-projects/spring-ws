@@ -20,7 +20,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -182,12 +181,12 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
         if (address == null) {
             return null;
         }
-        List referenceProperties =
+        List<Node> referenceProperties =
                 referencePropertiesExpression != null ? referencePropertiesExpression.evaluateAsNodeList(node) :
-                        Collections.EMPTY_LIST;
-        List referenceParameters =
+                        Collections.<Node>emptyList();
+        List<Node> referenceParameters =
                 referenceParametersExpression != null ? referenceParametersExpression.evaluateAsNodeList(node) :
-                        Collections.EMPTY_LIST;
+                        Collections.<Node>emptyList();
         return new EndpointReference(address, referenceProperties, referenceParameters);
     }
 
@@ -268,10 +267,9 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
         }
     }
 
-    protected void addReferenceNodes(Result result, List nodes) {
+    protected void addReferenceNodes(Result result, List<Node> nodes) {
         try {
-            for (Iterator iterator = nodes.iterator(); iterator.hasNext();) {
-                Node node = (Node) iterator.next();
+            for (Node node : nodes) {
                 DOMSource source = new DOMSource(node);
                 transform(source, result);
             }

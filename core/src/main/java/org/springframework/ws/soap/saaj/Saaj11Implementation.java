@@ -43,8 +43,6 @@ import javax.xml.transform.Source;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.SAXSource;
 
-import org.xml.sax.InputSource;
-
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.SoapVersion;
@@ -54,6 +52,8 @@ import org.springframework.ws.soap.saaj.support.SaajXmlReader;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportOutputStream;
 import org.springframework.xml.namespace.QNameUtils;
+
+import org.xml.sax.InputSource;
 
 /**
  * SAAJ 1.1 specific implementation of the <code>SaajImplementation</code> interface.
@@ -116,9 +116,9 @@ class Saaj11Implementation extends SaajImplementation {
     }
 
     @Override
-    public Iterator getAllAttibutes(SOAPElement element) {
-        List results = new ArrayList();
-        for (Iterator iterator = element.getAllAttributes(); iterator.hasNext();) {
+    public Iterator<QName> getAllAttributes(SOAPElement element) {
+        List<QName> results = new ArrayList<QName>();
+        for (Iterator<?> iterator = element.getAllAttributes(); iterator.hasNext();) {
             Name attributeName = (Name) iterator.next();
             results.add(SaajUtils.toQName(attributeName));
         }
@@ -193,15 +193,23 @@ class Saaj11Implementation extends SaajImplementation {
 
     /** Returns all header elements. */
     @Override
-    public Iterator examineAllHeaderElements(SOAPHeader header) {
-        return header.getChildElements();
+    @SuppressWarnings("unchecked")
+    public Iterator<SOAPHeaderElement> examineAllHeaderElements(SOAPHeader header) {
+        List<SOAPHeaderElement> result = new ArrayList<SOAPHeaderElement>();
+        for (Iterator<?> iterator = header.getChildElements(); iterator.hasNext();) {
+            Object o = iterator.next();
+            if (o instanceof SOAPHeaderElement) {
+                result.add((SOAPHeaderElement) o);
+            }
+        }
+        return result.iterator();
     }
 
     /** Returns all header elements for which the must understand attribute is true, given the actor or role. */
     @Override
-    public Iterator examineMustUnderstandHeaderElements(SOAPHeader header, String actorOrRole) {
-        List result = new ArrayList();
-        for (Iterator iterator = header.examineHeaderElements(actorOrRole); iterator.hasNext();) {
+    public Iterator<SOAPHeaderElement> examineMustUnderstandHeaderElements(SOAPHeader header, String actorOrRole) {
+        List<SOAPHeaderElement> result = new ArrayList<SOAPHeaderElement>();
+        for (Iterator<?> iterator = header.examineHeaderElements(actorOrRole); iterator.hasNext();) {
             SOAPHeaderElement headerElement = (SOAPHeaderElement) iterator.next();
             if (headerElement.getMustUnderstand()) {
                 result.add(headerElement);
@@ -289,13 +297,14 @@ class Saaj11Implementation extends SaajImplementation {
 
     /** Returns an iteration over all detail entries. */
     @Override
-    public Iterator getDetailEntries(Detail detail) {
+    @SuppressWarnings("unchecked")
+    public Iterator<DetailEntry> getDetailEntries(Detail detail) {
         return detail.getDetailEntries();
     }
 
     @Override
     public SOAPElement getFirstBodyElement(SOAPBody body) {
-        for (Iterator iterator = body.getChildElements(); iterator.hasNext();) {
+        for (Iterator<?> iterator = body.getChildElements(); iterator.hasNext();) {
             Object child = iterator.next();
             if (child instanceof SOAPElement) {
                 return (SOAPElement) child;
@@ -306,14 +315,15 @@ class Saaj11Implementation extends SaajImplementation {
 
     @Override
     public void removeContents(SOAPElement element) {
-        for (Iterator iterator = element.getChildElements(); iterator.hasNext();) {
+        for (Iterator<?> iterator = element.getChildElements(); iterator.hasNext();) {
             iterator.next();
             iterator.remove();
         }
     }
 
     @Override
-    Iterator getChildElements(SOAPElement element, QName name) throws SOAPException {
+    @SuppressWarnings("unchecked")
+    Iterator<SOAPElement> getChildElements(SOAPElement element, QName name) throws SOAPException {
         Name elementName = SaajUtils.toName(name, element);
         return element.getChildElements(elementName);
     }
@@ -338,7 +348,7 @@ class Saaj11Implementation extends SaajImplementation {
                     message.saveChanges();
                 }
             }
-            for (Iterator iterator = headers.getAllHeaders(); iterator.hasNext();) {
+            for (Iterator<?> iterator = headers.getAllHeaders(); iterator.hasNext();) {
                 MimeHeader mimeHeader = (MimeHeader) iterator.next();
                 transportOutputStream.addHeader(mimeHeader.getName(), mimeHeader.getValue());
             }
@@ -353,12 +363,14 @@ class Saaj11Implementation extends SaajImplementation {
     }
 
     @Override
-    public Iterator getAttachments(SOAPMessage message) {
+    @SuppressWarnings("unchecked")
+    public Iterator<AttachmentPart> getAttachments(SOAPMessage message) {
         return message.getAttachments();
     }
 
     @Override
-    public Iterator getAttachment(SOAPMessage message, MimeHeaders mimeHeaders) {
+    @SuppressWarnings("unchecked")
+    public Iterator<AttachmentPart> getAttachment(SOAPMessage message, MimeHeaders mimeHeaders) {
         return message.getAttachments(mimeHeaders);
     }
 
@@ -394,7 +406,7 @@ class Saaj11Implementation extends SaajImplementation {
     }
 
     @Override
-    public Iterator getFaultSubcodes(SOAPFault fault) {
+    public Iterator<QName> getFaultSubcodes(SOAPFault fault) {
         throw new UnsupportedOperationException("SAAJ 1.1 does not support SOAP 1.2");
     }
 

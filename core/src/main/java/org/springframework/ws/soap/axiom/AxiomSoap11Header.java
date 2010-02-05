@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,14 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.springframework.util.ObjectUtils;
+import org.springframework.ws.soap.SoapHeaderElement;
+import org.springframework.ws.soap.soap11.Soap11Header;
+
 import org.apache.axiom.soap.RolePlayer;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPHeader;
-import org.springframework.util.ObjectUtils;
-import org.springframework.ws.soap.soap11.Soap11Header;
+import org.apache.axiom.soap.SOAPHeaderBlock;
 
 /**
  * Axiom-specific version of <code>org.springframework.ws.soap.Soap11Header</code>.
@@ -38,12 +41,13 @@ class AxiomSoap11Header extends AxiomSoapHeader implements Soap11Header {
         super(axiomHeader, axiomFactory);
     }
 
-    public Iterator examineHeaderElementsToProcess(final String[] actors) {
+    @SuppressWarnings("unchecked")
+    public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(final String[] actors) {
         RolePlayer rolePlayer = null;
         if (!ObjectUtils.isEmpty(actors)) {
             rolePlayer = new RolePlayer() {
 
-                public List getRoles() {
+                public List<?> getRoles() {
                     return Arrays.asList(actors);
                 }
 
@@ -52,7 +56,7 @@ class AxiomSoap11Header extends AxiomSoapHeader implements Soap11Header {
                 }
             };
         }
-        Iterator result = getAxiomHeader().getHeadersToProcess(rolePlayer);
+        Iterator<SOAPHeaderBlock> result = (Iterator<SOAPHeaderBlock>)getAxiomHeader().getHeadersToProcess(rolePlayer);
         return new AxiomSoapHeaderElementIterator(result);
     }
 }
