@@ -35,15 +35,15 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import javax.crypto.SecretKey;
 
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.ws.soap.security.support.KeyStoreUtils;
+
 import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
 import com.sun.xml.wss.impl.callback.DecryptionKeyCallback;
 import com.sun.xml.wss.impl.callback.EncryptionKeyCallback;
 import com.sun.xml.wss.impl.callback.SignatureKeyCallback;
 import com.sun.xml.wss.impl.callback.SignatureVerificationKeyCallback;
 import org.apache.xml.security.utils.RFC2253Parser;
-
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.ws.soap.security.support.KeyStoreUtils;
 
 /**
  * Callback handler that uses Java Security <code>KeyStore</code>s to handle cryptographic callbacks. Allows for
@@ -135,9 +135,9 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 
     private static X509Certificate getCertificate(PublicKey pk, KeyStore store) throws IOException {
         try {
-            Enumeration aliases = store.aliases();
+            Enumeration<String> aliases = store.aliases();
             while (aliases.hasMoreElements()) {
-                String alias = (String) aliases.nextElement();
+                String alias = aliases.nextElement();
                 Certificate cert = store.getCertificate(alias);
                 if (cert == null || !X_509_CERTIFICATE_TYPE.equals(cert.getType())) {
                     continue;
@@ -395,9 +395,9 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 
     protected X509Certificate getCertificateFromTrustStore(byte[] subjectKeyIdentifier) throws IOException {
         try {
-            Enumeration aliases = trustStore.aliases();
+            Enumeration<String> aliases = trustStore.aliases();
             while (aliases.hasMoreElements()) {
-                String alias = (String) aliases.nextElement();
+                String alias = aliases.nextElement();
                 Certificate cert = trustStore.getCertificate(alias);
                 if (cert == null || !X_509_CERTIFICATE_TYPE.equals(cert.getType())) {
                     continue;
@@ -426,9 +426,9 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
     protected X509Certificate getCertificateFromTrustStore(String issuerName, BigInteger serialNumber)
             throws IOException {
         try {
-            Enumeration aliases = trustStore.aliases();
+            Enumeration<String> aliases = trustStore.aliases();
             while (aliases.hasMoreElements()) {
-                String alias = (String) aliases.nextElement();
+                String alias = aliases.nextElement();
                 Certificate cert = trustStore.getCertificate(alias);
                 if (cert == null || !X_509_CERTIFICATE_TYPE.equals(cert.getType())) {
                     continue;
@@ -460,9 +460,9 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 
     protected PrivateKey getPrivateKey(PublicKey publicKey) throws IOException {
         try {
-            Enumeration aliases = keyStore.aliases();
+            Enumeration<String> aliases = keyStore.aliases();
             while (aliases.hasMoreElements()) {
-                String alias = (String) aliases.nextElement();
+                String alias = aliases.nextElement();
                 if (keyStore.isKeyEntry(alias)) {
                     // Just returning the first one here
                     return (PrivateKey) keyStore.getKey(alias, privateKeyPassword);
@@ -477,9 +477,9 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 
     protected PrivateKey getPrivateKey(X509Certificate certificate) throws IOException {
         try {
-            Enumeration aliases = keyStore.aliases();
+            Enumeration<String> aliases = keyStore.aliases();
             while (aliases.hasMoreElements()) {
-                String alias = (String) aliases.nextElement();
+                String alias = aliases.nextElement();
                 if (!keyStore.isKeyEntry(alias)) {
                     continue;
                 }
@@ -497,9 +497,9 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 
     protected PrivateKey getPrivateKey(byte[] keyIdentifier) throws IOException {
         try {
-            Enumeration aliases = keyStore.aliases();
+            Enumeration<String> aliases = keyStore.aliases();
             while (aliases.hasMoreElements()) {
-                String alias = (String) aliases.nextElement();
+                String alias = aliases.nextElement();
                 if (!keyStore.isKeyEntry(alias)) {
                     continue;
                 }
@@ -526,9 +526,9 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 
     protected PrivateKey getPrivateKey(String issuerName, BigInteger serialNumber) throws IOException {
         try {
-            Enumeration aliases = keyStore.aliases();
+            Enumeration<String> aliases = keyStore.aliases();
             while (aliases.hasMoreElements()) {
-                String alias = (String) aliases.nextElement();
+                String alias = aliases.nextElement();
                 if (!keyStore.isKeyEntry(alias)) {
                     continue;
                 }
@@ -682,9 +682,9 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
                 return false;
             }
             try {
-                Enumeration aliases = keyStore.aliases();
+                Enumeration<String> aliases = keyStore.aliases();
                 while (aliases.hasMoreElements()) {
-                    String alias = (String) aliases.nextElement();
+                    String alias = aliases.nextElement();
                     if (keyStore.isKeyEntry(alias)) {
                         X509Certificate x509Cert = (X509Certificate) keyStore.getCertificate(alias);
                         if (x509Cert != null) {

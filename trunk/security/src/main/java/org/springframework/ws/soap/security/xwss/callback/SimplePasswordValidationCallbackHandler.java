@@ -17,18 +17,18 @@
 package org.springframework.ws.soap.security.xwss.callback;
 
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
-import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
-import com.sun.xml.wss.impl.callback.TimestampValidationCallback;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
+
+import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
+import com.sun.xml.wss.impl.callback.TimestampValidationCallback;
 
 /**
  * Simple callback handler that validates passwords agains a in-memory <code>Properties</code> object. Password
@@ -43,10 +43,18 @@ import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
  */
 public class SimplePasswordValidationCallbackHandler extends AbstractCallbackHandler implements InitializingBean {
 
-    private Properties users = new Properties();
+    private Map<String, String> users = new HashMap<String, String>();
 
     /** Sets the users to validate against. Property names are usernames, property values are passwords. */
     public void setUsers(Properties users) {
+        for (Map.Entry<Object, Object> entry : users.entrySet()) {
+            if (entry.getKey() instanceof String && entry.getValue() instanceof String) {
+                this.users.put((String) entry.getKey(), (String) entry.getValue());
+            }
+        }
+    }
+
+    public void setUsersMap(Map<String, String> users) {
         this.users = users;
     }
 
@@ -64,7 +72,7 @@ public class SimplePasswordValidationCallbackHandler extends AbstractCallbackHan
             else if (passwordCallback.getRequest() instanceof PasswordValidationCallback.DigestPasswordRequest) {
                 PasswordValidationCallback.DigestPasswordRequest digestPasswordRequest =
                         (PasswordValidationCallback.DigestPasswordRequest) passwordCallback.getRequest();
-                String password = users.getProperty(digestPasswordRequest.getUsername());
+                String password = users.get(digestPasswordRequest.getUsername());
                 digestPasswordRequest.setPassword(password);
                 passwordCallback.setValidator(new PasswordValidationCallback.DigestPasswordValidator());
             }
@@ -78,21 +86,13 @@ public class SimplePasswordValidationCallbackHandler extends AbstractCallbackHan
         }
     }
 
-    public void setUsersMap(Map users) {
-        for (Iterator iterator = users.keySet().iterator(); iterator.hasNext();) {
-            String username = (String) iterator.next();
-            String password = (String) users.get(username);
-            this.users.setProperty(username, password);
-        }
-    }
-
     private class SimplePlainTextPasswordValidator implements PasswordValidationCallback.PasswordValidator {
 
         public boolean validate(PasswordValidationCallback.Request request)
                 throws PasswordValidationCallback.PasswordValidationException {
             PasswordValidationCallback.PlainTextPasswordRequest plainTextPasswordRequest =
                     (PasswordValidationCallback.PlainTextPasswordRequest) request;
-            String password = users.getProperty(plainTextPasswordRequest.getUsername());
+            String password = users.get(plainTextPasswordRequest.getUsername());
             return password != null && password.equals(plainTextPasswordRequest.getPassword());
         }
     }

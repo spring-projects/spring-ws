@@ -27,22 +27,6 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.xml.soap.MessageFactory;
 
-import org.apache.axiom.soap.SOAPEnvelope;
-import org.apache.axiom.soap.SOAPFactory;
-import org.apache.axiom.soap.SOAPMessage;
-import org.apache.ws.security.WSConstants;
-import org.apache.ws.security.WSSecurityEngine;
-import org.apache.ws.security.WSSecurityEngineResult;
-import org.apache.ws.security.WSSecurityException;
-import org.apache.ws.security.WSUsernameTokenPrincipal;
-import org.apache.ws.security.components.crypto.Crypto;
-import org.apache.ws.security.handler.RequestData;
-import org.apache.ws.security.handler.WSHandlerConstants;
-import org.apache.ws.security.handler.WSHandlerResult;
-import org.apache.ws.security.message.token.Timestamp;
-import org.apache.ws.security.util.WSSecurityUtil;
-import org.w3c.dom.Document;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -61,6 +45,22 @@ import org.springframework.ws.soap.security.WsSecurityValidationException;
 import org.springframework.ws.soap.security.callback.CallbackHandlerChain;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 import org.springframework.ws.soap.security.wss4j.callback.UsernameTokenPrincipalCallback;
+
+import org.apache.axiom.soap.SOAPEnvelope;
+import org.apache.axiom.soap.SOAPFactory;
+import org.apache.axiom.soap.SOAPMessage;
+import org.apache.ws.security.WSConstants;
+import org.apache.ws.security.WSSecurityEngine;
+import org.apache.ws.security.WSSecurityEngineResult;
+import org.apache.ws.security.WSSecurityException;
+import org.apache.ws.security.WSUsernameTokenPrincipal;
+import org.apache.ws.security.components.crypto.Crypto;
+import org.apache.ws.security.handler.RequestData;
+import org.apache.ws.security.handler.WSHandlerConstants;
+import org.apache.ws.security.handler.WSHandlerResult;
+import org.apache.ws.security.message.token.Timestamp;
+import org.apache.ws.security.util.WSSecurityUtil;
+import org.w3c.dom.Document;
 
 /**
  * A WS-Security endpoint interceptor based on Apache's WSS4J. This inteceptor supports messages created by the {@link
@@ -99,7 +99,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     private String securementActions;
 
-    private Vector securementActionsVector;
+    private Vector<Integer> securementActionsVector;
 
     private String securementUsername;
 
@@ -109,7 +109,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     private String validationActions;
 
-    private Vector validationActionsVector;
+    private Vector<Integer> validationActionsVector;
 
     private String validationActor;
 
@@ -490,7 +490,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
             // action, we need to pass an empty securementActionsVector to avoid
             // NPE
             if (securementAction == WSConstants.NO_SECURITY) {
-                securementActionsVector = new Vector(0);
+                securementActionsVector = new Vector<Integer>(0);
             }
 
             handler.doSenderAction(securementAction, envelopeAsDocument, requestData, securementActionsVector, false);
@@ -523,6 +523,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
             throws WsSecurityValidationException {
         if (logger.isDebugEnabled()) {
@@ -538,7 +539,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         // Header processing
 
         try {
-            Vector results = securityEngine
+            Vector<WSSecurityEngineResult> results = securityEngine
                     .processSecurityHeader(envelopeAsDocument, validationActor, validationCallbackHandler,
                             validationSignatureCrypto, validationDecryptionCrypto);
 
@@ -575,7 +576,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
      * @param validationActionsVector the decoded validation actions
      * @throws Wss4jSecurityValidationException if the results are deemed invalid
      */
-    protected void checkResults(Vector results, Vector validationActionsVector)
+    protected void checkResults(Vector<WSSecurityEngineResult> results, Vector<Integer> validationActionsVector)
             throws Wss4jSecurityValidationException {
         if (!handler.checkReceiverResultsAnyOrder(results, validationActionsVector)) {
             throw new Wss4jSecurityValidationException("Security processing failed (actions mismatch)");
@@ -586,10 +587,11 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
      * Puts the results of WS-Security headers processing in the message context. Some actions like Signature
      * Confirmation require this.
      */
-    private void updateContextWithResults(MessageContext messageContext, Vector results) {
-        Vector handlerResults;
-        if ((handlerResults = (Vector) messageContext.getProperty(WSHandlerConstants.RECV_RESULTS)) == null) {
-            handlerResults = new Vector();
+    @SuppressWarnings("unchecked")
+    private void updateContextWithResults(MessageContext messageContext, Vector<WSSecurityEngineResult> results) {
+        Vector<WSHandlerResult> handlerResults;
+        if ((handlerResults = (Vector<WSHandlerResult>) messageContext.getProperty(WSHandlerConstants.RECV_RESULTS)) == null) {
+            handlerResults = new Vector<WSHandlerResult>();
             messageContext.setProperty(WSHandlerConstants.RECV_RESULTS, handlerResults);
         }
         WSHandlerResult rResult = new WSHandlerResult(validationActor, results);
@@ -598,7 +600,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
     }
 
     /** Verifies the trust of a certificate. */
-    protected void verifyCertificateTrust(Vector results) throws WSSecurityException {
+    protected void verifyCertificateTrust(Vector<WSSecurityEngineResult> results) throws WSSecurityException {
         RequestData requestData = new RequestData();
         requestData.setSigCrypto(validationSignatureCrypto);
         WSSecurityEngineResult actionResult = WSSecurityUtil.fetchActionResult(results, WSConstants.SIGN);
@@ -613,7 +615,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
     }
 
     /** Verifies the timestamp. */
-    protected void verifyTimestamp(Vector results) throws WSSecurityException {
+    protected void verifyTimestamp(Vector<WSSecurityEngineResult> results) throws WSSecurityException {
         WSSecurityEngineResult actionResult = WSSecurityUtil.fetchActionResult(results, WSConstants.TS);
 
         if (actionResult != null) {
@@ -626,7 +628,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         }
     }
 
-    private void processPrincipal(Vector results) {
+    private void processPrincipal(Vector<WSSecurityEngineResult> results) {
         WSSecurityEngineResult actionResult = WSSecurityUtil.fetchActionResult(results, WSConstants.UT);
 
         if (actionResult != null) {

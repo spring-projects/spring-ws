@@ -43,8 +43,7 @@ public class CallbackHandlerChain extends AbstractCallbackHandler {
     @Override
     protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
         boolean allUnsupported = true;
-        for (int i = 0; i < callbackHandlers.length; i++) {
-            CallbackHandler callbackHandler = callbackHandlers[i];
+        for (CallbackHandler callbackHandler : callbackHandlers) {
             try {
                 callbackHandler.handle(new Callback[]{callback});
                 allUnsupported = false;

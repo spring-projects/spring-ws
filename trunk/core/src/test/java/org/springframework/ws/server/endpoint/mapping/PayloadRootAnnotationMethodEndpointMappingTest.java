@@ -27,6 +27,7 @@ import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointAdapter;
+import org.springframework.ws.server.EndpointMapping;
 import org.springframework.ws.server.MessageDispatcher;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.adapter.PayloadMethodEndpointAdapter;
@@ -69,7 +70,7 @@ public class PayloadRootAnnotationMethodEndpointMappingTest extends AbstractDepe
 
         MessageDispatcher messageDispatcher = new SoapMessageDispatcher();
         messageDispatcher.setApplicationContext(applicationContext);
-        messageDispatcher.setEndpointMappings(Collections.singletonList(mapping));
+        messageDispatcher.setEndpointMappings(Collections.<EndpointMapping>singletonList(mapping));
         messageDispatcher.setEndpointAdapters(Collections.singletonList(adapter));
 
         messageDispatcher.receive(messageContext);
