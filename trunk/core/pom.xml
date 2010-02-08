@@ -47,12 +47,24 @@
                         <!--TODO: include-->
                         <exclude>org/springframework/ws/server/endpoint/adapter/GenericMarshallingMethodEndpointAdapter.java</exclude>
                     </excludes>
+                    <testExcludes>
+                        <testExclude>org/springframework/ws/server/endpoint/adapter/GenericMarshallingMethodEndpointAdapterTest.java</testExclude>
+                        <testExclude>org/springframework/ws/config/WebServicesNamespaceHandlerTigerTest.java</testExclude>
+                    </testExcludes>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>com.springsource.bundlor</groupId>
                 <artifactId>com.springsource.bundlor.maven</artifactId>
             </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
+            </plugin>            
         </plugins>
     </build>
     <dependencies>
