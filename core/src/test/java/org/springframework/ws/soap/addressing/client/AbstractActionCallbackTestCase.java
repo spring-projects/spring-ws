@@ -24,8 +24,6 @@ import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
-import org.easymock.MockControl;
-
 import org.springframework.ws.soap.addressing.AbstractWsAddressingTestCase;
 import org.springframework.ws.soap.addressing.core.EndpointReference;
 import org.springframework.ws.soap.addressing.messageid.MessageIdStrategy;
@@ -36,74 +34,74 @@ import org.springframework.ws.transport.context.DefaultTransportContext;
 import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.easymock.EasyMock.*;
+
 public abstract class AbstractActionCallbackTestCase extends AbstractWsAddressingTestCase {
 
     private ActionCallback callback;
 
-    private MockControl strategyControl;
-
     private MessageIdStrategy strategyMock;
-
-    private MockControl connectionControl;
 
     private WebServiceConnection connectionMock;
 
-    @Override
-    protected final void onSetUp() throws Exception {
-        strategyControl = MockControl.createControl(MessageIdStrategy.class);
-        strategyMock = (MessageIdStrategy) strategyControl.getMock();
+    @Before
+    public void createMocks() throws Exception {
+        strategyMock = createMock(MessageIdStrategy.class);
 
-        connectionControl = MockControl.createControl(WebServiceConnection.class);
-        connectionMock = (WebServiceConnection) connectionControl.getMock();
+        connectionMock = createMock(WebServiceConnection.class);
+
         TransportContext transportContext = new DefaultTransportContext(connectionMock);
         TransportContextHolder.setTransportContext(transportContext);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void clearContext() throws Exception {
         TransportContextHolder.setTransportContext(null);
     }
 
+    @Test
     public void testValid() throws Exception {
         URI action = new URI("http://example.com/fabrikam/mail/Delete");
         URI to = new URI("mailto:fabrikam@example.com");
         callback = new ActionCallback(action, getVersion(), to);
         callback.setMessageIdStrategy(strategyMock);
         SaajSoapMessage message = createDeleteMessage();
-        strategyControl
-                .expectAndReturn(strategyMock.newMessageId(message), new URI("http://example.com/someuniquestring"));
+        expect(strategyMock.newMessageId(message)).andReturn(new URI("http://example.com/someuniquestring"));
         callback.setReplyTo(new EndpointReference(new URI("http://example.com/business/client1")));
-        strategyControl.replay();
-        connectionControl.replay();
+
+        replay(strategyMock, connectionMock);
 
         callback.doWithMessage(message);
 
         SaajSoapMessage expected = loadSaajMessage(getTestPath() + "/valid.xml");
         assertXMLEqual("Invalid message", expected, message);
-        strategyControl.verify();
-        connectionControl.verify();
+
+        verify(strategyMock, connectionMock);
     }
 
+    @Test
     public void testDefaults() throws Exception {
         URI action = new URI("http://example.com/fabrikam/mail/Delete");
         URI connectionUri = new URI("mailto:fabrikam@example.com");
         callback = new ActionCallback(action, getVersion());
         callback.setMessageIdStrategy(strategyMock);
-        connectionControl.expectAndReturn(connectionMock.getUri(), connectionUri);
-        connectionControl.replay();
+        expect(connectionMock.getUri()).andReturn(connectionUri);
 
         SaajSoapMessage message = createDeleteMessage();
-        strategyControl
-                .expectAndReturn(strategyMock.newMessageId(message), new URI("http://example.com/someuniquestring"));
+        expect(strategyMock.newMessageId(message)).andReturn(new URI("http://example.com/someuniquestring"));
         callback.setReplyTo(new EndpointReference(new URI("http://example.com/business/client1")));
-        strategyControl.replay();
+
+        replay(strategyMock, connectionMock);
 
         callback.doWithMessage(message);
 
         SaajSoapMessage expected = loadSaajMessage(getTestPath() + "/valid.xml");
         assertXMLEqual("Invalid message", expected, message);
-        strategyControl.verify();
-        connectionControl.verify();
+        verify(strategyMock, connectionMock);
     }
 
     private SaajSoapMessage createDeleteMessage() throws SOAPException {

@@ -30,16 +30,21 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor;
 
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
 public class SimpleActionEndpointMappingTest extends AbstractWsAddressingTestCase {
 
     private SimpleActionEndpointMapping mapping;
 
     private Endpoint1 endpoint1;
 
-    @Override
-    protected void onSetUp() throws Exception {
+    @Before
+    public void createMappings() throws Exception {
         mapping = new SimpleActionEndpointMapping();
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<String, Object>();
         endpoint1 = new Endpoint1();
         Endpoint2 endpoint2 = new Endpoint2();
         map.put("http://example.com/fabrikam/mail/Delete", endpoint1);
@@ -51,6 +56,7 @@ public class SimpleActionEndpointMappingTest extends AbstractWsAddressingTestCas
         mapping.afterPropertiesSet();
     }
 
+    @Test
     public void testMatch() throws Exception {
         SaajSoapMessage message = loadSaajMessage("200408/valid.xml");
         MessageContext messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(messageFactory));
@@ -65,6 +71,7 @@ public class SimpleActionEndpointMappingTest extends AbstractWsAddressingTestCas
         assertTrue("Invalid first interceptor", interceptors[2] instanceof PayloadValidatingInterceptor);
     }
 
+    @Test
     public void testNoMatch() throws Exception {
         SaajSoapMessage message = loadSaajMessage("200408/response-no-message-id.xml");
         MessageContext messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(messageFactory));
