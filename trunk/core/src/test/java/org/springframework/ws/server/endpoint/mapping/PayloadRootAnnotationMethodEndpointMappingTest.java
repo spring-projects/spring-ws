@@ -23,7 +23,10 @@ import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
 
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointAdapter;
@@ -35,19 +38,22 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.server.SoapMessageDispatcher;
 
-public class PayloadRootAnnotationMethodEndpointMappingTest extends AbstractDependencyInjectionSpringContextTests {
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import static org.junit.Assert.*;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("applicationContext.xml")
+public class PayloadRootAnnotationMethodEndpointMappingTest  {
+
+    @Autowired
     private PayloadRootAnnotationMethodEndpointMapping mapping;
 
-    @Override
-    protected String getConfigPath() {
-        return "applicationContext.xml";
-    }
+    @Autowired
+    private ApplicationContext applicationContext;
 
-    public void setMapping(PayloadRootAnnotationMethodEndpointMapping mapping) {
-        this.mapping = mapping;
-    }
-
+    @Test
     public void testRegistration() throws NoSuchMethodException {
         MethodEndpoint endpoint = mapping.lookupEndpoint("{http://springframework.org/spring-ws}Request");
         assertNotNull("MethodEndpoint not registered", endpoint);
@@ -59,6 +65,7 @@ public class PayloadRootAnnotationMethodEndpointMappingTest extends AbstractDepe
                 mapping.lookupEndpoint("{http://springframework.org/spring-ws}Request2"));
     }
 
+    @Test
     public void testInvoke() throws Exception {
 
         MessageFactory messageFactory = MessageFactory.newInstance();

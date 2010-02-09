@@ -162,7 +162,7 @@ public class WebServiceTemplateTest {
 
         connectionMock.send(isA(WebServiceMessage.class));
         expect(connectionMock.hasError()).andReturn(false);
-        expect(connectionMock.hasFault()).andReturn(true).times(2);
+        expect(connectionMock.hasFault()).andReturn(true);
         expect(connectionMock.receive(messageFactory)).andReturn(response);
         connectionMock.close();
 
@@ -305,7 +305,6 @@ public class WebServiceTemplateTest {
         connectionMock.send(isA(WebServiceMessage.class));
         expect(connectionMock.hasError()).andReturn(false);
         expect(connectionMock.receive(messageFactory)).andReturn(null);
-        expect(connectionMock.hasFault()).andReturn(false);
         connectionMock.close();
 
         replay(connectionMock, marshallerMock);
@@ -403,7 +402,6 @@ public class WebServiceTemplateTest {
         expect(connectionMock.hasError()).andReturn(false);
         expect(connectionMock.receive(messageFactory)).andReturn(new MockWebServiceMessage("<response/>"));
         expect(connectionMock.hasFault()).andReturn(false);
-        connectionMock.close();
 
         replay(connectionMock, interceptorMock1, interceptorMock2, requestCallback, extractorMock);
 

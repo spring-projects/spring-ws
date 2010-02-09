@@ -23,25 +23,24 @@ import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPException;
 
-import org.custommonkey.xmlunit.XMLTestCase;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.w3c.dom.Document;
-
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
-public abstract class AbstractWsAddressingTestCase extends XMLTestCase {
+import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.Before;
+import org.w3c.dom.Document;
+
+import static org.junit.Assert.assertNotNull;
+
+public abstract class AbstractWsAddressingTestCase {
 
     protected MessageFactory messageFactory;
 
-    @Override
-    protected final void setUp() throws Exception {
+    @Before
+    public void createMessageFactory() throws Exception {
         messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
         XMLUnit.setIgnoreWhitespace(true);
-        onSetUp();
     }
 
-    protected void onSetUp() throws Exception {
-    }
 
     protected SaajSoapMessage loadSaajMessage(String fileName) throws SOAPException, IOException {
         MimeHeaders mimeHeaders = new MimeHeaders();
@@ -59,6 +58,6 @@ public abstract class AbstractWsAddressingTestCase extends XMLTestCase {
     protected void assertXMLEqual(String message, SaajSoapMessage expected, SaajSoapMessage result) {
         Document expectedDocument = expected.getSaajMessage().getSOAPPart();
         Document resultDocument = result.getSaajMessage().getSOAPPart();
-        assertXMLEqual(message, expectedDocument, resultDocument);
+        org.custommonkey.xmlunit.XMLAssert.assertXMLEqual(message, expectedDocument, resultDocument);
     }
 }

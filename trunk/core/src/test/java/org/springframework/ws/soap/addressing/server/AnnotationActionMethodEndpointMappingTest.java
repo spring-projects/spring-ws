@@ -23,9 +23,6 @@ import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPException;
 
-import org.custommonkey.xmlunit.XMLTestCase;
-import org.custommonkey.xmlunit.XMLUnit;
-
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
@@ -37,7 +34,14 @@ import org.springframework.ws.soap.addressing.server.annotation.Address;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 
-public class AnnotationActionMethodEndpointMappingTest extends XMLTestCase {
+import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
+
+public class AnnotationActionMethodEndpointMappingTest {
 
     private StaticApplicationContext applicationContext;
 
@@ -45,8 +49,8 @@ public class AnnotationActionMethodEndpointMappingTest extends XMLTestCase {
 
     private MessageFactory messageFactory;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
         XMLUnit.setIgnoreWhitespace(true);
         applicationContext = new StaticApplicationContext();
@@ -54,26 +58,28 @@ public class AnnotationActionMethodEndpointMappingTest extends XMLTestCase {
         mapping = (AnnotationActionEndpointMapping) applicationContext.getBean("mapping");
     }
 
+    @Test
     public void testNoAddress() throws Exception {
         applicationContext.registerSingleton("endpoint", Endpoint1.class);
         applicationContext.refresh();
         MessageContext messageContext = createMessageContext();
 
         EndpointInvocationChain chain = mapping.getEndpoint(messageContext);
-        assertNotNull("MethodEndpoint not registered", chain);
+        Assert.assertNotNull("MethodEndpoint not registered", chain);
         MethodEndpoint expected = new MethodEndpoint(applicationContext.getBean("endpoint"), "doIt", new Class[0]);
-        assertEquals("Invalid endpoint registered", expected, chain.getEndpoint());
+        Assert.assertEquals("Invalid endpoint registered", expected, chain.getEndpoint());
     }
 
+    @Test
     public void testAddress() throws Exception {
         applicationContext.registerSingleton("endpoint", Endpoint2.class);
         applicationContext.refresh();
         MessageContext messageContext = createMessageContext();
 
         EndpointInvocationChain chain = mapping.getEndpoint(messageContext);
-        assertNotNull("MethodEndpoint not registered", chain);
+        Assert.assertNotNull("MethodEndpoint not registered", chain);
         MethodEndpoint expected = new MethodEndpoint(applicationContext.getBean("endpoint"), "doIt", new Class[0]);
-        assertEquals("Invalid endpoint registered", expected, chain.getEndpoint());
+        Assert.assertEquals("Invalid endpoint registered", expected, chain.getEndpoint());
     }
 
     private MessageContext createMessageContext() throws SOAPException, IOException {

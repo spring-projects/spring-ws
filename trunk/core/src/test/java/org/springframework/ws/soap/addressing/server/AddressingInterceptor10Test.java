@@ -26,6 +26,9 @@ import org.springframework.ws.soap.addressing.version.AddressingVersion;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertTrue;
+
 public class AddressingInterceptor10Test extends AbstractAddressingInterceptorTestCase {
 
     @Override
@@ -42,15 +45,15 @@ public class AddressingInterceptor10Test extends AbstractAddressingInterceptorTe
         SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-no-to.xml");
         MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
         URI messageId = new URI("uid:1234");
-        strategyControl.expectAndReturn(strategyMock.newMessageId((SoapMessage) context.getResponse()), messageId);
-        strategyControl.replay();
+        expect(strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
+        replay(strategyMock);
         boolean result = interceptor.handleResponse(context, null);
         assertTrue("Request with no To not handled", result);
         assertTrue("Message Context has no response", context.hasResponse());
         SaajSoapMessage expectedResponse = loadSaajMessage(getTestPath() + "/response-anonymous.xml");
         assertXMLEqual("Invalid response for message with invalid MAP", expectedResponse,
                 (SaajSoapMessage) context.getResponse());
-        strategyControl.verify();
+        verify(strategyMock);
     }
 
 }
