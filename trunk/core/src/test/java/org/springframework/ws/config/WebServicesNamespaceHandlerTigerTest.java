@@ -18,30 +18,36 @@ package org.springframework.ws.config;
 
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ws.server.endpoint.adapter.GenericMarshallingMethodEndpointAdapter;
 import org.springframework.ws.server.endpoint.adapter.XPathParamAnnotationMethodEndpointAdapter;
 
-public class WebServicesNamespaceHandlerTigerTest extends TestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public class WebServicesNamespaceHandlerTigerTest {
 
     private ApplicationContext applicationContext;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         applicationContext =
                 new ClassPathXmlApplicationContext("webServicesNamespaceHandlerTest-tiger.xml", getClass());
     }
 
+    @Test
     public void testMarshallingEndpoints() throws Exception {
-        Map result = applicationContext.getBeansOfType(GenericMarshallingMethodEndpointAdapter.class);
-        assertFalse("no MarshallingMethodEndpointAdapter found", result.isEmpty());
+        Map<String, GenericMarshallingMethodEndpointAdapter> result =
+                applicationContext.getBeansOfType(GenericMarshallingMethodEndpointAdapter.class);
+        Assert.assertFalse("no MarshallingMethodEndpointAdapter found", result.isEmpty());
     }
 
+    @Test
     public void testXpathEndpoints() throws Exception {
-        Map result = applicationContext.getBeansOfType(XPathParamAnnotationMethodEndpointAdapter.class);
-        assertFalse("no XPathParamAnnotationMethodEndpointAdapter found", result.isEmpty());
+        Map<String, XPathParamAnnotationMethodEndpointAdapter> result =
+                applicationContext.getBeansOfType(XPathParamAnnotationMethodEndpointAdapter.class);
+        Assert.assertFalse("no XPathParamAnnotationMethodEndpointAdapter found", result.isEmpty());
     }
 }

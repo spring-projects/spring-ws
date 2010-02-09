@@ -22,22 +22,23 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 
-import org.custommonkey.xmlunit.XMLTestCase;
-import org.w3c.dom.Document;
-
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-public class DomPoxMessageTest extends XMLTestCase {
+import org.junit.Before;
+import org.junit.Test;
+import org.w3c.dom.Document;
 
-    public static final String NAMESPACE = "http://www.springframework.org/spring-ws";
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+
+public class DomPoxMessageTest {
 
     private DomPoxMessage message;
 
     private Transformer transformer;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         Document document = documentBuilder.newDocument();
@@ -46,6 +47,7 @@ public class DomPoxMessageTest extends XMLTestCase {
         message = new DomPoxMessage(document, transformer, DomPoxMessageFactory.DEFAULT_CONTENT_TYPE);
     }
 
+    @Test
     public void testGetPayload() throws Exception {
         String content = "<root xmlns='http://www.springframework.org/spring-ws'>" + "<child/></root>";
         StringSource source = new StringSource(content);
@@ -55,6 +57,7 @@ public class DomPoxMessageTest extends XMLTestCase {
         assertXMLEqual(content, stringResult.toString());
     }
 
+    @Test
     public void testGetPayloadResultTwice() throws Exception {
         String content = "<element xmlns=\"http://www.springframework.org/spring-ws\" />";
         transformer.transform(new StringSource(content), message.getPayloadResult());
@@ -64,6 +67,7 @@ public class DomPoxMessageTest extends XMLTestCase {
         assertXMLEqual(content, stringResult.toString());
     }
 
+    @Test
     public void testWriteTo() throws Exception {
         String content = "<root xmlns='http://www.springframework.org/spring-ws'>" + "<child/></root>";
         StringSource source = new StringSource(content);

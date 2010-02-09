@@ -16,34 +16,40 @@
 
 package org.springframework.ws.client.core;
 
-import junit.framework.TestCase;
-import org.easymock.MockControl;
 import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.client.WebServiceFaultException;
 
-public class SimpleFaultMessageResolverTest extends TestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.easymock.EasyMock.*;
+
+public class SimpleFaultMessageResolverTest {
 
     private SimpleFaultMessageResolver resolver;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         resolver = new SimpleFaultMessageResolver();
     }
 
+    @Test
     public void testResolveFault() throws Exception {
-        MockControl messageControl = MockControl.createControl(FaultAwareWebServiceMessage.class);
-        FaultAwareWebServiceMessage messageMock = (FaultAwareWebServiceMessage) messageControl.getMock();
+        FaultAwareWebServiceMessage messageMock = createMock(FaultAwareWebServiceMessage.class);
         String message = "message";
-        messageControl.expectAndReturn(messageMock.getFaultReason(), message);
-        messageControl.replay();
+        expect(messageMock.getFaultReason()).andReturn(message);
+
+        replay(messageMock);
+
         try {
             resolver.resolveFault(messageMock);
-            fail("WebServiceFaultExcpetion expected");
+            Assert.fail("WebServiceFaultExcpetion expected");
         }
         catch (WebServiceFaultException ex) {
             // expected
-            assertEquals("Invalid exception message", message, ex.getMessage());
+            Assert.assertEquals("Invalid exception message", message, ex.getMessage());
         }
-        messageControl.verify();
+        verify(messageMock);
     }
 }
