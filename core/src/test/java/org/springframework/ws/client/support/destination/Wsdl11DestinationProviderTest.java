@@ -19,38 +19,43 @@ package org.springframework.ws.client.support.destination;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import junit.framework.TestCase;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-public class Wsdl11DestinationProviderTest extends TestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public class Wsdl11DestinationProviderTest {
 
     private Wsdl11DestinationProvider provider;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         provider = new Wsdl11DestinationProvider();
     }
 
+    @Test
     public void testSimple() throws URISyntaxException {
         Resource wsdl = new ClassPathResource("simple.wsdl", getClass());
         provider.setWsdl(wsdl);
 
         URI result = provider.getDestination();
 
-        assertEquals("Invalid URI returned", new URI("http://example.com/myService"), result);
+        Assert.assertEquals("Invalid URI returned", new URI("http://example.com/myService"), result);
     }
 
+    @Test
     public void testComplex() throws URISyntaxException {
         Resource wsdl = new ClassPathResource("complex.wsdl", getClass());
         provider.setWsdl(wsdl);
 
         URI result = provider.getDestination();
 
-        assertEquals("Invalid URI returned", new URI("http://example.com/soap11"), result);
+        Assert.assertEquals("Invalid URI returned", new URI("http://example.com/soap11"), result);
     }
 
+    @Test
     public void testCustomExpression() throws URISyntaxException {
         provider.setLocationExpression("/wsdl:definitions/wsdl:service/wsdl:port/soap12:address/@location");
         Resource wsdl = new ClassPathResource("complex.wsdl", getClass());
@@ -58,6 +63,6 @@ public class Wsdl11DestinationProviderTest extends TestCase {
 
         URI result = provider.getDestination();
 
-        assertEquals("Invalid URI returned", new URI("http://example.com/soap12"), result);
+        Assert.assertEquals("Invalid URI returned", new URI("http://example.com/soap12"), result);
     }
 }

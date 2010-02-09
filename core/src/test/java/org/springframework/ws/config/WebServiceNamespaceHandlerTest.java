@@ -18,23 +18,26 @@ package org.springframework.ws.config;
 
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter;
 
-public class WebServiceNamespaceHandlerTest extends TestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public class WebServiceNamespaceHandlerTest {
 
     private ApplicationContext applicationContext;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         applicationContext = new ClassPathXmlApplicationContext("webServiceNamespaceHandlerTest.xml", getClass());
     }
 
+    @Test
     public void testMarshallingMethods() throws Exception {
-        Map result = applicationContext.getBeansOfType(MarshallingMethodEndpointAdapter.class);
-        assertFalse("no MarshallingMethodEndpointAdapter found", result.isEmpty());
+        Map<String, MarshallingMethodEndpointAdapter> result = applicationContext.getBeansOfType(MarshallingMethodEndpointAdapter.class);
+        Assert.assertFalse("no MarshallingMethodEndpointAdapter found", result.isEmpty());
     }
 }

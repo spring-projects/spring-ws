@@ -18,57 +18,61 @@ package org.springframework.ws.context;
 
 import java.util.Arrays;
 
-import junit.framework.TestCase;
-import org.easymock.MockControl;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 
-public class DefaultMessageContextTest extends TestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.easymock.EasyMock.*;
+
+public class DefaultMessageContextTest {
 
     private DefaultMessageContext context;
-
-    private MockControl factoryControl;
 
     private WebServiceMessageFactory factoryMock;
 
     private WebServiceMessage request;
 
-    @Override
-    protected void setUp() throws Exception {
-        factoryControl = MockControl.createControl(WebServiceMessageFactory.class);
-        factoryMock = (WebServiceMessageFactory) factoryControl.getMock();
+    @Before
+    public void setUp() throws Exception {
+        factoryMock = createMock(WebServiceMessageFactory.class);
         request = new MockWebServiceMessage();
         context = new DefaultMessageContext(request, factoryMock);
     }
 
+    @Test
     public void testRequest() throws Exception {
-        assertEquals("Invalid request returned", request, context.getRequest());
+        Assert.assertEquals("Invalid request returned", request, context.getRequest());
     }
 
+    @Test
     public void testResponse() throws Exception {
         WebServiceMessage response = new MockWebServiceMessage();
-        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), response);
-        factoryControl.replay();
+        expect(factoryMock.createWebServiceMessage()).andReturn(response);
+        replay(factoryMock);
 
         WebServiceMessage result = context.getResponse();
-        assertEquals("Invalid response returned", response, result);
-        factoryControl.verify();
+        Assert.assertEquals("Invalid response returned", response, result);
+        verify(factoryMock);
     }
 
+    @Test
     public void testProperties() throws Exception {
-        assertEquals("Invalid property names returned", 0, context.getPropertyNames().length);
+        Assert.assertEquals("Invalid property names returned", 0, context.getPropertyNames().length);
         String name = "name";
-        assertFalse("Property set", context.containsProperty(name));
+        Assert.assertFalse("Property set", context.containsProperty(name));
         String value = "value";
         context.setProperty(name, value);
-        assertTrue("Property not set", context.containsProperty(name));
-        assertEquals("Invalid property names returned", Arrays.asList(new String[]{name}),
+        Assert.assertTrue("Property not set", context.containsProperty(name));
+        Assert.assertEquals("Invalid property names returned", Arrays.asList(name),
                 Arrays.asList(context.getPropertyNames()));
-        assertEquals("Invalid property value returned", value, context.getProperty(name));
+        Assert.assertEquals("Invalid property value returned", value, context.getProperty(name));
         context.removeProperty(name);
-        assertFalse("Property set", context.containsProperty(name));
-        assertEquals("Invalid property names returned", 0, context.getPropertyNames().length);
+        Assert.assertFalse("Property set", context.containsProperty(name));
+        Assert.assertEquals("Invalid property names returned", 0, context.getPropertyNames().length);
     }
 
 }

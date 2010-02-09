@@ -55,7 +55,7 @@ public class SimpleSaajServlet extends HttpServlet {
     }
 
     private MimeHeaders getHeaders(HttpServletRequest httpServletRequest) {
-        Enumeration enumeration = httpServletRequest.getHeaderNames();
+        Enumeration<?> enumeration = httpServletRequest.getHeaderNames();
         MimeHeaders headers = new MimeHeaders();
         while (enumeration.hasMoreElements()) {
             String headerName = (String) enumeration.nextElement();
@@ -69,7 +69,7 @@ public class SimpleSaajServlet extends HttpServlet {
     }
 
     private void putHeaders(MimeHeaders headers, HttpServletResponse res) {
-        Iterator it = headers.getAllHeaders();
+        Iterator<?> it = headers.getAllHeaders();
         while (it.hasNext()) {
             MimeHeader header = (MimeHeader) it.next();
             String[] values = headers.getHeader(header.getName());
