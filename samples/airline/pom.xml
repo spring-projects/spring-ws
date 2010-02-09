@@ -11,7 +11,7 @@
     <name>Spring WS Airline Sample</name>
     <profiles>
         <profile>
-            <id>jdk14-jdk15</id>
+            <id>jdk15</id>
             <activation>
                 <jdk>!1.6</jdk>
             </activation>
@@ -155,19 +155,6 @@
         <dependency>
             <groupId>org.springframework.ws</groupId>
             <artifactId>spring-ws-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.ws</groupId>
-            <artifactId>spring-ws-core-tiger</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.ws</groupId>
-            <artifactId>spring-oxm</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.ws</groupId>
-            <artifactId>spring-oxm-tiger</artifactId>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.ws</groupId>

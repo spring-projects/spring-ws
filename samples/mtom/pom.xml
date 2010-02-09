@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <parent>
       <artifactId>spring-ws-samples</artifactId>
       <groupId>org.springframework.ws</groupId>
@@ -31,7 +32,7 @@
     </reporting>
     <profiles>
         <profile>
-            <id>jdk14-jdk15</id>
+            <id>jdk15</id>
             <activation>
                 <jdk>!1.6</jdk>
             </activation>
@@ -96,14 +97,14 @@
    </build>
    <dependencies>
       <!-- Spring-WS dependencies -->
-      <dependency>
+       <dependency>
          <groupId>org.springframework.ws</groupId>
-         <artifactId>spring-ws-core-tiger</artifactId>
+         <artifactId>spring-ws-core</artifactId>
       </dependency>
       <dependency>
-         <groupId>org.springframework.ws</groupId>
-         <artifactId>spring-oxm-tiger</artifactId>
-         <scope>runtime</scope>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-oxm</artifactId>
+          <scope>runtime</scope>
       </dependency>
    </dependencies>
 </project>
