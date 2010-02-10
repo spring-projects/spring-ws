@@ -16,39 +16,47 @@
 
 package org.springframework.ws.server.endpoint.adapter;
 
-import junit.framework.TestCase;
-import org.easymock.MockControl;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
 
-public class MessageEndpointAdapterTest extends TestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.easymock.EasyMock.*;
+
+public class MessageEndpointAdapterTest {
 
     private MessageEndpointAdapter adapter;
 
-    private MockControl endpointControl;
-
     private MessageEndpoint endpointMock;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         adapter = new MessageEndpointAdapter();
-        endpointControl = MockControl.createControl(MessageEndpoint.class);
-        endpointMock = (MessageEndpoint) endpointControl.getMock();
+        endpointMock = createMock(MessageEndpoint.class);
     }
 
+    @Test
     public void testSupports() throws Exception {
-        assertTrue("MessageEndpointAdapter does not support MessageEndpoint", adapter.supports(endpointMock));
+        Assert.assertTrue("MessageEndpointAdapter does not support MessageEndpoint", adapter.supports(endpointMock));
     }
 
+    @Test
     public void testInvoke() throws Exception {
         MessageContext context = new DefaultMessageContext(new MockWebServiceMessageFactory());
 
         endpointMock.invoke(context);
-        endpointControl.replay();
+
+        replay(endpointMock);
+
         adapter.invoke(context, endpointMock);
-        endpointControl.verify();
+
+        verify(endpointMock);
     }
+
+
 
 }

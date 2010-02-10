@@ -32,7 +32,9 @@ import org.springframework.ws.server.endpoint.annotation.XPathParam;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -41,7 +43,7 @@ import org.w3c.dom.Text;
 
 import static org.easymock.EasyMock.*;
 
-public class XPathParamAnnotationMethodEndpointAdapterTest extends TestCase {
+public class XPathParamAnnotationMethodEndpointAdapterTest {
 
     private static final String CONTENTS = "<root><child><text>text</text><number>42.0</number></child></root>";
 
@@ -53,49 +55,57 @@ public class XPathParamAnnotationMethodEndpointAdapterTest extends TestCase {
 
     private boolean namespacesInvoked;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         adapter = new XPathParamAnnotationMethodEndpointAdapter();
         adapter.afterPropertiesSet();
     }
 
+    @Test
     public void testUnsupportedInvalidParam() throws NoSuchMethodException {
         MethodEndpoint endpoint = new MethodEndpoint(this, "unsupportedInvalidParamType", new Class[]{Integer.TYPE});
-        assertFalse("Method supported", adapter.supports(endpoint));
+        Assert.assertFalse("Method supported", adapter.supports(endpoint));
     }
 
+    @Test
     public void testUnsupportedInvalidReturnType() throws NoSuchMethodException {
         MethodEndpoint endpoint = new MethodEndpoint(this, "unsupportedInvalidReturnType", new Class[]{String.class});
-        assertFalse("Method supported", adapter.supports(endpoint));
+        Assert.assertFalse("Method supported", adapter.supports(endpoint));
     }
 
+    @Test
     public void testUnsupportedInvalidParams() throws NoSuchMethodException {
         MethodEndpoint endpoint =
                 new MethodEndpoint(this, "unsupportedInvalidParams", new Class[]{String.class, String.class});
-        assertFalse("Method supported", adapter.supports(endpoint));
+        Assert.assertFalse("Method supported", adapter.supports(endpoint));
     }
 
+    @Test
     public void testSupportedTypes() throws NoSuchMethodException {
         MethodEndpoint endpoint = new MethodEndpoint(this, "supportedTypes",
                 new Class[]{Boolean.TYPE, Double.TYPE, Node.class, NodeList.class, String.class});
-        assertTrue("Not all types supported", adapter.supports(endpoint));
+        Assert.assertTrue("Not all types supported", adapter.supports(endpoint));
     }
 
+    @Test
     public void testSupportsStringSource() throws NoSuchMethodException {
         MethodEndpoint endpoint = new MethodEndpoint(this, "supportedStringSource", new Class[]{String.class});
-        assertTrue("StringSource method not supported", adapter.supports(endpoint));
+        Assert.assertTrue("StringSource method not supported", adapter.supports(endpoint));
     }
 
+    @Test
     public void testSupportsSource() throws NoSuchMethodException {
         MethodEndpoint endpoint = new MethodEndpoint(this, "supportedSource", new Class[]{String.class});
-        assertTrue("Source method not supported", adapter.supports(endpoint));
+        Assert.assertTrue("Source method not supported", adapter.supports(endpoint));
     }
 
+    @Test
     public void testSupportsVoid() throws NoSuchMethodException {
         MethodEndpoint endpoint = new MethodEndpoint(this, "supportedVoid", new Class[]{String.class});
-        assertTrue("void method not supported", adapter.supports(endpoint));
+        Assert.assertTrue("void method not supported", adapter.supports(endpoint));
     }
 
+    @Test
     public void testInvokeTypes() throws Exception {
         WebServiceMessage messageMock = createMock(WebServiceMessage.class);
         expect(messageMock.getPayloadSource()).andReturn(new StringSource(CONTENTS));
@@ -106,11 +116,12 @@ public class XPathParamAnnotationMethodEndpointAdapterTest extends TestCase {
         MethodEndpoint endpoint = new MethodEndpoint(this, "supportedTypes",
                 new Class[]{Boolean.TYPE, Double.TYPE, Node.class, NodeList.class, String.class});
         adapter.invoke(messageContext, endpoint);
-        assertTrue("Method not invoked", supportedTypesInvoked);
+        Assert.assertTrue("Method not invoked", supportedTypesInvoked);
 
         verify(messageMock, factoryMock);
     }
 
+    @Test
     public void testInvokeSource() throws Exception {
         WebServiceMessage requestMock = createMock(WebServiceMessage.class);
         WebServiceMessage responseMock = createMock(WebServiceMessage.class);
@@ -123,11 +134,12 @@ public class XPathParamAnnotationMethodEndpointAdapterTest extends TestCase {
         MessageContext messageContext = new DefaultMessageContext(requestMock, factoryMock);
         MethodEndpoint endpoint = new MethodEndpoint(this, "supportedSource", new Class[]{String.class});
         adapter.invoke(messageContext, endpoint);
-        assertTrue("Method not invoked", supportedSourceInvoked);
+        Assert.assertTrue("Method not invoked", supportedSourceInvoked);
 
         verify(requestMock, responseMock, factoryMock);
     }
 
+    @Test
     public void testInvokeVoidDom() throws Exception {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -159,7 +171,7 @@ public class XPathParamAnnotationMethodEndpointAdapterTest extends TestCase {
         MessageContext messageContext = new DefaultMessageContext(requestMock, factoryMock);
         MethodEndpoint endpoint = new MethodEndpoint(this, "namespaces", new Class[]{Node.class});
         adapter.invoke(messageContext, endpoint);
-        assertTrue("Method not invoked", namespacesInvoked);
+        Assert.assertTrue("Method not invoked", namespacesInvoked);
     }
 
     public void supportedVoid(@XPathParam("/")String param1) {
@@ -180,12 +192,12 @@ public class XPathParamAnnotationMethodEndpointAdapterTest extends TestCase {
                                @XPathParam("/root/*")NodeList param4,
                                @XPathParam("/root/child/text")String param5) {
         supportedTypesInvoked = true;
-        assertTrue("Invalid boolean value", param1);
-        assertEquals("Invalid double value", 42D, param2, 0.00001D);
-        assertEquals("Invalid Node value", "child", param3.getLocalName());
-        assertEquals("Invalid NodeList value", 1, param4.getLength());
-        assertEquals("Invalid Node value", "child", param4.item(0).getLocalName());
-        assertEquals("Invalid Node value", "text", param5);
+        Assert.assertTrue("Invalid boolean value", param1);
+        Assert.assertEquals("Invalid double value", 42D, param2, 0.00001D);
+        Assert.assertEquals("Invalid Node value", "child", param3.getLocalName());
+        Assert.assertEquals("Invalid NodeList value", 1, param4.getLength());
+        Assert.assertEquals("Invalid Node value", "child", param4.item(0).getLocalName());
+        Assert.assertEquals("Invalid Node value", "text", param5);
     }
 
     public void unsupportedInvalidParams(@XPathParam("/")String param1, String param2) {
@@ -201,6 +213,6 @@ public class XPathParamAnnotationMethodEndpointAdapterTest extends TestCase {
 
     public void namespaces(@XPathParam(".")Node param) {
         namespacesInvoked = true;
-        assertEquals("Invalid parameter", "child", param.getLocalName());
+        Assert.assertEquals("Invalid parameter", "child", param.getLocalName());
     }
 }
