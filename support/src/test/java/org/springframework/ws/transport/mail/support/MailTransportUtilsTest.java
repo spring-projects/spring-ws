@@ -1,5 +1,5 @@
 /*
- * Copyright ${YEAR} the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,33 +20,37 @@ import java.net.URI;
 import javax.mail.URLName;
 import javax.mail.internet.InternetAddress;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class MailTransportUtilsTest extends TestCase {
+public class MailTransportUtilsTest {
 
+    @Test
     public void testToPasswordProtectedString() throws Exception {
         URLName name = new URLName("imap://john:secret@imap.example.com/INBOX");
         String result = MailTransportUtils.toPasswordProtectedString(name);
-        assertEquals("Password found in string", -1, result.indexOf("secret"));
+        Assert.assertEquals("Password found in string", -1, result.indexOf("secret"));
     }
 
+    @Test
     public void testGetTo() throws Exception {
         URI uri = new URI("mailto:infobot@example.com?subject=current-issue");
         InternetAddress to = MailTransportUtils.getTo(uri);
-        assertEquals("Invalid destination", new InternetAddress("infobot@example.com"), to);
+        Assert.assertEquals("Invalid destination", new InternetAddress("infobot@example.com"), to);
 
         uri = new URI("mailto:infobot@example.com");
         to = MailTransportUtils.getTo(uri);
-        assertEquals("Invalid destination", new InternetAddress("infobot@example.com"), to);
+        Assert.assertEquals("Invalid destination", new InternetAddress("infobot@example.com"), to);
     }
 
+    @Test
     public void testGetSubject() throws Exception {
         URI uri = new URI("mailto:infobot@example.com?subject=current-issue");
         String subject = MailTransportUtils.getSubject(uri);
-        assertEquals("Invalid destination", "current-issue", subject);
+        Assert.assertEquals("Invalid destination", "current-issue", subject);
 
         uri = new URI("mailto:infobot@example.com");
         subject = MailTransportUtils.getSubject(uri);
-        assertNull("Invalid destination", subject);
+        Assert.assertNull("Invalid destination", subject);
     }
 }
