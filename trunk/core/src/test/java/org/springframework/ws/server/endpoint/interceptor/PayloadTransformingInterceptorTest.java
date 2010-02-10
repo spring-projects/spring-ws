@@ -22,9 +22,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 
-import org.custommonkey.xmlunit.XMLTestCase;
-import org.custommonkey.xmlunit.XMLUnit;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.ws.MockWebServiceMessage;
@@ -39,7 +36,14 @@ import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.transform.ResourceSource;
 import org.springframework.xml.transform.StringResult;
 
-public class PayloadTransformingInterceptorTest extends XMLTestCase {
+import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+
+public class PayloadTransformingInterceptorTest {
 
     private PayloadTransformingInterceptor interceptor;
 
@@ -51,8 +55,8 @@ public class PayloadTransformingInterceptorTest extends XMLTestCase {
 
     private Resource xslt;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         interceptor = new PayloadTransformingInterceptor();
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         transformer = transformerFactory.newTransformer();
@@ -62,6 +66,7 @@ public class PayloadTransformingInterceptorTest extends XMLTestCase {
         XMLUnit.setIgnoreWhitespace(true);
     }
 
+    @Test
     public void testHandleRequest() throws Exception {
         interceptor.setRequestXslt(xslt);
         interceptor.afterPropertiesSet();
@@ -69,12 +74,13 @@ public class PayloadTransformingInterceptorTest extends XMLTestCase {
         MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
         boolean result = interceptor.handleRequest(context, null);
-        assertTrue("Invalid interceptor result", result);
+        Assert.assertTrue("Invalid interceptor result", result);
         StringResult expected = new StringResult();
         transformer.transform(new SAXSource(SaxUtils.createInputSource(output)), expected);
         assertXMLEqual(expected.toString(), request.getPayloadAsString());
     }
 
+    @Test
     public void testHandleRequestNoXslt() throws Exception {
         interceptor.setResponseXslt(xslt);
         interceptor.afterPropertiesSet();
@@ -82,12 +88,13 @@ public class PayloadTransformingInterceptorTest extends XMLTestCase {
         MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
         boolean result = interceptor.handleRequest(context, null);
-        assertTrue("Invalid interceptor result", result);
+        Assert.assertTrue("Invalid interceptor result", result);
         StringResult expected = new StringResult();
         transformer.transform(new SAXSource(SaxUtils.createInputSource(input)), expected);
         assertXMLEqual(expected.toString(), request.getPayloadAsString());
     }
 
+    @Test
     public void testHandleResponse() throws Exception {
         interceptor.setResponseXslt(xslt);
         interceptor.afterPropertiesSet();
@@ -97,12 +104,13 @@ public class PayloadTransformingInterceptorTest extends XMLTestCase {
         response.setPayload(input);
 
         boolean result = interceptor.handleResponse(context, null);
-        assertTrue("Invalid interceptor result", result);
+        Assert.assertTrue("Invalid interceptor result", result);
         StringResult expected = new StringResult();
         transformer.transform(new SAXSource(SaxUtils.createInputSource(output)), expected);
         assertXMLEqual(expected.toString(), response.getPayloadAsString());
     }
 
+    @Test
     public void testHandleResponseNoXslt() throws Exception {
         interceptor.setRequestXslt(xslt);
         interceptor.afterPropertiesSet();
@@ -112,12 +120,13 @@ public class PayloadTransformingInterceptorTest extends XMLTestCase {
         response.setPayload(input);
 
         boolean result = interceptor.handleResponse(context, null);
-        assertTrue("Invalid interceptor result", result);
+        Assert.assertTrue("Invalid interceptor result", result);
         StringResult expected = new StringResult();
         transformer.transform(new SAXSource(SaxUtils.createInputSource(input)), expected);
         assertXMLEqual(expected.toString(), response.getPayloadAsString());
     }
 
+    @Test
     public void testSaaj() throws Exception {
         interceptor.setRequestXslt(xslt);
         interceptor.afterPropertiesSet();
@@ -127,7 +136,7 @@ public class PayloadTransformingInterceptorTest extends XMLTestCase {
         transformer.transform(new ResourceSource(input), message.getPayloadResult());
         MessageContext context = new DefaultMessageContext(message, new SaajSoapMessageFactory(messageFactory));
 
-        assertTrue("Invalid interceptor result", interceptor.handleRequest(context, null));
+        Assert.assertTrue("Invalid interceptor result", interceptor.handleRequest(context, null));
         StringResult expected = new StringResult();
         transformer.transform(new SAXSource(SaxUtils.createInputSource(output)), expected);
         StringResult result = new StringResult();
@@ -136,6 +145,7 @@ public class PayloadTransformingInterceptorTest extends XMLTestCase {
 
     }
 
+    @Test
     public void testPox() throws Exception {
         interceptor.setRequestXslt(xslt);
         interceptor.afterPropertiesSet();
@@ -144,7 +154,7 @@ public class PayloadTransformingInterceptorTest extends XMLTestCase {
         transformer.transform(new ResourceSource(input), message.getPayloadResult());
         MessageContext context = new DefaultMessageContext(message, factory);
 
-        assertTrue("Invalid interceptor result", interceptor.handleRequest(context, null));
+        Assert.assertTrue("Invalid interceptor result", interceptor.handleRequest(context, null));
         StringResult expected = new StringResult();
         transformer.transform(new SAXSource(SaxUtils.createInputSource(output)), expected);
         StringResult result = new StringResult();
@@ -153,10 +163,11 @@ public class PayloadTransformingInterceptorTest extends XMLTestCase {
 
     }
 
+    @Test
     public void testNoStylesheetsSet() throws Exception {
         try {
             interceptor.afterPropertiesSet();
-            fail("Should have thrown an Exception");
+            Assert.fail("Should have thrown an Exception");
         }
         catch (IllegalArgumentException ex) {
         }

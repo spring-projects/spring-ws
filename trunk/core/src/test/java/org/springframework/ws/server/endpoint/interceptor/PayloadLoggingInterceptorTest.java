@@ -16,21 +16,24 @@
 
 package org.springframework.ws.server.endpoint.interceptor;
 
-import junit.framework.TestCase;
-import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
-import org.apache.log4j.spi.LoggingEvent;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 
-public class PayloadLoggingInterceptorTest extends TestCase {
+import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.spi.LoggingEvent;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public class PayloadLoggingInterceptorTest {
 
     private PayloadLoggingInterceptor interceptor;
 
@@ -38,8 +41,8 @@ public class PayloadLoggingInterceptorTest extends TestCase {
 
     private MessageContext messageContext;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         interceptor = new PayloadLoggingInterceptor();
         appender = new CountingAppender();
         BasicConfigurator.configure(appender);
@@ -49,41 +52,45 @@ public class PayloadLoggingInterceptorTest extends TestCase {
         appender.reset();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         BasicConfigurator.resetConfiguration();
         ClassPathResource resource = new ClassPathResource("log4j.properties");
         PropertyConfigurator.configure(resource.getURL());
     }
 
+    @Test
     public void testHandleRequestDisabled() throws Exception {
         interceptor.setLogRequest(false);
         int eventCount = appender.getCount();
         interceptor.handleRequest(messageContext, null);
-        assertEquals("PayloadLoggingInterceptor logged when disabled", appender.getCount(), eventCount);
+        Assert.assertEquals("PayloadLoggingInterceptor logged when disabled", appender.getCount(), eventCount);
     }
 
+    @Test
     public void testHandleRequestEnabled() throws Exception {
         int eventCount = appender.getCount();
         interceptor.handleRequest(messageContext, null);
-        assertTrue("PayloadLoggingInterceptor did not log", appender.getCount() > eventCount);
+        Assert.assertTrue("PayloadLoggingInterceptor did not log", appender.getCount() > eventCount);
     }
 
+    @Test
     public void testHandleResponseDisabled() throws Exception {
         MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
         response.setPayload("<response/>");
         interceptor.setLogResponse(false);
         int eventCount = appender.getCount();
         interceptor.handleResponse(messageContext, null);
-        assertEquals("PayloadLoggingInterceptor logged when disabled", appender.getCount(), eventCount);
+        Assert.assertEquals("PayloadLoggingInterceptor logged when disabled", appender.getCount(), eventCount);
     }
 
+    @Test
     public void testHandleResponseEnabled() throws Exception {
         MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
         response.setPayload("<response/>");
         int eventCount = appender.getCount();
         interceptor.handleResponse(messageContext, null);
-        assertTrue("PayloadLoggingInterceptor did not log", appender.getCount() > eventCount);
+        Assert.assertTrue("PayloadLoggingInterceptor did not log", appender.getCount() > eventCount);
     }
 
     private static class CountingAppender extends AppenderSkeleton {
