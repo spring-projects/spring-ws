@@ -18,9 +18,11 @@ package org.springframework.ws.server.endpoint;
 
 import java.lang.reflect.Method;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class MethodEndpointTest extends TestCase {
+public class MethodEndpointTest {
 
     private MethodEndpoint endpoint;
 
@@ -28,43 +30,48 @@ public class MethodEndpointTest extends TestCase {
 
     private Method method;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         myMethodInvoked = false;
-        method = getClass().getMethod("myMethod", new Class[]{String.class});
+        method = getClass().getMethod("myMethod", String.class);
         endpoint = new MethodEndpoint(this, method);
     }
 
+    @Test
     public void testGetters() throws Exception {
-        assertEquals("Invalid bean", this, endpoint.getBean());
-        assertEquals("Invalid bean", method, endpoint.getMethod());
+        Assert.assertEquals("Invalid bean", this, endpoint.getBean());
+        Assert.assertEquals("Invalid bean", method, endpoint.getMethod());
     }
 
+    @Test
     public void testInvoke() throws Exception {
-        assertFalse("Method invoked before invocation", myMethodInvoked);
+        Assert.assertFalse("Method invoked before invocation", myMethodInvoked);
         endpoint.invoke(new Object[]{"arg"});
-        assertTrue("Method invoked before invocation", myMethodInvoked);
+        Assert.assertTrue("Method invoked before invocation", myMethodInvoked);
     }
 
+    @Test
     public void testEquals() throws Exception {
-        assertEquals("Not equal", endpoint, endpoint);
-        assertEquals("Not equal", new MethodEndpoint(this, method), endpoint);
-        Method otherMethod = getClass().getMethod("testEquals", new Class[0]);
-        assertFalse("Equal", new MethodEndpoint(this, otherMethod).equals(endpoint));
+        Assert.assertEquals("Not equal", endpoint, endpoint);
+        Assert.assertEquals("Not equal", new MethodEndpoint(this, method), endpoint);
+        Method otherMethod = getClass().getMethod("testEquals");
+        Assert.assertFalse("Equal", new MethodEndpoint(this, otherMethod).equals(endpoint));
     }
 
+    @Test
     public void testHashCode() throws Exception {
-        assertEquals("Not equal", new MethodEndpoint(this, method).hashCode(), endpoint.hashCode());
-        Method otherMethod = getClass().getMethod("testEquals", new Class[0]);
-        assertFalse("Equal", new MethodEndpoint(this, otherMethod).hashCode() == endpoint.hashCode());
+        Assert.assertEquals("Not equal", new MethodEndpoint(this, method).hashCode(), endpoint.hashCode());
+        Method otherMethod = getClass().getMethod("testEquals");
+        Assert.assertFalse("Equal", new MethodEndpoint(this, otherMethod).hashCode() == endpoint.hashCode());
     }
 
     public void myMethod(String arg) {
-        assertEquals("Invalid argument", "arg", arg);
+        Assert.assertEquals("Invalid argument", "arg", arg);
         myMethodInvoked = true;
     }
 
+    @Test
     public void testToString() throws Exception {
-        assertNotNull("Na valid toString", endpoint.toString());
+        Assert.assertNotNull("Na valid toString", endpoint.toString());
     }
 }

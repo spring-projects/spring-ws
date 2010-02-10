@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,15 +30,16 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
-import org.custommonkey.xmlunit.XMLTestCase;
+import org.springframework.xml.transform.StaxSource;
+
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import org.springframework.xml.transform.StaxSource;
-
-public abstract class AbstractEndpointTestCase extends XMLTestCase {
+@SuppressWarnings("Since15")
+public abstract class AbstractEndpointTestCase {
 
     protected static final String NAMESPACE_URI = "http://springframework.org/ws";
 
@@ -50,6 +51,7 @@ public abstract class AbstractEndpointTestCase extends XMLTestCase {
 
     protected static final String RESPONSE = "<" + RESPONSE_ELEMENT + " xmlns=\"" + NAMESPACE_URI + "\"/>";
 
+    @Test
     public void testDomSource() throws Exception {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
@@ -58,29 +60,34 @@ public abstract class AbstractEndpointTestCase extends XMLTestCase {
         testSource(new DOMSource(requestDocument.getDocumentElement()));
     }
 
+    @Test
     public void testSaxSource() throws Exception {
         XMLReader reader = XMLReaderFactory.createXMLReader();
         InputSource inputSource = new InputSource(new StringReader(REQUEST));
         testSource(new SAXSource(reader, inputSource));
     }
 
+    @Test
     public void testStaxSourceEventReader() throws Exception {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader(REQUEST));
         testSource(new StaxSource(eventReader));
     }
 
+    @Test
     public void testStaxSourceStreamReader() throws Exception {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(REQUEST));
         testSource(new StaxSource(streamReader));
     }
 
+    @Test
     public void testStreamSourceInputStream() throws Exception {
         InputStream is = new ByteArrayInputStream(REQUEST.getBytes("UTF-8"));
         testSource(new StreamSource(is));
     }
 
+    @Test
     public void testStreamSourceReader() throws Exception {
         Reader reader = new StringReader(REQUEST);
         testSource(new StreamSource(reader));

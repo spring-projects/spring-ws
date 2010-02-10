@@ -23,18 +23,26 @@ import javax.xml.transform.TransformerFactory;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 public abstract class AbstractPayloadEndpointTestCase extends AbstractEndpointTestCase {
 
     private PayloadEndpoint endpoint;
 
     private Transformer transformer;
 
-    @Override
-    protected final void setUp() throws Exception {
+    @Before
+    public void createEndpoint() throws Exception {
         endpoint = createResponseEndpoint();
         transformer = TransformerFactory.newInstance().newTransformer();
     }
 
+    @Test
     public void testNoResponse() throws Exception {
         endpoint = createNoResponseEndpoint();
         StringSource requestSource = new StringSource(REQUEST);
@@ -42,6 +50,7 @@ public abstract class AbstractPayloadEndpointTestCase extends AbstractEndpointTe
         assertNull("Response source returned", resultSource);
     }
 
+    @Test
     public void testNoRequest() throws Exception {
         endpoint = createNoRequestEndpoint();
         Source resultSource = endpoint.invoke(null);

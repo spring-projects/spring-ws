@@ -24,9 +24,6 @@ import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.soap.SOAPFactory;
-
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.axiom.AxiomSoapMessage;
@@ -36,11 +33,19 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.soap.SOAPFactory;
+import org.junit.Test;
+
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.junit.Assert.*;
+
 /**
  * Test case for AbstractStaxStreamPayloadEndpoint.
  *
  * @see AbstractStaxStreamPayloadEndpoint
  */
+@SuppressWarnings("Since15")
 public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCase {
 
     @Override
@@ -94,6 +99,7 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
         };
     }
 
+    @Test
     public void testSaajResponse() throws Exception {
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         MessageFactory messageFactory = MessageFactory.newInstance();
@@ -111,6 +117,7 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
         assertXMLEqual(RESPONSE, stringResult.toString());
     }
 
+    @Test
     public void testAxiomResponse() throws Exception {
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
@@ -128,6 +135,7 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
         assertXMLEqual(RESPONSE, stringResult.toString());
     }
 
+    @Test
     public void testAxiomNoResponse() throws Exception {
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
@@ -142,6 +150,7 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
         assertFalse("context has response", context.hasResponse());
     }
 
+    @Test
     public void testAxiomResponseNoPayloadCaching() throws Exception {
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
@@ -161,6 +170,7 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
         assertXMLEqual(RESPONSE, stringResult.toString());
     }
 
+    @Test
     public void testAxiomNoResponseNoPayloadCaching() throws Exception {
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();

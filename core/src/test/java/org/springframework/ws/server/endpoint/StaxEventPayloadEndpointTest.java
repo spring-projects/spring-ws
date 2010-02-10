@@ -25,11 +25,14 @@ import javax.xml.stream.events.Namespace;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.stream.util.XMLEventConsumer;
 
+import static org.junit.Assert.*;
+
 /**
  * Test case for AbstractStaxEventPayloadEndpoint.
  *
  * @see AbstractStaxEventPayloadEndpoint
  */
+@SuppressWarnings("Since15")
 public class StaxEventPayloadEndpointTest extends AbstractMessageEndpointTestCase {
 
     @Override

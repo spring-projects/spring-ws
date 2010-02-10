@@ -16,12 +16,13 @@
 
 package org.springframework.ws.server.endpoint;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import junit.framework.TestCase;
+import java.util.Collections;
 
 import org.springframework.ws.context.MessageContext;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test for AbstractEndpointExceptionResolver
@@ -29,14 +30,14 @@ import org.springframework.ws.context.MessageContext;
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
  */
-public class EndpointExceptionResolverTest extends TestCase {
+public class EndpointExceptionResolverTest {
 
     private MethodEndpoint methodEndpoint;
 
     private AbstractEndpointExceptionResolver exceptionResolver;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         exceptionResolver = new AbstractEndpointExceptionResolver() {
 
             @Override
@@ -45,15 +46,14 @@ public class EndpointExceptionResolverTest extends TestCase {
             }
         };
 
-        Set mappedEndpoints = new HashSet();
-        mappedEndpoints.add(this);
-        exceptionResolver.setMappedEndpoints(mappedEndpoints);
+        exceptionResolver.setMappedEndpoints(Collections.singleton(this));
         methodEndpoint = new MethodEndpoint(this, getClass().getMethod("emptyMethod", new Class[0]));
     }
 
+    @Test
     public void testMatchMethodEndpoint() {
         boolean matched = exceptionResolver.resolveException(null, methodEndpoint, null);
-        assertTrue("AbstractEndpointExceptionResolver did not match mapped MethodEndpoint", matched);
+        Assert.assertTrue("AbstractEndpointExceptionResolver did not match mapped MethodEndpoint", matched);
     }
 
     public void emptyMethod() {

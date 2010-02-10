@@ -19,6 +19,8 @@ package org.springframework.ws.server.endpoint;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
+import static org.junit.Assert.*;
+
 public class Dom4jPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 
     @Override

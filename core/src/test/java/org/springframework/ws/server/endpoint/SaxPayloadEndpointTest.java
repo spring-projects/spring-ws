@@ -19,10 +19,14 @@ package org.springframework.ws.server.endpoint;
 import javax.xml.transform.Source;
 
 import org.springframework.xml.transform.StringSource;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class SaxPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 
