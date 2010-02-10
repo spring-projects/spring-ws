@@ -18,30 +18,35 @@ package org.springframework.ws.transport.http;
 
 import java.io.IOException;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.ws.transport.TransportConstants;
+
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
-import org.springframework.ws.transport.TransportConstants;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-public class WebServiceHttpHandlerIntegrationTest extends AbstractDependencyInjectionSpringContextTests {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("httpserver-applicationContext.xml")
+public class WebServiceHttpHandlerIntegrationTest {
 
     private HttpClient client;
 
-    @Override
-    protected String[] getConfigLocations() {
-        return new String[]{"classpath:org/springframework/ws/transport/http/httpserver-applicationContext.xml"};
-    }
-
-    @Override
-    protected void onSetUp() throws Exception {
+    @Before
+    public void createHttpClient() throws Exception {
         client = new HttpClient();
     }
 
+    @Test
     public void testInvalidMethod() throws IOException {
         GetMethod getMethod = new GetMethod("http://localhost:8888/service");
         client.executeMethod(getMethod);
@@ -50,6 +55,7 @@ public class WebServiceHttpHandlerIntegrationTest extends AbstractDependencyInje
         assertEquals("Response retrieved", 0, getMethod.getResponseContentLength());
     }
 
+    @Test
     public void testNoResponse() throws IOException {
         PostMethod postMethod = new PostMethod("http://localhost:8888/service");
         postMethod.addRequestHeader(HttpTransportConstants.HEADER_CONTENT_TYPE, "text/xml");
@@ -62,6 +68,7 @@ public class WebServiceHttpHandlerIntegrationTest extends AbstractDependencyInje
         assertEquals("Response retrieved", 0, postMethod.getResponseContentLength());
     }
 
+    @Test
     public void testResponse() throws IOException {
         PostMethod postMethod = new PostMethod("http://localhost:8888/service");
         postMethod.addRequestHeader(HttpTransportConstants.HEADER_CONTENT_TYPE, "text/xml");
@@ -74,6 +81,7 @@ public class WebServiceHttpHandlerIntegrationTest extends AbstractDependencyInje
         assertTrue("No Response retrieved", postMethod.getResponseContentLength() > 0);
     }
 
+    @Test
     public void testNoEndpoint() throws IOException {
         PostMethod postMethod = new PostMethod("http://localhost:8888/service");
         postMethod.addRequestHeader(HttpTransportConstants.HEADER_CONTENT_TYPE, "text/xml");
@@ -86,6 +94,7 @@ public class WebServiceHttpHandlerIntegrationTest extends AbstractDependencyInje
         assertEquals("Response retrieved", 0, postMethod.getResponseContentLength());
     }
 
+    @Test
     public void testFault() throws IOException {
         PostMethod postMethod = new PostMethod("http://localhost:8888/service");
         postMethod.addRequestHeader(HttpTransportConstants.HEADER_CONTENT_TYPE, "text/xml");
