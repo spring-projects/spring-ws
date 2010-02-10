@@ -26,44 +26,44 @@ import javax.jms.TextMessage;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.jms.core.MessagePostProcessor;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
 
-public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjectionSpringContextTests {
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import static org.junit.Assert.*;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("jms-sender-applicationContext.xml")
+public class JmsMessageSenderIntegrationTest {
+
+    @Autowired
     private JmsMessageSender messageSender;
 
+    @Autowired
     private JmsTemplate jmsTemplate;
 
     private MessageFactory messageFactory;
 
     private static final String SOAP_ACTION = "\"http://springframework.org/DoIt\"";
 
-    @Override
-    protected void onSetUp() throws Exception {
+    @Before
+    public void createMessageFactory() throws Exception {
         messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
     }
 
-    @Override
-    protected String[] getConfigLocations() {
-        return new String[]{"classpath:org/springframework/ws/transport/jms/jms-sender-applicationContext.xml"};
-    }
-
-    public void setJmsTemplate(JmsTemplate jmsTemplate) {
-        this.jmsTemplate = jmsTemplate;
-    }
-
-    public void setMessageSender(JmsMessageSender messageSender) {
-        this.messageSender = messageSender;
-    }
-
+    @Test
     public void testSendAndReceiveQueueBytesMessage() throws Exception {
         WebServiceConnection connection = null;
         try {
@@ -102,6 +102,7 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
         }
     }
 
+    @Test
     public void testSendAndReceiveQueueTextMessage() throws Exception {
         WebServiceConnection connection = null;
         try {
@@ -140,6 +141,7 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
         }
     }
 
+    @Test
     public void testSendNoResponse() throws Exception {
         WebServiceConnection connection = null;
         try {
@@ -163,6 +165,7 @@ public class JmsMessageSenderIntegrationTest extends AbstractDependencyInjection
         }
     }
 
+    @Test
     public void testPostProcessor() throws Exception {
         MessagePostProcessor processor = new MessagePostProcessor() {
             public Message postProcessMessage(Message message) throws JMSException {
