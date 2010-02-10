@@ -24,50 +24,40 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.jms.Topic;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-public class WebServiceMessageListenerIntegrationTest extends AbstractDependencyInjectionSpringContextTests {
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import static org.junit.Assert.assertNotNull;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("jms-receiver-applicationContext.xml")
+public class WebServiceMessageListenerIntegrationTest {
 
     private static final String CONTENT =
             "<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'>" + "<SOAP-ENV:Body>\n" +
                     "<m:GetLastTradePrice xmlns:m='http://www.springframework.org/spring-ws'>\n" +
                     "<symbol>DIS</symbol>\n" + "</m:GetLastTradePrice>\n" + "</SOAP-ENV:Body></SOAP-ENV:Envelope>";
 
+    @Autowired
     private JmsTemplate jmsTemplate;
 
+    @Autowired
     private Queue responseQueue;
 
+    @Autowired
     private Queue requestQueue;
 
+    @Autowired
     private Topic requestTopic;
 
-    public WebServiceMessageListenerIntegrationTest() {
-        setAutowireMode(AUTOWIRE_BY_NAME);
-    }
 
-    public void setJmsTemplate(JmsTemplate jmsTemplate) {
-        this.jmsTemplate = jmsTemplate;
-    }
-
-    public void setRequestQueue(Queue requestQueue) {
-        this.requestQueue = requestQueue;
-    }
-
-    public void setRequestTopic(Topic requestTopic) {
-        this.requestTopic = requestTopic;
-    }
-
-    public void setResponseQueue(Queue responseQueue) {
-        this.responseQueue = responseQueue;
-    }
-
-    @Override
-    protected String[] getConfigLocations() {
-        return new String[]{"classpath:org/springframework/ws/transport/jms/jms-receiver-applicationContext.xml"};
-    }
-
+    @Test
     public void testReceiveQueueBytesMessage() throws Exception {
         final byte[] b = CONTENT.getBytes("UTF-8");
         jmsTemplate.send(requestQueue, new MessageCreator() {
@@ -82,6 +72,7 @@ public class WebServiceMessageListenerIntegrationTest extends AbstractDependency
         assertNotNull("No response received", response);
     }
 
+    @Test
     public void testReceiveQueueTextMessage() throws Exception {
         jmsTemplate.send(requestQueue, new MessageCreator() {
             public Message createMessage(Session session) throws JMSException {
@@ -94,6 +85,7 @@ public class WebServiceMessageListenerIntegrationTest extends AbstractDependency
         assertNotNull("No response received", response);
     }
 
+    @Test
     public void testReceiveTopic() throws Exception {
         final byte[] b = CONTENT.getBytes("UTF-8");
         jmsTemplate.send(requestTopic, new MessageCreator() {

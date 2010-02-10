@@ -16,32 +16,30 @@
 
 package org.springframework.ws.transport.jms;
 
-import org.custommonkey.xmlunit.XMLAssert;
-
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-public class JmsIntegrationTest extends AbstractDependencyInjectionSpringContextTests {
+import org.custommonkey.xmlunit.XMLAssert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("jms-applicationContext.xml")
+public class JmsIntegrationTest {
+
+    @Autowired
     private WebServiceTemplate webServiceTemplate;
 
-    @Override
-    protected String[] getConfigLocations() {
-        return new String[]{"classpath:org/springframework/ws/transport/jms/jms-applicationContext.xml"};
-    }
 
     public void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
         this.webServiceTemplate = webServiceTemplate;
     }
 
-    @Override
-    protected void onTearDown() throws Exception {
-        applicationContext.close();
-        setDirty();
-    }
-
+    @Test
     public void testTemporaryQueue() throws Exception {
         String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
         StringResult result = new StringResult();
@@ -49,6 +47,7 @@ public class JmsIntegrationTest extends AbstractDependencyInjectionSpringContext
         XMLAssert.assertXMLEqual("Invalid content received", content, result.toString());
     }
 
+    @Test
     public void testPermanentQueue() throws Exception {
         String url = "jms:RequestQueue?deliveryMode=NON_PERSISTENT;replyToName=ResponseQueue";
         String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
