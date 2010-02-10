@@ -33,7 +33,7 @@ import org.springframework.util.CollectionUtils;
  * @see #setExpression(String)
  * @since 1.0.0
  */
-public class XPathExpressionFactoryBean implements FactoryBean, InitializingBean {
+public class XPathExpressionFactoryBean implements FactoryBean<XPathExpression>, InitializingBean {
 
     private Map<String, String> namespaces;
 
@@ -61,11 +61,11 @@ public class XPathExpressionFactoryBean implements FactoryBean, InitializingBean
         }
     }
 
-    public Object getObject() throws Exception {
+    public XPathExpression getObject() throws Exception {
         return expression;
     }
 
-    public Class<?> getObjectType() {
+    public Class<? extends XPathExpression> getObjectType() {
         return XPathExpression.class;
     }
 

@@ -24,15 +24,23 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.xml.transform.StringSource;
 
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 public abstract class AbstractMessageEndpointTestCase extends AbstractEndpointTestCase {
 
     private MessageEndpoint endpoint;
 
-    @Override
-    protected final void setUp() throws Exception {
+    @Before
+    public void createEndpoint() throws Exception {
         endpoint = createResponseEndpoint();
     }
 
+    @Test
     public void testNoResponse() throws Exception {
         endpoint = createNoResponseEndpoint();
         StringSource requestSource = new StringSource(REQUEST);
@@ -43,6 +51,7 @@ public abstract class AbstractMessageEndpointTestCase extends AbstractEndpointTe
         assertFalse("Response message created", context.hasResponse());
     }
 
+    @Test
     public void testNoRequestPayload() throws Exception {
         endpoint = createNoRequestPayloadEndpoint();
 

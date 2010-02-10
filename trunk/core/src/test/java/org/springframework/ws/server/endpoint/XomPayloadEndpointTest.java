@@ -18,6 +18,8 @@ package org.springframework.ws.server.endpoint;
 
 import nu.xom.Element;
 
+import static org.junit.Assert.*;
+
 public class XomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 
     @Override

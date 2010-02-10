@@ -103,12 +103,6 @@
             <groupId>org.apache.ws.security</groupId>
             <artifactId>wss4j</artifactId>
         </dependency>
-        <!-- Acegi depdencies -->
-        <dependency>
-            <groupId>org.acegisecurity</groupId>
-            <artifactId>acegi-security</artifactId>
-            <optional>true</optional>
-        </dependency>
         <!-- Spring Security dependencies -->
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -121,12 +115,6 @@
             <artifactId>mail</artifactId>
         </dependency>
         <!-- Test dependencies -->
-        <dependency>
-            <groupId>easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>1.2_Java1.3</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>

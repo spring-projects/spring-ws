@@ -18,8 +18,6 @@ package org.springframework.ws.server;
 
 import java.util.Collections;
 
-import junit.framework.TestCase;
-import org.easymock.MockControl;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.NoEndpointFoundException;
@@ -30,76 +28,84 @@ import org.springframework.ws.server.endpoint.adapter.PayloadEndpointAdapter;
 import org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping;
 import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
 
-public class MessageDispatcherTest extends TestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.easymock.EasyMock.*;
+
+public class MessageDispatcherTest {
 
     private MessageDispatcher dispatcher;
 
     private MessageContext messageContext;
 
-    private MockControl factoryControl;
-
     private WebServiceMessageFactory factoryMock;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         dispatcher = new MessageDispatcher();
-        factoryControl = MockControl.createControl(WebServiceMessageFactory.class);
-        factoryMock = (WebServiceMessageFactory) factoryControl.getMock();
+        factoryMock = createMock(WebServiceMessageFactory.class);
         messageContext = new DefaultMessageContext(new MockWebServiceMessage(), factoryMock);
     }
 
+    @Test
     public void testGetEndpoint() throws Exception {
-        MockControl mappingControl = MockControl.createControl(EndpointMapping.class);
-        EndpointMapping mappingMock = (EndpointMapping) mappingControl.getMock();
+        EndpointMapping mappingMock = createMock(EndpointMapping.class);
         dispatcher.setEndpointMappings(Collections.singletonList(mappingMock));
 
         EndpointInvocationChain chain = new EndpointInvocationChain(new Object());
 
-        mappingControl.expectAndReturn(mappingMock.getEndpoint(messageContext), chain);
+        expect(mappingMock.getEndpoint(messageContext)).andReturn(chain);
 
-        mappingControl.replay();
-        factoryControl.replay();
+        replay(mappingMock, factoryMock);
+
         EndpointInvocationChain result = dispatcher.getEndpoint(messageContext);
-        mappingControl.verify();
-        factoryControl.verify();
-        assertEquals("getEndpoint returns invalid EndpointInvocationChain", chain, result);
+
+        verify(mappingMock, factoryMock);
+
+        Assert.assertEquals("getEndpoint returns invalid EndpointInvocationChain", chain, result);
     }
 
+    @Test
     public void testGetEndpointAdapterSupportedEndpoint() throws Exception {
-        MockControl adapterControl = MockControl.createControl(EndpointAdapter.class);
-        EndpointAdapter adapterMock = (EndpointAdapter) adapterControl.getMock();
+        EndpointAdapter adapterMock = createMock(EndpointAdapter.class);
         dispatcher.setEndpointAdapters(Collections.singletonList(adapterMock));
 
         Object endpoint = new Object();
-        adapterControl.expectAndReturn(adapterMock.supports(endpoint), true);
-        adapterControl.replay();
-        factoryControl.replay();
+        expect(adapterMock.supports(endpoint)).andReturn(true);
+
+        replay(adapterMock, factoryMock);
+
         EndpointAdapter result = dispatcher.getEndpointAdapter(endpoint);
-        adapterControl.verify();
-        factoryControl.verify();
-        assertEquals("getEnpointAdapter returns invalid EndpointAdapter", adapterMock, result);
+
+        verify(adapterMock, factoryMock);
+
+        Assert.assertEquals("getEnpointAdapter returns invalid EndpointAdapter", adapterMock, result);
     }
 
+    @Test
     public void testGetEndpointAdapterUnsupportedEndpoint() throws Exception {
-        MockControl adapterControl = MockControl.createControl(EndpointAdapter.class);
-        EndpointAdapter adapterMock = (EndpointAdapter) adapterControl.getMock();
+        EndpointAdapter adapterMock = createMock(EndpointAdapter.class);
         dispatcher.setEndpointAdapters(Collections.singletonList(adapterMock));
 
         Object endpoint = new Object();
-        adapterControl.expectAndReturn(adapterMock.supports(endpoint), false);
-        adapterControl.replay();
-        factoryControl.replay();
+        expect(adapterMock.supports(endpoint)).andReturn(false);
+
+        replay(adapterMock, factoryMock);
+
         try {
             dispatcher.getEndpointAdapter(endpoint);
-            fail("getEndpointAdapter does not throw IllegalStateException for unsupported endpoint");
+            Assert.fail("getEndpointAdapter does not throw IllegalStateException for unsupported endpoint");
         }
         catch (IllegalStateException ex) {
             // Expected
         }
-        adapterControl.verify();
-        factoryControl.verify();
+
+        verify(adapterMock, factoryMock);
     }
 
+    @Test
     public void testResolveException() throws Exception {
         final Exception ex = new Exception();
         EndpointMapping endpointMapping = new EndpointMapping() {
@@ -114,269 +120,243 @@ public class MessageDispatcherTest extends TestCase {
             public boolean resolveException(MessageContext givenMessageContext,
                                             Object givenEndpoint,
                                             Exception givenException) {
-                assertEquals("Invalid message context", messageContext, givenMessageContext);
-                assertNull("Invalid endpoint", givenEndpoint);
-                assertEquals("Invalid exception", ex, givenException);
+                Assert.assertEquals("Invalid message context", messageContext, givenMessageContext);
+                Assert.assertNull("Invalid endpoint", givenEndpoint);
+                Assert.assertEquals("Invalid exception", ex, givenException);
                 givenMessageContext.getResponse();
                 return true;
             }
 
         };
         dispatcher.setEndpointExceptionResolvers(Collections.singletonList(resolver));
-        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), new MockWebServiceMessage());
-        factoryControl.replay();
+        expect(factoryMock.createWebServiceMessage()).andReturn(new MockWebServiceMessage());
+
+        replay(factoryMock);
 
         dispatcher.dispatch(messageContext);
-        assertNotNull("processEndpointException sets no response", messageContext.getResponse());
-        factoryControl.verify();
+        Assert.assertNotNull("processEndpointException sets no response", messageContext.getResponse());
+
+        verify(factoryMock);
     }
 
+    @Test
     public void testProcessUnsupportedEndpointException() throws Exception {
-        MockControl resolverControl = MockControl.createControl(EndpointExceptionResolver.class);
-        EndpointExceptionResolver resolverMock = (EndpointExceptionResolver) resolverControl.getMock();
+        EndpointExceptionResolver resolverMock = createMock(EndpointExceptionResolver.class);
         dispatcher.setEndpointExceptionResolvers(Collections.singletonList(resolverMock));
 
         Object endpoint = new Object();
         Exception ex = new Exception();
 
-        resolverControl.expectAndReturn(resolverMock.resolveException(messageContext, endpoint, ex), false);
+        expect(resolverMock.resolveException(messageContext, endpoint, ex)).andReturn(false);
 
-        resolverControl.replay();
+        replay(factoryMock, resolverMock);
+
         try {
             dispatcher.processEndpointException(messageContext, endpoint, ex);
         }
         catch (Exception result) {
-            assertEquals("processEndpointException throws invalid exception", ex, result);
+            Assert.assertEquals("processEndpointException throws invalid exception", ex, result);
         }
-        resolverControl.verify();
+        verify(factoryMock, resolverMock);
     }
 
+    @Test
     public void testNormalFlow() throws Exception {
-        MockControl adapterControl = MockControl.createControl(EndpointAdapter.class);
-        EndpointAdapter adapterMock = (EndpointAdapter) adapterControl.getMock();
+        EndpointAdapter adapterMock = createMock(EndpointAdapter.class);
         dispatcher.setEndpointAdapters(Collections.singletonList(adapterMock));
 
         Object endpoint = new Object();
-        adapterControl.expectAndReturn(adapterMock.supports(endpoint), true);
+        expect(adapterMock.supports(endpoint)).andReturn(true);
 
-        MockControl mappingControl = MockControl.createControl(EndpointMapping.class);
-        EndpointMapping mappingMock = (EndpointMapping) mappingControl.getMock();
+        EndpointMapping mappingMock = createMock(EndpointMapping.class);
         dispatcher.setEndpointMappings(Collections.singletonList(mappingMock));
 
-        MockControl interceptorControl = MockControl.createStrictControl(EndpointInterceptor.class);
-        EndpointInterceptor interceptorMock1 = (EndpointInterceptor) interceptorControl.getMock();
-        EndpointInterceptor interceptorMock2 = (EndpointInterceptor) interceptorControl.getMock();
+        EndpointInterceptor interceptorMock1 = createMock("interceptor1", EndpointInterceptor.class);
+        EndpointInterceptor interceptorMock2 = createMock("interceptor2", EndpointInterceptor.class);
 
-        interceptorControl.expectAndReturn(interceptorMock1.handleRequest(messageContext, endpoint), true);
-        interceptorControl.expectAndReturn(interceptorMock2.handleRequest(messageContext, endpoint), true);
+        expect(interceptorMock1.handleRequest(messageContext, endpoint)).andReturn(true);
+        expect(interceptorMock2.handleRequest(messageContext, endpoint)).andReturn(true);
+
         adapterMock.invoke(messageContext, endpoint);
-        interceptorControl.expectAndReturn(interceptorMock2.handleResponse(messageContext, endpoint), true);
-        interceptorControl.expectAndReturn(interceptorMock1.handleResponse(messageContext, endpoint), true);
+
+        expect(interceptorMock2.handleResponse(messageContext, endpoint)).andReturn(true);
+        expect(interceptorMock1.handleResponse(messageContext, endpoint)).andReturn(true);
 
         EndpointInvocationChain chain =
                 new EndpointInvocationChain(endpoint, new EndpointInterceptor[]{interceptorMock1, interceptorMock2});
 
-        mappingControl.expectAndReturn(mappingMock.getEndpoint(messageContext), chain);
-        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), new MockWebServiceMessage());
+        expect(mappingMock.getEndpoint(messageContext)).andReturn(chain);
+        expect(factoryMock.createWebServiceMessage()).andReturn(new MockWebServiceMessage());
 
-        mappingControl.replay();
-        interceptorControl.replay();
-        adapterControl.replay();
-        factoryControl.replay();
+        replay(mappingMock, interceptorMock1, interceptorMock2, adapterMock, factoryMock);
+
         //  response required for interceptor invocation
         messageContext.getResponse();
         dispatcher.dispatch(messageContext);
 
-        mappingControl.verify();
-        interceptorControl.verify();
-        adapterControl.verify();
-        factoryControl.verify();
+        verify(mappingMock, interceptorMock1, interceptorMock2, adapterMock, factoryMock);
     }
 
+    @Test
     public void testFlowNoResponse() throws Exception {
-        MockControl adapterControl = MockControl.createControl(EndpointAdapter.class);
-        EndpointAdapter adapterMock = (EndpointAdapter) adapterControl.getMock();
+        EndpointAdapter adapterMock = createMock(EndpointAdapter.class);
         dispatcher.setEndpointAdapters(Collections.singletonList(adapterMock));
 
         Object endpoint = new Object();
-        adapterControl.expectAndReturn(adapterMock.supports(endpoint), true);
+        expect(adapterMock.supports(endpoint)).andReturn(true);
 
-        MockControl mappingControl = MockControl.createControl(EndpointMapping.class);
-        EndpointMapping mappingMock = (EndpointMapping) mappingControl.getMock();
+        EndpointMapping mappingMock = createMock(EndpointMapping.class);
         dispatcher.setEndpointMappings(Collections.singletonList(mappingMock));
 
-        MockControl interceptorControl = MockControl.createStrictControl(EndpointInterceptor.class);
-        EndpointInterceptor interceptorMock1 = (EndpointInterceptor) interceptorControl.getMock();
-        EndpointInterceptor interceptorMock2 = (EndpointInterceptor) interceptorControl.getMock();
+        EndpointInterceptor interceptorMock1 = createMock("interceptor1", EndpointInterceptor.class);
+        EndpointInterceptor interceptorMock2 = createMock("interceptor2", EndpointInterceptor.class);
 
         EndpointInvocationChain chain =
                 new EndpointInvocationChain(endpoint, new EndpointInterceptor[]{interceptorMock1, interceptorMock2});
-        mappingControl.expectAndReturn(mappingMock.getEndpoint(messageContext), chain);
+        expect(mappingMock.getEndpoint(messageContext)).andReturn(chain);
 
-        interceptorControl.expectAndReturn(interceptorMock1.handleRequest(messageContext, endpoint), true);
-        interceptorControl.expectAndReturn(interceptorMock2.handleRequest(messageContext, endpoint), true);
+        expect(interceptorMock1.handleRequest(messageContext, endpoint)).andReturn(true);
+        expect(interceptorMock2.handleRequest(messageContext, endpoint)).andReturn(true);
+
         adapterMock.invoke(messageContext, endpoint);
 
-        mappingControl.replay();
-        interceptorControl.replay();
-        adapterControl.replay();
-        factoryControl.replay();
+        replay(mappingMock, interceptorMock1, interceptorMock2, adapterMock, factoryMock);
 
         dispatcher.dispatch(messageContext);
 
-        mappingControl.verify();
-        interceptorControl.verify();
-        adapterControl.verify();
-        factoryControl.verify();
+        verify(mappingMock, interceptorMock1, interceptorMock2, adapterMock, factoryMock);
     }
 
+    @Test
     public void testInterceptedRequestFlow() throws Exception {
-        MockControl adapterControl = MockControl.createControl(EndpointAdapter.class);
-        EndpointAdapter adapterMock = (EndpointAdapter) adapterControl.getMock();
+        EndpointAdapter adapterMock = createMock(EndpointAdapter.class);
         dispatcher.setEndpointAdapters(Collections.singletonList(adapterMock));
 
-        MockControl mappingControl = MockControl.createControl(EndpointMapping.class);
-        EndpointMapping mappingMock = (EndpointMapping) mappingControl.getMock();
+        EndpointMapping mappingMock = createMock(EndpointMapping.class);
         dispatcher.setEndpointMappings(Collections.singletonList(mappingMock));
 
-        MockControl interceptorControl = MockControl.createStrictControl(EndpointInterceptor.class);
-        EndpointInterceptor interceptorMock1 = (EndpointInterceptor) interceptorControl.getMock();
-        EndpointInterceptor interceptorMock2 = (EndpointInterceptor) interceptorControl.getMock();
+        EndpointInterceptor interceptorMock1 = createMock("interceptor1", EndpointInterceptor.class);
+        EndpointInterceptor interceptorMock2 = createMock("interceptor2", EndpointInterceptor.class);
 
         Object endpoint = new Object();
-        interceptorControl.expectAndReturn(interceptorMock1.handleRequest(messageContext, endpoint), false);
-        interceptorControl.expectAndReturn(interceptorMock1.handleResponse(messageContext, endpoint), true);
+
+        expect(interceptorMock1.handleRequest(messageContext, endpoint)).andReturn(false);
+        expect(interceptorMock1.handleResponse(messageContext, endpoint)).andReturn(true);
 
         EndpointInvocationChain chain =
                 new EndpointInvocationChain(endpoint, new EndpointInterceptor[]{interceptorMock1, interceptorMock2});
 
-        mappingControl.expectAndReturn(mappingMock.getEndpoint(messageContext), chain);
-        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), new MockWebServiceMessage());
+        expect(mappingMock.getEndpoint(messageContext)).andReturn(chain);
+        expect(factoryMock.createWebServiceMessage()).andReturn(new MockWebServiceMessage());
 
-        mappingControl.replay();
-        interceptorControl.replay();
-        adapterControl.replay();
-        factoryControl.replay();
+        replay(mappingMock, interceptorMock1, interceptorMock2, adapterMock, factoryMock);
 
         //  response required for interceptor invocation
         messageContext.getResponse();
 
         dispatcher.dispatch(messageContext);
 
-        mappingControl.verify();
-        interceptorControl.verify();
-        adapterControl.verify();
-        factoryControl.verify();
+        verify(mappingMock, interceptorMock1, interceptorMock2, adapterMock, factoryMock);
     }
 
+    @Test
     public void testInterceptedResponseFlow() throws Exception {
-        MockControl adapterControl = MockControl.createControl(EndpointAdapter.class);
-        EndpointAdapter adapterMock = (EndpointAdapter) adapterControl.getMock();
+        EndpointAdapter adapterMock = createMock(EndpointAdapter.class);
         dispatcher.setEndpointAdapters(Collections.singletonList(adapterMock));
 
-        MockControl mappingControl = MockControl.createControl(EndpointMapping.class);
-        EndpointMapping mappingMock = (EndpointMapping) mappingControl.getMock();
+        EndpointMapping mappingMock = createMock(EndpointMapping.class);
         dispatcher.setEndpointMappings(Collections.singletonList(mappingMock));
 
-        MockControl interceptorControl = MockControl.createStrictControl(EndpointInterceptor.class);
-        EndpointInterceptor interceptorMock1 = (EndpointInterceptor) interceptorControl.getMock();
-        EndpointInterceptor interceptorMock2 = (EndpointInterceptor) interceptorControl.getMock();
+        EndpointInterceptor interceptorMock1 = createMock("interceptor1", EndpointInterceptor.class);
+        EndpointInterceptor interceptorMock2 = createMock("interceptor2", EndpointInterceptor.class);
 
         Object endpoint = new Object();
-        interceptorControl.expectAndReturn(interceptorMock1.handleRequest(messageContext, endpoint), true);
-        interceptorControl.expectAndReturn(interceptorMock2.handleRequest(messageContext, endpoint), false);
-        interceptorControl.expectAndReturn(interceptorMock2.handleResponse(messageContext, endpoint), false);
+        expect(interceptorMock1.handleRequest(messageContext, endpoint)).andReturn(true);
+        expect(interceptorMock2.handleRequest(messageContext, endpoint)).andReturn(false);
+        expect(interceptorMock2.handleResponse(messageContext, endpoint)).andReturn(false);
 
         EndpointInvocationChain chain =
                 new EndpointInvocationChain(endpoint, new EndpointInterceptor[]{interceptorMock1, interceptorMock2});
 
-        mappingControl.expectAndReturn(mappingMock.getEndpoint(messageContext), chain);
-        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), new MockWebServiceMessage());
+        expect(mappingMock.getEndpoint(messageContext)).andReturn(chain);
+        expect(factoryMock.createWebServiceMessage()).andReturn(new MockWebServiceMessage());
 
-        mappingControl.replay();
-        interceptorControl.replay();
-        adapterControl.replay();
-        factoryControl.replay();
+        replay(mappingMock, interceptorMock1, interceptorMock2, adapterMock, factoryMock);
+
         //  response required for interceptor invocation
         messageContext.getResponse();
 
         dispatcher.dispatch(messageContext);
 
-        mappingControl.verify();
-        interceptorControl.verify();
-        adapterControl.verify();
-        factoryControl.verify();
+        verify(mappingMock, interceptorMock1, interceptorMock2, adapterMock, factoryMock);
     }
 
+    @Test
     public void testFaultFlow() throws Exception {
-        MockControl adapterControl = MockControl.createControl(EndpointAdapter.class);
-        EndpointAdapter adapterMock = (EndpointAdapter) adapterControl.getMock();
+        EndpointAdapter adapterMock = createMock(EndpointAdapter.class);
         dispatcher.setEndpointAdapters(Collections.singletonList(adapterMock));
 
         Object endpoint = new Object();
-        adapterControl.expectAndReturn(adapterMock.supports(endpoint), true);
+        expect(adapterMock.supports(endpoint)).andReturn(true);
 
-        MockControl mappingControl = MockControl.createControl(EndpointMapping.class);
-        EndpointMapping mappingMock = (EndpointMapping) mappingControl.getMock();
+        EndpointMapping mappingMock = createMock(EndpointMapping.class);
         dispatcher.setEndpointMappings(Collections.singletonList(mappingMock));
 
-        MockControl interceptorControl = MockControl.createStrictControl(EndpointInterceptor.class);
-        EndpointInterceptor interceptorMock = (EndpointInterceptor) interceptorControl.getMock();
+        EndpointInterceptor interceptorMock = createMock(EndpointInterceptor.class);
 
-        interceptorControl.expectAndReturn(interceptorMock.handleRequest(messageContext, endpoint), true);
+        expect(interceptorMock.handleRequest(messageContext, endpoint)).andReturn(true);
         adapterMock.invoke(messageContext, endpoint);
-        interceptorControl.expectAndReturn(interceptorMock.handleFault(messageContext, endpoint), true);
+        expect(interceptorMock.handleFault(messageContext, endpoint)).andReturn(true);
 
         EndpointInvocationChain chain =
                 new EndpointInvocationChain(endpoint, new EndpointInterceptor[]{interceptorMock});
 
-        mappingControl.expectAndReturn(mappingMock.getEndpoint(messageContext), chain);
+        expect(mappingMock.getEndpoint(messageContext)).andReturn(chain);
         MockWebServiceMessage response = new MockWebServiceMessage();
         response.setFault(true);
-        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), response);
+        expect(factoryMock.createWebServiceMessage()).andReturn(response);
 
-        mappingControl.replay();
-        interceptorControl.replay();
-        adapterControl.replay();
-        factoryControl.replay();
+        replay(mappingMock, interceptorMock, adapterMock, factoryMock);
+
         //  response required for interceptor invocation
         messageContext.getResponse();
         dispatcher.dispatch(messageContext);
 
-        mappingControl.verify();
-        interceptorControl.verify();
-        adapterControl.verify();
-        factoryControl.verify();
+        verify(mappingMock, interceptorMock, adapterMock, factoryMock);
     }
 
+    @Test
     public void testNoEndpointFound() throws Exception {
-        dispatcher.setEndpointMappings(Collections.EMPTY_LIST);
+        dispatcher.setEndpointMappings(Collections.<EndpointMapping>emptyList());
         try {
             dispatcher.receive(messageContext);
-            fail("NoEndpointFoundException expected");
+            Assert.fail("NoEndpointFoundException expected");
         }
         catch (NoEndpointFoundException ex) {
             // expected
         }
     }
 
+    @Test
     public void testDetectStrategies() throws Exception {
         StaticApplicationContext applicationContext = new StaticApplicationContext();
         applicationContext.registerSingleton("mapping", PayloadRootQNameEndpointMapping.class);
         applicationContext.registerSingleton("adapter", PayloadEndpointAdapter.class);
         applicationContext.registerSingleton("resolver", SimpleSoapExceptionResolver.class);
         dispatcher.setApplicationContext(applicationContext);
-        assertEquals("Invalid amount of mappings detected", 1, dispatcher.getEndpointMappings().size());
-        assertTrue("Invalid mappings detected",
+        Assert.assertEquals("Invalid amount of mappings detected", 1, dispatcher.getEndpointMappings().size());
+        Assert.assertTrue("Invalid mappings detected",
                 dispatcher.getEndpointMappings().get(0) instanceof PayloadRootQNameEndpointMapping);
-        assertEquals("Invalid amount of adapters detected", 1, dispatcher.getEndpointAdapters().size());
-        assertTrue("Invalid mappings detected",
+        Assert.assertEquals("Invalid amount of adapters detected", 1, dispatcher.getEndpointAdapters().size());
+        Assert.assertTrue("Invalid mappings detected",
                 dispatcher.getEndpointAdapters().get(0) instanceof PayloadEndpointAdapter);
-        assertEquals("Invalid amount of resolvers detected", 1, dispatcher.getEndpointExceptionResolvers().size());
-        assertTrue("Invalid mappings detected",
+        Assert.assertEquals("Invalid amount of resolvers detected", 1,
+                dispatcher.getEndpointExceptionResolvers().size());
+        Assert.assertTrue("Invalid mappings detected",
                 dispatcher.getEndpointExceptionResolvers().get(0) instanceof SimpleSoapExceptionResolver);
     }
 
+    @Test
     public void testDefaultStrategies() throws Exception {
         StaticApplicationContext applicationContext = new StaticApplicationContext();
         dispatcher.setApplicationContext(applicationContext);

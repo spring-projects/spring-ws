@@ -19,6 +19,8 @@ package org.springframework.ws.server.endpoint;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
+import static org.junit.Assert.*;
+
 public class JDomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 
     @Override
