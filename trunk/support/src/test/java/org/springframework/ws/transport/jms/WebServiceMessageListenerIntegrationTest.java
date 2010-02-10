@@ -16,6 +16,7 @@
 
 package org.springframework.ws.transport.jms;
 
+import javax.annotation.Resource;
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -47,10 +48,10 @@ public class WebServiceMessageListenerIntegrationTest {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    @Autowired
+    @Resource
     private Queue responseQueue;
 
-    @Autowired
+    @Resource
     private Queue requestQueue;
 
     @Autowired

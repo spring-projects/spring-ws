@@ -16,31 +16,39 @@
 
 package org.springframework.ws.transport.mail;
 
-import org.custommonkey.xmlunit.XMLAssert;
-import org.jvnet.mock_javamail.Mailbox;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-public class MailIntegrationTest extends AbstractDependencyInjectionSpringContextTests {
+import org.custommonkey.xmlunit.XMLAssert;
+import org.junit.After;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.jvnet.mock_javamail.Mailbox;
 
+import static org.junit.Assert.assertEquals;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("mail-applicationContext.xml")
+public class MailIntegrationTest {
+
+    @Autowired
     private WebServiceTemplate webServiceTemplate;
 
-    @Override
-    protected String[] getConfigLocations() {
-        return new String[]{"classpath:org/springframework/ws/transport/mail/mail-applicationContext.xml"};
-    }
+    @Autowired
+    private GenericApplicationContext applicationContext;
 
-    @Override
-    protected void onTearDown() throws Exception {
+    @After
+    public void clearMailbox() throws Exception {
         Mailbox.clearAll();
     }
 
-    public void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
-        this.webServiceTemplate = webServiceTemplate;
-    }
 
+    @Test
     public void testMailTransport() throws Exception {
         String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
         StringResult result = new StringResult();

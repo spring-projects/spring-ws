@@ -22,13 +22,17 @@ import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPMessage;
 
-import junit.framework.TestCase;
-import org.jvnet.mock_javamail.Mailbox;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.transport.WebServiceConnection;
 
-public class MailMessageSenderIntegrationTest extends TestCase {
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.jvnet.mock_javamail.Mailbox;
+
+public class MailMessageSenderIntegrationTest {
 
     private MailMessageSender messageSender;
 
@@ -36,8 +40,8 @@ public class MailMessageSenderIntegrationTest extends TestCase {
 
     private static final String SOAP_ACTION = "http://springframework.org/DoIt";
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         messageSender = new MailMessageSender();
         messageSender.setFrom("Spring-WS SOAP Client <client@example.com>");
         messageSender.setTransportUri("smtp://smtp.example.com");
@@ -46,22 +50,23 @@ public class MailMessageSenderIntegrationTest extends TestCase {
         messageSender.afterPropertiesSet();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         Mailbox.clearAll();
     }
 
+    @Test
     public void testSendAndReceiveQueueNoResponse() throws Exception {
-        URI mailTo = new URI("mailto:server@example.com?subject=SOAP%20Test");
         WebServiceConnection connection = null;
         try {
+            URI mailTo = new URI("mailto:server@example.com?subject=SOAP%20Test");
             connection = messageSender.createConnection(mailTo);
             SOAPMessage saajMessage = messageFactory.createMessage();
             saajMessage.getSOAPBody().addBodyElement(new QName("http://springframework.org", "test"));
             SoapMessage soapRequest = new SaajSoapMessage(saajMessage);
             soapRequest.setSoapAction(SOAP_ACTION);
             connection.send(soapRequest);
-            assertEquals("No mail message sent", 1, Mailbox.get("server@example.com").size());
+            Assert.assertEquals("No mail message sent", 1, Mailbox.get("server@example.com").size());
         }
         finally {
             if (connection != null) {
