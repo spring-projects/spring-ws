@@ -11,19 +11,7 @@
             <outputDirectory/>
         </fileSet>
         <fileSet>
-            <directory>oxm/src/main/java</directory>
-            <outputDirectory/>
-        </fileSet>
-        <fileSet>
-            <directory>oxm-tiger/src/main/java</directory>
-            <outputDirectory/>
-        </fileSet>
-        <fileSet>
             <directory>core/src/main/java</directory>
-            <outputDirectory/>
-        </fileSet>
-        <fileSet>
-            <directory>core-tiger/src/main/java</directory>
             <outputDirectory/>
         </fileSet>
         <fileSet>
