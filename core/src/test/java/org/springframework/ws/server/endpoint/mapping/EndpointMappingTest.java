@@ -16,80 +16,90 @@
 
 package org.springframework.ws.server.endpoint.mapping;
 
-import junit.framework.TestCase;
-import org.easymock.MockControl;
-
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.EndpointInvocationChain;
 import org.springframework.ws.server.endpoint.interceptor.EndpointInterceptorAdapter;
 
-public class EndpointMappingTest extends TestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.easymock.EasyMock.*;
+
+public class EndpointMappingTest {
 
     private MessageContext mockContext;
 
-    private MockControl contextControl;
-
-    @Override
-    protected void setUp() throws Exception {
-        contextControl = MockControl.createControl(MessageContext.class);
-        mockContext = (MessageContext) contextControl.getMock();
+    @Before
+    public void setUp() throws Exception {
+        mockContext = createMock(MessageContext.class);
     }
 
+    @Test
     public void testDefaultEndpoint() throws Exception {
         Object defaultEndpoint = new Object();
         AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
             @Override
             protected Object getEndpointInternal(MessageContext givenRequest) throws Exception {
-                assertEquals("Invalid request passed", mockContext, givenRequest);
+                Assert.assertEquals("Invalid request passed", mockContext, givenRequest);
                 return null;
             }
         };
         mapping.setDefaultEndpoint(defaultEndpoint);
-        contextControl.replay();
+
+        replay(mockContext);
 
         EndpointInvocationChain result = mapping.getEndpoint(mockContext);
-        assertNotNull("No EndpointInvocatioChain returned", result);
-        assertEquals("Default Endpoint not returned", defaultEndpoint, result.getEndpoint());
-        contextControl.verify();
+        Assert.assertNotNull("No EndpointInvocatioChain returned", result);
+        Assert.assertEquals("Default Endpoint not returned", defaultEndpoint, result.getEndpoint());
+
+        verify(mockContext);
     }
 
+    @Test
     public void testEndpoint() throws Exception {
         final Object endpoint = new Object();
         AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
             @Override
             protected Object getEndpointInternal(MessageContext givenRequest) throws Exception {
-                assertEquals("Invalid request passed", mockContext, givenRequest);
+                Assert.assertEquals("Invalid request passed", mockContext, givenRequest);
                 return endpoint;
             }
         };
-        contextControl.replay();
+        replay(mockContext);
 
         EndpointInvocationChain result = mapping.getEndpoint(mockContext);
-        assertNotNull("No EndpointInvocatioChain returned", result);
-        assertEquals("Unexpected Endpoint returned", endpoint, result.getEndpoint());
-        contextControl.verify();
+        Assert.assertNotNull("No EndpointInvocatioChain returned", result);
+        Assert.assertEquals("Unexpected Endpoint returned", endpoint, result.getEndpoint());
+
+        verify(mockContext);
     }
 
+    @Test
     public void testEndpointInterceptors() throws Exception {
         final Object endpoint = new Object();
         EndpointInterceptor interceptor = new EndpointInterceptorAdapter();
         AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
             @Override
             protected Object getEndpointInternal(MessageContext givenRequest) throws Exception {
-                assertEquals("Invalid request passed", mockContext, givenRequest);
+                Assert.assertEquals("Invalid request passed", mockContext, givenRequest);
                 return endpoint;
             }
         };
-        contextControl.replay();
+
+        replay(mockContext);
+
         mapping.setInterceptors(new EndpointInterceptor[]{interceptor});
         EndpointInvocationChain result = mapping.getEndpoint(mockContext);
-        assertEquals("Unexpected amount of EndpointInterceptors returned", 1, result.getInterceptors().length);
-        assertEquals("Unexpected EndpointInterceptor returned", interceptor, result.getInterceptors()[0]);
-        contextControl.verify();
+        Assert.assertEquals("Unexpected amount of EndpointInterceptors returned", 1, result.getInterceptors().length);
+        Assert.assertEquals("Unexpected EndpointInterceptor returned", interceptor, result.getInterceptors()[0]);
+
+        verify(mockContext);
     }
 
+    @Test
     public void testEndpointBeanName() throws Exception {
         StaticApplicationContext applicationContext = new StaticApplicationContext();
         applicationContext.registerSingleton("endpoint", Object.class);
@@ -98,18 +108,21 @@ public class EndpointMappingTest extends TestCase {
 
             @Override
             protected Object getEndpointInternal(MessageContext message) throws Exception {
-                assertEquals("Invalid request", mockContext, message);
+                Assert.assertEquals("Invalid request", mockContext, message);
                 return "endpoint";
             }
         };
         mapping.setApplicationContext(applicationContext);
-        contextControl.replay();
+
+        replay(mockContext);
 
         EndpointInvocationChain result = mapping.getEndpoint(mockContext);
-        assertNotNull("No endpoint returned", result);
-        contextControl.verify();
+        Assert.assertNotNull("No endpoint returned", result);
+
+        verify(mockContext);
     }
 
+    @Test
     public void testEndpointInvalidBeanName() throws Exception {
         StaticApplicationContext applicationContext = new StaticApplicationContext();
         applicationContext.registerSingleton("endpoint", Object.class);
@@ -118,19 +131,22 @@ public class EndpointMappingTest extends TestCase {
 
             @Override
             protected Object getEndpointInternal(MessageContext message) throws Exception {
-                assertEquals("Invalid request", mockContext, message);
+                Assert.assertEquals("Invalid request", mockContext, message);
                 return "noSuchBean";
             }
         };
         mapping.setApplicationContext(applicationContext);
-        contextControl.replay();
+
+        replay(mockContext);
 
         EndpointInvocationChain result = mapping.getEndpoint(mockContext);
 
-        assertNull("No endpoint returned", result);
-        contextControl.verify();
+        Assert.assertNull("No endpoint returned", result);
+
+        verify(mockContext);
     }
 
+    @Test
     public void testEndpointPrototype() throws Exception {
         StaticApplicationContext applicationContext = new StaticApplicationContext();
         applicationContext.registerPrototype("endpoint", MyEndpoint.class);
@@ -139,19 +155,21 @@ public class EndpointMappingTest extends TestCase {
 
             @Override
             protected Object getEndpointInternal(MessageContext message) throws Exception {
-                assertEquals("Invalid request", mockContext, message);
+                Assert.assertEquals("Invalid request", mockContext, message);
                 return "endpoint";
             }
         };
         mapping.setApplicationContext(applicationContext);
-        contextControl.replay();
+
+        replay(mockContext);
 
         EndpointInvocationChain result = mapping.getEndpoint(mockContext);
-        assertNotNull("No endpoint returned", result);
+        Assert.assertNotNull("No endpoint returned", result);
         result = mapping.getEndpoint(mockContext);
-        assertNotNull("No endpoint returned", result);
-        assertEquals("Prototype endpoint was not constructed twice", 2, MyEndpoint.constrCount);
-        contextControl.verify();
+        Assert.assertNotNull("No endpoint returned", result);
+        Assert.assertEquals("Prototype endpoint was not constructed twice", 2, MyEndpoint.constrCount);
+
+        verify(mockContext);
     }
 
     private static class MyEndpoint {
