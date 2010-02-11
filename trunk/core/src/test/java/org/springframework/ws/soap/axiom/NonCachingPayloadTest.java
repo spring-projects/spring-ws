@@ -19,26 +19,31 @@ package org.springframework.ws.soap.axiom;
 import java.io.StringWriter;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.springframework.xml.transform.StaxResult;
+
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.impl.llom.soap11.SOAP11Factory;
-import org.custommonkey.xmlunit.XMLTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-import org.springframework.xml.transform.StaxResult;
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 
-public class NonCachingPayloadTest extends XMLTestCase {
+@SuppressWarnings("Since15")
+public class NonCachingPayloadTest {
 
     private Payload payload;
 
     private SOAPBody body;
 
-    @Override
+    @Before
     public final void setUp() {
         SOAPFactory soapFactory = new SOAP11Factory();
         body = soapFactory.createSOAPBody();
         payload = new NonCachingPayload(body, soapFactory);
     }
 
+    @Test
     public void testDelegatingStreamWriter() throws Exception {
         StaxResult result = (StaxResult) payload.getResult();
         XMLStreamWriter streamWriter = result.getXMLStreamWriter();
@@ -62,6 +67,7 @@ public class NonCachingPayloadTest extends XMLTestCase {
         assertXMLEqual(expected, writer.toString());
     }
 
+    @Test
     public void testDelegatingStreamWriterWriteEndDocument() throws Exception {
         StaxResult result = (StaxResult) payload.getResult();
         XMLStreamWriter streamWriter = result.getXMLStreamWriter();
@@ -84,6 +90,7 @@ public class NonCachingPayloadTest extends XMLTestCase {
         assertXMLEqual(expected, writer.toString());
     }
 
+    @Test
     public void testDelegatingStreamWriterWriteEmptyElement() throws Exception {
         StaxResult result = (StaxResult) payload.getResult();
         XMLStreamWriter streamWriter = result.getXMLStreamWriter();

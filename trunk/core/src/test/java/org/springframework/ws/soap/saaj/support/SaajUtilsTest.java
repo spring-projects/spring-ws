@@ -17,7 +17,6 @@
 package org.springframework.ws.soap.saaj.support;
 
 import java.io.InputStream;
-
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,87 +26,98 @@ import javax.xml.soap.Name;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPMessage;
 
-import org.custommonkey.xmlunit.XMLTestCase;
-import org.w3c.dom.Document;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.saaj.SaajSoapMessageException;
 
-public class SaajUtilsTest extends XMLTestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.w3c.dom.Document;
+
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+
+public class SaajUtilsTest {
 
     private MessageFactory messageFactory;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         messageFactory = MessageFactory.newInstance();
     }
 
+    @Test
     public void testToName() throws Exception {
         SOAPMessage message = messageFactory.createMessage();
         QName qName = new QName("localPart");
         SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
         Name name = SaajUtils.toName(qName, envelope);
-        assertNotNull("Invalid name", name);
-        assertEquals("Invalid local part", qName.getLocalPart(), name.getLocalName());
-        assertFalse("Invalid prefix", StringUtils.hasLength(name.getPrefix()));
-        assertFalse("Invalid namespace", StringUtils.hasLength(name.getURI()));
+        Assert.assertNotNull("Invalid name", name);
+        Assert.assertEquals("Invalid local part", qName.getLocalPart(), name.getLocalName());
+        Assert.assertFalse("Invalid prefix", StringUtils.hasLength(name.getPrefix()));
+        Assert.assertFalse("Invalid namespace", StringUtils.hasLength(name.getURI()));
     }
 
+    @Test
     public void testToNameNamespace() throws Exception {
         SOAPMessage message = messageFactory.createMessage();
         QName qName = new QName("namespace", "localPart");
         SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
         envelope.addNamespaceDeclaration("prefix", "namespace");
         Name name = SaajUtils.toName(qName, envelope);
-        assertNotNull("Invalid name", name);
-        assertEquals("Invalid namespace", qName.getNamespaceURI(), name.getURI());
-        assertEquals("Invalid local part", qName.getLocalPart(), name.getLocalName());
-        assertEquals("Invalid prefix", "prefix", name.getPrefix());
+        Assert.assertNotNull("Invalid name", name);
+        Assert.assertEquals("Invalid namespace", qName.getNamespaceURI(), name.getURI());
+        Assert.assertEquals("Invalid local part", qName.getLocalPart(), name.getLocalName());
+        Assert.assertEquals("Invalid prefix", "prefix", name.getPrefix());
     }
 
+    @Test
     public void testToNameNamespacePrefix() throws Exception {
         SOAPMessage message = messageFactory.createMessage();
         QName qName = new QName("namespace", "localPart", "prefix");
         SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
         Name name = SaajUtils.toName(qName, envelope);
-        assertNotNull("Invalid name", name);
-        assertEquals("Invalid namespace", qName.getNamespaceURI(), name.getURI());
-        assertEquals("Invalid local part", qName.getLocalPart(), name.getLocalName());
-        assertEquals("Invalid prefix", qName.getPrefix(), name.getPrefix());
+        Assert.assertNotNull("Invalid name", name);
+        Assert.assertEquals("Invalid namespace", qName.getNamespaceURI(), name.getURI());
+        Assert.assertEquals("Invalid local part", qName.getLocalPart(), name.getLocalName());
+        Assert.assertEquals("Invalid prefix", qName.getPrefix(), name.getPrefix());
     }
 
+    @Test
     public void testToQName() throws Exception {
         SOAPMessage message = messageFactory.createMessage();
         Name name = message.getSOAPPart().getEnvelope().createName("localPart", null, null);
         QName qName = SaajUtils.toQName(name);
-        assertNotNull("Invalid qName", qName);
-        assertEquals("Invalid namespace", name.getURI(), qName.getNamespaceURI());
-        assertFalse("Invalid prefix", StringUtils.hasLength(qName.getPrefix()));
-        assertFalse("Invalid namespace", StringUtils.hasLength(qName.getNamespaceURI()));
+        Assert.assertNotNull("Invalid qName", qName);
+        Assert.assertEquals("Invalid namespace", name.getURI(), qName.getNamespaceURI());
+        Assert.assertFalse("Invalid prefix", StringUtils.hasLength(qName.getPrefix()));
+        Assert.assertFalse("Invalid namespace", StringUtils.hasLength(qName.getNamespaceURI()));
     }
 
+    @Test
     public void testToQNameNamespace() throws Exception {
         SOAPMessage message = messageFactory.createMessage();
         Name name = message.getSOAPPart().getEnvelope().createName("localPart", null, "namespace");
         QName qName = SaajUtils.toQName(name);
-        assertNotNull("Invalid qName", qName);
-        assertEquals("Invalid namespace", name.getURI(), qName.getNamespaceURI());
-        assertEquals("Invalid local part", name.getLocalName(), qName.getLocalPart());
-        assertFalse("Invalid prefix", StringUtils.hasLength(qName.getPrefix()));
+        Assert.assertNotNull("Invalid qName", qName);
+        Assert.assertEquals("Invalid namespace", name.getURI(), qName.getNamespaceURI());
+        Assert.assertEquals("Invalid local part", name.getLocalName(), qName.getLocalPart());
+        Assert.assertFalse("Invalid prefix", StringUtils.hasLength(qName.getPrefix()));
     }
 
+    @Test
     public void testToQNamePrefixNamespace() throws Exception {
         SOAPMessage message = messageFactory.createMessage();
         Name name = message.getSOAPPart().getEnvelope().createName("localPart", "prefix", "namespace");
         QName qName = SaajUtils.toQName(name);
-        assertNotNull("Invalid qName", qName);
-        assertEquals("Invalid namespace", name.getURI(), qName.getNamespaceURI());
-        assertEquals("Invalid local part", name.getLocalName(), qName.getLocalPart());
-        assertEquals("Invalid prefix", name.getPrefix(), qName.getPrefix());
+        Assert.assertNotNull("Invalid qName", qName);
+        Assert.assertEquals("Invalid namespace", name.getURI(), qName.getNamespaceURI());
+        Assert.assertEquals("Invalid local part", name.getLocalName(), qName.getLocalPart());
+        Assert.assertEquals("Invalid prefix", name.getPrefix(), qName.getPrefix());
     }
 
+    @Test
     public void testLoadMessage() throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
@@ -118,10 +128,12 @@ public class SaajUtilsTest extends XMLTestCase {
         assertXMLEqual(soapMessage.getSOAPPart(), document);
     }
 
+    @Test
     public void testGetSaajVersion() throws Exception {
-        assertEquals("Invalid SAAJ version", SaajUtils.SAAJ_13, SaajUtils.getSaajVersion());
+        Assert.assertEquals("Invalid SAAJ version", SaajUtils.SAAJ_13, SaajUtils.getSaajVersion());
     }
     
+    @Test
     public void testGetSaajVersionInvalidEnvelope() throws Exception {
         Resource resource = new ClassPathResource("invalidNamespaceReferenceSoapMessage.xml", getClass());
     	InputStream in = null;
@@ -130,7 +142,8 @@ public class SaajUtilsTest extends XMLTestCase {
             MimeHeaders headers = new MimeHeaders();
             SOAPMessage soapMessage = messageFactory.createMessage(headers, in);
 			SaajUtils.getSaajVersion(soapMessage);
-    		fail("Should have thrown SaajSoapMessageException as message envelope is invalid and cannot be accessed.");
+    		Assert.fail(
+                    "Should have thrown SaajSoapMessageException as message envelope is invalid and cannot be accessed.");
     	}
     	catch (SaajSoapMessageException e) {
     		// expected

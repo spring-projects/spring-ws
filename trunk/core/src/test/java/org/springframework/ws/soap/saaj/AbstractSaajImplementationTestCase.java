@@ -37,12 +37,17 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 
-import org.custommonkey.xmlunit.XMLTestCase;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-public abstract class AbstractSaajImplementationTestCase extends XMLTestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+
+public abstract class AbstractSaajImplementationTestCase {
 
     private SaajImplementation implementation;
 
@@ -54,8 +59,8 @@ public abstract class AbstractSaajImplementationTestCase extends XMLTestCase {
 
     private SOAPHeader header;
 
-    @Override
-    protected final void setUp() throws Exception {
+    @Before
+    public final void setUp() throws Exception {
         implementation = createSaajImplementation();
         MessageFactory messageFactory = MessageFactory.newInstance();
         message = messageFactory.createMessage();
@@ -66,70 +71,80 @@ public abstract class AbstractSaajImplementationTestCase extends XMLTestCase {
 
     protected abstract SaajImplementation createSaajImplementation();
 
+    @Test
     public void testGetName() throws Exception {
         QName name = implementation.getName(message.getSOAPPart().getEnvelope());
-        assertEquals("Invalid name", SoapVersion.SOAP_11.getEnvelopeName(), name);
+        Assert.assertEquals("Invalid name", SoapVersion.SOAP_11.getEnvelopeName(), name);
     }
 
+    @Test
     public void testGetSource() throws Exception {
         Source source = implementation.getSource(message.getSOAPPart().getEnvelope().getBody());
-        assertNotNull("No source returned", source);
+        Assert.assertNotNull("No source returned", source);
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         StringResult result = new StringResult();
         transformer.transform(source, result);
         assertXMLEqual("<Body xmlns='http://schemas.xmlsoap.org/soap/envelope/'/>", result.toString());
     }
 
+    @Test
     public void testGetResult() throws Exception {
         Source source = new StringSource("<content xmlns='http://springframework.org/spring-ws'/>");
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         transformer.transform(source, implementation.getResult(message.getSOAPPart().getEnvelope().getBody()));
     }
 
+    @Test
     public void testGetEnvelope() throws Exception {
         SOAPEnvelope envelope = implementation.getEnvelope(message);
-        assertEquals("Invalid envelope", message.getSOAPPart().getEnvelope(), envelope);
+        Assert.assertEquals("Invalid envelope", message.getSOAPPart().getEnvelope(), envelope);
     }
 
+    @Test
     public void testGetHeader() throws Exception {
         SOAPHeader header = implementation.getHeader(message.getSOAPPart().getEnvelope());
-        assertEquals("Invalid header", message.getSOAPPart().getEnvelope().getHeader(), header);
+        Assert.assertEquals("Invalid header", message.getSOAPPart().getEnvelope().getHeader(), header);
     }
 
+    @Test
     public void testGetBody() throws Exception {
         SOAPBody body = implementation.getBody(message.getSOAPPart().getEnvelope());
-        assertEquals("Invalid body", message.getSOAPPart().getEnvelope().getBody(), body);
+        Assert.assertEquals("Invalid body", message.getSOAPPart().getEnvelope().getBody(), body);
     }
 
+    @Test
     public void testExampleAllHeaderElements() throws Exception {
-        Iterator iterator = implementation.examineAllHeaderElements(header);
-        assertFalse("Header elements present", iterator.hasNext());
+        Iterator<SOAPHeaderElement> iterator = implementation.examineAllHeaderElements(header);
+        Assert.assertFalse("Header elements present", iterator.hasNext());
         createHeaderElement();
         iterator = implementation.examineAllHeaderElements(header);
-        assertTrue("No header elements present", iterator.hasNext());
+        Assert.assertTrue("No header elements present", iterator.hasNext());
     }
 
+    @Test
     public void testExampleMustUnderstandHeaderElements() throws Exception {
         SOAPHeaderElement headerElement = createHeaderElement();
         headerElement.setMustUnderstand(true);
-        Iterator iterator = implementation.examineAllHeaderElements(header);
-        assertTrue("No header elements present", iterator.hasNext());
+        Iterator<SOAPHeaderElement> iterator = implementation.examineAllHeaderElements(header);
+        Assert.assertTrue("No header elements present", iterator.hasNext());
     }
 
+    @Test
     public void testAddHeaderElement() throws Exception {
         SOAPHeaderElement headerElement = implementation
                 .addHeaderElement(header, new QName("http://springframework.org/spring-ws", "Header"));
-        assertNotNull("No header element returned", headerElement);
-        assertEquals("Invalid namespace", "http://springframework.org/spring-ws",
+        Assert.assertNotNull("No header element returned", headerElement);
+        Assert.assertEquals("Invalid namespace", "http://springframework.org/spring-ws",
                 headerElement.getElementName().getURI());
-        assertEquals("Invalid local name", "Header", headerElement.getElementName().getLocalName());
+        Assert.assertEquals("Invalid local name", "Header", headerElement.getElementName().getLocalName());
     }
 
+    @Test
     public void testGetActorOrRole() throws Exception {
         SOAPHeaderElement headerElement = createHeaderElement();
         String actor = "http://springframework.org/spring-ws/Actor";
         headerElement.setActor(actor);
-        assertEquals("Invalid actor", actor, implementation.getActorOrRole(headerElement));
+        Assert.assertEquals("Invalid actor", actor, implementation.getActorOrRole(headerElement));
     }
 
     private SOAPHeaderElement createHeaderElement() throws SOAPException {
@@ -137,46 +152,53 @@ public abstract class AbstractSaajImplementationTestCase extends XMLTestCase {
         return header.addHeaderElement(name);
     }
 
+    @Test
     public void testSetActorOrRole() throws Exception {
         SOAPHeaderElement headerElement = createHeaderElement();
         String actor = "http://springframework.org/spring-ws/Actor";
         implementation.setActorOrRole(headerElement, actor);
-        assertEquals("Invalid actor", headerElement.getActor(), actor);
+        Assert.assertEquals("Invalid actor", headerElement.getActor(), actor);
     }
 
+    @Test
     public void testGetMustUnderstand() throws Exception {
         SOAPHeaderElement headerElement = createHeaderElement();
         headerElement.setMustUnderstand(true);
-        assertTrue("Invalid mustUnderstand", implementation.getMustUnderstand(headerElement));
+        Assert.assertTrue("Invalid mustUnderstand", implementation.getMustUnderstand(headerElement));
     }
 
+    @Test
     public void testSetMustUnderstand() throws Exception {
         SOAPHeaderElement headerElement = createHeaderElement();
         implementation.setMustUnderstand(headerElement, true);
-        assertTrue("Invalid mustUnderstand", headerElement.getMustUnderstand());
+        Assert.assertTrue("Invalid mustUnderstand", headerElement.getMustUnderstand());
     }
 
+    @Test
     public void testHasFault() throws Exception {
-        assertFalse("Body has fault", implementation.hasFault(body));
+        Assert.assertFalse("Body has fault", implementation.hasFault(body));
         body.addFault();
-        assertTrue("Body has no fault", implementation.hasFault(body));
+        Assert.assertTrue("Body has no fault", implementation.hasFault(body));
     }
 
+    @Test
     public void testGetFault() throws Exception {
-        assertNull("Body has fault", implementation.getFault(body));
+        Assert.assertNull("Body has fault", implementation.getFault(body));
         body.addFault();
-        assertNotNull("Body has no fault", implementation.getFault(body));
+        Assert.assertNotNull("Body has no fault", implementation.getFault(body));
     }
 
+    @Test
     public void testAddFault() throws Exception {
         implementation
                 .addFault(body, new QName("http://springframework.org/spring-ws", "Fault"), "Fault", Locale.ENGLISH);
-        assertTrue("No Fault added", body.hasFault());
+        Assert.assertTrue("No Fault added", body.hasFault());
     }
 
+    @Test
     public void testGetFaultCode() throws Exception {
         SOAPFault fault = createFault();
-        assertEquals("Invalid fault code", new QName("http://springframework.org/spring-ws", "Fault"),
+        Assert.assertEquals("Invalid fault code", new QName("http://springframework.org/spring-ws", "Fault"),
                 implementation.getFaultCode(fault));
     }
 
@@ -184,106 +206,119 @@ public abstract class AbstractSaajImplementationTestCase extends XMLTestCase {
         return body.addFault(new QName("http://springframework.org/spring-ws", "Fault"), "Fault", Locale.ENGLISH);
     }
 
+    @Test
     public void testGetFaultActor() throws Exception {
         SOAPFault fault = createFault();
         String actor = "http://springframework.org/spring-ws/Actor";
         fault.setFaultActor(actor);
-        assertEquals("Invalid actor", actor, implementation.getFaultActor(fault));
+        Assert.assertEquals("Invalid actor", actor, implementation.getFaultActor(fault));
     }
 
+    @Test
     public void testSetFaultActor() throws Exception {
         SOAPFault fault = createFault();
         String actor = "http://springframework.org/spring-ws/Actor";
         implementation.setFaultActor(fault, actor);
-        assertEquals("Invalid actor", actor, fault.getFaultActor());
+        Assert.assertEquals("Invalid actor", actor, fault.getFaultActor());
     }
 
+    @Test
     public void testGetFaultString() throws Exception {
         SOAPFault fault = createFault();
         String faultString = "FaultString";
         fault.setFaultString(faultString);
-        assertEquals("Invalid fault string", faultString, implementation.getFaultString(fault));
+        Assert.assertEquals("Invalid fault string", faultString, implementation.getFaultString(fault));
     }
 
+    @Test
     public void testGetFaultStringLocale() throws Exception {
         SOAPFault fault = createFault();
-        assertEquals("Invalid fault string", Locale.ENGLISH, implementation.getFaultStringLocale(fault));
+        Assert.assertEquals("Invalid fault string", Locale.ENGLISH, implementation.getFaultStringLocale(fault));
     }
 
+    @Test
     public void testGetFaultDetail() throws Exception {
         SOAPFault fault = createFault();
-        assertNull("Fault Detail returned", implementation.getFaultDetail(fault));
+        Assert.assertNull("Fault Detail returned", implementation.getFaultDetail(fault));
         fault.addDetail();
-        assertNotNull("No Fault Detail returned", implementation.getFaultDetail(fault));
+        Assert.assertNotNull("No Fault Detail returned", implementation.getFaultDetail(fault));
     }
 
+    @Test
     public void testAddFaultDetail() throws Exception {
         SOAPFault fault = createFault();
         Detail detail = implementation.addFaultDetail(fault);
-        assertEquals("Invalid fault detail", fault.getDetail(), detail);
+        Assert.assertEquals("Invalid fault detail", fault.getDetail(), detail);
     }
 
+    @Test
     public void testAddDetailEntry() throws Exception {
         SOAPFault fault = createFault();
         Detail detail = fault.addDetail();
         DetailEntry detailEntry =
                 implementation.addDetailEntry(detail, new QName("http://springframework.org/spring-ws", "DetailEntry"));
-        assertNotNull("No detail entry", detailEntry);
-        Iterator iterator = detail.getDetailEntries();
-        assertTrue("No detail entried", iterator.hasNext());
-        assertEquals("Invalid detail entry", detailEntry, iterator.next());
+        Assert.assertNotNull("No detail entry", detailEntry);
+        Iterator<?> iterator = detail.getDetailEntries();
+        Assert.assertTrue("No detail entry", iterator.hasNext());
+        Assert.assertEquals("Invalid detail entry", detailEntry, iterator.next());
     }
 
+    @Test
     public void testAddTextNode() throws Exception {
         SOAPFault fault = createFault();
         Detail detail = fault.addDetail();
         Name name = envelope.createName("DetailEntry", "", "http://springframework.org/spring-ws");
         DetailEntry detailEntry = detail.addDetailEntry(name);
         implementation.addTextNode(detailEntry, "text");
-        assertEquals("Invalid text", "text", detailEntry.getValue());
+        Assert.assertEquals("Invalid text", "text", detailEntry.getValue());
     }
 
+    @Test
     public void testGetDetailEntries() throws Exception {
         SOAPFault fault = createFault();
         Detail detail = fault.addDetail();
-        Iterator iterator = implementation.getDetailEntries(detail);
-        assertFalse("Detail entries found", iterator.hasNext());
+        Iterator<DetailEntry> iterator = implementation.getDetailEntries(detail);
+        Assert.assertFalse("Detail entries found", iterator.hasNext());
         Name name = envelope.createName("DetailEntry", "", "http://springframework.org/spring-ws");
         DetailEntry detailEntry = detail.addDetailEntry(name);
         iterator = implementation.getDetailEntries(detail);
-        assertTrue("No detail entries found", iterator.hasNext());
-        assertEquals("Invalid detail entry found", detailEntry, iterator.next());
-        assertFalse("Detail entries found", iterator.hasNext());
+        Assert.assertTrue("No detail entries found", iterator.hasNext());
+        Assert.assertEquals("Invalid detail entry found", detailEntry, iterator.next());
+        Assert.assertFalse("Detail entries found", iterator.hasNext());
     }
 
+    @Test
     public void testWriteTo() throws Exception {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         implementation.writeTo(message, os);
-        assertTrue("Nothing written", os.toByteArray().length > 0);
+        Assert.assertTrue("Nothing written", os.toByteArray().length > 0);
     }
 
+    @Test
     public void testGetAttachments() throws Exception {
-        Iterator iterator = implementation.getAttachments(message);
-        assertFalse("Message has attachments", iterator.hasNext());
+        Iterator<AttachmentPart> iterator = implementation.getAttachments(message);
+        Assert.assertFalse("Message has attachments", iterator.hasNext());
         AttachmentPart attachmentPart = message.createAttachmentPart();
         message.addAttachmentPart(attachmentPart);
         iterator = implementation.getAttachments(message);
-        assertTrue("Message has no attachments", iterator.hasNext());
-        assertEquals("Invalid attachment part", attachmentPart, iterator.next());
+        Assert.assertTrue("Message has no attachments", iterator.hasNext());
+        Assert.assertEquals("Invalid attachment part", attachmentPart, iterator.next());
     }
 
+    @Test
     public void testAddAttachmentPart() throws Exception {
         DataHandler dataHandler = new DataHandler("data", "text/plain");
         AttachmentPart attachmentPart = implementation.addAttachmentPart(message, dataHandler);
-        assertNotNull("No attachment part", attachmentPart);
+        Assert.assertNotNull("No attachment part", attachmentPart);
     }
 
+    @Test
     public void testRemoveContents() throws Exception {
         body.addBodyElement(new QName("foo", "bar"));
 
-        assertTrue("Body has child nodes", body.hasChildNodes());
+        Assert.assertTrue("Body has child nodes", body.hasChildNodes());
         implementation.removeContents(message.getSOAPBody());
-        assertFalse("Body has child nodes", body.hasChildNodes());
+        Assert.assertFalse("Body has child nodes", body.hasChildNodes());
     }
 
 }

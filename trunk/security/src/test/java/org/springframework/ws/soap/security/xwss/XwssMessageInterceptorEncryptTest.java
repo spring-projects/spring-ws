@@ -20,15 +20,19 @@ import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.xml.soap.SOAPMessage;
 
-import com.sun.xml.wss.impl.callback.DecryptionKeyCallback;
-import com.sun.xml.wss.impl.callback.EncryptionKeyCallback;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
+import com.sun.xml.wss.impl.callback.DecryptionKeyCallback;
+import com.sun.xml.wss.impl.callback.EncryptionKeyCallback;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
 public class XwssMessageInterceptorEncryptTest extends AbstractXwssMessageInterceptorKeyStoreTestCase {
 
+    @Test
     public void testEncryptDefaultCertificate() throws Exception {
         interceptor.setPolicyConfiguration(new ClassPathResource("encrypt-config.xml", getClass()));
         CallbackHandler handler = new AbstractCallbackHandler() {
@@ -64,6 +68,7 @@ public class XwssMessageInterceptorEncryptTest extends AbstractXwssMessageInterc
                 "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/xenc:EncryptedKey", result);
     }
 
+    @Test
     public void testEncryptAlias() throws Exception {
         interceptor.setPolicyConfiguration(new ClassPathResource("encrypt-alias-config.xml", getClass()));
         CallbackHandler handler = new AbstractCallbackHandler() {
@@ -99,6 +104,7 @@ public class XwssMessageInterceptorEncryptTest extends AbstractXwssMessageInterc
                 "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/xenc:EncryptedKey", result);
     }
 
+    @Test
     public void testDecrypt() throws Exception {
         interceptor.setPolicyConfiguration(new ClassPathResource("decrypt-config.xml", getClass()));
         CallbackHandler handler = new AbstractCallbackHandler() {

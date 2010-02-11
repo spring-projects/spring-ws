@@ -27,19 +27,23 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
-import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-public class Wsdl4jDefinitionTest extends XMLTestCase {
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+
+public class Wsdl4jDefinitionTest {
 
     private Wsdl4jDefinition definition;
 
     private Transformer transformer;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         XMLUnit.setIgnoreWhitespace(true);
         WSDLFactory factory = WSDLFactory.newInstance();
         WSDLReader reader = factory.newWSDLReader();
@@ -54,9 +58,10 @@ public class Wsdl4jDefinitionTest extends XMLTestCase {
         transformer = TransformerFactory.newInstance().newTransformer();
     }
 
+    @Test
     public void testGetSource() throws Exception {
         Source source = definition.getSource();
-        assertNotNull("Source is null", source);
+        Assert.assertNotNull("Source is null", source);
         DOMResult result = new DOMResult();
         transformer.transform(source, result);
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();

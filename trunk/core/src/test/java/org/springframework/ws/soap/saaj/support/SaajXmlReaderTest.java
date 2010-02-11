@@ -26,11 +26,14 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 
-import org.custommonkey.xmlunit.XMLTestCase;
+import org.junit.Before;
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-public class SaajXmlReaderTest extends XMLTestCase {
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+
+public class SaajXmlReaderTest {
 
     private SaajXmlReader saajReader;
 
@@ -38,8 +41,8 @@ public class SaajXmlReaderTest extends XMLTestCase {
 
     private Transformer transformer;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         MessageFactory messageFactory = MessageFactory.newInstance();
         message = messageFactory.createMessage();
         SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
@@ -47,6 +50,7 @@ public class SaajXmlReaderTest extends XMLTestCase {
         transformer = TransformerFactory.newInstance().newTransformer();
     }
 
+    @Test
     public void testNamespacesPrefixes() throws Exception {
         saajReader.setFeature("http://xml.org/sax/features/namespaces", true);
         saajReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
@@ -58,6 +62,7 @@ public class SaajXmlReaderTest extends XMLTestCase {
         assertXMLEqual((Document) expected.getNode(), (Document) result.getNode());
     }
 
+    @Test
     public void testNamespacesNoPrefixes() throws Exception {
         saajReader.setFeature("http://xml.org/sax/features/namespaces", true);
         saajReader.setFeature("http://xml.org/sax/features/namespace-prefixes", false);
