@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,15 +28,18 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
-import junit.framework.TestCase;
+import org.springframework.xml.transform.StaxSource;
+
+import org.junit.Assert;
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
-import org.springframework.xml.transform.StaxSource;
+@SuppressWarnings("Since15")
+public class PayloadRootUtilsTest {
 
-public class PayloadRootUtilsTest extends TestCase {
-
+    @Test
     public void testGetQNameForDomSource() throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -45,46 +48,50 @@ public class PayloadRootUtilsTest extends TestCase {
         document.appendChild(element);
         Source source = new DOMSource(document);
         QName qName = PayloadRootUtils.getPayloadRootQName(source, TransformerFactory.newInstance());
-        assertNotNull("getQNameForNode returns null", qName);
-        assertEquals("QName has invalid localname", "localname", qName.getLocalPart());
-        assertEquals("Qname has invalid namespace", "namespace", qName.getNamespaceURI());
-        assertEquals("Qname has invalid prefix", "prefix", qName.getPrefix());
+        Assert.assertNotNull("getQNameForNode returns null", qName);
+        Assert.assertEquals("QName has invalid localname", "localname", qName.getLocalPart());
+        Assert.assertEquals("Qname has invalid namespace", "namespace", qName.getNamespaceURI());
+        Assert.assertEquals("Qname has invalid prefix", "prefix", qName.getPrefix());
     }
 
+    @Test
     public void testGetQNameForStaxSource() throws Exception {
         String contents = "<prefix:localname xmlns:prefix='namespace'/>";
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(contents));
         Source source = new StaxSource(streamReader);
         QName qName = PayloadRootUtils.getPayloadRootQName(source, TransformerFactory.newInstance());
-        assertNotNull("getQNameForNode returns null", qName);
-        assertEquals("QName has invalid localname", "localname", qName.getLocalPart());
-        assertEquals("Qname has invalid namespace", "namespace", qName.getNamespaceURI());
-        assertEquals("Qname has invalid prefix", "prefix", qName.getPrefix());
+        Assert.assertNotNull("getQNameForNode returns null", qName);
+        Assert.assertEquals("QName has invalid localname", "localname", qName.getLocalPart());
+        Assert.assertEquals("Qname has invalid namespace", "namespace", qName.getNamespaceURI());
+        Assert.assertEquals("Qname has invalid prefix", "prefix", qName.getPrefix());
     }
 
+    @Test
     public void testGetQNameForStreamSource() throws Exception {
         String contents = "<prefix:localname xmlns:prefix='namespace'/>";
         Source source = new StreamSource(new StringReader(contents));
         QName qName = PayloadRootUtils.getPayloadRootQName(source, TransformerFactory.newInstance());
-        assertNotNull("getQNameForNode returns null", qName);
-        assertEquals("QName has invalid localname", "localname", qName.getLocalPart());
-        assertEquals("Qname has invalid namespace", "namespace", qName.getNamespaceURI());
-        assertEquals("Qname has invalid prefix", "prefix", qName.getPrefix());
+        Assert.assertNotNull("getQNameForNode returns null", qName);
+        Assert.assertEquals("QName has invalid localname", "localname", qName.getLocalPart());
+        Assert.assertEquals("Qname has invalid namespace", "namespace", qName.getNamespaceURI());
+        Assert.assertEquals("Qname has invalid prefix", "prefix", qName.getPrefix());
     }
 
+    @Test
     public void testGetQNameForSaxSource() throws Exception {
         String contents = "<prefix:localname xmlns:prefix='namespace'/>";
         Source source = new SAXSource(new InputSource(new StringReader(contents)));
         QName qName = PayloadRootUtils.getPayloadRootQName(source, TransformerFactory.newInstance());
-        assertNotNull("getQNameForNode returns null", qName);
-        assertEquals("QName has invalid localname", "localname", qName.getLocalPart());
-        assertEquals("Qname has invalid namespace", "namespace", qName.getNamespaceURI());
-        assertEquals("Qname has invalid prefix", "prefix", qName.getPrefix());
+        Assert.assertNotNull("getQNameForNode returns null", qName);
+        Assert.assertEquals("QName has invalid localname", "localname", qName.getLocalPart());
+        Assert.assertEquals("Qname has invalid namespace", "namespace", qName.getNamespaceURI());
+        Assert.assertEquals("Qname has invalid prefix", "prefix", qName.getPrefix());
     }
 
+    @Test
     public void testGetQNameForNullSource() throws Exception {
         QName qName = PayloadRootUtils.getPayloadRootQName(null, TransformerFactory.newInstance());
-        assertNull("Qname returned", qName);
+        Assert.assertNull("Qname returned", qName);
     }
 }

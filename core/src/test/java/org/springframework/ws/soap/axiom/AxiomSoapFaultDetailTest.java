@@ -20,14 +20,17 @@ import java.io.StringReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 
-import junit.framework.TestCase;
-import org.apache.axiom.soap.SOAPMessage;
-import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
-
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapFaultDetail;
 
-public class AxiomSoapFaultDetailTest extends TestCase {
+import org.apache.axiom.soap.SOAPMessage;
+import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+@SuppressWarnings("Since15")
+public class AxiomSoapFaultDetailTest {
 
     private static final String FAILING_FAULT =
             "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" " +
@@ -53,8 +56,8 @@ public class AxiomSoapFaultDetailTest extends TestCase {
 
     private AxiomSoapMessage succeedingMessage;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(FAILING_FAULT));
         StAXSOAPModelBuilder builder = new StAXSOAPModelBuilder(parser);
         SOAPMessage soapMessage = builder.getSoapMessage();
@@ -69,22 +72,24 @@ public class AxiomSoapFaultDetailTest extends TestCase {
 
     }
 
+    @Test
     public void testGetDetailEntriesWorksWithWhitespaceNodes() throws Exception {
         SoapFault fault = failingMessage.getSoapBody().getFault();
-        assertNotNull("Fault is null", fault);
-        assertNotNull("Fault detail is null", fault.getFaultDetail());
+        Assert.assertNotNull("Fault is null", fault);
+        Assert.assertNotNull("Fault detail is null", fault.getFaultDetail());
         SoapFaultDetail detail = fault.getFaultDetail();
-        assertTrue("No next detail entry present", detail.getDetailEntries().hasNext());
+        Assert.assertTrue("No next detail entry present", detail.getDetailEntries().hasNext());
         detail.getDetailEntries().next();
 
     }
 
+    @Test
     public void testGetDetailEntriesWorksWithoutWhitespaceNodes() throws Exception {
         SoapFault fault = succeedingMessage.getSoapBody().getFault();
-        assertNotNull("Fault is null", fault);
-        assertNotNull("Fault detail is null", fault.getFaultDetail());
+        Assert.assertNotNull("Fault is null", fault);
+        Assert.assertNotNull("Fault detail is null", fault.getFaultDetail());
         SoapFaultDetail detail = fault.getFaultDetail();
-        assertTrue("No next detail entry present", detail.getDetailEntries().hasNext());
+        Assert.assertTrue("No next detail entry present", detail.getDetailEntries().hasNext());
         detail.getDetailEntries().next();
     }
 

@@ -16,10 +16,6 @@
 
 package org.springframework.ws.soap.security.xwss.callback;
 
-import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
-import junit.framework.TestCase;
-import org.easymock.MockControl;
-
 import org.springframework.security.Authentication;
 import org.springframework.security.AuthenticationManager;
 import org.springframework.security.BadCredentialsException;
@@ -29,13 +25,19 @@ import org.springframework.security.providers.TestingAuthenticationToken;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 
-public class SpringPlainTextPasswordValidationCallbackHandlerTest extends TestCase {
+import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.easymock.EasyMock.*;
+
+public class SpringPlainTextPasswordValidationCallbackHandlerTest {
 
     private SpringPlainTextPasswordValidationCallbackHandler callbackHandler;
 
-    private MockControl control;
-
-    private AuthenticationManager mock;
+    private AuthenticationManager authenticationManager;
 
     private PasswordValidationCallback callback;
 
@@ -43,12 +45,11 @@ public class SpringPlainTextPasswordValidationCallbackHandlerTest extends TestCa
 
     private String password;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         callbackHandler = new SpringPlainTextPasswordValidationCallbackHandler();
-        control = MockControl.createControl(AuthenticationManager.class);
-        mock = (AuthenticationManager) control.getMock();
-        callbackHandler.setAuthenticationManager(mock);
+        authenticationManager = createMock(AuthenticationManager.class);
+        callbackHandler.setAuthenticationManager(authenticationManager);
         username = "Bert";
         password = "Ernie";
         PasswordValidationCallback.PlainTextPasswordRequest request =
@@ -56,34 +57,41 @@ public class SpringPlainTextPasswordValidationCallbackHandlerTest extends TestCa
         callback = new PasswordValidationCallback(request);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         SecurityContextHolder.clearContext();
     }
 
+    @Test
     public void testAuthenticateUserPlainTextValid() throws Exception {
         Authentication authResult = new TestingAuthenticationToken(username, password, new GrantedAuthority[0]);
-        control.expectAndReturn(mock.authenticate(new UsernamePasswordAuthenticationToken(username, password)),
-                authResult);
-        control.replay();
+        expect(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password))).andReturn(authResult);
+
+        replay(authenticationManager);
+
         callbackHandler.handleInternal(callback);
         boolean authenticated = callback.getResult();
-        assertTrue("Not authenticated", authenticated);
-        assertNotNull("No Authentication created", SecurityContextHolder.getContext().getAuthentication());
-        control.verify();
+        Assert.assertTrue("Not authenticated", authenticated);
+        Assert.assertNotNull("No Authentication created", SecurityContextHolder.getContext().getAuthentication());
+
+        verify(authenticationManager);
     }
 
+    @Test
     public void testAuthenticateUserPlainTextInvalid() throws Exception {
-        control.expectAndThrow(mock.authenticate(new UsernamePasswordAuthenticationToken(username, password)),
-                new BadCredentialsException(""));
-        control.replay();
+        expect(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password))).andThrow(new BadCredentialsException(""));
+
+        replay(authenticationManager);
+
         callbackHandler.handleInternal(callback);
         boolean authenticated = callback.getResult();
-        assertFalse("Authenticated", authenticated);
-        assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
-        control.verify();
+        Assert.assertFalse("Authenticated", authenticated);
+        Assert.assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
+
+        verify(authenticationManager);
     }
 
+    @Test
     public void testCleanUp() throws Exception {
         TestingAuthenticationToken authentication =
                 new TestingAuthenticationToken(new Object(), new Object(), new GrantedAuthority[0]);
@@ -91,7 +99,7 @@ public class SpringPlainTextPasswordValidationCallbackHandlerTest extends TestCa
 
         CleanupCallback cleanupCallback = new CleanupCallback();
         callbackHandler.handleInternal(cleanupCallback);
-        assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
+        Assert.assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
     }
 
 }

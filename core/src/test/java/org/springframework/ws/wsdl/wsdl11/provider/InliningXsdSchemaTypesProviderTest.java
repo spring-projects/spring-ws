@@ -21,26 +21,29 @@ import javax.wsdl.Types;
 import javax.wsdl.extensions.schema.Schema;
 import javax.wsdl.factory.WSDLFactory;
 
-import junit.framework.TestCase;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection;
 
-public class InliningXsdSchemaTypesProviderTest extends TestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public class InliningXsdSchemaTypesProviderTest {
 
     private InliningXsdSchemaTypesProvider provider;
 
     private Definition definition;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         provider = new InliningXsdSchemaTypesProvider();
         WSDLFactory factory = WSDLFactory.newInstance();
         definition = factory.newDefinition();
     }
 
+    @Test
     public void testSingle() throws Exception {
         String definitionNamespace = "http://springframework.org/spring-ws";
         definition.addNamespace("tns", definitionNamespace);
@@ -57,13 +60,14 @@ public class InliningXsdSchemaTypesProviderTest extends TestCase {
         provider.addTypes(definition);
 
         Types types = definition.getTypes();
-        assertNotNull("No types created", types);
-        assertEquals("Invalid amount of schemas", 1, types.getExtensibilityElements().size());
+        Assert.assertNotNull("No types created", types);
+        Assert.assertEquals("Invalid amount of schemas", 1, types.getExtensibilityElements().size());
 
         Schema wsdlSchema = (Schema) types.getExtensibilityElements().get(0);
-        assertNotNull("No element defined", wsdlSchema.getElement());
+        Assert.assertNotNull("No element defined", wsdlSchema.getElement());
     }
 
+    @Test
     public void testComplex() throws Exception {
         String definitionNamespace = "http://springframework.org/spring-ws";
         definition.addNamespace("tns", definitionNamespace);
@@ -81,13 +85,13 @@ public class InliningXsdSchemaTypesProviderTest extends TestCase {
         provider.addTypes(definition);
 
         Types types = definition.getTypes();
-        assertNotNull("No types created", types);
-        assertEquals("Invalid amount of schemas", 2, types.getExtensibilityElements().size());
+        Assert.assertNotNull("No types created", types);
+        Assert.assertEquals("Invalid amount of schemas", 2, types.getExtensibilityElements().size());
 
         Schema wsdlSchema = (Schema) types.getExtensibilityElements().get(0);
-        assertNotNull("No element defined", wsdlSchema.getElement());
+        Assert.assertNotNull("No element defined", wsdlSchema.getElement());
 
         wsdlSchema = (Schema) types.getExtensibilityElements().get(1);
-        assertNotNull("No element defined", wsdlSchema.getElement());
+        Assert.assertNotNull("No element defined", wsdlSchema.getElement());
     }
 }

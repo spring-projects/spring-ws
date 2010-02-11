@@ -20,10 +20,6 @@ import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 
-import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
-import junit.framework.TestCase;
-import org.easymock.MockControl;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.AuthenticationManager;
 import org.springframework.security.BadCredentialsException;
@@ -33,24 +29,29 @@ import org.springframework.security.providers.TestingAuthenticationToken;
 import org.springframework.security.providers.x509.X509AuthenticationToken;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 
-public class SpringCertificateValidationCallbackHandlerTest extends TestCase {
+import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.easymock.EasyMock.*;
+
+public class SpringCertificateValidationCallbackHandlerTest {
 
     private SpringCertificateValidationCallbackHandler callbackHandler;
 
-    private MockControl control;
-
-    private AuthenticationManager mock;
+    private AuthenticationManager authenticationManager;
 
     private X509Certificate certificate;
 
     private CertificateValidationCallback callback;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         callbackHandler = new SpringCertificateValidationCallbackHandler();
-        control = MockControl.createControl(AuthenticationManager.class);
-        mock = (AuthenticationManager) control.getMock();
-        callbackHandler.setAuthenticationManager(mock);
+        authenticationManager = createMock(AuthenticationManager.class);
+        callbackHandler.setAuthenticationManager(authenticationManager);
         KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
         InputStream is = null;
         try {
@@ -66,35 +67,42 @@ public class SpringCertificateValidationCallbackHandlerTest extends TestCase {
         callback = new CertificateValidationCallback(certificate);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         SecurityContextHolder.clearContext();
     }
 
+    @Test
     public void testValidateCertificateValid() throws Exception {
-        mock.authenticate(new X509AuthenticationToken(certificate));
-        control.setMatcher(MockControl.ALWAYS_MATCHER);
-        control.setReturnValue(new TestingAuthenticationToken(certificate, null, new GrantedAuthority[0]));
-        control.replay();
+        expect(authenticationManager.authenticate(isA(X509AuthenticationToken.class)))
+                .andReturn(new TestingAuthenticationToken(certificate, null, new GrantedAuthority[0]));
+
+        replay(authenticationManager);
+
         callbackHandler.handleInternal(callback);
         boolean authenticated = callback.getResult();
-        assertTrue("Not authenticated", authenticated);
-        assertNotNull("No Authentication created", SecurityContextHolder.getContext().getAuthentication());
-        control.verify();
+        Assert.assertTrue("Not authenticated", authenticated);
+        Assert.assertNotNull("No Authentication created", SecurityContextHolder.getContext().getAuthentication());
+
+        verify(authenticationManager);
     }
 
+    @Test
     public void testValidateCertificateInvalid() throws Exception {
-        mock.authenticate(new X509AuthenticationToken(certificate));
-        control.setMatcher(MockControl.ALWAYS_MATCHER);
-        control.setThrowable(new BadCredentialsException(""));
-        control.replay();
+        expect(authenticationManager.authenticate(isA(X509AuthenticationToken.class)))
+                .andThrow(new BadCredentialsException(""));
+
+        replay(authenticationManager);
+
         callbackHandler.handleInternal(callback);
         boolean authenticated = callback.getResult();
-        assertFalse("Authenticated", authenticated);
-        assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
-        control.verify();
+        Assert.assertFalse("Authenticated", authenticated);
+        Assert.assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
+
+        verify(authenticationManager);
     }
 
+    @Test
     public void testCleanUp() throws Exception {
         TestingAuthenticationToken authentication =
                 new TestingAuthenticationToken(new Object(), new Object(), new GrantedAuthority[0]);
@@ -102,7 +110,7 @@ public class SpringCertificateValidationCallbackHandlerTest extends TestCase {
 
         CleanupCallback cleanupCallback = new CleanupCallback();
         callbackHandler.handleInternal(cleanupCallback);
-        assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
+        Assert.assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
     }
 
 }

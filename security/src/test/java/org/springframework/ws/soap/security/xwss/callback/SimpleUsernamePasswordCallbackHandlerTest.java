@@ -18,28 +18,32 @@ package org.springframework.ws.soap.security.xwss.callback;
 
 import com.sun.xml.wss.impl.callback.PasswordCallback;
 import com.sun.xml.wss.impl.callback.UsernameCallback;
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class SimpleUsernamePasswordCallbackHandlerTest extends TestCase {
+public class SimpleUsernamePasswordCallbackHandlerTest {
 
     private SimpleUsernamePasswordCallbackHandler handler;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         handler = new SimpleUsernamePasswordCallbackHandler();
         handler.setUsername("Bert");
         handler.setPassword("Ernie");
     }
 
+    @Test
     public void testUsernameCallback() throws Exception {
         UsernameCallback usernameCallback = new UsernameCallback();
         handler.handleInternal(usernameCallback);
-        assertEquals("Invalid username", "Bert", usernameCallback.getUsername());
+        Assert.assertEquals("Invalid username", "Bert", usernameCallback.getUsername());
     }
 
+    @Test
     public void testPasswordCallback() throws Exception {
         PasswordCallback passwordCallback = new PasswordCallback();
         handler.handleInternal(passwordCallback);
-        assertEquals("Invalid username", "Ernie", passwordCallback.getPassword());
+        Assert.assertEquals("Invalid username", "Ernie", passwordCallback.getPassword());
     }
 }

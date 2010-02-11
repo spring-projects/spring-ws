@@ -25,31 +25,34 @@ import javax.xml.transform.TransformerFactory;
 import org.springframework.xml.transform.StaxSource;
 import org.springframework.xml.transform.StringResult;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 
 @SuppressWarnings("Since15")
-public class XmlEventStreamReaderTest extends TestCase {
+public class XmlEventStreamReaderTest {
 
     private static final String XML =
             "<?pi content?><root xmlns='namespace'><prefix:child xmlns:prefix='namespace2'>content</prefix:child></root>";
 
     private XmlEventStreamReader streamReader;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader(XML));
         streamReader = new XmlEventStreamReader(eventReader);
     }
 
+    @Test
     public void testReadAll() throws Exception {
         while (streamReader.hasNext()) {
             streamReader.next();
         }
     }
 
+    @Test
     public void testReadCorrect() throws Exception {
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         StaxSource source = new StaxSource(streamReader);

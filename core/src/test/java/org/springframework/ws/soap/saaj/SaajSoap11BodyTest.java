@@ -25,6 +25,11 @@ import javax.xml.soap.SOAPMessage;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.soap11.AbstractSoap11BodyTestCase;
 
+import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 public class SaajSoap11BodyTest extends AbstractSoap11BodyTestCase {
 
     @Override
@@ -34,6 +39,7 @@ public class SaajSoap11BodyTest extends AbstractSoap11BodyTestCase {
         return new SaajSoap11Body(saajMessage.getSOAPPart().getEnvelope().getBody(), true);
     }
 
+    @Test
     public void testLangAttributeOnSoap11FaultString() throws Exception {
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
         SOAPMessage saajMessage = messageFactory.createMessage();

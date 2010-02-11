@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,14 +22,21 @@ import org.springframework.ws.soap.AbstractSoapEnvelopeTestCase;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.xml.transform.StringResult;
 
+import org.junit.Test;
+
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.junit.Assert.assertEquals;
+
 public abstract class AbstractSoap11EnvelopeTestCase extends AbstractSoapEnvelopeTestCase {
 
+    @Test
     public void testGetName() throws Exception {
         assertEquals("Invalid qualified name",
                 new QName(SoapVersion.SOAP_11.getEnvelopeNamespaceUri(), "Envelope"),
                 soapEnvelope.getName());
     }
 
+    @Test
     public void testGetContent() throws Exception {
         StringResult result = new StringResult();
         transformer.transform(soapEnvelope.getSource(), result);

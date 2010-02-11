@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,16 +19,24 @@ package org.springframework.ws.soap;
 import org.springframework.ws.AbstractWebServiceMessageFactoryTestCase;
 import org.springframework.ws.WebServiceMessage;
 
+import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
+
 public abstract class AbstractSoapMessageFactoryTestCase extends AbstractWebServiceMessageFactoryTestCase {
 
+    @Test
     public void testCreateEmptySoapMessage() throws Exception {
         WebServiceMessage message = messageFactory.createWebServiceMessage();
         assertTrue("Not a SoapMessage", message instanceof SoapMessage);
     }
 
+    @Test
     public abstract void testCreateSoapMessageNoAttachment() throws Exception;
 
+    @Test
     public abstract void testCreateSoapMessageSwA() throws Exception;
 
+    @Test
     public abstract void testCreateSoapMessageMtom() throws Exception;
 }

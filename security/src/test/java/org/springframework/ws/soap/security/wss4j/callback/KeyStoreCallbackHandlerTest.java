@@ -18,20 +18,22 @@ package org.springframework.ws.soap.security.wss4j.callback;
 
 import java.security.KeyStore;
 
-import junit.framework.TestCase;
-import org.apache.ws.security.WSPasswordCallback;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.soap.security.support.KeyStoreFactoryBean;
 
-public class KeyStoreCallbackHandlerTest extends TestCase {
+import org.apache.ws.security.WSPasswordCallback;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public class KeyStoreCallbackHandlerTest {
 
     private KeyStoreCallbackHandler callbackHandler;
 
     private WSPasswordCallback callback;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         callbackHandler = new KeyStoreCallbackHandler();
         callback = new WSPasswordCallback("secretkey", WSPasswordCallback.KEY_NAME);
 
@@ -45,9 +47,10 @@ public class KeyStoreCallbackHandlerTest extends TestCase {
         callbackHandler.setSymmetricKeyPassword("123456");
     }
 
+    @Test
     public void testHandleKeyName() throws Exception {
         callbackHandler.handleInternal(callback);
-        assertNotNull("symmetric key must not be null", callback.getKey());
+        Assert.assertNotNull("symmetric key must not be null", callback.getKey());
     }
 
 }

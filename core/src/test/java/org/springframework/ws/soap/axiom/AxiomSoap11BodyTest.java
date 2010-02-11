@@ -16,13 +16,14 @@
 
 package org.springframework.ws.soap.axiom;
 
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.soap.SOAPFactory;
-
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.soap11.AbstractSoap11BodyTestCase;
 import org.springframework.xml.transform.StringSource;
+
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.soap.SOAPFactory;
+import org.junit.Test;
 
 public class AxiomSoap11BodyTest extends AbstractSoap11BodyTestCase {
 
@@ -33,6 +34,7 @@ public class AxiomSoap11BodyTest extends AbstractSoap11BodyTestCase {
         return axiomSoapMessage.getSoapBody();
     }
 
+    @Test
     public void testPayloadNoCaching() throws Exception {
         AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
         messageFactory.setPayloadCaching(false);

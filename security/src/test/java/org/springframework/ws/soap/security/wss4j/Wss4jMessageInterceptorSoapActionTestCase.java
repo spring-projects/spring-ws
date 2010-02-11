@@ -18,13 +18,17 @@ package org.springframework.ws.soap.security.wss4j;
 
 import java.util.Properties;
 
-import org.apache.ws.security.WSConstants;
-
+import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j.callback.SimplePasswordValidationCallbackHandler;
-import org.springframework.ws.WebServiceMessageFactory;
+
+import org.apache.ws.security.WSConstants;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public abstract class Wss4jMessageInterceptorSoapActionTestCase extends Wss4jTestCase {
 
@@ -49,6 +53,7 @@ public abstract class Wss4jMessageInterceptorSoapActionTestCase extends Wss4jTes
         interceptor.afterPropertiesSet();
     }
 
+    @Test
     public void testPreserveSoapActionOnValidation() throws Exception {
         SoapMessage message = loadSoap11Message("usernameTokenPlainText-soap.xml");
         message.setSoapAction(SOAP_ACTION);
@@ -59,6 +64,7 @@ public abstract class Wss4jMessageInterceptorSoapActionTestCase extends Wss4jTes
         assertEquals("Soap Action is different from expected", SOAP_ACTION, message.getSoapAction());
     }
 
+    @Test
     public void testPreserveSoap12ActionOnValidation() throws Exception {
         SoapMessage message = loadSoap12Message("usernameTokenPlainText-soap12.xml");
         message.setSoapAction(SOAP_ACTION);
@@ -70,6 +76,7 @@ public abstract class Wss4jMessageInterceptorSoapActionTestCase extends Wss4jTes
         assertEquals("Soap Action is different from expected", SOAP_ACTION, message.getSoapAction());
     }
 
+    @Test
     public void testPreserveSoapActionOnSecurement() throws Exception {
         SoapMessage message = loadSoap11Message("empty-soap.xml");
         message.setSoapAction(SOAP_ACTION);
@@ -83,6 +90,7 @@ public abstract class Wss4jMessageInterceptorSoapActionTestCase extends Wss4jTes
 
     }
 
+    @Test
     public void testPreserveSoap12ActionOnSecurement() throws Exception {
         SoapMessage message = loadSoap12Message("empty-soap12.xml");
         message.setSoapAction(SOAP_ACTION);

@@ -20,19 +20,21 @@ import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 
-import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
-import junit.framework.TestCase;
-
 import org.springframework.core.io.ClassPathResource;
 
-public class JaasCertificateValidationCallbackHandlerTest extends TestCase {
+import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public class JaasCertificateValidationCallbackHandlerTest {
 
     private JaasCertificateValidationCallbackHandler callbackHandler;
 
     private CertificateValidationCallback callback;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         System.setProperty("java.security.auth.login.config", getClass().getResource("jaas.config").toString());
         callbackHandler = new JaasCertificateValidationCallbackHandler();
         callbackHandler.setLoginContextName("Certificate");
@@ -51,10 +53,11 @@ public class JaasCertificateValidationCallbackHandlerTest extends TestCase {
         callback = new CertificateValidationCallback(certificate);
     }
 
+    @Test
     public void testValidateCertificateValid() throws Exception {
         callbackHandler.handleInternal(callback);
         boolean authenticated = callback.getResult();
-        assertTrue("Not authenticated", authenticated);
+        Assert.assertTrue("Not authenticated", authenticated);
     }
 
 }

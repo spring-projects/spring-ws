@@ -18,14 +18,16 @@ package org.springframework.ws.soap.security.wss4j;
 
 import java.util.Properties;
 
-import org.apache.ws.security.components.crypto.Crypto;
-import org.w3c.dom.Document;
-
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j.support.CryptoFactoryBean;
+
+import org.junit.Test;
+import org.w3c.dom.Document;
+
+import static org.junit.Assert.assertNotNull;
 
 public abstract class Wss4jMessageInterceptorSignTestCase extends Wss4jTestCase {
 
@@ -47,14 +49,15 @@ public abstract class Wss4jMessageInterceptorSignTestCase extends Wss4jTestCase 
         cryptoFactoryBeanConfig.setProperty("org.apache.ws.security.crypto.merlin.file", "private.jks");
         cryptoFactoryBean.setConfiguration(cryptoFactoryBeanConfig);
         cryptoFactoryBean.afterPropertiesSet();
-        interceptor.setValidationSignatureCrypto((Crypto) cryptoFactoryBean
+        interceptor.setValidationSignatureCrypto(cryptoFactoryBean
                 .getObject());
-        interceptor.setSecurementSignatureCrypto((Crypto) cryptoFactoryBean
+        interceptor.setSecurementSignatureCrypto(cryptoFactoryBean
                 .getObject());
         interceptor.afterPropertiesSet();
 
     }
 
+    @Test
     public void testValidateCertificate() throws Exception {
         SoapMessage message = loadSoap11Message("signed-soap.xml");
 
@@ -66,6 +69,7 @@ public abstract class Wss4jMessageInterceptorSignTestCase extends Wss4jTestCase 
                 getDocument(message));
     }
 
+    @Test
     public void testValidateCertificateWithSignatureConfirmation() throws Exception {
         SoapMessage message = loadSoap11Message("signed-soap.xml");
         MessageContext messageContext = getSoap11MessageContext(message);
@@ -79,6 +83,7 @@ public abstract class Wss4jMessageInterceptorSignTestCase extends Wss4jTestCase 
                 "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse11:SignatureConfirmation", document);
     }
 
+    @Test
     public void testSignResponse() throws Exception {
         interceptor.setSecurementActions("Signature");
         interceptor.setEnableSignatureConfirmation(false);
@@ -98,6 +103,7 @@ public abstract class Wss4jMessageInterceptorSignTestCase extends Wss4jTestCase 
 
     }
 
+    @Test
     public void testSignResponseWithSignatureUser() throws Exception {
         interceptor.setSecurementActions("Signature");
         interceptor.setEnableSignatureConfirmation(false);

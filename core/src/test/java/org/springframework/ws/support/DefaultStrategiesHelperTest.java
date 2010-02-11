@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,10 +27,12 @@ import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class DefaultStrategiesHelperTest extends TestCase {
+public class DefaultStrategiesHelperTest {
 
+    @Test
     public void testGetDefaultStrategies() throws Exception {
 
         Properties strategies = new Properties();
@@ -42,17 +44,18 @@ public class DefaultStrategiesHelperTest extends TestCase {
         applicationContext.registerSingleton("strategy1", StrategyImpl.class);
         applicationContext.registerSingleton("strategy2", ContextAwareStrategyImpl.class);
 
-        List result = helper.getDefaultStrategies(Strategy.class, applicationContext);
-        assertNotNull("No result", result);
-        assertEquals("Invalid amount of strategies", 2, result.size());
-        assertTrue("Result not a Strategy implementation", result.get(0) instanceof Strategy);
-        assertTrue("Result not a Strategy implementation", result.get(1) instanceof Strategy);
-        assertTrue("Result not a StrategyImpl implementation", result.get(0) instanceof StrategyImpl);
-        assertTrue("Result not a StrategyImpl implementation", result.get(1) instanceof ContextAwareStrategyImpl);
+        List<Strategy> result = helper.getDefaultStrategies(Strategy.class, applicationContext);
+        Assert.assertNotNull("No result", result);
+        Assert.assertEquals("Invalid amount of strategies", 2, result.size());
+        Assert.assertTrue("Result not a Strategy implementation", result.get(0) != null);
+        Assert.assertTrue("Result not a Strategy implementation", result.get(1) != null);
+        Assert.assertTrue("Result not a StrategyImpl implementation", result.get(0) instanceof StrategyImpl);
+        Assert.assertTrue("Result not a StrategyImpl implementation", result.get(1) instanceof ContextAwareStrategyImpl);
         ContextAwareStrategyImpl impl = (ContextAwareStrategyImpl) result.get(1);
-        assertNotNull("No application context injected", impl.getApplicationContext());
+        Assert.assertNotNull("No application context injected", impl.getApplicationContext());
     }
 
+    @Test
     public void testGetDefaultStrategy() throws Exception {
         Properties strategies = new Properties();
         strategies.put(Strategy.class.getName(), StrategyImpl.class.getName());
@@ -63,11 +66,12 @@ public class DefaultStrategiesHelperTest extends TestCase {
         applicationContext.registerSingleton("strategy2", ContextAwareStrategyImpl.class);
 
         Object result = helper.getDefaultStrategy(Strategy.class, applicationContext);
-        assertNotNull("No result", result);
-        assertTrue("Result not a Strategy implementation", result instanceof Strategy);
-        assertTrue("Result not a StrategyImpl implementation", result instanceof StrategyImpl);
+        Assert.assertNotNull("No result", result);
+        Assert.assertTrue("Result not a Strategy implementation", result instanceof Strategy);
+        Assert.assertTrue("Result not a StrategyImpl implementation", result instanceof StrategyImpl);
     }
 
+    @Test
     public void testGetDefaultStrategyMoreThanOne() throws Exception {
         Properties strategies = new Properties();
         strategies.put(Strategy.class.getName(),
@@ -80,13 +84,14 @@ public class DefaultStrategiesHelperTest extends TestCase {
 
         try {
             helper.getDefaultStrategy(Strategy.class, applicationContext);
-            fail("Expected BeanInitializationException");
+            Assert.fail("Expected BeanInitializationException");
         }
         catch (BeanInitializationException ex) {
             // expected
         }
     }
 
+    @Test
     public void testResourceConstructor() throws Exception {
         Resource resource = new ClassPathResource("strategies.properties", getClass());
         new DefaultStrategiesHelper(resource);

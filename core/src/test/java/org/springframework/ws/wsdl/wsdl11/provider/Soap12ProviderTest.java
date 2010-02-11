@@ -39,21 +39,24 @@ import javax.wsdl.extensions.soap12.SOAP12Operation;
 import javax.wsdl.factory.WSDLFactory;
 import javax.xml.namespace.QName;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class Soap12ProviderTest extends TestCase {
+public class Soap12ProviderTest {
 
     private Soap12Provider provider;
 
     private Definition definition;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         provider = new Soap12Provider();
         WSDLFactory factory = WSDLFactory.newInstance();
         definition = factory.newDefinition();
     }
 
+    @Test
     public void testPopulateBinding() throws Exception {
         String namespace = "http://springframework.org/spring-ws";
         definition.addNamespace("tns", namespace);
@@ -91,52 +94,56 @@ public class Soap12ProviderTest extends TestCase {
         provider.addServices(definition);
 
         Binding binding = definition.getBinding(new QName(namespace, "PortTypeSoap12"));
-        assertNotNull("No binding created", binding);
-        assertEquals("Invalid port type", portType, binding.getPortType());
-        assertEquals("Invalid amount of extensibility elements", 1, binding.getExtensibilityElements().size());
+        Assert.assertNotNull("No binding created", binding);
+        Assert.assertEquals("Invalid port type", portType, binding.getPortType());
+        Assert.assertEquals("Invalid amount of extensibility elements", 1, binding.getExtensibilityElements().size());
 
         SOAP12Binding soapBinding = (SOAP12Binding) binding.getExtensibilityElements().get(0);
-        assertEquals("Invalid style", "document", soapBinding.getStyle());
-        assertEquals("Invalid amount of binding operations", 1, binding.getBindingOperations().size());
+        Assert.assertEquals("Invalid style", "document", soapBinding.getStyle());
+        Assert.assertEquals("Invalid amount of binding operations", 1, binding.getBindingOperations().size());
 
         BindingOperation bindingOperation = binding.getBindingOperation("Operation", "Input", "Output");
-        assertNotNull("No binding operation created", bindingOperation);
-        assertEquals("Invalid amount of extensibility elements", 1, bindingOperation.getExtensibilityElements().size());
+        Assert.assertNotNull("No binding operation created", bindingOperation);
+        Assert.assertEquals("Invalid amount of extensibility elements", 1,
+                bindingOperation.getExtensibilityElements().size());
 
         SOAP12Operation soapOperation = (SOAP12Operation) bindingOperation.getExtensibilityElements().get(0);
-        assertEquals("Invalid SOAPAction", namespace + "/Action", soapOperation.getSoapActionURI());
+        Assert.assertEquals("Invalid SOAPAction", namespace + "/Action", soapOperation.getSoapActionURI());
 
         BindingInput bindingInput = bindingOperation.getBindingInput();
-        assertNotNull("No binding input", bindingInput);
-        assertEquals("Invalid name", "Input", bindingInput.getName());
-        assertEquals("Invalid amount of extensibility elements", 1, bindingInput.getExtensibilityElements().size());
+        Assert.assertNotNull("No binding input", bindingInput);
+        Assert.assertEquals("Invalid name", "Input", bindingInput.getName());
+        Assert.assertEquals("Invalid amount of extensibility elements", 1,
+                bindingInput.getExtensibilityElements().size());
         SOAP12Body soapBody = (SOAP12Body) bindingInput.getExtensibilityElements().get(0);
-        assertEquals("Invalid soap body use", "literal", soapBody.getUse());
+        Assert.assertEquals("Invalid soap body use", "literal", soapBody.getUse());
 
         BindingOutput bindingOutput = bindingOperation.getBindingOutput();
-        assertNotNull("No binding output", bindingOutput);
-        assertEquals("Invalid name", "Output", bindingOutput.getName());
-        assertEquals("Invalid amount of extensibility elements", 1, bindingOutput.getExtensibilityElements().size());
+        Assert.assertNotNull("No binding output", bindingOutput);
+        Assert.assertEquals("Invalid name", "Output", bindingOutput.getName());
+        Assert.assertEquals("Invalid amount of extensibility elements", 1,
+                bindingOutput.getExtensibilityElements().size());
         soapBody = (SOAP12Body) bindingOutput.getExtensibilityElements().get(0);
-        assertEquals("Invalid soap body use", "literal", soapBody.getUse());
+        Assert.assertEquals("Invalid soap body use", "literal", soapBody.getUse());
 
         BindingFault bindingFault = bindingOperation.getBindingFault("Fault");
-        assertNotNull("No binding fault", bindingFault);
-        assertEquals("Invalid amount of extensibility elements", 1, bindingFault.getExtensibilityElements().size());
+        Assert.assertNotNull("No binding fault", bindingFault);
+        Assert.assertEquals("Invalid amount of extensibility elements", 1,
+                bindingFault.getExtensibilityElements().size());
         SOAP12Fault soapFault = (SOAP12Fault) bindingFault.getExtensibilityElements().get(0);
-        assertEquals("Invalid soap fault use", "literal", soapFault.getUse());
+        Assert.assertEquals("Invalid soap fault use", "literal", soapFault.getUse());
 
         Service service = definition.getService(new QName(namespace, "Service"));
-        assertNotNull("No Service created", service);
-        assertEquals("Invalid amount of ports", 1, service.getPorts().size());
+        Assert.assertNotNull("No Service created", service);
+        Assert.assertEquals("Invalid amount of ports", 1, service.getPorts().size());
 
         Port port = service.getPort("PortTypeSoap12");
-        assertNotNull("No port created", port);
-        assertEquals("Invalid binding", binding, port.getBinding());
-        assertEquals("Invalid amount of extensibility elements", 1, port.getExtensibilityElements().size());
+        Assert.assertNotNull("No port created", port);
+        Assert.assertEquals("Invalid binding", binding, port.getBinding());
+        Assert.assertEquals("Invalid amount of extensibility elements", 1, port.getExtensibilityElements().size());
 
         SOAP12Address soapAddress = (SOAP12Address) port.getExtensibilityElements().get(0);
-        assertEquals("Invalid soap address", locationUri, soapAddress.getLocationURI());
+        Assert.assertEquals("Invalid soap address", locationUri, soapAddress.getLocationURI());
     }
 
 

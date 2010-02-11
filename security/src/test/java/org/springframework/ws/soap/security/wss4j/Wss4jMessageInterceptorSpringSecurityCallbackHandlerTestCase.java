@@ -18,9 +18,6 @@ package org.springframework.ws.soap.security.wss4j;
 
 import java.util.Properties;
 
-import org.apache.ws.security.WSConstants;
-import org.easymock.MockControl;
-
 import org.springframework.security.Authentication;
 import org.springframework.security.AuthenticationManager;
 import org.springframework.security.GrantedAuthority;
@@ -35,27 +32,33 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j.callback.SpringDigestPasswordValidationCallbackHandler;
 import org.springframework.ws.soap.security.wss4j.callback.SpringPlainTextPasswordValidationCallbackHandler;
 
+import org.apache.ws.security.WSConstants;
+import org.junit.After;
+import org.junit.Test;
+
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCase extends Wss4jTestCase {
 
     private Properties users = new Properties();
 
-    private MockControl control;
-
-    private AuthenticationManager mock;
+    private AuthenticationManager authenticationManager;
 
     @Override
     protected void onSetup() throws Exception {
-        control = MockControl.createControl(AuthenticationManager.class);
-        mock = (AuthenticationManager) control.getMock();
+        authenticationManager = createMock(AuthenticationManager.class);
         users.setProperty("Bert", "Ernie,ROLE_TEST");
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        control.verify();
+    @After
+    public void tearDown() throws Exception {
+        verify(authenticationManager);
         SecurityContextHolder.clearContext();
     }
 
+    @Test
     public void testValidateUsernameTokenPlainText() throws Exception {
         EndpointInterceptor interceptor = prepareInterceptor("UsernameToken", true, false);
         SoapMessage message = loadSoap11Message("usernameTokenPlainText-soap.xml");
@@ -69,6 +72,7 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCa
         assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
     }
 
+    @Test
     public void testValidateUsernameTokenDigest() throws Exception {
         EndpointInterceptor interceptor = prepareInterceptor("UsernameToken", true, true);
         SoapMessage message = loadSoap11Message("usernameTokenDigest-soap.xml");
@@ -114,15 +118,14 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCa
             SpringPlainTextPasswordValidationCallbackHandler callbackHandler =
                     new SpringPlainTextPasswordValidationCallbackHandler();
             Authentication authResult = new TestingAuthenticationToken("Bert", "Ernie", new GrantedAuthority[0]);
-            control.expectAndReturn(mock.authenticate(new UsernamePasswordAuthenticationToken("Bert", "Ernie")),
-                    authResult);
-            callbackHandler.setAuthenticationManager(mock);
+            expect(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken("Bert", "Ernie"))).andReturn(authResult);
+            callbackHandler.setAuthenticationManager(authenticationManager);
             callbackHandler.afterPropertiesSet();
             interceptor.setSecurementPasswordType(WSConstants.PW_TEXT);
             interceptor.setValidationCallbackHandler(callbackHandler);
             interceptor.afterPropertiesSet();
         }
-        control.replay();
+        replay(authenticationManager);
         return interceptor;
     }
 }

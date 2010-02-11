@@ -29,10 +29,13 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
 
-import junit.framework.TestCase;
 import org.springframework.xml.transform.StringSource;
 
-public class SaajContentHandlerTest extends TestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public class SaajContentHandlerTest {
 
     private SaajContentHandler handler;
 
@@ -40,8 +43,8 @@ public class SaajContentHandlerTest extends TestCase {
 
     private SOAPEnvelope envelope;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         MessageFactory messageFactory = MessageFactory.newInstance();
         SOAPMessage message = messageFactory.createMessage();
         envelope = message.getSOAPPart().getEnvelope();
@@ -49,6 +52,7 @@ public class SaajContentHandlerTest extends TestCase {
         transformer = TransformerFactory.newInstance().newTransformer();
     }
 
+    @Test
     public void testHandler() throws Exception {
         String content = "<Root xmlns='http://springframework.org/spring-ws/1' " +
                 "xmlns:child='http://springframework.org/spring-ws/2'>" +
@@ -57,15 +61,15 @@ public class SaajContentHandlerTest extends TestCase {
         Result result = new SAXResult(handler);
         transformer.transform(source, result);
         Name rootName = envelope.createName("Root", "", "http://springframework.org/spring-ws/1");
-        Iterator iterator = envelope.getBody().getChildElements(rootName);
-        assertTrue("No child found", iterator.hasNext());
+        Iterator<?> iterator = envelope.getBody().getChildElements(rootName);
+        Assert.assertTrue("No child found", iterator.hasNext());
         SOAPBodyElement rootElement = (SOAPBodyElement) iterator.next();
         Name childName = envelope.createName("Child", "child", "http://springframework.org/spring-ws/2");
         iterator = rootElement.getChildElements(childName);
-        assertTrue("No child found", iterator.hasNext());
+        Assert.assertTrue("No child found", iterator.hasNext());
         SOAPElement childElement = (SOAPElement) iterator.next();
-        assertEquals("Invalid contents", "Content", childElement.getValue());
+        Assert.assertEquals("Invalid contents", "Content", childElement.getValue());
         Name attributeName = envelope.createName("attribute");
-        assertEquals("Invalid attribute value", "value", childElement.getAttributeValue(attributeName));
+        Assert.assertEquals("Invalid attribute value", "value", childElement.getAttributeValue(attributeName));
     }
 }

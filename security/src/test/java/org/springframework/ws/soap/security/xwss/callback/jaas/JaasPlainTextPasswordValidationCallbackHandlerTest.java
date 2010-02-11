@@ -17,35 +17,39 @@
 package org.springframework.ws.soap.security.xwss.callback.jaas;
 
 import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class JaasPlainTextPasswordValidationCallbackHandlerTest extends TestCase {
+public class JaasPlainTextPasswordValidationCallbackHandlerTest {
 
     private JaasPlainTextPasswordValidationCallbackHandler callbackHandler;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         System.setProperty("java.security.auth.login.config", getClass().getResource("jaas.config").toString());
         callbackHandler = new JaasPlainTextPasswordValidationCallbackHandler();
         callbackHandler.setLoginContextName("PlainText");
     }
 
+    @Test
     public void testAuthenticateUserPlainTextValid() throws Exception {
         PasswordValidationCallback.PlainTextPasswordRequest request =
                 new PasswordValidationCallback.PlainTextPasswordRequest("Bert", "Ernie");
         PasswordValidationCallback callback = new PasswordValidationCallback(request);
         callbackHandler.handleInternal(callback);
         boolean authenticated = callback.getResult();
-        assertTrue("Not authenticated", authenticated);
+        Assert.assertTrue("Not authenticated", authenticated);
     }
 
+    @Test
     public void testAuthenticateUserPlainTextInvalid() throws Exception {
         PasswordValidationCallback.PlainTextPasswordRequest request =
                 new PasswordValidationCallback.PlainTextPasswordRequest("Bert", "Big bird");
         PasswordValidationCallback callback = new PasswordValidationCallback(request);
         callbackHandler.handleInternal(callback);
         boolean authenticated = callback.getResult();
-        assertFalse("Authenticated", authenticated);
+        Assert.assertFalse("Authenticated", authenticated);
     }
 
 }

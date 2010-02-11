@@ -22,15 +22,19 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
-
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.soap.soap11.AbstractSoap11MessageFactoryTestCase;
 import org.springframework.ws.transport.MockTransportInputStream;
 import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.xml.transform.StringResult;
+
+import org.custommonkey.xmlunit.XMLAssert;
+import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryTestCase {
 
@@ -45,6 +49,7 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
         return factory;
     }
 
+    @Test
     public void testGetCharsetEncoding() {
         AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
 
@@ -53,6 +58,7 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
         assertEquals("Invalid charset", "utf-8", messageFactory.getCharSetEncoding("application/xop+xml;type=\"text/xml; charset=utf-8\""));
     }
 
+    @Test
     public void testRepetitiveReadCaching() throws Exception {
         AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
         messageFactory.setPayloadCaching(true);
@@ -69,6 +75,7 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
         transformer.transform(message.getPayloadSource(), result);
     }
 
+    @Test
     public void testRepetitiveReadNoCaching() throws Exception {
         AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
         messageFactory.setPayloadCaching(false);
@@ -94,6 +101,7 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
     /**
      * See http://jira.springframework.org/browse/SWS-502
      */
+    @Test
     public void testSWS502() throws Exception {
         AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
         messageFactory.setPayloadCaching(false);

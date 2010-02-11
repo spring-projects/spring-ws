@@ -29,8 +29,13 @@ import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.transport.MockTransportInputStream;
 import org.springframework.ws.transport.TransportInputStream;
 
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
 public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapMessageFactoryTestCase {
 
+    @Test
     public void testCreateEmptySoap11Message() throws Exception {
         WebServiceMessage message = messageFactory.createWebServiceMessage();
         assertTrue("Not a SoapMessage", message instanceof SoapMessage);
@@ -67,8 +72,8 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
         assertTrue("Not a SoapMessage", message instanceof SoapMessage);
         SoapMessage soapMessage = (SoapMessage) message;
         assertEquals("Invalid soap version", SoapVersion.SOAP_11, soapMessage.getVersion());
-        assertFalse("Message a XOP pacakge", soapMessage.isXopPackage());
-        Iterator iter = soapMessage.getAttachments();
+        assertFalse("Message a XOP package", soapMessage.isXopPackage());
+        Iterator<Attachment> iter = soapMessage.getAttachments();
         assertTrue("No attachments read", iter.hasNext());
         Attachment attachment = soapMessage.getAttachment("interface21");
         assertNotNull("No attachment read", attachment);
@@ -88,14 +93,15 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
         assertTrue("Not a SoapMessage", message instanceof SoapMessage);
         SoapMessage soapMessage = (SoapMessage) message;
         assertEquals("Invalid soap version", SoapVersion.SOAP_11, soapMessage.getVersion());
-        assertTrue("Message not a XOP pacakge", soapMessage.isXopPackage());
-        Iterator iter = soapMessage.getAttachments();
+        assertTrue("Message not a XOP package", soapMessage.isXopPackage());
+        Iterator<Attachment> iter = soapMessage.getAttachments();
         assertTrue("No attachments read", iter.hasNext());
 
         Attachment attachment = soapMessage.getAttachment("<1.urn:uuid:492264AB42E57108E01176731445504@apache.org>");
         assertNotNull("No attachment read", attachment);
     }
 
+    @Test
     public void testCreateSoapMessageMtomWeirdStartInfo() throws Exception {
         InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-mtom.bin");
         Map<String, String> headers = new HashMap<String, String>();
@@ -108,14 +114,15 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
         assertTrue("Not a SoapMessage", message instanceof SoapMessage);
         SoapMessage soapMessage = (SoapMessage) message;
         assertEquals("Invalid soap version", SoapVersion.SOAP_11, soapMessage.getVersion());
-        assertTrue("Message not a XOP pacakge", soapMessage.isXopPackage());
-        Iterator iter = soapMessage.getAttachments();
+        assertTrue("Message not a XOP package", soapMessage.isXopPackage());
+        Iterator<Attachment> iter = soapMessage.getAttachments();
         assertTrue("No attachments read", iter.hasNext());
 
         Attachment attachment = soapMessage.getAttachment("<1.urn:uuid:492264AB42E57108E01176731445504@apache.org>");
         assertNotNull("No attachment read", attachment);
     }
 
+    @Test
     public void testCreateSoapMessageUtf8ByteOrderMark() throws Exception {
         InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-utf8-bom.xml");
         Map<String, String> headers = new HashMap<String, String>();
@@ -126,6 +133,7 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
         assertEquals("Invalid soap version", SoapVersion.SOAP_11, message.getVersion());
     }
 
+    @Test
     public void testCreateSoapMessageUtf16BigEndianByteOrderMark() throws Exception {
         InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-utf16-be-bom.xml");
         Map<String, String> headers = new HashMap<String, String>();
@@ -136,6 +144,7 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
         assertEquals("Invalid soap version", SoapVersion.SOAP_11, message.getVersion());
     }
 
+    @Test
     public void testCreateSoapMessageUtf16LittleEndianByteOrderMark() throws Exception {
         InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-utf16-le-bom.xml");
         Map<String, String> headers = new HashMap<String, String>();

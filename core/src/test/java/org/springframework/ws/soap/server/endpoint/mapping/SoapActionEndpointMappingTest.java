@@ -18,38 +18,43 @@ package org.springframework.ws.soap.server.endpoint.mapping;
 
 import javax.xml.soap.MessageFactory;
 
-import junit.framework.TestCase;
-
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 
-public class SoapActionEndpointMappingTest extends TestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public class SoapActionEndpointMappingTest {
 
     private SoapActionEndpointMapping mapping;
 
     private MessageContext context;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         mapping = new SoapActionEndpointMapping();
         context = new DefaultMessageContext(new SaajSoapMessageFactory(MessageFactory.newInstance()));
     }
 
+    @Test
     public void testGetLookupKeyForMessage() throws Exception {
         String soapAction = "http://springframework.org/spring-ws/SoapAction";
         ((SoapMessage) context.getRequest()).setSoapAction(soapAction);
-        assertEquals("Invalid lookup key", soapAction, mapping.getLookupKeyForMessage(context));
+        Assert.assertEquals("Invalid lookup key", soapAction, mapping.getLookupKeyForMessage(context));
     }
 
+    @Test
     public void testGetLookupKeyForMessageQuoted() throws Exception {
         String soapAction = "http://springframework.org/spring-ws/SoapAction";
         ((SoapMessage) context.getRequest()).setSoapAction(soapAction);
-        assertEquals("Invalid lookup key", soapAction, mapping.getLookupKeyForMessage(context));
+        Assert.assertEquals("Invalid lookup key", soapAction, mapping.getLookupKeyForMessage(context));
     }
 
+    @Test
     public void testValidateLookupKey() throws Exception {
-        assertTrue("Soapaction not valid", mapping.validateLookupKey("SoapAction"));
+        Assert.assertTrue("Soapaction not valid", mapping.validateLookupKey("SoapAction"));
     }
 }

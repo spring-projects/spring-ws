@@ -27,7 +27,6 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
-import junit.framework.TestCase;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
@@ -40,14 +39,18 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 
-public class FaultCreatingValidatingMarshallingPayloadEndpointTest extends TestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 
     private MessageContext messageContext;
 
     private ResourceBundleMessageSource messageSource;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         this.messageSource = new ResourceBundleMessageSource();
         this.messageSource.setBasename("org.springframework.ws.soap.server.endpoint.messages");
         MessageFactory messageFactory = MessageFactory.newInstance();
@@ -57,6 +60,7 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest extends TestC
                 new DefaultMessageContext(new SaajSoapMessage(request), new SaajSoapMessageFactory(messageFactory));
     }
 
+    @Test
     public void testValidationIncorrect() throws Exception {
         Person p = new Person("", -1);
         PersonMarshaller marshaller = new PersonMarshaller(p);
@@ -66,7 +70,7 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest extends TestC
 
                     @Override
                     protected Object invokeInternal(Object requestObject) throws Exception {
-                        fail("No expected");
+                        Assert.fail("No expected");
                         return null;
                     }
                 };
@@ -78,27 +82,28 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest extends TestC
         endpoint.invoke(messageContext);
 
         SOAPMessage response = ((SaajSoapMessage) messageContext.getResponse()).getSaajMessage();
-        assertTrue("Response has no fault", response.getSOAPBody().hasFault());
+        Assert.assertTrue("Response has no fault", response.getSOAPBody().hasFault());
         SOAPFault fault = response.getSOAPBody().getFault();
-        assertEquals("Invalid fault code", new QName("http://schemas.xmlsoap.org/soap/envelope/", "Client"),
+        Assert.assertEquals("Invalid fault code", new QName("http://schemas.xmlsoap.org/soap/envelope/", "Client"),
                 fault.getFaultCodeAsQName());
-        assertEquals("Invalid fault string", endpoint.getFaultStringOrReason(), fault.getFaultString());
+        Assert.assertEquals("Invalid fault string", endpoint.getFaultStringOrReason(), fault.getFaultString());
         Detail detail = fault.getDetail();
-        assertNotNull("No detail", detail);
-        Iterator iterator = detail.getDetailEntries();
-        assertTrue("No detail entry", iterator.hasNext());
+        Assert.assertNotNull("No detail", detail);
+        Iterator<?> iterator = detail.getDetailEntries();
+        Assert.assertTrue("No detail entry", iterator.hasNext());
         DetailEntry detailEntry = (DetailEntry) iterator.next();
-        assertEquals("Invalid detail entry name", new QName("http://springframework.org/spring-ws", "ValidationError"),
-                detailEntry.getElementQName());
-        assertEquals("Invalid detail entry text", "Name is required", detailEntry.getTextContent());
-        assertTrue("No detail entry", iterator.hasNext());
+        Assert.assertEquals("Invalid detail entry name",
+                new QName("http://springframework.org/spring-ws", "ValidationError"), detailEntry.getElementQName());
+        Assert.assertEquals("Invalid detail entry text", "Name is required", detailEntry.getTextContent());
+        Assert.assertTrue("No detail entry", iterator.hasNext());
         detailEntry = (DetailEntry) iterator.next();
-        assertEquals("Invalid detail entry name", new QName("http://springframework.org/spring-ws", "ValidationError"),
-                detailEntry.getElementQName());
-        assertEquals("Invalid detail entry text", "Age Cannot be negative", detailEntry.getTextContent());
-        assertFalse("Too many detail entries", iterator.hasNext());
+        Assert.assertEquals("Invalid detail entry name",
+                new QName("http://springframework.org/spring-ws", "ValidationError"), detailEntry.getElementQName());
+        Assert.assertEquals("Invalid detail entry text", "Age Cannot be negative", detailEntry.getTextContent());
+        Assert.assertFalse("Too many detail entries", iterator.hasNext());
     }
 
+    @Test
     public void testValidationCorrect() throws Exception {
         Person p = new Person("John", 42);
         PersonMarshaller marshaller = new PersonMarshaller(p);
@@ -118,12 +123,12 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest extends TestC
         endpoint.invoke(messageContext);
 
         SOAPMessage response = ((SaajSoapMessage) messageContext.getResponse()).getSaajMessage();
-        assertFalse("Response has fault", response.getSOAPBody().hasFault());
+        Assert.assertFalse("Response has fault", response.getSOAPBody().hasFault());
     }
 
     private static class PersonValidator implements Validator {
 
-        public boolean supports(Class clazz) {
+        public boolean supports(Class<?> clazz) {
             return Person.class.equals(clazz);
         }
 
@@ -183,7 +188,7 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest extends TestC
             return person;
         }
 
-        public boolean supports(Class clazz) {
+        public boolean supports(Class<?> clazz) {
             return Person.class.equals(clazz);
         }
 

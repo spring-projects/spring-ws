@@ -16,20 +16,23 @@
 
 package org.springframework.ws.soap.server.endpoint.interceptor;
 
-import junit.framework.TestCase;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.ws.context.DefaultMessageContext;
+import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
+
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.spi.LoggingEvent;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.ws.context.DefaultMessageContext;
-import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
-
-public class SoapEnvelopeLoggingInterceptorTest extends TestCase {
+public class SoapEnvelopeLoggingInterceptorTest {
 
     private SoapEnvelopeLoggingInterceptor interceptor;
 
@@ -37,8 +40,8 @@ public class SoapEnvelopeLoggingInterceptorTest extends TestCase {
 
     private MessageContext messageContext;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         interceptor = new SoapEnvelopeLoggingInterceptor();
         appender = new SoapEnvelopeLoggingInterceptorTest.CountingAppender();
         BasicConfigurator.configure(appender);
@@ -49,54 +52,60 @@ public class SoapEnvelopeLoggingInterceptorTest extends TestCase {
         appender.reset();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         BasicConfigurator.resetConfiguration();
         ClassPathResource resource = new ClassPathResource("log4j.properties");
         PropertyConfigurator.configure(resource.getURL());
     }
 
+    @Test
     public void testHandleRequestDisabled() throws Exception {
         interceptor.setLogRequest(false);
         int eventCount = appender.getCount();
         interceptor.handleRequest(messageContext, null);
-        assertEquals("interceptor logged when disabled", appender.getCount(), eventCount);
+        Assert.assertEquals("interceptor logged when disabled", appender.getCount(), eventCount);
     }
 
+    @Test
     public void testHandleRequestEnabled() throws Exception {
         int eventCount = appender.getCount();
         interceptor.handleRequest(messageContext, null);
-        assertTrue("interceptor did not log", appender.getCount() > eventCount);
+        Assert.assertTrue("interceptor did not log", appender.getCount() > eventCount);
     }
 
+    @Test
     public void testHandleResponseDisabled() throws Exception {
         messageContext.getResponse();
         interceptor.setLogResponse(false);
         int eventCount = appender.getCount();
         interceptor.handleResponse(messageContext, null);
-        assertEquals("interceptor logged when disabled", appender.getCount(), eventCount);
+        Assert.assertEquals("interceptor logged when disabled", appender.getCount(), eventCount);
     }
 
+    @Test
     public void testHandleResponseEnabled() throws Exception {
         messageContext.getResponse();
         int eventCount = appender.getCount();
         interceptor.handleResponse(messageContext, null);
-        assertTrue("interceptor did not log", appender.getCount() > eventCount);
+        Assert.assertTrue("interceptor did not log", appender.getCount() > eventCount);
     }
 
+    @Test
     public void testHandleFaultDisabled() throws Exception {
         messageContext.getResponse();
         interceptor.setLogFault(false);
         int eventCount = appender.getCount();
         interceptor.handleFault(messageContext, null);
-        assertEquals("interceptor logged when disabled", appender.getCount(), eventCount);
+        Assert.assertEquals("interceptor logged when disabled", appender.getCount(), eventCount);
     }
 
+    @Test
     public void testHandleFaultEnabled() throws Exception {
         messageContext.getResponse();
         int eventCount = appender.getCount();
         interceptor.handleResponse(messageContext, null);
-        assertTrue("interceptor did not log", appender.getCount() > eventCount);
+        Assert.assertTrue("interceptor did not log", appender.getCount() > eventCount);
     }
 
     private static class CountingAppender extends AppenderSkeleton {

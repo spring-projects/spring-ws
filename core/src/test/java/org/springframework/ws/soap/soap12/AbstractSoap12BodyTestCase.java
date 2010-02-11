@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,17 +28,25 @@ import org.springframework.ws.soap.SoapVersion;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
+import org.junit.Test;
+
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.junit.Assert.*;
+
 public abstract class AbstractSoap12BodyTestCase extends AbstractSoapBodyTestCase {
 
+    @Test
     public void testGetType() {
         assertTrue("Invalid type returned", soapBody instanceof Soap12Body);
     }
 
+    @Test
     public void testGetName() throws Exception {
         assertEquals("Invalid qualified name", new QName(SoapVersion.SOAP_12.getEnvelopeNamespaceUri(), "Body"),
                 soapBody.getName());
     }
 
+    @Test
     public void testGetSource() throws Exception {
         StringResult result = new StringResult();
         transformer.transform(soapBody.getSource(), result);
@@ -46,6 +54,7 @@ public abstract class AbstractSoap12BodyTestCase extends AbstractSoapBodyTestCas
                 result.toString());
     }
 
+    @Test
     public void testAddMustUnderstandFault() throws Exception {
         SoapFault fault = soapBody.addMustUnderstandFault("SOAP Must Understand Error", Locale.ENGLISH);
         assertEquals("Invalid fault code", new QName("http://www.w3.org/2003/05/soap-envelope", "MustUnderstand"),
@@ -60,6 +69,7 @@ public abstract class AbstractSoap12BodyTestCase extends AbstractSoapBodyTestCas
                         "</soapenv:Reason></soapenv:Fault>", result.toString());
     }
 
+    @Test
     public void testAddSenderFault() throws Exception {
         SoapFault fault = soapBody.addClientOrSenderFault("faultString", Locale.ENGLISH);
         assertEquals("Invalid fault code", new QName("http://www.w3.org/2003/05/soap-envelope", "Sender"),
@@ -74,6 +84,7 @@ public abstract class AbstractSoap12BodyTestCase extends AbstractSoapBodyTestCas
                         "</soapenv:Fault>", result.toString());
     }
 
+    @Test
     public void testAddReceiverFault() throws Exception {
         SoapFault fault = soapBody.addServerOrReceiverFault("faultString", Locale.ENGLISH);
         assertEquals("Invalid fault code", new QName("http://www.w3.org/2003/05/soap-envelope", "Receiver"),
@@ -88,6 +99,7 @@ public abstract class AbstractSoap12BodyTestCase extends AbstractSoapBodyTestCas
                         "</soapenv:Fault>", result.toString());
     }
 
+    @Test
     public void testAddFaultWithDetail() throws Exception {
         SoapFault fault = soapBody.addServerOrReceiverFault("faultString", Locale.ENGLISH);
         SoapFaultDetail detail = fault.addFaultDetail();
@@ -106,6 +118,7 @@ public abstract class AbstractSoap12BodyTestCase extends AbstractSoapBodyTestCas
                         "</prefix:localPart></soapenv:Detail></soapenv:Fault>", result.toString());
     }
 
+    @Test
     public void testAddFaultWithDetailResult() throws Exception {
         SoapFault fault = soapBody.addServerOrReceiverFault("faultString", Locale.ENGLISH);
         SoapFaultDetail detail = fault.addFaultDetail();
@@ -122,13 +135,14 @@ public abstract class AbstractSoap12BodyTestCase extends AbstractSoapBodyTestCas
                         "<detailContents xmlns='namespace'/>" + "</soapenv:Detail></soapenv:Fault>", result.toString());
     }
 
+    @Test
     public void testAddFaultWithSubcode() throws Exception {
         Soap12Fault fault = (Soap12Fault) soapBody.addServerOrReceiverFault("faultString", Locale.ENGLISH);
         QName subcode1 = new QName("http://www.springframework.org", "Subcode1", "spring-ws");
         fault.addFaultSubcode(subcode1);
         QName subcode2 = new QName("http://www.springframework.org", "Subcode2", "spring-ws");
         fault.addFaultSubcode(subcode2);
-        Iterator iterator = fault.getFaultSubcodes();
+        Iterator<QName> iterator = fault.getFaultSubcodes();
         assertTrue("No subcode found", iterator.hasNext());
         assertEquals("Invalid subcode", subcode1, iterator.next());
         assertTrue("No subcode found", iterator.hasNext());

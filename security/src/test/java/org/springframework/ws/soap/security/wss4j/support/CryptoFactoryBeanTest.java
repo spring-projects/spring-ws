@@ -18,21 +18,24 @@ package org.springframework.ws.soap.security.wss4j.support;
 
 import java.util.Properties;
 
-import junit.framework.TestCase;
-import org.apache.ws.security.components.crypto.Merlin;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.ClassUtils;
 
-public class CryptoFactoryBeanTest extends TestCase {
+import org.apache.ws.security.components.crypto.Merlin;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public class CryptoFactoryBeanTest {
 
     private CryptoFactoryBean factoryBean;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         factoryBean = new CryptoFactoryBean();
     }
 
+    @Test
     public void testSetConfiguration() throws Exception {
         Properties configuration = new Properties();
         configuration.setProperty("org.apache.ws.security.crypto.provider",
@@ -46,10 +49,11 @@ public class CryptoFactoryBeanTest extends TestCase {
         factoryBean.afterPropertiesSet();
 
         Object result = factoryBean.getObject();
-        assertNotNull("No result", result);
-        assertTrue("Not a Merlin instance", result instanceof Merlin);
+        Assert.assertNotNull("No result", result);
+        Assert.assertTrue("Not a Merlin instance", result instanceof Merlin);
     }
 
+    @Test
     public void testProperties() throws Exception {
         factoryBean.setKeyStoreType("jceks");
         factoryBean.setKeyStorePassword("123456");
@@ -57,7 +61,7 @@ public class CryptoFactoryBeanTest extends TestCase {
         factoryBean.setBeanClassLoader(ClassUtils.getDefaultClassLoader());
         factoryBean.afterPropertiesSet();
         Object result = factoryBean.getObject();
-        assertNotNull("No result", result);
-        assertTrue("Not a Merlin instance", result instanceof Merlin);
+        Assert.assertNotNull("No result", result);
+        Assert.assertTrue("Not a Merlin instance", result instanceof Merlin);
     }
 }

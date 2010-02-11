@@ -20,9 +20,9 @@ import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class CallbackHandlerChainTest extends TestCase {
+public class CallbackHandlerChainTest {
 
     private CallbackHandler supported = new CallbackHandler() {
         public void handle(Callback[] callbacks) {
@@ -38,28 +38,21 @@ public class CallbackHandlerChainTest extends TestCase {
     private Callback callback = new Callback() {
     };
 
-    @Override
-    protected void setUp() throws Exception {
-    }
-
+    @Test
     public void testSupported() throws Exception {
         CallbackHandlerChain chain = new CallbackHandlerChain(new CallbackHandler[]{supported});
         chain.handle(new Callback[]{callback});
     }
 
+    @Test
     public void testUnsupportedSupported() throws Exception {
         CallbackHandlerChain chain = new CallbackHandlerChain(new CallbackHandler[]{unsupported, supported});
         chain.handle(new Callback[]{callback});
     }
 
+    @Test(expected = UnsupportedCallbackException.class)
     public void testUnsupported() throws Exception {
         CallbackHandlerChain chain = new CallbackHandlerChain(new CallbackHandler[]{unsupported});
-        try {
-            chain.handle(new Callback[]{callback});
-            fail("Expected UnsupportedCallbackException");
-        }
-        catch (UnsupportedCallbackException ex) {
-            // expected behavior
-        }
+        chain.handle(new Callback[]{callback});
     }
 }
