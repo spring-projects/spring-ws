@@ -18,9 +18,6 @@ package org.springframework.ws.server.endpoint.mapping;
 
 import java.net.URI;
 
-import junit.framework.TestCase;
-import org.easymock.MockControl;
-
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
@@ -28,35 +25,48 @@ import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.context.DefaultTransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
 
-public class UriEndpointMappingTest extends TestCase {
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.easymock.EasyMock.*;
+
+public class UriEndpointMappingTest {
 
     private UriEndpointMapping mapping;
 
     private MessageContext context;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         mapping = new UriEndpointMapping();
         context = new DefaultMessageContext(new MockWebServiceMessageFactory());
     }
 
-    public void testGetLookupKeyForMessage() throws Exception {
-        MockControl control = MockControl.createControl(WebServiceConnection.class);
-        WebServiceConnection connectionMock = (WebServiceConnection) control.getMock();
-        TransportContextHolder.setTransportContext(new DefaultTransportContext(connectionMock));
-
-        URI uri = new URI("jms://exampleQueue");
-        control.expectAndReturn(connectionMock.getUri(), uri);
-        control.replay();
-
-        assertEquals("Invalid lookup key", uri.toString(), mapping.getLookupKeyForMessage(context));
-
-        control.verify();
+    @After
+    public void clearContext() {
         TransportContextHolder.setTransportContext(null);
     }
 
+    @Test
+    public void testGetLookupKeyForMessage() throws Exception {
+        WebServiceConnection connectionMock = createMock(WebServiceConnection.class);
+        TransportContextHolder.setTransportContext(new DefaultTransportContext(connectionMock));
+
+        URI uri = new URI("jms://exampleQueue");
+        expect(connectionMock.getUri()).andReturn(uri);
+
+        replay(connectionMock);
+
+        Assert.assertEquals("Invalid lookup key", uri.toString(), mapping.getLookupKeyForMessage(context));
+
+        verify(connectionMock);
+    }
+
+    @Test
     public void testValidateLookupKey() throws Exception {
-        assertTrue("URI not valid", mapping.validateLookupKey("http://example.com/services"));
-        assertFalse("URI not valid", mapping.validateLookupKey("some string"));
+        Assert.assertTrue("URI not valid", mapping.validateLookupKey("http://example.com/services"));
+        Assert.assertFalse("URI not valid", mapping.validateLookupKey("some string"));
     }
 }

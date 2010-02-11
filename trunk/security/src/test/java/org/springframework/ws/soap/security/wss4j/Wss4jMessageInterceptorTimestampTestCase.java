@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +19,19 @@ package org.springframework.ws.soap.security.wss4j;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import org.w3c.dom.Document;
-
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.WsSecurityValidationException;
 
+import org.junit.Test;
+import org.w3c.dom.Document;
+
+import static org.junit.Assert.assertEquals;
+
 public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTestCase {
 
+    @Test
     public void testAddTimestamp() throws Exception {
         Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
         interceptor.setSecurementActions("Timestamp");
@@ -40,6 +44,7 @@ public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTest
                 "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsu:Timestamp", document);
     }
 
+    @Test
     public void testValidateTimestamp() throws Exception {
         Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
         interceptor.setValidationActions("Timestamp");
@@ -52,26 +57,23 @@ public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTest
                 getDocument(message));
     }
 
+    @Test(expected = WsSecurityValidationException.class)
     public void testValidateTimestampWithExpiredTtl() throws Exception {
         Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
         interceptor.setValidationActions("Timestamp");
         interceptor.afterPropertiesSet();
         SoapMessage message = loadSoap11Message("expiredTimestamp-soap.xml");
         MessageContext context = new DefaultMessageContext(message, getSoap11MessageFactory());
-        try {
-            interceptor.validateMessage(message, context);
-            fail();
-        }
-        catch (WsSecurityValidationException e) {
-            // expected
-        }
+        interceptor.validateMessage(message, context);
     }
 
+
+    @Test
     public void testSecureTimestampWithCustomTtl() throws Exception {
-        int ttlInSeconds = 1;
         Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
         interceptor.setSecurementActions("Timestamp");
         interceptor.setTimestampStrict(true);
+        int ttlInSeconds = 1;
         interceptor.setSecurementTimeToLive(ttlInSeconds);
         interceptor.afterPropertiesSet();
         SoapMessage message = loadSoap11Message("empty-soap.xml");

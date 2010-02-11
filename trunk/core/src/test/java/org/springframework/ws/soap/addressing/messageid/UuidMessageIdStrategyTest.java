@@ -18,22 +18,25 @@ package org.springframework.ws.soap.addressing.messageid;
 
 import java.net.URI;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class UuidMessageIdStrategyTest extends TestCase {
+public class UuidMessageIdStrategyTest {
 
     private MessageIdStrategy strategy;
 
-    @Override
-    protected final void setUp() throws Exception {
+    @Before
+    public final void setUp() throws Exception {
         strategy = new UuidMessageIdStrategy();
     }
 
+    @Test
     public void testStrategy() {
         URI messageId1 = strategy.newMessageId(null);
-        assertNotNull("Empty messageId", messageId1);
+        Assert.assertNotNull("Empty messageId", messageId1);
         URI messageId2 = strategy.newMessageId(null);
-        assertNotNull("Empty messageId", messageId2);
-        assertFalse("Equal messageIds", messageId1.equals(messageId2));
+        Assert.assertNotNull("Empty messageId", messageId2);
+        Assert.assertFalse("Equal messageIds", messageId1.equals(messageId2));
     }
 }

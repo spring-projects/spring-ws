@@ -30,6 +30,8 @@ import org.springframework.ws.transport.MockTransportInputStream;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportInputStream;
 
+import static org.junit.Assert.*;
+
 public abstract class AbstractSoap12MessageFactoryTestCase extends AbstractSoapMessageFactoryTestCase {
 
     @Override
@@ -86,8 +88,8 @@ public abstract class AbstractSoap12MessageFactoryTestCase extends AbstractSoapM
         assertTrue("Not a SoapMessage", message instanceof SoapMessage);
         SoapMessage soapMessage = (SoapMessage) message;
         assertEquals("Invalid soap version", SoapVersion.SOAP_12, soapMessage.getVersion());
-        assertTrue("Message is not a XOP pacakge", soapMessage.isXopPackage());
-        Iterator iter = soapMessage.getAttachments();
+        assertTrue("Message is not a XOP package", soapMessage.isXopPackage());
+        Iterator<Attachment> iter = soapMessage.getAttachments();
         assertTrue("No attachments read", iter.hasNext());
 
         Attachment attachment = soapMessage.getAttachment("<1.urn:uuid:40864869929B855F971176851454452@apache.org>");

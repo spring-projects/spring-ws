@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,16 +27,24 @@ import org.springframework.ws.soap.SoapVersion;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
+import org.junit.Test;
+
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.junit.Assert.*;
+
 public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCase {
 
+    @Test
     public void testGetType() {
         assertTrue("Invalid type returned", soapBody instanceof Soap11Body);
     }
 
+    @Test
     public void testGetName() throws Exception {
         assertEquals("Invalid qualified name", SoapVersion.SOAP_11.getBodyName(), soapBody.getName());
     }
 
+    @Test
     public void testGetSource() throws Exception {
         StringResult result = new StringResult();
         transformer.transform(soapBody.getSource(), result);
@@ -44,6 +52,7 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
                 result.toString());
     }
 
+    @Test
     public void testAddMustUnderstandFault() throws Exception {
         SoapFault fault = soapBody.addMustUnderstandFault("SOAP Must Understand Error", null);
         assertEquals("Invalid fault code", new QName("http://schemas.xmlsoap.org/soap/envelope/", "MustUnderstand"),
@@ -53,6 +62,7 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
                 "<faultstring>SOAP Must Understand Error</faultstring></SOAP-ENV:Fault>");
     }
 
+    @Test
     public void testAddClientFault() throws Exception {
         SoapFault fault = soapBody.addClientOrSenderFault("faultString", null);
         assertEquals("Invalid fault code", new QName("http://schemas.xmlsoap.org/soap/envelope/", "Client"),
@@ -62,6 +72,7 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
                 "<faultstring>faultString</faultstring>" + "</SOAP-ENV:Fault>");
     }
 
+    @Test
     public void testAddServerFault() throws Exception {
         SoapFault fault = soapBody.addServerOrReceiverFault("faultString", null);
         assertEquals("Invalid fault code", new QName("http://schemas.xmlsoap.org/soap/envelope/", "Server"),
@@ -71,6 +82,7 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
                 "<faultstring>faultString</faultstring>" + "</SOAP-ENV:Fault>");
     }
 
+    @Test
     public void testAddFault() throws Exception {
         QName faultCode = new QName("http://www.springframework.org", "fault", "spring");
         String faultString = "faultString";
@@ -90,6 +102,7 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
                 "</faultactor>" + "</SOAP-ENV:Fault>");
     }
 
+    @Test
     public void testAddFaultNoPrefix() throws Exception {
         QName faultCode = new QName("http://www.springframework.org", "fault");
         String faultString = "faultString";
@@ -105,6 +118,7 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
         assertEquals("Invalid fault actor", actor, fault.getFaultActorOrRole());
     }
 
+    @Test
     public void testAddFaultWithDetail() throws Exception {
         QName faultCode = new QName("http://www.springframework.org", "fault", "spring");
         String faultString = "faultString";
@@ -127,6 +141,7 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
 
     }
 
+    @Test
     public void testAddFaultWithDetailResult() throws Exception {
         SoapFault fault = ((Soap11Body) soapBody)
                 .addFault(new QName("namespace", "localPart", "prefix"), "Fault", null);

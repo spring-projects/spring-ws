@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,15 @@
 
 package org.springframework.ws.soap.security.wss4j;
 
-import org.w3c.dom.Document;
-
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 
+import org.junit.Test;
+import org.w3c.dom.Document;
+
 public abstract class Wss4jMessageInterceptorUsernameTokenSignatureTestCase extends Wss4jTestCase {
 
+    @Test
     public void testAddUsernameTokenSignature() throws Exception {
         Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
         interceptor.setSecurementActions("UsernameTokenSignature");

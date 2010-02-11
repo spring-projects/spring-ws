@@ -18,20 +18,21 @@ package org.springframework.ws.transport.support;
 
 import java.net.URI;
 
-import junit.framework.TestCase;
-import org.easymock.MockControl;
-
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
+import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
 
-public class WebServiceMessageReceiverObjectSupportTest extends TestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.easymock.EasyMock.*;
+public class WebServiceMessageReceiverObjectSupportTest {
 
     private WebServiceMessageReceiverObjectSupport receiverSupport;
-
-    private MockControl connectionControl;
 
     private WebServiceConnection connectionMock;
 
@@ -39,55 +40,55 @@ public class WebServiceMessageReceiverObjectSupportTest extends TestCase {
 
     private MockWebServiceMessage request;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         receiverSupport = new MyReceiverSupport();
         messageFactory = new MockWebServiceMessageFactory();
         receiverSupport.setMessageFactory(messageFactory);
-        connectionControl = MockControl.createStrictControl(WebServiceConnection.class);
-        connectionMock = (WebServiceConnection) connectionControl.getMock();
+        connectionMock = createStrictMock(WebServiceConnection.class);
         request = new MockWebServiceMessage();
     }
 
+    @Test
     public void testHandleConnectionResponse() throws Exception {
-        connectionControl.expectAndReturn(connectionMock.getUri(), new URI("http://example.com"));
-        connectionControl.expectAndReturn(connectionMock.receive(messageFactory), request);
-        connectionMock.send(new MockWebServiceMessage());
-        connectionControl.setMatcher(MockControl.ALWAYS_MATCHER);
+        expect(connectionMock.getUri()).andReturn(new URI("http://example.com"));
+        expect(connectionMock.receive(messageFactory)).andReturn(request);
+        connectionMock.send(isA(WebServiceMessage.class));
         connectionMock.close();
 
-        connectionControl.replay();
+        replay(connectionMock);
 
         WebServiceMessageReceiver receiver = new WebServiceMessageReceiver() {
 
             public void receive(MessageContext messageContext) throws Exception {
-                assertNotNull("No message context", messageContext);
+                Assert.assertNotNull("No message context", messageContext);
                 messageContext.getResponse();
             }
         };
 
         receiverSupport.handleConnection(connectionMock, receiver);
 
-        connectionControl.verify();
+        verify(connectionMock);
     }
 
+    @Test
     public void testHandleConnectionNoResponse() throws Exception {
-        connectionControl.expectAndReturn(connectionMock.getUri(), new URI("http://example.com"));
-        connectionControl.expectAndReturn(connectionMock.receive(messageFactory), request);
+        expect(connectionMock.getUri()).andReturn(new URI("http://example.com"));
+        expect(connectionMock.receive(messageFactory)).andReturn(request);
         connectionMock.close();
 
-        connectionControl.replay();
+        replay(connectionMock);
 
         WebServiceMessageReceiver receiver = new WebServiceMessageReceiver() {
 
             public void receive(MessageContext messageContext) throws Exception {
-                assertNotNull("No message context", messageContext);
+                Assert.assertNotNull("No message context", messageContext);
             }
         };
 
         receiverSupport.handleConnection(connectionMock, receiver);
 
-        connectionControl.verify();
+        verify(connectionMock);
     }
 
     private static class MyReceiverSupport extends WebServiceMessageReceiverObjectSupport {

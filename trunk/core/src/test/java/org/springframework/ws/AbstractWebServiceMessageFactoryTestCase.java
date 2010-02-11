@@ -16,20 +16,23 @@
 
 package org.springframework.ws;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public abstract class AbstractWebServiceMessageFactoryTestCase extends TestCase {
+public abstract class AbstractWebServiceMessageFactoryTestCase {
 
     protected WebServiceMessageFactory messageFactory;
 
-    @Override
-    protected final void setUp() throws Exception {
+    @Before
+    public final void setUp() throws Exception {
         messageFactory = createMessageFactory();
     }
 
+    @Test
     public void testCreateEmptyMessage() throws Exception {
         WebServiceMessage message = messageFactory.createWebServiceMessage();
-        assertNotNull("WebServiceMessage is null", message);
+        Assert.assertNotNull("WebServiceMessage is null", message);
     }
 
     protected abstract WebServiceMessageFactory createMessageFactory() throws Exception;

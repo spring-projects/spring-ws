@@ -16,39 +16,44 @@
 
 package org.springframework.ws.soap.security.xwss.callback;
 
-import com.sun.xml.wss.impl.callback.PasswordCallback;
-import com.sun.xml.wss.impl.callback.UsernameCallback;
-import junit.framework.TestCase;
-
 import org.springframework.security.Authentication;
 import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 
-public class SpringUsernamePasswordCallbackHandlerTest extends TestCase {
+import com.sun.xml.wss.impl.callback.PasswordCallback;
+import com.sun.xml.wss.impl.callback.UsernameCallback;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public class SpringUsernamePasswordCallbackHandlerTest {
 
     private SpringUsernamePasswordCallbackHandler handler;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         handler = new SpringUsernamePasswordCallbackHandler();
         Authentication authentication = new UsernamePasswordAuthenticationToken("Bert", "Ernie");
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         SecurityContextHolder.clearContext();
     }
 
+    @Test
     public void testUsernameCallback() throws Exception {
         UsernameCallback usernameCallback = new UsernameCallback();
         handler.handleInternal(usernameCallback);
-        assertEquals("Invalid username", "Bert", usernameCallback.getUsername());
+        Assert.assertEquals("Invalid username", "Bert", usernameCallback.getUsername());
     }
 
+    @Test
     public void testPasswordCallback() throws Exception {
         PasswordCallback passwordCallback = new PasswordCallback();
         handler.handleInternal(passwordCallback);
-        assertEquals("Invalid username", "Ernie", passwordCallback.getPassword());
+        Assert.assertEquals("Invalid username", "Ernie", passwordCallback.getPassword());
     }
 }

@@ -16,10 +16,6 @@
 
 package org.springframework.ws.soap.security.wss4j.callback;
 
-import junit.framework.TestCase;
-import org.apache.ws.security.WSUsernameTokenPrincipal;
-import org.easymock.MockControl;
-
 import org.springframework.security.Authentication;
 import org.springframework.security.GrantedAuthority;
 import org.springframework.security.GrantedAuthorityImpl;
@@ -29,50 +25,54 @@ import org.springframework.security.userdetails.User;
 import org.springframework.security.userdetails.UserDetails;
 import org.springframework.security.userdetails.UserDetailsService;
 
+import org.apache.ws.security.WSUsernameTokenPrincipal;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.easymock.EasyMock.*;
+
 /** @author tareq */
-public class SpringDigestPasswordValidationCallbackHandlerTest extends TestCase {
+public class SpringDigestPasswordValidationCallbackHandlerTest {
 
     private SpringDigestPasswordValidationCallbackHandler callbackHandler;
 
     private GrantedAuthorityImpl grantedAuthority;
 
-    private UserDetailsService userDetailsService;
-
-    private MockControl control;
-
-    private WSUsernameTokenPrincipal principal;
-
     private UsernameTokenPrincipalCallback callback;
 
     private UserDetails user;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         callbackHandler = new SpringDigestPasswordValidationCallbackHandler();
 
         grantedAuthority = new GrantedAuthorityImpl("ROLE_1");
         user = new User("Ernie", "Bert", true, true, true, true, new GrantedAuthority[]{grantedAuthority});
 
-        control = MockControl.createControl(UserDetailsService.class);
-        userDetailsService = (UserDetailsService) control.getMock();
-        userDetailsService.loadUserByUsername("Ernie");
-        control.setDefaultReturnValue(user);
-        control.replay();
-        callbackHandler.setUserDetailsService(userDetailsService);
-
-        principal = new WSUsernameTokenPrincipal("Ernie", true);
+        WSUsernameTokenPrincipal principal = new WSUsernameTokenPrincipal("Ernie", true);
         callback = new UsernameTokenPrincipalCallback(principal);
-
     }
 
+    @Test
     public void testHandleUsernameTokenPrincipal() throws Exception {
+        UserDetailsService userDetailsService = createMock(UserDetailsService.class);
+        callbackHandler.setUserDetailsService(userDetailsService);
+
+        expect(userDetailsService.loadUserByUsername("Ernie")).andReturn(user).anyTimes();
+
+        replay(userDetailsService);
+
         callbackHandler.handleUsernameTokenPrincipal(callback);
         SecurityContext context = SecurityContextHolder.getContext();
-        assertNotNull("SecurityContext must not be null", context);
+        Assert.assertNotNull("SecurityContext must not be null", context);
         Authentication authentication = context.getAuthentication();
-        assertNotNull("Authentication must not be null", authentication);
+        Assert.assertNotNull("Authentication must not be null", authentication);
         GrantedAuthority[] authorities = authentication.getAuthorities();
-        assertTrue("GrantedAuthority[] must not be null or empty", (authorities != null && authorities.length > 0));
-        assertEquals("Unexpected authority", grantedAuthority, authorities[0]);
+        Assert.assertTrue("GrantedAuthority[] must not be null or empty",
+                (authorities != null && authorities.length > 0));
+        Assert.assertEquals("Unexpected authority", grantedAuthority, authorities[0]);
+
+        verify(userDetailsService);
     }
 }

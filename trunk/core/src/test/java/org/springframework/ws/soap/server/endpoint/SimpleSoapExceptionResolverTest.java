@@ -18,8 +18,6 @@ package org.springframework.ws.soap.server.endpoint;
 
 import java.util.Locale;
 
-import junit.framework.TestCase;
-import org.easymock.MockControl;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
@@ -27,49 +25,45 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.soap11.Soap11Body;
 
-public class SimpleSoapExceptionResolverTest extends TestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.easymock.EasyMock.*;
+
+public class SimpleSoapExceptionResolverTest {
 
     private SimpleSoapExceptionResolver exceptionResolver;
 
     private MessageContext messageContext;
 
-    private MockControl messageControl;
-
     private SoapMessage messageMock;
-
-    private MockControl bodyControl;
 
     private Soap11Body bodyMock;
 
-    private MockControl factoryControl;
-
     private WebServiceMessageFactory factoryMock;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         exceptionResolver = new SimpleSoapExceptionResolver();
-        factoryControl = MockControl.createControl(WebServiceMessageFactory.class);
-        factoryMock = (WebServiceMessageFactory) factoryControl.getMock();
+        factoryMock = createMock(WebServiceMessageFactory.class);
         messageContext = new DefaultMessageContext(new MockWebServiceMessage(), factoryMock);
-        messageControl = MockControl.createControl(SoapMessage.class);
-        messageMock = (SoapMessage) messageControl.getMock();
-        bodyControl = MockControl.createControl(Soap11Body.class);
-        bodyControl.setDefaultMatcher(MockControl.ARRAY_MATCHER);
-        bodyMock = (Soap11Body) bodyControl.getMock();
+        messageMock = createMock(SoapMessage.class);
+        bodyMock = createMock(Soap11Body.class);
     }
 
+    @Test
     public void testResolveExceptionInternal() throws Exception {
         Exception exception = new Exception("message");
-        factoryControl.expectAndReturn(factoryMock.createWebServiceMessage(), messageMock);
-        messageControl.expectAndReturn(messageMock.getSoapBody(), bodyMock);
-        bodyControl.expectAndReturn(bodyMock.addServerOrReceiverFault(exception.getMessage(), Locale.ENGLISH), null);
-        factoryControl.replay();
-        messageControl.replay();
-        bodyControl.replay();
+        expect(factoryMock.createWebServiceMessage()).andReturn(messageMock);
+        expect(messageMock.getSoapBody()).andReturn(bodyMock);
+        expect(bodyMock.addServerOrReceiverFault(exception.getMessage(), Locale.ENGLISH)).andReturn(null);
+
+        replay(factoryMock, messageMock, bodyMock);
+
         boolean result = exceptionResolver.resolveExceptionInternal(messageContext, null, exception);
-        assertTrue("Invalid result", result);
-        factoryControl.verify();
-        messageControl.verify();
-        bodyControl.verify();
+        Assert.assertTrue("Invalid result", result);
+
+        verify(factoryMock, messageMock, bodyMock);
     }
 }

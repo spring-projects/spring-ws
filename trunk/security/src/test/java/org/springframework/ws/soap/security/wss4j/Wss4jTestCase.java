@@ -43,15 +43,19 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.xpath.Jaxp13XPathTemplate;
 
-import junit.framework.TestCase;
 import org.apache.axiom.soap.SOAP12Constants;
 import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
+import org.junit.Assert;
+import org.junit.Before;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-public abstract class Wss4jTestCase extends TestCase {
+import static org.junit.Assert.assertTrue;
+
+public abstract class Wss4jTestCase {
 
     protected MessageFactory saajSoap11MessageFactory;
+
     protected MessageFactory saajSoap12MessageFactory;
 
     protected final boolean axiomTest = this.getClass().getSimpleName().startsWith("Axiom");
@@ -60,10 +64,10 @@ public abstract class Wss4jTestCase extends TestCase {
 
     protected Jaxp13XPathTemplate xpathTemplate = new Jaxp13XPathTemplate();
 
-    @Override
-    protected final void setUp() throws Exception {
+    @Before
+    public final void setUp() throws Exception {
         if (!axiomTest && !saajTest) {
-            throw new IllegalArgumentException("test class name must statrt with either Axiom or Saaj");
+            throw new IllegalArgumentException("test class name must start with either Axiom or Saaj");
         }
         saajSoap11MessageFactory = MessageFactory.newInstance();
         saajSoap12MessageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
@@ -87,7 +91,7 @@ public abstract class Wss4jTestCase extends TestCase {
                                           String xpathExpression,
                                           Document document) {
         String actualValue = xpathTemplate.evaluateAsString(xpathExpression, new DOMSource(document));
-        assertEquals(message, expectedValue, actualValue);
+        Assert.assertEquals(message, expectedValue, actualValue);
     }
 
     protected void assertXpathEvaluatesTo(String message,
@@ -95,22 +99,22 @@ public abstract class Wss4jTestCase extends TestCase {
                                           String xpathExpression,
                                           String document) {
         String actualValue = xpathTemplate.evaluateAsString(xpathExpression, new StringSource(document));
-        assertEquals(message, expectedValue, actualValue);
+        Assert.assertEquals(message, expectedValue, actualValue);
     }
 
     protected void assertXpathExists(String message, String xpathExpression, Document document) {
         Node node = xpathTemplate.evaluateAsNode(xpathExpression, new DOMSource(document));
-        assertNotNull(message, node);
+        Assert.assertNotNull(message, node);
     }
 
     protected void assertXpathNotExists(String message, String xpathExpression, Document document) {
         Node node = xpathTemplate.evaluateAsNode(xpathExpression, new DOMSource(document));
-        assertNull(message, node);
+        Assert.assertNull(message, node);
     }
 
     protected void assertXpathNotExists(String message, String xpathExpression, String document) {
         Node node = xpathTemplate.evaluateAsNode(xpathExpression, new StringSource(document));
-        assertNull(message, node);
+        Assert.assertNull(message, node);
     }
 
     protected SaajSoapMessage loadSaaj11Message(String fileName) throws Exception {
@@ -160,6 +164,7 @@ public abstract class Wss4jTestCase extends TestCase {
         }
     }
 
+     @SuppressWarnings("Since15")
      protected AxiomSoapMessage loadAxiom12Message(String fileName) throws Exception {
         Resource resource = new ClassPathResource(fileName, getClass());
         InputStream is = resource.getInputStream();

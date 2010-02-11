@@ -26,14 +26,16 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import junit.framework.TestCase;
-import org.w3c.dom.Document;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.sax.SaxUtils;
 
-public class SuffixBasedMessagesProviderTest extends TestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.w3c.dom.Document;
+
+public class SuffixBasedMessagesProviderTest {
 
     private SuffixBasedMessagesProvider provider;
 
@@ -41,8 +43,8 @@ public class SuffixBasedMessagesProviderTest extends TestCase {
 
     private DocumentBuilder documentBuilder;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         provider = new SuffixBasedMessagesProvider();
         provider.setFaultSuffix("Foo");
         WSDLFactory factory = WSDLFactory.newInstance();
@@ -52,6 +54,7 @@ public class SuffixBasedMessagesProviderTest extends TestCase {
         documentBuilder = documentBuilderFactory.newDocumentBuilder();
     }
 
+    @Test
     public void testAddMessages() throws Exception {
         String definitionNamespace = "http://springframework.org/spring-ws";
         definition.addNamespace("tns", definitionNamespace);
@@ -70,18 +73,20 @@ public class SuffixBasedMessagesProviderTest extends TestCase {
 
         provider.addMessages(definition);
 
-        assertEquals("Invalid amount of messages created", 2, definition.getMessages().size());
+        Assert.assertEquals("Invalid amount of messages created", 2, definition.getMessages().size());
 
         Message message = definition.getMessage(new QName(definitionNamespace, "GetOrderRequest"));
-        assertNotNull("Message not created", message);
+        Assert.assertNotNull("Message not created", message);
         Part part = message.getPart("GetOrderRequest");
-        assertNotNull("Part not created", part);
-        assertEquals("Invalid element on part", new QName(schemaNamespace, "GetOrderRequest"), part.getElementName());
+        Assert.assertNotNull("Part not created", part);
+        Assert.assertEquals("Invalid element on part", new QName(schemaNamespace, "GetOrderRequest"),
+                part.getElementName());
 
         message = definition.getMessage(new QName(definitionNamespace, "GetOrderResponse"));
-        assertNotNull("Message not created", message);
+        Assert.assertNotNull("Message not created", message);
         part = message.getPart("GetOrderResponse");
-        assertNotNull("Part not created", part);
-        assertEquals("Invalid element on part", new QName(schemaNamespace, "GetOrderResponse"), part.getElementName());
+        Assert.assertNotNull("Part not created", part);
+        Assert.assertEquals("Invalid element on part", new QName(schemaNamespace, "GetOrderResponse"),
+                part.getElementName());
     }
 }

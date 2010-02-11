@@ -19,12 +19,16 @@ package org.springframework.ws.soap;
 import java.util.Locale;
 import javax.xml.transform.dom.DOMResult;
 
+import org.springframework.xml.transform.StringResult;
+import org.springframework.xml.transform.StringSource;
+
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import org.springframework.xml.transform.StringResult;
-import org.springframework.xml.transform.StringSource;
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.junit.Assert.*;
 
 public abstract class AbstractSoapBodyTestCase extends AbstractSoapElementTestCase {
 
@@ -38,12 +42,14 @@ public abstract class AbstractSoapBodyTestCase extends AbstractSoapElementTestCa
 
     protected abstract SoapBody createSoapBody() throws Exception;
 
+    @Test
     public void testPayload() throws Exception {
         String payload = "<payload xmlns='http://www.springframework.org' />";
         transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
         assertPayloadEqual(payload);
     }
 
+    @Test
     public void testGetPayloadResultTwice() throws Exception {
         String payload = "<payload xmlns='http://www.springframework.org' />";
         transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
@@ -55,10 +61,12 @@ public abstract class AbstractSoapBodyTestCase extends AbstractSoapElementTestCa
         assertEquals("Invalid amount of child nodes", 1, children.getLength());
     }
 
+    @Test
     public void testNoFault() throws Exception {
         assertFalse("body has fault", soapBody.hasFault());
     }
 
+    @Test
     public void testAddFaultWithExistingPayload() throws Exception {
         StringSource contents = new StringSource("<payload xmlns='http://www.springframework.org' />");
         transformer.transform(contents, soapBody.getPayloadResult());

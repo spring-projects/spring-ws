@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,11 +35,16 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringSource;
 
+import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
+
 public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptorSignTestCase {
 
     private static final String PAYLOAD =
             "<tru:StockSymbol xmlns:tru=\"http://fabrikam123.com/payloads\">QQQ</tru:StockSymbol>";
 
+    @Test
     public void testSignAndValidate() throws Exception {
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         interceptor.setSecurementActions("Signature");
@@ -54,7 +59,7 @@ public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptor
         interceptor.secureMessage(message, messageContext);
 
         SOAPHeader header = ((SaajSoapMessage) message).getSaajMessage().getSOAPHeader();
-        Iterator iterator = header.getChildElements(new QName(
+        Iterator<?> iterator = header.getChildElements(new QName(
                 "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security"));
         assertTrue("No security header", iterator.hasNext());
         SOAPHeaderElement securityHeader = (SOAPHeaderElement) iterator.next();

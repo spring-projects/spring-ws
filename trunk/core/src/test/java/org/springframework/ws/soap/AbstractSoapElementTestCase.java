@@ -21,16 +21,18 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 
-import org.custommonkey.xmlunit.XMLTestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public abstract class AbstractSoapElementTestCase extends XMLTestCase {
+public abstract class AbstractSoapElementTestCase {
 
     private SoapElement soapElement;
 
     protected Transformer transformer;
 
-    @Override
-    protected final void setUp() throws Exception {
+    @Before
+    public final void setUp() throws Exception {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         transformer = transformerFactory.newTransformer();
         soapElement = createSoapElement();
@@ -38,21 +40,24 @@ public abstract class AbstractSoapElementTestCase extends XMLTestCase {
 
     protected abstract SoapElement createSoapElement() throws Exception;
 
+    @Test
     public void testAttributes() throws Exception {
         QName name = new QName("http://springframework.org/spring-ws", "attribute");
         String value = "value";
         soapElement.addAttribute(name, value);
-        assertEquals("Invalid attribute value", value, soapElement.getAttributeValue(name));
-        Iterator allAttributes = soapElement.getAllAttributes();
-        assertTrue("Iterator is empty", allAttributes.hasNext());
+        Assert.assertEquals("Invalid attribute value", value, soapElement.getAttributeValue(name));
+        Iterator<QName> allAttributes = soapElement.getAllAttributes();
+        Assert.assertTrue("Iterator is empty", allAttributes.hasNext());
     }
 
+    @Test
     public void testAddNamespaceDeclaration() throws Exception {
         String prefix = "p";
         String namespace = "http://springframework.org/spring-ws";
         soapElement.addNamespaceDeclaration(prefix, namespace);
     }
 
+    @Test
     public void testAddDefaultNamespaceDeclaration() throws Exception {
         String prefix = "";
         String namespace = "http://springframework.org/spring-ws";

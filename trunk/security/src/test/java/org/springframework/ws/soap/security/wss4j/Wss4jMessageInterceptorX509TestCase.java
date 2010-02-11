@@ -16,14 +16,15 @@
 
 package org.springframework.ws.soap.security.wss4j;
 
-import org.apache.ws.security.components.crypto.Crypto;
-import org.apache.ws.security.components.crypto.Merlin;
-import org.w3c.dom.Document;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j.support.CryptoFactoryBean;
+
+import org.apache.ws.security.components.crypto.Crypto;
+import org.apache.ws.security.components.crypto.Merlin;
+import org.junit.Test;
+import org.w3c.dom.Document;
 
 public abstract class Wss4jMessageInterceptorX509TestCase extends Wss4jTestCase {
 
@@ -49,6 +50,7 @@ public abstract class Wss4jMessageInterceptorX509TestCase extends Wss4jTestCase 
 
     }
 
+    @Test
     public void testAddCertificate() throws Exception {
 
         interceptor.setSecurementPassword("123456");
@@ -64,7 +66,7 @@ public abstract class Wss4jMessageInterceptorX509TestCase extends Wss4jTestCase 
         assertXpathExists("Absent BinarySecurityToken element",
                 "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:BinarySecurityToken", document);
 
-        // lets verfiy the signature that we've just generated
+        // lets verify the signature that we've just generated
         interceptor.validateMessage(message, messageContext);
     }
 

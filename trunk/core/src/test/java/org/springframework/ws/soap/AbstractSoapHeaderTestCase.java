@@ -22,6 +22,11 @@ import javax.xml.namespace.QName;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
+import org.junit.Test;
+
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.junit.Assert.*;
+
 public abstract class AbstractSoapHeaderTestCase extends AbstractSoapElementTestCase {
 
     protected SoapHeader soapHeader;
@@ -38,12 +43,13 @@ public abstract class AbstractSoapHeaderTestCase extends AbstractSoapElementTest
 
     protected abstract SoapHeader createSoapHeader() throws Exception;
 
+    @Test
     public void testAddHeaderElement() throws Exception {
         QName qName = new QName(NAMESPACE, "localName", PREFIX);
         SoapHeaderElement headerElement = soapHeader.addHeaderElement(qName);
         assertNotNull("No SoapHeaderElement returned", headerElement);
         assertEquals("Invalid qName for element", qName, headerElement.getName());
-        Iterator iterator = soapHeader.examineAllHeaderElements();
+        Iterator<SoapHeaderElement> iterator = soapHeader.examineAllHeaderElements();
         assertTrue("SoapHeader has no elements", iterator.hasNext());
         String payload = "<content xmlns='http://www.springframework.org'/>";
         transformer.transform(new StringSource(payload), headerElement.getResult());
@@ -51,15 +57,17 @@ public abstract class AbstractSoapHeaderTestCase extends AbstractSoapElementTest
                 "<spring:localName xmlns:spring='http://www.springframework.org'><spring:content/></spring:localName>");
     }
 
+    @Test
     public void testRemoveHeaderElement() throws Exception {
         QName qName = new QName(NAMESPACE, "localName", PREFIX);
         soapHeader.removeHeaderElement(qName);
         soapHeader.addHeaderElement(qName);
         soapHeader.removeHeaderElement(qName);
-        Iterator iterator = soapHeader.examineAllHeaderElements();
+        Iterator<SoapHeaderElement> iterator = soapHeader.examineAllHeaderElements();
         assertFalse("SoapHeader has elements", iterator.hasNext());
     }
 
+    @Test
     public void testExamineAllHeaderElement() throws Exception {
         QName qName = new QName(NAMESPACE, "localName", PREFIX);
         SoapHeaderElement headerElement = soapHeader.addHeaderElement(qName);
@@ -67,10 +75,10 @@ public abstract class AbstractSoapHeaderTestCase extends AbstractSoapElementTest
         assertNotNull("No SoapHeaderElement returned", headerElement);
         String payload = "<content xmlns='http://www.springframework.org'/>";
         transformer.transform(new StringSource(payload), headerElement.getResult());
-        Iterator iterator = soapHeader.examineAllHeaderElements();
+        Iterator<SoapHeaderElement> iterator = soapHeader.examineAllHeaderElements();
         assertNotNull("header element iterator is null", iterator);
         assertTrue("header element iterator has no elements", iterator.hasNext());
-        headerElement = (SoapHeaderElement) iterator.next();
+        headerElement = iterator.next();
         assertEquals("Invalid qName for element", qName, headerElement.getName());
         StringResult result = new StringResult();
         transformer.transform(headerElement.getSource(), result);
@@ -80,6 +88,7 @@ public abstract class AbstractSoapHeaderTestCase extends AbstractSoapElementTest
         assertFalse("header element iterator has too many elements", iterator.hasNext());
     }
 
+    @Test
     public void testExamineMustUnderstandHeaderElements() throws Exception {
         QName qName1 = new QName(NAMESPACE, "localName1", PREFIX);
         SoapHeaderElement headerElement1 = soapHeader.addHeaderElement(qName1);
@@ -89,23 +98,24 @@ public abstract class AbstractSoapHeaderTestCase extends AbstractSoapElementTest
         SoapHeaderElement headerElement2 = soapHeader.addHeaderElement(qName2);
         headerElement2.setMustUnderstand(true);
         headerElement2.setActorOrRole("role2");
-        Iterator iterator = soapHeader.examineMustUnderstandHeaderElements("role1");
+        Iterator<SoapHeaderElement> iterator = soapHeader.examineMustUnderstandHeaderElements("role1");
         assertNotNull("header element iterator is null", iterator);
         assertTrue("header element iterator has no elements", iterator.hasNext());
-        SoapHeaderElement headerElement = (SoapHeaderElement) iterator.next();
+        SoapHeaderElement headerElement = iterator.next();
         assertEquals("Invalid name on header element", qName1, headerElement.getName());
         assertTrue("MustUnderstand not set on header element", headerElement.getMustUnderstand());
         assertEquals("Invalid role on header element", "role1", headerElement.getActorOrRole());
         assertFalse("header element iterator has too many elements", iterator.hasNext());
     }
 
+    @Test
     public void testGetResult() throws Exception {
         String content =
                 "<spring:localName xmlns:spring='http://www.springframework.org'><spring:content/></spring:localName>";
         transformer.transform(new StringSource(content), soapHeader.getResult());
-        Iterator iterator = soapHeader.examineAllHeaderElements();
+        Iterator<SoapHeaderElement> iterator = soapHeader.examineAllHeaderElements();
         assertTrue("Header has no children", iterator.hasNext());
-        SoapHeaderElement headerElement = (SoapHeaderElement) iterator.next();
+        SoapHeaderElement headerElement = iterator.next();
         assertFalse("Header has too many children", iterator.hasNext());
         assertHeaderElementEqual(headerElement, content);
     }

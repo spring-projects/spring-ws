@@ -28,6 +28,11 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.WsSecurityValidationException;
 import org.springframework.ws.soap.security.wss4j.callback.SimplePasswordValidationCallbackHandler;
 
+import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCase {
 
     private Wss4jSecurityInterceptor interceptor;
@@ -46,6 +51,7 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
         interceptor.afterPropertiesSet();
     }
 
+    @Test
     public void testValidateUsernameTokenPlainText() throws Exception {
         SoapMessage message = loadSoap11Message("usernameTokenPlainTextWithHeaders-soap.xml");
         MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
@@ -53,8 +59,8 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
         Object result = getMessage(message);
         assertNotNull("No result returned", result);
 
-        for (Iterator i = message.getEnvelope().getHeader().examineAllHeaderElements(); i.hasNext();) {
-            SoapHeaderElement element = (SoapHeaderElement) i.next();
+        for (Iterator<SoapHeaderElement> i = message.getEnvelope().getHeader().examineAllHeaderElements(); i.hasNext();) {
+            SoapHeaderElement element = i.next();
             QName name = element.getName();
             if (name.getNamespaceURI()
                     .equals("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd")) {
@@ -70,6 +76,7 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
 
     }
 
+    @Test
     public void testEmptySecurityHeader() throws Exception {
         SoapMessage message = loadSoap11Message("emptySecurityHeader-soap.xml");
         MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
@@ -82,6 +89,7 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
         }
     }
 
+    @Test
     public void testPreserveCustomHeaders() throws Exception {
         interceptor.setSecurementActions("UsernameToken");
         interceptor.setSecurementUsername("Bert");

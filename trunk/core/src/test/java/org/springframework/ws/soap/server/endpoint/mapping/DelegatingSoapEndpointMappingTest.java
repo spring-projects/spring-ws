@@ -16,8 +16,6 @@
 
 package org.springframework.ws.soap.server.endpoint.mapping;
 
-import junit.framework.TestCase;
-import org.easymock.MockControl;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
@@ -25,33 +23,40 @@ import org.springframework.ws.server.EndpointInvocationChain;
 import org.springframework.ws.server.EndpointMapping;
 import org.springframework.ws.soap.server.SoapEndpointInvocationChain;
 
-public class DelegatingSoapEndpointMappingTest extends TestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.easymock.EasyMock.*;
+
+public class DelegatingSoapEndpointMappingTest {
 
     private DelegatingSoapEndpointMapping endpointMapping;
 
-    private MockControl control;
-
     private EndpointMapping mock;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         endpointMapping = new DelegatingSoapEndpointMapping();
-        control = MockControl.createControl(EndpointMapping.class);
-        mock = (EndpointMapping) control.getMock();
+        mock = createMock(EndpointMapping.class);
         endpointMapping.setDelegate(mock);
     }
 
+    @Test
     public void testGetEndpointMapping() throws Exception {
         String role = "http://www.springframework.org/spring-ws/role";
         endpointMapping.setActorOrRole(role);
         MessageContext context = new DefaultMessageContext(new MockWebServiceMessageFactory());
         EndpointInvocationChain delegateChain = new EndpointInvocationChain(new Object());
-        control.expectAndReturn(mock.getEndpoint(context), delegateChain);
-        control.replay();
+        expect(mock.getEndpoint(context)).andReturn(delegateChain);
+
+        replay(mock);
+
         SoapEndpointInvocationChain resultChain = (SoapEndpointInvocationChain) endpointMapping.getEndpoint(context);
-        assertNotNull("No chain returned", resultChain);
-        assertEquals("Invalid ampount of roles returned", 1, resultChain.getActorsOrRoles().length);
-        assertEquals("Invalid role returned", role, resultChain.getActorsOrRoles()[0]);
-        control.verify();
+        Assert.assertNotNull("No chain returned", resultChain);
+        Assert.assertEquals("Invalid ampount of roles returned", 1, resultChain.getActorsOrRoles().length);
+        Assert.assertEquals("Invalid role returned", role, resultChain.getActorsOrRoles()[0]);
+
+        verify(mock);
     }
 }

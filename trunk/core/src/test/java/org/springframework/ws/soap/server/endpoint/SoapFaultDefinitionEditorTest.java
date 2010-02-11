@@ -19,51 +19,58 @@ package org.springframework.ws.soap.server.endpoint;
 import java.util.Locale;
 import javax.xml.namespace.QName;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class SoapFaultDefinitionEditorTest extends TestCase {
+public class SoapFaultDefinitionEditorTest {
 
     private SoapFaultDefinitionEditor editor;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         editor = new SoapFaultDefinitionEditor();
     }
 
+    @Test
     public void testSetAsTextNoLocale() throws Exception {
         editor.setAsText("Server, Server error");
         SoapFaultDefinition definition = (SoapFaultDefinition) editor.getValue();
-        assertNotNull("fault not set", definition);
-        assertEquals("Invalid fault code", new QName("Server"), definition.getFaultCode());
-        assertEquals("Invalid fault string", "Server error", definition.getFaultStringOrReason());
-        assertEquals("Invalid fault string locale", Locale.ENGLISH, definition.getLocale());
+        Assert.assertNotNull("fault not set", definition);
+        Assert.assertEquals("Invalid fault code", new QName("Server"), definition.getFaultCode());
+        Assert.assertEquals("Invalid fault string", "Server error", definition.getFaultStringOrReason());
+        Assert.assertEquals("Invalid fault string locale", Locale.ENGLISH, definition.getLocale());
     }
 
+    @Test
     public void testSetAsTextLocale() throws Exception {
         editor.setAsText("Server, Server error, nl");
         SoapFaultDefinition definition = (SoapFaultDefinition) editor.getValue();
-        assertNotNull("fault not set", definition);
-        assertEquals("Invalid fault code", new QName("Server"), definition.getFaultCode());
-        assertEquals("Invalid fault string", "Server error", definition.getFaultStringOrReason());
-        assertEquals("Invalid fault string locale", new Locale("nl"), definition.getLocale());
+        Assert.assertNotNull("fault not set", definition);
+        Assert.assertEquals("Invalid fault code", new QName("Server"), definition.getFaultCode());
+        Assert.assertEquals("Invalid fault string", "Server error", definition.getFaultStringOrReason());
+        Assert.assertEquals("Invalid fault string locale", new Locale("nl"), definition.getLocale());
     }
 
+    @Test
     public void testSetAsTextSender() throws Exception {
         editor.setAsText("SENDER, Server error");
         SoapFaultDefinition definition = (SoapFaultDefinition) editor.getValue();
-        assertNotNull("fault not set", definition);
-        assertEquals("Invalid fault code", SoapFaultDefinition.SENDER, definition.getFaultCode());
-        assertEquals("Invalid fault string", "Server error", definition.getFaultStringOrReason());
+        Assert.assertNotNull("fault not set", definition);
+        Assert.assertEquals("Invalid fault code", SoapFaultDefinition.SENDER, definition.getFaultCode());
+        Assert.assertEquals("Invalid fault string", "Server error", definition.getFaultStringOrReason());
     }
 
+    @Test
     public void testSetAsTextReceiver() throws Exception {
         editor.setAsText("RECEIVER, Server error");
         SoapFaultDefinition definition = (SoapFaultDefinition) editor.getValue();
-        assertNotNull("fault not set", definition);
-        assertEquals("Invalid fault code", SoapFaultDefinition.RECEIVER, definition.getFaultCode());
-        assertEquals("Invalid fault string", "Server error", definition.getFaultStringOrReason());
+        Assert.assertNotNull("fault not set", definition);
+        Assert.assertEquals("Invalid fault code", SoapFaultDefinition.RECEIVER, definition.getFaultCode());
+        Assert.assertEquals("Invalid fault string", "Server error", definition.getFaultStringOrReason());
     }
 
+    @Test
     public void testSetAsTextIllegalArgument() throws Exception {
         try {
             editor.setAsText("SOAP-ENV:Server");
@@ -72,8 +79,9 @@ public class SoapFaultDefinitionEditorTest extends TestCase {
         }
     }
 
+    @Test
     public void testSetAsTextEmpty() throws Exception {
         editor.setAsText("");
-        assertNull("definition not set to null", editor.getValue());
+        Assert.assertNull("definition not set to null", editor.getValue());
     }
 }

@@ -16,21 +16,25 @@
 
 package org.springframework.ws.wsdl.wsdl11;
 
-import junit.framework.TestCase;
 import org.springframework.core.io.ClassPathResource;
 
-public class SimpleWsdl11DefinitionTest extends TestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public class SimpleWsdl11DefinitionTest {
 
     private SimpleWsdl11Definition definition;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         definition = new SimpleWsdl11Definition();
         definition.setWsdl(new ClassPathResource("complete.wsdl", getClass()));
         definition.afterPropertiesSet();
     }
 
+    @Test
     public void testGetSource() throws Exception {
-        assertNotNull("No source returned", definition.getSource());
+        Assert.assertNotNull("No source returned", definition.getSource());
     }
 }

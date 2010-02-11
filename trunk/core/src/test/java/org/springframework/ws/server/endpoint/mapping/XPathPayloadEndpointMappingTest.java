@@ -16,21 +16,25 @@
 
 package org.springframework.ws.server.endpoint.mapping;
 
-import junit.framework.TestCase;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 
-public class XPathPayloadEndpointMappingTest extends TestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public class XPathPayloadEndpointMappingTest {
 
     private XPathPayloadEndpointMapping mapping;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         mapping = new XPathPayloadEndpointMapping();
     }
 
+    @Test
     public void testGetLookupKeyForMessage() throws Exception {
         mapping.setExpression("/root/text()");
         mapping.afterPropertiesSet();
@@ -39,7 +43,7 @@ public class XPathPayloadEndpointMappingTest extends TestCase {
         MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
         String result = mapping.getLookupKeyForMessage(context);
-        assertNotNull("mapping returns null", result);
-        assertEquals("mapping returns invalid result", "value", result);
+        Assert.assertNotNull("mapping returns null", result);
+        Assert.assertEquals("mapping returns invalid result", "value", result);
     }
 }

@@ -16,50 +16,56 @@
 
 package org.springframework.ws.soap.security.xwss.callback;
 
-import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
-import junit.framework.TestCase;
-
 import java.util.Properties;
 
-public class SimplePasswordValidationCallbackHandlerTest extends TestCase {
+import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public class SimplePasswordValidationCallbackHandlerTest {
 
     private SimplePasswordValidationCallbackHandler handler;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         handler = new SimplePasswordValidationCallbackHandler();
         Properties users = new Properties();
         users.setProperty("Bert", "Ernie");
         handler.setUsers(users);
     }
 
+    @Test
     public void testPlainTextPasswordValid() throws Exception {
         PasswordValidationCallback.PlainTextPasswordRequest request =
                 new PasswordValidationCallback.PlainTextPasswordRequest("Bert", "Ernie");
         PasswordValidationCallback callback = new PasswordValidationCallback(request);
         handler.handleInternal(callback);
         boolean authenticated = callback.getResult();
-        assertTrue("Not authenticated", authenticated);
+        Assert.assertTrue("Not authenticated", authenticated);
     }
 
+    @Test
     public void testPlainTextPasswordInvalid() throws Exception {
         PasswordValidationCallback.PlainTextPasswordRequest request =
                 new PasswordValidationCallback.PlainTextPasswordRequest("Bert", "Big bird");
         PasswordValidationCallback callback = new PasswordValidationCallback(request);
         handler.handleInternal(callback);
         boolean authenticated = callback.getResult();
-        assertFalse("Authenticated", authenticated);
+        Assert.assertFalse("Authenticated", authenticated);
     }
 
+    @Test
     public void testPlainTextPasswordNoSuchUser() throws Exception {
         PasswordValidationCallback.PlainTextPasswordRequest request =
                 new PasswordValidationCallback.PlainTextPasswordRequest("Big bird", "Bert");
         PasswordValidationCallback callback = new PasswordValidationCallback(request);
         handler.handleInternal(callback);
         boolean authenticated = callback.getResult();
-        assertFalse("Authenticated", authenticated);
+        Assert.assertFalse("Authenticated", authenticated);
     }
 
+    @Test
     public void testDigestPasswordValid() throws Exception {
         String username = "Bert";
         String nonce = "9mdsYDCrjjYRur0rxzYt2oD7";
@@ -70,10 +76,11 @@ public class SimplePasswordValidationCallbackHandlerTest extends TestCase {
         PasswordValidationCallback callback = new PasswordValidationCallback(request);
         handler.handleInternal(callback);
         boolean authenticated = callback.getResult();
-        assertTrue("Authenticated", authenticated);
+        Assert.assertTrue("Authenticated", authenticated);
 
     }
 
+    @Test
     public void testDigestPasswordInvalid() throws Exception {
         String username = "Bert";
         String nonce = "9mdsYDCrjjYRur0rxzYt2oD7";
@@ -84,7 +91,7 @@ public class SimplePasswordValidationCallbackHandlerTest extends TestCase {
         PasswordValidationCallback callback = new PasswordValidationCallback(request);
         handler.handleInternal(callback);
         boolean authenticated = callback.getResult();
-        assertFalse("Authenticated", authenticated);
+        Assert.assertFalse("Authenticated", authenticated);
 
     }
 }

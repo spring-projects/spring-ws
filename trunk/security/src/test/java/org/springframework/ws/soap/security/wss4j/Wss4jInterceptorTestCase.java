@@ -22,9 +22,15 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.WsSecuritySecurementException;
 import org.springframework.ws.soap.security.WsSecurityValidationException;
 
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 public abstract class Wss4jInterceptorTestCase extends Wss4jTestCase {
 
-    public void testhandleRequest() throws Exception {
+    @Test
+    public void testHandleRequest() throws Exception {
         SoapMessage request = loadSoap11Message("empty-soap.xml");
         final Object requestMessage = getMessage(request);
         SoapMessage validatedRequest = loadSoap11Message("empty-soap.xml");
@@ -48,7 +54,8 @@ public abstract class Wss4jInterceptorTestCase extends Wss4jTestCase {
         assertEquals("Invalid request", validatedRequestMessage, getMessage((SoapMessage) context.getRequest()));
     }
 
-    public void testhandleResponse() throws Exception {
+    @Test
+    public void testHandleResponse() throws Exception {
         SoapMessage securedResponse = loadSoap11Message("empty-soap.xml");
         final Object securedResponseMessage = getMessage(securedResponse);
 

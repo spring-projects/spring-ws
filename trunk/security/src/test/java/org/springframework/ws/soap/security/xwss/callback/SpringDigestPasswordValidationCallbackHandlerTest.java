@@ -16,12 +16,8 @@
 
 package org.springframework.ws.soap.security.xwss.callback;
 
-import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
-import junit.framework.TestCase;
-import org.easymock.MockControl;
-
-import org.springframework.security.GrantedAuthority;
 import org.springframework.security.DisabledException;
+import org.springframework.security.GrantedAuthority;
 import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.providers.TestingAuthenticationToken;
 import org.springframework.security.userdetails.User;
@@ -29,13 +25,19 @@ import org.springframework.security.userdetails.UserDetailsService;
 import org.springframework.security.userdetails.UsernameNotFoundException;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 
-public class SpringDigestPasswordValidationCallbackHandlerTest extends TestCase {
+import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.easymock.EasyMock.*;
+
+public class SpringDigestPasswordValidationCallbackHandlerTest {
 
     private SpringDigestPasswordValidationCallbackHandler callbackHandler;
 
-    private MockControl control;
-
-    private UserDetailsService mock;
+    private UserDetailsService userDetailsService;
 
     private String username;
 
@@ -43,12 +45,11 @@ public class SpringDigestPasswordValidationCallbackHandlerTest extends TestCase 
 
     private PasswordValidationCallback callback;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         callbackHandler = new SpringDigestPasswordValidationCallbackHandler();
-        control = MockControl.createControl(UserDetailsService.class);
-        mock = (UserDetailsService) control.getMock();
-        callbackHandler.setUserDetailsService(mock);
+        userDetailsService = createMock(UserDetailsService.class);
+        callbackHandler.setUserDetailsService(userDetailsService);
         username = "Bert";
         password = "Ernie";
         String nonce = "9mdsYDCrjjYRur0rxzYt2oD7";
@@ -59,55 +60,72 @@ public class SpringDigestPasswordValidationCallbackHandlerTest extends TestCase 
         callback = new PasswordValidationCallback(request);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         SecurityContextHolder.clearContext();
     }
 
+    @Test
     public void testAuthenticateUserDigestUserNotFound() throws Exception {
-        control.expectAndThrow(mock.loadUserByUsername(username), new UsernameNotFoundException(username));
-        control.replay();
+        expect(userDetailsService.loadUserByUsername(username)).andThrow(new UsernameNotFoundException(username));
+
+        replay(userDetailsService);
+
         callbackHandler.handleInternal(callback);
         boolean authenticated = callback.getResult();
-        assertFalse("Authenticated", authenticated);
-        assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
-        control.verify();
+        Assert.assertFalse("Authenticated", authenticated);
+        Assert.assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
+
+        verify(userDetailsService);
     }
 
+    @Test
     public void testAuthenticateUserDigestValid() throws Exception {
         User user = new User(username, password, true, true, true, true, new GrantedAuthority[0]);
-        control.expectAndReturn(mock.loadUserByUsername(username), user);
-        control.replay();
+        expect(userDetailsService.loadUserByUsername(username)).andReturn(user);
+
+        replay(userDetailsService);
+
         callbackHandler.handleInternal(callback);
         boolean authenticated = callback.getResult();
-        assertTrue("Not authenticated", authenticated);
-        assertNotNull("No Authentication created", SecurityContextHolder.getContext().getAuthentication());
-        control.verify();
+        Assert.assertTrue("Not authenticated", authenticated);
+        Assert.assertNotNull("No Authentication created", SecurityContextHolder.getContext().getAuthentication());
+
+        verify(userDetailsService);
     }
 
+    @Test
     public void testAuthenticateUserDigestValidInvalid() throws Exception {
         User user = new User(username, "Big bird", true, true, true, true, new GrantedAuthority[0]);
-        control.expectAndReturn(mock.loadUserByUsername(username), user);
-        control.replay();
+        expect(userDetailsService.loadUserByUsername(username)).andReturn(user);
+
+        replay(userDetailsService);
+
         callbackHandler.handleInternal(callback);
         boolean authenticated = callback.getResult();
-        assertFalse("Authenticated", authenticated);
-        assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
-        control.verify();
+        Assert.assertFalse("Authenticated", authenticated);
+        Assert.assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
+
+        verify(userDetailsService);
     }
 
+    @Test
     public void testAuthenticateUserDigestDisbaled() throws Exception {
         User user = new User(username, "Ernie", false, true, true, true, new GrantedAuthority[0]);
-        control.expectAndReturn(mock.loadUserByUsername(username), user);
-        control.replay();
+        expect(userDetailsService.loadUserByUsername(username)).andReturn(user);
+
+        replay(userDetailsService);
+
         try {
             callbackHandler.handleInternal(callback);
-            fail("disabled user authenticated");
-        } catch (
-                DisabledException expected) {
+            Assert.fail("disabled user authenticated");
+        } catch (DisabledException expected) {
+            // expected
         }
+        verify(userDetailsService);
     }
 
+    @Test
     public void testCleanUp() throws Exception {
         TestingAuthenticationToken authentication =
                 new TestingAuthenticationToken(new Object(), new Object(), new GrantedAuthority[0]);
@@ -115,7 +133,7 @@ public class SpringDigestPasswordValidationCallbackHandlerTest extends TestCase 
 
         CleanupCallback cleanupCallback = new CleanupCallback();
         callbackHandler.handleInternal(cleanupCallback);
-        assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
+        Assert.assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
     }
 
 }

@@ -16,17 +16,19 @@
 
 package org.springframework.ws.soap.security.xwss.callback;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class KeyStoreCallbackHandlerTest extends TestCase {
+public class KeyStoreCallbackHandlerTest {
 
     private KeyStoreCallbackHandler handler;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         handler = new KeyStoreCallbackHandler();
     }
 
+    @Test
     public void testLoadDefaultTrustStore() throws Exception {
         System.setProperty("javax.net.ssl.trustStore",
                 "/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home/");

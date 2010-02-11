@@ -30,21 +30,24 @@ import javax.wsdl.Service;
 import javax.wsdl.factory.WSDLFactory;
 import javax.xml.namespace.QName;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class SoapProviderTest extends TestCase {
+public class SoapProviderTest {
 
     private SoapProvider provider;
 
     private Definition definition;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         provider = new SoapProvider();
         WSDLFactory factory = WSDLFactory.newInstance();
         definition = factory.newDefinition();
     }
 
+    @Test
     public void testPopulateBinding() throws Exception {
         String namespace = "http://springframework.org/spring-ws";
         definition.addNamespace("tns", namespace);
@@ -85,18 +88,18 @@ public class SoapProviderTest extends TestCase {
         provider.addServices(definition);
 
         Binding binding = definition.getBinding(new QName(namespace, "PortTypeSoap11"));
-        assertNotNull("No SOAP 1.1 binding created", binding);
+        Assert.assertNotNull("No SOAP 1.1 binding created", binding);
         binding = definition.getBinding(new QName(namespace, "PortTypeSoap12"));
-        assertNotNull("No SOAP 1.2 binding created", binding);
+        Assert.assertNotNull("No SOAP 1.2 binding created", binding);
 
         Service service = definition.getService(new QName(namespace, "Service"));
-        assertNotNull("No Service created", service);
-        assertEquals("Invalid amount of ports", 2, service.getPorts().size());
+        Assert.assertNotNull("No Service created", service);
+        Assert.assertEquals("Invalid amount of ports", 2, service.getPorts().size());
 
         Port port = service.getPort("PortTypeSoap11");
-        assertNotNull("No SOAP 1.1 port created", port);
+        Assert.assertNotNull("No SOAP 1.1 port created", port);
         port = service.getPort("PortTypeSoap12");
-        assertNotNull("No SOAP 1.2 port created", port);
+        Assert.assertNotNull("No SOAP 1.2 port created", port);
     }
 
 
