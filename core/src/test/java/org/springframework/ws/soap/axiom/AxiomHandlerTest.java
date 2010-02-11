@@ -24,12 +24,15 @@ import org.apache.axiom.om.OMDocument;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
-import org.custommonkey.xmlunit.XMLTestCase;
+import org.junit.Before;
+import org.junit.Test;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-public class AxiomHandlerTest extends XMLTestCase {
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+
+public class AxiomHandlerTest {
 
     private static final String XML_1 =
             "<?xml version='1.0' encoding='UTF-8'?>" + "<?pi content?>" + "<root xmlns='namespace'>" +
@@ -54,13 +57,14 @@ public class AxiomHandlerTest extends XMLTestCase {
 
     private OMFactory factory;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         factory = OMAbstractFactory.getOMFactory();
         result = factory.createOMDocument();
         xmlReader = XMLReaderFactory.createXMLReader();
     }
 
+    @Test
     public void testContentHandlerDocumentNamespacePrefixes() throws Exception {
         xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
         handler = new AxiomHandler(result, factory);
@@ -72,6 +76,7 @@ public class AxiomHandlerTest extends XMLTestCase {
         assertXMLEqual("Invalid result", XML_1, bos.toString("UTF-8"));
     }
 
+    @Test
     public void testContentHandlerDocumentNoNamespacePrefixes() throws Exception {
         xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", false);
         handler = new AxiomHandler(result, factory);
@@ -82,6 +87,7 @@ public class AxiomHandlerTest extends XMLTestCase {
         assertXMLEqual("Invalid result", XML_1, bos.toString("UTF-8"));
     }
 
+    @Test
     public void testContentHandlerElement() throws Exception {
         OMNamespace namespace = factory.createOMNamespace("namespace", "");
         OMElement rootElement = factory.createOMElement("root", namespace, result);
@@ -93,6 +99,7 @@ public class AxiomHandlerTest extends XMLTestCase {
         assertXMLEqual("Invalid result", XML_2_EXPECTED, bos.toString("UTF-8"));
     }
 
+    @Test
     public void testContentHandlerPredefinedEntityReference() throws Exception {
         handler = new AxiomHandler(result, factory);
         xmlReader.setContentHandler(handler);

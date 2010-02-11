@@ -38,14 +38,6 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.custommonkey.xmlunit.XMLTestCase;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
@@ -54,7 +46,18 @@ import org.springframework.xml.transform.StaxResult;
 import org.springframework.xml.transform.StaxSource;
 import org.springframework.xml.transform.StringResult;
 
-public abstract class AbstractWebServiceMessageTestCase extends XMLTestCase {
+import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.Before;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.helpers.XMLReaderFactory;
+
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+
+public abstract class AbstractWebServiceMessageTestCase {
 
     protected Transformer transformer;
 
@@ -68,8 +71,8 @@ public abstract class AbstractWebServiceMessageTestCase extends XMLTestCase {
         return expectedWriter.toString();
     }
 
-    @Override
-    protected final void setUp() throws Exception {
+    @Before
+    public final void setUp() throws Exception {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         transformer = transformerFactory.newTransformer();
         webServiceMessage = createWebServiceMessage();
@@ -77,6 +80,7 @@ public abstract class AbstractWebServiceMessageTestCase extends XMLTestCase {
         XMLUnit.setIgnoreWhitespace(true);
     }
 
+    @Test
     public void testDomPayload() throws Exception {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
@@ -91,6 +95,8 @@ public abstract class AbstractWebServiceMessageTestCase extends XMLTestCase {
         validateMessage();
     }
 
+    @Test
+    @SuppressWarnings("Since15")
     public void testEventReaderPayload() throws Exception {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLEventReader eventReader = inputFactory.createXMLEventReader(payload.getInputStream());
@@ -106,6 +112,7 @@ public abstract class AbstractWebServiceMessageTestCase extends XMLTestCase {
         validateMessage();
     }
 
+    @Test
     public void testReaderPayload() throws Exception {
         Reader reader = new InputStreamReader(payload.getInputStream(), "UTF-8");
         StreamSource streamSource = new StreamSource(reader, payload.getURL().toString());
@@ -116,6 +123,7 @@ public abstract class AbstractWebServiceMessageTestCase extends XMLTestCase {
         assertXMLEqual(getExpectedString(), resultWriter.toString());
     }
 
+    @Test
     public void testSaxPayload() throws Exception {
         SAXSource saxSource = new SAXSource(SaxUtils.createInputSource(payload));
         transformer.transform(saxSource, webServiceMessage.getPayloadResult());
@@ -125,6 +133,7 @@ public abstract class AbstractWebServiceMessageTestCase extends XMLTestCase {
         validateMessage();
     }
 
+    @Test
     public void testStreamPayload() throws Exception {
         StreamSource streamSource = new StreamSource(payload.getInputStream(), payload.getURL().toString());
         transformer.transform(streamSource, webServiceMessage.getPayloadResult());
@@ -137,6 +146,8 @@ public abstract class AbstractWebServiceMessageTestCase extends XMLTestCase {
         validateMessage();
     }
 
+    @Test
+    @SuppressWarnings("Since15")
     public void testStreamReaderPayload() throws Exception {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLStreamReader streamReader = inputFactory.createXMLStreamReader(payload.getInputStream());

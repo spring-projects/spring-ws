@@ -18,8 +18,6 @@ package org.springframework.ws.soap.soap12;
 
 import java.io.ByteArrayOutputStream;
 
-import junit.framework.Assert;
-
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamSource;
@@ -30,6 +28,11 @@ import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.transport.MockTransportOutputStream;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.xml.transform.StringSource;
+
+import junit.framework.Assert;
+
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.junit.Assert.*;
 
 public abstract class AbstractSoap12MessageTestCase extends AbstractSoapMessageTestCase {
 
@@ -59,12 +62,12 @@ public abstract class AbstractSoap12MessageTestCase extends AbstractSoapMessageT
         assertXMLEqual(
                 "<Envelope xmlns='http://www.w3.org/2003/05/soap-envelope'><Body><payload xmlns='http://www.springframework.org' /></Body></Envelope>",
                 result);
-        String contentType = (String) tos.getHeaders().get(TransportConstants.HEADER_CONTENT_TYPE);
+        String contentType = tos.getHeaders().get(TransportConstants.HEADER_CONTENT_TYPE);
         assertTrue("Invalid Content-Type set", contentType.indexOf(SoapVersion.SOAP_12.getContentType()) != -1);
         assertNull(TransportConstants.HEADER_SOAP_ACTION + " header must not be found",
                 tos.getHeaders().get(TransportConstants.HEADER_SOAP_ACTION));
         assertTrue("Invalid Content-Type set", contentType.indexOf(soapAction) != -1);
-        String resultAccept = (String) tos.getHeaders().get("Accept");
+        String resultAccept = tos.getHeaders().get("Accept");
         assertNotNull("Invalid accept header", resultAccept);
     }
 
@@ -75,7 +78,7 @@ public abstract class AbstractSoap12MessageTestCase extends AbstractSoapMessageT
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         MockTransportOutputStream tos = new MockTransportOutputStream(bos);
         soapMessage.writeTo(tos);
-        String contentType = (String) tos.getHeaders().get("Content-Type");
+        String contentType = tos.getHeaders().get("Content-Type");
         assertTrue("Content-Type for attachment message does not contains multipart/related",
                 contentType.indexOf("multipart/related") != -1);
         assertTrue("Content-Type for attachment message does not contains type=\"application/soap+xml\"",

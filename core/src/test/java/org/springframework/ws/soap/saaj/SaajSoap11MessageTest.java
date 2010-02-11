@@ -30,6 +30,12 @@ import org.springframework.ws.soap.soap11.AbstractSoap11MessageTestCase;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
+import org.junit.Test;
+
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 public class SaajSoap11MessageTest extends AbstractSoap11MessageTestCase {
 
     private SOAPMessage saajMessage;
@@ -42,6 +48,7 @@ public class SaajSoap11MessageTest extends AbstractSoap11MessageTestCase {
         return new SaajSoapMessage(saajMessage);
     }
 
+    @Test
     public void testGetPayloadSource() throws Exception {
         saajMessage.getSOAPPart().getEnvelope().getBody().addChildElement("child");
         Source source = soapMessage.getPayloadSource();
@@ -50,6 +57,7 @@ public class SaajSoap11MessageTest extends AbstractSoap11MessageTestCase {
         assertXMLEqual("Invalid source", "<child/>", result.toString());
     }
 
+    @Test
     public void testGetPayloadSourceText() throws Exception {
         SOAPBody body = saajMessage.getSOAPPart().getEnvelope().getBody();
         body.addTextNode(" ");
@@ -60,12 +68,13 @@ public class SaajSoap11MessageTest extends AbstractSoap11MessageTestCase {
         assertXMLEqual("Invalid source", "<child/>", result.toString());
     }
 
+    @Test
     public void testGetPayloadResult() throws Exception {
         StringSource source = new StringSource("<child/>");
         Result result = soapMessage.getPayloadResult();
         transformer.transform(source, result);
         SOAPBody body = saajMessage.getSOAPPart().getEnvelope().getBody();
-        Iterator iterator = body.getChildElements();
+        Iterator<?> iterator = body.getChildElements();
         assertTrue("No child nodes created", iterator.hasNext());
         SOAPBodyElement bodyElement = (SOAPBodyElement) iterator.next();
         assertEquals("Invalid child node created", "child", bodyElement.getElementName().getLocalName());

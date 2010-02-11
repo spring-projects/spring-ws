@@ -20,18 +20,23 @@ import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.xml.soap.SOAPMessage;
 
-import com.sun.xml.wss.impl.callback.PasswordCallback;
-import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
-import com.sun.xml.wss.impl.callback.TimestampValidationCallback;
-import com.sun.xml.wss.impl.callback.UsernameCallback;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
+import com.sun.xml.wss.impl.callback.PasswordCallback;
+import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
+import com.sun.xml.wss.impl.callback.TimestampValidationCallback;
+import com.sun.xml.wss.impl.callback.UsernameCallback;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
 public class XwssMessageInterceptorUsernameTokenTest extends AbstractXwssMessageInterceptorTestCase {
 
-    public void testAddUsernameTokenDigest() throws Exception {
+
+    @Test
+   public void testAddUsernameTokenDigest() throws Exception {
         interceptor.setPolicyConfiguration(new ClassPathResource("usernameToken-digest-config.xml", getClass()));
         CallbackHandler handler = new AbstractCallbackHandler() {
 
@@ -62,6 +67,7 @@ public class XwssMessageInterceptorUsernameTokenTest extends AbstractXwssMessage
                 result);
     }
 
+    @Test
     public void testAddUsernameTokenPlainText() throws Exception {
         interceptor.setPolicyConfiguration(new ClassPathResource("usernameToken-plainText-config.xml", getClass()));
         CallbackHandler handler = new AbstractCallbackHandler() {
@@ -93,6 +99,7 @@ public class XwssMessageInterceptorUsernameTokenTest extends AbstractXwssMessage
                 result);
     }
 
+    @Test
     public void testValidateUsernameTokenPlainText() throws Exception {
         interceptor
                 .setPolicyConfiguration(new ClassPathResource("requireUsernameToken-plainText-config.xml", getClass()));
@@ -132,6 +139,7 @@ public class XwssMessageInterceptorUsernameTokenTest extends AbstractXwssMessage
         assertXpathNotExists("Security Header not removed", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security", result);
     }
 
+    @Test
     public void testValidateUsernameTokenDigest() throws Exception {
         interceptor.setPolicyConfiguration(new ClassPathResource("requireUsernameToken-digest-config.xml", getClass()));
         CallbackHandler handler = new AbstractCallbackHandler() {

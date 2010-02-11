@@ -47,13 +47,19 @@ import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 
-public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase extends XMLTestCase {
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.junit.Assert.assertEquals;
+
+public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase {
 
     private Server jettyServer;
 
@@ -89,8 +95,8 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
 
     private URI connectionUri;
 
-    @Override
-    protected final void setUp() throws Exception {
+    @Before
+    public final void setUp() throws Exception {
         connectionUri = new URI("http://localhost:8888/");
         jettyServer = new Server(8888);
         jettyContext = new Context(jettyServer, "/");
@@ -106,33 +112,38 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
 
     protected abstract AbstractHttpWebServiceMessageSender createMessageSender();
 
-    @Override
-    protected final void tearDown() throws Exception {
+    @After
+    public final void tearDown() throws Exception {
         if (jettyServer.isRunning()) {
             jettyServer.stop();
         }
     }
 
+    @Test
     public void testSupports() throws URISyntaxException {
-        assertTrue("Message sender does not support HTTP url", messageSender.supports(connectionUri));
+        Assert.assertTrue("Message sender does not support HTTP url", messageSender.supports(connectionUri));
     }
 
+    @Test
     public void testSendAndReceiveResponse() throws Exception {
         MyServlet servlet = new MyServlet();
         servlet.setResponse(true);
         validateResponse(servlet);
     }
 
+    @Test
     public void testSendAndReceiveNoResponse() throws Exception {
         validateNonResponse(new MyServlet());
     }
 
+    @Test
     public void testSendAndReceiveNoResponseAccepted() throws Exception {
         MyServlet servlet = new MyServlet();
         servlet.setResponseStatus(HttpServletResponse.SC_ACCEPTED);
         validateNonResponse(servlet);
     }
 
+    @Test
     public void testSendAndReceiveCompressed() throws Exception {
         MyServlet servlet = new MyServlet();
         servlet.setResponse(true);
@@ -140,6 +151,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
         validateResponse(servlet);
     }
 
+    @Test
     public void testSendAndReceiveInvalidContentSize() throws Exception {
         MyServlet servlet = new MyServlet();
         servlet.setResponse(true);
@@ -147,6 +159,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
         validateResponse(servlet);
     }
 
+    @Test
     public void testSendAndReceiveCompressedInvalidContentSize() throws Exception {
         MyServlet servlet = new MyServlet();
         servlet.setResponse(true);
@@ -155,6 +168,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
         validateResponse(servlet);
     }
 
+    @Test
     public void testSendAndReceiveFault() throws Exception {
         MyServlet servlet = new MyServlet();
         servlet.setResponseStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -167,15 +181,11 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
         try {
             connection.send(new SaajSoapMessage(request));
             connection.receive(messageFactory);
-            assertTrue("Response has no fault", connection.hasFault());
+            Assert.assertTrue("Response has no fault", connection.hasFault());
         }
         finally {
             connection.close();
         }
-    }
-
-    public void testReuseClosedConnection() throws Exception {
-
     }
 
     private void validateResponse(Servlet servlet) throws Exception {
@@ -187,13 +197,13 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
         try {
             connection.send(new SaajSoapMessage(request));
             SaajSoapMessage response = (SaajSoapMessage) connection.receive(messageFactory);
-            assertNotNull("No response", response);
-            assertFalse("Response has fault", connection.hasFault());
+            Assert.assertNotNull("No response", response);
+            Assert.assertFalse("Response has fault", connection.hasFault());
             SOAPMessage saajResponse = response.getSaajMessage();
             String[] headerValues = saajResponse.getMimeHeaders().getHeader(RESPONSE_HEADER_NAME);
-            assertNotNull("Response has no header", headerValues);
-            assertEquals("Response has invalid header", 1, headerValues.length);
-            assertEquals("Response has invalid header values", RESPONSE_HEADER_VALUE, headerValues[0]);
+            Assert.assertNotNull("Response has no header", headerValues);
+            Assert.assertEquals("Response has invalid header", 1, headerValues.length);
+            Assert.assertEquals("Response has invalid header values", RESPONSE_HEADER_VALUE, headerValues[0]);
             StringResult result = new StringResult();
             Transformer transformer = transformerFactory.newTransformer();
             transformer.transform(response.getPayloadSource(), result);
@@ -213,7 +223,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase ext
         try {
             connection.send(new SaajSoapMessage(request));
             WebServiceMessage response = connection.receive(messageFactory);
-            assertNull("Response", response);
+            Assert.assertNull("Response", response);
         }
         finally {
             connection.close();

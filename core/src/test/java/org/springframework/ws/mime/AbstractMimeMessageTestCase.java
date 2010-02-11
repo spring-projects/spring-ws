@@ -25,6 +25,10 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.AbstractWebServiceMessageTestCase;
 import org.springframework.ws.WebServiceMessage;
 
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
 public abstract class AbstractMimeMessageTestCase extends AbstractWebServiceMessageTestCase {
 
     protected MimeMessage mimeMessage;
@@ -46,16 +50,19 @@ public abstract class AbstractMimeMessageTestCase extends AbstractWebServiceMess
 
     protected abstract MimeMessage createMimeMessage() throws Exception;
 
+    @Test
     public void testEmptyMessage() throws Exception {
-        Iterator iterator = mimeMessage.getAttachments();
+        Iterator<Attachment> iterator = mimeMessage.getAttachments();
         assertFalse("Empty MimeMessage has attachments", iterator.hasNext());
     }
 
+    @Test
     public void testAddAttachment() throws Exception {
         Attachment attachment = mimeMessage.addAttachment(contentId, picture, contentType);
         testAttachment(attachment);
     }
 
+    @Test
     public void testGetAttachment() throws Exception {
         mimeMessage.addAttachment(contentId, picture, contentType);
         Attachment attachment = mimeMessage.getAttachment(contentId);
@@ -63,9 +70,10 @@ public abstract class AbstractMimeMessageTestCase extends AbstractWebServiceMess
         testAttachment(attachment);
     }
 
+    @Test
     public void testGetAttachments() throws Exception {
         mimeMessage.addAttachment(contentId, picture, contentType);
-        Iterator iterator = mimeMessage.getAttachments();
+        Iterator<Attachment> iterator = mimeMessage.getAttachments();
         assertNotNull("Attachment iterator is null", iterator);
         assertTrue("Attachment iterator has no elements", iterator.hasNext());
         Attachment attachment = (Attachment) iterator.next();

@@ -22,16 +22,19 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
-import org.custommonkey.xmlunit.XMLTestCase;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.w3c.dom.Document;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection;
 
-public class DefaultWsdl11DefinitionTest extends XMLTestCase {
+import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.Before;
+import org.junit.Test;
+import org.w3c.dom.Document;
+
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+
+public class DefaultWsdl11DefinitionTest {
 
     private DefaultWsdl11Definition definition;
 
@@ -39,8 +42,8 @@ public class DefaultWsdl11DefinitionTest extends XMLTestCase {
 
     private DocumentBuilder documentBuilder;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         definition = new DefaultWsdl11Definition();
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         transformer = transformerFactory.newTransformer();
@@ -50,6 +53,7 @@ public class DefaultWsdl11DefinitionTest extends XMLTestCase {
         XMLUnit.setIgnoreWhitespace(true);
     }
 
+    @Test
     public void testSingle() throws Exception {
         Resource resource = new ClassPathResource("single.xsd", getClass());
         SimpleXsdSchema schema = new SimpleXsdSchema(resource);
@@ -72,6 +76,7 @@ public class DefaultWsdl11DefinitionTest extends XMLTestCase {
 
     }
 
+    @Test
     public void testInclude() throws Exception {
         ClassPathResource resource = new ClassPathResource("including.xsd", getClass());
         CommonsXsdSchemaCollection schemaCollection = new CommonsXsdSchemaCollection(new Resource[]{resource});
@@ -92,6 +97,7 @@ public class DefaultWsdl11DefinitionTest extends XMLTestCase {
         assertXMLEqual("Invalid WSDL built", expected, result);
     }
 
+    @Test
     public void testImport() throws Exception {
         ClassPathResource resource = new ClassPathResource("importing.xsd", getClass());
         CommonsXsdSchemaCollection schemaCollection = new CommonsXsdSchemaCollection(new Resource[]{resource});
@@ -112,6 +118,7 @@ public class DefaultWsdl11DefinitionTest extends XMLTestCase {
         assertXMLEqual("Invalid WSDL built", expected, result);
     }
 
+    @Test
     public void testSoap11And12() throws Exception {
         Resource resource = new ClassPathResource("single.xsd", getClass());
         SimpleXsdSchema schema = new SimpleXsdSchema(resource);

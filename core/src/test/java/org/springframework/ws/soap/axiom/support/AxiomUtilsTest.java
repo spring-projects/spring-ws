@@ -24,6 +24,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.xml.sax.SaxUtils;
+
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
@@ -33,68 +38,75 @@ import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPMessage;
 import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
 import org.apache.axiom.soap.impl.llom.soap11.SOAP11Factory;
-import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.w3c.dom.Document;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.xml.sax.SaxUtils;
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 
-public class AxiomUtilsTest extends XMLTestCase {
+public class AxiomUtilsTest {
 
     private OMElement element;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         OMFactory factory = OMAbstractFactory.getOMFactory();
         OMNamespace namespace = factory.createOMNamespace("http://www.springframework.org", "prefix");
         element = factory.createOMElement("element", namespace);
         XMLUnit.setIgnoreWhitespace(true);
     }
 
+    @Test
     public void testToNamespaceDeclared() throws Exception {
         QName qName = new QName(element.getNamespace().getNamespaceURI(), "localPart");
         OMNamespace namespace = AxiomUtils.toNamespace(qName, element);
-        assertNotNull("Invalid namespace", namespace);
-        assertEquals("Invalid namespace", qName.getNamespaceURI(), namespace.getNamespaceURI());
+        Assert.assertNotNull("Invalid namespace", namespace);
+        Assert.assertEquals("Invalid namespace", qName.getNamespaceURI(), namespace.getNamespaceURI());
     }
 
+    @Test
     public void testToNamespaceUndeclared() throws Exception {
         QName qName = new QName("http://www.example.com", "localPart");
         OMNamespace namespace = AxiomUtils.toNamespace(qName, element);
-        assertNotNull("Invalid namespace", namespace);
-        assertEquals("Invalid namespace", qName.getNamespaceURI(), namespace.getNamespaceURI());
-        assertFalse("Invalid prefix", "prefix".equals(namespace.getPrefix()));
+        Assert.assertNotNull("Invalid namespace", namespace);
+        Assert.assertEquals("Invalid namespace", qName.getNamespaceURI(), namespace.getNamespaceURI());
+        Assert.assertFalse("Invalid prefix", "prefix".equals(namespace.getPrefix()));
     }
 
+    @Test
     public void testToNamespacePrefixDeclared() throws Exception {
         QName qName = new QName(element.getNamespace().getNamespaceURI(), "localPart", "prefix");
         OMNamespace namespace = AxiomUtils.toNamespace(qName, element);
-        assertNotNull("Invalid namespace", namespace);
-        assertEquals("Invalid namespace", qName.getNamespaceURI(), namespace.getNamespaceURI());
-        assertEquals("Invalid prefix", "prefix", namespace.getPrefix());
+        Assert.assertNotNull("Invalid namespace", namespace);
+        Assert.assertEquals("Invalid namespace", qName.getNamespaceURI(), namespace.getNamespaceURI());
+        Assert.assertEquals("Invalid prefix", "prefix", namespace.getPrefix());
     }
 
+    @Test
     public void testToNamespacePrefixUndeclared() throws Exception {
         QName qName = new QName("http://www.example.com", "localPart", "otherPrefix");
         OMNamespace namespace = AxiomUtils.toNamespace(qName, element);
-        assertNotNull("Invalid namespace", namespace);
-        assertEquals("Invalid namespace", qName.getNamespaceURI(), namespace.getNamespaceURI());
-        assertEquals("Invalid prefix", qName.getPrefix(), namespace.getPrefix());
+        Assert.assertNotNull("Invalid namespace", namespace);
+        Assert.assertEquals("Invalid namespace", qName.getNamespaceURI(), namespace.getNamespaceURI());
+        Assert.assertEquals("Invalid prefix", qName.getPrefix(), namespace.getPrefix());
     }
 
+    @Test
     public void testToLanguage() throws Exception {
-        assertEquals("Invalid conversion", "fr-CA", AxiomUtils.toLanguage(Locale.CANADA_FRENCH));
-        assertEquals("Invalid conversion", "en", AxiomUtils.toLanguage(Locale.ENGLISH));
+        Assert.assertEquals("Invalid conversion", "fr-CA", AxiomUtils.toLanguage(Locale.CANADA_FRENCH));
+        Assert.assertEquals("Invalid conversion", "en", AxiomUtils.toLanguage(Locale.ENGLISH));
     }
 
+    @Test
     public void testToLocale() throws Exception {
-        assertEquals("Invalid conversion", Locale.CANADA_FRENCH, AxiomUtils.toLocale("fr-CA"));
-        assertEquals("Invalid conversion", Locale.ENGLISH, AxiomUtils.toLocale("en"));
+        Assert.assertEquals("Invalid conversion", Locale.CANADA_FRENCH, AxiomUtils.toLocale("fr-CA"));
+        Assert.assertEquals("Invalid conversion", Locale.ENGLISH, AxiomUtils.toLocale("en"));
     }
 
+    @Test
+    @SuppressWarnings("Since15")
     public void testToDocument() throws Exception {
         Resource resource = new ClassPathResource("org/springframework/ws/soap/soap11/soap11.xml");
 
@@ -114,6 +126,7 @@ public class AxiomUtilsTest extends XMLTestCase {
         assertXMLEqual("Invalid document generated from SOAPEnvelope", expected, result);
     }
 
+    @Test
     public void testToEnvelope() throws Exception {
         Resource resource = new ClassPathResource("org/springframework/ws/soap/soap11/soap11.xml");
 

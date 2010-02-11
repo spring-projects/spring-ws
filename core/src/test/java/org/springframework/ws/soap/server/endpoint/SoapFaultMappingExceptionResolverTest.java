@@ -23,7 +23,6 @@ import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPMessage;
 
-import org.custommonkey.xmlunit.XMLTestCase;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
@@ -35,23 +34,29 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 import org.springframework.ws.soap.soap12.Soap12Fault;
 
-public class SoapFaultMappingExceptionResolverTest extends XMLTestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public class SoapFaultMappingExceptionResolverTest {
 
     private SoapFaultMappingExceptionResolver resolver;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         resolver = new SoapFaultMappingExceptionResolver();
     }
 
+    @Test
     public void testGetDepth() throws Exception {
-        assertEquals("Invalid depth for Exception", 0, resolver.getDepth("java.lang.Exception", new Exception()));
-        assertEquals("Invalid depth for IllegalArgumentException", 2,
+        Assert.assertEquals("Invalid depth for Exception", 0, resolver.getDepth("java.lang.Exception", new Exception()));
+        Assert.assertEquals("Invalid depth for IllegalArgumentException", 2,
                 resolver.getDepth("java.lang.Exception", new IllegalArgumentException()));
-        assertEquals("Invalid depth for IllegalStateException", -1,
+        Assert.assertEquals("Invalid depth for IllegalStateException", -1,
                 resolver.getDepth("IllegalArgumentException", new IllegalStateException()));
     }
 
+    @Test
     public void testResolveExceptionClientSoap11() throws Exception {
         Properties mappings = new Properties();
         mappings.setProperty(Exception.class.getName(), "SERVER, Server error");
@@ -64,17 +69,18 @@ public class SoapFaultMappingExceptionResolverTest extends XMLTestCase {
         MessageContext context = new DefaultMessageContext(new SaajSoapMessage(message), factory);
 
         boolean result = resolver.resolveException(context, null, new IllegalArgumentException("bla"));
-        assertTrue("resolveException returns false", result);
-        assertTrue("Context has no response", context.hasResponse());
+        Assert.assertTrue("resolveException returns false", result);
+        Assert.assertTrue("Context has no response", context.hasResponse());
         SoapMessage response = (SoapMessage) context.getResponse();
-        assertTrue("Response has no fault", response.getSoapBody().hasFault());
+        Assert.assertTrue("Response has no fault", response.getSoapBody().hasFault());
         Soap11Fault fault = (Soap11Fault) response.getSoapBody().getFault();
-        assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getClientOrSenderFaultName(),
+        Assert.assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getClientOrSenderFaultName(),
                 fault.getFaultCode());
-        assertEquals("Invalid fault string on fault", "Client error", fault.getFaultStringOrReason());
-        assertNull("Detail on fault", fault.getFaultDetail());
+        Assert.assertEquals("Invalid fault string on fault", "Client error", fault.getFaultStringOrReason());
+        Assert.assertNull("Detail on fault", fault.getFaultDetail());
     }
 
+    @Test
     public void testResolveExceptionSenderSoap12() throws Exception {
         Properties mappings = new Properties();
         mappings.setProperty(Exception.class.getName(), "RECEIVER, Receiver error, en");
@@ -87,17 +93,18 @@ public class SoapFaultMappingExceptionResolverTest extends XMLTestCase {
         MessageContext context = new DefaultMessageContext(new SaajSoapMessage(message), factory);
 
         boolean result = resolver.resolveException(context, null, new IllegalArgumentException("bla"));
-        assertTrue("resolveException returns false", result);
-        assertTrue("Context has no response", context.hasResponse());
+        Assert.assertTrue("resolveException returns false", result);
+        Assert.assertTrue("Context has no response", context.hasResponse());
         SoapMessage response = (SoapMessage) context.getResponse();
-        assertTrue("Response has no fault", response.getSoapBody().hasFault());
+        Assert.assertTrue("Response has no fault", response.getSoapBody().hasFault());
         Soap12Fault fault = (Soap12Fault) response.getSoapBody().getFault();
-        assertEquals("Invalid fault code on fault", SoapVersion.SOAP_12.getClientOrSenderFaultName(),
+        Assert.assertEquals("Invalid fault code on fault", SoapVersion.SOAP_12.getClientOrSenderFaultName(),
                 fault.getFaultCode());
-        assertEquals("Invalid fault string on fault", "Sender error", fault.getFaultReasonText(Locale.ENGLISH));
-        assertNull("Detail on fault", fault.getFaultDetail());
+        Assert.assertEquals("Invalid fault string on fault", "Sender error", fault.getFaultReasonText(Locale.ENGLISH));
+        Assert.assertNull("Detail on fault", fault.getFaultDetail());
     }
 
+    @Test
     public void testResolveExceptionServerSoap11() throws Exception {
         Properties mappings = new Properties();
         mappings.setProperty(Exception.class.getName(), "CLIENT, Client error");
@@ -110,17 +117,18 @@ public class SoapFaultMappingExceptionResolverTest extends XMLTestCase {
         MessageContext context = new DefaultMessageContext(new SaajSoapMessage(message), factory);
 
         boolean result = resolver.resolveException(context, null, new IllegalArgumentException("bla"));
-        assertTrue("resolveException returns false", result);
-        assertTrue("Context has no response", context.hasResponse());
+        Assert.assertTrue("resolveException returns false", result);
+        Assert.assertTrue("Context has no response", context.hasResponse());
         SoapMessage response = (SoapMessage) context.getResponse();
-        assertTrue("Response has no fault", response.getSoapBody().hasFault());
+        Assert.assertTrue("Response has no fault", response.getSoapBody().hasFault());
         Soap11Fault fault = (Soap11Fault) response.getSoapBody().getFault();
-        assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getServerOrReceiverFaultName(),
+        Assert.assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getServerOrReceiverFaultName(),
                 fault.getFaultCode());
-        assertEquals("Invalid fault string on fault", "Server error", fault.getFaultStringOrReason());
-        assertNull("Detail on fault", fault.getFaultDetail());
+        Assert.assertEquals("Invalid fault string on fault", "Server error", fault.getFaultStringOrReason());
+        Assert.assertNull("Detail on fault", fault.getFaultDetail());
     }
 
+    @Test
     public void testResolveExceptionReceiverSoap12() throws Exception {
         Properties mappings = new Properties();
         mappings.setProperty(Exception.class.getName(), "SENDER, Sender error");
@@ -133,17 +141,18 @@ public class SoapFaultMappingExceptionResolverTest extends XMLTestCase {
         MessageContext context = new DefaultMessageContext(new SaajSoapMessage(message), factory);
 
         boolean result = resolver.resolveException(context, null, new IllegalArgumentException("bla"));
-        assertTrue("resolveException returns false", result);
-        assertTrue("Context has no response", context.hasResponse());
+        Assert.assertTrue("resolveException returns false", result);
+        Assert.assertTrue("Context has no response", context.hasResponse());
         SoapMessage response = (SoapMessage) context.getResponse();
-        assertTrue("Response has no fault", response.getSoapBody().hasFault());
+        Assert.assertTrue("Response has no fault", response.getSoapBody().hasFault());
         Soap12Fault fault = (Soap12Fault) response.getSoapBody().getFault();
-        assertEquals("Invalid fault code on fault", SoapVersion.SOAP_12.getServerOrReceiverFaultName(),
+        Assert.assertEquals("Invalid fault code on fault", SoapVersion.SOAP_12.getServerOrReceiverFaultName(),
                 fault.getFaultCode());
-        assertEquals("Invalid fault string on fault", "Receiver error", fault.getFaultReasonText(Locale.ENGLISH));
-        assertNull("Detail on fault", fault.getFaultDetail());
+        Assert.assertEquals("Invalid fault string on fault", "Receiver error", fault.getFaultReasonText(Locale.ENGLISH));
+        Assert.assertNull("Detail on fault", fault.getFaultDetail());
     }
 
+    @Test
     public void testResolveExceptionDefault() throws Exception {
         Properties mappings = new Properties();
         mappings.setProperty(SoapMessageException.class.getName(), "SERVER,Server error");
@@ -157,30 +166,31 @@ public class SoapFaultMappingExceptionResolverTest extends XMLTestCase {
         MessageContext context = new DefaultMessageContext(new SaajSoapMessage(message), factory);
 
         boolean result = resolver.resolveException(context, null, new IllegalArgumentException("bla"));
-        assertTrue("resolveException returns false", result);
-        assertTrue("Context has no response", context.hasResponse());
+        Assert.assertTrue("resolveException returns false", result);
+        Assert.assertTrue("Context has no response", context.hasResponse());
         SoapMessage response = (SoapMessage) context.getResponse();
-        assertTrue("Response has no fault", response.getSoapBody().hasFault());
+        Assert.assertTrue("Response has no fault", response.getSoapBody().hasFault());
         Soap11Fault fault = (Soap11Fault) response.getSoapBody().getFault();
-        assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getClientOrSenderFaultName(),
+        Assert.assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getClientOrSenderFaultName(),
                 fault.getFaultCode());
-        assertEquals("Invalid fault string on fault", "bla", fault.getFaultStringOrReason());
-        assertNull("Detail on fault", fault.getFaultDetail());
+        Assert.assertEquals("Invalid fault string on fault", "bla", fault.getFaultStringOrReason());
+        Assert.assertNull("Detail on fault", fault.getFaultDetail());
 
         // SWS-226
         result = resolver.resolveException(context, null, new IllegalArgumentException());
-        assertTrue("resolveException returns false", result);
-        assertTrue("Context has no response", context.hasResponse());
+        Assert.assertTrue("resolveException returns false", result);
+        Assert.assertTrue("Context has no response", context.hasResponse());
         response = (SoapMessage) context.getResponse();
-        assertTrue("Response has no fault", response.getSoapBody().hasFault());
+        Assert.assertTrue("Response has no fault", response.getSoapBody().hasFault());
         fault = (Soap11Fault) response.getSoapBody().getFault();
-        assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getClientOrSenderFaultName(),
+        Assert.assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getClientOrSenderFaultName(),
                 fault.getFaultCode());
-        assertEquals("Invalid fault string on fault", "java.lang.IllegalArgumentException",
+        Assert.assertEquals("Invalid fault string on fault", "java.lang.IllegalArgumentException",
                 fault.getFaultStringOrReason());
-        assertNull("Detail on fault", fault.getFaultDetail());
+        Assert.assertNull("Detail on fault", fault.getFaultDetail());
     }
 
+    @Test
     public void testResolveNoMessageException() throws Exception {
         Properties mappings = new Properties();
         mappings.setProperty(IOException.class.getName(), "SERVER");
@@ -192,15 +202,15 @@ public class SoapFaultMappingExceptionResolverTest extends XMLTestCase {
         MessageContext context = new DefaultMessageContext(new SaajSoapMessage(message), factory);
 
         boolean result = resolver.resolveException(context, null, new IOException());
-        assertTrue("resolveException returns false", result);
-        assertTrue("Context has no response", context.hasResponse());
+        Assert.assertTrue("resolveException returns false", result);
+        Assert.assertTrue("Context has no response", context.hasResponse());
         SoapMessage response = (SoapMessage) context.getResponse();
-        assertTrue("Response has no fault", response.getSoapBody().hasFault());
+        Assert.assertTrue("Response has no fault", response.getSoapBody().hasFault());
         Soap11Fault fault = (Soap11Fault) response.getSoapBody().getFault();
-        assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getServerOrReceiverFaultName(),
+        Assert.assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getServerOrReceiverFaultName(),
                 fault.getFaultCode());
-        assertEquals("Invalid fault string on fault", "java.io.IOException", fault.getFaultStringOrReason());
-        assertNull("Detail on fault", fault.getFaultDetail());
+        Assert.assertEquals("Invalid fault string on fault", "java.io.IOException", fault.getFaultStringOrReason());
+        Assert.assertNull("Detail on fault", fault.getFaultDetail());
     }
 
 

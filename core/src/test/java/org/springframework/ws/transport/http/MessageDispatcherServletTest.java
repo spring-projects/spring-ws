@@ -23,10 +23,6 @@ import javax.servlet.ServletException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.custommonkey.xmlunit.XMLTestCase;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.w3c.dom.Document;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.core.io.ClassPathResource;
@@ -41,41 +37,52 @@ import org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMa
 import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
 import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
 
-public class MessageDispatcherServletTest extends XMLTestCase {
+import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.w3c.dom.Document;
+
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+
+public class MessageDispatcherServletTest {
 
     private ServletConfig config;
 
     private MessageDispatcherServlet servlet;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         config = new MockServletConfig(new MockServletContext(), "spring-ws");
         servlet = new MessageDispatcherServlet();
     }
 
-    private void assertStrategies(Class expectedClass, List actual) {
-        assertEquals("Invalid amount of strategies", 1, actual.size());
+    private void assertStrategies(Class<?> expectedClass, List<?> actual) {
+        Assert.assertEquals("Invalid amount of strategies", 1, actual.size());
         Object strategy = actual.get(0);
-        assertTrue("Invalid strategy", expectedClass.isAssignableFrom(strategy.getClass()));
+        Assert.assertTrue("Invalid strategy", expectedClass.isAssignableFrom(strategy.getClass()));
     }
 
+    @Test
     public void testDefaultStrategies() throws ServletException {
         servlet.setContextClass(StaticWebApplicationContext.class);
         servlet.init(config);
         MessageDispatcher messageDispatcher = (MessageDispatcher) servlet.getMessageReceiver();
-        assertNotNull("No messageDispatcher created", messageDispatcher);
+        Assert.assertNotNull("No messageDispatcher created", messageDispatcher);
     }
 
+    @Test
     public void testDetectedStrategies() throws ServletException {
         servlet.setContextClass(DetectWebApplicationContext.class);
         servlet.init(config);
         MessageDispatcher messageDispatcher = (MessageDispatcher) servlet.getMessageReceiver();
-        assertNotNull("No messageDispatcher created", messageDispatcher);
+        Assert.assertNotNull("No messageDispatcher created", messageDispatcher);
         assertStrategies(PayloadRootQNameEndpointMapping.class, messageDispatcher.getEndpointMappings());
         assertStrategies(PayloadEndpointAdapter.class, messageDispatcher.getEndpointAdapters());
         assertStrategies(SimpleSoapExceptionResolver.class, messageDispatcher.getEndpointExceptionResolvers());
     }
 
+    @Test
     public void testDetectWsdlDefinitions() throws Exception {
         servlet.setContextClass(WsdlDefinitionWebApplicationContext.class);
         servlet.init(config);

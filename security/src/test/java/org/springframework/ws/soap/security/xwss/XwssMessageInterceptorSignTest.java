@@ -21,15 +21,19 @@ import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.xml.soap.SOAPMessage;
 
-import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
-import com.sun.xml.wss.impl.callback.SignatureKeyCallback;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
+import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
+import com.sun.xml.wss.impl.callback.SignatureKeyCallback;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
 public class XwssMessageInterceptorSignTest extends AbstractXwssMessageInterceptorKeyStoreTestCase {
 
+    @Test
     public void testSignDefaultCertificate() throws Exception {
         interceptor.setPolicyConfiguration(new ClassPathResource("sign-config.xml", getClass()));
         CallbackHandler handler = new AbstractCallbackHandler() {
@@ -65,6 +69,7 @@ public class XwssMessageInterceptorSignTest extends AbstractXwssMessageIntercept
                 result);
     }
 
+    @Test
     public void testSignAlias() throws Exception {
         interceptor.setPolicyConfiguration(new ClassPathResource("sign-alias-config.xml", getClass()));
         CallbackHandler handler = new AbstractCallbackHandler() {
@@ -101,6 +106,7 @@ public class XwssMessageInterceptorSignTest extends AbstractXwssMessageIntercept
                 result);
     }
 
+    @Test
     public void testValidateCertificate() throws Exception {
         interceptor.setPolicyConfiguration(new ClassPathResource("requireSignature-config.xml", getClass()));
         CallbackHandler handler = new AbstractCallbackHandler() {

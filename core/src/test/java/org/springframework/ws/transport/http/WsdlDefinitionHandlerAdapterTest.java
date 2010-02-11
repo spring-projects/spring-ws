@@ -26,11 +26,6 @@ import javax.wsdl.xml.WSDLReader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.custommonkey.xmlunit.XMLTestCase;
-import org.easymock.MockControl;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -38,11 +33,18 @@ import org.springframework.ws.wsdl.WsdlDefinition;
 import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
 import org.springframework.xml.transform.StringSource;
 
-public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.easymock.EasyMock.*;
+
+public class WsdlDefinitionHandlerAdapterTest {
 
     private WsdlDefinitionHandlerAdapter adapter;
-
-    private MockControl definitionControl;
 
     private WsdlDefinition definitionMock;
 
@@ -50,35 +52,43 @@ public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
 
     private MockHttpServletResponse response;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         adapter = new WsdlDefinitionHandlerAdapter();
-        definitionControl = MockControl.createControl(WsdlDefinition.class);
-        definitionMock = (WsdlDefinition) definitionControl.getMock();
+        definitionMock = createMock(WsdlDefinition.class);
         adapter.afterPropertiesSet();
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
     }
 
+    @Test
     public void testHandleGet() throws Exception {
         request.setMethod(HttpTransportConstants.METHOD_GET);
         String definition = "<definition xmlns='http://schemas.xmlsoap.org/wsdl/'/>";
-        definitionControl.expectAndReturn(definitionMock.getSource(), new StringSource(definition));
-        definitionControl.replay();
+        expect(definitionMock.getSource()).andReturn(new StringSource(definition));
+
+        replay(definitionMock);
+
         adapter.handle(request, response, definitionMock);
         assertXMLEqual(definition, response.getContentAsString());
-        definitionControl.verify();
+
+        verify(definitionMock);
     }
 
+    @Test
     public void testHandleNonGet() throws Exception {
         request.setMethod(HttpTransportConstants.METHOD_POST);
-        definitionControl.replay();
-        adapter.handle(request, response, definitionMock);
-        definitionControl.verify();
-        assertEquals("METHOD_NOT_ALLOWED expected", HttpServletResponse.SC_METHOD_NOT_ALLOWED, response.getStatus());
 
+        replay(definitionMock);
+
+        adapter.handle(request, response, definitionMock);
+        Assert.assertEquals("METHOD_NOT_ALLOWED expected", HttpServletResponse.SC_METHOD_NOT_ALLOWED,
+                response.getStatus());
+
+        verify(definitionMock);
     }
 
+    @Test
     public void testTransformLocations() throws Exception {
         adapter.setTransformLocations(true);
         request.setMethod(HttpTransportConstants.METHOD_GET);
@@ -89,7 +99,8 @@ public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
         request.setServletPath("/service.wsdl");
         request.setPathInfo(null);
         request.setRequestURI("/context/service.wsdl");
-        definitionControl.replay();
+
+        replay(definitionMock);
 
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
@@ -99,9 +110,10 @@ public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
         Document expectedDocument = documentBuilder.parse(getClass().getResourceAsStream("wsdl11-expected.wsdl"));
         assertXMLEqual("Invalid result", expectedDocument, result);
 
-        definitionControl.verify();
+        verify(definitionMock);
     }
 
+    @Test
     public void testTransformLocationFullUrl() throws Exception {
         request.setScheme("http");
         request.setServerName("example.com");
@@ -112,10 +124,11 @@ public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
         String oldLocation = "http://localhost:8080/context/service";
 
         String result = adapter.transformLocation(oldLocation, request);
-        assertNotNull("No result", result);
-        assertEquals("Invalid result", new URI("http://example.com:8080/context/service"), new URI(result));
+        Assert.assertNotNull("No result", result);
+        Assert.assertEquals("Invalid result", new URI("http://example.com:8080/context/service"), new URI(result));
     }
 
+    @Test
     public void testTransformLocationEmptyContextFullUrl() throws Exception {
         request.setScheme("http");
         request.setServerName("example.com");
@@ -125,10 +138,11 @@ public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
         String oldLocation = "http://localhost:8080/service";
 
         String result = adapter.transformLocation(oldLocation, request);
-        assertNotNull("No result", result);
-        assertEquals("Invalid result", new URI("http://example.com:8080/service"), new URI(result));
+        Assert.assertNotNull("No result", result);
+        Assert.assertEquals("Invalid result", new URI("http://example.com:8080/service"), new URI(result));
     }
 
+    @Test
     public void testTransformLocationRelativeUrl() throws Exception {
         request.setScheme("http");
         request.setServerName("example.com");
@@ -139,10 +153,11 @@ public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
         String oldLocation = "/service";
 
         String result = adapter.transformLocation(oldLocation, request);
-        assertNotNull("No result", result);
-        assertEquals("Invalid result", new URI("http://example.com:8080/context/service"), new URI(result));
+        Assert.assertNotNull("No result", result);
+        Assert.assertEquals("Invalid result", new URI("http://example.com:8080/context/service"), new URI(result));
     }
 
+    @Test
     public void testTransformLocationEmptyContextRelativeUrl() throws Exception {
         request.setScheme("http");
         request.setServerName("example.com");
@@ -152,10 +167,11 @@ public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
         String oldLocation = "/service";
 
         String result = adapter.transformLocation(oldLocation, request);
-        assertNotNull("No result", result);
-        assertEquals("Invalid result", new URI("http://example.com:8080/service"), new URI(result));
+        Assert.assertNotNull("No result", result);
+        Assert.assertEquals("Invalid result", new URI("http://example.com:8080/service"), new URI(result));
     }
 
+    @Test
     public void testHandleSimpleWsdl11DefinitionWithoutTransformLocations() throws Exception {
         adapter.setTransformLocations(false);
         request.setMethod(HttpTransportConstants.METHOD_GET);
@@ -176,7 +192,7 @@ public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
         WSDLFactory factory = WSDLFactory.newInstance();
         WSDLReader reader = factory.newWSDLReader();
         Definition wsdl4jDefinition = reader.readWSDL(null, new InputSource(inputStream));
-        assertNotNull("No definition read", wsdl4jDefinition);
+        Assert.assertNotNull("No definition read", wsdl4jDefinition);
 
         inputStream = new ByteArrayInputStream(response.getContentAsByteArray());
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -189,6 +205,7 @@ public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
         assertXMLEqual("Invalid WSDL returned", expectedDocument, resultingDocument);
     }
 
+    @Test
     public void testHandleSimpleWsdl11DefinitionWithTransformLocation() throws Exception {
         adapter.setTransformLocations(true);
         request.setMethod(HttpTransportConstants.METHOD_GET);
@@ -209,7 +226,7 @@ public class WsdlDefinitionHandlerAdapterTest extends XMLTestCase {
         WSDLFactory factory = WSDLFactory.newInstance();
         WSDLReader reader = factory.newWSDLReader();
         Definition wsdl4jDefinition = reader.readWSDL(null, new InputSource(inputStream));
-        assertNotNull("No definition read", wsdl4jDefinition);
+        Assert.assertNotNull("No definition read", wsdl4jDefinition);
 
         inputStream = new ByteArrayInputStream(response.getContentAsByteArray());
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();

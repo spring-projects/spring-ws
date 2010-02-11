@@ -37,6 +37,7 @@ import org.springframework.ws.transport.WebServiceConnection;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.URIException;
+import org.junit.Test;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
@@ -48,20 +49,16 @@ public class CommonsHttpMessageSenderIntegrationTest extends AbstractHttpWebServ
         return new CommonsHttpMessageSender();
     }
 
+    @Test(expected = ConnectTimeoutException.class)
     public void testConnectionTimeout() throws Exception {
         CommonsHttpMessageSender messageSender = new CommonsHttpMessageSender();
         messageSender.setConnectionTimeout(1);
         WebServiceConnection connection = messageSender.createConnection(new URI("http://example.com/"));
         WebServiceMessage message = new MockWebServiceMessage();
-        try {
-            connection.send(message);
-            fail("ConnectTimeoutException expected");
-        }
-        catch (ConnectTimeoutException ex) {
-            // expected
-        }
+        connection.send(message);
     }
 
+    @Test
     public void testMaxConnections() throws URISyntaxException, URIException {
         CommonsHttpMessageSender messageSender = new CommonsHttpMessageSender();
         messageSender.setMaxTotalConnections(2);
@@ -73,6 +70,7 @@ public class CommonsHttpMessageSenderIntegrationTest extends AbstractHttpWebServ
         messageSender.setMaxConnectionsPerHost(maxConnectionsPerHost);
     }
 
+    @Test
     public void testContextClose() throws Exception {
         MessageFactory messageFactory = MessageFactory.newInstance();
         Server jettyServer = new Server(8888);
@@ -86,7 +84,7 @@ public class CommonsHttpMessageSenderIntegrationTest extends AbstractHttpWebServ
             appContext.registerSingleton("messageSender", CommonsHttpMessageSender.class);
             appContext.refresh();
 
-            CommonsHttpMessageSender messageSender = (CommonsHttpMessageSender) appContext
+            CommonsHttpMessageSender messageSender = appContext
                     .getBean("messageSender", CommonsHttpMessageSender.class);
             connection = messageSender.createConnection(new URI("http://localhost:8888/"));
 
