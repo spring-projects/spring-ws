@@ -45,7 +45,6 @@ import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.easymock.MockControl;
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -59,6 +58,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.easymock.EasyMock.*;
 
 @SuppressWarnings("Since15")
 public class TraxUtilsTest {
@@ -247,14 +247,14 @@ public class TraxUtilsTest {
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         Document document = documentBuilder.newDocument();
 
-        MockControl control = MockControl.createControl(TraxUtils.SourceCallback.class);
-        TraxUtils.SourceCallback mock = (TraxUtils.SourceCallback) control.getMock();
+        TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
         mock.domSource(document);
-        control.replay();
+
+        replay(mock);
 
         TraxUtils.doWithSource(new DOMSource(document), mock);
 
-        control.verify();
+        verify(mock);
     }
 
     @Test
@@ -263,14 +263,14 @@ public class TraxUtilsTest {
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         Document document = documentBuilder.newDocument();
 
-        MockControl control = MockControl.createControl(TraxUtils.ResultCallback.class);
-        TraxUtils.ResultCallback mock = (TraxUtils.ResultCallback) control.getMock();
+        TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
         mock.domResult(document);
-        control.replay();
+
+        replay(mock);
 
         TraxUtils.doWithResult(new DOMResult(document), mock);
 
-        control.verify();
+        verify(mock);
     }
 
     @Test
@@ -278,14 +278,14 @@ public class TraxUtilsTest {
         XMLReader reader = XMLReaderFactory.createXMLReader();
         InputSource inputSource = new InputSource();
 
-        MockControl control = MockControl.createControl(TraxUtils.SourceCallback.class);
-        TraxUtils.SourceCallback mock = (TraxUtils.SourceCallback) control.getMock();
+        TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
         mock.saxSource(reader, inputSource);
-        control.replay();
+
+        replay(mock);
 
         TraxUtils.doWithSource(new SAXSource(reader, inputSource), mock);
 
-        control.verify();
+        verify(mock);
     }
 
     @Test
@@ -293,16 +293,16 @@ public class TraxUtilsTest {
         ContentHandler contentHandler = new DefaultHandler();
         LexicalHandler lexicalHandler = new DefaultHandler2();
 
-        MockControl control = MockControl.createControl(TraxUtils.ResultCallback.class);
-        TraxUtils.ResultCallback mock = (TraxUtils.ResultCallback) control.getMock();
+        TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
         mock.saxResult(contentHandler, lexicalHandler);
-        control.replay();
+
+        replay(mock);
 
         SAXResult result = new SAXResult(contentHandler);
         result.setLexicalHandler(lexicalHandler);
         TraxUtils.doWithResult(result, mock);
 
-        control.verify();
+        verify(mock);
     }
 
     @Test
@@ -310,14 +310,14 @@ public class TraxUtilsTest {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader("<element/>"));
 
-        MockControl control = MockControl.createControl(TraxUtils.SourceCallback.class);
-        TraxUtils.SourceCallback mock = (TraxUtils.SourceCallback) control.getMock();
+        TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
         mock.staxSource(eventReader);
-        control.replay();
+
+        replay(mock);
 
         TraxUtils.doWithSource(new StaxSource(eventReader), mock);
 
-        control.verify();
+        verify(mock);
     }
 
     @Test
@@ -325,14 +325,14 @@ public class TraxUtilsTest {
         XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
         XMLEventWriter eventWriter = outputFactory.createXMLEventWriter(new StringWriter());
 
-        MockControl control = MockControl.createControl(TraxUtils.ResultCallback.class);
-        TraxUtils.ResultCallback mock = (TraxUtils.ResultCallback) control.getMock();
+        TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
         mock.staxResult(eventWriter);
-        control.replay();
+
+        replay(mock);
 
         TraxUtils.doWithResult(new StaxResult(eventWriter), mock);
 
-        control.verify();
+        verify(mock);
     }
 
     @Test
@@ -340,14 +340,14 @@ public class TraxUtilsTest {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader("<element/>"));
 
-        MockControl control = MockControl.createControl(TraxUtils.SourceCallback.class);
-        TraxUtils.SourceCallback mock = (TraxUtils.SourceCallback) control.getMock();
+        TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
         mock.staxSource(streamReader);
-        control.replay();
+
+        replay(mock);
 
         TraxUtils.doWithSource(new StaxSource(streamReader), mock);
 
-        control.verify();
+        verify(mock);
     }
 
     @Test
@@ -355,14 +355,14 @@ public class TraxUtilsTest {
         XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
         XMLStreamWriter streamWriter = outputFactory.createXMLStreamWriter(new StringWriter());
 
-        MockControl control = MockControl.createControl(TraxUtils.ResultCallback.class);
-        TraxUtils.ResultCallback mock = (TraxUtils.ResultCallback) control.getMock();
+        TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
         mock.staxResult(streamWriter);
-        control.replay();
+
+        replay(mock);
 
         TraxUtils.doWithResult(new StaxResult(streamWriter), mock);
 
-        control.verify();
+        verify(mock);
     }
 
     @Test
@@ -370,28 +370,28 @@ public class TraxUtilsTest {
         byte[] xml = "<element/>".getBytes("UTF-8");
         InputStream inputStream = new ByteArrayInputStream(xml);
 
-        MockControl control = MockControl.createControl(TraxUtils.SourceCallback.class);
-        TraxUtils.SourceCallback mock = (TraxUtils.SourceCallback) control.getMock();
+        TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
         mock.streamSource(inputStream);
-        control.replay();
+
+        replay(mock);
 
         TraxUtils.doWithSource(new StreamSource(inputStream), mock);
 
-        control.verify();
+        verify(mock);
     }
 
     @Test
     public void testDoWithStreamResultOutputStream() throws Exception {
         OutputStream outputStream = new ByteArrayOutputStream();
 
-        MockControl control = MockControl.createControl(TraxUtils.ResultCallback.class);
-        TraxUtils.ResultCallback mock = (TraxUtils.ResultCallback) control.getMock();
+        TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
         mock.streamResult(outputStream);
-        control.replay();
+
+        replay(mock);
 
         TraxUtils.doWithResult(new StreamResult(outputStream), mock);
 
-        control.verify();
+        verify(mock);
     }
 
     @Test
@@ -399,28 +399,28 @@ public class TraxUtilsTest {
         String xml = "<element/>";
         Reader reader = new StringReader(xml);
 
-        MockControl control = MockControl.createControl(TraxUtils.SourceCallback.class);
-        TraxUtils.SourceCallback mock = (TraxUtils.SourceCallback) control.getMock();
+        TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
         mock.streamSource(reader);
-        control.replay();
+
+        replay(mock);
 
         TraxUtils.doWithSource(new StreamSource(reader), mock);
 
-        control.verify();
+        verify(mock);
     }
 
     @Test
     public void testDoWithStreamResultWriter() throws Exception {
         Writer writer = new StringWriter();
 
-        MockControl control = MockControl.createControl(TraxUtils.ResultCallback.class);
-        TraxUtils.ResultCallback mock = (TraxUtils.ResultCallback) control.getMock();
+        TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
         mock.streamResult(writer);
-        control.replay();
+
+        replay(mock);
 
         TraxUtils.doWithResult(new StreamResult(writer), mock);
 
-        control.verify();
+        verify(mock);
     }
 
     @Test
