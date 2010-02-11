@@ -20,8 +20,6 @@ import java.lang.reflect.Method;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
-import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
 import org.springframework.oxm.GenericMarshaller;
 import org.springframework.oxm.GenericUnmarshaller;
 import org.springframework.ws.WebServiceMessage;
@@ -32,7 +30,13 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-public class GenericMarshallingMethodEndpointAdapterTest extends TestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.easymock.EasyMock.*;
+
+public class GenericMarshallingMethodEndpointAdapterTest {
 
     private GenericMarshallingMethodEndpointAdapter adapter;
 
@@ -44,8 +48,8 @@ public class GenericMarshallingMethodEndpointAdapterTest extends TestCase {
 
     private boolean responseInvoked;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         adapter = new GenericMarshallingMethodEndpointAdapter();
         marshallerMock = createMock(GenericMarshaller.class);
         adapter.setMarshaller(marshallerMock);
@@ -54,6 +58,7 @@ public class GenericMarshallingMethodEndpointAdapterTest extends TestCase {
         adapter.afterPropertiesSet();
     }
 
+    @Test
     public void testNoResponse() throws Exception {
         WebServiceMessage messageMock = createMock(WebServiceMessage.class);
         expect(messageMock.getPayloadSource()).andReturn(new StringSource("<request/>"));
@@ -66,13 +71,14 @@ public class GenericMarshallingMethodEndpointAdapterTest extends TestCase {
 
         replay(marshallerMock, unmarshallerMock, messageMock, factoryMock);
 
-        assertFalse("Method invoked", noResponseInvoked);
+        Assert.assertFalse("Method invoked", noResponseInvoked);
         adapter.invoke(messageContext, methodEndpoint);
-        assertTrue("Method not invoked", noResponseInvoked);
+        Assert.assertTrue("Method not invoked", noResponseInvoked);
 
         verify(marshallerMock, unmarshallerMock, messageMock, factoryMock);
     }
 
+    @Test
     public void testNoRequestPayload() throws Exception {
         WebServiceMessage messageMock = createMock(WebServiceMessage.class);
         expect(messageMock.getPayloadSource()).andReturn(null);
@@ -84,13 +90,14 @@ public class GenericMarshallingMethodEndpointAdapterTest extends TestCase {
 
         replay(marshallerMock, unmarshallerMock, messageMock, factoryMock);
 
-        assertFalse("Method invoked", noResponseInvoked);
+        Assert.assertFalse("Method invoked", noResponseInvoked);
         adapter.invoke(messageContext, methodEndpoint);
-        assertTrue("Method not invoked", noResponseInvoked);
+        Assert.assertTrue("Method not invoked", noResponseInvoked);
 
         verify(marshallerMock, unmarshallerMock, messageMock, factoryMock);
     }
 
+    @Test
     public void testResponse() throws Exception {
         WebServiceMessage requestMock = createMock(WebServiceMessage.class);
         expect(requestMock.getPayloadSource()).andReturn(new StringSource("<request/>"));
@@ -107,13 +114,14 @@ public class GenericMarshallingMethodEndpointAdapterTest extends TestCase {
 
         replay(marshallerMock, unmarshallerMock, requestMock, responseMock, factoryMock);
 
-        assertFalse("Method invoked", responseInvoked);
+        Assert.assertFalse("Method invoked", responseInvoked);
         adapter.invoke(messageContext, methodEndpoint);
-        assertTrue("Method not invoked", responseInvoked);
+        Assert.assertTrue("Method not invoked", responseInvoked);
 
         verify(marshallerMock, unmarshallerMock, requestMock, responseMock, factoryMock);
     }
 
+    @Test
     public void testSupportedNoResponse() throws NoSuchMethodException {
         Method noResponse = getClass().getMethod("noResponse", MyGenericType.class);
         MethodEndpoint methodEndpoint = new MethodEndpoint(this, noResponse);
@@ -121,11 +129,12 @@ public class GenericMarshallingMethodEndpointAdapterTest extends TestCase {
 
         replay(marshallerMock, unmarshallerMock);
 
-        assertTrue("Method unsupported", adapter.supportsInternal(methodEndpoint));
+        Assert.assertTrue("Method unsupported", adapter.supportsInternal(methodEndpoint));
 
         verify(marshallerMock, unmarshallerMock);
     }
 
+    @Test
     public void testSupportedResponse() throws NoSuchMethodException {
         Method response = getClass().getMethod("response", MyGenericType.class);
         MethodEndpoint methodEndpoint = new MethodEndpoint(this, response);
@@ -135,21 +144,23 @@ public class GenericMarshallingMethodEndpointAdapterTest extends TestCase {
 
         replay(marshallerMock, unmarshallerMock);
 
-        assertTrue("Method unsupported", adapter.supportsInternal(methodEndpoint));
+        Assert.assertTrue("Method unsupported", adapter.supportsInternal(methodEndpoint));
 
         verify(marshallerMock, unmarshallerMock);
     }
 
+    @Test
     public void testUnsupportedMethodMultipleParams() throws NoSuchMethodException {
         Method unsupported = getClass().getMethod("unsupportedMultipleParams", String.class, String.class);
 
         replay(marshallerMock, unmarshallerMock);
 
-        assertFalse("Method supported", adapter.supportsInternal(new MethodEndpoint(this, unsupported)));
+        Assert.assertFalse("Method supported", adapter.supportsInternal(new MethodEndpoint(this, unsupported)));
 
         verify(marshallerMock, unmarshallerMock);
     }
 
+    @Test
     public void testUnsupportedMethodWrongParam() throws NoSuchMethodException {
         Method unsupported = getClass().getMethod("unsupportedWrongParam", String.class);
         expect(unmarshallerMock.supports(unsupported.getGenericParameterTypes()[0])).andReturn(false);
@@ -157,18 +168,19 @@ public class GenericMarshallingMethodEndpointAdapterTest extends TestCase {
 
         replay(marshallerMock, unmarshallerMock);
 
-        assertFalse("Method supported", adapter.supportsInternal(new MethodEndpoint(this, unsupported)));
+        Assert.assertFalse("Method supported", adapter.supportsInternal(new MethodEndpoint(this, unsupported)));
 
         verify(marshallerMock, unmarshallerMock);
     }
 
+    @Test
     public void testUnsupportedMethodWrongReturnType() throws NoSuchMethodException {
         Method unsupported = getClass().getMethod("unsupportedWrongParam", String.class);
         expect(marshallerMock.supports(unsupported.getGenericReturnType())).andReturn(false);
 
         replay(marshallerMock, unmarshallerMock);
 
-        assertFalse("Method supported", adapter.supportsInternal(new MethodEndpoint(this, unsupported)));
+        Assert.assertFalse("Method supported", adapter.supportsInternal(new MethodEndpoint(this, unsupported)));
 
         verify(marshallerMock, unmarshallerMock);
     }
