@@ -11,6 +11,7 @@
     <packaging>jar</packaging>
     <name>Spring WS Support</name>
     <description>Spring Web Services Support package.</description>
+<!--
     <repositories>
         <repository>
             <id>spring-ext</id>
@@ -23,6 +24,7 @@
             <url>http://download.java.net/maven/2/</url>
         </repository>
     </repositories>
+-->
     <profiles>
         <profile>
             <id>jdk15</id>
