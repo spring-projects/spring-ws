@@ -46,7 +46,7 @@ public class Main {
         request.setDepartureDate(departureDate);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         System.out.println("Requesting flights on " + dateFormat.format(departureDate));
-        Flight[] flights = airline.getFlights(request);
+        Flight[] flights = airline.getFlights(request).getFlight();
         System.out.println("Got " + flights.length + " results");
         if (flights.length > 0)
         {
@@ -66,8 +66,8 @@ public class Main {
         System.out.println("Ticket " + ticket.getId());
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         System.out.println("Ticket issue date:\t" + dateFormat.format(ticket.getIssueDate()));
-        for (int i = 0; i < ticket.getPassengers().length; i++) {
-            writeName(ticket.getPassengers()[i]);
+        for (int i = 0; i < ticket.getPassengers().getPassenger().length; i++) {
+            writeName(ticket.getPassengers().getPassenger()[i]);
 
         }
         writeFlight(ticket.getFlight());

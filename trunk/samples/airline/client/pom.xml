@@ -12,5 +12,6 @@
     <name>Spring WS Airline Sample - Clients</name>
     <modules>
         <module>saaj</module>
+        <module>axis1</module>
     </modules>
 </project>
