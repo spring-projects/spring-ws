@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
-        <artifactId>spring-ws-samples</artifactId>
+        <artifactId>pox</artifactId>
         <groupId>org.springframework.ws</groupId>
         <version>2.0.0-M1-SNAPSHOT</version>
-        <relativePath>../samples/pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>pox</artifactId>
+    <artifactId>pox-server</artifactId>
     <packaging>war</packaging>
-    <name>Spring WS POX Sample</name>
+    <name>Spring WS POX Sample - Server</name>
     <description>A Spring-WS sample that uses Plain Old XML, rather than SOAP.</description>
     <profiles>
         <profile>
@@ -24,28 +24,11 @@
             </dependencies>
         </profile>
     </profiles>
-    <reporting>
-        <plugins>
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <stylesheetfile>${basedir}/../../src/main/javadoc/javadoc.css</stylesheetfile>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
     <dependencies>
         <!-- Spring-WS dependencies -->
         <dependency>
             <groupId>org.springframework.ws</groupId>
             <artifactId>spring-ws-core</artifactId>
-        </dependency>
-        <!-- Test dependencies -->
-        <dependency>
-            <groupId>easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>1.2_Java1.3</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
