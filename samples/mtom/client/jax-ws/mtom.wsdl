@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch="http://www.springframework.org/spring-ws/samples/mtom" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.springframework.org/spring-ws/samples/mtom" targetNamespace="http://www.springframework.org/spring-ws/samples/mtom">
+  <wsdl:types>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" elementFormDefault="qualified" targetNamespace="http://www.springframework.org/spring-ws/samples/mtom">
+
+    <element name="StoreImageRequest" type="tns:Image"/>
+
+    <element name="LoadImageRequest" type="string"/>
+
+    <element name="LoadImageResponse" type="tns:Image"/>
+
+    <complexType name="Image">
+        <sequence>
+            <element name="name" type="string"/>
+            <element name="image" type="base64Binary" xmime:expectedContentTypes="image/png"/>
+        </sequence>
+    </complexType>
+
+</schema>
+  </wsdl:types>
+  <wsdl:message name="StoreImageRequest">
+    <wsdl:part element="tns:StoreImageRequest" name="StoreImageRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="LoadImageResponse">
+    <wsdl:part element="tns:LoadImageResponse" name="LoadImageResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="LoadImageRequest">
+    <wsdl:part element="tns:LoadImageRequest" name="LoadImageRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ImageRepository">
+    <wsdl:operation name="StoreImage">
+      <wsdl:input message="tns:StoreImageRequest" name="StoreImageRequest">
+    </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="LoadImage">
+      <wsdl:input message="tns:LoadImageRequest" name="LoadImageRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:LoadImageResponse" name="LoadImageResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ImageRepositorySoap11" type="tns:ImageRepository">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="StoreImage">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="StoreImageRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="LoadImage">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="LoadImageRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="LoadImageResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ImageRepositoryService">
+    <wsdl:port binding="tns:ImageRepositorySoap11" name="ImageRepositorySoap11">
+      <soap:address location="http://localhost:8080/mtom-server/"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
