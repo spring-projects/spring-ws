@@ -13,5 +13,7 @@
     <modules>
         <module>saaj</module>
         <module>axis1</module>
+        <module>spring-ws</module>
+        <module>jms</module>
     </modules>
 </project>
