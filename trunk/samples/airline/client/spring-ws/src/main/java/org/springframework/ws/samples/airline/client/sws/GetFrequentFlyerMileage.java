@@ -45,7 +45,7 @@ public class GetFrequentFlyerMileage extends WebServiceGatewaySupport {
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
                 "org/springframework/ws/samples/airline/client/sws/applicationContext.xml");
 
-        GetFrequentFlyerMileage getFrequentFlyerMileage = (GetFrequentFlyerMileage) applicationContext
+        GetFrequentFlyerMileage getFrequentFlyerMileage = applicationContext
                 .getBean("getFrequentFlyerMileage", GetFrequentFlyerMileage.class);
         getFrequentFlyerMileage.getFrequentFlyerMileage();
     }

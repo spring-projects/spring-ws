@@ -8,7 +8,7 @@
         <constructor-arg ref="messagFactory"/>
         <property name="destinationProvider">
             <bean class="org.springframework.ws.client.support.destination.Wsdl11DestinationProvider">
-                <property name="wsdl" value="http://localhost:8080/airline/airline.wsdl"/>
+                <property name="wsdl" value="http://localhost:8080/airline-server/airline.wsdl"/>
             </bean>
         </property>
     </bean>
