@@ -13,4 +13,4 @@ Sample table of contents
 Except the tutorial, all of these samples consist of a separate 'server' and 'client' project.
 The server projects can be run using the "mvn jetty:run" command, or by using "mvn package" and deploying the resulting
 war archives to a Web Container.
-The client projects are typically command-line projects, and can by started by issuing the 'mvn exec:java' command.
+The client projects are typically command-line projects, and can by started by issuing the 'mvn install exec:java' command.

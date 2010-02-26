@@ -14,12 +14,4 @@
         <module>saaj</module>
         <module>spring-ws</module>
     </modules>
-    <dependencies>
-        <!-- Logging dependencies -->
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-    </dependencies>
 </project>
