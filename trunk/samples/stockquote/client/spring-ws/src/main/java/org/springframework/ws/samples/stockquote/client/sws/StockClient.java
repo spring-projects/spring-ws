@@ -46,7 +46,9 @@ public class StockClient extends WebServiceGatewaySupport {
         Source requestSource = new ResourceSource(request);
         StringResult result = new StringResult();
         getWebServiceTemplate().sendSourceAndReceiveToResult(requestSource, new ActionCallback(action), result);
+        System.out.println();
         System.out.println(result);
+        System.out.println();
     }
 
     public static void main(String[] args) throws IOException {
