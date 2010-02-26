@@ -4,7 +4,7 @@
 
     <bean id="contactsClient" class="org.springframework.ws.samples.pox.client.sws.ContactsClient">
         <constructor-arg ref="messageFactory"/>
-        <property name="defaultUri" value="http://localhost:8080/pox/"/>
+        <property name="defaultUri" value="http://localhost:8080/pox-server/"/>
         <property name="request" value="classpath:org/springframework/ws/samples/pox/client/sws/contactsRequest.xml"/>
         <property name="expression" ref="expression"/>
     </bean>

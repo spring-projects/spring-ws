@@ -52,7 +52,9 @@ public class ContactsClient extends WebServiceGatewaySupport {
         DOMResult result = new DOMResult();
         getWebServiceTemplate().sendSourceAndReceiveToResult(requestSource, result);
         int contactCount = (int) expression.evaluateAsNumber(result.getNode());
+        System.out.println();
         System.out.println("contactCount = " + contactCount);
+        System.out.println();
     }
 
     public static void main(String[] args) throws IOException {
