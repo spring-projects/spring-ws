@@ -37,7 +37,7 @@
                         </goals>
                         <configuration>
                             <wsdlUrls>
-                                <wsdlUrl>http://localhost:8080/mtom-server/mtom.wsdl</wsdlUrl>
+                                <wsdlUrl>file://${project.basedir}/mtom.wsdl</wsdlUrl>
                             </wsdlUrls>
                             <packageName>org.springframework.ws.samples.mtom.client.jaxws</packageName>
                         </configuration>
