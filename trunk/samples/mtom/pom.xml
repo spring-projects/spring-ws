@@ -9,7 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mtom</artifactId>
     <packaging>pom</packaging>
-    <name>Spring WS MTOM</name>
+    <name>Spring WS MTOM Sample</name>
     <modules>
         <module>server</module>
         <module>client</module>
