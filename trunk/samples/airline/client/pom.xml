@@ -15,5 +15,6 @@
         <module>axis1</module>
         <module>spring-ws</module>
         <module>jms</module>
+        <module>jax-ws</module>
     </modules>
 </project>
