@@ -48,6 +48,10 @@
         </plugins>
     </build>
     <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
         <!-- Spring-WS dependencies -->
         <dependency>
             <groupId>org.springframework.ws</groupId>
@@ -56,6 +60,7 @@
         <dependency>
             <groupId>org.springframework.ws</groupId>
             <artifactId>spring-ws-support</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 </project>
