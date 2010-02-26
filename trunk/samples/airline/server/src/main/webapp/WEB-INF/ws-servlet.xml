@@ -13,7 +13,7 @@
         </description>
         <property name="schemaCollection" ref="schemaCollection"/>
         <property name="portTypeName" value="Airline"/>
-        <property name="locationUri" value="http://localhost:8080/airline/services"/>
+        <property name="locationUri" value="http://localhost:8080/airline-server/services"/>
         <property name="targetNamespace"
                 value="http://www.springframework.org/spring-ws/samples/airline/definitions"/>
     </bean>
