@@ -58,21 +58,20 @@
    <build>
       <plugins>
           <plugin>
-              <groupId>com.sun.tools.xjc.maven2</groupId>
-              <artifactId>maven-jaxb-plugin</artifactId>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>jaxb2-maven-plugin</artifactId>
               <executions>
                   <execution>
-                      <phase>generate-sources</phase>
                       <goals>
-                          <goal>generate</goal>
+                          <goal>xjc</goal>
                       </goals>
                   </execution>
-              </executions>
-              <configuration>
-                  <generatePackage>org.springframework.ws.samples.mtom.schema</generatePackage>
-                  <schemaDirectory>src/main/webapp/WEB-INF</schemaDirectory>
-              </configuration>
-          </plugin>
+             </executions>
+             <configuration>
+                 <schemaDirectory>src/main/webapp/WEB-INF</schemaDirectory>
+                  <packageName>org.springframework.ws.samples.mtom.schema</packageName>
+             </configuration>
+         </plugin>
       </plugins>
    </build>
    <dependencies>
@@ -80,11 +79,6 @@
        <dependency>
          <groupId>org.springframework.ws</groupId>
          <artifactId>spring-ws-core</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-oxm</artifactId>
-          <scope>runtime</scope>
       </dependency>
    </dependencies>
 </project>
