@@ -1,6 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch="http://www.springframework.org/spring-ws/samples/mtom" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.springframework.org/spring-ws/samples/mtom" targetNamespace="http://www.springframework.org/spring-ws/samples/mtom">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                                                                        xmlns:sch="http://www.springframework.org/spring-ws/samples/mtom"
+                                                                        xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                                                                        xmlns:tns="http://www.springframework.org/spring-ws/samples/mtom"
+                                                                        targetNamespace="http://www.springframework.org/spring-ws/samples/mtom">
   <wsdl:types>
-    <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" elementFormDefault="qualified" targetNamespace="http://www.springframework.org/spring-ws/samples/mtom">
+    <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
+            elementFormDefault="qualified" targetNamespace="http://www.springframework.org/spring-ws/samples/mtom"
+            xmlns:tns="http://www.springframework.org/spring-ws/samples/mtom">
 
     <element name="StoreImageRequest" type="tns:Image"/>
 
