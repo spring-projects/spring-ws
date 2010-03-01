@@ -3,6 +3,21 @@ SPRING WEB SERVICES CHANGELOG
 http://www.springframework.org/spring-ws
 
 
+Changes in version 2.0 Milestone 1
+------------------------
+
+** Bug
+    * [SWS-501] - Maven dependency for oxm 1.5.5.A non-existent version of Spring
+
+** Refactoring
+    * [SWS-567] - Refactor to use OXM from Spring 3
+
+** Task
+    * [SWS-451] - Update spring-ws Maven POM to use correct Spring artifactId values
+    * [SWS-597] - Merge core and core-tiger modules
+    * [SWS-598] - Drop OXM modules in favor of Spring 3.0
+    * [SWS-599] - Change API to use Java 5+
+
 Changes in version 1.5.9
 ------------------------
 
