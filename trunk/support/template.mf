@@ -1,8 +1,9 @@
 Bundle-SymbolicName: org.springframework.ws.support
 Bundle-Name: Spring Web Services Support
 Bundle-Vendor: SpringSource
+Bundle-Version: ${osgi.version}
 Bundle-ManifestVersion: 2
-Fragment-Host: org.springframework.ws;bundle-version="[${version}, ${version}]"
+Fragment-Host: org.springframework.ws;bundle-version=${osgi.range}
 Import-Template: 
  com.sun.net.httpserver.*;version="0";resolution:=optional,
  com.sun.mail.imap.*;version="[1.4.0, 2.0.0)";resolution:=optional,
@@ -14,18 +15,16 @@ Import-Template:
  javax.net.ssl.*;version="0",
  javax.xml.transform.*;version="0",
  org.apache.commons.logging.*;version="[1.1.1, 2.0.0)",
- org.springframework.beans.*;version="[3.0.1, 4.0.0)",
- org.springframework.context.*;version="[3.0.1, 4.0.0)",
- org.springframework.core.*;version="[3.0.1, 4.0.0)",
- org.springframework.ejb.*;version="[3.0.1, 4.0.0)",
- org.springframework.jms.*;version="[3.0.1, 4.0.0)",
- org.springframework.jndi.*;version="[3.0.1, 4.0.0)",
- org.springframework.scheduling.*;version="[3.0.1, 4.0.0)",
- org.springframework.util.*;version="[3.0.1, 4.0.0)",
- org.springframework.ws.*;version="[${version}, ${version}]",
- org.springframework.xml.*;version="[${version}, ${version}]"
-Excluded-Imports:
- org.springframework.ws.transport.*
+ org.springframework.beans.*;version=${spring.framework.osgi.range},
+ org.springframework.context.*;version=${spring.framework.osgi.range},
+ org.springframework.core.*;version=${spring.framework.osgi.range},
+ org.springframework.ejb.*;version=${spring.framework.osgi.range},
+ org.springframework.jms.*;version=${spring.framework.osgi.range},
+ org.springframework.jndi.*;version=${spring.framework.osgi.range},
+ org.springframework.scheduling.*;version=${spring.framework.osgi.range},
+ org.springframework.util.*;version=${spring.framework.osgi.range},
+ org.springframework.ws.*;version=${osgi.range},
+ org.springframework.xml.*;version=${osgi.range}
 Ignored-Existing-Headers: 
  Bnd-LastModified,
  Import-Package,

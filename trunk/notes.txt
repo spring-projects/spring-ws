@@ -1,9 +1,16 @@
 Dear Spring community,
 
-I'm pleased to announce that Spring Web Services 1.5.9 has been released!
+I'm pleased to announce that Spring Web Services 2.0 Milestone 1 has been
+released!
 
-This is the latest bug fix and enhancement release in the Spring-WS 1.5
-series. It fixes all bugs reported since 1.5.8 and introduces various
-enhancements throughout the framework. Please see the changelog for details.
+This is the first milestone release in the 2.0 release cycle. It does not
+introduce any new features (yet), but does add the following:
+
+- Usage of Spring's OXM
+- Java 5 API (including generics, varargs, etc)
+
+Please see the changelog for details.
+
+Spring Web Services 2.0 is due in the second quarter of 2010.
 
 For more information, see http://static.springframework.org/spring-ws/site/

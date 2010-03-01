@@ -79,13 +79,13 @@
         </snapshotRepository>
         <site>
             <id>static.springframework.org</id>
-            <url>scp://static.springframework.org/var/www/domains/springframework.org/static/htdocs/spring-ws/sites/1.5</url>
+            <url>scp://static.springframework.org/var/www/domains/springframework.org/static/htdocs/spring-ws/sites/2.0</url>
         </site>
     </distributionManagement>
     <scm>
-        <connection>scm:svn:https://src.springframework.org/svn/spring-ws/tags/spring-ws-1.5.6</connection>
-        <developerConnection>scm:svn:https://src.springframework.org/svn/spring-ws/tags/spring-ws-1.5.6</developerConnection>
-        <url>https://fisheye.springframework.org/browse/spring-ws/tags/spring-ws-1.5.6</url>
+        <connection>scm:svn:https://src.springframework.org/svn/spring-ws/trunk</connection>
+        <developerConnection>scm:svn:https://src.springframework.org/svn/spring-ws/trunk/</developerConnection>
+        <url>https://fisheye.springframework.org/browse/spring-ws/trunk</url>
     </scm>
     <properties>
         <spring.framework.version>3.0.1.RELEASE</spring.framework.version>
@@ -566,7 +566,7 @@
             <plugin>
                 <groupId>com.agilejava.docbkx</groupId>
                 <artifactId>docbkx-maven-plugin</artifactId>
-                <version>2.0.9</version>
+                <version>2.0.6</version>
                 <executions>
                     <execution>
                         <goals>
