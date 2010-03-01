@@ -1,6 +1,7 @@
 Bundle-SymbolicName: org.springframework.ws
 Bundle-Name: Spring Web Services Core
 Bundle-Vendor: SpringSource
+Bundle-Version: ${osgi.version}
 Bundle-ManifestVersion: 2
 Import-Template: 
  javax.activation.*;version="[1.1.0, 2.0.0)",
@@ -18,16 +19,16 @@ Import-Template:
  org.apache.commons.logging.*;version="[1.1.1, 2.0.0)",
  org.dom4j.*;version="[1.6.1, 2.0.0)";resolution:=optional,
  org.jdom.*;version="[1.0.0, 2.0.0)";resolution:=optional,
- org.springframework.aop.*;version="[3.0.1, 4.0.0)",
- org.springframework.beans.*;version="[3.0.1, 4.0.0)",
- org.springframework.context.*;version="[3.0.1, 4.0.0)",
- org.springframework.core.*;version="[3.0.1, 4.0.0)",
- org.springframework.oxm.*;version="[3.0.1, 4.0.0)",
- org.springframework.util.*;version="[3.0.1, 4.0.0)",
- org.springframework.stereotype.*;version="[3.0.1, 4.0.0)",
- org.springframework.validation.*;version="[3.0.1, 4.0.0)",
- org.springframework.web.*;version="[3.0.1, 4.0.0)",
- org.springframework.xml.*;version="[${version}, ${version}]",
+ org.springframework.aop.*;version=${spring.framework.osgi.range},
+ org.springframework.beans.*;version=${spring.framework.osgi.range},
+ org.springframework.context.*;version=${spring.framework.osgi.range},
+ org.springframework.core.*;version=${spring.framework.osgi.range},
+ org.springframework.oxm.*;version=${spring.framework.osgi.range},
+ org.springframework.util.*;version=${spring.framework.osgi.range},
+ org.springframework.stereotype.*;version=${spring.framework.osgi.range},
+ org.springframework.validation.*;version=${spring.framework.osgi.range},
+ org.springframework.web.*;version=${spring.framework.osgi.range},
+ org.springframework.xml.*;version=${osgi.range},
  org.w3c.dom.*;version="0",
  org.xml.sax.*;version="0"
 Ignored-Existing-Headers: 

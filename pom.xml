@@ -79,7 +79,7 @@
         </snapshotRepository>
         <site>
             <id>static.springframework.org</id>
-            <url>scp://static.springframework.org/var/www/domains/springframework.org/static/htdocs/spring-ws/sites/1.5</url>
+            <url>scp://static.springframework.org/var/www/domains/springframework.org/static/htdocs/spring-ws/sites/2.0</url>
         </site>
     </distributionManagement>
     <scm>
@@ -566,7 +566,7 @@
             <plugin>
                 <groupId>com.agilejava.docbkx</groupId>
                 <artifactId>docbkx-maven-plugin</artifactId>
-                <version>2.0.9</version>
+                <version>2.0.6</version>
                 <executions>
                     <execution>
                         <goals>
