@@ -28,7 +28,10 @@
         <url>https://fisheye.springframework.org/browse/spring-ws/tags/spring-ws-2.0.0-M1</url>
     </scm>
     <properties>
+        <osgi.version>2.0.0.M1</osgi.version>
+        <osgi.range>"${osgi.version:[=.=.=, =.=.+1)}"</osgi.range>
         <spring.framework.version>3.0.1.RELEASE</spring.framework.version>
+        <spring.framework.osgi.range>"[3.0.1, 4.0.0)"</spring.framework.osgi.range>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <pluginRepositories>
