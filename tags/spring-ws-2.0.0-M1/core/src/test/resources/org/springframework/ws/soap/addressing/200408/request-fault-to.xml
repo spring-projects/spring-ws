@@ -1,0 +1,20 @@
+<S:Envelope xmlns:S="http://www.w3.org/2003/05/soap-envelope"
+            xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
+            xmlns:f123="http://www.fabrikam123.example/svc53">
+    <S:Header>
+        <wsa:MessageID>uuid:aaaabbbb-cccc-dddd-eeee-ffffffffffff</wsa:MessageID>
+        <wsa:ReplyTo>
+            <wsa:Address>http://example.com/business/client1</wsa:Address>
+        </wsa:ReplyTo>
+        <wsa:FaultTo>
+            <wsa:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:Address>
+        </wsa:FaultTo>
+        <wsa:To S:mustUnderstand="true">mailto:joe@fabrikam123.example</wsa:To>
+        <wsa:Action>http://fabrikam123.example/mail/Delete</wsa:Action>
+    </S:Header>
+    <S:Body>
+        <f123:Delete>
+            <maxCount>42</maxCount>
+        </f123:Delete>
+    </S:Body>
+</S:Envelope>

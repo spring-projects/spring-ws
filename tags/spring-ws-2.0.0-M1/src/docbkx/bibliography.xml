@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE bibliography PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<bibliography>
+    <title>Bibliography</title>
+    <biblioentry id="waldo-94">
+        <authorgroup>
+            <author>
+                <firstname>Jim</firstname>
+                <surname>Waldo</surname>
+            </author>
+            <author>
+                <firstname>Ann</firstname>
+                <surname>Wollrath</surname>
+            </author>
+            <author>
+                <firstname>Sam</firstname>
+                <surname>Kendall</surname>
+            </author>
+        </authorgroup>
+        <title>A Note on Distributed Computing</title>
+        <publisher>
+            <publishername>Springer Verlag</publishername>
+        </publisher>
+        <date>1994</date>
+    </biblioentry>
+    <biblioentry id="alpine">
+        <authorgroup>
+            <author>
+                <firstname>Steve</firstname>
+                <surname>Loughran</surname>
+            </author>
+            <author>
+                <firstname>Edmund</firstname>
+                <surname>Smith</surname>
+            </author>
+        </authorgroup>
+        <title>Rethinking the Java SOAP Stack</title>
+        <date>May 17, 2005</date>
+        <copyright>
+            <year>2005</year>
+            <holder>IEEE Telephone Laboratories, Inc.</holder>
+        </copyright>
+    </biblioentry>
+    <biblioentry id="effective-enterprise-java">
+        <authorgroup>
+            <author>
+                <firstname>Ted</firstname>
+                <surname>Neward</surname>
+            </author>
+        </authorgroup>
+        <editor>
+            <firstname>Scott</firstname>
+            <surname>Meyers</surname>
+        </editor>
+        <title>Effective Enterprise Java</title>
+        <publisher>
+            <publishername>Addison-Wesley</publishername>
+        </publisher>
+        <date>2004</date>
+    </biblioentry>
+    <biblioentry id="effective-xml">
+        <authorgroup>
+            <author>
+                <firstname>Elliotte Rusty</firstname>
+                <surname>Harold</surname>
+            </author>
+        </authorgroup>
+        <editor>
+            <firstname>Scott</firstname>
+            <surname>Meyers</surname>
+        </editor>
+        <title>Effective XML</title>
+        <publisher>
+            <publishername>Addison-Wesley</publishername>
+        </publisher>
+        <date>2004</date>
+    </biblioentry>
+</bibliography>

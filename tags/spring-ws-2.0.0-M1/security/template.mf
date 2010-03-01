@@ -1,0 +1,26 @@
+Bundle-SymbolicName: org.springframework.ws.soap.security
+Bundle-Name: Spring Web Services SOAP Security
+Bundle-Vendor: SpringSource
+Bundle-ManifestVersion: 2
+Import-Template: 
+ com.sun.xml.wss.*;version="0",
+ javax.crypto.*;version="0",
+ javax.security.auth.*;version="0",
+ javax.xml.namespace.*;version="0",
+ javax.xml.soap.*;version="[1.1.0, 2.0.0)";resolution:=optional,
+ org.apache.axiom.*;version="[1.2.5, 2.0.0)";resolution:=optional,
+ org.apache.commons.logging.*;version="[1.1.1, 2.0.0)",
+ org.apache.ws.security.*;version="[1.5.8, 2.0.0)";resolution:=optional,
+ org.apache.xml.security.*;version="[1.0.5.D2, 2.0.0)";resolution:=optional,
+ org.springframework.beans.*;version="[3.0.1, 4.0.0)",
+ org.springframework.core.*;version="[3.0.1, 4.0.0)",
+ org.springframework.dao.*;version="[3.0.1, 4.0.0)",
+ org.springframework.security.*;version="[3.0.0.A, 4.0.0)",
+ org.springframework.util.*;version="[3.0.1, 4.0.0)",
+ org.springframework.ws.*;version="[${version}, ${version}]",
+ org.w3c.dom.*;version="0"
+Ignored-Existing-Headers:
+ Bnd-LastModified,
+ Import-Package,
+ Export-Package,
+ Tool
