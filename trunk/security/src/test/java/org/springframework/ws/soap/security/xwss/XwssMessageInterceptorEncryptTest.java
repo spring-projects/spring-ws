@@ -44,7 +44,7 @@ public class XwssMessageInterceptorEncryptTest extends AbstractXwssMessageInterc
                     if (keyCallback.getRequest() instanceof EncryptionKeyCallback.AliasX509CertificateRequest) {
                         EncryptionKeyCallback.AliasX509CertificateRequest request =
                                 (EncryptionKeyCallback.AliasX509CertificateRequest) keyCallback.getRequest();
-                        assertNull("Invalid alias", request.getAlias());
+                        assertEquals("Invalid alias", "", request.getAlias());
                         request.setX509Certificate(certificate);
                     }
                     else {
