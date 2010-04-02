@@ -131,7 +131,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     public void setSecurementActions(String securementActions) {
         this.securementActions = securementActions;
-        securementActionsVector = new Vector();
+        securementActionsVector = new Vector<Integer>();
         try {
             securementAction = WSSecurityUtil.decodeAction(securementActions, securementActionsVector);
         }
@@ -376,7 +376,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
     public void setValidationActions(String actions) {
         this.validationActions = actions;
         try {
-            validationActionsVector = new Vector();
+            validationActionsVector = new Vector<Integer>();
             validationAction = WSSecurityUtil.decodeAction(actions, validationActionsVector);
         }
         catch (WSSecurityException ex) {
