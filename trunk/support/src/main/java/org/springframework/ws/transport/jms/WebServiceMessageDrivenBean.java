@@ -109,18 +109,18 @@ public class WebServiceMessageDrivenBean extends AbstractJmsMessageDrivenBean {
         }
     }
 
-    /** Creates a connection factory. Default implemantion does a bean lookup for {@link #CONNECTION_FACTORY_BEAN_NAME}. */
+    /** Creates a connection factory. Default implementation does a bean lookup for {@link #CONNECTION_FACTORY_BEAN_NAME}. */
     protected ConnectionFactory createConnectionFactory() throws Exception {
         return (ConnectionFactory) getBeanFactory().getBean(CONNECTION_FACTORY_BEAN_NAME, ConnectionFactory.class);
     }
 
-    /** Creates a message factory. Default implemantion does a bean lookup for {@link #MESSAGE_FACTORY_BEAN_NAME}. */
+    /** Creates a message factory. Default implementation does a bean lookup for {@link #MESSAGE_FACTORY_BEAN_NAME}. */
     protected WebServiceMessageFactory createMessageFactory() {
         return (WebServiceMessageFactory) getBeanFactory()
                 .getBean(MESSAGE_FACTORY_BEAN_NAME, WebServiceMessageFactory.class);
     }
 
-    /** Creates a connection factory. Default implemantion does a bean lookup for {@link #MESSAGE_RECEIVER_BEAN_NAME}. */
+    /** Creates a connection factory. Default implementation does a bean lookup for {@link #MESSAGE_RECEIVER_BEAN_NAME}. */
     protected WebServiceMessageReceiver createMessageReceiver() {
         return (WebServiceMessageReceiver) getBeanFactory()
                 .getBean(MESSAGE_RECEIVER_BEAN_NAME, WebServiceMessageReceiver.class);
@@ -141,7 +141,7 @@ public class WebServiceMessageDrivenBean extends AbstractJmsMessageDrivenBean {
     }
 
     /**
-     * Creates a JMS {@link Session}. Default implemantion creates a non-transactional, {@link Session#AUTO_ACKNOWLEDGE
+     * Creates a JMS {@link Session}. Default implementation creates a non-transactional, {@link Session#AUTO_ACKNOWLEDGE
      * auto acknowledged} session.
      * <p/>
      * This implementation uses JMS 1.1 API.
