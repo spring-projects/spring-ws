@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2002-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 
 import org.springframework.util.Assert;
-import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.xml.transform.TransformerObjectSupport;
+
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -67,7 +67,7 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
         documentBuilderFactory.setValidating(validating);
     }
 
-    public WebServiceMessage createWebServiceMessage() {
+    public DomPoxMessage createWebServiceMessage() {
         try {
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document request = documentBuilder.newDocument();
@@ -77,11 +77,11 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
             throw new DomPoxMessageException("Could not create message context", ex);
         }
         catch (TransformerConfigurationException ex) {
-            throw new DomPoxMessageException("Could not create transormer", ex);
+            throw new DomPoxMessageException("Could not create transformer", ex);
         }
     }
 
-    public WebServiceMessage createWebServiceMessage(InputStream inputStream) throws IOException {
+    public DomPoxMessage createWebServiceMessage(InputStream inputStream) throws IOException {
         try {
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document request = documentBuilder.parse(inputStream);
@@ -94,7 +94,7 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
             throw new DomPoxMessageException("Could not parse request message", ex);
         }
         catch (TransformerConfigurationException ex) {
-            throw new DomPoxMessageException("Could not create transormer", ex);
+            throw new DomPoxMessageException("Could not create transformer", ex);
         }
     }
 }
