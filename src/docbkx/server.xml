@@ -24,7 +24,7 @@
            Spring-WS's XML handling is extremely flexible. An endpoint can choose from
            a large amount of XML handling libraries supported by Spring-WS, including the DOM family (W3C DOM, JDOM,
            dom4j, and XOM), SAX or StAX for faster performance, XPath to extract information from the message, or even
-           <link linkend="oxm">marshalling techniques</link> (JAXB, Castor, XMLBeans, JiBX, or XStream) to convert
+           marshalling techniques (JAXB, Castor, XMLBeans, JiBX, or XStream) to convert
            the XML to objects and vice-versa.
         </para>
     </section>
@@ -314,18 +314,6 @@
                 the dispatcher servlet does not load the default adapters, and is unable to handle standard Spring-MVC
                 <interfacename>Controllers</interfacename>. Therefore, we add the
                 <classname>SimpleControllerHandlerAdapter</classname> at the end.
-                <footnote>
-                    <para>
-                        By default, the Spring MVC <classname>DispatcherServlet</classname> configures the following
-                        handler adapters in version 2.5:
-                        <itemizedlist>
-                            <listitem><para><classname>org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter</classname></para></listitem>
-                            <listitem><para><classname>org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter</classname></para></listitem>
-                            <listitem><para><classname>org.springframework.web.servlet.mvc.throwaway.ThrowawayControllerHandlerAdapter</classname></para></listitem>
-                            <listitem><para><classname>org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter</classname></para></listitem>
-                        </itemizedlist>
-                    </para>
-                </footnote>
             </para>
             <para>
                 In a similar fashion, you can wire up a <classname>WsdlDefinitionHandlerAdapter</classname> to make sure
@@ -669,7 +657,7 @@ public class SampleEndpoint extends AbstractDomPayloadEndpoint {
                 Rather than handling XML directly using DOM, you can use marshalling to convert the payload of the XML
                 message into a Java Object. Spring Web Services offers the
                 <classname>AbstractMarshallingPayloadEndpoint</classname> for this purpose, which is built on the
-                marshalling abstraction described in <xref linkend="oxm"/>. The
+                Spring's OXM package. The
                 <classname>AbstractMarshallingPayloadEndpoint</classname> has two properties:
                 <property>marshaller</property> and <property>unmarshaller</property>, in which you can inject in the
                 constructor or by setters.
@@ -721,7 +709,9 @@ public class MarshallingOrderEndpoint extends AbstractMarshallingPayloadEndpoint
     ]]><lineannotation>&lt;!-- Other beans, such as the endpoint mapping --&gt;</lineannotation><![CDATA[
 </beans>]]></programlisting>
             <para>
-                In this sample, we configure a <link linkend="oxm-jaxb2">Jaxb2Marshaller</link> for the
+                In this sample, we configure a
+                <ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/oxm.html#oxm-jaxb2">Jaxb2Marshaller</ulink>
+                for the
                 <classname>OrderRequest</classname> and <classname>Order</classname> classes, and inject that
                 marshaller together with the
                 <classname>DefaultOrderService</classname> into our endpoint. This business service is not shown, but
@@ -756,7 +746,8 @@ public class MarshallingOrderEndpoint extends AbstractMarshallingPayloadEndpoint
     </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>]]></programlisting>
             <para>
-                Instead of JAXB 2, we could have used any of the other marshallers described in <xref linkend="oxm"/>.
+                Instead of JAXB 2, we could have used <ulink
+                url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/oxm.html">any Spring OXM marshallers</ulink>.
                 The only thing that would change in the above example is the configuration of the
                 <literal>marshaller</literal> bean.
             </para>

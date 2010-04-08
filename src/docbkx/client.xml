@@ -7,7 +7,7 @@
         <title>Introduction</title>
         <para>
             Spring-WS provides a client-side Web service API that allows for consistent, XML-driven access to
-            Web services. It also caters for the use of <link linkend="oxm">marshallers and unmarshallers</link>
+            Web services. It also caters for the use of marshallers and unmarshallers
             so that your service tier code can deal exclusively with Java objects.
         </para>
         <para>
@@ -284,7 +284,9 @@ public class WebServiceClient {
                 <classname>WebServiceTemplate</classname> class delegates the conversion of the request object
                 to XML to a <interfacename>Marshaller</interfacename>, and the conversion of the response
                 XML to an object to an <interfacename>Unmarshaller</interfacename>. (For more information
-                about marshalling and unmarshaller, refer to <xref linkend="oxm"/>.) By using the
+                about marshalling and unmarshaller, refer to
+                <ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/oxm.html">the Spring documentation</ulink>.)
+                By using the
                 marshallers, your application code can focus on the business object that is being sent or
                 received and not be concerned with the details of how it is represented as XML. In order to
                 use the marshalling functionality, you have to set a marshaller and unmarshaller with the

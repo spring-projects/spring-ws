@@ -16,11 +16,10 @@
         on this XML, and not on Java.
     </para>
     <para>
-        Spring Web Services focusses on creating these document-driven Web services.
+        Spring Web Services focuses on creating these document-driven Web services.
         Spring Web Services facilitates contract-first SOAP service development, allowing for the creation of
         flexible web services using one of the many ways to manipulate XML payloads. 
-        Spring-WS provides a powerful <link linkend="server">message dispatching framework</link>, various <link
-        linkend="oxm">XML marshalling</link> techniques that can be used outside a Web service environment, a <link
+        Spring-WS provides a powerful <link linkend="server">message dispatching framework</link>, a <link
         linkend="security">WS-Security</link> solution that integrates with your existing application security
         solution, and a <link linkend="client">Client-side API</link> that follows the familiar Spring template pattern.
     </para>

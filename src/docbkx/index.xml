@@ -59,16 +59,14 @@
                 to both client- and server-side WS, a chapter devoted to the specifics
                 of <link linkend="server">writing server-side Web services</link>,
                 a chapter about using Web services on
-                <link linkend="client">the client-side</link>, and chapters on using
-                <link linkend="security">WS-Security</link> and
-                <link linkend="oxm">Object/XML mapping</link>.
+                <link linkend="client">the client-side</link>, and a chapters on using
+                <link linkend="security">WS-Security</link>.
             </para>
         </partintro>
         <xi:include href="common.xml"/>
         <xi:include href="server.xml"/>
         <xi:include href="client.xml"/>
         <xi:include href="security.xml"/>
-        <xi:include href="oxm.xml"/>
     </part>
     <part id="resources">
         <title>Other Resources</title>
