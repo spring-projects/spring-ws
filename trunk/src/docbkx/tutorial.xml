@@ -620,7 +620,7 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
             </programlistingco>
             <para>
                  Using JDOM is just one of the options to handle the XML: other options include DOM, dom4j, XOM,
-                 SAX, and StAX, but also <link linkend="oxm">marshalling techniques</link> like JAXB, Castor, XMLBeans,
+                 SAX, and StAX, but also marshalling techniques like JAXB, Castor, XMLBeans,
                  JiBX, and XStream. We chose JDOM because it gives us access to the raw XML, and because it
                  is based on classes (not interfaces and factory methods as with W3C DOM and dom4j), which makes the
                  code less verbose. We use XPath because it is less fragile than marshalling technologies: we don't
