@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2002-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import javax.xml.stream.XMLStreamReader;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor;
 import org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping;
 import org.springframework.ws.soap.SoapMessageFactory;
@@ -191,11 +190,11 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
         }
     }
 
-    public WebServiceMessage createWebServiceMessage() {
+    public AxiomSoapMessage createWebServiceMessage() {
         return new AxiomSoapMessage(soapFactory, payloadCaching, langAttributeOnSoap11FaultString);
     }
 
-    public WebServiceMessage createWebServiceMessage(InputStream inputStream) throws IOException {
+    public AxiomSoapMessage createWebServiceMessage(InputStream inputStream) throws IOException {
         Assert.isInstanceOf(TransportInputStream.class, inputStream,
                 "AxiomSoapMessageFactory requires a TransportInputStream");
         TransportInputStream transportInputStream = (TransportInputStream) inputStream;
@@ -242,7 +241,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
     }
 
     /** Creates an AxiomSoapMessage without attachments. */
-    private WebServiceMessage createAxiomSoapMessage(InputStream inputStream, String contentType, String soapAction)
+    private AxiomSoapMessage createAxiomSoapMessage(InputStream inputStream, String contentType, String soapAction)
             throws XMLStreamException {
         XMLStreamReader reader = inputFactory.createXMLStreamReader(inputStream, getCharSetEncoding(contentType));
         String envelopeNamespace = getSoapEnvelopeNamespace(contentType);
