@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2002-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,15 +21,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.StringTokenizer;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapMessageCreationException;
 import org.springframework.ws.soap.SoapMessageFactory;
 import org.springframework.ws.soap.SoapVersion;
@@ -63,6 +65,8 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 
     private boolean langAttributeOnSoap11FaultString = true;
 
+    private Map<String, ?> messageProperties;
+
     /** Default, empty constructor. */
     public SaajSoapMessageFactory() {
     }
@@ -83,6 +87,14 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
     }
 
     /**
+     * Sets the SAAJ message properties. These properties will be set on created messages.
+     * @see javax.xml.soap.SOAPMessage#setProperty(String, Object)
+     */
+    public void setMessageProperties(Map<String, ?> messageProperties) {
+        this.messageProperties = messageProperties;
+    }
+
+    /**
      * Defines whether a {@code xml:lang} attribute should be set on SOAP 1.1 {@code <faultstring>} elements.
      * <p/>
      * The default is {@code true}, to comply with WS-I, but this flag can be set to {@code false} to the older W3C SOAP
@@ -90,7 +102,7 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
      *
      * @see <a href="http://www.ws-i.org/Profiles/BasicProfile-1.1.html#SOAP_Fault_Language">WS-I Basic Profile 1.1</a>
      */
-    public void setlangAttributeOnSoap11FaultString(boolean langAttributeOnSoap11FaultString) {
+    public void setLangAttributeOnSoap11FaultString(boolean langAttributeOnSoap11FaultString) {
         this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
     }
 
@@ -152,20 +164,24 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
         }
     }
 
-    public WebServiceMessage createWebServiceMessage() {
+    public SaajSoapMessage createWebServiceMessage() {
         try {
-            return new SaajSoapMessage(messageFactory.createMessage(), langAttributeOnSoap11FaultString);
+            SOAPMessage saajMessage = messageFactory.createMessage();
+            postProcess(saajMessage);
+            return new SaajSoapMessage(saajMessage, langAttributeOnSoap11FaultString);
         }
         catch (SOAPException ex) {
             throw new SoapMessageCreationException("Could not create empty message: " + ex.getMessage(), ex);
         }
     }
 
-    public WebServiceMessage createWebServiceMessage(InputStream inputStream) throws IOException {
+    public SaajSoapMessage createWebServiceMessage(InputStream inputStream) throws IOException {
         MimeHeaders mimeHeaders = parseMimeHeaders(inputStream);
         try {
             inputStream = checkForUtf8ByteOrderMark(inputStream);
-            return new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, inputStream));
+            SOAPMessage saajMessage = messageFactory.createMessage(mimeHeaders, inputStream);
+            postProcess(saajMessage);
+            return new SaajSoapMessage(saajMessage);
         }
         catch (SOAPException ex) {
             // SAAJ 1.3 RI has a issue with handling multipart XOP content types which contain "startinfo" rather than
@@ -176,7 +192,9 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
                 contentType = contentType.replace("startinfo", "start-info");
                 mimeHeaders.setHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
                 try {
-                    return new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, inputStream),
+                    SOAPMessage saajMessage = messageFactory.createMessage(mimeHeaders, inputStream);
+                    postProcess(saajMessage);
+                    return new SaajSoapMessage(saajMessage,
                             langAttributeOnSoap11FaultString);
                 }
                 catch (SOAPException e) {
@@ -221,6 +239,20 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
             }
         }
         return pushbackInputStream;
+    }
+
+    /**
+     * Template method that allows for post-processing of the given {@link SOAPMessage}.
+     * <p>Default implementation sets {@linkplain SOAPMessage#setProperty(String, Object) message properties}, if any.
+     * @param soapMessage the message to post process
+     * @see #setMessageProperties(java.util.Map)
+     */
+    protected void postProcess(SOAPMessage soapMessage) throws SOAPException {
+        if (!CollectionUtils.isEmpty(messageProperties)) {
+            for (Map.Entry<String, ?> entry : messageProperties.entrySet()) {
+                soapMessage.setProperty(entry.getKey(), entry.getValue());
+            }
+        }
     }
 
     public String toString() {

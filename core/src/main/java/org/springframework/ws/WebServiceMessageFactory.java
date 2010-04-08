@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2007 the original author or authors.
+ * Copyright 2002-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ public interface WebServiceMessageFactory {
      * If the given stream is an instance of {@link org.springframework.ws.transport.TransportInputStream
      * TransportInputStream}, the headers will be read from the request.
      *
-     * @param inputStream the inputstream to read the message from
+     * @param inputStream the input stream to read the message from
      * @return the created message
      * @throws java.io.IOException if an I/O exception occurs
      */
