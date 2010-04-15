@@ -45,7 +45,7 @@ import org.springframework.xml.transform.StringSource;
  */
 public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
 
-    private StringBuffer content;
+    private StringBuilder content;
 
     private boolean fault = false;
 
@@ -57,7 +57,7 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
     public MockWebServiceMessage(Source source) throws TransformerException {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
-        content = new StringBuffer();
+        content = new StringBuilder();
         transformer.transform(source, getPayloadResult());
     }
 
@@ -65,13 +65,13 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
         this(new SAXSource(SaxUtils.createInputSource(resource)));
     }
 
-    public MockWebServiceMessage(StringBuffer content) {
+    public MockWebServiceMessage(StringBuilder content) {
         this.content = content;
     }
 
     public MockWebServiceMessage(String content) {
         if (content != null) {
-            this.content = new StringBuffer(content);
+            this.content = new StringBuilder(content);
         }
     }
 
@@ -101,7 +101,7 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
 
     private void checkContent() {
         if (content == null) {
-            content = new StringBuffer();
+            content = new StringBuilder();
         }
     }
 
