@@ -55,7 +55,7 @@ public abstract class AbstractMessageEndpointTestCase extends AbstractEndpointTe
     public void testNoRequestPayload() throws Exception {
         endpoint = createNoRequestPayloadEndpoint();
 
-        MessageContext context = new DefaultMessageContext(new MockWebServiceMessage((StringBuffer) null),
+        MessageContext context = new DefaultMessageContext(new MockWebServiceMessage((StringBuilder) null),
                 new MockWebServiceMessageFactory());
         endpoint.invoke(context);
         assertFalse("Response message created", context.hasResponse());
