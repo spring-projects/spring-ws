@@ -159,7 +159,7 @@ public class MarshallingPayloadEndpointTest {
 
     @Test
     public void testInvokeNoRequest() throws Exception {
-        MockWebServiceMessage request = new MockWebServiceMessage((StringBuffer) null);
+        MockWebServiceMessage request = new MockWebServiceMessage((StringBuilder) null);
         context = new DefaultMessageContext(request, factoryMock);
         AbstractMarshallingPayloadEndpoint endpoint = new AbstractMarshallingPayloadEndpoint() {
 
