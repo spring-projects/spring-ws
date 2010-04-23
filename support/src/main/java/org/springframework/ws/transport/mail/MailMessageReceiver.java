@@ -66,7 +66,7 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
 
     private MonitoringStrategy monitoringStrategy;
 
-    /** Sets the from address to use when sending reponse messages. */
+    /** Sets the from address to use when sending response messages. */
     public void setFrom(String from) throws AddressException {
         this.from = new InternetAddress(from);
     }

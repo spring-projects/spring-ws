@@ -185,6 +185,47 @@
 </beans>]]></programlisting>
                     </para>
                 </section>
+                <section>
+                    <title>XMPP transport</title>
+                    <para>
+                        Spring Web Services 2.0 introduced an XMPP (Jabber) transport, which can be used to send and
+                        receive web service messages via XMPP. The client-side XMPP
+                        functionality is contained in the <classname>XmppMessageSender</classname> class.
+                        This class creates an XMPP message from the request
+                        <interfacename>WebServiceMessage</interfacename>, and sends it via XMPP. It then listens for a
+                        response message to arrive.
+                    </para>
+                    <para>
+                        To use the <classname>XmppMessageSender</classname>, set the <property>defaultUri</property> or
+                        <parameter>uri</parameter> parameter to a <literal>xmpp</literal> URI, for example
+                        <uri>xmpp:johndoe@jabber.org</uri>. The sender also requires an
+                        <classname>XMPPConnection</classname> to work, which can be conveniently created using the
+                        <classname>org.springframework.ws.transport.xmpp.support.XmppConnectionFactoryBean</classname>.
+                    </para>
+                    <para>
+                        The following example shows how to use the xmpp transport:<programlisting><![CDATA[<beans>
+
+    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+
+    <bean id="connection" class="org.springframework.ws.transport.xmpp.support.XmppConnectionFactoryBean">
+        <property name="host" value="jabber.org"/>
+        <property name="username" value="username"/>
+        <property name="password" value="password"/>
+    </bean>
+
+    <bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+        <constructor-arg ref="messageFactory"/>
+        <property name="messageSender">
+            <bean class="org.springframework.ws.transport.xmpp.XmppMessageSender">
+                <property name="connection" ref="connection"/>
+            </bean>
+        </property>
+        <property name="defaultUri" value="xmpp:user@jabber.org"/>
+    </bean>
+
+</beans>]]></programlisting>
+                    </para>
+                </section>
             </section>
             <section>
                 <title>Message factories</title>
