@@ -523,6 +523,50 @@
                 <ulink url="http://static.springframework.org/spring/docs/2.5.x/api/org/springframework/remoting/support/SimpleHttpServerFactoryBean.html">Javadoc</ulink>.
         	</para>
         </section>
+        <section>
+            <title>XMPP transport</title>
+            <para>
+                Finally, Spring Web Services 2.0 introduced support for XMPP, otherwise known as Jabber. The support
+                is based on the <ulink url="http://www.igniterealtime.org/projects/smack/index.jsp">Smack</ulink>
+                library.
+            </para>
+            <para>
+                Spring Web Services support for XMPP is very similar to the other transports: there is a a
+                <classname>XmppMessageSender</classname> for the <classname>WebServiceTemplate</classname> and
+                and a <classname>XmppMessageReceiver</classname> to use with the
+                <classname>MessageDispatcher</classname>.
+            </para>
+            <para>The following example shows how to set up the server-side XMPP components:
+            <programlisting><![CDATA[<beans>
+
+    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+
+    <bean id="connection" class="org.springframework.ws.transport.xmpp.support.XmppConnectionFactoryBean">
+        <property name="host" value="jabber.org"/>
+        <property name="username" value="username"/>
+        <property name="password" value="password"/>
+    </bean>
+
+    <bean id="messagingReceiver" class="org.springframework.ws.transport.xmpp.XmppMessageReceiver">
+        <property name="messageFactory" ref="messageFactory"/>
+        <property name="connection" ref="connection"/>
+        <property name="messageReceiver" ref="messageDispatcher"/>
+    </bean>
+
+    <bean id="messageDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+        <property name="endpointMappings">
+            <bean
+              class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
+                <property name="defaultEndpoint">
+                    <bean class="com.example.MyEndpoint"/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+</beans>]]></programlisting>
+            </para>
+        </section>
     </section>
     <section>
         <title>Endpoints</title>

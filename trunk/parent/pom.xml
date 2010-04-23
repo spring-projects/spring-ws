@@ -634,6 +634,11 @@
                 <artifactId>activemq-core</artifactId>
                 <version>4.1.1</version>
             </dependency>
+            <dependency>
+                <groupId>jivesoftware</groupId>
+                <artifactId>smack</artifactId>
+                <version>3.1.0</version>
+            </dependency>
             <!-- Logging dependencies -->
             <dependency>
                 <groupId>commons-logging</groupId>

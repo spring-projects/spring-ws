@@ -11,20 +11,6 @@
     <packaging>jar</packaging>
     <name>Spring WS Support</name>
     <description>Spring Web Services Support package.</description>
-<!--
-    <repositories>
-        <repository>
-            <id>spring-ext</id>
-            <name>Spring External Dependencies Repository</name>
-            <url>https://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo-ext/</url>
-        </repository>
-        <repository>
-            <id>java.net-maven-2</id>
-            <name>Java.net Repository for Maven</name>
-            <url>http://download.java.net/maven/2/</url>
-        </repository>
-    </repositories>
--->
     <profiles>
         <profile>
             <id>jdk15</id>
@@ -102,6 +88,10 @@
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>jivesoftware</groupId>
+            <artifactId>smack</artifactId>
         </dependency>
         <!-- Other dependencies -->
         <dependency>
