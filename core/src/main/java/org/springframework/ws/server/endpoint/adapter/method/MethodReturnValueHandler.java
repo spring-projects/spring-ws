@@ -20,34 +20,34 @@ import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;
 
 /**
- * Strategy interface used to resolve method return values. This interface is used to allow the {@link
+ * Strategy interface used to handle method return values. This interface is used to allow the {@link
  * org.springframework.ws.server.endpoint.adapter.DefaultMethodEndpointAdapter DefaultMethodEndpointAdapter} to be
  * indefinitely extensible.
  *
  * @author Arjen Poutsma
  * @since 2.0
  */
-public interface MethodReturnValueResolver {
+public interface MethodReturnValueHandler {
 
     /**
-     * Indicates whether the given {@linkplain MethodParameter method return type} is supported by this resolver.
+     * Indicates whether the given {@linkplain MethodParameter method return type} is supported by this handler.
      *
      * @param returnType the method return type to check
-     * @return {@code true} if this resolver supports the supplied return type; {@code false} otherwise
+     * @return {@code true} if this handler supports the supplied return type; {@code false} otherwise
      */
     boolean supportsReturnType(MethodParameter returnType);
 
     /**
-     * Resolves the given return value into a method argument.
+     * Handles the given return value.
      *
      * @param messageContext the current message context
-     * @param returnType     the return type to resolve. This type must have previously been passed to the {@link
+     * @param returnType     the return type to handle. This type must have previously been passed to the {@link
      *                       #supportsReturnType(MethodParameter)} method of this interface, which must have returned
      *                       {@code true}.
-     * @param returnValue    the return value to resolve.
+     * @param returnValue    the return value to handle
      * @throws Exception in case of errors
      */
-    void resolveReturnValue(MessageContext messageContext, MethodParameter returnType, Object returnValue)
+    void handleReturnValue(MessageContext messageContext, MethodParameter returnType, Object returnValue)
             throws Exception;
 
 
