@@ -32,7 +32,7 @@ import javax.xml.transform.Result;
 public interface SoapHeader extends SoapElement {
 
     /**
-     * Returns a <code>Result</code> that represents the concents of the header.
+     * Returns a <code>Result</code> that represents the contents of the header.
      * <p/>
      * The result can be used for marshalling.
      *
