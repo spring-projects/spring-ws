@@ -20,8 +20,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.core.JdkVersion;
+import org.springframework.core.MethodParameter;
 import org.springframework.util.Assert;
+import org.springframework.util.ReflectionUtils;
 
 /**
  * Represents a bean method that will be invoked as part of an incoming Web service message.
@@ -61,7 +62,7 @@ public final class MethodEndpoint {
      * @param parameterTypes the method parameter types
      * @throws NoSuchMethodException when the method cannot be found
      */
-    public MethodEndpoint(Object bean, String methodName, Class<?>[] parameterTypes) throws NoSuchMethodException {
+    public MethodEndpoint(Object bean, String methodName, Class<?>... parameterTypes) throws NoSuchMethodException {
         Assert.notNull(bean, "bean must not be null");
         Assert.notNull(methodName, "method must not be null");
         this.bean = bean;
@@ -70,8 +71,8 @@ public final class MethodEndpoint {
     }
 
     /**
-     * Constructs a new method endpoint with the given bean name and method. The bean name will be lazily initized when
-     * {@link #invoke(Object[])} is called.
+     * Constructs a new method endpoint with the given bean name and method. The bean name will be lazily initialized when
+     * {@link #invoke(Object...)} is called.
      *
      * @param beanName    the bean name
      * @param beanFactory the bean factory to use for bean initialization
@@ -98,6 +99,21 @@ public final class MethodEndpoint {
         return this.method;
     }
 
+    /** Returns the method parameters for this method endpoint. */
+    public MethodParameter[] getMethodParameters() {
+        int parameterCount = getMethod().getParameterTypes().length;
+        MethodParameter[] parameters = new MethodParameter[parameterCount];
+        for (int i = 0; i < parameterCount; i++) {
+            parameters[i] = new MethodParameter(getMethod(), i);
+        }
+        return parameters;
+    }
+
+    /** Returns the method return type, as {@code MethodParameter}. */
+    public MethodParameter getReturnType() {
+        return new MethodParameter(method, -1);
+    }
+
     /**
      * Invokes this method endpoint with the given arguments.
      *
@@ -105,31 +121,34 @@ public final class MethodEndpoint {
      * @return the invocation result
      * @throws Exception when the method invocation results in an exception
      */
-    public Object invoke(Object[] args) throws Exception {
+    public Object invoke(Object... args) throws Exception {
         Object endpoint = bean;
         if (endpoint instanceof String) {
             String endpointName = (String) endpoint;
             endpoint = beanFactory.getBean(endpointName);
         }
+        ReflectionUtils.makeAccessible(method);
         try {
-            return this.method.invoke(endpoint, args);
+            return method.invoke(endpoint, args);
         }
         catch (InvocationTargetException ex) {
             handleInvocationTargetException(ex);
-            throw new IllegalStateException("Unexpected exception thrown by method - " +
-                    ex.getTargetException().getClass().getName() + ": " + ex.getTargetException().getMessage());
+            throw new IllegalStateException(
+                    "Unexpected exception thrown by method - " + ex.getTargetException().getClass().getName() + ": " +
+                            ex.getTargetException().getMessage());
         }
     }
 
     private void handleInvocationTargetException(InvocationTargetException ex) throws Exception {
-        if (ex.getTargetException() instanceof RuntimeException) {
-            throw (RuntimeException) ex.getTargetException();
+        Throwable targetException = ex.getTargetException();
+        if (targetException instanceof RuntimeException) {
+            throw (RuntimeException) targetException;
         }
-        if (ex.getTargetException() instanceof Error) {
-            throw (Error) ex.getTargetException();
+        if (targetException instanceof Error) {
+            throw (Error) targetException;
         }
-        if (ex.getTargetException() instanceof Exception) {
-            throw (Exception) ex.getTargetException();
+        if (targetException instanceof Exception) {
+            throw (Exception) targetException;
         }
 
     }
@@ -150,19 +169,7 @@ public final class MethodEndpoint {
     }
 
     public String toString() {
-        if (JdkVersion.getMajorJavaVersion() <= JdkVersion.JAVA_14) {
-            return this.method.toString();
-        }
-        else {
-            return GenericToStringProvider.toString(method);
-        }
+        return method.toGenericString();
     }
 
-    /** Inner class to avoid a static JDK 1.5 dependency for generic string generation. */
-    private static class GenericToStringProvider {
-
-        public static String toString(Method method) {
-            return method.toGenericString();
-        }
-    }
 }

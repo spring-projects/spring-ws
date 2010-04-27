@@ -16,37 +16,18 @@
 
 package org.springframework.ws.server.endpoint.adapter.method;
 
-import javax.xml.transform.TransformerException;
-
 import org.springframework.core.MethodParameter;
-import org.springframework.ws.MockWebServiceMessage;
-import org.springframework.ws.MockWebServiceMessageFactory;
-import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.soap.axiom.AxiomSoapMessage;
-import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
-import org.springframework.ws.soap.saaj.SaajSoapMessage;
-import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
-import org.springframework.xml.transform.StringSource;
-import org.springframework.xml.transform.TransformerObjectSupport;
 
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.soap.SOAPFactory;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public abstract class AbstractPayloadMethodProcessorTest extends TransformerObjectSupport {
+public abstract class AbstractPayloadMethodProcessorTest extends AbstractMethodArgumentResolverTest {
 
-    protected static final String NAMESPACE_URI = "http://springframework.org/ws";
-
-    protected static final String LOCAL_NAME = "request";
-
-    protected static final String XML = "<" + LOCAL_NAME + " xmlns=\"" + NAMESPACE_URI + "\"/>";
-
-    protected AbstractPayloadMethodProcessor processor;
+    private AbstractPayloadMethodProcessor processor;
 
     private MethodParameter[] supportedParameters;
 
@@ -151,37 +132,6 @@ public abstract class AbstractPayloadMethodProcessorTest extends TransformerObje
     }
 
     protected abstract Object getReturnValue(MethodParameter returnType) throws Exception;
-
-    protected MessageContext createSaajMessageContext() throws javax.xml.soap.SOAPException {
-        javax.xml.soap.MessageFactory saajFactory = javax.xml.soap.MessageFactory.newInstance();
-        javax.xml.soap.SOAPMessage saajMessage = saajFactory.createMessage();
-        saajMessage.getSOAPBody().addChildElement(LOCAL_NAME, "", NAMESPACE_URI);
-        return new DefaultMessageContext(new SaajSoapMessage(saajMessage), new SaajSoapMessageFactory(saajFactory));
-    }
-
-    protected MessageContext createMockMessageContext() throws TransformerException {
-        MockWebServiceMessage request = new MockWebServiceMessage(new StringSource(XML));
-        return new DefaultMessageContext(request, new MockWebServiceMessageFactory());
-    }
-
-    protected MessageContext createCachingAxiomMessageContext() throws Exception {
-        SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
-        AxiomSoapMessage request = new AxiomSoapMessage(axiomFactory, true, false);
-        transform(new StringSource(XML), request.getPayloadResult());
-        AxiomSoapMessageFactory soapMessageFactory = new AxiomSoapMessageFactory();
-        soapMessageFactory.afterPropertiesSet();
-        return new DefaultMessageContext(request, soapMessageFactory);
-    }
-
-    protected MessageContext createNonCachingAxiomMessageContext() throws Exception {
-        SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
-        AxiomSoapMessage request = new AxiomSoapMessage(axiomFactory, false, false);
-        transform(new StringSource(XML), request.getPayloadResult());
-        AxiomSoapMessageFactory soapMessageFactory = new AxiomSoapMessageFactory();
-        soapMessageFactory.setPayloadCaching(false);
-        soapMessageFactory.afterPropertiesSet();
-        return new DefaultMessageContext(request, soapMessageFactory);
-    }
 
     public String unsupported(String s) {
         return s;
