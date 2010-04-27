@@ -33,7 +33,7 @@ import org.w3c.dom.Node;
  * @author Arjen Poutsma
  * @since 2.0
  */
-public class DomMethodArgumentProcessor extends AbstractPayloadMethodProcessor {
+public class DomPayloadMethodProcessor extends AbstractPayloadMethodProcessor {
 
     // MethodArgumentResolver
 

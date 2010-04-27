@@ -31,11 +31,11 @@ import org.w3c.dom.Node;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class DomMethodArgumentProcessorTest extends AbstractPayloadMethodProcessorTest {
+public class DomPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTest {
 
     @Override
     protected AbstractPayloadMethodProcessor createProcessor() {
-        return new DomMethodArgumentProcessor();
+        return new DomPayloadMethodProcessor();
     }
 
     @Override
