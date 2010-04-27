@@ -32,13 +32,14 @@ import org.springframework.xml.transform.TransformerObjectSupport;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.soap.SOAPFactory;
 
-public abstract class AbstractPayloadMethodArgumentResolverTest extends TransformerObjectSupport {
+/** @author Arjen Poutsma */
+public class AbstractMethodArgumentResolverTest extends TransformerObjectSupport {
 
     protected static final String NAMESPACE_URI = "http://springframework.org/ws";
 
     protected static final String LOCAL_NAME = "request";
 
-    private static final String REQUEST = "<" + LOCAL_NAME + " xmlns=\"" + NAMESPACE_URI + "\"/>";
+    protected static final String XML = "<" + LOCAL_NAME + " xmlns=\"" + NAMESPACE_URI + "\"/>";
 
     protected MessageContext createSaajMessageContext() throws javax.xml.soap.SOAPException {
         javax.xml.soap.MessageFactory saajFactory = javax.xml.soap.MessageFactory.newInstance();
@@ -48,15 +49,14 @@ public abstract class AbstractPayloadMethodArgumentResolverTest extends Transfor
     }
 
     protected MessageContext createMockMessageContext() throws TransformerException {
-        MockWebServiceMessage request =
-            new MockWebServiceMessage(new StringSource(REQUEST));
+        MockWebServiceMessage request = new MockWebServiceMessage(new StringSource(XML));
         return new DefaultMessageContext(request, new MockWebServiceMessageFactory());
     }
 
     protected MessageContext createCachingAxiomMessageContext() throws Exception {
         SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
         AxiomSoapMessage request = new AxiomSoapMessage(axiomFactory, true, false);
-        transform(new StringSource(REQUEST), request.getPayloadResult());
+        transform(new StringSource(XML), request.getPayloadResult());
         AxiomSoapMessageFactory soapMessageFactory = new AxiomSoapMessageFactory();
         soapMessageFactory.afterPropertiesSet();
         return new DefaultMessageContext(request, soapMessageFactory);
@@ -65,11 +65,10 @@ public abstract class AbstractPayloadMethodArgumentResolverTest extends Transfor
     protected MessageContext createNonCachingAxiomMessageContext() throws Exception {
         SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
         AxiomSoapMessage request = new AxiomSoapMessage(axiomFactory, false, false);
-        transform(new StringSource(REQUEST), request.getPayloadResult());
+        transform(new StringSource(XML), request.getPayloadResult());
         AxiomSoapMessageFactory soapMessageFactory = new AxiomSoapMessageFactory();
         soapMessageFactory.setPayloadCaching(false);
         soapMessageFactory.afterPropertiesSet();
         return new DefaultMessageContext(request, soapMessageFactory);
     }
-
 }
