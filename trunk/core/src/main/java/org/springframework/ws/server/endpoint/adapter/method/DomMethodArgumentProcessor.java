@@ -43,7 +43,7 @@ public class DomMethodArgumentProcessor extends AbstractPayloadMethodProcessor {
     }
 
     @Override
-    protected Object resolveRequestPayloadArgument(Source requestPayload, MethodParameter parameter) throws Exception {
+    protected Node resolveRequestPayloadArgument(Source requestPayload, MethodParameter parameter) throws Exception {
         if (requestPayload instanceof DOMSource) {
             return resolveArgumentDomSource(parameter, (DOMSource) requestPayload);
         }
@@ -77,7 +77,7 @@ public class DomMethodArgumentProcessor extends AbstractPayloadMethodProcessor {
     }
 
     @Override
-    protected Source createResponsePayload(MethodParameter returnType, Object returnValue) {
+    protected DOMSource createResponsePayload(MethodParameter returnType, Object returnValue) {
         Node returnedNode = (Node) returnValue;
         return new DOMSource(returnedNode);
     }
