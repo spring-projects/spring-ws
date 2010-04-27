@@ -35,14 +35,14 @@ public interface MethodArgumentResolver {
      * @param parameter the method parameter to check
      * @return {@code true} if this resolver supports the supplied parameter; {@code false} otherwise
      */
-    boolean supportsMethodParameter(MethodParameter parameter);
+    boolean supportsParameter(MethodParameter parameter);
 
     /**
      * Resolves the given parameter into a method argument.
      *
      * @param messageContext the current message context
      * @param parameter      the parameter to resolve to an argument. This parameter must have previously been passed to
-     *                       the {@link #supportsMethodParameter(MethodParameter)} method of this interface, which must
+     *                       the {@link #supportsParameter(MethodParameter)} method of this interface, which must
      *                       have returned {@code true}.
      * @return the resolved argument. May be {@code null}.
      * @throws Exception in case of errors

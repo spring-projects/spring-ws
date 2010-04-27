@@ -19,6 +19,7 @@ package org.springframework.ws.server.endpoint.adapter.method;
 import javax.xml.transform.Source;
 
 import org.springframework.core.MethodParameter;
+import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
@@ -43,7 +44,8 @@ public abstract class AbstractPayloadMethodProcessor extends TransformerObjectSu
      * This implementation gets checks if the given parameter is annotated with {@link RequestPayload}, and invokes
      * {@link #supportsRequestPayloadParameter(MethodParameter)} afterwards.
      */
-    public final boolean supportsMethodParameter(MethodParameter parameter) {
+    public final boolean supportsParameter(MethodParameter parameter) {
+        Assert.isTrue(parameter.getParameterIndex() >= 0, "Parameter index larger smaller than 0");
         if (parameter.getParameterAnnotation(RequestPayload.class) == null) {
             return false;
         }
@@ -92,6 +94,7 @@ public abstract class AbstractPayloadMethodProcessor extends TransformerObjectSu
      * and invokes {@link #supportsResponsePayloadReturnType(MethodParameter)} afterwards.
      */
     public final boolean supportsReturnType(MethodParameter returnType) {
+        Assert.isTrue(returnType.getParameterIndex() == -1, "Parameter index is not -1");
         if (returnType.getMethodAnnotation(ResponsePayload.class) == null) {
             return false;
         }
