@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
 
 package org.springframework.ws.server.endpoint.adapter;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointAdapter;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
@@ -31,9 +29,6 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * @since 1.0.0
  */
 public abstract class AbstractMethodEndpointAdapter extends TransformerObjectSupport implements EndpointAdapter {
-
-    /** Logger available to subclasses. */
-    protected final Log logger = LogFactory.getLog(getClass());
 
     /**
      * Delegates to {@link #supportsInternal(org.springframework.ws.server.endpoint.MethodEndpoint)}.
