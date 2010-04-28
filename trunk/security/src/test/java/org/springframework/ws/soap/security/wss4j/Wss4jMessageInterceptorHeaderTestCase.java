@@ -16,22 +16,21 @@
 
 package org.springframework.ws.soap.security.wss4j;
 
+import static org.junit.Assert.*;
+
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
 import java.util.Properties;
+
 import javax.xml.namespace.QName;
 
+import org.junit.Test;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.WsSecurityValidationException;
 import org.springframework.ws.soap.security.wss4j.callback.SimplePasswordValidationCallbackHandler;
-
-import org.junit.Test;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCase {
 
@@ -50,7 +49,7 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
         interceptor.setValidationCallbackHandler(callbackHandler);
         interceptor.afterPropertiesSet();
     }
-
+    
     @Test
     public void testValidateUsernameTokenPlainText() throws Exception {
         SoapMessage message = loadSoap11Message("usernameTokenPlainTextWithHeaders-soap.xml");
@@ -76,17 +75,20 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
 
     }
 
-    @Test
+    @Test(expected=WsSecurityValidationException.class)
     public void testEmptySecurityHeader() throws Exception {
         SoapMessage message = loadSoap11Message("emptySecurityHeader-soap.xml");
         MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
-        try {
-            interceptor.validateMessage(message, messageContext);
-            fail("validation must fail for an empty security header.");
-        }
-        catch (WsSecurityValidationException e) {
-            // expected
-        }
+        interceptor.validateMessage(message, messageContext);
+    }
+    
+    @Test
+    public void testSkipValidationOnEmptyHeader() throws Exception {
+        SoapMessage message = loadSoap11Message("noSecurityHeader-soap.xml");
+        MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
+        interceptor.setSkipValidationIfNoHeaderPresent(true);
+        boolean result = interceptor.handleRequest(messageContext, null);
+        assertTrue("handeRequest result must be true", result);
     }
 
     @Test
