@@ -20,24 +20,21 @@ import org.springframework.core.MethodParameter;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
+import org.jdom.Element;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class Dom4jPayloadMethodArgumentResolverTest extends AbstractPayloadMethodProcessorTest {
+public class JDomPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTest {
 
-   @Override
+    @Override
     protected AbstractPayloadMethodProcessor createProcessor() {
-        return new Dom4jPayloadMethodProcessor();
+        return new JDomPayloadMethodProcessor();
     }
 
     @Override
     protected MethodParameter[] createSupportedParameters() throws NoSuchMethodException {
-        return new MethodParameter[]{
-                new MethodParameter(getClass().getMethod("element", Element.class), 0)};
+        return new MethodParameter[]{new MethodParameter(getClass().getMethod("element", Element.class), 0)};
     }
 
     @Override
@@ -47,21 +44,19 @@ public class Dom4jPayloadMethodArgumentResolverTest extends AbstractPayloadMetho
 
     @Override
     protected void testArgument(Object argument, MethodParameter parameter) {
-        assertTrue("argument not a node", argument instanceof Element);
-        Element element = (Element) argument;
-        assertEquals("Invalid namespace", NAMESPACE_URI, element.getNamespaceURI());
-        assertEquals("Invalid local name", LOCAL_NAME, element.getName());
+        assertTrue("argument not a element", argument instanceof Element);
+        Element node = (Element) argument;
+        assertEquals("Invalid namespace", NAMESPACE_URI, node.getNamespaceURI());
+        assertEquals("Invalid local name", LOCAL_NAME, node.getName());
     }
 
     @Override
     protected Element getReturnValue(MethodParameter returnType) {
-        Document document = DocumentHelper.createDocument();
-        return document.addElement(LOCAL_NAME, NAMESPACE_URI);
+        return new Element(LOCAL_NAME, NAMESPACE_URI);
     }
 
     @ResponsePayload
     public Element element(@RequestPayload Element element) {
         return element;
     }
-
 }
