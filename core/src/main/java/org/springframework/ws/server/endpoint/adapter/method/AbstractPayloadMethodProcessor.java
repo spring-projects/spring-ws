@@ -135,7 +135,7 @@ public abstract class AbstractPayloadMethodProcessor extends TransformerObjectSu
      * @return the response payload
      * @throws Exception in case of errors
      */
-    protected abstract Source createResponsePayload(MethodParameter returnType, Object returnValue);
+    protected abstract Source createResponsePayload(MethodParameter returnType, Object returnValue) throws Exception;
 
     /**
      * Converts the given source to a byte array input stream.

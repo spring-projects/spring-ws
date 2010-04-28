@@ -16,12 +16,16 @@
 
 package org.springframework.ws.server.endpoint.adapter.method;
 
+import javax.xml.transform.Source;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.xml.transform.StringResult;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -128,6 +132,10 @@ public abstract class AbstractPayloadMethodProcessorTest extends AbstractMethodA
             Object returnValue = getReturnValue(supportedReturnType);
             processor.handleReturnValue(messageContext, supportedReturnType, returnValue);
             assertTrue("No response created", messageContext.hasResponse());
+            Source responsePayload = messageContext.getResponse().getPayloadSource();
+            StringResult result = new StringResult();
+            transform(responsePayload, result);
+            assertXMLEqual(XML, result.toString());
         }
     }
 
