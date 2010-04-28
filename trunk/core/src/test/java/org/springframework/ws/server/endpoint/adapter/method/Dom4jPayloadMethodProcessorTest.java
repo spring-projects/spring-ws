@@ -16,25 +16,22 @@
 
 package org.springframework.ws.server.endpoint.adapter.method;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class DomPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTest {
+public class Dom4jPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTest {
 
-    @Override
+   @Override
     protected AbstractPayloadMethodProcessor createProcessor() {
-        return new DomPayloadMethodProcessor();
+        return new Dom4jPayloadMethodProcessor();
     }
 
     @Override
@@ -53,15 +50,13 @@ public class DomPayloadMethodProcessorTest extends AbstractPayloadMethodProcesso
         assertTrue("argument not a element", argument instanceof Element);
         Element element = (Element) argument;
         assertEquals("Invalid namespace", NAMESPACE_URI, element.getNamespaceURI());
-        assertEquals("Invalid local name", LOCAL_NAME, element.getLocalName());
+        assertEquals("Invalid local name", LOCAL_NAME, element.getName());
     }
 
     @Override
-    protected Element getReturnValue(MethodParameter returnType) throws ParserConfigurationException {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.newDocument();
-        return document.createElementNS(NAMESPACE_URI, LOCAL_NAME);
+    protected Element getReturnValue(MethodParameter returnType) {
+        Document document = DocumentHelper.createDocument();
+        return document.addElement(LOCAL_NAME, NAMESPACE_URI);
     }
 
     @ResponsePayload

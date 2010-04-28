@@ -78,8 +78,8 @@ public class DomPayloadMethodProcessor extends AbstractPayloadMethodProcessor {
 
     @Override
     protected DOMSource createResponsePayload(MethodParameter returnType, Object returnValue) {
-        Element returnedNode = (Element) returnValue;
-        return new DOMSource(returnedNode);
+        Element returnedElement = (Element) returnValue;
+        return new DOMSource(returnedElement);
     }
 
     private boolean supports(MethodParameter parameter) {
