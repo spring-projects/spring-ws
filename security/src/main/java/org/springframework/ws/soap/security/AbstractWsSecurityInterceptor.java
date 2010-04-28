@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap.security;
 
+import java.util.Iterator;
 import java.util.Locale;
 import javax.xml.namespace.QName;
 
@@ -29,6 +30,7 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointExceptionResolver;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapFault;
+import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.server.SoapEndpointInterceptor;
@@ -61,6 +63,8 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
     private boolean secureRequest = true;
 
     private boolean validateResponse = true;
+    
+    private boolean skipValidationIfNoHeaderPresent = false;
 
     private EndpointExceptionResolver exceptionResolver;
 
@@ -89,11 +93,17 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
         this.exceptionResolver = exceptionResolver;
     }
 
+    /** Allows skipping validation if no security header is present. */
+    public void setSkipValidationIfNoHeaderPresent(
+			boolean skipValidationIfNoHeaderPresent) {
+		this.skipValidationIfNoHeaderPresent = skipValidationIfNoHeaderPresent;
+	}
+
     /*
      * Server-side
      */
 
-    /**
+	/**
      * Validates a server-side incoming request. Delegates to {@link #validateMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)}
      * if the {@link #setValidateRequest(boolean) validateRequest} property is <code>true</code>.
      *
@@ -106,6 +116,9 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
     public final boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
         if (validateRequest) {
             Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
+            if(skipValidationIfNoHeaderPresent && !isSecurityHeaderPresent((SoapMessage) messageContext.getRequest())){
+            	return true;
+            }
             try {
                 validateMessage((SoapMessage) messageContext.getRequest(), messageContext);
                 return true;
@@ -122,7 +135,7 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
         }
     }
 
-    /**
+	/**
      * Secures a server-side outgoing response. Delegates to {@link #secureMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)}
      * if the {@link #setSecureResponse(boolean) secureResponse} property is <code>true</code>.
      *
@@ -213,6 +226,9 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
         if (validateResponse) {
             Assert.isTrue(messageContext.hasResponse(), "MessageContext contains no response");
             Assert.isInstanceOf(SoapMessage.class, messageContext.getResponse());
+            if(skipValidationIfNoHeaderPresent && !isSecurityHeaderPresent((SoapMessage) messageContext.getRequest())){
+            	return true;
+            }
             try {
                 validateMessage((SoapMessage) messageContext.getResponse(), messageContext);
                 return true;
@@ -320,4 +336,22 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
             throws WsSecuritySecurementException;
 
     protected abstract void cleanUp();
+
+    /**
+     * Iterates over header elements and returns true if WS-Security header is found. 
+     */
+    private boolean isSecurityHeaderPresent(SoapMessage message) {
+    	SoapHeader soapHeader = message.getSoapHeader();
+    	if(soapHeader == null){
+    		return false;
+    	}
+		Iterator<SoapHeaderElement> elements = soapHeader.examineAllHeaderElements();
+    	while(elements.hasNext()){
+    		SoapHeaderElement e = elements.next();
+    		if(e.getName().equals(WS_SECURITY_NAME)){
+    			return true;
+    		}
+    	}
+    	return false;
+	}
 }
