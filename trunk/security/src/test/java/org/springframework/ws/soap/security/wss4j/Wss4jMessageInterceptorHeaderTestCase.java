@@ -83,15 +83,6 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
     }
     
     @Test
-    public void testSkipValidationOnEmptyHeader() throws Exception {
-        SoapMessage message = loadSoap11Message("noSecurityHeader-soap.xml");
-        MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
-        interceptor.setSkipValidationIfNoHeaderPresent(true);
-        boolean result = interceptor.handleRequest(messageContext, null);
-        assertTrue("handeRequest result must be true", result);
-    }
-
-    @Test
     public void testPreserveCustomHeaders() throws Exception {
         interceptor.setSecurementActions("UsernameToken");
         interceptor.setSecurementUsername("Bert");
