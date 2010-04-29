@@ -24,7 +24,7 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.soap.server.SoapMessageDispatcher;
 
 /**
- * Adapter that supports endpoint methods that use marshalling. Supports methods with the following signature:
+ * Adapter that supports endpoint methods with message contexts. Supports methods with the following signature:
  * <pre>
  * void handleMyMessage(MessageContext request);
  * </pre>
@@ -36,7 +36,6 @@ import org.springframework.ws.soap.server.SoapMessageDispatcher;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
-
 public class MessageMethodEndpointAdapter extends AbstractMethodEndpointAdapter {
 
     @Override
