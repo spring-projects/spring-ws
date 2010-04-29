@@ -91,7 +91,7 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter 
             boolean supported = false;
             for (MethodArgumentResolver methodArgumentResolver : methodArgumentResolvers) {
                 if (logger.isTraceEnabled()) {
-                    logger.trace("Testing if endpoint adapter [" + methodArgumentResolver + "] supports [" +
+                    logger.trace("Testing if argument resolver [" + methodArgumentResolver + "] supports [" +
                             methodParameter.getGenericParameterType() + "]");
                 }
                 if (methodArgumentResolver.supportsParameter(methodParameter)) {
