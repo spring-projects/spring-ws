@@ -111,9 +111,16 @@ public class DefaultStrategiesHelper {
             if (value != null) {
                 String[] classNames = StringUtils.commaDelimitedListToStringArray(value);
                 result = new ArrayList<T>(classNames.length);
+                ClassLoader classLoader = null;
+                if (applicationContext != null) {
+                    classLoader = applicationContext.getClassLoader();
+                }
+                if (classLoader == null) {
+                    classLoader = DefaultStrategiesHelper.class.getClassLoader();
+                }
                 for (String className : classNames) {
-                    Class<T> clazz =
-                            (Class<T>) ClassUtils.forName(className, DefaultStrategiesHelper.class.getClassLoader());
+                    Class<T> clazz = (Class<T>) ClassUtils.forName(className, classLoader);
+                    Assert.isTrue(strategyInterface.isAssignableFrom(clazz), clazz.getName() + " is not a " + strategyInterface.getName());
                     T strategy = instantiateBean(clazz, applicationContext);
                     result.add(strategy);
                 }
@@ -130,7 +137,7 @@ public class DefaultStrategiesHelper {
         }
     }
 
-    /** Instantiates the given bean, simulating the standard bean lifecycle. */
+    /** Instantiates the given bean, simulating the standard bean life cycle. */
     private <T> T instantiateBean(Class<T> clazz, ApplicationContext applicationContext) {
         T strategy = BeanUtils.instantiateClass(clazz);
         if (strategy instanceof BeanNameAware) {
