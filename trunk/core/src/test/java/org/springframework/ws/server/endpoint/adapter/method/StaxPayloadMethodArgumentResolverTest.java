@@ -30,8 +30,7 @@ import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /** @author Arjen Poutsma */
 @SuppressWarnings("Since15")
@@ -43,11 +42,21 @@ public class StaxPayloadMethodArgumentResolverTest extends AbstractMethodArgumen
 
     private MethodParameter eventParameter;
 
+    private MethodParameter invalidParameter;
+
     @Before
     public void setUp() throws Exception {
         resolver = new StaxPayloadMethodArgumentResolver();
         streamParameter = new MethodParameter(getClass().getMethod("streamReader", XMLStreamReader.class), 0);
         eventParameter = new MethodParameter(getClass().getMethod("eventReader", XMLEventReader.class), 0);
+        invalidParameter = new MethodParameter(getClass().getMethod("invalid", XMLStreamReader.class), 0);
+    }
+
+    @Test
+    public void supportsParameter() {
+        assertTrue("resolver does not support XMLStreamReader", resolver.supportsParameter(streamParameter));
+        assertTrue("resolver does not support XMLEventReader", resolver.supportsParameter(eventParameter));
+        assertFalse("resolver supports invalid parameter", resolver.supportsParameter(invalidParameter));
     }
 
     @Test
