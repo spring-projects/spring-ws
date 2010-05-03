@@ -35,7 +35,7 @@ import org.w3c.dom.Node;
  * @author Arjen Poutsma
  * @since 2.0
  */
-public class JDomPayloadMethodProcessor extends AbstractPayloadMethodProcessor {
+public class JDomPayloadMethodProcessor extends AbstractPayloadSourceMethodProcessor {
 
     @Override
     protected boolean supportsRequestPayloadParameter(MethodParameter parameter) {

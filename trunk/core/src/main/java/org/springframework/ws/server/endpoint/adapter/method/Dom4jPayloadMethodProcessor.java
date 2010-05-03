@@ -35,7 +35,7 @@ import org.dom4j.io.DocumentSource;
  * @author Arjen Poutsma
  * @since 2.0
  */
-public class Dom4jPayloadMethodProcessor extends AbstractPayloadMethodProcessor {
+public class Dom4jPayloadMethodProcessor extends AbstractPayloadSourceMethodProcessor {
 
     @Override
     protected boolean supportsRequestPayloadParameter(MethodParameter parameter) {

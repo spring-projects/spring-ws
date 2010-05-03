@@ -28,7 +28,7 @@ import static org.junit.Assert.assertTrue;
 public class XomPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTest {
 
     @Override
-    protected AbstractPayloadMethodProcessor createProcessor() {
+    protected AbstractPayloadSourceMethodProcessor createProcessor() {
         return new XomPayloadMethodProcessor();
     }
 

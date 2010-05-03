@@ -30,7 +30,7 @@ import static org.junit.Assert.assertTrue;
 public class Dom4jPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTest {
 
    @Override
-    protected AbstractPayloadMethodProcessor createProcessor() {
+    protected AbstractPayloadSourceMethodProcessor createProcessor() {
         return new Dom4jPayloadMethodProcessor();
     }
 
