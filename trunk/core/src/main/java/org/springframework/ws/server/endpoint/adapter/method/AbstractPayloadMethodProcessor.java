@@ -69,7 +69,7 @@ public abstract class AbstractPayloadMethodProcessor extends TransformerObjectSu
 
     public final Object resolveArgument(MessageContext messageContext, MethodParameter parameter) throws Exception {
         Source requestPayload = getRequestPayload(messageContext);
-        return requestPayload != null ? resolveRequestPayloadArgument(requestPayload, parameter) : null;
+        return requestPayload != null ? resolveRequestPayloadArgument(parameter, requestPayload) : null;
     }
 
     /** Returns the request payload as {@code Source}. */
@@ -81,12 +81,12 @@ public abstract class AbstractPayloadMethodProcessor extends TransformerObjectSu
     /**
      * Resolves the given parameter, annotated with {@link RequestPayload}, into a method argument.
      *
-     * @param requestPayload the request payload
      * @param parameter      the parameter to resolve to an argument
+     * @param requestPayload the request payload
      * @return the resolved argument. May be {@code null}.
      * @throws Exception in case of errors
      */
-    protected abstract Object resolveRequestPayloadArgument(Source requestPayload, MethodParameter parameter)
+    protected abstract Object resolveRequestPayloadArgument(MethodParameter parameter, Source requestPayload)
             throws Exception;
 
     // MethodReturnValueHandler

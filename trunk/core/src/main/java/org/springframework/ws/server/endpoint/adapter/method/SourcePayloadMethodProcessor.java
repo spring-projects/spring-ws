@@ -46,7 +46,7 @@ public class SourcePayloadMethodProcessor extends AbstractPayloadMethodProcessor
     }
 
     @Override
-    protected Object resolveRequestPayloadArgument(Source requestPayload, MethodParameter parameter) throws Exception {
+    protected Object resolveRequestPayloadArgument(MethodParameter parameter, Source requestPayload) throws Exception {
         Class<?> parameterType = parameter.getParameterType();
         if (parameterType.isAssignableFrom(requestPayload.getClass())) {
             return requestPayload;
