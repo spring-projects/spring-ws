@@ -36,7 +36,7 @@ import org.xml.sax.InputSource;
  * @author Arjen Poutsma
  * @since 2.0
  */
-public class SourcePayloadMethodProcessor extends AbstractPayloadMethodProcessor {
+public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodProcessor {
 
     // MethodArgumentResolver
 

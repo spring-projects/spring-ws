@@ -41,7 +41,7 @@ import org.w3c.dom.DOMImplementation;
  * @author Arjen Poutsma
  * @since 2.0
  */
-public class XomPayloadMethodProcessor extends AbstractPayloadMethodProcessor {
+public class XomPayloadMethodProcessor extends AbstractPayloadSourceMethodProcessor {
 
     private DocumentBuilderFactory documentBuilderFactory = createDocumentBuilderFactory();
 

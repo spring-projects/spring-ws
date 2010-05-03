@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractPayloadMethodProcessorTest extends AbstractMethodArgumentResolverTest {
 
-    private AbstractPayloadMethodProcessor processor;
+    private AbstractPayloadSourceMethodProcessor processor;
 
     private MethodParameter[] supportedParameters;
 
@@ -44,7 +44,7 @@ public abstract class AbstractPayloadMethodProcessorTest extends AbstractMethodA
         supportedReturnTypes = createSupportedReturnTypes();
     }
 
-    protected abstract AbstractPayloadMethodProcessor createProcessor();
+    protected abstract AbstractPayloadSourceMethodProcessor createProcessor();
 
     protected abstract MethodParameter[] createSupportedParameters() throws NoSuchMethodException;
 
