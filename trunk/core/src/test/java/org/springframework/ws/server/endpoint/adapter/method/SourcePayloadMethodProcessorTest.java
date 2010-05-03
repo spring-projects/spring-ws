@@ -27,7 +27,7 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import org.springframework.xml.transform.StringSource;
 
 /** @author Arjen Poutsma */
-public class SourcePayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTest {
+public class SourcePayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTestCase {
 
     @Override
     protected AbstractPayloadSourceMethodProcessor createProcessor() {

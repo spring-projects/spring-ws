@@ -27,7 +27,7 @@ import org.dom4j.Element;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class Dom4jPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTest {
+public class Dom4jPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTestCase {
 
    @Override
     protected AbstractPayloadSourceMethodProcessor createProcessor() {

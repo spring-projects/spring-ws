@@ -25,7 +25,7 @@ import nu.xom.Element;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class XomPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTest {
+public class XomPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTestCase {
 
     @Override
     protected AbstractPayloadSourceMethodProcessor createProcessor() {

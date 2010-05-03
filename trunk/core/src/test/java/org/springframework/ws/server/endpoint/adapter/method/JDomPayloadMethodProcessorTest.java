@@ -25,7 +25,7 @@ import org.jdom.Element;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class JDomPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTest {
+public class JDomPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTestCase {
 
     @Override
     protected AbstractPayloadSourceMethodProcessor createProcessor() {
