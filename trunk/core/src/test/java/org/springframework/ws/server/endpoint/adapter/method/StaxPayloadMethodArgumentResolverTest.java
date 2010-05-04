@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
 
 /** @author Arjen Poutsma */
 @SuppressWarnings("Since15")
-public class StaxPayloadMethodArgumentResolverTest extends AbstractMethodArgumentResolverTest {
+public class StaxPayloadMethodArgumentResolverTest extends AbstractMethodArgumentResolverTestCase {
 
     private StaxPayloadMethodArgumentResolver resolver;
 

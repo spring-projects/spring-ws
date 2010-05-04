@@ -29,7 +29,7 @@ import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public abstract class AbstractPayloadMethodProcessorTestCase extends AbstractMethodArgumentResolverTest {
+public abstract class AbstractPayloadMethodProcessorTestCase extends AbstractMethodArgumentResolverTestCase {
 
     private AbstractPayloadSourceMethodProcessor processor;
 

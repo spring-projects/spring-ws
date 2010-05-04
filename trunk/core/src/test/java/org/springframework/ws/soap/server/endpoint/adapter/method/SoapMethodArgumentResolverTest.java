@@ -18,7 +18,7 @@ package org.springframework.ws.soap.server.endpoint.adapter.method;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.server.endpoint.adapter.method.AbstractMethodArgumentResolverTest;
+import org.springframework.ws.server.endpoint.adapter.method.AbstractMethodArgumentResolverTestCase;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.SoapHeader;
@@ -31,7 +31,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /** @author Arjen Poutsma */
-public class SoapMethodArgumentResolverTest extends AbstractMethodArgumentResolverTest {
+public class SoapMethodArgumentResolverTest extends AbstractMethodArgumentResolverTestCase {
 
     private SoapMethodArgumentResolver resolver;
 
