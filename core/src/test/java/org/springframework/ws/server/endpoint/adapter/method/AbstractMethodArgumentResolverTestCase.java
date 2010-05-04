@@ -32,8 +32,7 @@ import org.springframework.xml.transform.TransformerObjectSupport;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.soap.SOAPFactory;
 
-/** @author Arjen Poutsma */
-public class AbstractMethodArgumentResolverTest extends TransformerObjectSupport {
+public class AbstractMethodArgumentResolverTestCase extends TransformerObjectSupport {
 
     protected static final String NAMESPACE_URI = "http://springframework.org/ws";
 
