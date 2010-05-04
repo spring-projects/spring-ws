@@ -90,11 +90,11 @@ public class MarshallingPayloadMethodProcessor extends AbstractPayloadMethodProc
 
     public Object resolveArgument(MessageContext messageContext, MethodParameter parameter) throws Exception {
         WebServiceMessage request = messageContext.getRequest();
-        Object requestObject = MarshallingUtils.unmarshal(getUnmarshaller(), request);
+        Object argument = MarshallingUtils.unmarshal(getUnmarshaller(), request);
         if (logger.isDebugEnabled()) {
-            logger.debug("Unmarshalled payload request to [" + requestObject + "]");
+            logger.debug("Unmarshalled payload request to [" + argument + "]");
         }
-        return requestObject;
+        return argument;
     }
 
     @Override
