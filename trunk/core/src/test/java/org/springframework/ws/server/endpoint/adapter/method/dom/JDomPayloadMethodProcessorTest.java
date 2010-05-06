@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.server.endpoint.adapter.method;
+package org.springframework.ws.server.endpoint.adapter.method.dom;
 
 import org.springframework.core.MethodParameter;
+import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadMethodProcessorTestCase;
+import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadSourceMethodProcessor;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 

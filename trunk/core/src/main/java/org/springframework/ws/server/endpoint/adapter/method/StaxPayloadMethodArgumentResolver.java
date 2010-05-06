@@ -155,14 +155,7 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
         return XMLInputFactory.newInstance();
     }
 
-    /**
-     * Converts the given source to a byte array input stream.
-     *
-     * @param source the source to convert
-     * @return the input stream
-     * @throws TransformerException in case of transformation errors
-     */
-    protected ByteArrayInputStream convertToByteArrayInputStream(Source source) throws TransformerException {
+    private ByteArrayInputStream convertToByteArrayInputStream(Source source) throws TransformerException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         transform(source, new StreamResult(bos));
         return new ByteArrayInputStream(bos.toByteArray());

@@ -14,28 +14,29 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.server.endpoint.adapter.method;
+package org.springframework.ws.server.endpoint.adapter.method.dom;
 
 import javax.xml.transform.Source;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
 
 import org.springframework.core.MethodParameter;
+import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadSourceMethodProcessor;
 
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.io.DOMReader;
-import org.dom4j.io.DocumentResult;
-import org.dom4j.io.DocumentSource;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.input.DOMBuilder;
+import org.jdom.transform.JDOMResult;
+import org.jdom.transform.JDOMSource;
+import org.w3c.dom.Node;
 
 /**
- * Implementation of {@link MethodArgumentResolver} and {@link MethodReturnValueHandler} that supports dom4j
+ * Implementation of {@link org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver} and {@link org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler} that supports JDOM
  * {@linkplain Element elements}.
  *
  * @author Arjen Poutsma
  * @since 2.0
  */
-public class Dom4jPayloadMethodProcessor extends AbstractPayloadSourceMethodProcessor {
+public class JDomPayloadMethodProcessor extends AbstractPayloadSourceMethodProcessor {
 
     @Override
     protected boolean supportsRequestPayloadParameter(MethodParameter parameter) {
@@ -43,20 +44,22 @@ public class Dom4jPayloadMethodProcessor extends AbstractPayloadSourceMethodProc
     }
 
     @Override
-    protected Object resolveRequestPayloadArgument(MethodParameter parameter, Source requestPayload)
-            throws TransformerException {
+    protected Element resolveRequestPayloadArgument(MethodParameter parameter, Source requestPayload) throws Exception {
         if (requestPayload instanceof DOMSource) {
-            org.w3c.dom.Node node = ((DOMSource) requestPayload).getNode();
-            if (node.getNodeType() == org.w3c.dom.Node.DOCUMENT_NODE) {
-                DOMReader domReader = new DOMReader();
-                Document document = domReader.read((org.w3c.dom.Document) node);
+            Node node = ((DOMSource) requestPayload).getNode();
+            DOMBuilder domBuilder = new DOMBuilder();
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                return domBuilder.build((org.w3c.dom.Element) node);
+            }
+            else if (node.getNodeType() == Node.DOCUMENT_NODE) {
+                Document document = domBuilder.build((org.w3c.dom.Document) node);
                 return document.getRootElement();
             }
         }
         // we have no other option than to transform
-        DocumentResult dom4jResult = new DocumentResult();
-        transform(requestPayload, dom4jResult);
-        return dom4jResult.getDocument().getRootElement();
+        JDOMResult jdomResult = new JDOMResult();
+        transform(requestPayload, jdomResult);
+        return jdomResult.getDocument().getRootElement();
     }
 
     @Override
@@ -67,7 +70,7 @@ public class Dom4jPayloadMethodProcessor extends AbstractPayloadSourceMethodProc
     @Override
     protected Source createResponsePayload(MethodParameter returnType, Object returnValue) {
         Element returnedElement = (Element) returnValue;
-        return new DocumentSource(returnedElement);
+        return new JDOMSource(returnedElement);
     }
 
     private boolean supports(MethodParameter parameter) {

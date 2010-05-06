@@ -7,6 +7,7 @@ Import-Template:
  javax.activation.*;version="[1.1.0, 2.0.0)",
  javax.servlet.*;version="[2.4.0, 3.0.0)",
  javax.wsdl.*;version="[1.6.1, 2.0.0)";resolution:=optional,
+ javax.xml.bind.*;version="0";resolution:=optional,
  javax.xml.namespace.*;version="0",
  javax.xml.parsers.*;version="0",
  javax.xml.transform.*;version="0",
