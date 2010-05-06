@@ -46,7 +46,9 @@ import org.springframework.xml.transform.TraxUtils;
  * @see XMLEventReader
  * @see XMLEventWriter
  * @since 1.0.0
+ * @deprecated as of Spring Web Services 2.0, in favor of annotated endpoints
  */
+@Deprecated
 @SuppressWarnings("Since15")
 public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPayloadEndpoint implements MessageEndpoint {
 
