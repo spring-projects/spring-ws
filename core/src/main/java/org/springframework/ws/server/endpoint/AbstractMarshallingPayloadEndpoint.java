@@ -18,9 +18,6 @@ package org.springframework.ws.server.endpoint;
 
 import java.io.IOException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
@@ -28,6 +25,9 @@ import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.support.MarshallingUtils;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Endpoint that unmarshals the request payload, and marshals the response object. This endpoint needs a
@@ -41,7 +41,9 @@ import org.springframework.ws.support.MarshallingUtils;
  * @see Unmarshaller
  * @see #invokeInternal(Object)
  * @since 1.0.0
+ * @deprecated as of Spring Web Services 2.0, in favor of annotated endpoints
  */
+@Deprecated
 public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpoint, InitializingBean {
 
     /** Logger available to subclasses. */
@@ -78,7 +80,7 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
         Assert.notNull(marshaller, "marshaller must not be null");
         if (!(marshaller instanceof Unmarshaller)) {
             throw new IllegalArgumentException("Marshaller [" + marshaller + "] does not implement the Unmarshaller " +
-                    "interface. Please set an Unmarshaller explicitely by using the " +
+                    "interface. Please set an Unmarshaller explicitly by using the " +
                     "AbstractMarshallingPayloadEndpoint(Marshaller, Unmarshaller) constructor.");
         }
         else {
@@ -189,7 +191,7 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
      * The default implementation does nothing.
      *
      * @deprecated as of Spring Web Services 1.5: {@link #afterPropertiesSet()} is no longer final, so this can safely
-     *             be overriden in subclasses
+     *             be overridden in subclasses
      */
     @Deprecated
     public void afterMarshallerSet() throws Exception {
@@ -198,10 +200,10 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
     /**
      * Template method that subclasses must implement to process a request.
      * <p/>
-     * The unmarshaled request object is passed as a parameter, and the returned object is marshalled to a response. If
+     * The unmarshalled request object is passed as a parameter, and the returned object is marshalled to a response. If
      * no response is required, return <code>null</code>.
      *
-     * @param requestObject the unnmarshalled message payload as an object
+     * @param requestObject the unmarshalled message payload as an object
      * @return the object to be marshalled as response, or <code>null</code> if a response is not required
      */
     protected abstract Object invokeInternal(Object requestObject) throws Exception;

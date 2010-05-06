@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,11 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
+import org.springframework.xml.transform.TransformerObjectSupport;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
-import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
  * Abstract base class for endpoints that handle the message payload as DOM elements.
@@ -43,7 +43,9 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * @author Alef Arendsen
  * @see #invokeInternal(org.w3c.dom.Element,org.w3c.dom.Document)
  * @since 1.0.0
+ * @deprecated as of Spring Web Services 2.0, in favor of annotated endpoints
  */
+@Deprecated
 public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSupport implements PayloadEndpoint {
 
     private DocumentBuilderFactory documentBuilderFactory;

@@ -60,7 +60,9 @@ import org.xml.sax.XMLReader;
  * @author Arjen Poutsma
  * @see Element
  * @since 1.0.0
+ * @deprecated as of Spring Web Services 2.0, in favor of annotated endpoints
  */
+@Deprecated
 @SuppressWarnings("Since15")
 public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSupport implements PayloadEndpoint {
 
