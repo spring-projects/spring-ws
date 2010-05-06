@@ -20,10 +20,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
@@ -38,7 +37,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.ws.soap.saaj.SaajSoapMessageException;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.xml.namespace.QNameUtils;
 
@@ -71,7 +69,7 @@ public abstract class SaajUtils {
     private static final String SAAJ_13_CLASS_NAME = "javax.xml.soap.SAAJMetaFactory";
 
     // Maps SOAPElement class names to Integer SAAJ versions (SAAJ_11, SAAJ_12, SAAJ_13)
-    private static final Map<String, Integer> saajVersions = Collections.synchronizedMap(new HashMap<String, Integer>());
+    private static final Map<String, Integer> saajVersions = new ConcurrentHashMap<String, Integer>();
 
     private static int saajVersion = SAAJ_12;
 
@@ -89,7 +87,7 @@ public abstract class SaajUtils {
 
     private static boolean isSaaj13() {
         try {
-            ClassUtils.forName(SAAJ_13_CLASS_NAME);
+            ClassUtils.forName(SAAJ_13_CLASS_NAME, SaajUtils.class.getClassLoader());
             MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
             return true;
         }
@@ -152,15 +150,9 @@ public abstract class SaajUtils {
      * @see #SAAJ_12
      * @see #SAAJ_13
      */
-    public static int getSaajVersion(SOAPMessage soapMessage) {
+    public static int getSaajVersion(SOAPMessage soapMessage) throws SOAPException {
         Assert.notNull(soapMessage, "'soapMessage' must not be null");
-        SOAPEnvelope soapEnvelope;
-        try {
-        	soapEnvelope = soapMessage.getSOAPPart().getEnvelope();
-        }
-        catch (SOAPException ex) {
-        	throw new SaajSoapMessageException("Could not access envelope: " + ex.getMessage(), ex);
-        }
+        SOAPEnvelope soapEnvelope = soapMessage.getSOAPPart().getEnvelope();
         return getSaajVersion(soapEnvelope);
     }
 

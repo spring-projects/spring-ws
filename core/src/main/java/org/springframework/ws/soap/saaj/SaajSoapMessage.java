@@ -170,8 +170,17 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         }
     }
 
+    private int getSaajVersion() {
+        try {
+            return SaajUtils.getSaajVersion(saajMessage);
+        }
+        catch (SOAPException ex) {
+            throw new SaajSoapEnvelopeException("Could not access envelope: " + ex.getMessage(), ex);
+        }
+    }
+
     public boolean isXopPackage() {
-        if (SaajUtils.getSaajVersion(saajMessage) >= SaajUtils.SAAJ_13) {
+        if (getSaajVersion() >= SaajUtils.SAAJ_13) {
             SOAPPart saajPart = saajMessage.getSOAPPart();
             String[] contentTypes = saajPart.getMimeHeader(TransportConstants.HEADER_CONTENT_TYPE);
             for (String contentType : contentTypes) {
@@ -184,7 +193,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
     }
 
     public boolean convertToXopPackage() {
-        if (SaajUtils.getSaajVersion(saajMessage) >= SaajUtils.SAAJ_13) {
+        if (getSaajVersion() >= SaajUtils.SAAJ_13) {
             convertMessageToXop();
             convertPartToXop();
             return true;
@@ -248,13 +257,14 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 
     protected final SaajImplementation getImplementation() {
         if (implementation == null) {
-            if (SaajUtils.getSaajVersion(saajMessage) == SaajUtils.SAAJ_13) {
+            int saajVersion = getSaajVersion();
+            if (saajVersion == SaajUtils.SAAJ_13) {
                 implementation = Saaj13Implementation.getInstance();
             }
-            else if (SaajUtils.getSaajVersion(saajMessage) == SaajUtils.SAAJ_12) {
+            else if (saajVersion == SaajUtils.SAAJ_12) {
                 implementation = Saaj12Implementation.getInstance();
             }
-            else if (SaajUtils.getSaajVersion(saajMessage) == SaajUtils.SAAJ_11) {
+            else if (saajVersion == SaajUtils.SAAJ_11) {
                 implementation = Saaj11Implementation.getInstance();
             }
             else {
