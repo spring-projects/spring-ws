@@ -16,7 +16,6 @@
 
 package org.springframework.xml.transform;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
@@ -44,7 +43,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 
@@ -232,8 +230,7 @@ public abstract class TraxUtils {
      * @param source   source to look at
      * @param callback the callback to invoke for each kind of source
      */
-    public static void doWithSource(Source source, SourceCallback callback)
-            throws XMLStreamException, IOException, SAXException {
+    public static void doWithSource(Source source, SourceCallback callback) throws Exception {
         if (source instanceof DOMSource) {
             callback.domSource(((DOMSource) source).getNode());
         }
@@ -281,8 +278,7 @@ public abstract class TraxUtils {
      * @param result   result to look at
      * @param callback the callback to invoke for each kind of result
      */
-    public static void doWithResult(Result result, ResultCallback callback)
-            throws XMLStreamException, IOException, SAXException {
+    public static void doWithResult(Result result, ResultCallback callback) throws Exception{
         if (result instanceof DOMResult) {
             callback.domResult(((DOMResult) result).getNode());
         }
@@ -335,7 +331,7 @@ public abstract class TraxUtils {
          *
          * @param node the node
          */
-        void domSource(Node node);
+        void domSource(Node node) throws Exception;
 
         /**
          * Perform an operation on the {@code XMLReader} and {@code InputSource} contained in a {@link SAXSource}.
@@ -343,7 +339,7 @@ public abstract class TraxUtils {
          * @param reader      the reader, can be {@code null}
          * @param inputSource the input source, can be {@code null}
          */
-        void saxSource(XMLReader reader, InputSource inputSource) throws IOException, SAXException;
+        void saxSource(XMLReader reader, InputSource inputSource) throws Exception;
 
         /**
          * Perform an operation on the {@code XMLEventReader} contained in a JAXP 1.4 {@link StAXSource} or Spring
@@ -351,7 +347,7 @@ public abstract class TraxUtils {
          *
          * @param eventReader the reader
          */
-        void staxSource(XMLEventReader eventReader) throws XMLStreamException;
+        void staxSource(XMLEventReader eventReader) throws Exception;
 
         /**
          * Perform an operation on the {@code XMLStreamReader} contained in a JAXP 1.4 {@link StAXSource} or Spring
@@ -359,21 +355,21 @@ public abstract class TraxUtils {
          *
          * @param streamReader the reader
          */
-        void staxSource(XMLStreamReader streamReader) throws XMLStreamException;
+        void staxSource(XMLStreamReader streamReader) throws Exception;
 
         /**
          * Perform an operation on the {@code InputStream} contained in a {@link StreamSource}.
          *
          * @param inputStream the input stream
          */
-        void streamSource(InputStream inputStream) throws IOException;
+        void streamSource(InputStream inputStream) throws Exception;
 
         /**
          * Perform an operation on the {@code Reader} contained in a {@link StreamSource}.
          *
          * @param reader the reader
          */
-        void streamSource(Reader reader) throws IOException;
+        void streamSource(Reader reader) throws Exception;
     }
 
     /**
@@ -388,7 +384,7 @@ public abstract class TraxUtils {
          *
          * @param node the node
          */
-        void domResult(Node node);
+        void domResult(Node node) throws Exception;
 
         /**
          * Perform an operation on the {@code ContentHandler} and {@code LexicalHandler} contained in a {@link
@@ -397,7 +393,7 @@ public abstract class TraxUtils {
          * @param contentHandler the content handler
          * @param lexicalHandler the lexicalHandler, can be {@code null}
          */
-        void saxResult(ContentHandler contentHandler, LexicalHandler lexicalHandler) throws IOException, SAXException;
+        void saxResult(ContentHandler contentHandler, LexicalHandler lexicalHandler) throws Exception;
 
         /**
          * Perform an operation on the {@code XMLEventWriter} contained in a JAXP 1.4 {@link StAXResult} or Spring
@@ -405,7 +401,7 @@ public abstract class TraxUtils {
          *
          * @param eventWriter the writer
          */
-        void staxResult(XMLEventWriter eventWriter) throws XMLStreamException;
+        void staxResult(XMLEventWriter eventWriter) throws Exception;
 
         /**
          * Perform an operation on the {@code XMLStreamWriter} contained in a JAXP 1.4 {@link StAXResult} or Spring
@@ -413,21 +409,21 @@ public abstract class TraxUtils {
          *
          * @param streamWriter the writer
          */
-        void staxResult(XMLStreamWriter streamWriter) throws XMLStreamException;
+        void staxResult(XMLStreamWriter streamWriter) throws Exception;
 
         /**
          * Perform an operation on the {@code OutputStream} contained in a {@link StreamResult}.
          *
          * @param outputStream the output stream
          */
-        void streamResult(OutputStream outputStream) throws IOException;
+        void streamResult(OutputStream outputStream) throws Exception;
 
         /**
          * Perform an operation on the {@code Writer} contained in a {@link StreamResult}.
          *
          * @param writer the writer
          */
-        void streamResult(Writer writer) throws IOException;
+        void streamResult(Writer writer) throws Exception;
     }
 
     /** Inner class to avoid a static JAXP 1.4 dependency. */

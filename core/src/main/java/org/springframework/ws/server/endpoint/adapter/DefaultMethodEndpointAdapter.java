@@ -16,19 +16,29 @@
 
 package org.springframework.ws.server.endpoint.adapter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.BeanClassLoaderAware;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.MethodParameter;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
+import org.springframework.ws.server.endpoint.adapter.method.MessageContextMethodArgumentResolver;
 import org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver;
 import org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler;
-import org.springframework.ws.support.DefaultStrategiesHelper;
+import org.springframework.ws.server.endpoint.adapter.method.SourcePayloadMethodProcessor;
+import org.springframework.ws.server.endpoint.adapter.method.StaxPayloadMethodArgumentResolver;
+import org.springframework.ws.server.endpoint.adapter.method.dom.Dom4jPayloadMethodProcessor;
+import org.springframework.ws.server.endpoint.adapter.method.dom.DomPayloadMethodProcessor;
+import org.springframework.ws.server.endpoint.adapter.method.dom.JDomPayloadMethodProcessor;
+import org.springframework.ws.server.endpoint.adapter.method.dom.XomPayloadMethodProcessor;
+import org.springframework.ws.server.endpoint.adapter.method.jaxb.JaxbElementPayloadMethodProcessor;
+import org.springframework.ws.server.endpoint.adapter.method.jaxb.XmlRootElementPayloadMethodProcessor;
 
 /**
  * Default extension of {@link AbstractMethodEndpointAdapter} with support for pluggable {@linkplain
@@ -37,19 +47,31 @@ import org.springframework.ws.support.DefaultStrategiesHelper;
  * @author Arjen Poutsma
  * @since 2.0
  */
-public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter {
+public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
+        implements BeanClassLoaderAware, InitializingBean {
+
+    private static final String DOM4J_CLASS_NAME = "org.dom4j.Element";
+
+    private static final String JAXB2_CLASS_NAME = "javax.xml.bind.Binder";
+
+    private static final String JDOM_CLASS_NAME = "org.jdom.Element";
+
+    private static final String STAX_CLASS_NAME = "javax.xml.stream.XMLInputFactory";
+
+    private static final String XOM_CLASS_NAME = "nu.xom.Element";
+
+    private static final String SOAP_METHOD_ARGUMENT_RESOLVER_CLASS_NAME =
+            "org.springframework.ws.soap.server.endpoint.adapter.method.SoapMethodArgumentResolver";
 
     private List<MethodArgumentResolver> methodArgumentResolvers;
 
     private List<MethodReturnValueHandler> methodReturnValueHandlers;
 
-    /**
-     * Initializes a {@code DefaultMethodEndpointAdapter} with the default strategies.
-     *
-     * @see #initDefaultStrategies()
-     */
-    public DefaultMethodEndpointAdapter() {
-        initDefaultStrategies();
+    private ClassLoader classLoader;
+
+    /** Returns the list of {@code MethodArgumentResolver}s to use. */
+    public List<MethodArgumentResolver> getMethodArgumentResolvers() {
+        return methodArgumentResolvers;
     }
 
     /** Sets the list of {@code MethodArgumentResolver}s to use. */
@@ -57,27 +79,100 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter 
         this.methodArgumentResolvers = methodArgumentResolvers;
     }
 
+    /** Returns the list of {@code MethodReturnValueHandler}s to use. */
+    public List<MethodReturnValueHandler> getMethodReturnValueHandlers() {
+        return methodReturnValueHandlers;
+    }
+
     /** Sets the list of {@code MethodReturnValueHandler}s to use. */
     public void setMethodReturnValueHandlers(List<MethodReturnValueHandler> methodReturnValueHandlers) {
         this.methodReturnValueHandlers = methodReturnValueHandlers;
     }
 
-    /** Initialize the default implementations for the adapter's strategies */
+    private ClassLoader getClassLoader() {
+        return this.classLoader != null ? this.classLoader : DefaultMethodEndpointAdapter.class.getClassLoader();
+    }
+
+    public void setBeanClassLoader(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+    }
+
+    public void afterPropertiesSet() throws Exception {
+        initDefaultStrategies();
+    }
+
+    /** Initialize the default implementations for the adapter's strategies. */
     protected void initDefaultStrategies() {
-        Resource resource =
-                new ClassPathResource(ClassUtils.getShortName(DefaultMethodEndpointAdapter.class) + ".properties",
-                        DefaultMethodEndpointAdapter.class);
-        DefaultStrategiesHelper strategiesHelper = new DefaultStrategiesHelper(resource);
+        initMethodArgumentResolvers();
+        initMethodReturnValueHandlers();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void initMethodArgumentResolvers() {
         if (CollectionUtils.isEmpty(methodArgumentResolvers)) {
-            List<MethodArgumentResolver> methodArgumentResolvers =
-                    strategiesHelper.getDefaultStrategies(MethodArgumentResolver.class);
+            List<MethodArgumentResolver> methodArgumentResolvers = new ArrayList<MethodArgumentResolver>();
+            methodArgumentResolvers.add(new DomPayloadMethodProcessor());
+            methodArgumentResolvers.add(new MessageContextMethodArgumentResolver());
+            methodArgumentResolvers.add(new SourcePayloadMethodProcessor());
+            try {
+                Class<MethodArgumentResolver> soapMethodArgumentResolverClass =
+                        (Class<MethodArgumentResolver>) ClassUtils
+                                .forName(SOAP_METHOD_ARGUMENT_RESOLVER_CLASS_NAME, getClassLoader());
+                methodArgumentResolvers.add(BeanUtils.instantiate(soapMethodArgumentResolverClass));
+            }
+            catch (ClassNotFoundException e) {
+                logger.warn("Could not find \"" + SOAP_METHOD_ARGUMENT_RESOLVER_CLASS_NAME + "\" on the classpath");
+            }
+            if (isPresent(DOM4J_CLASS_NAME)) {
+                methodArgumentResolvers.add(new Dom4jPayloadMethodProcessor());
+            }
+            if (isPresent(JAXB2_CLASS_NAME)) {
+                methodArgumentResolvers.add(new XmlRootElementPayloadMethodProcessor());
+                methodArgumentResolvers.add(new JaxbElementPayloadMethodProcessor());
+            }
+            if (isPresent(JDOM_CLASS_NAME)) {
+                methodArgumentResolvers.add(new JDomPayloadMethodProcessor());
+            }
+            if (isPresent(STAX_CLASS_NAME)) {
+                methodArgumentResolvers.add(new StaxPayloadMethodArgumentResolver());
+            }
+            if (isPresent(XOM_CLASS_NAME)) {
+                methodArgumentResolvers.add(new XomPayloadMethodProcessor());
+            }
+            if (logger.isDebugEnabled()) {
+                logger.debug("No MethodArgumentResolvers set, using defaults: " + methodArgumentResolvers);
+            }
             setMethodArgumentResolvers(methodArgumentResolvers);
         }
+    }
+
+    private void initMethodReturnValueHandlers() {
         if (CollectionUtils.isEmpty(methodReturnValueHandlers)) {
-            List<MethodReturnValueHandler> methodReturnValueHandlers =
-                    strategiesHelper.getDefaultStrategies(MethodReturnValueHandler.class);
+            List<MethodReturnValueHandler> methodReturnValueHandlers = new ArrayList<MethodReturnValueHandler>();
+            methodReturnValueHandlers.add(new DomPayloadMethodProcessor());
+            methodReturnValueHandlers.add(new SourcePayloadMethodProcessor());
+            if (isPresent(DOM4J_CLASS_NAME)) {
+                methodReturnValueHandlers.add(new Dom4jPayloadMethodProcessor());
+            }
+            if (isPresent(JAXB2_CLASS_NAME)) {
+                methodReturnValueHandlers.add(new XmlRootElementPayloadMethodProcessor());
+                methodReturnValueHandlers.add(new JaxbElementPayloadMethodProcessor());
+            }
+            if (isPresent(JDOM_CLASS_NAME)) {
+                methodReturnValueHandlers.add(new JDomPayloadMethodProcessor());
+            }
+            if (isPresent(XOM_CLASS_NAME)) {
+                methodArgumentResolvers.add(new XomPayloadMethodProcessor());
+            }
+            if (logger.isDebugEnabled()) {
+                logger.debug("No MethodReturnValueHandlers set, using defaults: " + methodReturnValueHandlers);
+            }
             setMethodReturnValueHandlers(methodReturnValueHandlers);
         }
+    }
+
+    private boolean isPresent(String className) {
+        return ClassUtils.isPresent(className, getClassLoader());
     }
 
     @Override
@@ -170,7 +265,7 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter 
     /**
      * Handle the return value for the given method endpoint.
      * <p/>
-     * This implementation iterates over the set {@linkplain #setMethodReturnValueHandler(java.util.List) return value
+     * This implementation iterates over the set {@linkplain #setMethodReturnValueHandlers(java.util.List)}  return value
      * handlers} to resolve the return value.
      *
      * @param messageContext the current message context

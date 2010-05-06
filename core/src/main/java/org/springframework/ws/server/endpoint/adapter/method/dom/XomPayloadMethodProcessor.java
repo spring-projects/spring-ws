@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.server.endpoint.adapter.method;
+package org.springframework.ws.server.endpoint.adapter.method.dom;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -26,6 +26,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
 
 import org.springframework.core.MethodParameter;
+import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadSourceMethodProcessor;
 
 import nu.xom.Builder;
 import nu.xom.Document;
@@ -35,7 +36,7 @@ import nu.xom.converters.DOMConverter;
 import org.w3c.dom.DOMImplementation;
 
 /**
- * Implementation of {@link MethodArgumentResolver} and {@link MethodReturnValueHandler} that supports XOM {@linkplain
+ * Implementation of {@link org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver} and {@link org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler} that supports XOM {@linkplain
  * Element elements}.
  *
  * @author Arjen Poutsma

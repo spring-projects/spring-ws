@@ -68,6 +68,16 @@ public class DefaultMethodEndpointAdapterTest {
     }
 
     @Test
+    public void initDefaultStrategies() throws Exception {
+        adapter = new DefaultMethodEndpointAdapter();
+        adapter.setBeanClassLoader(DefaultMethodEndpointAdapterTest.class.getClassLoader());
+        adapter.afterPropertiesSet();
+
+        assertFalse("No default MethodArgumentResolvers loaded", adapter.getMethodArgumentResolvers().isEmpty());
+        assertFalse("No default MethodReturnValueHandlers loaded", adapter.getMethodReturnValueHandlers().isEmpty());
+    }
+
+    @Test
     public void supportsSupported() throws Exception {
         expect(argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(true);
         expect(argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(false);

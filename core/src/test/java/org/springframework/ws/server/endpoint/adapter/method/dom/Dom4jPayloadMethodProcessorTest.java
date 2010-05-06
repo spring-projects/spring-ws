@@ -14,27 +14,32 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.server.endpoint.adapter.method;
+package org.springframework.ws.server.endpoint.adapter.method.dom;
 
 import org.springframework.core.MethodParameter;
+import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadMethodProcessorTestCase;
+import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadSourceMethodProcessor;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
-import nu.xom.Element;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class XomPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTestCase {
+public class Dom4jPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTestCase {
 
-    @Override
+   @Override
     protected AbstractPayloadSourceMethodProcessor createProcessor() {
-        return new XomPayloadMethodProcessor();
+        return new Dom4jPayloadMethodProcessor();
     }
 
     @Override
     protected MethodParameter[] createSupportedParameters() throws NoSuchMethodException {
-        return new MethodParameter[]{new MethodParameter(getClass().getMethod("element", Element.class), 0)};
+        return new MethodParameter[]{
+                new MethodParameter(getClass().getMethod("element", Element.class), 0)};
     }
 
     @Override
@@ -45,18 +50,20 @@ public class XomPayloadMethodProcessorTest extends AbstractPayloadMethodProcesso
     @Override
     protected void testArgument(Object argument, MethodParameter parameter) {
         assertTrue("argument not a element", argument instanceof Element);
-        Element node = (Element) argument;
-        assertEquals("Invalid namespace", NAMESPACE_URI, node.getNamespaceURI());
-        assertEquals("Invalid local name", LOCAL_NAME, node.getLocalName());
+        Element element = (Element) argument;
+        assertEquals("Invalid namespace", NAMESPACE_URI, element.getNamespaceURI());
+        assertEquals("Invalid local name", LOCAL_NAME, element.getName());
     }
 
     @Override
     protected Element getReturnValue(MethodParameter returnType) {
-        return new Element(LOCAL_NAME, NAMESPACE_URI);
+        Document document = DocumentHelper.createDocument();
+        return document.addElement(LOCAL_NAME, NAMESPACE_URI);
     }
 
     @ResponsePayload
     public Element element(@RequestPayload Element element) {
         return element;
     }
+
 }
