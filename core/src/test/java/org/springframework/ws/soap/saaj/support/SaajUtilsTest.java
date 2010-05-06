@@ -24,12 +24,12 @@ import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPEnvelope;
+import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
-import org.springframework.ws.soap.saaj.SaajSoapMessageException;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -132,27 +132,14 @@ public class SaajUtilsTest {
     public void testGetSaajVersion() throws Exception {
         Assert.assertEquals("Invalid SAAJ version", SaajUtils.SAAJ_13, SaajUtils.getSaajVersion());
     }
-    
-    @Test
+
+    @Test(expected = SOAPException.class)
     public void testGetSaajVersionInvalidEnvelope() throws Exception {
         Resource resource = new ClassPathResource("invalidNamespaceReferenceSoapMessage.xml", getClass());
-    	InputStream in = null;
-    	try {
-            in = resource.getInputStream();
-            MimeHeaders headers = new MimeHeaders();
-            SOAPMessage soapMessage = messageFactory.createMessage(headers, in);
-			SaajUtils.getSaajVersion(soapMessage);
-    		Assert.fail(
-                    "Should have thrown SaajSoapMessageException as message envelope is invalid and cannot be accessed.");
-    	}
-    	catch (SaajSoapMessageException e) {
-    		// expected
-    	}
-        finally {
-            if (in != null) {
-                in.close();
-            }
-        }
+        InputStream in = resource.getInputStream();
+        MimeHeaders headers = new MimeHeaders();
+        SOAPMessage soapMessage = messageFactory.createMessage(headers, in);
+        SaajUtils.getSaajVersion(soapMessage);
     }
 
 }
