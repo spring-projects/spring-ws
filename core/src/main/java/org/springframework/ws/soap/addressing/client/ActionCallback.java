@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import javax.xml.transform.TransformerException;
 
-import org.springframework.core.JdkVersion;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
@@ -29,7 +28,6 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.addressing.core.EndpointReference;
 import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 import org.springframework.ws.soap.addressing.messageid.MessageIdStrategy;
-import org.springframework.ws.soap.addressing.messageid.RandomGuidMessageIdStrategy;
 import org.springframework.ws.soap.addressing.messageid.UuidMessageIdStrategy;
 import org.springframework.ws.soap.addressing.version.Addressing10;
 import org.springframework.ws.soap.addressing.version.AddressingVersion;
@@ -124,12 +122,7 @@ public class ActionCallback implements WebServiceMessageCallback {
         this.action = action;
         this.version = version;
         this.to = to;
-        if (JdkVersion.isAtLeastJava15()) {
-            messageIdStrategy = new UuidMessageIdStrategy();
-        }
-        else {
-            messageIdStrategy = new RandomGuidMessageIdStrategy();
-        }
+        messageIdStrategy = new UuidMessageIdStrategy();
     }
 
     /**
@@ -143,8 +136,7 @@ public class ActionCallback implements WebServiceMessageCallback {
     /**
      * Returns the message id strategy used for creating WS-Addressing MessageIds.
      * <p/>
-     * By default, the {@link UuidMessageIdStrategy} is used on Java 5 and higher, and the {@link
-     * RandomGuidMessageIdStrategy} on Java 1.4.
+     * By default, the {@link UuidMessageIdStrategy} is used.
      */
     public MessageIdStrategy getMessageIdStrategy() {
         return messageIdStrategy;
@@ -153,8 +145,7 @@ public class ActionCallback implements WebServiceMessageCallback {
     /**
      * Sets the message id strategy used for creating WS-Addressing MessageIds.
      * <p/>
-     * By default, the {@link UuidMessageIdStrategy} is used on Java 5 and higher, and the {@link
-     * RandomGuidMessageIdStrategy} on Java 1.4.
+     * By default, the {@link UuidMessageIdStrategy} is used.
      */
     public void setMessageIdStrategy(MessageIdStrategy messageIdStrategy) {
         Assert.notNull(messageIdStrategy, "'messageIdStrategy' must not be null");

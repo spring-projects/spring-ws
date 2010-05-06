@@ -22,7 +22,6 @@ import java.util.Iterator;
 import javax.xml.transform.TransformerException;
 
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.core.JdkVersion;
 import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
@@ -33,7 +32,6 @@ import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 import org.springframework.ws.soap.addressing.messageid.MessageIdStrategy;
-import org.springframework.ws.soap.addressing.messageid.RandomGuidMessageIdStrategy;
 import org.springframework.ws.soap.addressing.messageid.UuidMessageIdStrategy;
 import org.springframework.ws.soap.addressing.version.Addressing10;
 import org.springframework.ws.soap.addressing.version.Addressing200408;
@@ -50,8 +48,7 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * org.springframework.ws.soap.addressing.version.Addressing200408} and {@link org.springframework.ws.soap.addressing.version.Addressing10}.
  * <p/>
  * The {@link #setMessageIdStrategy(MessageIdStrategy) messageIdStrategy} property defines the strategy to use for
- * creating reply <code>MessageIDs</code>. By default, this is the {@link UuidMessageIdStrategy} on Java 5 and higher,
- * and the {@link RandomGuidMessageIdStrategy} on Java 1.4.
+ * creating reply <code>MessageIDs</code>. By default, this is the {@link UuidMessageIdStrategy}.
  * <p/>
  * The {@link #setMessageSenders(WebServiceMessageSender[]) messageSenders} are used to send out-of-band reply messages.
  * If a request messages defines a non-anonymous reply address, these senders will be used to send the message.
@@ -90,17 +87,11 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
     /**
      * Initializes the default implementation for this mapping's strategies: the {@link
      * org.springframework.ws.soap.addressing.version.Addressing200408} and {@link org.springframework.ws.soap.addressing.version.Addressing10}
-     * versions of the specication, and the {@link UuidMessageIdStrategy} on Java 5 and higher; the {@link
-     * RandomGuidMessageIdStrategy} on Java 1.4.
+     * versions of the specification, and the {@link UuidMessageIdStrategy}.
      */
     protected void initDefaultStrategies() {
         this.versions = new AddressingVersion[]{new Addressing200408(), new Addressing10()};
-        if (JdkVersion.isAtLeastJava15()) {
-            messageIdStrategy = new UuidMessageIdStrategy();
-        }
-        else {
-            messageIdStrategy = new RandomGuidMessageIdStrategy();
-        }
+        messageIdStrategy = new UuidMessageIdStrategy();
     }
 
     public final void setActorOrRole(String actorOrRole) {
@@ -138,8 +129,7 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
     /**
      * Sets the message id strategy used for creating WS-Addressing MessageIds.
      * <p/>
-     * By default, the {@link UuidMessageIdStrategy} is used on Java 5 and higher, and the {@link
-     * RandomGuidMessageIdStrategy} on Java 1.4.
+     * By default, the {@link UuidMessageIdStrategy} is used.
      */
     public final void setMessageIdStrategy(MessageIdStrategy messageIdStrategy) {
         Assert.notNull(messageIdStrategy, "'messageIdStrategy' must not be null");
