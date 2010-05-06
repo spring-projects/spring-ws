@@ -82,8 +82,9 @@ import java.util.Random;
  * modification. This class is free for all uses.
  *
  * @author Marc A. Mnich
- * @version 1.2.1 11/05/02
+ * @deprecated as of Spring Web Services 2.0, in favor of {@link UuidMessageIdStrategy}
  */
+@Deprecated
 public class RandomGuid {
 
     private static Random random;
