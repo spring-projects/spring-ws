@@ -30,8 +30,9 @@ import org.dom4j.io.DocumentResult;
 import org.dom4j.io.DocumentSource;
 
 /**
- * Implementation of {@link org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver} and {@link org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler} that supports dom4j
- * {@linkplain Element elements}.
+ * Implementation of {@link org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver
+ * MethodArgumentResolver} and {@link org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler
+ * MethodReturnValueHandler} that supports dom4j {@linkplain Element elements}.
  *
  * @author Arjen Poutsma
  * @since 2.0

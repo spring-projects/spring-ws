@@ -36,8 +36,9 @@ import nu.xom.converters.DOMConverter;
 import org.w3c.dom.DOMImplementation;
 
 /**
- * Implementation of {@link org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver} and {@link org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler} that supports XOM {@linkplain
- * Element elements}.
+ * Implementation of {@link org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver
+ * MethodArgumentResolver} and {@link org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler
+ * MethodReturnValueHandler} that supports XOM {@linkplain Element elements}.
  *
  * @author Arjen Poutsma
  * @since 2.0
