@@ -17,13 +17,18 @@
 package org.springframework.ws.server.endpoint.adapter.method;
 
 import java.io.ByteArrayInputStream;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamSource;
 
 import org.springframework.core.MethodParameter;
+import org.springframework.xml.JaxpVersion;
+import org.springframework.xml.transform.StaxSource;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -36,7 +41,10 @@ import org.xml.sax.InputSource;
  * @author Arjen Poutsma
  * @since 2.0
  */
+@SuppressWarnings("Since15")
 public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodProcessor {
+
+    private XMLInputFactory inputFactory = createXmlInputFactory();
 
     // MethodArgumentResolver
 
@@ -55,13 +63,17 @@ public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodPro
             DOMResult domResult = new DOMResult();
             transform(requestPayload, domResult);
             Node node = domResult.getNode();
-            if (node instanceof Document) {
-                Document document = (Document) node;
-                return new DOMSource(document.getDocumentElement());
+            if (node.getNodeType() == Node.DOCUMENT_NODE) {
+                return new DOMSource(((Document) node).getDocumentElement());
             }
             else {
                 return new DOMSource(domResult.getNode());
             }
+        }
+        else if (StaxSource.class.isAssignableFrom(parameterType)) {
+            ByteArrayInputStream bis = convertToByteArrayInputStream(requestPayload);
+            XMLStreamReader streamReader = inputFactory.createXMLStreamReader(bis);
+            return new StaxSource(streamReader);
         }
         else if (SAXSource.class.isAssignableFrom(parameterType)) {
             ByteArrayInputStream bis = convertToByteArrayInputStream(requestPayload);
@@ -72,8 +84,12 @@ public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodPro
             ByteArrayInputStream bis = convertToByteArrayInputStream(requestPayload);
             return new StreamSource(bis);
         }
-        // should not happen
-        throw new UnsupportedOperationException();
+        else if (JaxpVersion.isAtLeastJaxp14() && Jaxp14StaxHandler.isStaxSource(parameterType)) {
+            ByteArrayInputStream bis = convertToByteArrayInputStream(requestPayload);
+            XMLStreamReader streamReader = inputFactory.createXMLStreamReader(bis);
+            return Jaxp14StaxHandler.createStaxSource(streamReader);
+        }
+        throw new IllegalArgumentException("Unknown Source type: " + parameterType);
     }
 
     // MethodReturnValueHandler
@@ -90,6 +106,32 @@ public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodPro
 
     private boolean supports(MethodParameter parameter) {
         return Source.class.isAssignableFrom(parameter.getParameterType());
+    }
+
+    /**
+     * Create a {@code XMLInputFactory} that this resolver will use to create {@link javax.xml.stream.XMLStreamReader}
+     * and {@link javax.xml.stream.XMLEventReader} objects.
+     * <p/>
+     * Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
+     * so this method will only be called once.
+     *
+     * @return the created factory
+     */
+    protected XMLInputFactory createXmlInputFactory() {
+        return XMLInputFactory.newInstance();
+    }
+
+    /** Inner class to avoid a static JAXP 1.4 dependency. */
+    private static class Jaxp14StaxHandler {
+
+        private static boolean isStaxSource(Class<?> clazz) {
+            return StAXSource.class.isAssignableFrom(clazz);
+        }
+
+        private static Source createStaxSource(XMLStreamReader streamReader) {
+            return new StAXSource(streamReader);
+        }
+
     }
 
 }

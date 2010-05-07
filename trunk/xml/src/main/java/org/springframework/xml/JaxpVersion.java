@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,18 +47,19 @@ public abstract class JaxpVersion {
     private static int jaxpVersion = JAXP_10;
 
     static {
+        ClassLoader classLoader = JaxpVersion.class.getClassLoader();
         try {
-            ClassUtils.forName(JAXP_14_CLASS_NAME);
+            ClassUtils.forName(JAXP_14_CLASS_NAME, classLoader);
             jaxpVersion = JAXP_14;
         }
         catch (ClassNotFoundException ex1) {
             try {
-                ClassUtils.forName(JAXP_13_CLASS_NAME);
+                ClassUtils.forName(JAXP_13_CLASS_NAME, classLoader);
                 jaxpVersion = JAXP_13;
             }
             catch (ClassNotFoundException ex2) {
                 try {
-                    ClassUtils.forName(JAXP_11_CLASS_NAME);
+                    ClassUtils.forName(JAXP_11_CLASS_NAME, classLoader);
                     jaxpVersion = JAXP_11;
                 }
                 catch (ClassNotFoundException ex3) {
