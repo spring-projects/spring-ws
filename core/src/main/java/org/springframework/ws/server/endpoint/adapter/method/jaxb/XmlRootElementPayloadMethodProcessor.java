@@ -24,7 +24,15 @@ import javax.xml.bind.annotation.XmlType;
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;
 
-/** @author Arjen Poutsma */
+/**
+ * Implementation of {@link org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver
+ * MethodArgumentResolver} and {@link org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler
+ * MethodReturnValueHandler} that supports parameters annotated with {@link XmlRootElement @XmlRootElement} or {@link
+ * XmlType @XmlType}, and return values annotated with {@link XmlRootElement @XmlRootElement}.
+ *
+ * @author Arjen Poutsma
+ * @since 2.0
+ */
 public class XmlRootElementPayloadMethodProcessor extends AbstractJaxb2PayloadMethodProcessor {
 
     @Override
@@ -38,10 +46,10 @@ public class XmlRootElementPayloadMethodProcessor extends AbstractJaxb2PayloadMe
         Class<?> parameterType = parameter.getParameterType();
 
         if (parameterType.isAnnotationPresent(XmlRootElement.class)) {
-            return unmarshalFromRequest(messageContext, parameterType);
+            return unmarshalFromRequestPayload(messageContext, parameterType);
         }
         else {
-            JAXBElement<?> element = unmarshalElementFromRequest(messageContext, parameterType);
+            JAXBElement<?> element = unmarshalElementFromRequestPayload(messageContext, parameterType);
             return element != null ? element.getValue() : null;
         }
     }
@@ -55,7 +63,7 @@ public class XmlRootElementPayloadMethodProcessor extends AbstractJaxb2PayloadMe
     public void handleReturnValue(MessageContext messageContext, MethodParameter returnType, Object returnValue)
             throws JAXBException {
         Class<?> parameterType = returnType.getParameterType();
-        marshalToResponse(messageContext, parameterType, returnValue);
+        marshalToResponsePayload(messageContext, parameterType, returnValue);
     }
 
 

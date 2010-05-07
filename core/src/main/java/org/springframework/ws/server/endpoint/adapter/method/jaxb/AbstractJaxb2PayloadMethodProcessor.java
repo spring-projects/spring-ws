@@ -50,6 +50,13 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 
 /**
+ * Abstract base class for {@link org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver
+ * MethodArgumentResolver} and {@link org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler
+ * MethodReturnValueHandler} implementations that use JAXB2. Creates {@link JAXBContext} object lazily, and offers
+ * {@linkplain #marshalToResponsePayload(org.springframework.ws.context.MessageContext, Class, Object) marshalling} and
+ * {@linkplain #unmarshalFromRequestPayload(org.springframework.ws.context.MessageContext, Class) unmarshalling}
+ * methods.
+ *
  * @author Arjen Poutsma
  * @since 2.0
  */
@@ -57,8 +64,19 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
     private final ConcurrentMap<Class, JAXBContext> jaxbContexts = new ConcurrentHashMap<Class, JAXBContext>();
 
-    protected void marshalToResponse(MessageContext messageContext, Class<?> clazz, Object jaxbElement)
+    /**
+     * Marshals the given {@code jaxbElement} to the response payload of the given message context.
+     *
+     * @param messageContext the message context to marshal to
+     * @param clazz          the clazz to create a marshaller for
+     * @param jaxbElement    the object to be marshalled
+     * @throws JAXBException in case of JAXB2 errors
+     */
+    protected final void marshalToResponsePayload(MessageContext messageContext, Class<?> clazz, Object jaxbElement)
             throws JAXBException {
+        Assert.notNull(messageContext, "'messageContext' must not be null");
+        Assert.notNull(clazz, "'clazz' must not be null");
+        Assert.notNull(jaxbElement, "'jaxbElement' must not be null");
         if (logger.isDebugEnabled()) {
             logger.debug("Marshalling [" + jaxbElement + "] to response payload");
         }
@@ -77,7 +95,16 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
         return response != null ? response.getPayloadResult() : null;
     }
 
-    protected Object unmarshalFromRequest(MessageContext messageContext, Class<?> clazz) throws JAXBException {
+    /**
+     * Unmarshals the request payload of the given message context.
+     *
+     * @param messageContext the message context to unmarshal from
+     * @param clazz          the class to unmarshal
+     * @return the unmarshalled object, or {@code null} if the request has no payload
+     * @throws JAXBException in case of JAXB2 errors
+     */
+    protected final Object unmarshalFromRequestPayload(MessageContext messageContext, Class<?> clazz)
+            throws JAXBException {
         Source requestPayload = getRequestPayload(messageContext);
         if (requestPayload == null) {
             return null;
@@ -95,7 +122,15 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
         }
     }
 
-    protected <T> JAXBElement<T> unmarshalElementFromRequest(MessageContext messageContext, Class<T> clazz)
+    /**
+     * Unmarshals the request payload of the given message context as {@link JAXBElement}.
+     *
+     * @param messageContext the message context to unmarshal from
+     * @param clazz          the class to unmarshal
+     * @return the unmarshalled element, or {@code null} if the request has no payload
+     * @throws JAXBException in case of JAXB2 errors
+     */
+    protected final <T> JAXBElement<T> unmarshalElementFromRequestPayload(MessageContext messageContext, Class<T> clazz)
             throws JAXBException {
         Source requestPayload = getRequestPayload(messageContext);
         if (requestPayload == null) {

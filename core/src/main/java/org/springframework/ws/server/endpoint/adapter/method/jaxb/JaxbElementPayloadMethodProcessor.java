@@ -24,7 +24,14 @@ import javax.xml.bind.JAXBException;
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;
 
-/** @author Arjen Poutsma */
+/**
+ * Implementation of {@link org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver
+ * MethodArgumentResolver} and {@link org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler
+ * MethodReturnValueHandler} that supports {@link JAXBElement} objects.
+ *
+ * @author Arjen Poutsma
+ * @since 2.0
+ */
 public class JaxbElementPayloadMethodProcessor extends AbstractJaxb2PayloadMethodProcessor {
 
     @Override
@@ -38,7 +45,7 @@ public class JaxbElementPayloadMethodProcessor extends AbstractJaxb2PayloadMetho
             throws JAXBException {
         ParameterizedType parameterizedType = (ParameterizedType) parameter.getGenericParameterType();
         Class<?> clazz = (Class) parameterizedType.getActualTypeArguments()[0];
-        return unmarshalElementFromRequest(messageContext, clazz);
+        return unmarshalElementFromRequestPayload(messageContext, clazz);
     }
 
     @Override
@@ -50,6 +57,6 @@ public class JaxbElementPayloadMethodProcessor extends AbstractJaxb2PayloadMetho
     public void handleReturnValue(MessageContext messageContext, MethodParameter returnType, Object returnValue)
             throws JAXBException {
         JAXBElement<?> element = (JAXBElement<?>) returnValue;
-        marshalToResponse(messageContext, element.getDeclaredType(), element);
+        marshalToResponsePayload(messageContext, element.getDeclaredType(), element);
     }
 }

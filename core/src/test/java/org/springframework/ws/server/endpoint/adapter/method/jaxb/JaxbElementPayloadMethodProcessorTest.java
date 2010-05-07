@@ -39,7 +39,6 @@ import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-/** @author Arjen Poutsma */
 public class JaxbElementPayloadMethodProcessorTest {
 
     private JaxbElementPayloadMethodProcessor processor;
@@ -48,11 +47,14 @@ public class JaxbElementPayloadMethodProcessorTest {
 
     private MethodParameter supportedReturnType;
 
+    private MethodParameter stringReturnType;
+
     @Before
     public void setUp() throws Exception {
         processor = new JaxbElementPayloadMethodProcessor();
         supportedParameter = new MethodParameter(getClass().getMethod("supported", JAXBElement.class), 0);
         supportedReturnType = new MethodParameter(getClass().getMethod("supported", JAXBElement.class), -1);
+        stringReturnType = new MethodParameter(getClass().getMethod("string"), -1);
     }
 
     @Test
@@ -91,11 +93,26 @@ public class JaxbElementPayloadMethodProcessorTest {
         assertXMLEqual("<type><string>Foo</string></type>", response.getPayloadAsString());
     }
 
-    
+    @Test
+    public void handleReturnValueString() throws JAXBException, IOException, SAXException {
+        MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
+
+        String s = "Foo";
+        JAXBElement<String> element = new JAXBElement<String>(new QName("string"), String.class, s);
+        processor.handleReturnValue(messageContext, stringReturnType, element);
+        assertTrue("context has no response", messageContext.hasResponse());
+        MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
+        assertXMLEqual("<string>Foo</string>", response.getPayloadAsString());
+    }
 
     @ResponsePayload
     public JAXBElement<MyType> supported(@RequestPayload JAXBElement<MyType> element) {
         return element;
+    }
+
+    @ResponsePayload
+    public JAXBElement<String> string() {
+        return new JAXBElement<String>(new QName("string"), String.class, "Foo");
     }
 
     @XmlType
