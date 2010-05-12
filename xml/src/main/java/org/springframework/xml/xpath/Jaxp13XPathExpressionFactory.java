@@ -39,11 +39,7 @@ import org.w3c.dom.NodeList;
  */
 abstract class Jaxp13XPathExpressionFactory {
 
-    private static XPathFactory xpathFactory;
-
-    static {
-        xpathFactory = XPathFactory.newInstance();
-    }
+    private static XPathFactory xpathFactory = XPathFactory.newInstance();
 
     /**
      * Creates a JAXP 1.3 <code>XPathExpression</code> from the given string expression.
@@ -54,7 +50,7 @@ abstract class Jaxp13XPathExpressionFactory {
      */
     static XPathExpression createXPathExpression(String expression) {
         try {
-            XPath xpath = xpathFactory.newXPath();
+            XPath xpath = createXPath();
             javax.xml.xpath.XPathExpression xpathExpression = xpath.compile(expression);
             return new Jaxp13XPathExpression(xpathExpression);
         }
@@ -74,7 +70,7 @@ abstract class Jaxp13XPathExpressionFactory {
      */
     public static XPathExpression createXPathExpression(String expression, Map namespaces) {
         try {
-            XPath xpath = xpathFactory.newXPath();
+            XPath xpath = createXPath();
             SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext();
             namespaceContext.setBindings(namespaces);
             xpath.setNamespaceContext(namespaceContext);
@@ -86,6 +82,11 @@ abstract class Jaxp13XPathExpressionFactory {
                     "Could not compile [" + expression + "] to a XPathExpression: " + ex.getMessage(), ex);
         }
     }
+
+    private static synchronized XPath createXPath() {
+        return xpathFactory.newXPath();
+    }
+    
 
     /** JAXP 1.3 implementation of the <code>XPathExpression</code> interface. */
     private static class Jaxp13XPathExpression implements XPathExpression {
