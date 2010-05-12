@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,13 +34,14 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.annotation.XPathParam;
 import org.springframework.xml.namespace.SimpleNamespaceContext;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * Adapter that supports endpoint methods that use marshalling. Supports methods with the following signature:
+ * Adapter that supports endpoint methods that use XPath expressions. Supports methods with the following signature:
  * <pre>
  * void handleMyMessage(@XPathParam("/root/child/text")String param);
  * </pre>
@@ -81,7 +82,7 @@ public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEnd
         }
         Class<?>[] parameterTypes = method.getParameterTypes();
         for (int i = 0; i < parameterTypes.length; i++) {
-            if (getXPathParamAnnotation(method, i) == null || !isSuportedType(parameterTypes[i])) {
+            if (getXPathParamAnnotation(method, i) == null || !isSupportedType(parameterTypes[i])) {
                 return false;
             }
         }
@@ -98,7 +99,7 @@ public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEnd
         return null;
     }
 
-    private boolean isSuportedType(Class<?> clazz) {
+    private boolean isSupportedType(Class<?> clazz) {
         return Boolean.class.isAssignableFrom(clazz) || Boolean.TYPE.isAssignableFrom(clazz) ||
                 Double.class.isAssignableFrom(clazz) || Double.TYPE.isAssignableFrom(clazz) ||
                 Node.class.isAssignableFrom(clazz) || NodeList.class.isAssignableFrom(clazz) ||
@@ -148,7 +149,7 @@ public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEnd
         return args;
     }
 
-    private XPath createXPath() {
+    private synchronized XPath createXPath() {
         XPath xpath = xpathFactory.newXPath();
         if (namespaces != null) {
             SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext();

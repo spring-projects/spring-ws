@@ -121,7 +121,7 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
     }
 
     private Object evaluate(String expression, Source context, QName returnType) throws XPathException {
-        XPath xpath = xpathFactory.newXPath();
+        XPath xpath = createXPath();
         if (getNamespaces() != null && !getNamespaces().isEmpty()) {
             SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext();
             namespaceContext.setBindings(getNamespaces());
@@ -165,5 +165,10 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
             throw new XPathException("Could not transform context to DOM Node", ex);
         }
     }
+
+    private synchronized XPath createXPath() {
+        return xpathFactory.newXPath();
+    }
+
 
 }
