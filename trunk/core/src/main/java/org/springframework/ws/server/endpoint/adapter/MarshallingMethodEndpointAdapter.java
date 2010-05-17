@@ -49,7 +49,11 @@ import org.springframework.ws.support.MarshallingUtils;
  * @see #setMarshaller(org.springframework.oxm.Marshaller)
  * @see #setUnmarshaller(org.springframework.oxm.Unmarshaller)
  * @since 1.0.0
+ * @deprecated as of Spring Web Services 2.0, in favor of {@link DefaultMethodEndpointAdapter} and {@link
+ *             org.springframework.ws.server.endpoint.adapter.method.MarshallingPayloadMethodProcessor
+ *             MarshallingPayloadMethodProcessor}.
  */
+@Deprecated
 public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdapter implements InitializingBean {
 
     private Marshaller marshaller;

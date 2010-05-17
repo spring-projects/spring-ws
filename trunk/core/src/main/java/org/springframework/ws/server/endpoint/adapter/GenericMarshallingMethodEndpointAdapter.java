@@ -35,7 +35,11 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
  *
  * @author Arjen Poutsma
  * @since 1.0.2
+ * @deprecated as of Spring Web Services 2.0, in favor of {@link DefaultMethodEndpointAdapter} and {@link
+ *             org.springframework.ws.server.endpoint.adapter.method.MarshallingPayloadMethodProcessor
+ *             MarshallingPayloadMethodProcessor}.
  */
+@Deprecated
 public class GenericMarshallingMethodEndpointAdapter extends MarshallingMethodEndpointAdapter {
 
     /**

@@ -57,7 +57,11 @@ import org.w3c.dom.NodeList;
  *
  * @author Arjen Poutsma
  * @since 1.0.0
+ * @deprecated as of Spring Web Services 2.0, in favor of {@link DefaultMethodEndpointAdapter} and {@link
+ *             org.springframework.ws.server.endpoint.adapter.method.XPathParamMethodArgumentResolver
+ *             XPathParamMethodArgumentResolver}.
  */
+@Deprecated
 public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEndpointAdapter
         implements InitializingBean {
 
