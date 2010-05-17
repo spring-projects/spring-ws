@@ -72,6 +72,17 @@ public class SimpleNamespaceContextTest {
         assertPrefixes(XMLConstants.XML_NS_URI, XMLConstants.XML_NS_PREFIX);
         assertPrefixes(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, XMLConstants.XMLNS_ATTRIBUTE);
     }
+    
+    @Test(expected = UnsupportedOperationException.class)
+    public void unmodifiableGetPrefixes() {
+        String namespaceUri = "namespaceUri";
+        context.bindNamespaceUri("prefix1", namespaceUri);
+        context.bindNamespaceUri("prefix2", namespaceUri);
+
+        Iterator<String> prefixes = context.getPrefixes(namespaceUri);
+        prefixes.next();
+        prefixes.remove();
+    }
 
     @Test
     public void testMultiplePrefixes() {

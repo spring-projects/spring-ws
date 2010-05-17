@@ -16,20 +16,17 @@
 
 package org.springframework.xml.namespace;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 
 import org.springframework.util.Assert;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 /**
  * Simple <code>javax.xml.namespace.NamespaceContext</code> implementation. Follows the standard
@@ -41,9 +38,9 @@ import org.springframework.util.MultiValueMap;
  */
 public class SimpleNamespaceContext implements NamespaceContext {
 
-    private Map<String, String> prefixToNamespaceUri = new HashMap<String, String>();
+    private Map<String, String> prefixToNamespaceUri = new LinkedHashMap<String, String>();
 
-    private MultiValueMap<String, String> namespaceUriToPrefixes = new LinkedMultiValueMap<String, String>();
+    private Map<String, Set<String>> namespaceUriToPrefixes = new LinkedHashMap<String, Set<String>>();
 
     public String getNamespaceURI(String prefix) {
         Assert.notNull(prefix, "prefix is null");
@@ -60,12 +57,14 @@ public class SimpleNamespaceContext implements NamespaceContext {
     }
 
     public String getPrefix(String namespaceUri) {
-        List<String> prefixes = getPrefixesInternal(namespaceUri);
-        return prefixes.isEmpty() ? null : prefixes.get(0);
+        Iterator<String> iterator = getPrefixes(namespaceUri);
+        return iterator.hasNext() ? iterator.next() : null;
     }
 
     public Iterator<String> getPrefixes(String namespaceUri) {
-        return getPrefixesInternal(namespaceUri).iterator();
+        Set<String> prefixes = getPrefixesInternal(namespaceUri);
+        prefixes = Collections.unmodifiableSet(prefixes);
+        return prefixes.iterator();
     }
 
     /**
@@ -125,23 +124,24 @@ public class SimpleNamespaceContext implements NamespaceContext {
     public Iterator<String> getBoundPrefixes() {
         Set<String> prefixes = new HashSet<String>(prefixToNamespaceUri.keySet());
         prefixes.remove(XMLConstants.DEFAULT_NS_PREFIX);
+        prefixes = Collections.unmodifiableSet(prefixes);
         return prefixes.iterator();
     }
 
-    private List<String> getPrefixesInternal(String namespaceUri) {
+    private Set<String> getPrefixesInternal(String namespaceUri) {
         if (XMLConstants.XML_NS_URI.equals(namespaceUri)) {
-            return Collections.singletonList(XMLConstants.XML_NS_PREFIX);
+            return Collections.singleton(XMLConstants.XML_NS_PREFIX);
         }
         else if (XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(namespaceUri)) {
-            return Collections.singletonList(XMLConstants.XMLNS_ATTRIBUTE);
+            return Collections.singleton(XMLConstants.XMLNS_ATTRIBUTE);
         }
         else {
-            List<String> list = namespaceUriToPrefixes.get(namespaceUri);
-            if (list == null) {
-                list = new ArrayList<String>();
-                namespaceUriToPrefixes.put(namespaceUri, list);
+            Set<String> set = namespaceUriToPrefixes.get(namespaceUri);
+            if (set == null) {
+                set = new LinkedHashSet<String>();
+                namespaceUriToPrefixes.put(namespaceUri, set);
             }
-            return list;
+            return set;
         }
     }
 
@@ -152,7 +152,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
      */
     public void removeBinding(String prefix) {
         String namespaceUri = prefixToNamespaceUri.get(prefix);
-        List<String> prefixes = getPrefixesInternal(namespaceUri);
+        Set<String> prefixes = getPrefixesInternal(namespaceUri);
         prefixes.remove(prefix);
     }
 
