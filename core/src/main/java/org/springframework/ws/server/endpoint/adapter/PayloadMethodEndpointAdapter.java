@@ -41,7 +41,11 @@ import org.springframework.ws.soap.server.SoapMessageDispatcher;
  *
  * @author Arjen Poutsma
  * @since 1.0.0
+ * @deprecated as of Spring Web Services 2.0, in favor of {@link DefaultMethodEndpointAdapter} and {@link
+ *             org.springframework.ws.server.endpoint.adapter.method.SourcePayloadMethodProcessor
+ *             SourcePayloadMethodProcessor}.
  */
+@Deprecated
 public class PayloadMethodEndpointAdapter extends AbstractMethodEndpointAdapter {
 
     @Override
@@ -56,7 +60,7 @@ public class PayloadMethodEndpointAdapter extends AbstractMethodEndpointAdapter 
     @Override
     protected void invokeInternal(MessageContext messageContext, MethodEndpoint methodEndpoint) throws Exception {
         Source requestSource = messageContext.getRequest().getPayloadSource();
-        Object result = methodEndpoint.invoke(new Object[]{requestSource});
+        Object result = methodEndpoint.invoke(requestSource);
         if (result != null) {
             Source responseSource = (Source) result;
             WebServiceMessage response = messageContext.getResponse();
