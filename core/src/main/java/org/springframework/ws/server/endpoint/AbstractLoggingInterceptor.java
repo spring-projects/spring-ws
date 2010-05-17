@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,13 +24,13 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.xml.transform.TransformerObjectSupport;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Abstract base class for <code>EndpointInterceptor</code> instances that log a part of a
@@ -152,7 +152,7 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
      * Logs the given string message.
      * <p/>
      * By default, this method uses a "debug" level of logging. Subclasses can override this method to change the level
-     * of loging used by the logger.
+     * of logging used by the logger.
      *
      * @param message the message
      */
