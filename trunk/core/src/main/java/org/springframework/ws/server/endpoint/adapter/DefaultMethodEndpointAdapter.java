@@ -33,6 +33,7 @@ import org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResol
 import org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler;
 import org.springframework.ws.server.endpoint.adapter.method.SourcePayloadMethodProcessor;
 import org.springframework.ws.server.endpoint.adapter.method.StaxPayloadMethodArgumentResolver;
+import org.springframework.ws.server.endpoint.adapter.method.XPathParamMethodArgumentResolver;
 import org.springframework.ws.server.endpoint.adapter.method.dom.Dom4jPayloadMethodProcessor;
 import org.springframework.ws.server.endpoint.adapter.method.dom.DomPayloadMethodProcessor;
 import org.springframework.ws.server.endpoint.adapter.method.dom.JDomPayloadMethodProcessor;
@@ -114,6 +115,7 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
             methodArgumentResolvers.add(new DomPayloadMethodProcessor());
             methodArgumentResolvers.add(new MessageContextMethodArgumentResolver());
             methodArgumentResolvers.add(new SourcePayloadMethodProcessor());
+            methodArgumentResolvers.add(new XPathParamMethodArgumentResolver());
             try {
                 Class<MethodArgumentResolver> soapMethodArgumentResolverClass =
                         (Class<MethodArgumentResolver>) ClassUtils
