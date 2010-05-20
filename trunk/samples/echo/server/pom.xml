@@ -12,7 +12,7 @@
     <description>A minimal Spring-WS sample that uses W3C DOM to echo back an incoming string.</description>
     <profiles>
         <profile>
-            <id>jdk14-jdk15</id>
+            <id>jdk15</id>
             <activation>
                 <jdk>!1.6</jdk>
             </activation>
