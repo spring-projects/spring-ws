@@ -21,12 +21,12 @@ import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.security.AuthenticationManager;
-import org.springframework.security.BadCredentialsException;
-import org.springframework.security.GrantedAuthority;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.providers.TestingAuthenticationToken;
-import org.springframework.security.providers.x509.X509AuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.ws.soap.security.x509.X509AuthenticationToken;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 
 import com.sun.xml.wss.impl.callback.CertificateValidationCallback;

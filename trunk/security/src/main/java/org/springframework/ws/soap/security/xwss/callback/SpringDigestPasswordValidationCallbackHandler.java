@@ -25,13 +25,13 @@ import com.sun.xml.wss.impl.callback.TimestampValidationCallback;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataAccessException;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
-import org.springframework.security.providers.dao.UserCache;
-import org.springframework.security.providers.dao.cache.NullUserCache;
-import org.springframework.security.userdetails.UserDetails;
-import org.springframework.security.userdetails.UserDetailsService;
-import org.springframework.security.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserCache;
+import org.springframework.security.core.userdetails.cache.NullUserCache;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
@@ -48,10 +48,9 @@ import org.springframework.ws.soap.security.support.SpringSecurityUtils;
  * and throws an <code>UnsupportedCallbackException</code> for others.
  *
  * @author Arjen Poutsma
- * @see org.springframework.security.userdetails.UserDetailsService
+ * @see org.springframework.security.core.userdetails.UserDetailsService
  * @see com.sun.xml.wss.impl.callback.PasswordValidationCallback
  * @see com.sun.xml.wss.impl.callback.PasswordValidationCallback.DigestPasswordRequest
- * @see org.springframework.security.ui.digestauth.DigestProcessingFilter
  * @since 1.5.0
  */
 public class SpringDigestPasswordValidationCallbackHandler extends AbstractCallbackHandler implements InitializingBean {

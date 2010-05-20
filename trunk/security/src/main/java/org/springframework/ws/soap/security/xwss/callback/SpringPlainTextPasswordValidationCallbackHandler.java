@@ -23,11 +23,11 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
 
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.security.Authentication;
-import org.springframework.security.AuthenticationException;
-import org.springframework.security.AuthenticationManager;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
@@ -44,10 +44,9 @@ import org.springframework.ws.soap.security.callback.CleanupCallback;
  * <code>PlainTextPasswordRequest</code>, and throws an <code>UnsupportedCallbackException</code> for others.
  *
  * @author Arjen Poutsma
- * @see org.springframework.security.providers.UsernamePasswordAuthenticationToken
+ * @see org.springframework.security.authentication.UsernamePasswordAuthenticationToken
  * @see com.sun.xml.wss.impl.callback.PasswordValidationCallback
  * @see com.sun.xml.wss.impl.callback.PasswordValidationCallback.PlainTextPasswordRequest
- * @see org.springframework.security.ui.basicauth.BasicProcessingFilter
  * @since 1.5.0
  */
 public class SpringPlainTextPasswordValidationCallbackHandler extends AbstractCallbackHandler
