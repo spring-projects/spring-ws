@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,18 @@
 
 package org.springframework.ws.samples.echo.ws;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.ws.samples.echo.service.EchoService;
-import org.springframework.ws.server.endpoint.AbstractDomPayloadEndpoint;
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.server.endpoint.annotation.RequestPayload;
+import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -31,7 +40,8 @@ import org.w3c.dom.Text;
  * @author Ingo Siebert
  * @author Arjen Poutsma
  */
-public class EchoEndpoint extends AbstractDomPayloadEndpoint {
+@Endpoint
+public class EchoEndpoint {
 
     /**
      * Namespace of both request and response.
@@ -48,26 +58,28 @@ public class EchoEndpoint extends AbstractDomPayloadEndpoint {
      */
     public static final String ECHO_RESPONSE_LOCAL_NAME = "echoResponse";
 
-    private EchoService echoService;
+    private final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
-    /**
-     * Sets the "business service" to delegate to.
-     */
-    public void setEchoService(EchoService echoService) {
+    private final EchoService echoService;
+
+    @Autowired
+    public EchoEndpoint(EchoService echoService) {
         this.echoService = echoService;
     }
+
 
     /**
      * Reads the given <code>requestElement</code>, and sends a the response back.
      *
      * @param requestElement the contents of the SOAP message as DOM elements
-     * @param document       a DOM document to be used for constructing <code>Node</code>s
      * @return the response element
      */
-    @Override
-    protected Element invokeInternal(Element requestElement, Document document) throws Exception {
+    @PayloadRoot(localPart = ECHO_REQUEST_LOCAL_NAME, namespace = NAMESPACE_URI)
+    @ResponsePayload
+    public Element handleEchoRequest(@RequestPayload Element requestElement) throws ParserConfigurationException {
         Assert.isTrue(NAMESPACE_URI.equals(requestElement.getNamespaceURI()), "Invalid namespace");
         Assert.isTrue(ECHO_REQUEST_LOCAL_NAME.equals(requestElement.getLocalName()), "Invalid local name");
+
         NodeList children = requestElement.getChildNodes();
         Text requestText = null;
         for (int i = 0; i < children.getLength(); i++) {
@@ -81,6 +93,9 @@ public class EchoEndpoint extends AbstractDomPayloadEndpoint {
         }
 
         String echo = echoService.echo(requestText.getNodeValue());
+
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        Document document = documentBuilder.newDocument();
         Element responseElement = document.createElementNS(NAMESPACE_URI, ECHO_RESPONSE_LOCAL_NAME);
         Text responseText = document.createTextNode(echo);
         responseElement.appendChild(responseText);

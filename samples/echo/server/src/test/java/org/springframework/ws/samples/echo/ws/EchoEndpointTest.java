@@ -42,14 +42,13 @@ public class EchoEndpointTest {
 
     @Before
     public void setUp() throws Exception {
-        endpoint = new EchoEndpoint();
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         requestDocument = documentBuilder.newDocument();
         responseDocument = documentBuilder.newDocument();
         mock = createMock(EchoService.class);
-        endpoint.setEchoService(mock);
+        endpoint = new EchoEndpoint(mock);
     }
 
     @Test
@@ -64,7 +63,7 @@ public class EchoEndpointTest {
 
         replay(mock);
 
-        Element echoResponse = endpoint.invokeInternal(echoRequest, responseDocument);
+        Element echoResponse = endpoint.handleEchoRequest(echoRequest);
         Assert.assertEquals("Invalid namespace", EchoEndpoint.NAMESPACE_URI, echoResponse.getNamespaceURI());
         Assert.assertEquals("Invalid namespace", EchoEndpoint.ECHO_RESPONSE_LOCAL_NAME, echoResponse.getLocalName());
         Text responseText = (Text) echoResponse.getChildNodes().item(0);
