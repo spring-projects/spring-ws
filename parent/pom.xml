@@ -538,7 +538,7 @@
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-core</artifactId>
-                <version>2.0.5.RELEASE</version>
+                <version>3.0.2.RELEASE</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.springframework</groupId>
@@ -548,13 +548,8 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-core-tiger</artifactId>
-                <version>2.0.5.RELEASE</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-core</artifactId>
-                <version>2.0.5.RELEASE</version>
+                <version>3.0.2.RELEASE</version>
                 <classifier>tests</classifier>
                 <exclusions>
                     <exclusion>
@@ -562,7 +557,14 @@
                         <artifactId>spring-support</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>            
+            </dependency>
+            <!-- X.509 dependencies -->
+            <dependency>
+                <groupId>net.sf.ehcache</groupId>
+                <artifactId>ehcache-core</artifactId>
+                <version>2.0.1</version>
+                <optional>true</optional>
+            </dependency>
             <!-- JEE dependencies -->
             <dependency>
                 <groupId>javax.xml.soap</groupId>

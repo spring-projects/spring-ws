@@ -23,13 +23,13 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import com.sun.xml.wss.impl.callback.PasswordCallback;
 import com.sun.xml.wss.impl.callback.UsernameCallback;
 
-import org.springframework.security.Authentication;
-import org.springframework.security.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
 /**
  * Callback handler that adds username/password information to a mesage using an Spring Security {@link
- * org.springframework.security.context.SecurityContext}.
+ * org.springframework.security.core.context.SecurityContext}.
  * <p/>
  * This class handles <code>UsernameCallback</code>s and <code>PasswordCallback</code>s, and throws an
  * <code>UnsupportedCallbackException</code> for others

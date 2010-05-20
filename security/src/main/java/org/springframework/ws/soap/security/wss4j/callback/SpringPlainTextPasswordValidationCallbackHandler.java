@@ -16,20 +16,19 @@
 
 package org.springframework.ws.soap.security.wss4j.callback;
 
-import java.io.IOException;
-import javax.security.auth.callback.UnsupportedCallbackException;
-
 import org.apache.ws.security.WSPasswordCallback;
 import org.apache.ws.security.WSSecurityException;
-
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.security.Authentication;
-import org.springframework.security.AuthenticationException;
-import org.springframework.security.AuthenticationManager;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
+
+import javax.security.auth.callback.UnsupportedCallbackException;
+import java.io.IOException;
 
 /**
  * Callback handler that validates a certificate uses an Spring Security <code>AuthenticationManager</code>. Logic based
@@ -40,7 +39,7 @@ import org.springframework.ws.soap.security.callback.CleanupCallback;
  * created with the username as principal and password as credentials.
  *
  * @author Arjen Poutsma
- * @see org.springframework.security.providers.UsernamePasswordAuthenticationToken
+ * @see org.springframework.security.authentication.UsernamePasswordAuthenticationToken
  * @see org.springframework.security.ui.basicauth.BasicProcessingFilter
  * @since 1.5.0
  */

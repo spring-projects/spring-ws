@@ -24,11 +24,11 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
 
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.security.Authentication;
-import org.springframework.security.AuthenticationException;
-import org.springframework.security.AuthenticationManager;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.providers.x509.X509AuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.ws.soap.security.x509.X509AuthenticationToken;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
@@ -44,9 +44,8 @@ import org.springframework.ws.soap.security.callback.CleanupCallback;
  * <code>UnsupportedCallbackException</code> for others.
  *
  * @author Arjen Poutsma
- * @see org.springframework.security.providers.x509.X509AuthenticationToken
- * @see org.springframework.security.providers.x509.X509AuthenticationProvider
- * @see org.springframework.security.ui.x509.X509ProcessingFilter
+ * @see org.springframework.ws.soap.security.x509.X509AuthenticationToken
+ * @see org.springframework.ws.soap.security.x509.X509AuthenticationProvider
  * @see com.sun.xml.wss.impl.callback.CertificateValidationCallback
  * @since 1.5.0
  */

@@ -24,13 +24,13 @@ import org.apache.ws.security.WSUsernameTokenPrincipal;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataAccessException;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
-import org.springframework.security.providers.dao.UserCache;
-import org.springframework.security.providers.dao.cache.NullUserCache;
-import org.springframework.security.userdetails.UserDetails;
-import org.springframework.security.userdetails.UserDetailsService;
-import org.springframework.security.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserCache;
+import org.springframework.security.core.userdetails.cache.NullUserCache;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 import org.springframework.ws.soap.security.support.SpringSecurityUtils;
@@ -43,7 +43,7 @@ import org.springframework.ws.soap.security.support.SpringSecurityUtils;
  * password contained in this details object is then compared with the digest in the message.
  *
  * @author Arjen Poutsma
- * @see org.springframework.security.userdetails.UserDetailsService
+ * @see org.springframework.security.core.userdetails.UserDetailsService
  * @see org.springframework.security.ui.digestauth.DigestProcessingFilter
  * @since 1.5.0
  */

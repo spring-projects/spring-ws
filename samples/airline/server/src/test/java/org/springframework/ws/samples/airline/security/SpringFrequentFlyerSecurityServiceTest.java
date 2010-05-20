@@ -19,11 +19,11 @@ package org.springframework.ws.samples.airline.security;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
-import org.springframework.security.context.SecurityContext;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.context.SecurityContextImpl;
-import org.springframework.security.providers.TestingAuthenticationToken;
-import org.springframework.security.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.ws.samples.airline.dao.FrequentFlyerDao;
 import org.springframework.ws.samples.airline.domain.FrequentFlyer;
 
@@ -42,7 +42,7 @@ public class SpringFrequentFlyerSecurityServiceTest extends TestCase {
     public void testGetCurrentlyAuthenticatedFrequentFlyer() throws Exception {
         FrequentFlyer frequentFlyer = new FrequentFlyer("john");
         FrequentFlyerDetails detail = new FrequentFlyerDetails(frequentFlyer);
-        TestingAuthenticationToken token = new TestingAuthenticationToken(detail, null, (GrantedAuthority[])null);
+        TestingAuthenticationToken token = new TestingAuthenticationToken(detail, null, new GrantedAuthority[]{});
         SecurityContext context = new SecurityContextImpl();
         context.setAuthentication(token);
         SecurityContextHolder.setContext(context);

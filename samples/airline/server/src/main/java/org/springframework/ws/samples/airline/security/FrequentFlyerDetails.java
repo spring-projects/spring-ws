@@ -16,9 +16,12 @@
 
 package org.springframework.ws.samples.airline.security;
 
-import org.springframework.security.GrantedAuthority;
-import org.springframework.security.GrantedAuthorityImpl;
-import org.springframework.security.userdetails.UserDetails;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ws.samples.airline.domain.FrequentFlyer;
 
 /**
@@ -31,14 +34,17 @@ public class FrequentFlyerDetails implements UserDetails {
 
     private FrequentFlyer frequentFlyer;
 
-    public static final GrantedAuthority[] GRANTED_AUTHORITIES =
-            new GrantedAuthority[]{new GrantedAuthorityImpl("ROLE_FREQUENT_FLYER")};
+    public static final Collection<GrantedAuthority> GRANTED_AUTHORITIES =
+            new ArrayList<GrantedAuthority>();
+    {
+        GRANTED_AUTHORITIES.add(new GrantedAuthorityImpl("ROLE_FREQUENT_FLYER"));
+    };
 
     public FrequentFlyerDetails(FrequentFlyer frequentFlyer) {
         this.frequentFlyer = frequentFlyer;
     }
 
-    public GrantedAuthority[] getAuthorities() {
+    public Collection<GrantedAuthority> getAuthorities() {
         return GRANTED_AUTHORITIES;
     }
 

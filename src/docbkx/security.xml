@@ -749,9 +749,9 @@
     <bean id="authenticationManager"
         class="org.springframework.security.providers.ProviderManager">
         <property name="providers">
-            <bean class="org.springframework.security.providers.x509.X509AuthenticationProvider">
+            <bean class="org.springframework.ws.soap.security.x509.X509AuthenticationProvider">
                 <property name="x509AuthoritiesPopulator">
-                    <bean class="org.springframework.security.providers.x509.populator.DaoX509AuthoritiesPopulator">
+                    <bean class="org.springframework.ws.soap.security.x509.populator.DaoX509AuthoritiesPopulator">
                         <property name="userDetailsService" ref="userDetailsService"/>
                     </bean>
                 </property>

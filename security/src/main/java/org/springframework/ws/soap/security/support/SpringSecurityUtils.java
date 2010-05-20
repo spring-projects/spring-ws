@@ -15,11 +15,11 @@
 
 package org.springframework.ws.soap.security.support;
 
-import org.springframework.security.userdetails.UserDetails;
-import org.springframework.security.LockedException;
-import org.springframework.security.DisabledException;
-import org.springframework.security.AccountExpiredException;
-import org.springframework.security.CredentialsExpiredException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.authentication.LockedException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.AccountExpiredException;
+import org.springframework.security.authentication.CredentialsExpiredException;
 
 /**
  * Generic utility methods for Spring Security

@@ -16,14 +16,16 @@
 
 package org.springframework.ws.soap.security.wss4j.callback;
 
-import org.springframework.security.Authentication;
-import org.springframework.security.GrantedAuthority;
-import org.springframework.security.GrantedAuthorityImpl;
-import org.springframework.security.context.SecurityContext;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.userdetails.User;
-import org.springframework.security.userdetails.UserDetails;
-import org.springframework.security.userdetails.UserDetailsService;
+import java.util.Collection;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import org.apache.ws.security.WSUsernameTokenPrincipal;
 import org.junit.Assert;
@@ -68,10 +70,10 @@ public class SpringDigestPasswordValidationCallbackHandlerTest {
         Assert.assertNotNull("SecurityContext must not be null", context);
         Authentication authentication = context.getAuthentication();
         Assert.assertNotNull("Authentication must not be null", authentication);
-        GrantedAuthority[] authorities = authentication.getAuthorities();
+        Collection<GrantedAuthority> authorities = authentication.getAuthorities();
         Assert.assertTrue("GrantedAuthority[] must not be null or empty",
-                (authorities != null && authorities.length > 0));
-        Assert.assertEquals("Unexpected authority", grantedAuthority, authorities[0]);
+                (authorities != null && authorities.size() > 0));
+        Assert.assertEquals("Unexpected authority", grantedAuthority, authorities.iterator().next());
 
         verify(userDetailsService);
     }
