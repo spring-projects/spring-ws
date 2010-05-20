@@ -77,7 +77,7 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
     }
 
     /**
-     * Logs the request message payload. Logging only ocurs if <code>logRequest</code> is set to <code>true</code>,
+     * Logs the request message payload. Logging only occurs if <code>logRequest</code> is set to <code>true</code>,
      * which is the default.
      *
      * @param messageContext the message context
@@ -92,7 +92,7 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
     }
 
     /**
-     * Logs the response message payload. Logging only ocurs if <code>logResponse</code> is set to <code>true</code>,
+     * Logs the response message payload. Logging only occurs if <code>logResponse</code> is set to <code>true</code>,
      * which is the default.
      *
      * @param messageContext the message context
