@@ -3,6 +3,27 @@ SPRING WEB SERVICES CHANGELOG
 http://www.springframework.org/spring-ws
 
 
+Changes in version 2.0 Milestone 2
+------------------------
+
+** Bug
+    * [SWS-613] - Jaxp13XPathTemplate uses thread-unsafe XPathFactory as field
+
+** Improvement
+    * [SWS-538] - Add support for XWSS 3.1
+
+** New Feature
+    * [SWS-193] - XwsSecurityInterceptor  : funtionality for skipping the validate of a SOAP message when there are no WSSE headers in SOAP envelope.
+    * [SWS-349] - Support @PayloadRoot annotation on methods with DOM, JDOM, DOM4J and XOM type method signatures
+    * [SWS-351] - Arbitrary parameter injection for @Endpoints
+    * [SWS-428] - XMPP support
+    * [SWS-540] - Adding XML declaration to a response
+
+** Task
+    * [SWS-559] - Upgrade Spring Security to 3.0.2
+    * [SWS-603] - Drop OXM chapter from ref docs
+    * [SWS-604] - Upgrade XSD schemas
+
 Changes in version 2.0 Milestone 1
 ------------------------
 
