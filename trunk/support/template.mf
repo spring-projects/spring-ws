@@ -15,6 +15,7 @@ Import-Template:
  javax.net.ssl.*;version="0",
  javax.xml.transform.*;version="0",
  org.apache.commons.logging.*;version="[1.1.1, 2.0.0)",
+ org.jivesoftware.smack.*;version="[3.1.0, 4.0.0)",
  org.springframework.beans.*;version=${spring.framework.osgi.range},
  org.springframework.context.*;version=${spring.framework.osgi.range},
  org.springframework.core.*;version=${spring.framework.osgi.range},
