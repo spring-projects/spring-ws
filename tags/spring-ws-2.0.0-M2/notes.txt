@@ -1,16 +1,58 @@
 Dear Spring community,
 
-I'm pleased to announce that Spring Web Services 2.0 Milestone 1 has been
+I'm pleased to announce that Spring Web Services 2.0 Milestone 2 has been
 released!
 
-This is the first milestone release in the 2.0 release cycle. It does not
-introduce any new features (yet), but does add the following:
+This is the second milestone release in the 2.0 release cycle. The most
+important new feature in this release is the ability to use arbitrary parameter
+types in @Endpoint methods (similar to @Controller methods in Spring-MVC).  The
+big improvement to the 1.5 @Endpoint model is that you can mix and match
+parameters, and are not as limited in the return types.  This
+means, for instance, that you can have the following @Endpoint method:
 
-- Usage of Spring's OXM
-- Java 5 API (including generics, varargs, etc)
+@PayloadRoot(localPart = "myRequest", namespace = "http://example.com")
+@ResponsePayload
+public MyJaxb2Response handleMyRequest(@RequestPayload org.w3c.dom.Element myElement, 
+                                       SoapHeader requestHeader,
+                                       MessageContext messageContext) {
 
-Please see the changelog for details.
+    // do something interesting here
+}
 
-Spring Web Services 2.0 is due in the second quarter of 2010.
+Currently supported parameters/return types include:
+- DOM Elements (W3C DOM by default; JDOM, dom4j, XOM are enabled automatically
+  if present on the classpath)
+- Types supported by an OXM Marshaller (requires an explicitely configured
+  marshaller)
+- JAXB2 types, if JAXB2 is found on the classpath (this means you no longer
+  have to configure a Jaxb2Marshaller explicitly) 
+- javax.xml.transform.Source and subtypes
+
+For the above parameters/return types, you will have to use
+@RequestPayload/@ResponsePayload, as shown in the sample above.
+
+Supported parameters (not return types) include:
+- MessageContext
+- StAX readers
+- SoapHeader, SoapBody, SoapEvelope (of the request message)
+- @XPathParam parameters. Note that you can now use the @Namespace and
+  @Namespaces annotations to specify any namespaces used in your XPath
+  expressions, and no longer need to set them up in XML application contexts.
+  For instance:
+
+@Namespaces(@Namespace(prefix = "tns", uri = "http://springframework.org/spring-ws"))
+public void myEndpointMethod(@XPathParam("/tns:root")String s) {
+}
+
+These namespace annotations can be present on the method, class, or package
+level (i.e. package-info.java).
+
+In addition to the above, Spring-WS 2.0 M2 includes:
+- Support for Spring Security 3.0
+- XMPP transport
+
+Please see the changelog for more details.
+
+Spring Web Services 2.0 is due in the third quarter of 2010.
 
 For more information, see http://static.springframework.org/spring-ws/site/
