@@ -404,7 +404,9 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                     new SourceExtractor() {
 
                         public Object extractData(Source source) throws IOException, TransformerException {
-                            transformer.transform(source, responseResult);
+                            if (source != null) {
+                                transformer.transform(source, responseResult);
+                            }
                             return Boolean.TRUE;
                         }
                     });
