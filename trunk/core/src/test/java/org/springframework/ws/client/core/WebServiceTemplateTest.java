@@ -37,11 +37,11 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 public class WebServiceTemplateTest {
 
@@ -53,9 +53,8 @@ public class WebServiceTemplateTest {
 
     @Before
     public void setUp() throws Exception {
-        template = new WebServiceTemplate();
         messageFactory = new MockWebServiceMessageFactory();
-        template.setMessageFactory(messageFactory);
+        template = new WebServiceTemplate(messageFactory);
         connectionMock = createMock(FaultAwareWebServiceConnection.class);
         final URI expectedUri = new URI("http://www.springframework.org/spring-ws");
         expect(connectionMock.getUri()).andReturn(expectedUri).anyTimes();
@@ -66,7 +65,7 @@ public class WebServiceTemplateTest {
             }
 
             public boolean supports(URI uri) {
-                Assert.assertEquals("Invalid uri", expectedUri, uri);
+                assertEquals("Invalid uri", expectedUri, uri);
                 return true;
             }
         });
@@ -82,7 +81,7 @@ public class WebServiceTemplateTest {
         template.setMarshaller(null);
         try {
             template.marshalSendAndReceive(new Object());
-            Assert.fail("IllegalStateException expected");
+            fail("IllegalStateException expected");
         }
         catch (IllegalStateException ex) {
             // expected behavior
@@ -100,7 +99,7 @@ public class WebServiceTemplateTest {
         template.setUnmarshaller(null);
         try {
             template.marshalSendAndReceive(new Object());
-            Assert.fail("IllegalStateException expected");
+            fail("IllegalStateException expected");
         }
         catch (IllegalStateException ex) {
             // expected behavior
@@ -127,7 +126,7 @@ public class WebServiceTemplateTest {
         replay(connectionMock, requestCallback, extractorMock);
 
         Object result = template.sendAndReceive(requestCallback, extractorMock);
-        Assert.assertEquals("Invalid response", extracted, result);
+        assertEquals("Invalid response", extracted, result);
 
         verify(connectionMock, requestCallback, extractorMock);
     }
@@ -144,7 +143,7 @@ public class WebServiceTemplateTest {
         replay(connectionMock, extractorMock);
 
         Object result = template.sendAndReceive(null, extractorMock);
-        Assert.assertNull("Invalid response", result);
+        assertNull("Invalid response", result);
 
         verify(connectionMock, extractorMock);
     }
@@ -169,7 +168,7 @@ public class WebServiceTemplateTest {
         replay(connectionMock, extractorMock, faultMessageResolverMock);
 
         Object result = template.sendAndReceive(null, extractorMock);
-        Assert.assertNull("Invalid response", result);
+        assertNull("Invalid response", result);
 
         verify(connectionMock, extractorMock, faultMessageResolverMock);
     }
@@ -191,11 +190,11 @@ public class WebServiceTemplateTest {
 
         try {
             template.sendAndReceive(null, extractorMock);
-            Assert.fail("Expected WebServiceTransportException");
+            fail("Expected WebServiceTransportException");
         }
         catch (WebServiceTransportException ex) {
             //expected
-            Assert.assertEquals("Invalid exception message", errorMessage, ex.getMessage());
+            assertEquals("Invalid exception message", errorMessage, ex.getMessage());
         }
 
         verify(connectionMock, extractorMock);
@@ -216,7 +215,7 @@ public class WebServiceTemplateTest {
         replay(connectionMock, extractorMock);
 
         Object result = template.sendSourceAndReceive(new StringSource("<request />"), extractorMock);
-        Assert.assertEquals("Invalid response", extracted, result);
+        assertEquals("Invalid response", extracted, result);
 
         verify(connectionMock, extractorMock);
     }
@@ -233,7 +232,7 @@ public class WebServiceTemplateTest {
         replay(connectionMock, extractorMock);
 
         Object result = template.sendSourceAndReceive(new StringSource("<request />"), extractorMock);
-        Assert.assertNull("Invalid response", result);
+        assertNull("Invalid response", result);
 
         verify(connectionMock, extractorMock);
     }
@@ -250,7 +249,7 @@ public class WebServiceTemplateTest {
 
         StringResult result = new StringResult();
         boolean b = template.sendSourceAndReceiveToResult(new StringSource("<request />"), result);
-        Assert.assertTrue("Invalid result", b);
+        assertTrue("Invalid result", b);
 
         verify(connectionMock);
     }
@@ -266,10 +265,30 @@ public class WebServiceTemplateTest {
 
         StringResult result = new StringResult();
         boolean b = template.sendSourceAndReceiveToResult(new StringSource("<request />"), result);
-        Assert.assertFalse("Invalid result", b);
+        assertFalse("Invalid result", b);
 
         verify(connectionMock);
     }
+
+    @Test
+    public void testSendAndReceiveResultNoResponsePayload() throws Exception {
+        connectionMock.send(isA(WebServiceMessage.class));
+        expect(connectionMock.hasError()).andReturn(false);
+        WebServiceMessage response = createMock(WebServiceMessage.class);
+        expect(connectionMock.receive(messageFactory)).andReturn(response);
+        expect(connectionMock.hasFault()).andReturn(false);
+        expect(response.getPayloadSource()).andReturn(null);
+        connectionMock.close();
+
+        replay(connectionMock, response);
+
+        StringResult result = new StringResult();
+        boolean b = template.sendSourceAndReceiveToResult(new StringSource("<request />"), result);
+        assertTrue("Invalid result", b);
+
+        verify(connectionMock, response);
+    }
+
 
     @Test
     public void testSendAndReceiveMarshalResponse() throws Exception {
@@ -291,7 +310,7 @@ public class WebServiceTemplateTest {
         replay(connectionMock, marshallerMock, unmarshallerMock);
 
         Object result = template.marshalSendAndReceive(new Object());
-        Assert.assertEquals("Invalid result", unmarshalled, result);
+        assertEquals("Invalid result", unmarshalled, result);
 
         verify(connectionMock, marshallerMock, unmarshallerMock);
     }
@@ -310,7 +329,7 @@ public class WebServiceTemplateTest {
         replay(connectionMock, marshallerMock);
 
         Object result = template.marshalSendAndReceive(new Object());
-        Assert.assertNull("Invalid result", result);
+        assertNull("Invalid result", result);
 
         verify(connectionMock, marshallerMock);
     }
@@ -325,7 +344,7 @@ public class WebServiceTemplateTest {
             }
 
             public boolean supports(URI uri) {
-                Assert.assertEquals("Invalid uri", customUri, uri);
+                assertEquals("Invalid uri", customUri, uri);
                 return true;
             }
         });
@@ -345,7 +364,7 @@ public class WebServiceTemplateTest {
         replay(connectionMock, requestCallback, extractorMock);
 
         Object result = template.sendAndReceive(customUri.toString(), requestCallback, extractorMock);
-        Assert.assertEquals("Invalid response", extracted, result);
+        assertEquals("Invalid response", extracted, result);
 
         verify(connectionMock, requestCallback, extractorMock);
     }
@@ -376,7 +395,7 @@ public class WebServiceTemplateTest {
         replay(connectionMock, interceptorMock1, interceptorMock2, requestCallback, extractorMock);
 
         Object result = template.sendAndReceive(requestCallback, extractorMock);
-        Assert.assertEquals("Invalid response", extracted, result);
+        assertEquals("Invalid response", extracted, result);
 
         verify(connectionMock, interceptorMock1, interceptorMock2, requestCallback, extractorMock);
     }
@@ -406,7 +425,7 @@ public class WebServiceTemplateTest {
         replay(connectionMock, interceptorMock1, interceptorMock2, requestCallback, extractorMock);
 
         Object result = template.doSendAndReceive(messageContext, connectionMock, requestCallback, extractorMock);
-        Assert.assertEquals("Invalid response", extracted, result);
+        assertEquals("Invalid response", extracted, result);
 
         verify(connectionMock, interceptorMock1, interceptorMock2, requestCallback, extractorMock);
     }
@@ -435,7 +454,7 @@ public class WebServiceTemplateTest {
         replay(connectionMock, interceptorMock1, interceptorMock2, requestCallback, extractorMock);
 
         Object result = template.doSendAndReceive(messageContext, connectionMock, requestCallback, extractorMock);
-        Assert.assertEquals("Invalid response", extracted, result);
+        assertEquals("Invalid response", extracted, result);
 
         verify(connectionMock, interceptorMock1, interceptorMock2, requestCallback, extractorMock);
     }
@@ -454,7 +473,7 @@ public class WebServiceTemplateTest {
             }
 
             public boolean supports(URI uri) {
-                Assert.assertEquals("Invalid uri", providerUri, uri);
+                assertEquals("Invalid uri", providerUri, uri);
                 return true;
             }
         });
@@ -471,7 +490,7 @@ public class WebServiceTemplateTest {
         replay(connectionMock, extractorMock, providerMock);
 
         Object result = template.sendAndReceive(null, extractorMock);
-        Assert.assertNull("Invalid response", result);
+        assertNull("Invalid response", result);
 
         verify(connectionMock, extractorMock, providerMock);
     }
