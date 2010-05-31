@@ -28,10 +28,10 @@
         <url>https://fisheye.springframework.org/browse/spring-ws/trunk</url>
     </scm>
     <properties>
-        <osgi.version>2.0.0.M2</osgi.version>
+        <osgi.version>2.0.0.M3</osgi.version>
         <osgi.range>"${osgi.version:[=.=.=, =.=.+1)}"</osgi.range>
-        <spring.framework.version>3.0.1.RELEASE</spring.framework.version>
-        <spring.framework.osgi.range>"[3.0.1, 4.0.0)"</spring.framework.osgi.range>
+        <spring.framework.version>3.0.2.RELEASE</spring.framework.version>
+        <spring.framework.osgi.range>"[3.0.2, 4.0.0)"</spring.framework.osgi.range>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <pluginRepositories>
@@ -166,11 +166,6 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.ws</groupId>
-                <artifactId>spring-ws-core-tiger</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.ws</groupId>
                 <artifactId>spring-ws-support</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -178,23 +173,6 @@
                 <groupId>org.springframework.ws</groupId>
                 <artifactId>spring-ws-security</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.ws</groupId>
-                <artifactId>spring-ws-samples</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.ws</groupId>
-                <artifactId>airline</artifactId>
-                <type>war</type>
-                <version>${pom.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.ws</groupId>
-                <artifactId>echo</artifactId>
-                <type>war</type>
-                <version>${pom.version}</version>
             </dependency>
             <!-- Spring dependencies -->
             <dependency>
