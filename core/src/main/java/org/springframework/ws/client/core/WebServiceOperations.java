@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public interface WebServiceOperations {
      * @return an arbitrary result object, as returned by the <code>WebServiceMessageExtractor</code>
      * @throws WebServiceClientException if there is a problem sending or receiving the message
      */
-    Object sendAndReceive(WebServiceMessageCallback requestCallback, WebServiceMessageExtractor responseExtractor)
+    <T> T sendAndReceive(WebServiceMessageCallback requestCallback, WebServiceMessageExtractor<T> responseExtractor)
             throws WebServiceClientException;
 
     /**
@@ -56,9 +56,9 @@ public interface WebServiceOperations {
      * @return an arbitrary result object, as returned by the <code>WebServiceMessageExtractor</code>
      * @throws WebServiceClientException if there is a problem sending or receiving the message
      */
-    Object sendAndReceive(String uri,
-                          WebServiceMessageCallback requestCallback,
-                          WebServiceMessageExtractor responseExtractor) throws WebServiceClientException;
+    <T> T sendAndReceive(String uri,
+                         WebServiceMessageCallback requestCallback,
+                         WebServiceMessageExtractor<T> responseExtractor) throws WebServiceClientException;
 
     /**
      * Sends a web service message that can be manipulated with the given request callback, handling the response with a
@@ -172,8 +172,8 @@ public interface WebServiceOperations {
      * @return an arbitrary result object, as returned by the <code>SourceExtractor</code>
      * @throws WebServiceClientException if there is a problem sending or receiving the message
      */
-    Object sendSourceAndReceive(Source requestPayload, SourceExtractor responseExtractor)
-            throws WebServiceClientException;
+    <T> T sendSourceAndReceive(Source requestPayload, SourceExtractor<T> responseExtractor)
+           throws WebServiceClientException;
 
     /**
      * Sends a web service message that contains the given payload, reading the result with a
@@ -185,8 +185,8 @@ public interface WebServiceOperations {
      * @return an arbitrary result object, as returned by the <code>SourceExtractor</code>
      * @throws WebServiceClientException if there is a problem sending or receiving the message
      */
-    Object sendSourceAndReceive(String uri, Source requestPayload, SourceExtractor responseExtractor)
-            throws WebServiceClientException;
+    <T> T sendSourceAndReceive(String uri, Source requestPayload, SourceExtractor<T> responseExtractor)
+           throws WebServiceClientException;
 
     /**
      * Sends a web service message that contains the given payload, reading the result with a
@@ -202,9 +202,9 @@ public interface WebServiceOperations {
      * @return an arbitrary result object, as returned by the <code>SourceExtractor</code>
      * @throws WebServiceClientException if there is a problem sending or receiving the message
      */
-    Object sendSourceAndReceive(Source requestPayload,
-                                WebServiceMessageCallback requestCallback,
-                                SourceExtractor responseExtractor) throws WebServiceClientException;
+    <T> T sendSourceAndReceive(Source requestPayload,
+                               WebServiceMessageCallback requestCallback,
+                               SourceExtractor<T> responseExtractor) throws WebServiceClientException;
 
     /**
      * Sends a web service message that contains the given payload, reading the result with a
@@ -219,10 +219,10 @@ public interface WebServiceOperations {
      * @return an arbitrary result object, as returned by the <code>SourceExtractor</code>
      * @throws WebServiceClientException if there is a problem sending or receiving the message
      */
-    Object sendSourceAndReceive(String uri,
-                                Source requestPayload,
-                                WebServiceMessageCallback requestCallback,
-                                SourceExtractor responseExtractor) throws WebServiceClientException;
+    <T> T sendSourceAndReceive(String uri,
+                               Source requestPayload,
+                               WebServiceMessageCallback requestCallback,
+                               SourceExtractor<T> responseExtractor) throws WebServiceClientException;
 
     //-----------------------------------------------------------------------------------------------------------------
     // Convenience methods for sending Sources and receiving to Results

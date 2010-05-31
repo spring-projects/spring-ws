@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import javax.xml.transform.TransformerException;
  * @see org.springframework.ws.client.core.WebServiceTemplate
  * @since 1.0.0
  */
-public interface SourceExtractor {
+public interface SourceExtractor<T> {
 
     /**
      * Process the data in the given <code>Source</code>, creating a corresponding result object.
@@ -45,6 +45,6 @@ public interface SourceExtractor {
      *         latter case)
      * @throws IOException in case of I/O errors
      */
-    Object extractData(Source source) throws IOException, TransformerException;
+    T extractData(Source source) throws IOException, TransformerException;
 
 }

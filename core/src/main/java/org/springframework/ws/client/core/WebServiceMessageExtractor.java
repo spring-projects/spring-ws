@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import org.springframework.ws.WebServiceMessage;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
-public interface WebServiceMessageExtractor {
+public interface WebServiceMessageExtractor<T> {
 
     /**
      * Process the data in the given <code>WebServiceMessage</code>, creating a corresponding result object.
@@ -46,6 +46,6 @@ public interface WebServiceMessageExtractor {
      * @throws IOException          in case of I/O errors
      * @throws TransformerException in case of transformation errors
      */
-    Object extractData(WebServiceMessage message) throws IOException, TransformerException;
+    T extractData(WebServiceMessage message) throws IOException, TransformerException;
 
 }

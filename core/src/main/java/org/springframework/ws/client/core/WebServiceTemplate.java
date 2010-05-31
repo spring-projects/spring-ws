@@ -239,7 +239,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      * When using an HTTP transport, this property defines whether to check the HTTP response status code is in the 2xx
      * Successful range. Both the SOAP specification and the WS-I Basic Profile define that a Web service must return a
      * "200 OK" or "202 Accepted" HTTP status code for a normal response. Setting this property to <code>false</code>
-     * allows this template to deal with non-conformant services.
+     * allows this template to deal with non-conforming services.
      *
      * @see #hasError(WebServiceConnection, WebServiceMessage)
      * @see <a href="http://www.w3.org/TR/2000/NOTE-SOAP-20000508/#_Toc478383529">SOAP 1.1 specification</a>
@@ -258,7 +258,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      * When using an HTTP transport, this property defines whether to check the HTTP response status code for fault
      * indicators. Both the SOAP specification and the WS-I Basic Profile define that a Web service must return a "500
      * Internal Server Error" HTTP status code if the response envelope is a Fault. Setting this property to
-     * <code>false</code> allows this template to deal with non-conformant services.
+     * <code>false</code> allows this template to deal with non-conforming services.
      *
      * @see #hasFault(WebServiceConnection,WebServiceMessage)
      * @see <a href="http://www.w3.org/TR/2000/NOTE-SOAP-20000508/#_Toc478383529">SOAP 1.1 specification</a>
@@ -360,7 +360,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                     }
                 }
             }
-        }, new WebServiceMessageExtractor() {
+        }, new WebServiceMessageExtractor<Object>() {
 
             public Object extractData(WebServiceMessage response) throws IOException {
                 Unmarshaller unmarshaller = getUnmarshaller();
@@ -397,10 +397,10 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                                                 final Result responseResult) {
         try {
             final Transformer transformer = createTransformer();
-            Boolean retVal = (Boolean) doSendAndReceive(uri, transformer, requestPayload, requestCallback,
-                    new SourceExtractor() {
+            Boolean retVal = doSendAndReceive(uri, transformer, requestPayload, requestCallback,
+                    new SourceExtractor<Boolean>() {
 
-                        public Object extractData(Source source) throws IOException, TransformerException {
+                        public Boolean extractData(Source source) throws IOException, TransformerException {
                             transformer.transform(source, responseResult);
                             return Boolean.TRUE;
                         }
@@ -416,26 +416,26 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     // Source-handling methods
     //
 
-    public Object sendSourceAndReceive(final Source requestPayload, final SourceExtractor responseExtractor) {
+    public <T> T sendSourceAndReceive(final Source requestPayload, final SourceExtractor<T> responseExtractor) {
         return sendSourceAndReceive(requestPayload, null, responseExtractor);
     }
 
-    public Object sendSourceAndReceive(String uri,
+    public <T> T sendSourceAndReceive(String uri,
                                        final Source requestPayload,
-                                       final SourceExtractor responseExtractor) {
+                                       final SourceExtractor<T> responseExtractor) {
         return sendSourceAndReceive(uri, requestPayload, null, responseExtractor);
     }
 
-    public Object sendSourceAndReceive(final Source requestPayload,
+    public <T> T sendSourceAndReceive(final Source requestPayload,
                                        final WebServiceMessageCallback requestCallback,
-                                       final SourceExtractor responseExtractor) {
+                                       final SourceExtractor<T> responseExtractor) {
         return sendSourceAndReceive(getDefaultUri(), requestPayload, requestCallback, responseExtractor);
     }
 
-    public Object sendSourceAndReceive(String uri,
+    public <T> T sendSourceAndReceive(String uri,
                                        final Source requestPayload,
                                        final WebServiceMessageCallback requestCallback,
-                                       final SourceExtractor responseExtractor) {
+                                       final SourceExtractor<T> responseExtractor) {
 
         try {
             return doSendAndReceive(uri, createTransformer(), requestPayload, requestCallback, responseExtractor);
@@ -445,11 +445,11 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
         }
     }
 
-    private Object doSendAndReceive(String uri,
+    private <T> T doSendAndReceive(String uri,
                                     final Transformer transformer,
                                     final Source requestPayload,
                                     final WebServiceMessageCallback requestCallback,
-                                    final SourceExtractor responseExtractor) {
+                                    final SourceExtractor<T> responseExtractor) {
         Assert.notNull(responseExtractor, "responseExtractor must not be null");
         return sendAndReceive(uri, new WebServiceMessageCallback() {
             public void doWithMessage(WebServiceMessage message) throws IOException, TransformerException {
@@ -458,7 +458,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                     requestCallback.doWithMessage(message);
                 }
             }
-        }, new SourceExtractorMessageExtractor(responseExtractor));
+        }, new SourceExtractorMessageExtractor<T>(responseExtractor));
     }
 
     //
@@ -474,19 +474,19 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                                   WebServiceMessageCallback requestCallback,
                                   WebServiceMessageCallback responseCallback) {
         Assert.notNull(responseCallback, "responseCallback must not be null");
-        Boolean result = (Boolean) sendAndReceive(uri, requestCallback,
+        Boolean result = sendAndReceive(uri, requestCallback,
                 new WebServiceMessageCallbackMessageExtractor(responseCallback));
         return result != null && result;
     }
 
-    public Object sendAndReceive(WebServiceMessageCallback requestCallback,
-                                 WebServiceMessageExtractor responseExtractor) {
+    public <T> T sendAndReceive(WebServiceMessageCallback requestCallback,
+                                 WebServiceMessageExtractor<T> responseExtractor) {
         return sendAndReceive(getDefaultUri(), requestCallback, responseExtractor);
     }
 
-    public Object sendAndReceive(String uriString,
+    public <T> T sendAndReceive(String uriString,
                                  WebServiceMessageCallback requestCallback,
-                                 WebServiceMessageExtractor responseExtractor) {
+                                 WebServiceMessageExtractor<T> responseExtractor) {
         Assert.notNull(responseExtractor, "'responseExtractor' must not be null");
         Assert.hasLength(uriString, "'uri' must not be empty");
         TransportContext previousTransportContext = TransportContextHolder.getTransportContext();
@@ -523,10 +523,11 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      * @throws WebServiceClientException if there is a problem sending or receiving the message
      * @throws IOException               in case of I/O errors
      */
-    protected Object doSendAndReceive(MessageContext messageContext,
-                                      WebServiceConnection connection,
-                                      WebServiceMessageCallback requestCallback,
-                                      WebServiceMessageExtractor responseExtractor) throws IOException {
+    @SuppressWarnings("unchecked")
+    protected <T> T doSendAndReceive(MessageContext messageContext,
+                                     WebServiceConnection connection,
+                                     WebServiceMessageCallback requestCallback,
+                                     WebServiceMessageExtractor<T> responseExtractor) throws IOException {
         try {
             if (requestCallback != null) {
                 requestCallback.doWithMessage(messageContext.getRequest());
@@ -545,7 +546,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
             if (!messageContext.hasResponse()) {
                 sendRequest(connection, messageContext.getRequest());
                 if (hasError(connection, messageContext.getRequest())) {
-                    return handleError(connection, messageContext.getRequest());
+                    return (T)handleError(connection, messageContext.getRequest());
                 }
                 WebServiceMessage response = connection.receive(getMessageFactory());
                 messageContext.setResponse(response);
@@ -558,7 +559,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                 }
                 else {
                     triggerHandleFault(interceptorIndex, messageContext);
-                    return handleFault(connection, messageContext);
+                    return (T)handleFault(connection, messageContext);
                 }
             }
             else {
@@ -612,7 +613,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      * Handles an error on the given connection. The default implementation throws a {@link
      * WebServiceTransportException}.
      *
-     * @param connection the erronous connection
+     * @param connection the erroneous connection
      * @param request    the corresponding request message
      * @return the object to be returned from {@link #sendAndReceive(String,WebServiceMessageCallback,
      *         WebServiceMessageExtractor)}, if any
@@ -722,7 +723,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      * FaultMessageResolver fault resolver} if registered, or invokes {@link #handleError(WebServiceConnection,
      * WebServiceMessage)} otherwise.
      *
-     * @param connection     the erronous connection
+     * @param connection     the faulty connection
      * @param messageContext the message context
      * @return the object to be returned from {@link #sendAndReceive(String,WebServiceMessageCallback,
      *         WebServiceMessageExtractor)}, if any
@@ -741,7 +742,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     }
 
     /** Adapter to enable use of a WebServiceMessageCallback inside a WebServiceMessageExtractor. */
-    private static class WebServiceMessageCallbackMessageExtractor implements WebServiceMessageExtractor {
+    private static class WebServiceMessageCallbackMessageExtractor implements WebServiceMessageExtractor<Boolean> {
 
         private final WebServiceMessageCallback callback;
 
@@ -749,22 +750,22 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
             this.callback = callback;
         }
 
-        public Object extractData(WebServiceMessage message) throws IOException, TransformerException {
+        public Boolean extractData(WebServiceMessage message) throws IOException, TransformerException {
             callback.doWithMessage(message);
             return Boolean.TRUE;
         }
     }
 
     /** Adapter to enable use of a SourceExtractor inside a WebServiceMessageExtractor. */
-    private static class SourceExtractorMessageExtractor implements WebServiceMessageExtractor {
+    private static class SourceExtractorMessageExtractor<T> implements WebServiceMessageExtractor<T> {
 
-        private final SourceExtractor sourceExtractor;
+        private final SourceExtractor<T> sourceExtractor;
 
-        private SourceExtractorMessageExtractor(SourceExtractor sourceExtractor) {
+        private SourceExtractorMessageExtractor(SourceExtractor<T> sourceExtractor) {
             this.sourceExtractor = sourceExtractor;
         }
 
-        public Object extractData(WebServiceMessage message) throws IOException, TransformerException {
+        public T extractData(WebServiceMessage message) throws IOException, TransformerException {
             return sourceExtractor.extractData(message.getPayloadSource());
         }
     }
