@@ -1,0 +1,13 @@
+Bundle-SymbolicName: org.springframework.ws.test
+Bundle-Name: Spring Web Services Test
+Bundle-Vendor: SpringSource
+Bundle-Version: ${osgi.version}
+Bundle-ManifestVersion: 2
+Import-Template:
+ org.springframework.ws.*;version=${osgi.range},
+ org.springframework.xml.*;version=${osgi.range}
+Ignored-Existing-Headers: 
+ Bnd-LastModified,
+ Import-Package,
+ Export-Package,
+ Tool
