@@ -270,7 +270,7 @@
 </bean>]]></programlisting>
                 <para>
                     When the <property>inline</property> property is enabled, it follows all XSD imports and includes,
-                    and inlines them in the WSDL. This greatly simplifies the deloyment of the schemas, which still
+                    and inlines them in the WSDL. This greatly simplifies the deployment of the schemas, which still
                     making it possible to edit them separately. 
                 </para>
                 <para>
@@ -281,7 +281,22 @@
                     Refer to the class-level Javadoc of these classes to see how you can extend this mechanism,
                     if necessary.
                 </para>
-
+                <note>
+                    <para>
+                        Even though it can be quite handy to create the WSDL at runtime from your XSDs, there
+                        are a couple of drawbacks to this approach. First off, though we try to keep the WSDL generation
+                        process consistent between releases, there is still the possibility that it changes (slightly).
+                        Second, the generation is a bit slow, though once generated, the WSDL is cached for later
+                        reference.
+                    </para>
+                    <para>
+                        It is therefore recommended to only use the <classname>DefaultWsdl11Definition</classname>
+                        during the development stages of your project. Then, we recommend to use your browser to
+                        download the generated WSDL, store it in the project, and expose it with the
+                        <classname>SimpleWsdl11Definition</classname>. This is the only way to be really sure that
+                        the WSDL does not change over time.
+                    </para>
+                </note>
             </section>
         </section>
         <section>
