@@ -45,13 +45,4 @@ public class XmppConnectionFactoryBeanTest {
         factoryBean.setPort(-10);
     }
 
-    @Test
-    public void xs4all() throws XMPPException {
-        factoryBean.setHost("jabber.xs4all.nl");
-        factoryBean.setUsername("poutsma");
-        factoryBean.setPassword("tusega");
-        factoryBean.afterPropertiesSet();
-        factoryBean.destroy();
-    }
-
 }
