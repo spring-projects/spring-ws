@@ -30,7 +30,7 @@
     <properties>
         <osgi.version>2.0.0.M3</osgi.version>
         <osgi.range>"${osgi.version:[=.=.=, =.=.+1)}"</osgi.range>
-        <spring.framework.version>3.0.2.RELEASE</spring.framework.version>
+        <spring.framework.version>3.0.3.RELEASE</spring.framework.version>
         <spring.framework.osgi.range>"[3.0.2, 4.0.0)"</spring.framework.osgi.range>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
