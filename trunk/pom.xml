@@ -23,13 +23,22 @@
     <inceptionYear>2005</inceptionYear>
     <developers>
         <developer>
-            <id>poutsma</id>
+            <id>apoutsma</id>
             <name>Arjen Poutsma</name>
-            <email>arjen.poutsma@springsource.com</email>
-            <organization>SpringSource</organization>
+            <email>apoutsma@vmware.com</email>
+            <organization>SpringSource - a division of VMware</organization>
             <organizationUrl>http://www.springsource.com</organizationUrl>
             <roles>
                 <role>Project Admin</role>
+                <role>Developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <id>tareqa</id>
+            <name>Tareq Abed Rabbo</name>
+            <email>tareq.abedrabbo@gmail.com</email>
+            <roles>
                 <role>Developer</role>
             </roles>
             <timezone>+1</timezone>
@@ -52,7 +61,8 @@
             <name>Giovanni Cuccu</name>
         </contributor>
         <contributor>
-            <name>Tareq Abed Rabbo</name>
+			<name>Lukas Krecan</name>
+			<url>http://blog.krecan.net</url>
         </contributor>
     </contributors>
     <organization>
@@ -96,6 +106,7 @@
         <module>core</module>
         <module>support</module>
         <module>security</module>
+        <module>test</module>
         <module>archetype</module>
     </modules>
     <profiles>
