@@ -43,7 +43,7 @@ import org.springframework.xml.transform.TraxUtils;
 @SuppressWarnings("Since15")
 public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport implements MethodArgumentResolver {
 
-    private XMLInputFactory inputFactory = createXmlInputFactory();
+    private final XMLInputFactory inputFactory = createXmlInputFactory();
 
     public boolean supportsParameter(MethodParameter parameter) {
         if (parameter.getParameterAnnotation(RequestPayload.class) == null) {
