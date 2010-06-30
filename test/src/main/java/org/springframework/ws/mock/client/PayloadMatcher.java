@@ -16,32 +16,33 @@
 
 package org.springframework.ws.mock.client;
 
-import java.io.IOException;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.dom.DOMSource;
 
-import org.springframework.core.io.Resource;
+import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.xml.sax.SaxUtils;
-import org.springframework.xml.transform.StringResult;
 
 import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
-import static org.custommonkey.xmlunit.XMLAssert.fail;
+import static junit.framework.Assert.fail;
 
 /**
  * Abstract base class that matches payloads.
  *
  * @author Arjen Poutsma
+ * @author Lukas Krecan
  * @since 2.0
  */
-abstract class PayloadMatcher extends DiffMatcher {
+class PayloadMatcher extends DiffMatcher {
+
+    private final Source expected;
+
+    PayloadMatcher(Source expected) {
+        Assert.notNull(expected, "'expected' must not be null");
+        this.expected = expected;
+    }
 
     @Override
     protected final Diff createDiff(WebServiceMessage request) throws Exception {
@@ -52,53 +53,15 @@ abstract class PayloadMatcher extends DiffMatcher {
         return createDiff(payload);
     }
 
-    protected abstract Diff createDiff(Source payload) throws Exception;
-
-    public static PayloadMatcher createStringPayloadMatcher(final String control) {
-        return new PayloadMatcher() {
-            @Override
-            protected Diff createDiff(Source payload) throws TransformerException, IOException, SAXException {
-                StringResult result = new StringResult();
-                transform(payload, result);
-                return new Diff(control, result.toString());
-            }
-        };
+    protected Diff createDiff(Source payload) throws TransformerException {
+        Document expectedDocument = createDocumentFromSource(expected);
+        Document actualDocument = createDocumentFromSource(payload);
+        return new Diff(expectedDocument, actualDocument);
     }
 
-    public static PayloadMatcher createResourcePayloadMatcher(final Resource control) {
-        return new PayloadMatcher() {
-            @Override
-            protected Diff createDiff(Source payload) throws IOException, SAXException, TransformerException {
-                InputSource controlInputSource = SaxUtils.createInputSource(control);
-                Document controlDocument = XMLUnit.buildDocument(XMLUnit.newControlParser(), controlInputSource);
-                DOMSource controlSource = new DOMSource(controlDocument);
-
-                DOMResult result = new DOMResult();
-                transform(payload, result);
-                DOMSource resultSource = new DOMSource(result.getNode());
-
-                return new Diff(controlSource, resultSource);
-            }
-        };
-    }
-
-    public static PayloadMatcher createSourcePayloadMatcher(final Source control) {
-        return new PayloadMatcher() {
-            @Override
-            protected Diff createDiff(Source payload) throws Exception {
-                if (control instanceof DOMSource && payload instanceof DOMSource) {
-                    return new Diff((DOMSource) control, (DOMSource) payload);
-                }
-                DOMResult controlResult = new DOMResult();
-                transform(control, controlResult);
-                DOMSource controlSource = new DOMSource(controlResult.getNode());
-
-                DOMResult payloadResult = new DOMResult();
-                transform(payload, payloadResult);
-                DOMSource payloadSource = new DOMSource(payloadResult.getNode());
-
-                return new Diff(controlSource, payloadSource);
-            }
-        };
+    private Document createDocumentFromSource(Source source) throws TransformerException {
+        DOMResult result = new DOMResult();
+        transform(source, result);
+        return (Document) result.getNode();
     }
 }
