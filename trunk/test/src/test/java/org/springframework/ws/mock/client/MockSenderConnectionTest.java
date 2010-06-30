@@ -36,7 +36,7 @@ public class MockSenderConnectionTest {
     public void setUp() throws Exception {
         connection = new MockSenderConnection();
     }
-    
+
     @Test
     public void uri() throws Exception {
         assertTrue("connection does not have any URI", connection.hasAnyUri());
@@ -60,7 +60,6 @@ public class MockSenderConnectionTest {
 
         connection.send(request);
 
-
         verify(requestMatcher1, requestMatcher2, request);
     }
 
@@ -80,7 +79,6 @@ public class MockSenderConnectionTest {
         connection.send(request);
     }
 
-    
     @Test
     public void receive() throws Exception {
         ResponseCallback responseCallback = createMock(ResponseCallback.class);
@@ -97,5 +95,29 @@ public class MockSenderConnectionTest {
         assertSame(response, result);
 
         verify(responseCallback, messageFactory, response);
+    }
+
+    @Test
+    public void sendAndReceive() throws Exception {
+        WebServiceMessageFactory messageFactory = createMock(WebServiceMessageFactory.class);
+        WebServiceMessage request = createMock("request", WebServiceMessage.class);
+        WebServiceMessage response = createMock("response", WebServiceMessage.class);
+
+        RequestMatcher requestMatcher = createMock("requestMatcher1", RequestMatcher.class);
+        ResponseCallback responseCallback = createMock(ResponseCallback.class);
+        connection.addRequestMatcher(requestMatcher).setResponseCallback(responseCallback);
+
+        requestMatcher.match(request);
+
+        expect(messageFactory.createWebServiceMessage()).andReturn(response);
+        responseCallback.doWithResponse(request, response);
+
+        replay(responseCallback, messageFactory, response, request, requestMatcher);
+
+        connection.send(request);
+        WebServiceMessage result = connection.receive(messageFactory);
+        assertSame(response, result);
+
+        verify(responseCallback, messageFactory, response, request, requestMatcher);
     }
 }
