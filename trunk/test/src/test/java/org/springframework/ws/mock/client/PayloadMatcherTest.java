@@ -16,8 +16,6 @@
 
 package org.springframework.ws.mock.client;
 
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.xml.transform.StringSource;
 
@@ -28,13 +26,13 @@ import static org.easymock.EasyMock.*;
 public class PayloadMatcherTest {
 
     @Test
-    public void stringPayloadMatch() throws Exception {
+    public void match() throws Exception {
         String xml = "<element xmlns='http://example.com'/>";
         WebServiceMessage message = createMock(WebServiceMessage.class);
         expect(message.getPayloadSource()).andReturn(new StringSource(xml));
         replay(message);
 
-        PayloadMatcher matcher = PayloadMatcher.createStringPayloadMatcher(xml);
+        PayloadMatcher matcher = new PayloadMatcher(new StringSource(xml));
         matcher.match(message);
 
         verify(message);
@@ -48,36 +46,8 @@ public class PayloadMatcherTest {
         replay(message);
 
         String expected = "<element2 xmlns='http://example.com'/>";
-        PayloadMatcher matcher = PayloadMatcher.createStringPayloadMatcher(expected);
+        PayloadMatcher matcher = new PayloadMatcher(new StringSource(expected));
         matcher.match(message);
     }
 
-    @Test
-    public void resourcePayload() throws Exception {
-        String xml = "<element xmlns='http://example.com'/>";
-        WebServiceMessage message = createMock(WebServiceMessage.class);
-        expect(message.getPayloadSource()).andReturn(new StringSource(xml));
-        replay(message);
-
-        Resource resource = new ByteArrayResource(xml.getBytes());
-        PayloadMatcher matcher = PayloadMatcher.createResourcePayloadMatcher(resource);
-        matcher.match(message);
-
-        verify(message);
-    }
-
-
-    @Test
-    public void sourcePayloadMatcher() throws Exception {
-        String xml = "<element xmlns='http://example.com'/>";
-        WebServiceMessage message = createMock(WebServiceMessage.class);
-        expect(message.getPayloadSource()).andReturn(new StringSource(xml));
-        replay(message);
-
-        Resource resource = new ByteArrayResource(xml.getBytes());
-        PayloadMatcher matcher = PayloadMatcher.createSourcePayloadMatcher(new StringSource(xml));
-        matcher.match(message);
-
-        verify(message);
-    }
 }

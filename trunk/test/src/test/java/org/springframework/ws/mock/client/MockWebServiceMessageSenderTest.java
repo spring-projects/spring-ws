@@ -16,7 +16,10 @@
 
 package org.springframework.ws.mock.client;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.dom.DOMSource;
 
 import org.springframework.ws.client.WebServiceIOException;
 import org.springframework.ws.client.WebServiceTransportException;
@@ -25,8 +28,10 @@ import org.springframework.ws.soap.client.SoapFaultClientException;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
+import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.Test;
+import org.w3c.dom.Document;
 
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 
@@ -42,6 +47,7 @@ public class MockWebServiceMessageSenderTest {
         template = new WebServiceTemplate();
         template.setMessageSender(messageSender);
         template.setDefaultUri("http://example.com/airline");
+        XMLUnit.setIgnoreWhitespace(true);
     }
 
     @Test
@@ -56,6 +62,24 @@ public class MockWebServiceMessageSenderTest {
         template.sendSourceAndReceiveToResult(new StringSource(request), result);
         assertXMLEqual(result.toString(), response);
         messageSender.verify();
+    }
+
+    @Test
+    public void normalDomSource() throws Exception {
+    	String request = "<request xmlns='http://example.com'/>";
+    	String response = "<response xmlns='http://example.com'/>";
+    	
+    	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    	Document document = factory.newDocumentBuilder().parse(new ByteArrayInputStream(request.getBytes()));
+
+    	messageSender.whenConnecting().expectPayload(new DOMSource(document)).andRespondWithPayload(response);
+    	messageSender.replay();
+    	
+    	
+    	StringResult result = new StringResult();
+    	template.sendSourceAndReceiveToResult(new StringSource(request), result);
+    	assertXMLEqual(result.toString(), response);
+    	messageSender.verify();
     }
 
     @Test(expected = AssertionError.class)

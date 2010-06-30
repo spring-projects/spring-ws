@@ -30,7 +30,8 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
-import org.springframework.xml.transform.TransformerObjectSupport;
+import org.springframework.xml.transform.ResourceSource;
+import org.springframework.xml.transform.StringSource;
 
 import static org.junit.Assert.fail;
 
@@ -42,8 +43,7 @@ import static org.junit.Assert.fail;
  * @author Lukas Krecan
  * @since 2.0
  */
-class MockSenderConnection extends TransformerObjectSupport
-        implements FaultAwareWebServiceConnection, RequestExpectations, ResponseActions {
+class MockSenderConnection implements FaultAwareWebServiceConnection, RequestExpectations, ResponseActions {
 
     private static final URI ANY_URI = URI.create("ANY");
 
@@ -69,17 +69,22 @@ class MockSenderConnection extends TransformerObjectSupport
 
     public ResponseActions expectPayload(String payload) {
         Assert.notNull(payload, "'payload' must not be null");
-        return addRequestMatcher(PayloadMatcher.createStringPayloadMatcher(payload));
+        return addRequestMatcher(new PayloadMatcher(new StringSource(payload)));
     }
 
     public ResponseActions expectPayload(Source payload) {
         Assert.notNull(payload, "'payload' must not be null");
-        return addRequestMatcher(PayloadMatcher.createSourcePayloadMatcher(payload));
+        return addRequestMatcher(new PayloadMatcher(payload));
     }
 
     public ResponseActions expectPayload(Resource payload) {
         Assert.notNull(payload, "'payload' must not be null");
-        return addRequestMatcher(PayloadMatcher.createResourcePayloadMatcher(payload));
+        try {
+            return addRequestMatcher(new PayloadMatcher(new ResourceSource(payload)));
+        }
+        catch (IOException ex) {
+            throw new IllegalArgumentException(payload + " could not be opened", ex);
+        }
     }
 
     public ResponseActions expectSoapHeader(QName soapHeaderName) {
