@@ -26,13 +26,13 @@ public class ExceptionResponseCallbackTest {
     public void ioException() throws Exception {
         ExceptionResponseCallback callback = new ExceptionResponseCallback(new IOException());
 
-        callback.doWithResponse(null);
+        callback.doWithResponse(null, null);
     }
     
     @Test(expected = RuntimeException.class)
     public void runtimeException() throws Exception {
         ExceptionResponseCallback callback = new ExceptionResponseCallback(new RuntimeException());
 
-        callback.doWithResponse(null);
+        callback.doWithResponse(null, null);
     }
 }

@@ -32,9 +32,9 @@ import static org.junit.Assert.fail;
  */
 abstract class SoapFaultResponseCallback implements ResponseCallback {
 
-    public final void doWithResponse(WebServiceMessage message) throws IOException {
-        Assert.isInstanceOf(SoapMessage.class, message);
-        SoapMessage soapMessage = (SoapMessage) message;
+    public final void doWithResponse(WebServiceMessage request, WebServiceMessage response) throws IOException {
+        Assert.isInstanceOf(SoapMessage.class, response);
+        SoapMessage soapMessage = (SoapMessage) response;
         SoapBody soapBody = soapMessage.getSoapBody();
         if (soapBody == null) {
             fail("SOAP message [" + soapMessage + "] does not contain SOAP body");

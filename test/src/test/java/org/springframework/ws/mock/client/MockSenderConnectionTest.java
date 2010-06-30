@@ -89,7 +89,7 @@ public class MockSenderConnectionTest {
         connection.setResponseCallback(responseCallback);
 
         expect(messageFactory.createWebServiceMessage()).andReturn(response);
-        responseCallback.doWithResponse(response);
+        responseCallback.doWithResponse(null, response);
 
         replay(responseCallback, messageFactory, response);
 

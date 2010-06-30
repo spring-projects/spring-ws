@@ -51,6 +51,8 @@ class MockSenderConnection implements FaultAwareWebServiceConnection, RequestExp
 
     private URI uri;
 
+    private WebServiceMessage request;
+
     private ResponseCallback responseCallback;
 
     private String errorMessage;
@@ -169,13 +171,13 @@ class MockSenderConnection implements FaultAwareWebServiceConnection, RequestExp
         else {
             throw new AssertionError("Unexpected send() for [" + message + "]");
         }
-
+        this.request = message;
     }
 
     public WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException {
         if (responseCallback != null) {
             WebServiceMessage response = messageFactory.createWebServiceMessage();
-            responseCallback.doWithResponse(response);
+            responseCallback.doWithResponse(request, response);
             return response;
         }
         else {
@@ -209,6 +211,7 @@ class MockSenderConnection implements FaultAwareWebServiceConnection, RequestExp
 
     public void close() throws IOException {
         requestMatchers.clear();
+        request = null;
         responseCallback = null;
         errorMessage = null;
         uri = null;
