@@ -43,9 +43,9 @@ class PayloadResponseCallback extends TransformerObjectSupport implements Respon
         this.payload = new ResourceSource(payload);
     }
 
-    public void doWithResponse(WebServiceMessage message) throws IOException {
+    public void doWithResponse(WebServiceMessage request, WebServiceMessage response) throws IOException {
         try {
-            transform(payload, message.getPayloadResult());
+            transform(payload, response.getPayloadResult());
         }
         catch (TransformerException ex) {
             throw new AssertionError("Could not transform response payload to message: " + ex.getMessage());

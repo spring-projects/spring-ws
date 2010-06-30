@@ -21,8 +21,8 @@ import java.io.IOException;
 import org.springframework.ws.WebServiceMessage;
 
 /**
- * Callback interface for code that operates on a {@link WebServiceMessage}. Defines the contract for matching request
- * messages to expectations.
+ * Callback interface for code that operates on response {@link WebServiceMessage}s. Defines the contract for creating
+ * responses in test scenarios.
  *
  * @author Arjen Poutsma
  * @author Lukas Krecan
@@ -30,6 +30,13 @@ import org.springframework.ws.WebServiceMessage;
  */
 public interface ResponseCallback {
 
-    void doWithResponse(WebServiceMessage message) throws IOException;
+    /**
+     * Execute any number of operations on the supplied response, given the request.
+     *
+     * @param request  the request message
+     * @param response the response message
+     * @throws IOException in case of I/O errors
+     */
+    void doWithResponse(WebServiceMessage request, WebServiceMessage response) throws IOException;
 
 }
