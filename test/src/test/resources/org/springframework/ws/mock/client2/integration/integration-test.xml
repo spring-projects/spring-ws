@@ -12,8 +12,8 @@
     <bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
         <property name="classesToBeBound">
             <list>
-                <value>org.springframework.ws.mock.client.CustomerCountRequest</value>
-                <value>org.springframework.ws.mock.client.CustomerCountResponse</value>
+                <value>org.springframework.ws.mock.client2.integration.CustomerCountRequest</value>
+                <value>org.springframework.ws.mock.client2.integration.CustomerCountResponse</value>
             </list>
         </property>
     </bean>
