@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.ws.transport.context;
 
 /**
@@ -42,7 +43,7 @@ public abstract class TransportContextHolder {
      * @return the current transport context, or <code>null</code> if none
      */
     public static TransportContext getTransportContext() {
-        return (TransportContext) transportContextHolder.get();
+        return transportContextHolder.get();
     }
 
     private static class TransportThreadLocal extends ThreadLocal<TransportContext> {
