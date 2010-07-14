@@ -25,8 +25,14 @@ import java.util.List;
 import org.springframework.util.Assert;
 import org.springframework.ws.transport.WebServiceMessageSender;
 
-import static org.junit.Assert.assertTrue;
-
+/**
+ * Mock implementation of {@link WebServiceMessageSender}. Contains a list of expected {@link MockSenderConnection}s,
+ * and iterates over those.
+ *
+ * @author Arjen Poutsma
+ * @author Lukas Krecan
+ * @since 2.0
+ */
 class MockWebServiceMessageSender implements WebServiceMessageSender {
 
     private final List<MockSenderConnection> expectedConnections = new LinkedList<MockSenderConnection>();
@@ -38,7 +44,9 @@ class MockWebServiceMessageSender implements WebServiceMessageSender {
         if (connectionIterator == null) {
             connectionIterator = expectedConnections.iterator();
         }
-        assertTrue("No further connections expected", connectionIterator.hasNext());
+        if (!connectionIterator.hasNext()) {
+            throw new AssertionError("No further connections expected");
+        }
 
         MockSenderConnection currentConnection = connectionIterator.next();
         currentConnection.setUri(uri);
