@@ -153,6 +153,17 @@ public class WebServiceMockTest {
         template.sendSourceAndReceiveToResult(new StringSource(request), new StringResult());
         assertNull(MockWebServiceMessageSenderHolder.get());
     }
+    
+    @Test(expected = AssertionError.class)
+    public void unexpectedConnection() throws Exception {
+        String request = "<request xmlns='http://example.com'/>";
+        String response = "<response xmlns='http://example.com'/>";
+
+        expect(payload(request)).andRespond(withPayload(response));
+
+        template.sendSourceAndReceiveToResult(new StringSource(request), new StringResult());
+        template.sendSourceAndReceiveToResult(new StringSource(request), new StringResult());
+    }
 
 
 }

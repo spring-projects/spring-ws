@@ -32,10 +32,18 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 class ThreadLocalMockWebServiceMessageSender implements WebServiceMessageSender {
 
     public WebServiceConnection createConnection(URI uri) throws IOException {
-        return MockWebServiceMessageSenderHolder.get().createConnection(uri);
+        return getMock().createConnection(uri);
     }
 
     public boolean supports(URI uri) {
-        return MockWebServiceMessageSenderHolder.get().supports(uri);
+        return getMock().supports(uri);
+    }
+
+    private MockWebServiceMessageSender getMock() {
+        MockWebServiceMessageSender mock = MockWebServiceMessageSenderHolder.get();
+        if (mock == null) {
+            throw new AssertionError("No further connections expected");
+        }
+        return mock;
     }
 }
