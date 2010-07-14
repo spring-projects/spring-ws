@@ -39,8 +39,9 @@ public abstract class WebServiceMock {
         Assert.notNull(webServiceTemplate, "'webServiceTemplate' must not be null");
 
         MockWebServiceMessageSender mockMessageSender = new MockWebServiceMessageSender();
-        webServiceTemplate.setMessageSender(mockMessageSender);
         MockWebServiceMessageSenderHolder.set(mockMessageSender);
+
+        webServiceTemplate.setMessageSender(new ThreadLocalMockWebServiceMessageSender());
     }
 
     /**
