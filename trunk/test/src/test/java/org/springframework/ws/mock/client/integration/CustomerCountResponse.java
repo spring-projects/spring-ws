@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.mock.client2.integration;
+package org.springframework.ws.mock.client.integration;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

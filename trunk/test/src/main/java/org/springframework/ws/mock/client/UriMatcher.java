@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.mock.client2;
+package org.springframework.ws.mock.client;
 
 import java.net.URI;
 
