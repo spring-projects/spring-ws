@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.mock.client2.integration;
+package org.springframework.ws.mock.client.integration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
-import static org.springframework.ws.mock.client2.WebServiceMock.*;
+import static org.springframework.ws.mock.client.WebServiceMock.*;
 
 /**
  * Integration test for client-side WebService testing. In different package so we can't use the package-protected

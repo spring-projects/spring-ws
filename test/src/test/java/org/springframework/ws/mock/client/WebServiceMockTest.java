@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.mock.client2;
+package org.springframework.ws.mock.client;
 
 import java.io.IOException;
 import java.net.URI;
@@ -36,7 +36,7 @@ import org.junit.Test;
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.springframework.ws.mock.client2.WebServiceMock.*;
+import static org.springframework.ws.mock.client.WebServiceMock.*;
 
 public class WebServiceMockTest {
 
