@@ -26,7 +26,7 @@ import org.springframework.ws.WebServiceMessage;
 import org.custommonkey.xmlunit.Diff;
 import org.w3c.dom.Document;
 
-import static junit.framework.Assert.fail;
+import static org.springframework.ws.mock.client.Assert.fail;
 
 /**
  * Matches {@link Source} payloads.

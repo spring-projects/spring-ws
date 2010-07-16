@@ -23,7 +23,7 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapMessage;
 
-import static org.junit.Assert.fail;
+import static org.springframework.ws.mock.client.Assert.fail;
 
 /**
  * Implementation of {@link ResponseCallback} that responds with a SOAP fault.

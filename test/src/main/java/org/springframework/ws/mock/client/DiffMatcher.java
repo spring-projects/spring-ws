@@ -24,8 +24,8 @@ import org.springframework.xml.transform.TransformerObjectSupport;
 
 import org.custommonkey.xmlunit.Diff;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.custommonkey.xmlunit.XMLAssert.fail;
+import static org.springframework.ws.mock.client.Assert.assertTrue;
+import static org.springframework.ws.mock.client.Assert.fail;
 
 /**
  * Implementation of {@link RequestMatcher} based on XMLUnit's {@link Diff}.
@@ -38,7 +38,7 @@ abstract class DiffMatcher extends TransformerObjectSupport implements RequestMa
     public final void match(URI uri, WebServiceMessage request) throws IOException, AssertionError {
         try {
             Diff diff = createDiff(request);
-            assertXMLEqual(diff, true);
+            assertTrue("Messages are different, " + diff.toString(), diff.similar());
         }
         catch (IOException ex) {
             throw ex;
