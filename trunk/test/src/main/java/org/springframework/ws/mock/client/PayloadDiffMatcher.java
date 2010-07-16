@@ -35,11 +35,11 @@ import static junit.framework.Assert.fail;
  * @author Lukas Krecan
  * @since 2.0
  */
-class PayloadMatcher extends DiffMatcher {
+class PayloadDiffMatcher extends DiffMatcher {
 
     private final Source expected;
 
-    PayloadMatcher(Source expected) {
+    PayloadDiffMatcher(Source expected) {
         Assert.notNull(expected, "'expected' must not be null");
         this.expected = expected;
     }
