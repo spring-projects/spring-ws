@@ -23,7 +23,7 @@ import org.junit.Test;
 
 import static org.easymock.EasyMock.*;
 
-public class PayloadMatcherTest {
+public class PayloadDiffMatcherTest {
 
     @Test
     public void match() throws Exception {
@@ -32,7 +32,7 @@ public class PayloadMatcherTest {
         expect(message.getPayloadSource()).andReturn(new StringSource(xml));
         replay(message);
 
-        PayloadMatcher matcher = new PayloadMatcher(new StringSource(xml));
+        PayloadDiffMatcher matcher = new PayloadDiffMatcher(new StringSource(xml));
         matcher.match(null, message);
 
         verify(message);
@@ -46,7 +46,7 @@ public class PayloadMatcherTest {
         replay(message);
 
         String expected = "<element2 xmlns='http://example.com'/>";
-        PayloadMatcher matcher = new PayloadMatcher(new StringSource(expected));
+        PayloadDiffMatcher matcher = new PayloadDiffMatcher(new StringSource(expected));
         matcher.match(null, message);
     }
 

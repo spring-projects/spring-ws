@@ -71,7 +71,7 @@ public abstract class WebServiceMock {
      */
     public static RequestMatcher payload(String payload) {
         Assert.notNull(payload, "'payload' must not be null");
-        return new PayloadMatcher(new StringSource(payload));
+        return new PayloadDiffMatcher(new StringSource(payload));
     }
 
     /**
@@ -82,7 +82,7 @@ public abstract class WebServiceMock {
      */
     public static RequestMatcher payload(Source payload) {
         Assert.notNull(payload, "'payload' must not be null");
-        return new PayloadMatcher(payload);
+        return new PayloadDiffMatcher(payload);
     }
 
     /**
@@ -93,7 +93,7 @@ public abstract class WebServiceMock {
      */
     public static RequestMatcher payload(Resource payload) {
         Assert.notNull(payload, "'payload' must not be null");
-        return new PayloadMatcher(createResourceSource(payload));
+        return new PayloadDiffMatcher(createResourceSource(payload));
     }
 
     /**

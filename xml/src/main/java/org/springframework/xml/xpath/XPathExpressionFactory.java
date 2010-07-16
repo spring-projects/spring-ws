@@ -41,25 +41,11 @@ public abstract class XPathExpressionFactory {
 
     private static final Log logger = LogFactory.getLog(XPathExpressionFactory.class);
 
-    private static final String JAXEN_CLASS_NAME = "org.jaxen.XPath";
+    private static boolean jaxp13Available = JaxpVersion.isAtLeastJaxp13();
 
-    private static boolean jaxp13Available;
+    private static boolean jaxenAvailable =
+            ClassUtils.isPresent("org.jaxen.XPath", XPathExpressionFactory.class.getClassLoader());
 
-    private static boolean jaxenAvailable;
-
-    static {
-        // Check whether JAXP 1.3 is available
-        jaxp13Available = JaxpVersion.isAtLeastJaxp13();
-
-        // Check whether Jaxen is available
-        try {
-            ClassUtils.forName(JAXEN_CLASS_NAME);
-            jaxenAvailable = true;
-        }
-        catch (ClassNotFoundException ex) {
-            jaxenAvailable = false;
-        }
-    }
 
     /**
      * Create a compiled XPath expression using the given string.
@@ -87,6 +73,9 @@ public abstract class XPathExpressionFactory {
     public static XPathExpression createXPathExpression(String expression, Map<String, String> namespaces)
             throws IllegalStateException, XPathParseException {
         Assert.hasLength(expression, "expression is empty");
+        if (namespaces == null) {
+            namespaces = Collections.emptyMap();
+        }
         if (jaxp13Available) {
             try {
                 logger.trace("Creating [javax.xml.xpath.XPathExpression]");
