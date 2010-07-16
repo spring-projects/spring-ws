@@ -26,8 +26,9 @@ import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.springframework.ws.mock.client.Assert.assertTrue;
+import static org.springframework.ws.mock.client.Assert.fail;
+
 
 /**
  * Matches SOAP headers.
@@ -52,6 +53,7 @@ class SoapHeaderMatcher implements RequestMatcher {
         SoapHeader soapHeader = soapMessage.getSoapHeader();
         if (soapHeader == null) {
             fail("SOAP message [" + soapMessage + "] does not contain SOAP header");
+            return;
         }
         Iterator<SoapHeaderElement> soapHeaderElementIterator = soapHeader.examineAllHeaderElements();
         boolean found = false;
