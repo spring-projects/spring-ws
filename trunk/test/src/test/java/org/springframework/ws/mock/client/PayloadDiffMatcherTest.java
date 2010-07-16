@@ -16,7 +16,11 @@
 
 package org.springframework.ws.mock.client;
 
+import javax.xml.soap.MessageFactory;
+
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.xml.transform.StringSource;
 
 import org.junit.Test;
@@ -48,6 +52,15 @@ public class PayloadDiffMatcherTest {
         String expected = "<element2 xmlns='http://example.com'/>";
         PayloadDiffMatcher matcher = new PayloadDiffMatcher(new StringSource(expected));
         matcher.match(null, message);
+    }
+
+    @Test(expected = AssertionError.class)
+    public void noPayload() throws Exception {
+        PayloadDiffMatcher matcher = new PayloadDiffMatcher(new StringSource("<message/>"));
+        MessageFactory messageFactory = MessageFactory.newInstance();
+        SoapMessage soapMessage = new SaajSoapMessage(messageFactory.createMessage());
+
+        matcher.createDiff(soapMessage);
     }
 
 }
