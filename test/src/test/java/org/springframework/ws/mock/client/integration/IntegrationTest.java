@@ -16,10 +16,13 @@
 
 package org.springframework.ws.mock.client.integration;
 
+import javax.xml.transform.Source;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.ws.client.core.WebServiceTemplate;
+import org.springframework.xml.transform.StringSource;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -48,10 +51,10 @@ public class IntegrationTest {
 
     @Test
     public void basic() throws Exception {
-        String expectedRequestPayload = "<customerCountRequest xmlns='http://springframework.org/client'>" +
-                "<customerName>John Doe</customerName>" + "</customerCountRequest>";
-        String responsePayload = "<customerCountResponse xmlns='http://springframework.org/client'>" +
-                "<customerCount>10</customerCount>" + "</customerCountResponse>";
+        Source expectedRequestPayload = new StringSource("<customerCountRequest xmlns='http://springframework.org/client'>" +
+                "<customerName>John Doe</customerName>" + "</customerCountRequest>");
+        Source responsePayload = new StringSource("<customerCountResponse xmlns='http://springframework.org/client'>" +
+                "<customerCount>10</customerCount>" + "</customerCountResponse>");
 
         expect(payload(expectedRequestPayload)).andRespond(withPayload(responsePayload));
 
