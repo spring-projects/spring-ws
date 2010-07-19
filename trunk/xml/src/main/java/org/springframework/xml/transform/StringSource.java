@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,12 @@
 
 package org.springframework.xml.transform;
 
+import java.io.InputStream;
+import java.io.Reader;
 import java.io.StringReader;
 import javax.xml.transform.stream.StreamSource;
+
+import org.springframework.util.Assert;
 
 /**
  * Convenient subclass of <code>StreamSource</code> that reads from a <code>StringReader</code>. The string to be read
@@ -28,23 +32,55 @@ import javax.xml.transform.stream.StreamSource;
  */
 public class StringSource extends StreamSource {
 
+    private final String content;
+
     /**
      * Initializes a new instance of the <code>StringSource</code> with the given string content.
      *
      * @param content the content
      */
     public StringSource(String content) {
-        super(new StringReader(content));
+        Assert.notNull(content, "'content' must not be null");
+        this.content = content;
+    }
+
+    @Override
+    public Reader getReader() {
+        return new StringReader(content);
     }
 
     /**
-     * Initializes a new instance of the <code>StringSource</code> with the given string content and system id.
+     * Throws {@link UnsupportedOperationException}.
      *
-     * @param content  the content
-     * @param systemId a string that conforms to the URI syntax
+     * @throws UnsupportedOperationException always
      */
-    public StringSource(String content, String systemId) {
-        super(new StringReader(content), systemId);
+    @Override
+    public void setInputStream(InputStream inputStream) {
+        throw new UnsupportedOperationException("setInputStream is not supported");
     }
 
+    /**
+     * Returns {@code null}.
+     *
+     * @return {@code null}
+     */
+    @Override
+    public InputStream getInputStream() {
+        return null;
+    }
+
+    /**
+     * Throws {@link UnsupportedOperationException}.
+     *
+     * @throws UnsupportedOperationException always
+     */
+    @Override
+    public void setReader(Reader reader) {
+        throw new UnsupportedOperationException("setReader is not supported");
+    }
+
+    @Override
+    public String toString() {
+        return content;
+    }
 }

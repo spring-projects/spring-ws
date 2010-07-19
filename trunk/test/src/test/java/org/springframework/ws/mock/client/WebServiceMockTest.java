@@ -19,6 +19,7 @@ package org.springframework.ws.mock.client;
 import java.io.IOException;
 import java.net.URI;
 import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
 import org.springframework.ws.WebServiceMessage;
@@ -73,19 +74,19 @@ public class WebServiceMockTest {
 
     @Test
     public void payloadMatch() throws Exception {
-        String request = "<request xmlns='http://example.com'/>";
-        String response = "<response xmlns='http://example.com'/>";
+        Source request = new StringSource("<request xmlns='http://example.com'/>");
+        Source response = new StringSource("<response xmlns='http://example.com'/>");
 
         expect(payload(request)).andRespond(withPayload(response));
 
         StringResult result = new StringResult();
-        template.sendSourceAndReceiveToResult(new StringSource(request), result);
-        assertXMLEqual(result.toString(), response);
+        template.sendSourceAndReceiveToResult(request, result);
+        assertXMLEqual(result.toString(), response.toString());
     }
 
     @Test(expected = AssertionError.class)
     public void payloadNonMatch() throws Exception {
-        String expected = "<request xmlns='http://example.com'/>";
+        Source expected = new StringSource("<request xmlns='http://example.com'/>");
 
         expect(payload(expected));
 
@@ -140,29 +141,29 @@ public class WebServiceMockTest {
 
     @Test
     public void verifyThreadLocalCleanUp() throws Exception {
-        String request = "<request xmlns='http://example.com'/>";
-        String response = "<response xmlns='http://example.com'/>";
+        Source request = new StringSource("<request xmlns='http://example.com'/>");
+        Source response = new StringSource("<response xmlns='http://example.com'/>");
 
         expect(payload(request)).andRespond(withPayload(response));
         expect(payload(request)).andRespond(withPayload(response));
         assertNotNull(MockWebServiceMessageSenderHolder.get());
 
-        template.sendSourceAndReceiveToResult(new StringSource(request), new StringResult());
+        template.sendSourceAndReceiveToResult(request, new StringResult());
         assertNotNull(MockWebServiceMessageSenderHolder.get());
 
-        template.sendSourceAndReceiveToResult(new StringSource(request), new StringResult());
+        template.sendSourceAndReceiveToResult(request, new StringResult());
         assertNull(MockWebServiceMessageSenderHolder.get());
     }
     
     @Test(expected = AssertionError.class)
     public void unexpectedConnection() throws Exception {
-        String request = "<request xmlns='http://example.com'/>";
-        String response = "<response xmlns='http://example.com'/>";
+        Source request = new StringSource("<request xmlns='http://example.com'/>");
+        Source response = new StringSource("<response xmlns='http://example.com'/>");
 
         expect(payload(request)).andRespond(withPayload(response));
 
-        template.sendSourceAndReceiveToResult(new StringSource(request), new StringResult());
-        template.sendSourceAndReceiveToResult(new StringSource(request), new StringResult());
+        template.sendSourceAndReceiveToResult(request, new StringResult());
+        template.sendSourceAndReceiveToResult(request, new StringResult());
     }
 
 

@@ -26,7 +26,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.xml.transform.ResourceSource;
-import org.springframework.xml.transform.StringSource;
 
 /**
  * @author Arjen Poutsma
@@ -62,17 +61,6 @@ public abstract class WebServiceMock {
     }
 
     // RequestMatchers
-
-    /**
-     * Expects the given String XML payload.
-     *
-     * @param payload the XML payload
-     * @return the request matcher
-     */
-    public static RequestMatcher payload(String payload) {
-        Assert.notNull(payload, "'payload' must not be null");
-        return new PayloadDiffMatcher(new StringSource(payload));
-    }
 
     /**
      * Expects the given {@link Source} XML payload.
@@ -130,17 +118,6 @@ public abstract class WebServiceMock {
     }
 
     // ResponseCallbacks
-
-    /**
-     * Respond with the given String XML as payload response.
-     *
-     * @param payload the response payload
-     * @return the response callback
-     */
-    public static ResponseCallback withPayload(String payload) {
-        Assert.notNull(payload, "'payload' must not be null");
-        return new PayloadResponseCallback(new StringSource(payload));
-    }
 
     /**
      * Respond with the given {@link Source} XML as payload response.
