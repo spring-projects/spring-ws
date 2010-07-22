@@ -26,6 +26,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.xml.transform.ResourceSource;
+import org.springframework.xml.validation.XmlValidator;
+import org.springframework.xml.validation.XmlValidatorFactory;
 
 /**
  * @author Arjen Poutsma
@@ -82,6 +84,27 @@ public abstract class WebServiceMock {
     public static RequestMatcher payload(Resource payload) {
         Assert.notNull(payload, "'payload' must not be null");
         return new PayloadDiffMatcher(createResourceSource(payload));
+    }
+
+    /**
+     * Expects the payload to validate against the given XSD schema(s).
+     *
+     * @param schema the schema
+     * @param furtherSchemas further schemas, if necessary
+     * @return the request matcher
+     */
+    public static RequestMatcher validPayload(Resource schema, Resource... furtherSchemas) {
+        try {
+            Resource[] joinedSchemas = new Resource[furtherSchemas.length + 1];
+            joinedSchemas[0] = schema;
+            System.arraycopy(furtherSchemas, 0, joinedSchemas, 1, furtherSchemas.length);
+            XmlValidator validator =
+                    XmlValidatorFactory.createValidator(joinedSchemas, XmlValidatorFactory.SCHEMA_W3C_XML);
+            return new SchemaValidatingRequestMatcher(validator);
+        }
+        catch (IOException ex) {
+            throw new IllegalArgumentException("Schema(s) could not be opened", ex);
+        }
     }
 
     /**
