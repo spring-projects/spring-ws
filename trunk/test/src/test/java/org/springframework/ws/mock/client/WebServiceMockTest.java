@@ -22,6 +22,8 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
 import org.springframework.ws.client.core.WebServiceTemplate;
@@ -154,7 +156,7 @@ public class WebServiceMockTest {
         template.sendSourceAndReceiveToResult(request, new StringResult());
         assertNull(MockWebServiceMessageSenderHolder.get());
     }
-    
+
     @Test(expected = AssertionError.class)
     public void unexpectedConnection() throws Exception {
         Source request = new StringSource("<request xmlns='http://example.com'/>");
@@ -166,5 +168,28 @@ public class WebServiceMockTest {
         template.sendSourceAndReceiveToResult(request, new StringResult());
     }
 
+    @Test
+    public void xsdMatch() throws Exception {
+        Resource schema = new ByteArrayResource(
+                "<schema xmlns=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"http://example.com\" elementFormDefault=\"qualified\"><element name=\"request\"/></schema>".getBytes());
+
+        expect(validPayload(schema));
+
+        StringResult result = new StringResult();
+        String actual = "<request xmlns='http://example.com'/>";
+        template.sendSourceAndReceiveToResult(new StringSource(actual), result);
+    }
+
+    @Test(expected = AssertionError.class)
+    public void xsdNonMatch() throws Exception {
+        Resource schema = new ByteArrayResource(
+                "<schema xmlns=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"http://example.com\" elementFormDefault=\"qualified\"><element name=\"request\"/></schema>".getBytes());
+
+        expect(validPayload(schema));
+
+        StringResult result = new StringResult();
+        String actual = "<request2 xmlns='http://example.com'/>";
+        template.sendSourceAndReceiveToResult(new StringSource(actual), result);
+    }
 
 }
