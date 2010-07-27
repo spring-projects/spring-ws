@@ -17,6 +17,7 @@
 package org.springframework.ws.mock.client;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Locale;
 
 import org.springframework.ws.WebServiceMessage;
@@ -33,7 +34,8 @@ import static org.springframework.ws.mock.client.Assert.fail;
  */
 abstract class SoapFaultResponseCallback implements ResponseCallback {
 
-    public final void doWithResponse(WebServiceMessage request, WebServiceMessage response) throws IOException {
+    public final void doWithResponse(URI uri, WebServiceMessage request, WebServiceMessage response)
+            throws IOException {
         if (!(response instanceof SoapMessage)) {
             fail("Response message is not a SOAP message");
             return;

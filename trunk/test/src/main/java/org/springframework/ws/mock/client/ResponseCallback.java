@@ -17,12 +17,13 @@
 package org.springframework.ws.mock.client;
 
 import java.io.IOException;
+import java.net.URI;
 
 import org.springframework.ws.WebServiceMessage;
 
 /**
- * Callback interface for code that operates on response {@link org.springframework.ws.WebServiceMessage}s. Defines the contract for creating
- * responses in test scenarios.
+ * Callback interface for code that operates on response {@link org.springframework.ws.WebServiceMessage}s. Defines the
+ * contract for creating responses in test scenarios.
  *
  * @author Arjen Poutsma
  * @author Lukas Krecan
@@ -33,10 +34,11 @@ public interface ResponseCallback {
     /**
      * Execute any number of operations on the supplied response, given the request.
      *
+     * @param uri      of the service called
      * @param request  the request message
      * @param response the response message
-     * @throws java.io.IOException in case of I/O errors
+     * @throws IOException in case of I/O errors
      */
-    void doWithResponse(WebServiceMessage request, WebServiceMessage response) throws IOException;
+    void doWithResponse(URI uri, WebServiceMessage request, WebServiceMessage response) throws IOException;
 
 }
