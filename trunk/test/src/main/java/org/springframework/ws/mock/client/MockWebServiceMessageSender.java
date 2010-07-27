@@ -56,12 +56,15 @@ class MockWebServiceMessageSender implements WebServiceMessageSender {
         return currentConnection;
     }
 
-    /** Always returns {@code true}. */
+    /**
+     * Always returns {@code true}.
+     */
     public boolean supports(URI uri) {
         return true;
     }
 
     MockSenderConnection expectNewConnection() {
+        Assert.state(connectionIterator == null, "Can not expect another connection, the test is already underway");
         MockSenderConnection connection = new MockSenderConnection();
         expectedConnections.add(connection);
         return connection;

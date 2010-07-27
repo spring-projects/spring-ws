@@ -23,6 +23,7 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
 import org.custommonkey.xmlunit.Diff;
+import org.custommonkey.xmlunit.XMLUnit;
 
 import static org.springframework.ws.mock.client.Assert.assertTrue;
 import static org.springframework.ws.mock.client.Assert.fail;
@@ -34,6 +35,11 @@ import static org.springframework.ws.mock.client.Assert.fail;
  * @since 2.0
  */
 abstract class DiffMatcher extends TransformerObjectSupport implements RequestMatcher {
+
+    static {
+        XMLUnit.setIgnoreWhitespace(true);
+    }
+    
 
     public final void match(URI uri, WebServiceMessage request) throws IOException, AssertionError {
         try {

@@ -25,6 +25,7 @@ import javax.xml.transform.Source;
 
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
+import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.xml.transform.ResourceSource;
 import org.springframework.xml.validation.XmlValidator;
@@ -64,6 +65,18 @@ public abstract class WebServiceMock {
     }
 
     // RequestMatchers
+
+    /**
+     * Expects any request.
+     *
+     * @return the request matcher
+     */
+    public static RequestMatcher anything() {
+        return new RequestMatcher() {
+            public void match(URI uri, WebServiceMessage request) throws IOException, AssertionError {
+            }
+        };
+    }
 
     /**
      * Expects the given {@link Source} XML payload.
@@ -121,7 +134,7 @@ public abstract class WebServiceMock {
     /**
      * Expects the given XPath expression to (not) exist or be evaluated to a value.
      *
-     * @param xpathExpression the XPath expression
+     * @param xpathExpression  the XPath expression
      * @param namespaceMapping the namespaces
      * @return the XPath expectations, to be further configured
      */
