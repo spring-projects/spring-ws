@@ -203,7 +203,7 @@ public class WebServiceMockTest {
         template.sendSourceAndReceiveToResult(new StringSource("<request xmlns='http://example.com'/>"),
                 new StringResult());
     }
-    
+
     @Test(expected = AssertionError.class)
     public void xpathExistsNonMatch() throws Exception {
         final Map<String, String> ns = Collections.singletonMap("ns", "http://example.com");
@@ -212,6 +212,33 @@ public class WebServiceMockTest {
 
         template.sendSourceAndReceiveToResult(new StringSource("<request xmlns='http://example.com'/>"),
                 new StringResult());
+    }
+
+    @Test
+    public void anythingMatch() throws Exception {
+        Source request = new StringSource("<request xmlns='http://example.com'/>");
+        Source response = new StringSource("<response xmlns='http://example.com'/>");
+
+        expect(anything()).andRespond(withPayload(response));
+
+        StringResult result = new StringResult();
+        template.sendSourceAndReceiveToResult(request, result);
+        assertXMLEqual(result.toString(), response.toString());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void recordWhenReplay() throws Exception {
+        Source request = new StringSource("<request xmlns='http://example.com'/>");
+        Source response = new StringSource("<response xmlns='http://example.com'/>");
+
+        expect(anything()).andRespond(withPayload(response));
+        expect(anything()).andRespond(withPayload(response));
+
+        StringResult result = new StringResult();
+        template.sendSourceAndReceiveToResult(request, result);
+        assertXMLEqual(result.toString(), response.toString());
+
+        expect(anything()).andRespond(withPayload(response));
     }
 
 
