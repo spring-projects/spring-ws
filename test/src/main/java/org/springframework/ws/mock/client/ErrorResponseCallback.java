@@ -17,6 +17,7 @@
 package org.springframework.ws.mock.client;
 
 import java.io.IOException;
+import java.net.URI;
 
 import org.springframework.ws.WebServiceMessage;
 
@@ -35,7 +36,7 @@ class ErrorResponseCallback implements ResponseCallback {
         this.errorMessage = errorMessage;
     }
 
-    public void doWithResponse(WebServiceMessage response, WebServiceMessage request) throws IOException {
+    public void doWithResponse(URI uri, WebServiceMessage response, WebServiceMessage request) throws IOException {
         // Do nothing
     }
 

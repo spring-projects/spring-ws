@@ -17,6 +17,7 @@
 package org.springframework.ws.mock.client;
 
 import java.io.IOException;
+import java.net.URI;
 
 import org.springframework.ws.WebServiceMessage;
 
@@ -39,7 +40,7 @@ class ExceptionResponseCallback implements ResponseCallback {
         this.exception = exception;
     }
 
-    public void doWithResponse(WebServiceMessage request, WebServiceMessage response) throws IOException {
+    public void doWithResponse(URI uri, WebServiceMessage request, WebServiceMessage response) throws IOException {
         if (exception instanceof IOException) {
             throw (IOException) exception;
         }

@@ -57,20 +57,21 @@ public class WebServiceMockTest {
 
     @Test
     public void mocks() throws Exception {
-        String uri = "http://example.com";
+        URI uri = URI.create("http://example.com");
 
         RequestMatcher requestMatcher1 = EasyMock.createStrictMock("requestMatcher1", RequestMatcher.class);
         RequestMatcher requestMatcher2 = EasyMock.createStrictMock("requestMatcher2", RequestMatcher.class);
         ResponseCallback responseCallback = EasyMock.createStrictMock(ResponseCallback.class);
 
-        requestMatcher1.match(EasyMock.eq(URI.create(uri)), EasyMock.isA(SaajSoapMessage.class));
-        requestMatcher2.match(EasyMock.eq(URI.create(uri)), EasyMock.isA(SaajSoapMessage.class));
-        responseCallback.doWithResponse(EasyMock.isA(SaajSoapMessage.class), EasyMock.isA(SaajSoapMessage.class));
+        requestMatcher1.match(EasyMock.eq(uri), EasyMock.isA(SaajSoapMessage.class));
+        requestMatcher2.match(EasyMock.eq(uri), EasyMock.isA(SaajSoapMessage.class));
+        responseCallback.doWithResponse(EasyMock.eq(uri), EasyMock.isA(SaajSoapMessage.class),
+                EasyMock.isA(SaajSoapMessage.class));
 
         EasyMock.replay(requestMatcher1, requestMatcher2, responseCallback);
 
         expect(requestMatcher1).andExpect(requestMatcher2).andRespond(responseCallback);
-        template.sendSourceAndReceiveToResult(uri, new StringSource("<request xmlns='http://example.com'/>"),
+        template.sendSourceAndReceiveToResult(uri.toString(), new StringSource("<request xmlns='http://example.com'/>"),
                 new StringResult());
 
         EasyMock.verify(requestMatcher1, requestMatcher2, responseCallback);

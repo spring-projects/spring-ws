@@ -17,6 +17,7 @@
 package org.springframework.ws.mock.client;
 
 import java.io.IOException;
+import java.net.URI;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
@@ -37,7 +38,7 @@ class PayloadResponseCallback extends TransformerObjectSupport implements Respon
         this.payload = payload;
     }
 
-    public void doWithResponse(WebServiceMessage request, WebServiceMessage response) throws IOException {
+    public void doWithResponse(URI uri, WebServiceMessage request, WebServiceMessage response) throws IOException {
         try {
             transform(payload, response.getPayloadResult());
         }

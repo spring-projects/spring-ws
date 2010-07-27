@@ -89,7 +89,7 @@ class MockSenderConnection implements FaultAwareWebServiceConnection, ResponseAc
     public WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException {
         if (responseCallback != null) {
             WebServiceMessage response = messageFactory.createWebServiceMessage();
-            responseCallback.doWithResponse(request, response);
+            responseCallback.doWithResponse(uri, request, response);
             return response;
         }
         else {
