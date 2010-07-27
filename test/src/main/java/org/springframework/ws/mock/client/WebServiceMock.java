@@ -19,6 +19,7 @@ package org.springframework.ws.mock.client;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Locale;
+import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
@@ -89,7 +90,7 @@ public abstract class WebServiceMock {
     /**
      * Expects the payload to validate against the given XSD schema(s).
      *
-     * @param schema the schema
+     * @param schema         the schema
      * @param furtherSchemas further schemas, if necessary
      * @return the request matcher
      */
@@ -105,6 +106,27 @@ public abstract class WebServiceMock {
         catch (IOException ex) {
             throw new IllegalArgumentException("Schema(s) could not be opened", ex);
         }
+    }
+
+    /**
+     * Expects the given XPath expression to (not) exist or be evaluated to a value.
+     *
+     * @param xpathExpression the XPath expression
+     * @return the XPath expectations, to be further configured
+     */
+    public static XPathExpectations xpath(String xpathExpression) {
+        return new DefaultXPathExpectations(xpathExpression, null);
+    }
+
+    /**
+     * Expects the given XPath expression to (not) exist or be evaluated to a value.
+     *
+     * @param xpathExpression the XPath expression
+     * @param namespaceMapping the namespaces
+     * @return the XPath expectations, to be further configured
+     */
+    public static XPathExpectations xpath(String xpathExpression, Map<String, String> namespaceMapping) {
+        return new DefaultXPathExpectations(xpathExpression, namespaceMapping);
     }
 
     /**
@@ -210,6 +232,7 @@ public abstract class WebServiceMock {
         Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
         return SoapFaultResponseCallback.createMustUnderstandFault(faultStringOrReason, locale);
     }
+
     /**
      * Respond with a {@code Client} (SOAP 1.1) or {@code Sender} (SOAP 1.2) fault.
      *
@@ -246,7 +269,6 @@ public abstract class WebServiceMock {
         return SoapFaultResponseCallback.createVersionMismatchFault(faultStringOrReason, locale);
     }
 
-
     private static ResourceSource createResourceSource(Resource resource) {
         try {
             return new ResourceSource(resource);
@@ -255,6 +277,5 @@ public abstract class WebServiceMock {
             throw new IllegalArgumentException(resource + " could not be opened", ex);
         }
     }
-
 
 }
