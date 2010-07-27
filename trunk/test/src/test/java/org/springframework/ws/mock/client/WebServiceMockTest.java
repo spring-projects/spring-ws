@@ -18,6 +18,8 @@ package org.springframework.ws.mock.client;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collections;
+import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
@@ -191,5 +193,26 @@ public class WebServiceMockTest {
         String actual = "<request2 xmlns='http://example.com'/>";
         template.sendSourceAndReceiveToResult(new StringSource(actual), result);
     }
+
+    @Test
+    public void xpathExistsMatch() throws Exception {
+        final Map<String, String> ns = Collections.singletonMap("ns", "http://example.com");
+
+        expect(xpath("/ns:request", ns).exists());
+
+        template.sendSourceAndReceiveToResult(new StringSource("<request xmlns='http://example.com'/>"),
+                new StringResult());
+    }
+    
+    @Test(expected = AssertionError.class)
+    public void xpathExistsNonMatch() throws Exception {
+        final Map<String, String> ns = Collections.singletonMap("ns", "http://example.com");
+
+        expect(xpath("/ns:foo", ns).exists());
+
+        template.sendSourceAndReceiveToResult(new StringSource("<request xmlns='http://example.com'/>"),
+                new StringResult());
+    }
+
 
 }
