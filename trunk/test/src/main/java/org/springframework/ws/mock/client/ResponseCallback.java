@@ -32,9 +32,9 @@ import org.springframework.ws.WebServiceMessage;
 public interface ResponseCallback {
 
     /**
-     * Execute any number of operations on the supplied response, given the request.
+     * Execute any number of operations on the supplied response, given the request and URI.
      *
-     * @param uri      of the service called
+     * @param uri      the URI
      * @param request  the request message
      * @param response the response message
      * @throws IOException in case of I/O errors
