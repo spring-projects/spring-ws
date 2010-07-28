@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <artifactId>airline</artifactId>
         <groupId>org.springframework.ws</groupId>
@@ -73,12 +74,12 @@
                             <goal>xjc</goal>
                         </goals>
                     </execution>
-               </executions>
-               <configuration>
-                   <schemaDirectory>src/main/webapp/</schemaDirectory>
-                   <packageName>org.springframework.ws.samples.airline.schema</packageName>
-               </configuration>
-           </plugin>
+                </executions>
+                <configuration>
+                    <schemaDirectory>src/main/webapp/</schemaDirectory>
+                    <packageName>org.springframework.ws.samples.airline.schema</packageName>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>openjpa-maven-plugin</artifactId>
@@ -247,6 +248,10 @@
             <artifactId>spring-security-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-core</artifactId>
             <scope>runtime</scope>
@@ -265,7 +270,6 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>3.0.2.RELEASE</version>
             <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>

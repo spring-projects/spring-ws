@@ -2,15 +2,11 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-    <bean id="messagFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
 
     <bean id="abstractClient" abstract="true">
-        <constructor-arg ref="messagFactory"/>
-        <property name="destinationProvider">
-            <bean class="org.springframework.ws.client.support.destination.Wsdl11DestinationProvider">
-                <property name="wsdl" value="http://localhost:8080/airline-server/airline.wsdl"/>
-            </bean>
-        </property>
+        <constructor-arg ref="messageFactory"/>
+        <property name="defaultUri" value="http://localhost:8080/airline-server/services"/>
     </bean>
 
     <bean id="marshaller" class="org.springframework.oxm.xmlbeans.XmlBeansMarshaller"/>

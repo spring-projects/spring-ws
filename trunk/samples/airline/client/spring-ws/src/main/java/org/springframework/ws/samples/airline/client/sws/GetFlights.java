@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -104,7 +104,7 @@ public class GetFlights extends WebServiceGatewaySupport {
     public static void main(String[] args) {
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
                 "org/springframework/ws/samples/airline/client/sws/applicationContext.xml");
-        GetFlights getFlights = (GetFlights) applicationContext.getBean("getFlights", GetFlights.class);
+        GetFlights getFlights = applicationContext.getBean("getFlights", GetFlights.class);
         getFlights.getFlights();
     }
 
