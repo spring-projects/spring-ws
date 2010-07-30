@@ -38,7 +38,7 @@ class PayloadResponseCallback extends AbstractResponseCreator<WebServiceMessage>
     }
 
     @Override
-    public void doWithResponse(URI uri, WebServiceMessage request, WebServiceMessage response) throws IOException {
+    protected void doWithResponse(URI uri, WebServiceMessage request, WebServiceMessage response) throws IOException {
         try {
             transform(payload, response.getPayloadResult());
         }

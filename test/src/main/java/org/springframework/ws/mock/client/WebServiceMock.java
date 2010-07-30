@@ -32,12 +32,87 @@ import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 
 /**
+ * <strong>Main entry point for client-side Web service testing</strong>. Typically used to mock a {@link
+ * WebServiceTemplate}, set up expectations on request messages, and create response messages.
+ * <p/>
+ * The typical usage of this mock is similar to any other mocking library (such as EasyMock), that is:
+ * <ol>
+ * <li>Statically import {@link org.springframework.ws.mock.client.WebServiceMock
+ * org.springframework.ws.mock.client.WebServiceMock.*}.
+ * <li>Use the {@link #mockWebServiceTemplate(WebServiceTemplate)} method to mock a web service template. Typically,
+ * this template is configured as a Spring bean, either explicitly or as a property of a class that extends
+ * {@link org.springframework.ws.client.core.support.WebServiceGatewaySupport WebServiceGatewaySupport}.</li>
+ * <li>Set up expectations on the outgoing request message by calling {@link #expect(RequestMatcher)} and
+ * {@link #payload(Source)}, {@link #connectionTo(String)}, {@link #xpath(String)}, or any of the other
+ * {@linkplain RequestMatcher request matcher} methods.
+ * Multiple expectations can be set up by calling
+ * {@link ResponseActions#andExpect(RequestMatcher) andExpect(RequestMatcher)}.</li>
+ * <li>Indicate the desired response actions by calling
+ * {@link ResponseActions#andRespond(ResponseCreator) andRespond(ResponseCreator)}.
+ * See {@link #withPayload(Source)}, {@link #withError(String)},
+ *  {@link #withClientOrSenderFault(String, Locale)}, or any of the other {@linkplain ResponseCreator response creator}
+ * methods.</li>
+ * <li>Use the {@code WebServiceTemplate} as normal, either directly of through client code.
+ * <li>Call {@link #verifyConnections()}.
+ * </ol>
+ * Note that because of the 'fluent' API offered by this class, you can typically use the Code Completion features (i.e.
+ * ctrl-space) in your IDE to set up the mocks.
+ * <p/>
+ * For example:
+ * <blockquote><pre>
+ * import org.junit.Before;
+ * import org.junit.Test;
+ * import org.junit.runner.RunWith;
+ * import org.springframework.beans.factory.annotation.Autowired;
+ * import org.springframework.test.context.ContextConfiguration;
+ * import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+ * import org.springframework.xml.transform.StringSource;
+ * <strong>import static org.springframework.ws.mock.client.WebServiceMock.*</strong>;
+ *
+ * 
+ * &#064;RunWith(SpringJUnit4ClassRunner.class)
+ * &#064;ContextConfiguration("applicationContext.xml")
+ * public class IntegrationTest {
+ *
+ *   // AirlineClient extends WebServiceGatewaySupport, and is configured in applicationContext.xml
+ *   &#064;Autowired
+ *   private MyWebServiceClient client;
+ *
+ *   &#064;Before
+ *   public void setUpMocks() throws Exception {
+ *     <strong>mockWebServiceTemplate(client.getWebServiceTemplate())</strong>;
+ *   }
+ *
+ *   &#064;Test
+ *   public void getCustomerCount() throws Exception {
+ *     Source requestPayload =
+ *       new StringSource("&lt;customerCountRequest xmlns='http://springframework.org/spring-ws/test' /&gt;";
+ *     Source responsePayload = new StringSource("&lt;customerCountResponse xmlns='http://springframework.org/spring-wstest'&gt;" +
+ *       "&lt;customerCount&gt;10&lt;/customerCount&gt;" +
+ *       "&lt;/customerCountResponse&gt;");
+ *
+ *     <strong>expect(payload(requestPayload)).andRespond(withPayload(responsePayload));</strong>
+ *
+ *     // client.getCustomerCount() uses the WebServiceTemplate
+ *     int customerCount = client.getCustomerCount();
+ *     assertEquals(10, response.getCustomerCount());
+ *
+ *     <strong>verifyConnections();</strong>
+ *   }
+ * }
+ * </pre></blockquote>
+ *
  * @author Arjen Poutsma
  * @author Lukas Krecan
  * @since 2.0
  */
 public abstract class WebServiceMock {
 
+    /**
+     * Mocks the given {@link WebServiceTemplate}. Typically done in a setup method of the test class.
+     *
+     * @param webServiceTemplate the template to mock.
+     */
     public static void mockWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
         Assert.notNull(webServiceTemplate, "'webServiceTemplate' must not be null");
 
