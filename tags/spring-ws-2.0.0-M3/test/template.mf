@@ -1,0 +1,21 @@
+Bundle-SymbolicName: org.springframework.ws.test
+Bundle-Name: Spring Web Services Test
+Bundle-Vendor: SpringSource
+Bundle-Version: ${osgi.version}
+Bundle-ManifestVersion: 2
+Import-Template:
+ javax.xml.namespace.*;version="0",
+ javax.xml.parsers.*;version="0",
+ javax.xml.transform.*;version="0",
+ org.custommonkey.xmlunit.*;version="[1.3.0, 2.0.0)",
+ org.springframework.core.*;version=${spring.framework.osgi.range},
+ org.springframework.util.*;version=${spring.framework.osgi.range},
+ org.springframework.ws.*;version=${osgi.range},
+ org.springframework.xml.*;version=${osgi.range},
+ org.w3c.dom.*;version="0",
+ org.xml.sax.*;version="0"
+Ignored-Existing-Headers:
+ Bnd-LastModified,
+ Import-Package,
+ Export-Package,
+ Tool
