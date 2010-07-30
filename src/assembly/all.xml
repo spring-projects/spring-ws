@@ -12,6 +12,7 @@
                 <include>org.springframework.ws:spring-ws-core</include>
                 <include>org.springframework.ws:spring-ws-support</include>
                 <include>org.springframework.ws:spring-ws-security</include>
+                <include>org.springframework.ws:spring-ws-test</include>
             </includes>
             <binaries>
                 <outputDirectory/>
