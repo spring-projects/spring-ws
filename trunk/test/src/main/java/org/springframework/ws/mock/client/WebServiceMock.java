@@ -87,7 +87,7 @@ import org.springframework.xml.validation.XmlValidatorFactory;
  *   public void getCustomerCount() throws Exception {
  *     Source requestPayload =
  *       new StringSource("&lt;customerCountRequest xmlns='http://springframework.org/spring-ws/test' /&gt;";
- *     Source responsePayload = new StringSource("&lt;customerCountResponse xmlns='http://springframework.org/spring-wstest'&gt;" +
+ *     Source responsePayload = new StringSource("&lt;customerCountResponse xmlns='http://springframework.org/spring-ws/test'&gt;" +
  *       "&lt;customerCount&gt;10&lt;/customerCount&gt;" +
  *       "&lt;/customerCountResponse&gt;");
  *
