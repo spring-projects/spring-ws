@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2010 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,14 +29,14 @@ import java.io.InputStream;
  * @see org.springframework.ws.WebServiceMessage
  * @since 1.0.0
  */
-public interface WebServiceMessageFactory {
+public interface WebServiceMessageFactory<T extends WebServiceMessage> {
 
     /**
      * Creates a new, empty <code>WebServiceMessage</code>.
      *
      * @return the empty message
      */
-    WebServiceMessage createWebServiceMessage();
+    T createWebServiceMessage();
 
     /**
      * Reads a {@link WebServiceMessage} from the given input stream.
@@ -48,6 +48,6 @@ public interface WebServiceMessageFactory {
      * @return the created message
      * @throws java.io.IOException if an I/O exception occurs
      */
-    WebServiceMessage createWebServiceMessage(InputStream inputStream) throws IOException;
+    T createWebServiceMessage(InputStream inputStream) throws IOException;
 
 }

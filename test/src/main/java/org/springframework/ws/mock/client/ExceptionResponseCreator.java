@@ -20,27 +20,30 @@ import java.io.IOException;
 import java.net.URI;
 
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.WebServiceMessageFactory;
 
 /**
- * Implementation of {@link ResponseCallback} that responds by throwing either an {@link IOException} or a {@link
+ * Implementation of {@link ResponseCreator} that responds by throwing either an {@link IOException} or a {@link
  * RuntimeException}.
  *
  * @author Arjen Poutsma
  * @since 2.0
  */
-class ExceptionResponseCallback implements ResponseCallback {
+class ExceptionResponseCreator implements ResponseCreator<WebServiceMessage> {
 
     private final Exception exception;
 
-    ExceptionResponseCallback(IOException exception) {
+    ExceptionResponseCreator(IOException exception) {
         this.exception = exception;
     }
 
-    ExceptionResponseCallback(RuntimeException exception) {
+    ExceptionResponseCreator(RuntimeException exception) {
         this.exception = exception;
     }
 
-    public void doWithResponse(URI uri, WebServiceMessage request, WebServiceMessage response) throws IOException {
+    public WebServiceMessage createResponse(URI uri,
+                                            WebServiceMessage request,
+                                            WebServiceMessageFactory<WebServiceMessage> factory) throws IOException {
         if (exception instanceof IOException) {
             throw (IOException) exception;
         }

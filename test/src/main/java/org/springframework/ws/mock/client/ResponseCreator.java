@@ -20,27 +20,25 @@ import java.io.IOException;
 import java.net.URI;
 
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.WebServiceMessageFactory;
 
 /**
- * Implementation of {@link ResponseCallback} that holds an error message.
+ * Allows for creating up responses. Implementations of this interface are returned by {@link WebServiceMock}.
  *
  * @author Arjen Poutsma
  * @author Lukas Krecan
  * @since 2.0
  */
-class ErrorResponseCallback implements ResponseCallback {
+public interface ResponseCreator<T extends WebServiceMessage> {
 
-    private final String errorMessage;
+    /**
+     * Create a response for the given the request and URI.
+     *
+     * @param uri            the URI
+     * @param request        the request message
+     * @param messageFactory the message that can be used to create responses
+     * @throws IOException in case of I/O errors
+     */
+    T createResponse(URI uri, T request, WebServiceMessageFactory<T> messageFactory) throws IOException;
 
-    ErrorResponseCallback(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
-
-    public void doWithResponse(URI uri, WebServiceMessage response, WebServiceMessage request) throws IOException {
-        // Do nothing
-    }
-
-    String getErrorMessage() {
-        return errorMessage;
-    }
 }

@@ -20,32 +20,26 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Locale;
 
-import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapMessage;
 
 import static org.springframework.ws.mock.client.Assert.fail;
 
 /**
- * Implementation of {@link ResponseCallback} that responds with a SOAP fault.
+ * Implementation of {@link ResponseCreator} that responds with a SOAP fault.
  *
  * @author Arjen Poutsma
  * @since 2.0
  */
-abstract class SoapFaultResponseCallback implements ResponseCallback {
+abstract class SoapFaultResponseCallback extends AbstractResponseCreator<SoapMessage> {
 
-    public final void doWithResponse(URI uri, WebServiceMessage request, WebServiceMessage response)
-            throws IOException {
-        if (!(response instanceof SoapMessage)) {
-            fail("Response message is not a SOAP message");
-            return;
+    @Override
+    protected void doWithResponse(URI uri, SoapMessage request, SoapMessage response) throws IOException {
+        SoapBody responseBody = response.getSoapBody();
+        if (responseBody == null) {
+            fail("SOAP message [" + response + "] does not contain SOAP body");
         }
-        SoapMessage soapResponse = (SoapMessage) response;
-        SoapBody soapResponseBody = soapResponse.getSoapBody();
-        if (soapResponseBody == null) {
-            fail("SOAP message [" + soapResponse + "] does not contain SOAP body");
-        }
-        addSoapFault(soapResponseBody);
+        addSoapFault(responseBody);
     }
 
     public abstract void addSoapFault(SoapBody soapBody);

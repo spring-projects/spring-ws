@@ -21,6 +21,7 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
 import javax.xml.namespace.QName;
+import javax.xml.soap.MessageFactory;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
@@ -31,6 +32,7 @@ import org.springframework.ws.client.core.WebServiceMessageCallback;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
+import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
@@ -56,25 +58,28 @@ public class WebServiceMockTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void mocks() throws Exception {
         URI uri = URI.create("http://example.com");
 
         RequestMatcher requestMatcher1 = EasyMock.createStrictMock("requestMatcher1", RequestMatcher.class);
         RequestMatcher requestMatcher2 = EasyMock.createStrictMock("requestMatcher2", RequestMatcher.class);
-        ResponseCallback responseCallback = EasyMock.createStrictMock(ResponseCallback.class);
+        ResponseCreator responseCreator = EasyMock.createStrictMock(ResponseCreator.class);
+
+        SaajSoapMessage response = new SaajSoapMessageFactory(MessageFactory.newInstance()).createWebServiceMessage();
 
         requestMatcher1.match(EasyMock.eq(uri), EasyMock.isA(SaajSoapMessage.class));
         requestMatcher2.match(EasyMock.eq(uri), EasyMock.isA(SaajSoapMessage.class));
-        responseCallback.doWithResponse(EasyMock.eq(uri), EasyMock.isA(SaajSoapMessage.class),
-                EasyMock.isA(SaajSoapMessage.class));
+        EasyMock.expect(responseCreator.createResponse(EasyMock.eq(uri), EasyMock.isA(SaajSoapMessage.class),
+                EasyMock.isA(SaajSoapMessageFactory.class))).andReturn(response);
 
-        EasyMock.replay(requestMatcher1, requestMatcher2, responseCallback);
+        EasyMock.replay(requestMatcher1, requestMatcher2, responseCreator);
 
-        expect(requestMatcher1).andExpect(requestMatcher2).andRespond(responseCallback);
+        expect(requestMatcher1).andExpect(requestMatcher2).andRespond(responseCreator);
         template.sendSourceAndReceiveToResult(uri.toString(), new StringSource("<request xmlns='http://example.com'/>"),
                 new StringResult());
 
-        EasyMock.verify(requestMatcher1, requestMatcher2, responseCallback);
+        EasyMock.verify(requestMatcher1, requestMatcher2, responseCreator);
     }
 
     @Test

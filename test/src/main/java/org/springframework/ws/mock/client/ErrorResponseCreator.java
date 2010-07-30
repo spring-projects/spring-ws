@@ -18,32 +18,33 @@ package org.springframework.ws.mock.client;
 
 import java.io.IOException;
 import java.net.URI;
-import javax.xml.transform.Source;
-import javax.xml.transform.TransformerException;
 
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.WebServiceMessageFactory;
 
 /**
- * Implementation of {@link ResponseCreator} that writes a {@link Source} response.
+ * Implementation of {@link ResponseCreator} that holds an error message.
  *
  * @author Arjen Poutsma
+ * @author Lukas Krecan
  * @since 2.0
  */
-class PayloadResponseCallback extends AbstractResponseCreator<WebServiceMessage> {
+class ErrorResponseCreator implements ResponseCreator<WebServiceMessage> {
 
-    private final Source payload;
+    private final String errorMessage;
 
-    PayloadResponseCallback(Source payload) {
-        this.payload = payload;
+    ErrorResponseCreator(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
-    @Override
-    public void doWithResponse(URI uri, WebServiceMessage request, WebServiceMessage response) throws IOException {
-        try {
-            transform(payload, response.getPayloadResult());
-        }
-        catch (TransformerException ex) {
-            throw new AssertionError("Could not transform response payload to message: " + ex.getMessage());
-        }
+    public WebServiceMessage createResponse(URI uri,
+                                            WebServiceMessage request,
+                                            WebServiceMessageFactory<WebServiceMessage> factory) throws IOException {
+        // Do nothing
+        return null;
+    }
+
+    String getErrorMessage() {
+        return errorMessage;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +21,13 @@ import java.io.InputStream;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
 
-public class MockWebServiceMessageFactory implements WebServiceMessageFactory {
+public class MockWebServiceMessageFactory implements WebServiceMessageFactory<MockWebServiceMessage> {
 
-    public WebServiceMessage createWebServiceMessage() {
+    public MockWebServiceMessage createWebServiceMessage() {
         return new MockWebServiceMessage();
     }
 
-    public WebServiceMessage createWebServiceMessage(InputStream inputStream) throws IOException {
+    public MockWebServiceMessage createWebServiceMessage(InputStream inputStream) throws IOException {
         try {
             return new MockWebServiceMessage(new StreamSource(inputStream));
         }

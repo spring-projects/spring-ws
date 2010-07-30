@@ -20,16 +20,26 @@ import java.io.IOException;
 import java.net.URI;
 
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.WebServiceMessageFactory;
+import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
- * Callback interface for code that operates on response {@link org.springframework.ws.WebServiceMessage}s. Defines the
- * contract for creating responses in test scenarios.
+ * Abstract base class for the {@link ResponseCreator} interface.
+ * <p/>
+ * Creates a response using the given {@link WebServiceMessageFactory}, and passes it on to {@link #doWithResponse(URI,
+ * WebServiceMessage, WebServiceMessage)}.
  *
  * @author Arjen Poutsma
- * @author Lukas Krecan
  * @since 2.0
  */
-public interface ResponseCallback {
+abstract class AbstractResponseCreator<T extends WebServiceMessage> extends TransformerObjectSupport
+        implements ResponseCreator<T> {
+
+    public final T createResponse(URI uri, T request, WebServiceMessageFactory<T> messageFactory) throws IOException {
+        T response = messageFactory.createWebServiceMessage();
+        doWithResponse(uri, request, response);
+        return response;
+    }
 
     /**
      * Execute any number of operations on the supplied response, given the request and URI.
@@ -39,6 +49,6 @@ public interface ResponseCallback {
      * @param response the response message
      * @throws IOException in case of I/O errors
      */
-    void doWithResponse(URI uri, WebServiceMessage request, WebServiceMessage response) throws IOException;
+    protected abstract void doWithResponse(URI uri, T request, T response) throws IOException;
 
 }
