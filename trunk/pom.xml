@@ -79,8 +79,9 @@
     <distributionManagement>
         <downloadUrl>http://www.springsource.com/download/community?project=Spring%20Web%20Services</downloadUrl>
         <repository>
-            <id>local</id>
-            <url>file:///Users/arjen/Projects/Spring/repos/repo</url>
+            <id>spring-milestone</id>
+            <name>Spring Milestone Repository</name>
+            <url>s3://maven.springframework.org/milestone</url>
         </repository>
         <snapshotRepository>
             <id>spring-s3</id>
