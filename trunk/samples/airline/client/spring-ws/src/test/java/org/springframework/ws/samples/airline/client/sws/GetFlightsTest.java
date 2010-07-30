@@ -87,6 +87,8 @@ public class GetFlightsTest {
 
         getFlights.getFlights();
 
+        verifyConnections();
+
     }
 
 

@@ -225,6 +225,8 @@ public class WebServiceMockTest {
         StringResult result = new StringResult();
         template.sendSourceAndReceiveToResult(request, result);
         assertXMLEqual(result.toString(), response.toString());
+
+        verifyConnections();
     }
 
     @Test(expected = IllegalStateException.class)
@@ -242,5 +244,14 @@ public class WebServiceMockTest {
         expect(anything()).andRespond(withPayload(response));
     }
 
+    @Test(expected = AssertionError.class)
+    public void verifyFailure() throws Exception {
+        expect(anything());
+        verifyConnections();
+    }
 
+    @Test
+    public void verifyOnly() throws Exception {
+        verifyConnections();
+    }
 }

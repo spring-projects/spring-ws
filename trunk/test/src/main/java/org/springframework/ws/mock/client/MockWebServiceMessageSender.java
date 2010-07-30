@@ -70,4 +70,13 @@ class MockWebServiceMessageSender implements WebServiceMessageSender {
         return connection;
     }
 
+    void verifyConnections() {
+        if (expectedConnections.isEmpty()) {
+            return;
+        }
+        if (connectionIterator == null || connectionIterator.hasNext()) {
+            throw new AssertionError("Further connection(s) expected");
+        }
+    }
+
 }
