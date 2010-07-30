@@ -63,6 +63,8 @@ public class IntegrationTest {
 
         CustomerCountResponse response = (CustomerCountResponse) webServiceTemplate.marshalSendAndReceive(request);
         assertEquals(10, response.getCustomerCount());
+        
+        verifyConnections();
     }
 
 }

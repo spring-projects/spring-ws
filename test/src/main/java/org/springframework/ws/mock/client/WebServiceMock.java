@@ -282,6 +282,20 @@ public abstract class WebServiceMock {
         return SoapFaultResponseCallback.createVersionMismatchFault(faultStringOrReason, locale);
     }
 
+    // Verification
+
+    /**
+     * Verifies that all connections were used.
+     *
+     * @throws AssertionError in case of unused connections.
+     */
+    public static void verifyConnections() {
+        MockWebServiceMessageSender messageSender = MockWebServiceMessageSenderHolder.get();
+        if (messageSender != null) {
+            messageSender.verifyConnections();
+        }
+    }
+
     private static ResourceSource createResourceSource(Resource resource) {
         try {
             return new ResourceSource(resource);
