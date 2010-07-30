@@ -32,10 +32,10 @@ public interface ResponseActions {
     ResponseActions andExpect(RequestMatcher requestMatcher);
 
     /**
-     * Sets the {@link ResponseCallback} for this mock.
+     * Sets the {@link ResponseCreator} for this mock.
      *
-     * @param responseCallback the response callback
+     * @param responseCreator the response creator
      */
-    void andRespond(ResponseCallback responseCallback);
+    void andRespond(ResponseCreator responseCreator);
 
 }

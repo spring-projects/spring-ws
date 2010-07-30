@@ -24,15 +24,15 @@ public class ExceptionResponseCallbackTest {
 
     @Test(expected = IOException.class)
     public void ioException() throws Exception {
-        ExceptionResponseCallback callback = new ExceptionResponseCallback(new IOException());
+        ExceptionResponseCreator callback = new ExceptionResponseCreator(new IOException());
 
-        callback.doWithResponse(null, null, null);
+        callback.createResponse(null, null, null);
     }
 
     @Test(expected = RuntimeException.class)
     public void runtimeException() throws Exception {
-        ExceptionResponseCallback callback = new ExceptionResponseCallback(new RuntimeException());
+        ExceptionResponseCreator callback = new ExceptionResponseCreator(new RuntimeException());
 
-        callback.doWithResponse(null, null, null);
+        callback.createResponse(null, null, null);
     }
 }

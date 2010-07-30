@@ -175,7 +175,7 @@ public abstract class WebServiceMock {
         return new UriMatcher(uri);
     }
 
-    // ResponseCallbacks
+    // ResponseCreators
 
     /**
      * Respond with the given {@link Source} XML as payload response.
@@ -183,7 +183,7 @@ public abstract class WebServiceMock {
      * @param payload the response payload
      * @return the response callback
      */
-    public static ResponseCallback withPayload(Source payload) {
+    public static ResponseCreator withPayload(Source payload) {
         Assert.notNull(payload, "'payload' must not be null");
         return new PayloadResponseCallback(payload);
     }
@@ -194,7 +194,7 @@ public abstract class WebServiceMock {
      * @param payload the response payload
      * @return the response callback
      */
-    public static ResponseCallback withPayload(Resource payload) {
+    public static ResponseCreator withPayload(Resource payload) {
         Assert.notNull(payload, "'payload' must not be null");
         return new PayloadResponseCallback(createResourceSource(payload));
     }
@@ -207,9 +207,9 @@ public abstract class WebServiceMock {
      * @see org.springframework.ws.transport.WebServiceConnection#hasError()
      * @see org.springframework.ws.transport.WebServiceConnection#getErrorMessage()
      */
-    public static ResponseCallback withError(String errorMessage) {
+    public static ResponseCreator withError(String errorMessage) {
         Assert.hasLength(errorMessage, "'errorMessage' must not be empty");
-        return new ErrorResponseCallback(errorMessage);
+        return new ErrorResponseCreator(errorMessage);
     }
 
     /**
@@ -218,9 +218,9 @@ public abstract class WebServiceMock {
      * @param ioException the exception to be thrown
      * @return the response callback
      */
-    public static ResponseCallback withException(IOException ioException) {
+    public static ResponseCreator withException(IOException ioException) {
         Assert.notNull(ioException, "'ioException' must not be null");
-        return new ExceptionResponseCallback(ioException);
+        return new ExceptionResponseCreator(ioException);
     }
 
     /**
@@ -229,9 +229,9 @@ public abstract class WebServiceMock {
      * @param ex the runtime exception to be thrown
      * @return the response callback
      */
-    public static ResponseCallback withException(RuntimeException ex) {
+    public static ResponseCreator withException(RuntimeException ex) {
         Assert.notNull(ex, "'ex' must not be null");
-        return new ExceptionResponseCallback(ex);
+        return new ExceptionResponseCreator(ex);
     }
 
     /**
@@ -241,7 +241,7 @@ public abstract class WebServiceMock {
      * @param locale              the language of faultStringOrReason. Optional for SOAP 1.1
      * @see org.springframework.ws.soap.SoapBody#addMustUnderstandFault(String, Locale)
      */
-    public static ResponseCallback withMustUnderstandFault(String faultStringOrReason, Locale locale) {
+    public static ResponseCreator withMustUnderstandFault(String faultStringOrReason, Locale locale) {
         Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
         return SoapFaultResponseCallback.createMustUnderstandFault(faultStringOrReason, locale);
     }
@@ -253,7 +253,7 @@ public abstract class WebServiceMock {
      * @param locale              the language of faultStringOrReason. Optional for SOAP 1.1
      * @see org.springframework.ws.soap.SoapBody#addClientOrSenderFault(String, Locale)
      */
-    public static ResponseCallback withClientOrSenderFault(String faultStringOrReason, Locale locale) {
+    public static ResponseCreator withClientOrSenderFault(String faultStringOrReason, Locale locale) {
         Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
         return SoapFaultResponseCallback.createClientOrSenderFault(faultStringOrReason, locale);
     }
@@ -265,7 +265,7 @@ public abstract class WebServiceMock {
      * @param locale              the language of faultStringOrReason. Optional for SOAP 1.1
      * @see org.springframework.ws.soap.SoapBody#addServerOrReceiverFault(String, Locale)
      */
-    public static ResponseCallback withServerOrReceiverFault(String faultStringOrReason, Locale locale) {
+    public static ResponseCreator withServerOrReceiverFault(String faultStringOrReason, Locale locale) {
         Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
         return SoapFaultResponseCallback.createServerOrReceiverFault(faultStringOrReason, locale);
     }
@@ -277,7 +277,7 @@ public abstract class WebServiceMock {
      * @param locale              the language of faultStringOrReason. Optional for SOAP 1.1
      * @see org.springframework.ws.soap.SoapBody#addVersionMismatchFault(String, Locale)
      */
-    public static ResponseCallback withVersionMismatchFault(String faultStringOrReason, Locale locale) {
+    public static ResponseCreator withVersionMismatchFault(String faultStringOrReason, Locale locale) {
         Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
         return SoapFaultResponseCallback.createVersionMismatchFault(faultStringOrReason, locale);
     }

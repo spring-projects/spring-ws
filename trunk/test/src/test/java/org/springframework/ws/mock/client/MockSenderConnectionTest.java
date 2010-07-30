@@ -30,7 +30,7 @@ public class MockSenderConnectionTest {
     public void error() throws IOException {
         String testErrorMessage = "Test Error Message";
         MockSenderConnection connection = new MockSenderConnection();
-        connection.andRespond(new ErrorResponseCallback(testErrorMessage));
+        connection.andRespond(new ErrorResponseCreator(testErrorMessage));
         assertTrue(connection.hasError());
         assertEquals(testErrorMessage, connection.getErrorMessage());
     }

@@ -27,8 +27,8 @@ public class ErrorResponseCallbackTest {
     @Test
     public void callback() throws IOException {
         String errorMessage = "Error message";
-        ErrorResponseCallback callback = new ErrorResponseCallback(errorMessage);
-        callback.doWithResponse(null, null, null);
+        ErrorResponseCreator callback = new ErrorResponseCreator(errorMessage);
+        callback.createResponse(null, null, null);
         assertEquals(errorMessage, callback.getErrorMessage());
     }
 }

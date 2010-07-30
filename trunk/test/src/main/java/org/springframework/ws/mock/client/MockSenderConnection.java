@@ -44,7 +44,7 @@ class MockSenderConnection implements FaultAwareWebServiceConnection, ResponseAc
 
     private WebServiceMessage request;
 
-    private ResponseCallback responseCallback;
+    private ResponseCreator responseCreator;
 
     void addRequestMatcher(RequestMatcher requestMatcher) {
         Assert.notNull(requestMatcher, "'requestMatcher' must not be null");
@@ -67,13 +67,14 @@ class MockSenderConnection implements FaultAwareWebServiceConnection, ResponseAc
         return this;
     }
 
-    public void andRespond(ResponseCallback responseCallback) {
-        Assert.notNull(responseCallback, "'responseCallback' must not be null");
-        this.responseCallback = responseCallback;
+    public void andRespond(ResponseCreator responseCreator) {
+        Assert.notNull(responseCreator, "'responseCreator' must not be null");
+        this.responseCreator = responseCreator;
     }
 
     // FaultAwareWebServiceConnection implementation
 
+    @SuppressWarnings("unchecked")
     public void send(WebServiceMessage message) throws IOException {
         if (!requestMatchers.isEmpty()) {
             for (RequestMatcher requestMatcher : requestMatchers) {
@@ -86,11 +87,10 @@ class MockSenderConnection implements FaultAwareWebServiceConnection, ResponseAc
         this.request = message;
     }
 
+    @SuppressWarnings("unchecked")
     public WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException {
-        if (responseCallback != null) {
-            WebServiceMessage response = messageFactory.createWebServiceMessage();
-            responseCallback.doWithResponse(uri, request, response);
-            return response;
+        if (responseCreator != null) {
+            return responseCreator.createResponse(uri, request, messageFactory);
         }
         else {
             return null;
@@ -102,12 +102,12 @@ class MockSenderConnection implements FaultAwareWebServiceConnection, ResponseAc
     }
 
     public boolean hasError() throws IOException {
-        return responseCallback instanceof ErrorResponseCallback;
+        return responseCreator instanceof ErrorResponseCreator;
     }
 
     public String getErrorMessage() throws IOException {
-        if (responseCallback instanceof ErrorResponseCallback) {
-            return ((ErrorResponseCallback) responseCallback).getErrorMessage();
+        if (responseCreator instanceof ErrorResponseCreator) {
+            return ((ErrorResponseCreator) responseCreator).getErrorMessage();
         }
         else {
             return null;
@@ -115,7 +115,7 @@ class MockSenderConnection implements FaultAwareWebServiceConnection, ResponseAc
     }
 
     public boolean hasFault() throws IOException {
-        return responseCallback instanceof SoapFaultResponseCallback;
+        return responseCreator instanceof SoapFaultResponseCallback;
     }
 
     public void setFault(boolean fault) throws IOException {
@@ -125,7 +125,7 @@ class MockSenderConnection implements FaultAwareWebServiceConnection, ResponseAc
     public void close() throws IOException {
         requestMatchers.clear();
         request = null;
-        responseCallback = null;
+        responseCreator = null;
         uri = null;
         if (lastConnection) {
             MockWebServiceMessageSenderHolder.clear();
