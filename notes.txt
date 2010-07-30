@@ -1,16 +1,64 @@
 Dear Spring community,
 
-I'm pleased to announce that Spring Web Services 2.0 Milestone 1 has been
+I'm pleased to announce that Spring Web Services 2.0 Milestone 3 has been
 released!
 
-This is the first milestone release in the 2.0 release cycle. It does not
-introduce any new features (yet), but does add the following:
+This is the third milestone release in the 2.0 release cycle. The most
+important new feature in this release is inclusion of a client-side 
+Web service testing framework. This testing framework is very similar to 
+EasyMock 2, offering a 'fluent' API for all you testing needs! 
+For example:
 
-- Usage of Spring's OXM
-- Java 5 API (including generics, varargs, etc)
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.xml.transform.StringSource;
+import static org.springframework.ws.mock.client.WebServiceMock.*;
 
-Please see the changelog for details.
 
-Spring Web Services 2.0 is due in the second quarter of 2010.
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("applicationContext.xml")
+public class IntegrationTest {
+
+  // AirlineClient extends WebServiceGatewaySupport, and is configured in applicationContext.xml
+  @Autowired
+  private MyWebServiceClient client;
+
+  @Before
+  public void setUpMocks() throws Exception {
+    mockWebServiceTemplate(client.getWebServiceTemplate());
+  }
+
+  @Test
+  public void getCustomerCount() throws Exception {
+    Source requestPayload =
+      new StringSource("<customerCountRequest xmlns='http://springframework.org/spring-ws/test' />";
+    Source responsePayload = new StringSource("<customerCountResponse xmlns='http://springframework.org/spring-wstest'>" +
+      "<customerCount>10</customerCount>" +
+      "</customerCountResponse>");
+
+    expect(payload(requestPayload)).andRespond(withPayload(responsePayload));
+
+    // client.getCustomerCount() uses the WebServiceTemplate
+    int customerCount = client.getCustomerCount();
+    assertEquals(10, response.getCustomerCount());
+
+    verifyConnections();
+  }
+}
+
+The WebServiceMock API has a lot more features than I can describe here, 
+I suggest you try out the new testing module today! Please leave feedback
+through JIRA or on the forums.
+
+Many thanks to Lukáš Křečan for helping out with this testing framework. It 
+would not have been possible without him.
+
+Please see the changelog for more details.
+
+Spring Web Services 2.0 is due in the third quarter of 2010.
 
 For more information, see http://static.springframework.org/spring-ws/site/
