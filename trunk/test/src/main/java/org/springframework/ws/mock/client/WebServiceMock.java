@@ -74,7 +74,7 @@ import org.springframework.xml.validation.XmlValidatorFactory;
  * &#064;ContextConfiguration("applicationContext.xml")
  * public class IntegrationTest {
  *
- *   // AirlineClient extends WebServiceGatewaySupport, and is configured in applicationContext.xml
+ *   // MyWebServiceClient extends WebServiceGatewaySupport, and is configured in applicationContext.xml
  *   &#064;Autowired
  *   private MyWebServiceClient client;
  *
