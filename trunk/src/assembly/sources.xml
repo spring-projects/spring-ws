@@ -22,5 +22,9 @@
             <directory>security/src/main/java</directory>
             <outputDirectory/>
         </fileSet>
+        <fileSet>
+            <directory>test/src/main/java</directory>
+            <outputDirectory/>
+        </fileSet>
     </fileSets>
 </assembly>
