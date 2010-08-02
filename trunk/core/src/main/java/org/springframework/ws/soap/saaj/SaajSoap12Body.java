@@ -23,7 +23,6 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 
 import org.springframework.util.Assert;
-import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.soap12.Soap12Body;
 import org.springframework.ws.soap.soap12.Soap12Fault;
@@ -40,24 +39,24 @@ class SaajSoap12Body extends SaajSoapBody implements Soap12Body {
         super(body);
     }
 
-    public SoapFault getFault() {
+    public Soap12Fault getFault() {
         SOAPFault fault = getImplementation().getFault(getSaajBody());
         return fault != null ? new SaajSoap12Fault(fault) : null;
     }
 
-    public SoapFault addClientOrSenderFault(String faultString, Locale locale) {
+    public Soap12Fault addClientOrSenderFault(String faultString, Locale locale) {
         return addFault(SoapVersion.SOAP_12.getClientOrSenderFaultName(), faultString, locale);
     }
 
-    public SoapFault addMustUnderstandFault(String faultString, Locale locale) {
+    public Soap12Fault addMustUnderstandFault(String faultString, Locale locale) {
         return addFault(SoapVersion.SOAP_12.getMustUnderstandFaultName(), faultString, locale);
     }
 
-    public SoapFault addServerOrReceiverFault(String faultString, Locale locale) {
+    public Soap12Fault addServerOrReceiverFault(String faultString, Locale locale) {
         return addFault(SoapVersion.SOAP_12.getServerOrReceiverFaultName(), faultString, locale);
     }
 
-    public SoapFault addVersionMismatchFault(String faultString, Locale locale) {
+    public Soap12Fault addVersionMismatchFault(String faultString, Locale locale) {
         return addFault(SoapVersion.SOAP_12.getVersionMismatchFaultName(), faultString, locale);
     }
 
