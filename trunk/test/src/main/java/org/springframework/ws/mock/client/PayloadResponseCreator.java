@@ -29,11 +29,11 @@ import org.springframework.ws.WebServiceMessage;
  * @author Arjen Poutsma
  * @since 2.0
  */
-class PayloadResponseCallback extends AbstractResponseCreator<WebServiceMessage> {
+class PayloadResponseCreator extends AbstractResponseCreator<WebServiceMessage> {
 
     private final Source payload;
 
-    PayloadResponseCallback(Source payload) {
+    PayloadResponseCreator(Source payload) {
         this.payload = payload;
     }
 

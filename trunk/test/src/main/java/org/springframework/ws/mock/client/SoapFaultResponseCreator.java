@@ -31,7 +31,7 @@ import static org.springframework.ws.mock.client.Assert.fail;
  * @author Arjen Poutsma
  * @since 2.0
  */
-abstract class SoapFaultResponseCallback extends AbstractResponseCreator<SoapMessage> {
+abstract class SoapFaultResponseCreator extends AbstractResponseCreator<SoapMessage> {
 
     @Override
     protected void doWithResponse(URI uri, SoapMessage request, SoapMessage response) throws IOException {
@@ -44,9 +44,9 @@ abstract class SoapFaultResponseCallback extends AbstractResponseCreator<SoapMes
 
     public abstract void addSoapFault(SoapBody soapBody);
 
-    public static SoapFaultResponseCallback createMustUnderstandFault(final String faultStringOrReason,
+    public static SoapFaultResponseCreator createMustUnderstandFault(final String faultStringOrReason,
                                                                       final Locale locale) {
-        return new SoapFaultResponseCallback() {
+        return new SoapFaultResponseCreator() {
             @Override
             public void addSoapFault(SoapBody soapBody) {
                 soapBody.addMustUnderstandFault(faultStringOrReason, locale);
@@ -55,9 +55,9 @@ abstract class SoapFaultResponseCallback extends AbstractResponseCreator<SoapMes
 
     }
 
-    public static SoapFaultResponseCallback createClientOrSenderFault(final String faultStringOrReason,
+    public static SoapFaultResponseCreator createClientOrSenderFault(final String faultStringOrReason,
                                                                       final Locale locale) {
-        return new SoapFaultResponseCallback() {
+        return new SoapFaultResponseCreator() {
             @Override
             public void addSoapFault(SoapBody soapBody) {
                 soapBody.addClientOrSenderFault(faultStringOrReason, locale);
@@ -65,9 +65,9 @@ abstract class SoapFaultResponseCallback extends AbstractResponseCreator<SoapMes
         };
     }
 
-    public static SoapFaultResponseCallback createServerOrReceiverFault(final String faultStringOrReason,
+    public static SoapFaultResponseCreator createServerOrReceiverFault(final String faultStringOrReason,
                                                                         final Locale locale) {
-        return new SoapFaultResponseCallback() {
+        return new SoapFaultResponseCreator() {
             @Override
             public void addSoapFault(SoapBody soapBody) {
                 soapBody.addServerOrReceiverFault(faultStringOrReason, locale);
@@ -76,9 +76,9 @@ abstract class SoapFaultResponseCallback extends AbstractResponseCreator<SoapMes
 
     }
 
-    public static SoapFaultResponseCallback createVersionMismatchFault(final String faultStringOrReason,
+    public static SoapFaultResponseCreator createVersionMismatchFault(final String faultStringOrReason,
                                                                        final Locale locale) {
-        return new SoapFaultResponseCallback() {
+        return new SoapFaultResponseCreator() {
             @Override
             public void addSoapFault(SoapBody soapBody) {
                 soapBody.addVersionMismatchFault(faultStringOrReason, locale);

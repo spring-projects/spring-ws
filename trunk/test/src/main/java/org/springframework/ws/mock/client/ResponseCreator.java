@@ -39,6 +39,6 @@ public interface ResponseCreator<T extends WebServiceMessage> {
      * @param messageFactory the message that can be used to create responses
      * @throws IOException in case of I/O errors
      */
-    T createResponse(URI uri, T request, WebServiceMessageFactory<T> messageFactory) throws IOException;
+    T createResponse(URI uri, T request, WebServiceMessageFactory<? extends T> messageFactory) throws IOException;
 
 }

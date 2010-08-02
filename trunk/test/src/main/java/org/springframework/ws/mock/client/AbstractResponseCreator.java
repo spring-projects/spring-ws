@@ -35,7 +35,7 @@ import org.springframework.xml.transform.TransformerObjectSupport;
 abstract class AbstractResponseCreator<T extends WebServiceMessage> extends TransformerObjectSupport
         implements ResponseCreator<T> {
 
-    public final T createResponse(URI uri, T request, WebServiceMessageFactory<T> messageFactory) throws IOException {
+    public final T createResponse(URI uri, T request, WebServiceMessageFactory<? extends T> messageFactory) throws IOException {
         T response = messageFactory.createWebServiceMessage();
         doWithResponse(uri, request, response);
         return response;

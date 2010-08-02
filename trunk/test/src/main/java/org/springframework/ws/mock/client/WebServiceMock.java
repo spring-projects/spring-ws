@@ -260,7 +260,7 @@ public abstract class WebServiceMock {
      */
     public static ResponseCreator withPayload(Source payload) {
         Assert.notNull(payload, "'payload' must not be null");
-        return new PayloadResponseCallback(payload);
+        return new PayloadResponseCreator(payload);
     }
 
     /**
@@ -271,7 +271,7 @@ public abstract class WebServiceMock {
      */
     public static ResponseCreator withPayload(Resource payload) {
         Assert.notNull(payload, "'payload' must not be null");
-        return new PayloadResponseCallback(createResourceSource(payload));
+        return new PayloadResponseCreator(createResourceSource(payload));
     }
 
     /**
@@ -318,7 +318,7 @@ public abstract class WebServiceMock {
      */
     public static ResponseCreator withMustUnderstandFault(String faultStringOrReason, Locale locale) {
         Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
-        return SoapFaultResponseCallback.createMustUnderstandFault(faultStringOrReason, locale);
+        return SoapFaultResponseCreator.createMustUnderstandFault(faultStringOrReason, locale);
     }
 
     /**
@@ -330,7 +330,7 @@ public abstract class WebServiceMock {
      */
     public static ResponseCreator withClientOrSenderFault(String faultStringOrReason, Locale locale) {
         Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
-        return SoapFaultResponseCallback.createClientOrSenderFault(faultStringOrReason, locale);
+        return SoapFaultResponseCreator.createClientOrSenderFault(faultStringOrReason, locale);
     }
 
     /**
@@ -342,7 +342,7 @@ public abstract class WebServiceMock {
      */
     public static ResponseCreator withServerOrReceiverFault(String faultStringOrReason, Locale locale) {
         Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
-        return SoapFaultResponseCallback.createServerOrReceiverFault(faultStringOrReason, locale);
+        return SoapFaultResponseCreator.createServerOrReceiverFault(faultStringOrReason, locale);
     }
 
     /**
@@ -354,7 +354,7 @@ public abstract class WebServiceMock {
      */
     public static ResponseCreator withVersionMismatchFault(String faultStringOrReason, Locale locale) {
         Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
-        return SoapFaultResponseCallback.createVersionMismatchFault(faultStringOrReason, locale);
+        return SoapFaultResponseCreator.createVersionMismatchFault(faultStringOrReason, locale);
     }
 
     // Verification

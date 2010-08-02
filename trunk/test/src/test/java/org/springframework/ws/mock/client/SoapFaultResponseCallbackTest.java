@@ -47,8 +47,8 @@ public class SoapFaultResponseCallbackTest {
     @Test
     public void clientOrSenderFault() throws IOException {
         String faultString = "Foo";
-        SoapFaultResponseCallback callback =
-                SoapFaultResponseCallback.createClientOrSenderFault(faultString, Locale.ENGLISH);
+        SoapFaultResponseCreator callback =
+                SoapFaultResponseCreator.createClientOrSenderFault(faultString, Locale.ENGLISH);
 
         callback.doWithResponse(null, null, response);
 
@@ -63,8 +63,8 @@ public class SoapFaultResponseCallbackTest {
     @Test
     public void mustUnderstandFault() throws IOException {
         String faultString = "Foo";
-        SoapFaultResponseCallback callback =
-                SoapFaultResponseCallback.createMustUnderstandFault(faultString, Locale.ENGLISH);
+        SoapFaultResponseCreator callback =
+                SoapFaultResponseCreator.createMustUnderstandFault(faultString, Locale.ENGLISH);
 
         callback.doWithResponse(null, null, response);
 
@@ -79,8 +79,8 @@ public class SoapFaultResponseCallbackTest {
     @Test
     public void serverOrReceiverFault() throws IOException {
         String faultString = "Foo";
-        SoapFaultResponseCallback callback =
-                SoapFaultResponseCallback.createServerOrReceiverFault(faultString, Locale.ENGLISH);
+        SoapFaultResponseCreator callback =
+                SoapFaultResponseCreator.createServerOrReceiverFault(faultString, Locale.ENGLISH);
 
         callback.doWithResponse(null, null, response);
 
@@ -95,8 +95,8 @@ public class SoapFaultResponseCallbackTest {
     @Test
     public void versionMismatchFault() throws IOException {
         String faultString = "Foo";
-        SoapFaultResponseCallback callback =
-                SoapFaultResponseCallback.createVersionMismatchFault(faultString, Locale.ENGLISH);
+        SoapFaultResponseCreator callback =
+                SoapFaultResponseCreator.createVersionMismatchFault(faultString, Locale.ENGLISH);
 
         callback.doWithResponse(null, null, response);
 
