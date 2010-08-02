@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 
 import org.springframework.util.Assert;
-import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.soap11.Soap11Body;
 import org.springframework.ws.soap.soap11.Soap11Fault;
@@ -43,7 +42,7 @@ class SaajSoap11Body extends SaajSoapBody implements Soap11Body {
         this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
     }
 
-    public SoapFault getFault() {
+    public Soap11Fault getFault() {
         SOAPFault fault = getImplementation().getFault(getSaajBody());
         return fault != null ? new SaajSoap11Fault(fault) : null;
     }
@@ -67,19 +66,19 @@ class SaajSoap11Body extends SaajSoapBody implements Soap11Body {
         }
     }
 
-    public SoapFault addClientOrSenderFault(String faultString, Locale locale) {
+    public Soap11Fault addClientOrSenderFault(String faultString, Locale locale) {
         return addFault(SoapVersion.SOAP_11.getClientOrSenderFaultName(), faultString, locale);
     }
 
-    public SoapFault addMustUnderstandFault(String faultString, Locale locale) {
+    public Soap11Fault addMustUnderstandFault(String faultString, Locale locale) {
         return addFault(SoapVersion.SOAP_11.getMustUnderstandFaultName(), faultString, locale);
     }
 
-    public SoapFault addServerOrReceiverFault(String faultString, Locale locale) {
+    public Soap11Fault addServerOrReceiverFault(String faultString, Locale locale) {
         return addFault(SoapVersion.SOAP_11.getServerOrReceiverFaultName(), faultString, locale);
     }
 
-    public SoapFault addVersionMismatchFault(String faultString, Locale locale) {
+    public Soap11Fault addVersionMismatchFault(String faultString, Locale locale) {
         return addFault(SoapVersion.SOAP_11.getVersionMismatchFaultName(), faultString, locale);
     }
 

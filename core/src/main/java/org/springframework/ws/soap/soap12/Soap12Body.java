@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.util.Locale;
 import javax.xml.namespace.QName;
 
 import org.springframework.ws.soap.SoapBody;
+import org.springframework.ws.soap.SoapFaultException;
 
 /**
  * Subinterface of <code>SoapBody</code> that exposes SOAP 1.2 functionality. Necessary because SOAP 1.1 differs from
@@ -40,5 +41,16 @@ public interface Soap12Body extends SoapBody {
      * @param locale   the language of the fault reason
      * @return the created <code>SoapFault</code>
      */
-    Soap12Fault addDataEncodingUnknownFault(QName[] subcodes, String reason, Locale locale);
+    Soap12Fault addDataEncodingUnknownFault(QName[] subcodes, String reason, Locale locale) throws SoapFaultException;
+    
+    Soap12Fault getFault();
+
+    Soap12Fault addMustUnderstandFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+
+    Soap12Fault addClientOrSenderFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+
+    Soap12Fault addServerOrReceiverFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+
+    Soap12Fault addVersionMismatchFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+    
 }

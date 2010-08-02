@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,13 @@ package org.springframework.ws.soap.axiom;
 import java.util.Locale;
 import javax.xml.namespace.QName;
 
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+import org.springframework.ws.soap.axiom.support.AxiomUtils;
+import org.springframework.ws.soap.soap11.Soap11Body;
+import org.springframework.ws.soap.soap11.Soap11Fault;
+import org.springframework.xml.namespace.QNameUtils;
+
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAP11Constants;
@@ -28,14 +35,6 @@ import org.apache.axiom.soap.SOAPFault;
 import org.apache.axiom.soap.SOAPFaultCode;
 import org.apache.axiom.soap.SOAPFaultReason;
 import org.apache.axiom.soap.SOAPProcessingException;
-
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-import org.springframework.ws.soap.SoapFault;
-import org.springframework.ws.soap.axiom.support.AxiomUtils;
-import org.springframework.ws.soap.soap11.Soap11Body;
-import org.springframework.ws.soap.soap11.Soap11Fault;
-import org.springframework.xml.namespace.QNameUtils;
 
 /**
  * Axiom-specific version of <code>org.springframework.ws.soap.Soap11Body</code>.
@@ -55,22 +54,22 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
         this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
     }
 
-    public SoapFault addMustUnderstandFault(String faultString, Locale locale) {
+    public Soap11Fault addMustUnderstandFault(String faultString, Locale locale) {
         SOAPFault fault = addStandardFault(SOAP11Constants.FAULT_CODE_MUST_UNDERSTAND, faultString, locale);
         return new AxiomSoap11Fault(fault, getAxiomFactory());
     }
 
-    public SoapFault addClientOrSenderFault(String faultString, Locale locale) {
+    public Soap11Fault addClientOrSenderFault(String faultString, Locale locale) {
         SOAPFault fault = addStandardFault(SOAP11Constants.FAULT_CODE_SENDER, faultString, locale);
         return new AxiomSoap11Fault(fault, getAxiomFactory());
     }
 
-    public SoapFault addServerOrReceiverFault(String faultString, Locale locale) {
+    public Soap11Fault addServerOrReceiverFault(String faultString, Locale locale) {
         SOAPFault fault = addStandardFault(SOAP11Constants.FAULT_CODE_RECEIVER, faultString, locale);
         return new AxiomSoap11Fault(fault, getAxiomFactory());
     }
 
-    public SoapFault addVersionMismatchFault(String faultString, Locale locale) {
+    public Soap11Fault addVersionMismatchFault(String faultString, Locale locale) {
         SOAPFault fault = addStandardFault(SOAP11Constants.FAULT_CODE_VERSION_MISMATCH, faultString, locale);
         return new AxiomSoap11Fault(fault, getAxiomFactory());
     }
@@ -148,7 +147,7 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
         faultReason.addAttribute(langAttribute);
     }
 
-    public SoapFault getFault() {
+    public Soap11Fault getFault() {
         SOAPFault axiomFault = getAxiomBody().getFault();
         return axiomFault != null ? new AxiomSoap11Fault(axiomFault, getAxiomFactory()) : null;
     }

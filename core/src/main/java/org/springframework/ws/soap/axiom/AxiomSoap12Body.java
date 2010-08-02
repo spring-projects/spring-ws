@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,11 @@ package org.springframework.ws.soap.axiom;
 import java.util.Locale;
 import javax.xml.namespace.QName;
 
+import org.springframework.util.Assert;
+import org.springframework.ws.soap.axiom.support.AxiomUtils;
+import org.springframework.ws.soap.soap12.Soap12Body;
+import org.springframework.ws.soap.soap12.Soap12Fault;
+
 import org.apache.axiom.soap.SOAP12Constants;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
@@ -28,12 +33,6 @@ import org.apache.axiom.soap.SOAPFaultReason;
 import org.apache.axiom.soap.SOAPFaultText;
 import org.apache.axiom.soap.SOAPFaultValue;
 import org.apache.axiom.soap.SOAPProcessingException;
-
-import org.springframework.util.Assert;
-import org.springframework.ws.soap.SoapFault;
-import org.springframework.ws.soap.axiom.support.AxiomUtils;
-import org.springframework.ws.soap.soap12.Soap12Body;
-import org.springframework.ws.soap.soap12.Soap12Fault;
 
 /**
  * Axiom-specific version of <code>org.springframework.ws.soap.Soap12Body</code>.
@@ -47,25 +46,25 @@ class AxiomSoap12Body extends AxiomSoapBody implements Soap12Body {
         super(axiomBody, axiomFactory, payloadCaching);
     }
 
-    public SoapFault addMustUnderstandFault(String reason, Locale locale) {
+    public Soap12Fault addMustUnderstandFault(String reason, Locale locale) {
         Assert.notNull(locale, "No locale given");
         SOAPFault fault = addStandardFault(SOAP12Constants.FAULT_CODE_MUST_UNDERSTAND, reason, locale);
         return new AxiomSoap12Fault(fault, getAxiomFactory());
     }
 
-    public SoapFault addClientOrSenderFault(String reason, Locale locale) {
+    public Soap12Fault addClientOrSenderFault(String reason, Locale locale) {
         Assert.notNull(locale, "No locale given");
         SOAPFault fault = addStandardFault(SOAP12Constants.FAULT_CODE_SENDER, reason, locale);
         return new AxiomSoap12Fault(fault, getAxiomFactory());
     }
 
-    public SoapFault addServerOrReceiverFault(String reason, Locale locale) {
+    public Soap12Fault addServerOrReceiverFault(String reason, Locale locale) {
         Assert.notNull(locale, "No locale given");
         SOAPFault fault = addStandardFault(SOAP12Constants.FAULT_CODE_RECEIVER, reason, locale);
         return new AxiomSoap12Fault(fault, getAxiomFactory());
     }
 
-    public SoapFault addVersionMismatchFault(String reason, Locale locale) {
+    public Soap12Fault addVersionMismatchFault(String reason, Locale locale) {
         Assert.notNull(locale, "No locale given");
         SOAPFault fault = addStandardFault(SOAP12Constants.FAULT_CODE_VERSION_MISMATCH, reason, locale);
         return new AxiomSoap12Fault(fault, getAxiomFactory());
@@ -98,7 +97,7 @@ class AxiomSoap12Body extends AxiomSoapBody implements Soap12Body {
         }
     }
 
-    public SoapFault getFault() {
+    public Soap12Fault getFault() {
         SOAPFault axiomFault = getAxiomBody().getFault();
         return axiomFault != null ? new AxiomSoap12Fault(axiomFault, getAxiomFactory()) : null;
     }
