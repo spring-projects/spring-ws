@@ -39,7 +39,7 @@ class ErrorResponseCreator implements ResponseCreator<WebServiceMessage> {
 
     public WebServiceMessage createResponse(URI uri,
                                             WebServiceMessage request,
-                                            WebServiceMessageFactory<WebServiceMessage> factory) throws IOException {
+                                            WebServiceMessageFactory<? extends WebServiceMessage> factory) throws IOException {
         // Do nothing
         return null;
     }

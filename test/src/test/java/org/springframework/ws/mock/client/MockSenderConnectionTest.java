@@ -38,7 +38,7 @@ public class MockSenderConnectionTest {
     @Test
     public void normal() throws IOException {
         MockSenderConnection connection = new MockSenderConnection();
-        connection.andRespond(new PayloadResponseCallback(new StringSource("<response/>")));
+        connection.andRespond(new PayloadResponseCreator(new StringSource("<response/>")));
         assertFalse(connection.hasError());
         assertNull(connection.getErrorMessage());
     }
@@ -46,7 +46,7 @@ public class MockSenderConnectionTest {
     @Test(expected = AssertionError.class)
     public void noRequestMatchers() throws IOException {
         MockSenderConnection connection = new MockSenderConnection();
-        connection.andRespond(new PayloadResponseCallback(new StringSource("<response/>")));
+        connection.andRespond(new PayloadResponseCreator(new StringSource("<response/>")));
         connection.send(null);
     }
 }

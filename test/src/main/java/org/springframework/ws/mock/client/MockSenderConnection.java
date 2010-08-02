@@ -115,7 +115,7 @@ class MockSenderConnection implements FaultAwareWebServiceConnection, ResponseAc
     }
 
     public boolean hasFault() throws IOException {
-        return responseCreator instanceof SoapFaultResponseCallback;
+        return responseCreator instanceof SoapFaultResponseCreator;
     }
 
     public void setFault(boolean fault) throws IOException {
