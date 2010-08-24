@@ -35,7 +35,7 @@ import org.springframework.ws.soap.SoapFaultDetailElement;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
-class SaajSoapFaultDetail extends SaajSoapElement implements SoapFaultDetail {
+class SaajSoapFaultDetail extends SaajSoapElement<SOAPFaultElement> implements SoapFaultDetail {
 
     public SaajSoapFaultDetail(SOAPFaultElement faultElement) {
         super(faultElement);
