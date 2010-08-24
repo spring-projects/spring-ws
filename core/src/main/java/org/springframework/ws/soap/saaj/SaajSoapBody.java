@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import org.springframework.ws.soap.SoapBody;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
-abstract class SaajSoapBody extends SaajSoapElement implements SoapBody {
+abstract class SaajSoapBody extends SaajSoapElement<SOAPBody> implements SoapBody {
 
     public SaajSoapBody(SOAPBody body) {
         super(body);
@@ -50,7 +50,7 @@ abstract class SaajSoapBody extends SaajSoapElement implements SoapBody {
     }
 
     protected SOAPBody getSaajBody() {
-        return (SOAPBody) getSaajElement();
+        return getSaajElement();
     }
 
 }

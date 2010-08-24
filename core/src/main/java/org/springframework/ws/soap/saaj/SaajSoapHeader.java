@@ -35,7 +35,7 @@ import org.springframework.ws.soap.SoapHeaderException;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
-abstract class SaajSoapHeader extends SaajSoapElement implements SoapHeader {
+abstract class SaajSoapHeader extends SaajSoapElement<SOAPHeader> implements SoapHeader {
 
     SaajSoapHeader(SOAPHeader header) {
         super(header);
@@ -75,7 +75,7 @@ abstract class SaajSoapHeader extends SaajSoapElement implements SoapHeader {
     }
 
     protected SOAPHeader getSaajHeader() {
-        return (SOAPHeader) getSaajElement();
+        return getSaajElement();
     }
 
     public Result getResult() {

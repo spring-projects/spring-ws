@@ -32,13 +32,13 @@ import org.springframework.ws.soap.saaj.support.SaajUtils;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
-class SaajSoapElement implements SoapElement {
+class SaajSoapElement<T extends SOAPElement> implements SoapElement {
 
-    private final SOAPElement element;
+    private final T element;
 
     private SaajImplementation implementation;
 
-    SaajSoapElement(SOAPElement element) {
+    SaajSoapElement(T element) {
         Assert.notNull(element, "element must not be null");
         this.element = element;
     }
@@ -91,7 +91,7 @@ class SaajSoapElement implements SoapElement {
         }
     }
 
-    protected final SOAPElement getSaajElement() {
+    protected final T getSaajElement() {
         return element;
     }
 

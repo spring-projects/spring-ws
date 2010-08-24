@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package org.springframework.ws.soap.saaj;
 
 import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
@@ -34,7 +33,7 @@ import org.springframework.ws.soap.SoapVersion;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
-class SaajSoapEnvelope extends SaajSoapElement implements SoapEnvelope {
+class SaajSoapEnvelope extends SaajSoapElement<SOAPEnvelope> implements SoapEnvelope {
 
     private SaajSoapBody body;
 
@@ -42,7 +41,7 @@ class SaajSoapEnvelope extends SaajSoapElement implements SoapEnvelope {
 
     private final boolean langAttributeOnSoap11FaultString;
 
-    SaajSoapEnvelope(SOAPElement element, boolean langAttributeOnSoap11FaultString) {
+    SaajSoapEnvelope(SOAPEnvelope element, boolean langAttributeOnSoap11FaultString) {
         super(element);
         this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
     }
@@ -91,7 +90,7 @@ class SaajSoapEnvelope extends SaajSoapElement implements SoapEnvelope {
     }
 
     protected SOAPEnvelope getSaajEnvelope() {
-        return (SOAPEnvelope) getSaajElement();
+        return getSaajElement();
     }
 
 }
