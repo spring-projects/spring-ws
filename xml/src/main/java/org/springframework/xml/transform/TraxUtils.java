@@ -52,7 +52,6 @@ import org.xml.sax.ext.LexicalHandler;
  * @author Arjen Poutsma
  * @since 1.5.0
  */
-@SuppressWarnings("Since15")
 public abstract class TraxUtils {
 
     /**
@@ -192,7 +191,7 @@ public abstract class TraxUtils {
      * or higher, or a {@link StaxSource} otherwise.
      *
      * @param eventReader the StAX event reader
-     * @return a source wrapping <code>streamReader</code>
+     * @return a source wrapping <code>eventReader</code>
      * @throws XMLStreamException in case of StAX errors
      */
     public static Source createStaxSource(XMLEventReader eventReader) throws XMLStreamException {

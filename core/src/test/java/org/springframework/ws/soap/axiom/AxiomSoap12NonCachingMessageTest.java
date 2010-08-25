@@ -33,7 +33,7 @@ public class AxiomSoap12NonCachingMessageTest extends AbstractSoap12MessageTestC
         messageFactory.setPayloadCaching(false);
         messageFactory.setSoapVersion(SoapVersion.SOAP_12);
 
-        return (SoapMessage) messageFactory.createWebServiceMessage();
+        return messageFactory.createWebServiceMessage();
     }
 
     @Override

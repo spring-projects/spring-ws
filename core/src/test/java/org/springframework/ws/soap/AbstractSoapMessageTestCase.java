@@ -20,19 +20,27 @@ import java.io.ByteArrayOutputStream;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.mime.AbstractMimeMessageTestCase;
 import org.springframework.ws.mime.MimeMessage;
+import org.springframework.ws.stream.StreamingPayload;
+import org.springframework.ws.stream.StreamingWebServiceMessage;
 import org.springframework.ws.transport.MockTransportOutputStream;
 import org.springframework.ws.transport.TransportConstants;
+import org.springframework.xml.namespace.SimpleNamespaceContext;
+import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 
 import org.junit.Test;
 import org.xml.sax.SAXParseException;
 
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import static org.junit.Assert.*;
 
 public abstract class AbstractSoapMessageTestCase extends AbstractMimeMessageTestCase {
@@ -80,6 +88,39 @@ public abstract class AbstractSoapMessageTestCase extends AbstractMimeMessageTes
         }
     }
 
+    @Test
+    public void testSetStreamingPayload() throws Exception {
+        if (!(soapMessage instanceof StreamingWebServiceMessage)) {
+            return;
+        }
+        StreamingWebServiceMessage streamingMessage = (StreamingWebServiceMessage) soapMessage;
+
+        final QName name = new QName("http://springframework.org", "root");
+        streamingMessage.setStreamingPayload(new StreamingPayload() {
+            public QName getName() {
+                return name;
+            }
+
+            public void writeTo(XMLStreamWriter streamWriter) throws XMLStreamException {
+                SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext();
+                namespaceContext.bindDefaultNamespaceUri(name.getNamespaceURI());
+                streamWriter.setNamespaceContext(namespaceContext);
+                streamWriter.writeStartElement(name.getNamespaceURI(), name.getLocalPart());
+                streamWriter.writeDefaultNamespace(name.getNamespaceURI());
+                streamWriter.writeStartElement(name.getNamespaceURI(), "child");
+                streamWriter.writeCharacters("Foo");
+                streamWriter.writeEndElement();
+                streamWriter.writeEndElement();
+            }
+        });
+
+        StringResult result = new StringResult();
+        transformer.transform(streamingMessage.getPayloadSource(), result);
+
+        String expected = "<root xmlns='http://springframework.org'><child>Foo</child></root>";
+        assertXMLEqual(expected, result.toString());
+    }
+
     protected abstract Resource[] getSoapSchemas();
 
     @Test
@@ -90,4 +131,5 @@ public abstract class AbstractSoapMessageTestCase extends AbstractMimeMessageTes
 
     @Test
     public abstract void testWriteToTransportResponseAttachment() throws Exception;
+
 }

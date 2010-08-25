@@ -26,10 +26,13 @@ import java.util.concurrent.ConcurrentMap;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.JAXBIntrospector;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Result;
@@ -41,6 +44,8 @@ import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadMethodProcessor;
+import org.springframework.ws.stream.StreamingPayload;
+import org.springframework.ws.stream.StreamingWebServiceMessage;
 import org.springframework.xml.transform.TraxUtils;
 
 import org.w3c.dom.Node;
@@ -80,19 +85,23 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
         if (logger.isDebugEnabled()) {
             logger.debug("Marshalling [" + jaxbElement + "] to response payload");
         }
-        Result responsePayload = getResponsePayload(messageContext);
-        try {
-            Jaxb2ResultCallback callback = new Jaxb2ResultCallback(clazz, jaxbElement);
-            TraxUtils.doWithResult(responsePayload, callback);
-        }
-        catch (Exception ex) {
-            throw convertToJaxbException(ex);
-        }
-    }
-
-    private Result getResponsePayload(MessageContext messageContext) {
         WebServiceMessage response = messageContext.getResponse();
-        return response != null ? response.getPayloadResult() : null;
+        if (response instanceof StreamingWebServiceMessage) {
+            StreamingWebServiceMessage streamingResponse = (StreamingWebServiceMessage) response;
+
+            StreamingPayload payload = new JaxbStreamingPayload(clazz, jaxbElement);
+            streamingResponse.setStreamingPayload(payload);
+        }
+        else {
+            Result responsePayload = response.getPayloadResult();
+            try {
+                Jaxb2ResultCallback callback = new Jaxb2ResultCallback(clazz, jaxbElement);
+                TraxUtils.doWithResult(responsePayload, callback);
+            }
+            catch (Exception ex) {
+                throw convertToJaxbException(ex);
+            }
+        }
     }
 
     /**
@@ -185,7 +194,6 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
     // Callbacks
 
-    @SuppressWarnings("Since15")
     private class Jaxb2SourceCallback implements TraxUtils.SourceCallback {
 
         private final Unmarshaller unmarshaller;
@@ -221,7 +229,6 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
         }
     }
 
-    @SuppressWarnings("Since15")
     private class JaxbElementSourceCallback<T> implements TraxUtils.SourceCallback {
 
         private final Unmarshaller unmarshaller;
@@ -260,7 +267,6 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
         }
     }
 
-    @SuppressWarnings("Since15")
     private class Jaxb2ResultCallback implements TraxUtils.ResultCallback {
 
         private final Marshaller marshaller;
@@ -294,6 +300,36 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
         public void streamResult(Writer writer) throws JAXBException {
             marshaller.marshal(jaxbElement, writer);
+        }
+    }
+
+    private class JaxbStreamingPayload implements StreamingPayload {
+
+        private final Object jaxbElement;
+
+        private final Marshaller marshaller;
+
+        private final QName name;
+
+        private JaxbStreamingPayload(Class<?> clazz, Object jaxbElement) throws JAXBException {
+            JAXBContext jaxbContext = getJaxbContext(clazz);
+            this.marshaller = jaxbContext.createMarshaller();
+            this.jaxbElement = jaxbElement;
+            JAXBIntrospector introspector = jaxbContext.createJAXBIntrospector();
+            this.name = introspector.getElementName(jaxbElement);
+        }
+
+        public QName getName() {
+            return name;
+        }
+
+        public void writeTo(XMLStreamWriter streamWriter) throws XMLStreamException {
+            try {
+                marshaller.marshal(jaxbElement, streamWriter);
+            }
+            catch (JAXBException ex) {
+                throw new XMLStreamException("Could not marshal [" + jaxbElement + "]: " + ex.getMessage(), ex);
+            }
         }
     }
 

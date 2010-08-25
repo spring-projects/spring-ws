@@ -14,30 +14,24 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.axiom;
+package org.springframework.ws.stream;
 
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
+import org.springframework.ws.WebServiceMessage;
 
 /**
- * Defines the contract for payloads in Axiom.
+ * Sub-interface of {@link WebServiceMessage} that allows for setting a streaming payload.
  *
  * @author Arjen Poutsma
- * @since 1.5.2
+ * @see StreamingPayload
+ * @since 2.0
  */
-abstract class Payload {
+public interface StreamingWebServiceMessage extends WebServiceMessage {
 
     /**
-     * Returns the source of the payload.
+     * Sets the streaming payload for this message.
      *
-     * @return the source of the payload
+     * @param payload the streaming payload
      */
-    public abstract Source getSource();
+    void setStreamingPayload(StreamingPayload payload);
 
-    /**
-     * Returns the result of the payload.
-     *
-     * @return the result of the payload
-     */
-    public abstract Result getResult();
 }

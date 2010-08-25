@@ -32,6 +32,8 @@ import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.support.SoapUtils;
+import org.springframework.ws.stream.StreamingPayload;
+import org.springframework.ws.stream.StreamingWebServiceMessage;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportOutputStream;
 
@@ -56,7 +58,7 @@ import org.apache.axiom.soap.SOAPProcessingException;
  * @since 1.0.0
  */
 @SuppressWarnings("Since15")
-public class AxiomSoapMessage extends AbstractSoapMessage {
+public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWebServiceMessage {
 
     private static final String EMPTY_SOAP_ACTION = "\"\"";
 
@@ -164,6 +166,11 @@ public class AxiomSoapMessage extends AbstractSoapMessage {
      */
     public void setOutputFormat(OMOutputFormat outputFormat) {
         this.outputFormat = outputFormat;
+    }
+
+    public void setStreamingPayload(StreamingPayload payload) {
+        AxiomSoapBody soapBody = (AxiomSoapBody) getSoapBody();
+        soapBody.setPayloadSource(payload);
     }
 
     public SoapEnvelope getEnvelope() {
