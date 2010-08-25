@@ -14,30 +14,34 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.soap.axiom;
+package org.springframework.ws.stream;
 
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 /**
- * Defines the contract for payloads in Axiom.
+ * Defines the contract for payloads that can be written directly to a {@link XMLStreamWriter}.
  *
  * @author Arjen Poutsma
- * @since 1.5.2
+ * @see StreamingWebServiceMessage
+ * @since 2.0
  */
-abstract class Payload {
+public interface StreamingPayload {
 
     /**
-     * Returns the source of the payload.
+     * Returns the qualified name of the payload.
      *
-     * @return the source of the payload
+     * @return the qualified name
      */
-    public abstract Source getSource();
+    QName getName();
 
     /**
-     * Returns the result of the payload.
+     * Writes this payload to the given {@link XMLStreamWriter}.
      *
-     * @return the result of the payload
+     * @param streamWriter the stream writer to write to
+     * @throws XMLStreamException in case of errors
      */
-    public abstract Result getResult();
+    void writeTo(XMLStreamWriter streamWriter) throws XMLStreamException;
+
 }

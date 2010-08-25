@@ -42,7 +42,7 @@ import org.apache.axiom.soap.SOAPFactory;
  * @since 1.5.2
  */
 @SuppressWarnings("Since15")
-class NonCachingPayload extends Payload {
+class NonCachingPayload extends AbstractPayload {
 
     private static final int BUF_SIZE = 1024;
 

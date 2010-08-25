@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,15 @@ package org.springframework.ws.soap.axiom;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import org.springframework.util.Assert;
+import org.springframework.ws.soap.SoapBody;
+import org.springframework.ws.soap.axiom.support.AxiomUtils;
+import org.springframework.ws.stream.StreamingPayload;
+
+import org.apache.axiom.om.OMDataSource;
+import org.apache.axiom.om.OMElement;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
-
-import org.springframework.ws.soap.SoapBody;
 
 /**
  * Axiom-specific version of <code>org.springframework.ws.soap.Soap11Body</code>.
@@ -58,5 +63,15 @@ abstract class AxiomSoapBody extends AxiomSoapElement implements SoapBody {
 
     protected final SOAPBody getAxiomBody() {
         return (SOAPBody) getAxiomElement();
+    }
+
+    public void setPayloadSource(StreamingPayload payload) {
+        Assert.notNull(payload, "'payload' must not be null");
+        OMDataSource dataSource = new StreamingOMDataSource(payload);
+        OMElement payloadElement = getAxiomFactory().createOMElement(dataSource, payload.getName());
+
+        SOAPBody soapBody = getAxiomBody();
+        AxiomUtils.removeContents(soapBody);
+        soapBody.addChild(payloadElement);
     }
 }

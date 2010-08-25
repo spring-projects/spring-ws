@@ -176,7 +176,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory<AxiomSoapMess
      *
      * @see <a href="http://www.ws-i.org/Profiles/BasicProfile-1.1.html#SOAP_Fault_Language">WS-I Basic Profile 1.1</a>
      */
-    public void setlangAttributeOnSoap11FaultString(boolean langAttributeOnSoap11FaultString) {
+    public void setLangAttributeOnSoap11FaultString(boolean langAttributeOnSoap11FaultString) {
         this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
     }
 
