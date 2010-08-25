@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,12 @@
 
 package org.springframework.ws;
 
-import org.springframework.ws.soap.SoapFault;
-import org.springframework.ws.soap.SoapMessage;
-
 /**
  * Sub-interface of {@link WebServiceMessage} that can contain special Fault messages. Fault messages (such as {@link
- * SoapFault} SOAP Faults) often require different processing rules.
+ * org.springframework.ws.soap.SoapFault} SOAP Faults) often require different processing rules.
  *
  * @author Arjen Poutsma
- * @see SoapMessage
+ * @see org.springframework.ws.soap.SoapMessage
  * @since 1.0.0
  */
 public interface FaultAwareWebServiceMessage extends WebServiceMessage {
