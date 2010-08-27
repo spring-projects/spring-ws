@@ -45,8 +45,10 @@ import org.xml.sax.ContentHandler;
  * @see XMLStreamWriter
  * @see javax.xml.transform.Transformer
  * @since 1.0.0
+ * @deprecated In favor of {@link org.springframework.util.xml.StaxUtils#createStaxResult(XMLEventWriter)} and {@link
+ *             org.springframework.util.xml.StaxUtils#createStaxResult(XMLStreamWriter)}
  */
-@SuppressWarnings("Since15")
+@Deprecated
 public class StaxResult extends SAXResult {
 
     private XMLEventWriter eventWriter;
