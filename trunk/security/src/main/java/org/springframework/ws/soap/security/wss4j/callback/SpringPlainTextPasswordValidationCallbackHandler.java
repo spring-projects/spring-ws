@@ -86,7 +86,7 @@ public class SpringPlainTextPasswordValidationCallbackHandler extends AbstractWs
             }
             SecurityContextHolder.clearContext();
             if (!ignoreFailure) {
-                throw new WSSecurityException(WSSecurityException.FAILED_AUTHENTICATION);
+                throw new WSSecurityException(WSSecurityException.FAILED_AUTHENTICATION, null, null, failed);
             }
         }
     }
