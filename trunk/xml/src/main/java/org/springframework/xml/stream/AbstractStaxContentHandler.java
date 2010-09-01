@@ -33,8 +33,9 @@ import org.xml.sax.SAXException;
  *
  * @author Arjen Poutsma
  * @since 1.0.0
+ * @deprecated With no concrete replacement
  */
-@SuppressWarnings("Since15")
+@Deprecated
 public abstract class AbstractStaxContentHandler implements ContentHandler {
 
     private SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext();

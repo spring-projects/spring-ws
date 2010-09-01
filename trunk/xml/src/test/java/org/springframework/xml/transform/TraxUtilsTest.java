@@ -34,16 +34,14 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.stax.StAXResult;
-import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+
+import org.springframework.util.xml.StaxUtils;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -57,177 +55,9 @@ import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import static org.easymock.EasyMock.*;
 
-@SuppressWarnings("Since15")
 public class TraxUtilsTest {
-
-    @Test
-    public void testIsStaxSourceInvalid() throws Exception {
-        Assert.assertFalse("A StAX Source", TraxUtils.isStaxSource(new DOMSource()));
-        Assert.assertFalse("A StAX Source", TraxUtils.isStaxSource(new SAXSource()));
-        Assert.assertFalse("A StAX Source", TraxUtils.isStaxSource(new StreamSource()));
-    }
-
-    @Test
-    public void testIsStaxSource() throws Exception {
-        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        String expected = "<element/>";
-        XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(expected));
-        StaxSource source = new StaxSource(streamReader);
-
-        Assert.assertTrue("Not a StAX Source", TraxUtils.isStaxSource(source));
-    }
-
-    @Test
-    public void testIsStaxSourceJaxp14() throws Exception {
-        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        String expected = "<element/>";
-        XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(expected));
-        StAXSource source = new StAXSource(streamReader);
-
-        Assert.assertTrue("Not a StAX Source", TraxUtils.isStaxSource(source));
-    }
-
-    @Test
-    public void testIsStaxResultInvalid() throws Exception {
-        Assert.assertFalse("A StAX Result", TraxUtils.isStaxResult(new DOMResult()));
-        Assert.assertFalse("A StAX Result", TraxUtils.isStaxResult(new SAXResult()));
-        Assert.assertFalse("A StAX Result", TraxUtils.isStaxResult(new StreamResult()));
-    }
-
-    @Test
-    public void testIsStaxResult() throws Exception {
-        XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-        XMLStreamWriter streamWriter = outputFactory.createXMLStreamWriter(new StringWriter());
-        StaxResult result = new StaxResult(streamWriter);
-
-        Assert.assertTrue("Not a StAX Result", TraxUtils.isStaxResult(result));
-    }
-
-    @Test
-    public void testIsStaxResultJaxp14() throws Exception {
-        XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-        XMLStreamWriter streamWriter = outputFactory.createXMLStreamWriter(new StringWriter());
-        StAXResult result = new StAXResult(streamWriter);
-
-        Assert.assertTrue("Not a StAX Result", TraxUtils.isStaxResult(result));
-    }
-
-    @Test
-    public void testCreateStaxSourceStreamReader() throws Exception {
-        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        String expected = "<element/>";
-        XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(expected));
-
-        Source source = TraxUtils.createStaxSource(streamReader);
-
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        StringResult result = new StringResult();
-        transformer.transform(source, result);
-
-        assertXMLEqual(expected, result.toString());
-    }
-
-    @Test
-    public void testCreateStaxSourceEventReader() throws Exception {
-        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        String expected = "<element/>";
-        XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader(expected));
-
-        Source source = TraxUtils.createStaxSource(eventReader);
-
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        StringResult result = new StringResult();
-        transformer.transform(source, result);
-
-        assertXMLEqual(expected, result.toString());
-    }
-
-    @Test
-    public void testGetXMLStreamReader() throws Exception {
-        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        String expected = "<element/>";
-        XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(expected));
-
-        StaxSource source = new StaxSource(streamReader);
-
-        Assert.assertEquals("Invalid XMLStreamReader", streamReader, TraxUtils.getXMLStreamReader(source));
-    }
-
-    @Test
-    public void testGetXMLStreamReaderJaxp14() throws Exception {
-        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        String expected = "<element/>";
-        XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(expected));
-
-        StAXSource source = new StAXSource(streamReader);
-
-        Assert.assertEquals("Invalid XMLStreamReader", streamReader, TraxUtils.getXMLStreamReader(source));
-    }
-
-    @Test
-    public void testGetXMLEventReader() throws Exception {
-        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        String expected = "<element/>";
-        XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader(expected));
-
-        StaxSource source = new StaxSource(eventReader);
-
-        Assert.assertEquals("Invalid XMLEventReader", eventReader, TraxUtils.getXMLEventReader(source));
-    }
-
-    @Test
-    public void testGetXMLEventReaderJaxp14() throws Exception {
-        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        String expected = "<element/>";
-        XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader(expected));
-
-        StAXSource source = new StAXSource(eventReader);
-
-        Assert.assertEquals("Invalid XMLEventReader", eventReader, TraxUtils.getXMLEventReader(source));
-    }
-
-    @Test
-    public void testGetXMLStreamWriter() throws Exception {
-        XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-        XMLStreamWriter streamWriter = outputFactory.createXMLStreamWriter(new StringWriter());
-
-        StaxResult result = new StaxResult(streamWriter);
-
-        Assert.assertEquals("Invalid XMLStreamWriter", streamWriter, TraxUtils.getXMLStreamWriter(result));
-    }
-
-    @Test
-    public void testGetXMLStreamWriterJaxp14() throws Exception {
-        XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-        XMLStreamWriter streamWriter = outputFactory.createXMLStreamWriter(new StringWriter());
-
-        StAXResult result = new StAXResult(streamWriter);
-
-        Assert.assertEquals("Invalid XMLStreamWriter", streamWriter, TraxUtils.getXMLStreamWriter(result));
-    }
-
-    @Test
-    public void testGetXMLEventWriter() throws Exception {
-        XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-        XMLEventWriter eventWriter = outputFactory.createXMLEventWriter(new StringWriter());
-
-        StaxResult result = new StaxResult(eventWriter);
-
-        Assert.assertEquals("Invalid XMLStreamWriter", eventWriter, TraxUtils.getXMLEventWriter(result));
-    }
-
-    @Test
-    public void testGetXMLEventWriterJaxp14() throws Exception {
-        XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-        XMLEventWriter eventWriter = outputFactory.createXMLEventWriter(new StringWriter());
-
-        StAXResult result = new StAXResult(eventWriter);
-
-        Assert.assertEquals("Invalid XMLEventWriter", eventWriter, TraxUtils.getXMLEventWriter(result));
-    }
 
     @Test
     public void testGetDocument() throws Exception {
@@ -315,7 +145,7 @@ public class TraxUtilsTest {
 
         replay(mock);
 
-        TraxUtils.doWithSource(new StaxSource(eventReader), mock);
+        TraxUtils.doWithSource(StaxUtils.createStaxSource(eventReader), mock);
 
         verify(mock);
     }
@@ -330,7 +160,7 @@ public class TraxUtilsTest {
 
         replay(mock);
 
-        TraxUtils.doWithResult(new StaxResult(eventWriter), mock);
+        TraxUtils.doWithResult(StaxUtils.createStaxResult(eventWriter), mock);
 
         verify(mock);
     }
@@ -345,7 +175,7 @@ public class TraxUtilsTest {
 
         replay(mock);
 
-        TraxUtils.doWithSource(new StaxSource(streamReader), mock);
+        TraxUtils.doWithSource(StaxUtils.createStaxSource(streamReader), mock);
 
         verify(mock);
     }
@@ -360,7 +190,7 @@ public class TraxUtilsTest {
 
         replay(mock);
 
-        TraxUtils.doWithResult(new StaxResult(streamWriter), mock);
+        TraxUtils.doWithResult(StaxUtils.createStaxResult(streamWriter), mock);
 
         verify(mock);
     }

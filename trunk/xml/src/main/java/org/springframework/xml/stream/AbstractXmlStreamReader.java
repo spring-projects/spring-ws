@@ -28,8 +28,9 @@ import org.springframework.util.Assert;
  *
  * @author Arjen Poutsma
  * @since 1.0.0
+ * @deprecated With no concrete replacement
  */
-@SuppressWarnings("Since15")
+@Deprecated
 public abstract class AbstractXmlStreamReader implements XMLStreamReader {
 
     public String getElementText() throws XMLStreamException {
@@ -150,7 +151,8 @@ public abstract class AbstractXmlStreamReader implements XMLStreamReader {
     public String getAttributeValue(String namespaceURI, String localName) {
         for (int i = 0; i < getAttributeCount(); i++) {
             QName name = getAttributeName(i);
-            if (name.getNamespaceURI().equals(namespaceURI) && name.getLocalPart().equals(localName)) {
+            if (name.getLocalPart().equals(localName) &&
+                    (namespaceURI == null || name.getNamespaceURI().equals(namespaceURI))) {
                 return getAttributeValue(i);
             }
         }

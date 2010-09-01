@@ -34,8 +34,9 @@ import org.xml.sax.Locator;
  * @author Arjen Poutsma
  * @see XMLStreamWriter
  * @since 1.0.0
+ * @deprecated In favor of {@link org.springframework.util.xml.StaxUtils#createContentHandler(javax.xml.stream.XMLStreamWriter)}
  */
-@SuppressWarnings("Since15")
+@Deprecated
 public class StaxStreamContentHandler extends AbstractStaxContentHandler {
 
     private final XMLStreamWriter streamWriter;

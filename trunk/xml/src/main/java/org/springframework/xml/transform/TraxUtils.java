@@ -36,8 +36,7 @@ import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.springframework.util.Assert;
-import org.springframework.xml.JaxpVersion;
+import org.springframework.util.xml.StaxUtils;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -59,19 +58,14 @@ public abstract class TraxUtils {
      *
      * @return <code>true</code> if <code>source</code> is a Spring-WS {@link StaxSource} or JAXP 1.4 {@link
      *         StAXSource}; <code>false</code> otherwise.
-     * @deprecated In favor of {@link org.springframework.util.xml.StaxUtils#isStaxSource(Source)}
+     * @deprecated In favor of {@link StaxUtils#isStaxSource(Source)}
      */
     @Deprecated
     public static boolean isStaxSource(Source source) {
         if (source instanceof StaxSource) {
             return true;
         }
-        else if (JaxpVersion.isAtLeastJaxp14()) {
-            return Jaxp14StaxHandler.isStaxSource(source);
-        }
-        else {
-            return false;
-        }
+        return StaxUtils.isStaxSource(source);
     }
 
     /**
@@ -79,19 +73,14 @@ public abstract class TraxUtils {
      *
      * @return <code>true</code> if <code>result</code> is a Spring-WS {@link StaxResult} or JAXP 1.4 {@link
      *         StAXResult}; <code>false</code> otherwise.
-     * @deprecated In favor of {@link org.springframework.util.xml.StaxUtils#isStaxResult(Result)}
+     * @deprecated In favor of {@link StaxUtils#isStaxResult(Result)}
      */
     @Deprecated
     public static boolean isStaxResult(Result result) {
         if (result instanceof StaxResult) {
             return true;
         }
-        else if (JaxpVersion.isAtLeastJaxp14()) {
-            return Jaxp14StaxHandler.isStaxResult(result);
-        }
-        else {
-            return false;
-        }
+        return StaxUtils.isStaxResult(result);
     }
 
     /**
@@ -101,19 +90,14 @@ public abstract class TraxUtils {
      * @return the {@link XMLStreamReader}
      * @throws IllegalArgumentException if <code>source</code> is neither a Spring-WS {@link StaxSource} or {@link
      *                                  StAXSource}
-     * @deprecated In favor of {@link org.springframework.util.xml.StaxUtils#getXMLStreamReader(Source)}
+     * @deprecated In favor of {@link StaxUtils#getXMLStreamReader(Source)}
      */
     @Deprecated
     public static XMLStreamReader getXMLStreamReader(Source source) {
         if (source instanceof StaxSource) {
             return ((StaxSource) source).getXMLStreamReader();
         }
-        else if (JaxpVersion.isAtLeastJaxp14()) {
-            return Jaxp14StaxHandler.getXMLStreamReader(source);
-        }
-        else {
-            throw new IllegalArgumentException("Source '" + source + "' is neither StaxSource nor StAXSource");
-        }
+        return StaxUtils.getXMLStreamReader(source);
     }
 
     /**
@@ -123,19 +107,14 @@ public abstract class TraxUtils {
      * @return the {@link XMLEventReader}
      * @throws IllegalArgumentException if <code>source</code> is neither a Spring-WS {@link StaxSource} or {@link
      *                                  StAXSource}
-     * @deprecated In favor of {@link org.springframework.util.xml.StaxUtils#getXMLEventReader(Source)}
+     * @deprecated In favor of {@link StaxUtils#getXMLEventReader(Source)}
      */
     @Deprecated
     public static XMLEventReader getXMLEventReader(Source source) {
         if (source instanceof StaxSource) {
             return ((StaxSource) source).getXMLEventReader();
         }
-        else if (JaxpVersion.isAtLeastJaxp14()) {
-            return Jaxp14StaxHandler.getXMLEventReader(source);
-        }
-        else {
-            throw new IllegalArgumentException("Source '" + source + "' is neither StaxSource nor StAXSource");
-        }
+        return StaxUtils.getXMLEventReader(source);
     }
 
     /**
@@ -145,19 +124,14 @@ public abstract class TraxUtils {
      * @return the {@link XMLStreamReader}
      * @throws IllegalArgumentException if <code>source</code> is neither a Spring-WS {@link StaxResult} or {@link
      *                                  StAXResult}
-     * @deprecated In favor of {@link org.springframework.util.xml.StaxUtils#getXMLStreamWriter(Result)}
+     * @deprecated In favor of {@link StaxUtils#getXMLStreamWriter(Result)}
      */
     @Deprecated
     public static XMLStreamWriter getXMLStreamWriter(Result result) {
         if (result instanceof StaxResult) {
             return ((StaxResult) result).getXMLStreamWriter();
         }
-        else if (JaxpVersion.isAtLeastJaxp14()) {
-            return Jaxp14StaxHandler.getXMLStreamWriter(result);
-        }
-        else {
-            throw new IllegalArgumentException("Result '" + result + "' is neither StaxResult nor StAXResult");
-        }
+        return StaxUtils.getXMLStreamWriter(result);
     }
 
     /**
@@ -167,19 +141,14 @@ public abstract class TraxUtils {
      * @return the {@link XMLStreamReader}
      * @throws IllegalArgumentException if <code>source</code> is neither a Spring-WS {@link StaxResult} or {@link
      *                                  StAXResult}
-     * @deprecated In favor of {@link org.springframework.util.xml.StaxUtils#getXMLEventWriter(Result)}
+     * @deprecated In favor of {@link StaxUtils#getXMLEventWriter(Result)}
      */
     @Deprecated
     public static XMLEventWriter getXMLEventWriter(Result result) {
         if (result instanceof StaxResult) {
             return ((StaxResult) result).getXMLEventWriter();
         }
-        else if (JaxpVersion.isAtLeastJaxp14()) {
-            return Jaxp14StaxHandler.getXMLEventWriter(result);
-        }
-        else {
-            throw new IllegalArgumentException("Result '" + result + "' is neither StaxResult nor StAXResult");
-        }
+        return StaxUtils.getXMLEventWriter(result);
     }
 
     /**
@@ -188,16 +157,11 @@ public abstract class TraxUtils {
      *
      * @param streamReader the StAX stream reader
      * @return a source wrapping <code>streamReader</code>
-     * @deprecated In favor of {@link org.springframework.util.xml.StaxUtils#createStaxSource(XMLStreamReader)}
+     * @deprecated In favor of {@link StaxUtils#createStaxSource(XMLStreamReader)}
      */
     @Deprecated
     public static Source createStaxSource(XMLStreamReader streamReader) {
-        if (JaxpVersion.isAtLeastJaxp14()) {
-            return Jaxp14StaxHandler.createStaxSource(streamReader);
-        }
-        else {
-            return new StaxSource(streamReader);
-        }
+        return StaxUtils.createStaxSource(streamReader);
     }
 
     /**
@@ -207,16 +171,11 @@ public abstract class TraxUtils {
      * @param eventReader the StAX event reader
      * @return a source wrapping <code>eventReader</code>
      * @throws XMLStreamException in case of StAX errors
-     * @deprecated In favor of {@link org.springframework.util.xml.StaxUtils#createStaxSource(XMLEventReader)}
+     * @deprecated In favor of {@link StaxUtils#createStaxSource(XMLEventReader)}
      */
     @Deprecated
     public static Source createStaxSource(XMLEventReader eventReader) throws XMLStreamException {
-        if (JaxpVersion.isAtLeastJaxp14()) {
-            return Jaxp14StaxHandler.createStaxSource(eventReader);
-        }
-        else {
-            return new StaxSource(eventReader);
-        }
+        return StaxUtils.createStaxSource(eventReader);
     }
 
     /**
@@ -240,7 +199,7 @@ public abstract class TraxUtils {
 
     /**
      * Performs the given {@linkplain SourceCallback callback} operation on a {@link Source}. Supports both the JAXP 1.4
-     * {@link StAXSource} and the Spring-WS {@link StaxSource}.
+     * {@link StAXSource} and the Spring 3.0 {@link StaxUtils#createStaxSource StaxSource}.
      *
      * @param source   source to look at
      * @param callback the callback to invoke for each kind of source
@@ -288,7 +247,7 @@ public abstract class TraxUtils {
 
     /**
      * Performs the given {@linkplain ResultCallback callback} operation on a {@link Result}. Supports both the JAXP 1.4
-     * {@link StAXResult} and the Spring-WS {@link StaxResult}.
+     * {@link StAXResult} and the Spring 3.0 {@link StaxUtils#createStaxResult StaxSource}.
      *
      * @param result   result to look at
      * @param callback the callback to invoke for each kind of result
@@ -439,46 +398,6 @@ public abstract class TraxUtils {
          * @param writer the writer
          */
         void streamResult(Writer writer) throws Exception;
-    }
-
-    /** Inner class to avoid a static JAXP 1.4 dependency. */
-    private static class Jaxp14StaxHandler {
-
-        private static Source createStaxSource(XMLStreamReader streamReader) {
-            return new StAXSource(streamReader);
-        }
-
-        private static Source createStaxSource(XMLEventReader eventReader) throws XMLStreamException {
-            return new StAXSource(eventReader);
-        }
-
-        private static boolean isStaxSource(Source source) {
-            return source instanceof StAXSource;
-        }
-
-        private static boolean isStaxResult(Result result) {
-            return result instanceof StAXResult;
-        }
-
-        private static XMLStreamReader getXMLStreamReader(Source source) {
-            Assert.isInstanceOf(StAXSource.class, source);
-            return ((StAXSource) source).getXMLStreamReader();
-        }
-
-        private static XMLEventReader getXMLEventReader(Source source) {
-            Assert.isInstanceOf(StAXSource.class, source);
-            return ((StAXSource) source).getXMLEventReader();
-        }
-
-        private static XMLStreamWriter getXMLStreamWriter(Result result) {
-            Assert.isInstanceOf(StAXResult.class, result);
-            return ((StAXResult) result).getXMLStreamWriter();
-        }
-
-        private static XMLEventWriter getXMLEventWriter(Result result) {
-            Assert.isInstanceOf(StAXResult.class, result);
-            return ((StAXResult) result).getXMLEventWriter();
-        }
     }
 
 

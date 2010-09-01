@@ -52,8 +52,9 @@ import org.xml.sax.helpers.AttributesImpl;
  * @see #setEntityResolver(org.xml.sax.EntityResolver)
  * @see #setErrorHandler(org.xml.sax.ErrorHandler)
  * @since 1.0.0
+ * @deprecated In favor of {@link org.springframework.util.xml.StaxUtils#createXMLReader(javax.xml.stream.XMLEventReader)}
  */
-@SuppressWarnings("Since15")
+@Deprecated
 public class StaxEventXmlReader extends AbstractStaxXmlReader {
 
     private final XMLEventReader reader;

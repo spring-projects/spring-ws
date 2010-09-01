@@ -35,8 +35,9 @@ import javax.xml.stream.events.XMLEvent;
  *
  * @author Arjen Poutsma
  * @since 1.0.0
+ * @deprecated In favor of {@link org.springframework.util.xml.StaxUtils#createEventStreamReader(XMLEventReader)}
  */
-@SuppressWarnings("Since15")
+@Deprecated
 public class XmlEventStreamReader extends AbstractXmlStreamReader {
 
     private XMLEvent event;

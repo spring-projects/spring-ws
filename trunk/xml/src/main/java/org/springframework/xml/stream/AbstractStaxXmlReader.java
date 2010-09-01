@@ -38,8 +38,9 @@ import org.xml.sax.SAXParseException;
  * @see #setEntityResolver(org.xml.sax.EntityResolver)
  * @see #setErrorHandler(org.xml.sax.ErrorHandler)
  * @since 1.0.0
+ * @deprecated With no concrete replacement
  */
-@SuppressWarnings("Since15")
+@Deprecated
 public abstract class AbstractStaxXmlReader extends AbstractXmlReader {
 
     private static final String NAMESPACES_FEATURE_NAME = "http://xml.org/sax/features/namespaces";
