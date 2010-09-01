@@ -44,8 +44,9 @@ import org.xml.sax.Locator;
  * @see XMLEvent
  * @see XMLEventConsumer
  * @since 1.0.0
+ * @deprecated In favor of {@link org.springframework.util.xml.StaxUtils#createContentHandler(javax.xml.stream.XMLEventWriter)}.
  */
-@SuppressWarnings("Since15")
+@Deprecated
 public class StaxEventContentHandler extends AbstractStaxContentHandler {
 
     private final XMLEventFactory eventFactory;

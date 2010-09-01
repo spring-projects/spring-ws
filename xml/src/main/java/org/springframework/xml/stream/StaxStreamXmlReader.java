@@ -40,8 +40,9 @@ import org.xml.sax.helpers.AttributesImpl;
  * @see #setEntityResolver(org.xml.sax.EntityResolver)
  * @see #setErrorHandler(org.xml.sax.ErrorHandler)
  * @since 1.0.0
+ * @deprecated In favor of {@link org.springframework.util.xml.StaxUtils#createXMLReader(javax.xml.stream.XMLStreamReader)}
  */
-@SuppressWarnings("Since15")
+@Deprecated
 public class StaxStreamXmlReader extends AbstractStaxXmlReader {
 
     private final XMLStreamReader reader;

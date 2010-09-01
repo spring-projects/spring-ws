@@ -29,8 +29,8 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import javax.xml.xpath.XPathFactoryConfigurationException;
 
+import org.springframework.util.xml.StaxUtils;
 import org.springframework.xml.namespace.SimpleNamespaceContext;
-import org.springframework.xml.transform.TraxUtils;
 
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
@@ -44,7 +44,7 @@ import org.xml.sax.InputSource;
  * Namespaces can be set using the <code>namespaces</code> property.
  *
  * @author Arjen Poutsma
- * @see #setNamespaces(java.util.Properties)
+ * @see #setNamespaces(java.util.Map)
  * @since 1.0.0
  */
 public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
@@ -128,7 +128,7 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
             xpath.setNamespaceContext(namespaceContext);
         }
         try {
-            if (TraxUtils.isStaxSource(context)) {
+            if (StaxUtils.isStaxSource(context)) {
                 Element element = getRootElement(context);
                 return xpath.evaluate(expression, element, returnType);
             }

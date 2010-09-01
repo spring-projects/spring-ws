@@ -28,10 +28,10 @@
         <url>https://fisheye.springframework.org/browse/spring-ws/trunk</url>
     </scm>
     <properties>
-        <osgi.version>2.0.0.M3</osgi.version>
+        <osgi.version>2.0.0.M4</osgi.version>
         <osgi.range>"${osgi.version:[=.=.=, =.=.+1)}"</osgi.range>
-        <spring.framework.version>3.0.3.RELEASE</spring.framework.version>
-        <spring.framework.osgi.range>"[3.0.2, 4.0.0)"</spring.framework.osgi.range>
+        <spring.framework.version>3.0.5.BUILD-SNAPSHOT</spring.framework.version>
+        <spring.framework.osgi.range>"[3.0.5, 4.0.0)"</spring.framework.osgi.range>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <pluginRepositories>
@@ -57,6 +57,7 @@
                     <configuration>
                         <source>1.5</source>
                         <target>1.5</target>
+                        <showDeprecation>true</showDeprecation>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -280,14 +281,8 @@
             </dependency>
             <dependency>
                 <groupId>org.codehaus.woodstox</groupId>
-                <artifactId>wstx-asl</artifactId>
-                <version>3.2.9</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>stax</groupId>
-                        <artifactId>stax-api</artifactId>
-                    </exclusion>
-                </exclusions>
+                <artifactId>woodstox-core-asl</artifactId>
+                <version>4.0.8</version>
             </dependency>
             <dependency>
                 <groupId>org.jdom</groupId>
