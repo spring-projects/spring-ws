@@ -78,7 +78,7 @@ public abstract class SchemaLoaderUtils {
         return schemaFactory.newSchema(schemaSources);
     }
 
-    /** Retrieves the URL from the given resource as System ID. Returns <code>null</code> if it cannot be openened. */
+    /** Retrieves the URL from the given resource as System ID. Returns <code>null</code> if it cannot be opened. */
     public static String getSystemId(Resource resource) {
         try {
             return resource.getURL().toString();
