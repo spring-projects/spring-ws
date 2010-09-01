@@ -46,7 +46,7 @@
     <repositories>
         <repository>
             <id>s2-snapshot</id>
-            <url>http://repository.springsource.com/maven/bundles/snapshot</url>
+            <url>http://maven.springframework.org/snapshot</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
