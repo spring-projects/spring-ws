@@ -24,27 +24,37 @@ import org.springframework.util.ClassUtils;
  * <p/>
  * Only distinguishes between JAXP 1.0, 1.1, 1.3, and 1.4, since JAXP 1.2 was a maintenance release with no new
  * classes.
+ * <p>
+ * Note that Spring-WS requires JDK 1.5 as of Spring-WS 2.0, and therefore has at least JAXP 1.3 available.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
  */
 public abstract class JaxpVersion {
 
+    /**
+     * Constant identifying JAXP 1.0.
+     */
     public static final int JAXP_10 = 0;
 
+    /**
+     * Constant identifying JAXP 1.1.
+     */
     public static final int JAXP_11 = 1;
 
+    /**
+     * Constant identifying JAXP 1.3.
+     */
     public static final int JAXP_13 = 3;
 
+    /**
+     * Constant identifying JAXP 1.4.
+     */
     public static final int JAXP_14 = 4;
-
-    private static final String JAXP_11_CLASS_NAME = "javax.xml.transform.Transformer";
-
-    private static final String JAXP_13_CLASS_NAME = "javax.xml.xpath.XPath";
 
     private static final String JAXP_14_CLASS_NAME = "javax.xml.transform.stax.StAXSource";
 
-    private static int jaxpVersion = JAXP_10;
+    private static int jaxpVersion;
 
     static {
         ClassLoader classLoader = JaxpVersion.class.getClassLoader();
@@ -52,20 +62,9 @@ public abstract class JaxpVersion {
             ClassUtils.forName(JAXP_14_CLASS_NAME, classLoader);
             jaxpVersion = JAXP_14;
         }
-        catch (ClassNotFoundException ex1) {
-            try {
-                ClassUtils.forName(JAXP_13_CLASS_NAME, classLoader);
-                jaxpVersion = JAXP_13;
-            }
-            catch (ClassNotFoundException ex2) {
-                try {
-                    ClassUtils.forName(JAXP_11_CLASS_NAME, classLoader);
-                    jaxpVersion = JAXP_11;
-                }
-                catch (ClassNotFoundException ex3) {
-                    // default to JAXP 1.0
-                }
-            }
+        catch (ClassNotFoundException ex) {
+            // leave 1.3 as default (it's either 1.3 or unknown)
+            jaxpVersion = JAXP_13;
         }
     }
 
@@ -88,7 +87,9 @@ public abstract class JaxpVersion {
      * @return <code>true</code> if the current JAXP version is at least JAXP 1.3
      * @see #getJaxpVersion()
      * @see #JAXP_13
+     * @deprecated as of Spring-WS 2.0 which requires Java 1.5+
      */
+    @Deprecated
     public static boolean isAtLeastJaxp13() {
         return getJaxpVersion() >= JAXP_13;
     }
