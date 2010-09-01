@@ -38,12 +38,19 @@ public interface XPathOperations {
     /**
      * Evaluates the given expression as a <code>boolean</code>. Returns the boolean evaluation of the expression, or
      * <code>false</code> if it is invalid.
+     * <p/>
+     * The return value is determined per the {@code boolean()} function defined in the XPath specification.
+     * This means that an expression that selects zero nodes will return {@code false}, while an expression that
+     * selects one or more nodes will return {@code true}.
+     * An expression that returns a string returns {@code false} for empty strings and {@code true} for all other
+     * strings.
+     * An expression that returns a number returns {@code false} for zero and {@code true} for non-zero numbers.
      *
      * @param expression the XPath expression
      * @param context    the context starting point
      * @return the result of the evaluation
      * @throws XPathException in case of XPath errors
-     * @see <a href="http://www.w3.org/TR/xpath#booleans">XPath specification</a>
+     * @see <a href="http://www.w3.org/TR/xpath/#function-boolean">XPath specification - boolean() function</a>
      */
     boolean evaluateAsBoolean(String expression, Source context) throws XPathException;
 
@@ -74,24 +81,30 @@ public interface XPathOperations {
     /**
      * Evaluates the given expression as a <code>double</code>. Returns the evaluation of the expression, or {@link
      * Double#NaN} if it is invalid.
-     *
+     * <p/>
+     * The return value is determined per the {@code number()} function as defined in the XPath specification.
+     * This means that if the expression selects multiple nodes, it will return the number value of the first node.
+     * 
      * @param expression the XPath expression
      * @param context    the context starting point
      * @return the result of the evaluation
      * @throws XPathException in case of XPath errors
-     * @see <a href="http://www.w3.org/TR/xpath#numbers">XPath specification</a>
+     * @see <a href="http://www.w3.org/TR/xpath/#function-number">XPath specification - number() function</a>
      */
     double evaluateAsDouble(String expression, Source context) throws XPathException;
 
     /**
      * Evaluates the given expression as a {@link String}. Returns the evaluation of the expression, or
      * <code>null</code> if it is invalid.
+     * <p/>
+     * The return value is determined per the {@code string()} function as defined in the XPath specification.
+     * This means that if the expression selects multiple nodes, it will return the string value of the first node.
      *
      * @param expression the XPath expression
      * @param context    the context starting point
      * @return the result of the evaluation
      * @throws XPathException in case of XPath errors
-     * @see <a href="http://www.w3.org/TR/xpath#strings">XPath specification</a>
+     * @see <a href="http://www.w3.org/TR/xpath/#function-string">XPath specification - string() function</a>
      */
     String evaluateAsString(String expression, Source context) throws XPathException;
 
