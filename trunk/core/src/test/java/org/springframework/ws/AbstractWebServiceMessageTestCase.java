@@ -30,6 +30,8 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
@@ -41,9 +43,8 @@ import javax.xml.transform.stream.StreamSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.xml.StaxUtils;
 import org.springframework.xml.sax.SaxUtils;
-import org.springframework.xml.transform.StaxResult;
-import org.springframework.xml.transform.StaxSource;
 import org.springframework.xml.transform.StringResult;
 
 import org.custommonkey.xmlunit.XMLUnit;
@@ -96,16 +97,15 @@ public abstract class AbstractWebServiceMessageTestCase {
     }
 
     @Test
-    @SuppressWarnings("Since15")
     public void testEventReaderPayload() throws Exception {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLEventReader eventReader = inputFactory.createXMLEventReader(payload.getInputStream());
-        StaxSource staxSource = new StaxSource(eventReader);
+        Source staxSource = StaxUtils.createCustomStaxSource(eventReader);
         transformer.transform(staxSource, webServiceMessage.getPayloadResult());
         StringWriter stringWriter = new StringWriter();
         XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
         XMLEventWriter eventWriter = outputFactory.createXMLEventWriter(stringWriter);
-        StaxResult staxResult = new StaxResult(eventWriter);
+        Result staxResult = StaxUtils.createCustomStaxResult(eventWriter);
         transformer.transform(webServiceMessage.getPayloadSource(), staxResult);
         eventWriter.flush();
         assertXMLEqual(getExpectedString(), stringWriter.toString());
@@ -147,16 +147,15 @@ public abstract class AbstractWebServiceMessageTestCase {
     }
 
     @Test
-    @SuppressWarnings("Since15")
     public void testStreamReaderPayload() throws Exception {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLStreamReader streamReader = inputFactory.createXMLStreamReader(payload.getInputStream());
-        StaxSource staxSource = new StaxSource(streamReader);
+        Source staxSource = StaxUtils.createCustomStaxSource(streamReader);
         transformer.transform(staxSource, webServiceMessage.getPayloadResult());
         StringWriter stringWriter = new StringWriter();
         XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
         XMLStreamWriter streamWriter = outputFactory.createXMLStreamWriter(stringWriter);
-        StaxResult staxResult = new StaxResult(streamWriter);
+        Result staxResult = StaxUtils.createCustomStaxResult(streamWriter);
         transformer.transform(webServiceMessage.getPayloadSource(), staxResult);
         streamWriter.flush();
         assertXMLEqual(getExpectedString(), stringWriter.toString());

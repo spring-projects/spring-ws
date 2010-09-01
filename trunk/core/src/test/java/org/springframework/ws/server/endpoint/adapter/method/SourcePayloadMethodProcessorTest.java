@@ -25,11 +25,9 @@ import javax.xml.transform.stream.StreamSource;
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-import org.springframework.xml.transform.StaxSource;
 import org.springframework.xml.transform.StringSource;
 
 /** @author Arjen Poutsma */
-@SuppressWarnings("Since15")
 public class SourcePayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTestCase {
 
     @Override
@@ -41,20 +39,18 @@ public class SourcePayloadMethodProcessorTest extends AbstractPayloadMethodProce
     protected MethodParameter[] createSupportedParameters() throws NoSuchMethodException {
         return new MethodParameter[]{new MethodParameter(getClass().getMethod("source", Source.class), 0),
                 new MethodParameter(getClass().getMethod("dom", DOMSource.class), 0),
-                new MethodParameter(getClass().getMethod("stax1", StaxSource.class), 0),
                 new MethodParameter(getClass().getMethod("sax", SAXSource.class), 0),
                 new MethodParameter(getClass().getMethod("stream", StreamSource.class), 0),
-                new MethodParameter(getClass().getMethod("stax2", StAXSource.class), 0)};
+                new MethodParameter(getClass().getMethod("stax", StAXSource.class), 0)};
     }
 
     @Override
     protected MethodParameter[] createSupportedReturnTypes() throws NoSuchMethodException {
         return new MethodParameter[]{new MethodParameter(getClass().getMethod("source", Source.class), -1),
                 new MethodParameter(getClass().getMethod("dom", DOMSource.class), -1),
-                new MethodParameter(getClass().getMethod("stax1", StaxSource.class), -1),
                 new MethodParameter(getClass().getMethod("sax", SAXSource.class), -1),
                 new MethodParameter(getClass().getMethod("stream", StreamSource.class), -1),
-        new MethodParameter(getClass().getMethod("stax2", StAXSource.class), -1)};
+        new MethodParameter(getClass().getMethod("stax", StAXSource.class), -1)};
     }
 
     @Override
@@ -73,11 +69,6 @@ public class SourcePayloadMethodProcessorTest extends AbstractPayloadMethodProce
     }
 
     @ResponsePayload
-    public StaxSource stax1(@RequestPayload StaxSource source) {
-        return source;
-    }
-
-    @ResponsePayload
     public SAXSource sax(@RequestPayload SAXSource source) {
         return source;
     }
@@ -88,7 +79,7 @@ public class SourcePayloadMethodProcessorTest extends AbstractPayloadMethodProce
     }
 
     @ResponsePayload
-    public StAXSource stax2(@RequestPayload StAXSource source) {
+    public StAXSource stax(@RequestPayload StAXSource source) {
         return source;
     }
 }

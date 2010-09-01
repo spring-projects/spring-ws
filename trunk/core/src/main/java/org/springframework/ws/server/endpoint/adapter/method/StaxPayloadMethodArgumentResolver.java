@@ -27,11 +27,10 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamResult;
 
 import org.springframework.core.MethodParameter;
+import org.springframework.util.xml.StaxUtils;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
-import org.springframework.xml.stream.XmlEventStreamReader;
 import org.springframework.xml.transform.TransformerObjectSupport;
-import org.springframework.xml.transform.TraxUtils;
 
 /**
  * Implementation of {@link MethodArgumentResolver} that supports StAX {@link XMLStreamReader} and {@link
@@ -40,7 +39,6 @@ import org.springframework.xml.transform.TraxUtils;
  * @author Arjen Poutsma
  * @since 2.0
  */
-@SuppressWarnings("Since15")
 public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport implements MethodArgumentResolver {
 
     private final XMLInputFactory inputFactory = createXmlInputFactory();
@@ -73,13 +71,13 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
 
     private XMLStreamReader resolveStreamReader(Source requestSource) throws TransformerException, XMLStreamException {
         XMLStreamReader streamReader = null;
-        if (TraxUtils.isStaxSource(requestSource)) {
-            streamReader = TraxUtils.getXMLStreamReader(requestSource);
+        if (StaxUtils.isStaxSource(requestSource)) {
+            streamReader = StaxUtils.getXMLStreamReader(requestSource);
             if (streamReader == null) {
-                XMLEventReader eventReader = TraxUtils.getXMLEventReader(requestSource);
+                XMLEventReader eventReader = StaxUtils.getXMLEventReader(requestSource);
                 if (eventReader != null) {
                     try {
-                        streamReader = new XmlEventStreamReader(eventReader);
+                        streamReader = StaxUtils.createEventStreamReader(eventReader);
                     }
                     catch (XMLStreamException ex) {
                         streamReader = null;
@@ -108,10 +106,10 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
 
     private XMLEventReader resolveEventReader(Source requestSource) throws TransformerException, XMLStreamException {
         XMLEventReader eventReader = null;
-        if (TraxUtils.isStaxSource(requestSource)) {
-            eventReader = TraxUtils.getXMLEventReader(requestSource);
+        if (StaxUtils.isStaxSource(requestSource)) {
+            eventReader = StaxUtils.getXMLEventReader(requestSource);
             if (eventReader == null) {
-                XMLStreamReader streamReader = TraxUtils.getXMLStreamReader(requestSource);
+                XMLStreamReader streamReader = StaxUtils.getXMLStreamReader(requestSource);
                 if (streamReader != null) {
                     try {
                         eventReader = inputFactory.createXMLEventReader(streamReader);

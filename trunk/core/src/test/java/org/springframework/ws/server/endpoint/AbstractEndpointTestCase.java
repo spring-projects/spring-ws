@@ -30,7 +30,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
-import org.springframework.xml.transform.StaxSource;
+import org.springframework.util.xml.StaxUtils;
 
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -71,14 +71,14 @@ public abstract class AbstractEndpointTestCase {
     public void testStaxSourceEventReader() throws Exception {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader(REQUEST));
-        testSource(new StaxSource(eventReader));
+        testSource(new SAXSource(StaxUtils.createXMLReader(eventReader), new InputSource()));
     }
 
     @Test
     public void testStaxSourceStreamReader() throws Exception {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(REQUEST));
-        testSource(new StaxSource(streamReader));
+        testSource(new SAXSource(StaxUtils.createXMLReader(streamReader), new InputSource()));
     }
 
     @Test

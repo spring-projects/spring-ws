@@ -61,11 +61,12 @@ public class XomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 
     @Override
     public void testStaxSourceEventReader() throws Exception {
-        // overriden, because XOM doesn not support it
+        // overriden, because XOM doesn't not support it
     }
 
-    public void testStaxSourceEventReaderJaxp14() throws Exception {
-        // overriden, because XOM doesn not support it
+    @Override
+    public void testStaxSourceStreamReader() throws Exception {
+        // overriden, because XOM doesn't not support it
     }
 
 }
