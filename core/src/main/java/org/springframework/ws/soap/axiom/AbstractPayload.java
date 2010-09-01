@@ -21,8 +21,8 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
 import org.springframework.util.Assert;
+import org.springframework.util.xml.StaxUtils;
 import org.springframework.ws.soap.axiom.support.AxiomUtils;
-import org.springframework.xml.transform.StaxSource;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
@@ -54,7 +54,7 @@ abstract class AbstractPayload extends Payload {
             OMElement payloadElement = getPayloadElement();
             if (payloadElement != null) {
                 XMLStreamReader streamReader = getStreamReader(payloadElement);
-                return new StaxSource(streamReader);
+                return StaxUtils.createCustomStaxSource(streamReader);
             }
             else {
                 return null;

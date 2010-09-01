@@ -24,8 +24,8 @@ import javax.xml.transform.Source;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import org.springframework.util.xml.StaxUtils;
 import org.springframework.ws.soap.SoapElement;
-import org.springframework.xml.transform.StaxSource;
 
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
@@ -63,7 +63,7 @@ class AxiomSoapElement implements SoapElement {
 
     public final Source getSource() {
         try {
-            return new StaxSource(axiomElement.getXMLStreamReader());
+            return StaxUtils.createCustomStaxSource(axiomElement.getXMLStreamReader());
         }
         catch (OMException ex) {
             throw new AxiomSoapElementException(ex);

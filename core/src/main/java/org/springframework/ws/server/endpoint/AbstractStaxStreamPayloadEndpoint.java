@@ -29,10 +29,9 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.springframework.util.xml.StaxUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.xml.stream.XmlEventStreamReader;
-import org.springframework.xml.transform.TraxUtils;
 
 /**
  * Abstract base class for endpoints that handle the message payload with streaming StAX. Allows subclasses to read the
@@ -61,13 +60,13 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
             return null;
         }
         XMLStreamReader streamReader = null;
-        if (TraxUtils.isStaxSource(source)) {
-            streamReader = TraxUtils.getXMLStreamReader(source);
+        if (StaxUtils.isStaxSource(source)) {
+            streamReader = StaxUtils.getXMLStreamReader(source);
             if (streamReader == null) {
-                XMLEventReader eventReader = TraxUtils.getXMLEventReader(source);
+                XMLEventReader eventReader = StaxUtils.getXMLEventReader(source);
                 if (eventReader != null) {
                     try {
-                        streamReader = new XmlEventStreamReader(eventReader);
+                        streamReader = StaxUtils.createEventStreamReader(eventReader);
                     }
                     catch (XMLStreamException ex) {
                         streamReader = null;
@@ -99,8 +98,8 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
 
     private XMLStreamWriter getStreamWriter(Result result) {
         XMLStreamWriter streamWriter = null;
-        if (TraxUtils.isStaxResult(result)) {
-            streamWriter = TraxUtils.getXMLStreamWriter(result);
+        if (StaxUtils.isStaxResult(result)) {
+            streamWriter = StaxUtils.getXMLStreamWriter(result);
         }
         if (streamWriter == null) {
             try {

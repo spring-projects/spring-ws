@@ -118,8 +118,7 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
                         "</soapenv:Body></soapenv:Envelope>";
 
         InputStream inputStream = new ByteArrayInputStream(envelope.getBytes("UTF-8"));
-        AxiomSoapMessage message =
-                (AxiomSoapMessage) messageFactory.createWebServiceMessage(new MockTransportInputStream(inputStream));
+        AxiomSoapMessage message = messageFactory.createWebServiceMessage(new MockTransportInputStream(inputStream));
 
         StringResult result = new StringResult();
         transformer.transform(message.getPayloadSource(), result);

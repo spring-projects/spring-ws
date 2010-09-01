@@ -27,8 +27,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
+import org.springframework.util.xml.StaxUtils;
 import org.springframework.xml.namespace.QNameUtils;
-import org.springframework.xml.transform.TraxUtils;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -69,8 +69,8 @@ public abstract class PayloadRootUtils {
                 return QNameUtils.getQNameForNode(document.getDocumentElement());
             }
         }
-        else if (TraxUtils.isStaxSource(source)) {
-            XMLStreamReader streamReader = TraxUtils.getXMLStreamReader(source);
+        else if (StaxUtils.isStaxSource(source)) {
+            XMLStreamReader streamReader = StaxUtils.getXMLStreamReader(source);
             if (streamReader != null) {
                 if (streamReader.getEventType() == XMLStreamConstants.START_DOCUMENT) {
                     try {

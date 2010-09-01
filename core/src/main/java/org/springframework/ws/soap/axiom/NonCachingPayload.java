@@ -24,7 +24,7 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Result;
 
-import org.springframework.xml.transform.StaxResult;
+import org.springframework.util.xml.StaxUtils;
 
 import org.apache.axiom.om.OMDataSource;
 import org.apache.axiom.om.OMElement;
@@ -41,7 +41,6 @@ import org.apache.axiom.soap.SOAPFactory;
  * @author Arjen Poutsma
  * @since 1.5.2
  */
-@SuppressWarnings("Since15")
 class NonCachingPayload extends AbstractPayload {
 
     private static final int BUF_SIZE = 1024;
@@ -52,7 +51,7 @@ class NonCachingPayload extends AbstractPayload {
 
     @Override
     public Result getResultInternal() {
-        return new StaxResult(new DelegatingStreamWriter());
+        return StaxUtils.createCustomStaxResult(new DelegatingStreamWriter());
     }
 
     @Override

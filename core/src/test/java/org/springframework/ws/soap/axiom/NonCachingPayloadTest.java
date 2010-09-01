@@ -19,7 +19,7 @@ package org.springframework.ws.soap.axiom;
 import java.io.StringWriter;
 import javax.xml.stream.XMLStreamWriter;
 
-import org.springframework.xml.transform.StaxResult;
+import org.springframework.util.xml.StaxUtils;
 
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
@@ -45,8 +45,7 @@ public class NonCachingPayloadTest {
 
     @Test
     public void testDelegatingStreamWriter() throws Exception {
-        StaxResult result = (StaxResult) payload.getResult();
-        XMLStreamWriter streamWriter = result.getXMLStreamWriter();
+        XMLStreamWriter streamWriter = StaxUtils.getXMLStreamWriter(payload.getResult());
 
         String namespace = "http://springframework.org/spring-ws";
         streamWriter.setDefaultNamespace(namespace);
@@ -69,8 +68,7 @@ public class NonCachingPayloadTest {
 
     @Test
     public void testDelegatingStreamWriterWriteEndDocument() throws Exception {
-        StaxResult result = (StaxResult) payload.getResult();
-        XMLStreamWriter streamWriter = result.getXMLStreamWriter();
+        XMLStreamWriter streamWriter = StaxUtils.getXMLStreamWriter(payload.getResult());
 
         String namespace = "http://springframework.org/spring-ws";
         streamWriter.setDefaultNamespace(namespace);
@@ -92,8 +90,7 @@ public class NonCachingPayloadTest {
 
     @Test
     public void testDelegatingStreamWriterWriteEmptyElement() throws Exception {
-        StaxResult result = (StaxResult) payload.getResult();
-        XMLStreamWriter streamWriter = result.getXMLStreamWriter();
+        XMLStreamWriter streamWriter = StaxUtils.getXMLStreamWriter(payload.getResult());
 
         String namespace = "http://springframework.org/spring-ws";
         streamWriter.setDefaultNamespace(namespace);

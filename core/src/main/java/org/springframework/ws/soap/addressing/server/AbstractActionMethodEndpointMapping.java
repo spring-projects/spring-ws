@@ -20,7 +20,6 @@ import java.lang.reflect.Method;
 import java.net.URI;
 
 import org.springframework.aop.support.AopUtils;
-import org.springframework.core.JdkVersion;
 import org.springframework.util.Assert;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 
@@ -45,8 +44,7 @@ public abstract class AbstractActionMethodEndpointMapping extends AbstractAction
         Assert.notNull(endpoint, "'endpoint' must not be null");
         Method[] methods = AopUtils.getTargetClass(endpoint).getMethods();
         for (Method method : methods) {
-            if (JdkVersion.isAtLeastJava15() && method.isSynthetic() ||
-                    method.getDeclaringClass().equals(Object.class)) {
+            if (method.isSynthetic() || method.getDeclaringClass().equals(Object.class)) {
                 continue;
             }
             URI action = getActionForMethod(method);

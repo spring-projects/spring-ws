@@ -32,9 +32,9 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.springframework.util.xml.StaxUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.xml.transform.TraxUtils;
 
 /**
  * Abstract base class for endpoints that handle the message payload with event-based StAX. Allows subclasses to read
@@ -49,7 +49,6 @@ import org.springframework.xml.transform.TraxUtils;
  * @deprecated as of Spring Web Services 2.0, in favor of annotated endpoints
  */
 @Deprecated
-@SuppressWarnings("Since15")
 public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPayloadEndpoint implements MessageEndpoint {
 
     private XMLEventFactory eventFactory;
@@ -85,10 +84,10 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
             return null;
         }
         XMLEventReader eventReader = null;
-        if (TraxUtils.isStaxSource(source)) {
-            eventReader = TraxUtils.getXMLEventReader(source);
+        if (StaxUtils.isStaxSource(source)) {
+            eventReader = StaxUtils.getXMLEventReader(source);
             if (eventReader == null) {
-                XMLStreamReader streamReader = TraxUtils.getXMLStreamReader(source);
+                XMLStreamReader streamReader = StaxUtils.getXMLStreamReader(source);
                 if (streamReader != null) {
                     try {
                         eventReader = getInputFactory().createXMLEventReader(streamReader);
@@ -122,8 +121,8 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
 
     private XMLEventWriter getEventWriter(Result result) {
         XMLEventWriter eventWriter = null;
-        if (TraxUtils.isStaxResult(result)) {
-            eventWriter = TraxUtils.getXMLEventWriter(result);
+        if (StaxUtils.isStaxResult(result)) {
+            eventWriter = StaxUtils.getXMLEventWriter(result);
         }
         if (eventWriter == null) {
             try {
