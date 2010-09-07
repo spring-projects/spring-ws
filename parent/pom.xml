@@ -13,7 +13,7 @@
             <url>file:///Users/arjen/Projects/Spring/repos/repo</url>
         </repository>
         <snapshotRepository>
-            <id>spring-maven-snapshot</id>
+            <id>spring-snapshot</id>
             <name>Spring Snapshot Repository</name>
             <url>s3://maven.springframework.org/snapshot</url>
         </snapshotRepository>
@@ -45,7 +45,7 @@
     <!--TODO: remove as soon as Spring 3.0.5 is out -->
     <repositories>
         <repository>
-            <id>s2-snapshot</id>
+            <id>s2-maven-snapshot</id>
             <url>http://maven.springframework.org/snapshot</url>
             <snapshots>
                 <enabled>true</enabled>
