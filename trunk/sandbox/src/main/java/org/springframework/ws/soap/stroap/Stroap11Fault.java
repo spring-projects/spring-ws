@@ -67,7 +67,7 @@ class Stroap11Fault extends StroapFault implements Soap11Fault {
         else {
             String prefix = faultCodeString.substring(0, idx);
             String localPart = faultCodeString.substring(idx + 1, faultCodeString.length());
-            String namespaceUri = getStartElement().getNamespaceContext().getNamespaceURI(prefix);
+            String namespaceUri = getStartElement().getNamespaceURI(prefix);
             return new QName(namespaceUri, localPart, prefix);
         }
     }
