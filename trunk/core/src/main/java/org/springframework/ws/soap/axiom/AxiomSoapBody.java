@@ -65,7 +65,7 @@ abstract class AxiomSoapBody extends AxiomSoapElement implements SoapBody {
         return (SOAPBody) getAxiomElement();
     }
 
-    public void setPayloadSource(StreamingPayload payload) {
+    public void setStreamingPayload(StreamingPayload payload) {
         Assert.notNull(payload, "'payload' must not be null");
         OMDataSource dataSource = new StreamingOMDataSource(payload);
         OMElement payloadElement = getAxiomFactory().createOMElement(dataSource, payload.getName());

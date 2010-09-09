@@ -32,7 +32,6 @@ import org.springframework.ws.stream.StreamingPayload;
 import org.springframework.ws.stream.StreamingWebServiceMessage;
 import org.springframework.ws.transport.MockTransportOutputStream;
 import org.springframework.ws.transport.TransportConstants;
-import org.springframework.xml.namespace.SimpleNamespaceContext;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
@@ -95,18 +94,15 @@ public abstract class AbstractSoapMessageTestCase extends AbstractMimeMessageTes
         }
         StreamingWebServiceMessage streamingMessage = (StreamingWebServiceMessage) soapMessage;
 
-        final QName name = new QName("http://springframework.org", "root");
+        final QName name = new QName("http://springframework.org", "root", "prefix");
         streamingMessage.setStreamingPayload(new StreamingPayload() {
             public QName getName() {
                 return name;
             }
 
             public void writeTo(XMLStreamWriter streamWriter) throws XMLStreamException {
-                SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext();
-                namespaceContext.bindDefaultNamespaceUri(name.getNamespaceURI());
-                streamWriter.setNamespaceContext(namespaceContext);
-                streamWriter.writeStartElement(name.getNamespaceURI(), name.getLocalPart());
-                streamWriter.writeDefaultNamespace(name.getNamespaceURI());
+                streamWriter.writeStartElement(name.getPrefix(), name.getLocalPart(), name.getNamespaceURI());
+                streamWriter.writeNamespace("prefix", name.getNamespaceURI());
                 streamWriter.writeStartElement(name.getNamespaceURI(), "child");
                 streamWriter.writeCharacters("Foo");
                 streamWriter.writeEndElement();
@@ -119,6 +115,8 @@ public abstract class AbstractSoapMessageTestCase extends AbstractMimeMessageTes
 
         String expected = "<root xmlns='http://springframework.org'><child>Foo</child></root>";
         assertXMLEqual(expected, result.toString());
+
+        soapMessage.writeTo(new ByteArrayOutputStream());
     }
 
     protected abstract Resource[] getSoapSchemas();

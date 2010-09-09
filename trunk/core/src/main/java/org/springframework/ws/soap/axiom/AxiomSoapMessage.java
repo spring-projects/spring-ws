@@ -170,7 +170,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
 
     public void setStreamingPayload(StreamingPayload payload) {
         AxiomSoapBody soapBody = (AxiomSoapBody) getSoapBody();
-        soapBody.setPayloadSource(payload);
+        soapBody.setStreamingPayload(payload);
     }
 
     public SoapEnvelope getEnvelope() {
