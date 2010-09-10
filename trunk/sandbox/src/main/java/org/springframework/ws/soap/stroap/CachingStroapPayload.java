@@ -18,6 +18,7 @@ package org.springframework.ws.soap.stroap;
 
 import java.util.LinkedList;
 import java.util.List;
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
@@ -40,6 +41,17 @@ class CachingStroapPayload extends StroapPayload {
         Assert.notNull(eventReader, "'eventReader' must not be null");
         XMLEventWriter eventWriter = getEventWriter();
         eventWriter.add(eventReader);
+    }
+
+    @Override
+    public QName getName() {
+        if (!events.isEmpty()) {
+            XMLEvent event = events.get(0);
+            if (event.isStartElement()) {
+                return event.asStartElement().getName();
+            }
+        }
+        return null;
     }
 
     @Override

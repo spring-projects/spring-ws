@@ -18,6 +18,7 @@ package org.springframework.ws.soap.stroap;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
@@ -42,6 +43,11 @@ class StreamingStroapPayload extends StroapPayload {
 
         this.payload = payload;
         this.messageFactory = messageFactory;
+    }
+
+    @Override
+    public QName getName() {
+        return payload.getName();
     }
 
     @Override
