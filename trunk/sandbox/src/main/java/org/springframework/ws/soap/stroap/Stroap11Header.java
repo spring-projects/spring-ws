@@ -16,12 +16,10 @@
 
 package org.springframework.ws.soap.stroap;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import javax.xml.soap.SOAPConstants;
-import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.events.StartElement;
 
 import org.springframework.util.ObjectUtils;
@@ -72,8 +70,4 @@ class Stroap11Header extends StroapHeader implements Soap11Header {
         return false;
     }
 
-    @Override
-    protected List<XMLEventReader> getChildEventReaders() {
-        return Collections.emptyList();
-    }
 }

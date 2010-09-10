@@ -124,5 +124,24 @@ public class StroapMessageFactory implements SoapMessageFactory<StroapMessage> {
         return XMLEventFactory.newFactory();
     }
 
+    public String toString() {
+        StringBuilder builder = new StringBuilder("StroapMessageFactory[");
+        if (getSoapVersion() == SoapVersion.SOAP_11) {
+            builder.append("SOAP 1.1");
+        }
+        else if (getSoapVersion() == SoapVersion.SOAP_12) {
+            builder.append("SOAP 1.2");
+        }
+        builder.append(',');
+        if (payloadCaching) {
+            builder.append("PayloadCaching enabled");
+        }
+        else {
+            builder.append("PayloadCaching disabled");
+        }
+        builder.append(']');
+        return builder.toString();
+    }
+
 
 }

@@ -16,8 +16,6 @@
 
 package org.springframework.ws.soap.stroap;
 
-import java.util.Collections;
-import java.util.List;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
@@ -107,8 +105,8 @@ abstract class StroapBody extends StroapContainer implements SoapBody {
     }
 
     @Override
-    protected final List<XMLEventReader> getChildEventReaders() {
-        return Collections.singletonList(payload.getEventReader());
+    protected final XMLEventReader[] getChildEventReaders() {
+        return new XMLEventReader[]{payload.getEventReader()};
     }
 
     @Override

@@ -65,15 +65,16 @@ abstract class StroapContainer extends StroapElement {
 
     @Override
     protected XMLEventReader getEventReader() {
-        List<XMLEventReader> eventReaders = new LinkedList<XMLEventReader>();
-        eventReaders.add(new ListBasedXMLEventReader(startElement));
-        eventReaders.addAll(getChildEventReaders());
-        eventReaders.add(new ListBasedXMLEventReader(endElement));
+        XMLEventReader[] childEventReaders = getChildEventReaders();
+        XMLEventReader[] eventReaders = new XMLEventReader[childEventReaders.length + 2];
+        eventReaders[0] = new ListBasedXMLEventReader(startElement);
+        System.arraycopy(childEventReaders, 0, eventReaders, 1, childEventReaders.length);
+        eventReaders[eventReaders.length - 1] = new ListBasedXMLEventReader(endElement);
 
         return new CompositeXMLEventReader(eventReaders);
     }
 
-    protected abstract List<XMLEventReader> getChildEventReaders();
+    protected abstract XMLEventReader[] getChildEventReaders();
 
     // Attributes
 

@@ -16,10 +16,7 @@
 
 package org.springframework.xml.stream;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
@@ -31,58 +28,64 @@ import org.springframework.util.Assert;
  */
 public class CompositeXMLEventReader extends AbstractXMLEventReader {
 
-    private List<XMLEventReader> eventReaders;
+    private final XMLEventReader[] eventReaders;
 
     private int cursor = 0;
 
     public CompositeXMLEventReader(XMLEventReader eventReader) {
         Assert.notNull(eventReader, "'eventReader' must not be null");
-        this.eventReaders = Collections.singletonList(eventReader);
+        this.eventReaders = new XMLEventReader[]{eventReader};
     }
 
     public CompositeXMLEventReader(XMLEventReader... eventReaders) {
         Assert.notNull(eventReaders, "'eventReaders' must not be null");
-        this.eventReaders = Arrays.asList(eventReaders);
+        this.eventReaders = eventReaders;
     }
 
     public CompositeXMLEventReader(List<XMLEventReader> eventReaders) {
         Assert.notNull(eventReaders, "'eventReaders' must not be null");
-        this.eventReaders = eventReaders;
+        this.eventReaders = eventReaders.toArray(new XMLEventReader[eventReaders.size()]);
     }
 
     public XMLEvent nextEvent() throws XMLStreamException {
-        if (!hasNext()) {
-            throw new NoSuchElementException();
+        XMLEvent event = null;
+        while (cursor < eventReaders.length) {
+            event = eventReaders[cursor].nextEvent();
+            if (cursor != eventReaders.length - 1 && event.isEndDocument()) {
+                cursor++;
+            }
+            else {
+                break;
+            }
         }
-        else {
-            return eventReaders.get(cursor).nextEvent();
-        }
+        return event;
     }
 
     public boolean hasNext() {
-        try {
-            while (cursor < eventReaders.size()) {
-                if (cursor != eventReaders.size() - 1) {
-                    XMLEvent event = eventReaders.get(cursor).peek();
-                    if (event == null || event.isEndDocument()) {
-                        cursor++;
-                        continue;
-                    }
+        while (cursor < eventReaders.length) {
+            if (cursor != eventReaders.length - 1) {
+                if (!eventReaders[cursor].hasNext()) {
+                    cursor++;
+                    continue;
                 }
-                return eventReaders.get(cursor).hasNext();
             }
-        }
-        catch (XMLStreamException ex) {
-            // ignored
+            return eventReaders[cursor].hasNext();
         }
         return false;
     }
 
     public XMLEvent peek() throws XMLStreamException {
-        if (hasNext()) {
-            return eventReaders.get(cursor).peek();
+        XMLEvent event = null;
+        while (cursor < eventReaders.length) {
+            event = eventReaders[cursor].peek();
+            if (cursor != eventReaders.length - 1 && (event == null || event.isEndDocument())) {
+                cursor++;
+            }
+            else {
+                break;
+            }
         }
-        return null;
+        return event;
     }
 
 }
