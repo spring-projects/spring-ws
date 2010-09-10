@@ -332,6 +332,13 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory<AxiomSoapMess
         else if (soapFactory instanceof SOAP12Factory) {
             builder.append("SOAP 1.2");
         }
+        builder.append(',');
+        if (payloadCaching) {
+            builder.append("PayloadCaching enabled");
+        }
+        else {
+            builder.append("PayloadCaching disabled");
+        }
         builder.append(']');
         return builder.toString();
     }
