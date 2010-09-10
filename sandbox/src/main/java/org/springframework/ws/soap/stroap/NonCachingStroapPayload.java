@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.stroap;
 
 import java.util.NoSuchElementException;
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
@@ -36,6 +37,21 @@ class NonCachingStroapPayload extends StroapPayload {
     NonCachingStroapPayload(XMLEventReader eventReader) throws XMLStreamException {
         Assert.notNull(eventReader, "'eventReader' must not be null");
         this.eventReader = eventReader;
+    }
+
+    @Override
+    public QName getName() {
+        try {
+            XMLEvent event = eventReader.peek();
+            if (event != null && event.isStartElement()) {
+                return event.asStartElement().getName();
+            }
+
+        }
+        catch (XMLStreamException ex) {
+            // ignore
+        }
+        return null;
     }
 
     @Override

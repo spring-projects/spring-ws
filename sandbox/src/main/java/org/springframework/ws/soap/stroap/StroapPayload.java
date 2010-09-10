@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap.stroap;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
@@ -24,6 +25,8 @@ import javax.xml.stream.XMLStreamException;
  * @author Arjen Poutsma
  */
 abstract class StroapPayload {
+
+    public abstract QName getName();
 
     public abstract XMLEventReader getEventReader();
 

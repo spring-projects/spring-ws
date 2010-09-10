@@ -55,7 +55,7 @@ public class StroapMessage extends AbstractSoapMessage implements StreamingWebSe
 
     private final MultiValueMap<String, String> mimeHeaders = new LinkedMultiValueMap<String, String>();
 
-    private StroapEnvelope envelope;
+    private final StroapEnvelope envelope;
 
     private final StroapMessageFactory messageFactory;
 
@@ -172,6 +172,17 @@ public class StroapMessage extends AbstractSoapMessage implements StreamingWebSe
 
     public Attachment addAttachment(String contentId, DataHandler dataHandler) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("StroapMessage");
+        StroapBody body = (StroapBody) envelope.getBody();
+        if (body != null) {
+            builder.append(' ');
+            builder.append(body.getPayloadName());
+        }
+        return builder.toString();
     }
 
     private static class NoStartEndDocumentWriter extends AbstractXMLEventWriter {

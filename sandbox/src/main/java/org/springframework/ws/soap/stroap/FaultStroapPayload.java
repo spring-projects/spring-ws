@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap.stroap;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 
 import org.springframework.util.Assert;
@@ -35,6 +36,11 @@ class FaultStroapPayload extends StroapPayload {
 
     SoapFault getFault() {
         return fault;
+    }
+
+    @Override
+    public QName getName() {
+        return fault.getName();
     }
 
     @Override

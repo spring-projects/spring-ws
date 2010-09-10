@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap.stroap;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
@@ -118,5 +119,9 @@ abstract class StroapBody extends StroapElement implements SoapBody {
 
     public void setStreamingPayload(StreamingPayload payload) {
         this.payload = new StreamingStroapPayload(payload, getMessageFactory());
+    }
+
+    public QName getPayloadName() {
+        return payload.getName();
     }
 }
