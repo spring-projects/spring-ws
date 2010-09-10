@@ -16,8 +16,6 @@
 
 package org.springframework.xml.stream;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import javax.xml.stream.events.XMLEvent;
@@ -29,44 +27,52 @@ import org.springframework.util.Assert;
  */
 public class ListBasedXMLEventReader extends AbstractXMLEventReader {
 
-    private final List<XMLEvent> events;
+    private final XMLEvent[] events;
 
     private int cursor = 0;
 
+    public ListBasedXMLEventReader() {
+        this.events = new XMLEvent[0];
+    }
+
     public ListBasedXMLEventReader(XMLEvent event) {
-        Assert.notNull(event, "'event' must not be null");
-        this.events = Collections.singletonList(event);
+        if (event != null) {
+            this.events = new XMLEvent[]{event};
+        }
+        else {
+            this.events = new XMLEvent[0];
+        }
     }
 
     public ListBasedXMLEventReader(XMLEvent... events) {
         Assert.notNull(events, "'events' must not be null");
-        this.events = Arrays.asList(events);
+        this.events = events;
     }
 
     public ListBasedXMLEventReader(List<XMLEvent> events) {
         Assert.notNull(events, "'events' must not be null");
-        this.events = events;
+        this.events = events.toArray(new XMLEvent[events.size()]);
     }
 
     public boolean hasNext() {
         Assert.notNull(events, "'events' must not be null");
-        return cursor != events.size();
+        return cursor != events.length;
     }
 
     public XMLEvent nextEvent() {
-        try {
-            return events.get(cursor++);
+        if (cursor < events.length) {
+            return events[cursor++];
         }
-        catch (IndexOutOfBoundsException e) {
+        else {
             throw new NoSuchElementException();
         }
     }
 
     public XMLEvent peek() {
-        try {
-            return events.get(cursor);
+        if (cursor < events.length) {
+            return events[cursor];
         }
-        catch (IndexOutOfBoundsException e) {
+        else {
             return null;
         }
     }

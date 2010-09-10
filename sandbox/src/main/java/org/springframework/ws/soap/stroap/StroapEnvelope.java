@@ -16,8 +16,6 @@
 
 package org.springframework.ws.soap.stroap;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
@@ -114,15 +112,13 @@ class StroapEnvelope extends StroapContainer implements SoapEnvelope {
     }
 
     @Override
-    protected List<XMLEventReader> getChildEventReaders() {
-        List<XMLEventReader> result = new ArrayList<XMLEventReader>(2);
+    protected XMLEventReader[] getChildEventReaders() {
         if (header != null) {
-            result.add(header.getEventReader());
+            return new XMLEventReader[]{header.getEventReader(), body.getEventReader()};
         }
-        if (body != null) {
-            result.add(body.getEventReader());
+        else {
+            return new XMLEventReader[]{body.getEventReader()};
         }
-        return result;
     }
 
 }

@@ -107,12 +107,13 @@ abstract class StroapHeader extends StroapContainer implements SoapHeader {
     }
 
     @Override
-    protected List<XMLEventReader> getChildEventReaders() {
-        List<XMLEventReader> result = new LinkedList<XMLEventReader>();
-        for (StroapHeaderElement headerElement : headerElements) {
-            result.add(headerElement.getEventReader());
+    protected XMLEventReader[] getChildEventReaders() {
+        XMLEventReader[] eventReaders = new XMLEventReader[headerElements.size()];
+        for (int i = 0; i < headerElements.size(); i++) {
+            StroapHeaderElement headerElement = headerElements.get(i);
+            eventReaders[i] = headerElement.getEventReader();
         }
-        return result;
+        return eventReaders;
     }
 
     public Result getResult() {

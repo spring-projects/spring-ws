@@ -16,9 +16,6 @@
 
 package org.springframework.ws.soap.stroap;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
@@ -102,12 +99,12 @@ class Stroap11Fault extends StroapFault implements Soap11Fault {
     }
 
     @Override
-    protected List<XMLEventReader> getChildEventReaders() {
-        List<XMLEventReader> eventReaders = new LinkedList<XMLEventReader>();
-        eventReaders.add(faultCode.getEventReader());
-        eventReaders.add(faultString.getEventReader());
+    protected XMLEventReader[] getChildEventReaders() {
+        XMLEventReader[] eventReaders = (faultActor != null) ? new XMLEventReader[2] : new XMLEventReader[3];
+        eventReaders[0] = faultCode.getEventReader();
+        eventReaders[1] = faultString.getEventReader();
         if (faultActor != null) {
-            eventReaders.add(faultActor.getEventReader());
+            eventReaders[2] = faultActor.getEventReader();
         }
         return eventReaders;
     }
@@ -152,8 +149,8 @@ class Stroap11Fault extends StroapFault implements Soap11Fault {
         }
 
         @Override
-        protected List<XMLEventReader> getChildEventReaders() {
-            return Collections.<XMLEventReader>singletonList(new ListBasedXMLEventReader(characters));
+        protected XMLEventReader[] getChildEventReaders() {
+            return new XMLEventReader[]{new ListBasedXMLEventReader(characters)};
         }
     }
 }

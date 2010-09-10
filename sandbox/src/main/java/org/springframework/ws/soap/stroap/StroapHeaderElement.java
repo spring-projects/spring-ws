@@ -16,7 +16,6 @@
 
 package org.springframework.ws.soap.stroap;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import javax.xml.namespace.QName;
@@ -105,8 +104,8 @@ class StroapHeaderElement extends StroapContainer implements SoapHeaderElement {
     }
 
     @Override
-    protected List<XMLEventReader> getChildEventReaders() {
-        return Collections.<XMLEventReader>singletonList(new ListBasedXMLEventReader(events));
+    protected XMLEventReader[] getChildEventReaders() {
+        return new XMLEventReader[]{new ListBasedXMLEventReader(events)};
     }
 
 
