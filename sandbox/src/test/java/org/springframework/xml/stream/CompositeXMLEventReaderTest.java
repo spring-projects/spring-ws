@@ -16,12 +16,14 @@
 
 package org.springframework.xml.stream;
 
+import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
 
 import org.junit.Before;
@@ -36,36 +38,42 @@ public class CompositeXMLEventReaderTest {
 
     private CompositeXMLEventReader chain;
 
-    private List<XMLEvent> events1 = new ArrayList<XMLEvent>();
+    private XMLInputFactory inputFactory;
 
-    private List<XMLEvent> events3 = new ArrayList<XMLEvent>();
+    private List<XMLEvent> expectedEvents = new ArrayList<XMLEvent>();
 
     @Before
     public void createChainUp() throws Exception {
-        XMLEventFactory eventFactory = XMLEventFactory.newInstance();
-        events1.add(eventFactory.createStartElement(new QName("event1-1"), null, null));
-        events1.add(eventFactory.createEndDocument());
-        events1.add(eventFactory.createStartElement(new QName("event1-2"), null, null));
-        XMLEventReader reader1 = new ListBasedXMLEventReader(events1);
+        inputFactory = XMLInputFactory.newFactory();
+        List<XMLEvent> events = getEvents("<event1-1><event1-2>text1</event1-2></event1-1>");
+        expectedEvents.addAll(events);
+        XMLEventReader reader1 = new ListBasedXMLEventReader(events);
         XMLEventReader reader2 = new ListBasedXMLEventReader();
-        events3.add(eventFactory.createStartElement(new QName("event2-1"), null, null));
-        events3.add(eventFactory.createEndElement(new QName("event2-2"), null));
-        XMLEventReader reader3 = new ListBasedXMLEventReader(events3);
+        events = getEvents("<event2-1></event2-1>");
+        expectedEvents.addAll(events);
+        XMLEventReader reader3 = new ListBasedXMLEventReader(events);
         XMLEventReader reader4 = new ListBasedXMLEventReader();
         chain = new CompositeXMLEventReader(reader1, reader2, reader3, reader4);
     }
 
+    private List<XMLEvent> getEvents(String xml) throws XMLStreamException {
+        XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader(xml));
+        List<XMLEvent> events = new LinkedList<XMLEvent>();
+        while (eventReader.hasNext()) {
+            XMLEvent event = eventReader.nextEvent();
+            if (!(event.isStartDocument() || event.isEndDocument())) {
+                events.add(event);
+            }
+
+        }
+        return events;
+    }
+
     @Test
     public void testChain() throws Exception {
-        assertEquals("peek returns invalid result", events1.get(0), chain.peek());
-        assertTrue("hasNext returns false", chain.hasNext());
-        assertEquals("nextEvent returns invalid result", events1.get(0), chain.nextEvent());
-        assertEquals("peek returns invalid result", events3.get(0), chain.peek());
-        assertTrue("hasNext returns false", chain.hasNext());
-        assertEquals("nextEvent returns invalid result", events3.get(0), chain.nextEvent());
-        assertEquals("peek returns invalid result", events3.get(1), chain.peek());
-        assertTrue("hasNext returns false", chain.hasNext());
-        assertEquals("nextEvent returns invalid result", events3.get(1), chain.nextEvent());
+        for (XMLEvent expectedEvent : expectedEvents) {
+            testEvent(expectedEvent);
+        }
         assertFalse("hasNext returns true", chain.hasNext());
         assertNull("peek returns element", chain.peek());
         try {
@@ -75,6 +83,13 @@ public class CompositeXMLEventReaderTest {
         catch (NoSuchElementException e) {
             // expected
         }
+    }
+
+    private void testEvent(XMLEvent expected) throws XMLStreamException {
+        assertEquals("1st peek returns invalid result", expected, chain.peek());
+        assertEquals("2nd peek returns invalid result", expected, chain.peek());
+        assertTrue("hasNext returns false", chain.hasNext());
+        assertEquals("nextEvent returns invalid result", expected, chain.nextEvent());
     }
 
 }
