@@ -28,11 +28,12 @@ import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderException;
 import org.springframework.ws.soap.SoapVersion;
+import org.springframework.xml.stream.CompositeXMLEventReader;
 
 /**
  * @author Arjen Poutsma
  */
-class StroapEnvelope extends StroapContainer implements SoapEnvelope {
+class StroapEnvelope extends StroapElement implements SoapEnvelope {
 
     private static final String LOCAL_NAME = "Envelope";
 
@@ -112,12 +113,12 @@ class StroapEnvelope extends StroapContainer implements SoapEnvelope {
     }
 
     @Override
-    protected XMLEventReader[] getChildEventReaders() {
+    protected XMLEventReader getChildEventReader() {
         if (header != null) {
-            return new XMLEventReader[]{header.getEventReader(), body.getEventReader()};
+            return new CompositeXMLEventReader(header.getEventReader(false), body.getEventReader(false));
         }
         else {
-            return new XMLEventReader[]{body.getEventReader()};
+            return body.getEventReader(false);
         }
     }
 

@@ -39,7 +39,7 @@ class FaultStroapPayload extends StroapPayload {
 
     @Override
     public XMLEventReader getEventReader() {
-        return fault.getEventReader();
+        return fault.getEventReader(false);
     }
 
 }

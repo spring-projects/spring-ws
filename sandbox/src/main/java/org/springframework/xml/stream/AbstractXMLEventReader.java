@@ -23,6 +23,8 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.XMLEvent;
 
+import org.springframework.util.ClassUtils;
+
 /**
  * Abstract base class for <code>XMLEventReader</code>s.
  *
@@ -36,7 +38,7 @@ public abstract class AbstractXMLEventReader implements XMLEventReader {
         try {
             return nextEvent();
         }
-        catch (XMLStreamException e) {
+        catch (XMLStreamException ex) {
             throw new NoSuchElementException();
         }
     }
@@ -47,7 +49,7 @@ public abstract class AbstractXMLEventReader implements XMLEventReader {
      * @throws UnsupportedOperationException when called
      */
     public void remove() {
-        throw new UnsupportedOperationException("remove not supported on AbstractXmlEventReader");
+        throw new UnsupportedOperationException("remove not supported on " + ClassUtils.getShortName(getClass()));
     }
 
     public String getElementText() throws XMLStreamException {

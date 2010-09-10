@@ -26,6 +26,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.SoapFaultDetail;
 import org.springframework.ws.soap.soap11.Soap11Fault;
+import org.springframework.xml.stream.CompositeXMLEventReader;
 import org.springframework.xml.stream.ListBasedXMLEventReader;
 
 /**
@@ -99,17 +100,17 @@ class Stroap11Fault extends StroapFault implements Soap11Fault {
     }
 
     @Override
-    protected XMLEventReader[] getChildEventReaders() {
-        XMLEventReader[] eventReaders = (faultActor != null) ? new XMLEventReader[2] : new XMLEventReader[3];
-        eventReaders[0] = faultCode.getEventReader();
-        eventReaders[1] = faultString.getEventReader();
+    protected XMLEventReader getChildEventReader() {
+        XMLEventReader[] eventReaders = (faultActor == null) ? new XMLEventReader[2] : new XMLEventReader[3];
+        eventReaders[0] = faultCode.getEventReader(false);
+        eventReaders[1] = faultString.getEventReader(false);
         if (faultActor != null) {
-            eventReaders[2] = faultActor.getEventReader();
+            eventReaders[2] = faultActor.getEventReader(false);
         }
-        return eventReaders;
+        return new CompositeXMLEventReader(eventReaders);
     }
 
-    private static class FaultElement extends StroapContainer {
+    private static class FaultElement extends StroapElement {
 
         private final Characters characters;
 
@@ -149,8 +150,8 @@ class Stroap11Fault extends StroapFault implements Soap11Fault {
         }
 
         @Override
-        protected XMLEventReader[] getChildEventReaders() {
-            return new XMLEventReader[]{new ListBasedXMLEventReader(characters)};
+        protected XMLEventReader getChildEventReader() {
+            return new ListBasedXMLEventReader(characters);
         }
     }
 }

@@ -34,11 +34,12 @@ import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapHeaderException;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.xml.stream.AbstractXMLEventWriter;
+import org.springframework.xml.stream.CompositeXMLEventReader;
 
 /**
  * @author Arjen Poutsma
  */
-abstract class StroapHeader extends StroapContainer implements SoapHeader {
+abstract class StroapHeader extends StroapElement implements SoapHeader {
 
     private List<StroapHeaderElement> headerElements = new LinkedList<StroapHeaderElement>();
 
@@ -107,13 +108,13 @@ abstract class StroapHeader extends StroapContainer implements SoapHeader {
     }
 
     @Override
-    protected XMLEventReader[] getChildEventReaders() {
+    protected XMLEventReader getChildEventReader() {
         XMLEventReader[] eventReaders = new XMLEventReader[headerElements.size()];
         for (int i = 0; i < headerElements.size(); i++) {
             StroapHeaderElement headerElement = headerElements.get(i);
-            eventReaders[i] = headerElement.getEventReader();
+            eventReaders[i] = headerElement.getEventReader(false);
         }
-        return eventReaders;
+        return new CompositeXMLEventReader(eventReaders);
     }
 
     public Result getResult() {
