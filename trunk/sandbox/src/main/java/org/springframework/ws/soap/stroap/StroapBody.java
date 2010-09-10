@@ -33,7 +33,7 @@ import org.springframework.ws.stream.StreamingPayload;
 /**
  * @author Arjen Poutsma
  */
-abstract class StroapBody extends StroapContainer implements SoapBody {
+abstract class StroapBody extends StroapElement implements SoapBody {
 
     private StroapPayload payload;
 
@@ -105,8 +105,8 @@ abstract class StroapBody extends StroapContainer implements SoapBody {
     }
 
     @Override
-    protected final XMLEventReader[] getChildEventReaders() {
-        return new XMLEventReader[]{payload.getEventReader()};
+    protected final XMLEventReader getChildEventReader() {
+        return payload.getEventReader();
     }
 
     @Override

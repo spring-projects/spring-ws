@@ -34,7 +34,7 @@ import org.springframework.xml.stream.ListBasedXMLEventReader;
 /**
  * @author Arjen Poutsma
  */
-class StroapHeaderElement extends StroapContainer implements SoapHeaderElement {
+class StroapHeaderElement extends StroapElement implements SoapHeaderElement {
 
     private final List<XMLEvent> events = new LinkedList<XMLEvent>();
 
@@ -104,8 +104,8 @@ class StroapHeaderElement extends StroapContainer implements SoapHeaderElement {
     }
 
     @Override
-    protected XMLEventReader[] getChildEventReaders() {
-        return new XMLEventReader[]{new ListBasedXMLEventReader(events)};
+    protected XMLEventReader getChildEventReader() {
+        return new ListBasedXMLEventReader(events);
     }
 
 

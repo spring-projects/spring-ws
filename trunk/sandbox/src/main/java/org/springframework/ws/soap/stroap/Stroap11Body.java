@@ -32,13 +32,13 @@ class Stroap11Body extends StroapBody implements Soap11Body {
 
     private static final String ENVELOPE_NAMESPACE_URI = "http://schemas.xmlsoap.org/soap/envelope/";
 
-    private QName CLIENT_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Client", PREFIX);
+    private QName CLIENT_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Client", DEFAULT_PREFIX);
 
-    private QName SERVER_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Server", PREFIX);
+    private QName SERVER_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Server", DEFAULT_PREFIX);
 
-    private QName MUST_UNDERSTAND_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "MustUnderstand", PREFIX);
+    private QName MUST_UNDERSTAND_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "MustUnderstand", DEFAULT_PREFIX);
 
-    private QName VERSION_MISMATCH_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "VersionMismatch", PREFIX);
+    private QName VERSION_MISMATCH_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "VersionMismatch", DEFAULT_PREFIX);
 
     Stroap11Body(StroapMessageFactory messageFactory) {
         super(messageFactory);

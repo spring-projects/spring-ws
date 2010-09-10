@@ -24,6 +24,8 @@ import javax.xml.stream.events.XMLEvent;
 import org.springframework.util.Assert;
 
 /**
+ * Implementation of {@link XMLEventReader} that combines multiple other {@code XMLEventReader}s.
+ *
  * @author Arjen Poutsma
  */
 public class CompositeXMLEventReader extends AbstractXMLEventReader {
@@ -47,11 +49,24 @@ public class CompositeXMLEventReader extends AbstractXMLEventReader {
         this.eventReaders = eventReaders.toArray(new XMLEventReader[eventReaders.size()]);
     }
 
+    public boolean hasNext() {
+        while (cursor < eventReaders.length) {
+            if (!atLastEventReader()) {
+                if (!currentEventReader().hasNext()) {
+                    cursor++;
+                    continue;
+                }
+            }
+            return currentEventReader().hasNext();
+        }
+        return false;
+    }
+
     public XMLEvent nextEvent() throws XMLStreamException {
         XMLEvent event = null;
         while (cursor < eventReaders.length) {
-            event = eventReaders[cursor].nextEvent();
-            if (cursor != eventReaders.length - 1 && event.isEndDocument()) {
+            event = currentEventReader().nextEvent();
+            if (!atLastEventReader() && event.isEndDocument()) {
                 cursor++;
             }
             else {
@@ -59,26 +74,13 @@ public class CompositeXMLEventReader extends AbstractXMLEventReader {
             }
         }
         return event;
-    }
-
-    public boolean hasNext() {
-        while (cursor < eventReaders.length) {
-            if (cursor != eventReaders.length - 1) {
-                if (!eventReaders[cursor].hasNext()) {
-                    cursor++;
-                    continue;
-                }
-            }
-            return eventReaders[cursor].hasNext();
-        }
-        return false;
     }
 
     public XMLEvent peek() throws XMLStreamException {
         XMLEvent event = null;
         while (cursor < eventReaders.length) {
-            event = eventReaders[cursor].peek();
-            if (cursor != eventReaders.length - 1 && (event == null || event.isEndDocument())) {
+            event = currentEventReader().peek();
+            if (!atLastEventReader() && (event == null || event.isEndDocument())) {
                 cursor++;
             }
             else {
@@ -86,6 +88,14 @@ public class CompositeXMLEventReader extends AbstractXMLEventReader {
             }
         }
         return event;
+    }
+
+    private XMLEventReader currentEventReader() {
+        return eventReaders[cursor];
+    }
+
+    private boolean atLastEventReader() {
+        return cursor == eventReaders.length - 1;
     }
 
 }

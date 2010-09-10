@@ -21,7 +21,7 @@ import org.springframework.ws.soap.SoapFault;
 /**
  * @author Arjen Poutsma
  */
-abstract class StroapFault extends StroapContainer implements SoapFault {
+abstract class StroapFault extends StroapElement implements SoapFault {
 
     protected StroapFault(StroapMessageFactory messageFactory) {
         super(messageFactory.getSoapVersion().getFaultName(), messageFactory);
