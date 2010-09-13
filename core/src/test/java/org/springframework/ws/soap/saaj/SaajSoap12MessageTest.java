@@ -40,7 +40,7 @@ public class SaajSoap12MessageTest extends AbstractSoap12MessageTestCase {
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
         saajMessage = messageFactory.createMessage();
         saajMessage.getSOAPHeader().detachNode();
-        return new SaajSoapMessage(saajMessage);
+        return new SaajSoapMessage(saajMessage, true, messageFactory);
     }
 
     public void testGetPayloadSource() throws Exception {

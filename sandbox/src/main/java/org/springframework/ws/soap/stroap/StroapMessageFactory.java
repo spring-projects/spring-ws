@@ -18,6 +18,7 @@ package org.springframework.ws.soap.stroap;
 
 import java.io.IOException;
 import java.io.InputStream;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
@@ -36,6 +37,8 @@ public class StroapMessageFactory implements SoapMessageFactory<StroapMessage> {
     private final XMLOutputFactory outputFactory = createXmlOutputFactory();
 
     private final XMLEventFactory eventFactory = createXmlEventFactory();
+
+    private final DocumentBuilderFactory documentBuilderFactory = createDocumentBuilderFactory();
 
     private boolean payloadCaching = true;
 
@@ -83,6 +86,10 @@ public class StroapMessageFactory implements SoapMessageFactory<StroapMessage> {
         return eventFactory;
     }
 
+    DocumentBuilderFactory getDocumentBuilderFactory() {
+        return documentBuilderFactory;
+    }
+
     /**
      * Create a {@code XMLInputFactory} that this message factory will use to create {@link
      * javax.xml.stream.XMLEventReader} objects.
@@ -122,6 +129,20 @@ public class StroapMessageFactory implements SoapMessageFactory<StroapMessage> {
      */
     protected XMLEventFactory createXmlEventFactory() {
         return XMLEventFactory.newFactory();
+    }
+
+    /**
+     * Create a {@code DocumentBuilderFactory} that this message factory will use to create {@link org.w3c.dom.Document} objects.
+     * <p/>
+     * Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
+     * so this method will only be called once.
+     *
+     * @return the created factory
+     */
+    protected DocumentBuilderFactory createDocumentBuilderFactory() {
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(true);
+        return documentBuilderFactory;
     }
 
     public String toString() {

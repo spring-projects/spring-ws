@@ -135,10 +135,7 @@ public abstract class AxiomUtils {
             }
         }
         catch (Exception ex) {
-            IllegalArgumentException iaex =
-                    new IllegalArgumentException("Error in converting SOAP Envelope to Document");
-            iaex.initCause(ex);
-            throw iaex;
+            throw new IllegalArgumentException("Error in converting SOAP Envelope to Document", ex);
         }
     }
 

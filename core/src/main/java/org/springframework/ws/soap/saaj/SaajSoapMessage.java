@@ -16,11 +16,14 @@
 
 package org.springframework.ws.soap.saaj;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
 import javax.activation.DataHandler;
 import javax.xml.soap.AttachmentPart;
+import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
@@ -41,6 +44,12 @@ import org.springframework.ws.soap.saaj.support.SaajUtils;
 import org.springframework.ws.soap.support.SoapUtils;
 import org.springframework.ws.transport.TransportConstants;
 
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSOutput;
+import org.w3c.dom.ls.LSSerializer;
+
 /**
  * SAAJ-specific implementation of the {@link SoapMessage} interface. Created via the {@link SaajSoapMessageFactory},
  * wraps a {@link SOAPMessage}.
@@ -52,6 +61,8 @@ import org.springframework.ws.transport.TransportConstants;
 public class SaajSoapMessage extends AbstractSoapMessage {
 
     private static final String CONTENT_TYPE_XOP = "application/xop+xml";
+
+    private final MessageFactory messageFactory;
 
     private SOAPMessage saajMessage;
 
@@ -67,7 +78,17 @@ public class SaajSoapMessage extends AbstractSoapMessage {
      * @param soapMessage the SAAJ SOAPMessage
      */
     public SaajSoapMessage(SOAPMessage soapMessage) {
-        this(soapMessage, true);
+        this(soapMessage, true, null);
+    }
+
+    /**
+     * Create a new <code>SaajSoapMessage</code> based on the given SAAJ <code>SOAPMessage</code>.
+     *
+     * @param soapMessage the SAAJ SOAPMessage
+     * @param messageFactory the SAAJ message factory
+     */
+    public SaajSoapMessage(SOAPMessage soapMessage, MessageFactory messageFactory) {
+        this(soapMessage, true, messageFactory);
     }
 
     /**
@@ -78,6 +99,18 @@ public class SaajSoapMessage extends AbstractSoapMessage {
      *                    whether a {@code xml:lang} attribute is allowed on SOAP 1.1 {@code <faultstring>} elements
      */
     public SaajSoapMessage(SOAPMessage soapMessage, boolean langAttributeOnSoap11FaultString) {
+        this(soapMessage, langAttributeOnSoap11FaultString, null);
+    }
+
+    /**
+     * Create a new <code>SaajSoapMessage</code> based on the given SAAJ <code>SOAPMessage</code>.
+     *
+     * @param soapMessage the SAAJ SOAPMessage
+     * @param langAttributeOnSoap11FaultString
+     *                    whether a {@code xml:lang} attribute is allowed on SOAP 1.1 {@code <faultstring>} elements
+     * @param messageFactory the message factory
+     */
+    public SaajSoapMessage(SOAPMessage soapMessage, boolean langAttributeOnSoap11FaultString, MessageFactory messageFactory) {
         Assert.notNull(soapMessage, "soapMessage must not be null");
         saajMessage = soapMessage;
         this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
@@ -85,6 +118,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         if (ObjectUtils.isEmpty(headers.getHeader(TransportConstants.HEADER_SOAP_ACTION))) {
             headers.addHeader(TransportConstants.HEADER_SOAP_ACTION, "\"\"");
         }
+        this.messageFactory = messageFactory;
     }
 
     /** Return the SAAJ <code>SOAPMessage</code> that this <code>SaajSoapMessage</code> is based on. */
@@ -154,6 +188,54 @@ public class SaajSoapMessage extends AbstractSoapMessage {
             throw new IllegalStateException("Unsupported SOAP version: " + getVersion());
         }
 
+    }
+
+    public Document getDocument() {
+        Assert.state(messageFactory != null, "Could find message factory to use");
+        // return saajSoapMessage.getSaajMessage().getSOAPPart(); // does not work, see SWS-345
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            getSaajMessage().writeTo(bos);
+            ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+            SOAPMessage saajMessage = messageFactory.createMessage(getSaajMessage().getMimeHeaders(), bis);
+            setSaajMessage(saajMessage);
+            return saajMessage.getSOAPPart();
+        }
+        catch (SOAPException ex) {
+            throw new SaajSoapMessageException("Could not save changes", ex);
+        }
+        catch (IOException ex) {
+            throw new SaajSoapMessageException("Could not save changes", ex);
+        }
+    }
+
+    public void setDocument(Document document) {
+        if (saajMessage.getSOAPPart() != document) {
+            Assert.state(messageFactory != null, "Could find message factory to use");
+            try {
+                DOMImplementation implementation = document.getImplementation();
+                Assert.isInstanceOf(DOMImplementationLS.class, implementation);
+
+                DOMImplementationLS loadSaveImplementation = (DOMImplementationLS) implementation;
+                LSOutput output = loadSaveImplementation.createLSOutput();
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                output.setByteStream(bos);
+
+                LSSerializer serializer = loadSaveImplementation.createLSSerializer();
+                serializer.write(document, output);
+
+                ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+
+                this.saajMessage = messageFactory.createMessage(saajMessage.getMimeHeaders(), bis);
+
+            }
+            catch (SOAPException ex) {
+                throw new SaajSoapMessageException("Could not read input stream", ex);
+            }
+            catch (IOException ex) {
+                throw new SaajSoapMessageException("Could not read input stream", ex);
+            }
+        }
     }
 
     public void writeTo(OutputStream outputStream) throws IOException {

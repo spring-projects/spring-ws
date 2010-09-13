@@ -53,7 +53,7 @@ public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptor
         interceptor.setSecurementUsername("rsaKey");
         SOAPMessage saajMessage = saajSoap11MessageFactory.createMessage();
         transformer.transform(new StringSource(PAYLOAD), new DOMResult(saajMessage.getSOAPBody()));
-        SoapMessage message = new SaajSoapMessage(saajMessage);
+        SoapMessage message = new SaajSoapMessage(saajMessage, saajSoap11MessageFactory);
         MessageContext messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(saajSoap11MessageFactory));
 
         interceptor.secureMessage(message, messageContext);
@@ -74,7 +74,7 @@ public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptor
         ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
 
         SOAPMessage signed = saajSoap11MessageFactory.createMessage(mimeHeaders, bis);
-        message = new SaajSoapMessage(signed);
+        message = new SaajSoapMessage(signed, saajSoap11MessageFactory);
         messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(saajSoap11MessageFactory));
 
         interceptor.validateMessage(message, messageContext);
