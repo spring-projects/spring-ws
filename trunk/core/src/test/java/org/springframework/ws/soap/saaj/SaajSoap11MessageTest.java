@@ -45,7 +45,7 @@ public class SaajSoap11MessageTest extends AbstractSoap11MessageTestCase {
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
         saajMessage = messageFactory.createMessage();
         saajMessage.getSOAPHeader().detachNode();
-        return new SaajSoapMessage(saajMessage);
+        return new SaajSoapMessage(saajMessage, true, messageFactory);
     }
 
     @Test

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@ package org.springframework.ws.soap;
 
 import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.mime.MimeMessage;
+
+import org.w3c.dom.Document;
 
 /**
  * Represents an abstraction for SOAP messages, providing access to a SOAP Envelope. The contents of the SOAP body can
@@ -73,5 +75,21 @@ public interface SoapMessage extends MimeMessage, FaultAwareWebServiceMessage {
      * @see SoapVersion#SOAP_12
      */
     SoapVersion getVersion();
+
+    /**
+     * Returns this message as a {@link Document}.
+     *
+     * Depending on the underlying implementation, this Document may be 'live' or not.
+     * @return this soap message as a DOM document
+     */
+    Document getDocument();
+
+    /**
+     * Returns this message as a {@link Document}.
+     *
+     * Depending on the underlying implementation, this Document may be 'live' or not.
+     * @return this soap message as a DOM document
+     */
+    void setDocument(Document document);
 
 }

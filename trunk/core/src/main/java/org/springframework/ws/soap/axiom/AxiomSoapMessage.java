@@ -31,6 +31,7 @@ import org.springframework.ws.soap.AbstractSoapMessage;
 import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
+import org.springframework.ws.soap.axiom.support.AxiomUtils;
 import org.springframework.ws.soap.support.SoapUtils;
 import org.springframework.ws.stream.StreamingPayload;
 import org.springframework.ws.stream.StreamingWebServiceMessage;
@@ -48,6 +49,7 @@ import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPMessage;
 import org.apache.axiom.soap.SOAPProcessingException;
+import org.w3c.dom.Document;
 
 /**
  * AXIOM-specific implementation of the {@link SoapMessage} interface. Created via the {@link AxiomSoapMessageFactory},
@@ -193,6 +195,23 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
     public void setSoapAction(String soapAction) {
         soapAction = SoapUtils.escapeAction(soapAction);
         this.soapAction = soapAction;
+    }
+
+    public Document getDocument() {
+        return AxiomUtils.toDocument(axiomMessage.getSOAPEnvelope());
+    }
+
+    public void setDocument(Document document) {
+        // save the Soap Action
+        String soapAction = getSoapAction();
+        SOAPEnvelope envelope = AxiomUtils.toEnvelope(document);
+        SOAPMessage newMessage = axiomFactory.createSOAPMessage();
+        newMessage.setSOAPEnvelope(envelope);
+
+        // replace the Axiom message
+        setAxiomMessage(newMessage);
+        // restore the Soap Action
+        setSoapAction(soapAction);
     }
 
     public boolean isXopPackage() {

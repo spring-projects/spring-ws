@@ -130,4 +130,14 @@ public abstract class AbstractSoapMessageTestCase extends AbstractMimeMessageTes
     @Test
     public abstract void testWriteToTransportResponseAttachment() throws Exception;
 
+    @Test
+    public abstract void testToDocument() throws Exception;
+
+    @Test
+    public abstract void testSetLiveDocument() throws Exception;
+
+    @Test
+    public abstract void testSetOtherDocument() throws Exception;
+
+
 }

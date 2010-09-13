@@ -125,7 +125,7 @@ public abstract class Wss4jTestCase {
         try {
             assertTrue("Could not load SAAJ message [" + resource + "]", resource.exists());
             is = resource.getInputStream();
-            return new SaajSoapMessage(saajSoap11MessageFactory.createMessage(mimeHeaders, is));
+            return new SaajSoapMessage(saajSoap11MessageFactory.createMessage(mimeHeaders, is), saajSoap11MessageFactory);
         }
         finally {
             is.close();
@@ -140,7 +140,7 @@ public abstract class Wss4jTestCase {
         try {
             assertTrue("Could not load SAAJ message [" + resource + "]", resource.exists());
             is = resource.getInputStream();
-            return new SaajSoapMessage(saajSoap12MessageFactory.createMessage(mimeHeaders, is));
+            return new SaajSoapMessage(saajSoap12MessageFactory.createMessage(mimeHeaders, is), saajSoap12MessageFactory);
         }
         finally {
             is.close();

@@ -168,7 +168,7 @@ public class SaajSoapMessageFactory implements SoapMessageFactory<SaajSoapMessag
         try {
             SOAPMessage saajMessage = messageFactory.createMessage();
             postProcess(saajMessage);
-            return new SaajSoapMessage(saajMessage, langAttributeOnSoap11FaultString);
+            return new SaajSoapMessage(saajMessage, langAttributeOnSoap11FaultString, messageFactory);
         }
         catch (SOAPException ex) {
             throw new SoapMessageCreationException("Could not create empty message: " + ex.getMessage(), ex);
@@ -181,7 +181,7 @@ public class SaajSoapMessageFactory implements SoapMessageFactory<SaajSoapMessag
             inputStream = checkForUtf8ByteOrderMark(inputStream);
             SOAPMessage saajMessage = messageFactory.createMessage(mimeHeaders, inputStream);
             postProcess(saajMessage);
-            return new SaajSoapMessage(saajMessage);
+            return new SaajSoapMessage(saajMessage, langAttributeOnSoap11FaultString, messageFactory);
         }
         catch (SOAPException ex) {
             // SAAJ 1.3 RI has a issue with handling multipart XOP content types which contain "startinfo" rather than

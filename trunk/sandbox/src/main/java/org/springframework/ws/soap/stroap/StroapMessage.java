@@ -16,6 +16,8 @@
 
 package org.springframework.ws.soap.stroap;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -25,10 +27,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import javax.activation.DataHandler;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.events.EndDocument;
+import javax.xml.stream.events.StartDocument;
 import javax.xml.stream.events.XMLEvent;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
 
 import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
@@ -48,6 +56,13 @@ import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.ws.transport.TransportOutputStream;
 import org.springframework.xml.stream.AbstractXMLEventWriter;
 
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSOutput;
+import org.w3c.dom.ls.LSSerializer;
+import org.xml.sax.SAXException;
+
 /**
  * @author Arjen Poutsma
  */
@@ -55,9 +70,13 @@ public class StroapMessage extends AbstractSoapMessage implements StreamingWebSe
 
     private final MultiValueMap<String, String> mimeHeaders = new LinkedMultiValueMap<String, String>();
 
-    private final StroapEnvelope envelope;
+    private StroapEnvelope envelope;
 
     private final StroapMessageFactory messageFactory;
+
+    private final StartDocument startDocument;
+
+    private final EndDocument endDocument;
 
     public StroapMessage(StroapMessageFactory messageFactory) {
         this(null, null, messageFactory);
@@ -79,6 +98,8 @@ public class StroapMessage extends AbstractSoapMessage implements StreamingWebSe
         if (!this.mimeHeaders.containsKey(TransportConstants.HEADER_ACCEPT)) {
             this.mimeHeaders.set(TransportConstants.HEADER_ACCEPT, messageFactory.getSoapVersion().getContentType());
         }
+        this.startDocument = messageFactory.getEventFactory().createStartDocument();
+        this.endDocument = messageFactory.getEventFactory().createEndDocument();
     }
 
     static StroapMessage build(InputStream inputStream, StroapMessageFactory messageFactory)
@@ -132,6 +153,79 @@ public class StroapMessage extends AbstractSoapMessage implements StreamingWebSe
         return messageFactory.getSoapVersion();
     }
 
+    public Document getDocument() {
+        try {
+            DocumentBuilder documentBuilder = messageFactory.getDocumentBuilderFactory().newDocumentBuilder();
+            try {
+                Document result = documentBuilder.newDocument();
+                DOMResult domResult = new DOMResult(result);
+                XMLEventWriter eventWriter = messageFactory.getOutputFactory().createXMLEventWriter(domResult);
+                eventWriter.add(startDocument);
+                envelope.writeTo(new NoStartEndDocumentWriter(eventWriter));
+                eventWriter.add(endDocument);
+                eventWriter.flush();
+                return result;
+            }
+            catch (XMLStreamException ignored) {
+                // ignored
+            }
+            catch (UnsupportedOperationException ignored) {
+                // ignored
+            }
+
+            // XMLOutputFactory does not support DOMResults, so let's do it the hard way
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            writeTo(bos);
+
+            ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+            return documentBuilder.parse(bis);
+        }
+        catch (ParserConfigurationException ex) {
+            throw new StroapMessageException("Could not create DocumentBuilderFactory", ex);
+        }
+        catch (SAXException ex) {
+            throw new StroapMessageException("Could not save message as Document", ex);
+        }
+        catch (IOException ex) {
+            throw new StroapMessageException("Could not save message as Document", ex);
+        }
+    }
+
+    public void setDocument(Document document) {
+        try {
+            try {
+                DOMSource domSource = new DOMSource(document);
+                XMLEventReader eventReader = messageFactory.getInputFactory().createXMLEventReader(domSource);
+                this.envelope = StroapEnvelope.build(eventReader, messageFactory);
+                return;
+            }
+            catch (XMLStreamException ignored) {
+                // ignored
+            }
+            catch (UnsupportedOperationException ignored) {
+                // ignored
+            }
+            // XMLInputFactory does not support DOMSources, so let's do it the hard way
+            DOMImplementation implementation = document.getImplementation();
+            Assert.isInstanceOf(DOMImplementationLS.class, implementation);
+
+            DOMImplementationLS loadSaveImplementation = (DOMImplementationLS) implementation;
+            LSOutput output = loadSaveImplementation.createLSOutput();
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            output.setByteStream(bos);
+
+            LSSerializer serializer = loadSaveImplementation.createLSSerializer();
+            serializer.write(document, output);
+
+            ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+            XMLEventReader eventReader = messageFactory.getInputFactory().createXMLEventReader(bis);
+            this.envelope = StroapEnvelope.build(eventReader, messageFactory);
+        }
+        catch (XMLStreamException ex) {
+            throw new StroapMessageException("Could not read Document", ex);
+        }
+    }
+
     public void writeTo(OutputStream outputStream) throws IOException {
         if (outputStream instanceof TransportOutputStream) {
             TransportOutputStream tos = (TransportOutputStream) outputStream;
@@ -144,9 +238,9 @@ public class StroapMessage extends AbstractSoapMessage implements StreamingWebSe
         }
         try {
             XMLEventWriter eventWriter = messageFactory.getOutputFactory().createXMLEventWriter(outputStream);
-            eventWriter.add(messageFactory.getEventFactory().createStartDocument());
+            eventWriter.add(startDocument);
             envelope.writeTo(new NoStartEndDocumentWriter(eventWriter));
-            eventWriter.add(messageFactory.getEventFactory().createEndDocument());
+            eventWriter.add(endDocument);
             eventWriter.flush();
         }
         catch (XMLStreamException ex) {

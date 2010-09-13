@@ -16,7 +16,12 @@
 
 package org.springframework.ws.soap.soap12;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.stream.StreamSource;
 
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
@@ -30,6 +35,8 @@ import org.springframework.ws.transport.TransportConstants;
 import org.springframework.xml.transform.StringSource;
 
 import junit.framework.Assert;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import static org.junit.Assert.*;
@@ -84,5 +91,72 @@ public abstract class AbstractSoap12MessageTestCase extends AbstractSoapMessageT
         assertTrue("Content-Type for attachment message does not contains type=\"application/soap+xml\"",
                 contentType.indexOf("type=\"application/soap+xml\"") != -1);
     }
+
+    @Override
+    public void testToDocument() throws Exception {
+        transformer.transform(new StringSource("<payload xmlns='http://www.springframework.org' />"),
+                soapMessage.getSoapBody().getPayloadResult());
+
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(true);
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        Document expected = documentBuilder.newDocument();
+        Element envelope = expected.createElementNS("http://www.w3.org/2003/05/soap-envelope", "Envelope");
+        expected.appendChild(envelope);
+        Element body = expected.createElementNS("http://www.w3.org/2003/05/soap-envelope", "Body");
+        envelope.appendChild(body);
+        Element payload = expected.createElementNS("http://www.springframework.org", "payload");
+        body.appendChild(payload);
+
+        Document result = soapMessage.getDocument();
+
+        assertXMLEqual(expected, result);
+    }
+
+    @Override
+    public void testSetLiveDocument() throws Exception {
+        transformer.transform(new StringSource("<payload xmlns='http://www.springframework.org' />"),
+                soapMessage.getSoapBody().getPayloadResult());
+
+        Document document = soapMessage.getDocument();
+
+        soapMessage.setDocument(document);
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        soapMessage.writeTo(bos);
+
+        String result = bos.toString("UTF-8");
+        assertXMLEqual(
+                "<Envelope xmlns='http://www.w3.org/2003/05/soap-envelope'><Body><payload xmlns='http://www.springframework.org' /></Body></Envelope>",                
+                result);
+    }
+
+    @Override
+    public void testSetOtherDocument() throws Exception {
+        transformer.transform(new StringSource("<payload xmlns='http://www.springframework.org' />"),
+                soapMessage.getSoapBody().getPayloadResult());
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        soapMessage.writeTo(bos);
+        ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+
+        DOMResult domResult = new DOMResult();
+        transformer.transform(new StreamSource(bis), domResult);
+
+        Document document = (Document) domResult.getNode();
+
+        soapMessage.setDocument(document);
+
+        bos = new ByteArrayOutputStream();
+        soapMessage.writeTo(bos);
+
+        String result = bos.toString("UTF-8");
+        assertXMLEqual(
+                "<Envelope xmlns='http://www.w3.org/2003/05/soap-envelope'><Body><payload xmlns='http://www.springframework.org' /></Body></Envelope>",
+                result);
+    }
+
+
+
 
 }
