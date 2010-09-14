@@ -41,9 +41,7 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
 import org.springframework.ws.server.endpoint.PayloadEndpoint;
 import org.springframework.ws.server.endpoint.adapter.MessageEndpointAdapter;
-import org.springframework.ws.server.endpoint.adapter.MessageMethodEndpointAdapter;
 import org.springframework.ws.server.endpoint.adapter.PayloadEndpointAdapter;
-import org.springframework.ws.server.endpoint.adapter.PayloadMethodEndpointAdapter;
 import org.springframework.ws.soap.server.SoapMessageDispatcher;
 import org.springframework.ws.support.DefaultStrategiesHelper;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
@@ -56,15 +54,22 @@ import org.apache.commons.logging.LogFactory;
  * <p/>
  * This dispatcher is quite similar to Spring MVCs {@link DispatcherServlet}. Just like its counterpart, this dispatcher
  * is very flexible. This class is SOAP agnostic; in typical SOAP Web Services, the {@link SoapMessageDispatcher}
- * subclass is used. <ul> <li>It can use any {@link EndpointMapping} implementation - whether standard, or provided as
+ * subclass is used.
+ * <ul>
+ * <li>It can use any {@link EndpointMapping} implementation - whether standard, or provided as
  * part of an application - to control the routing of request messages to endpoint objects. Endpoint mappings can be
- * registered using the <code>endpointMappings</code> property.</li> <li>It can use any {@link EndpointAdapter}; this
- * allows one to use any endpoint interface or form. Defaults to the {@link MessageEndpointAdapter} and {@link
- * PayloadEndpointAdapter}, for {@link MessageEndpoint} and {@link PayloadEndpoint}, respectively, and the {@link
- * MessageMethodEndpointAdapter} and {@link PayloadMethodEndpointAdapter}. Additional endpoint adapters can be added
- * through the <code>endpointAdapters</code> property.</li> <li>Its exception resolution strategy can be specified via a
+ * registered using the {@link #setEndpointMappings(List) endpointMappings} property.</li>
+ * <li>It can use any {@link EndpointAdapter}; this allows one to use any endpoint interface or form. Defaults to
+ * the {@link MessageEndpointAdapter} and {@link PayloadEndpointAdapter}, for {@link MessageEndpoint} and
+ * {@link PayloadEndpoint}, respectively, and the
+ * {@link org.springframework.ws.server.endpoint.adapter.MessageMethodEndpointAdapter MessageMethodEndpointAdapter} and
+ * {@link org.springframework.ws.server.endpoint.adapter.PayloadMethodEndpointAdapter PayloadMethodEndpointAdapter}.
+ * Additional endpoint adapters can be added through the {@link #setEndpointAdapters(List) endpointAdapters} property.</li>
+ * <li>Its exception resolution strategy can be specified via a
  * {@link EndpointExceptionResolver}, for example mapping certain exceptions to SOAP Faults. Default is none. Additional
- * exception resolvers can be added through the <code>endpointExceptionResolvers</code> property.</li> </ul>
+ * exception resolvers can be added through the {@link #setEndpointExceptionResolvers(List) endpointExceptionResolvers}
+ * property.</li>
+ * </ul>
  *
  * @author Arjen Poutsma
  * @see EndpointMapping
@@ -367,7 +372,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
             Map<String, EndpointAdapter> matchingBeans = BeanFactoryUtils
                     .beansOfTypeIncludingAncestors(applicationContext, EndpointAdapter.class, true, false);
             if (!matchingBeans.isEmpty()) {
-                endpointAdapters = new ArrayList(matchingBeans.values());
+                endpointAdapters = new ArrayList<EndpointAdapter>(matchingBeans.values());
                 Collections.sort(endpointAdapters, new OrderComparator());
             }
             else {
@@ -391,7 +396,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
             Map<String, EndpointExceptionResolver> matchingBeans = BeanFactoryUtils
                     .beansOfTypeIncludingAncestors(applicationContext, EndpointExceptionResolver.class, true, false);
             if (!matchingBeans.isEmpty()) {
-                endpointExceptionResolvers = new ArrayList(matchingBeans.values());
+                endpointExceptionResolvers = new ArrayList<EndpointExceptionResolver>(matchingBeans.values());
                 Collections.sort(endpointExceptionResolvers, new OrderComparator());
             }
             else {
@@ -415,7 +420,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
             Map<String, EndpointMapping> matchingBeans = BeanFactoryUtils
                     .beansOfTypeIncludingAncestors(applicationContext, EndpointMapping.class, true, false);
             if (!matchingBeans.isEmpty()) {
-                endpointMappings = new ArrayList(matchingBeans.values());
+                endpointMappings = new ArrayList<EndpointMapping>(matchingBeans.values());
                 Collections.sort(endpointMappings, new OrderComparator());
             }
             else {
