@@ -26,7 +26,6 @@ import org.springframework.context.ApplicationContextException;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 
@@ -34,16 +33,15 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
  * Abstract base class for {@link MethodEndpoint} mappings.
  * <p/>
  * Subclasses typically implement {@link org.springframework.beans.factory.config.BeanPostProcessor} to look for beans
- * that qualify as enpoint. The methods of this bean are then registered under a specific key with {@link
+ * that qualify as endpoint. The methods of this bean are then registered under a specific key with {@link
  * #registerEndpoint(String,MethodEndpoint)}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
  */
-public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapping {
+public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointMapping {
 
-    /** Keys are Strings, values are {@link MethodEndpoint}s. */
-    private final Map<String, MethodEndpoint> endpointMap = new HashMap<String, MethodEndpoint>();
+    private final Map<T, MethodEndpoint> endpointMap = new HashMap<T, MethodEndpoint>();
 
     /**
      * Lookup an endpoint for the given message. The extraction of the endpoint key is delegated to the concrete
@@ -54,8 +52,8 @@ public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapp
      */
     @Override
     protected Object getEndpointInternal(MessageContext messageContext) throws Exception {
-        String key = getLookupKeyForMessage(messageContext);
-        if (!StringUtils.hasLength(key)) {
+        T key = getLookupKeyForMessage(messageContext);
+        if (key == null) {
             return null;
         }
         if (logger.isDebugEnabled()) {
@@ -69,7 +67,7 @@ public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapp
      *
      * @return the registration keys
      */
-    protected abstract String getLookupKeyForMessage(MessageContext messageContext) throws Exception;
+    protected abstract T getLookupKeyForMessage(MessageContext messageContext) throws Exception;
 
     /**
      * Looks up an endpoint instance for the given keys. All keys are tried in order.
@@ -77,8 +75,8 @@ public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapp
      * @param key key the beans are mapped to
      * @return the associated endpoint instance, or <code>null</code> if not found
      */
-    protected MethodEndpoint lookupEndpoint(String key) {
-        return (MethodEndpoint) endpointMap.get(key);
+    protected MethodEndpoint lookupEndpoint(T key) {
+        return endpointMap.get(key);
     }
 
     /**
@@ -88,7 +86,7 @@ public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapp
      * @param endpoint the method endpoint instance
      * @throws BeansException if the endpoint could not be registered
      */
-    protected void registerEndpoint(String key, MethodEndpoint endpoint) throws BeansException {
+    protected void registerEndpoint(T key, MethodEndpoint endpoint) throws BeansException {
         Object mappedEndpoint = endpointMap.get(key);
         if (mappedEndpoint != null) {
             throw new ApplicationContextException("Cannot map endpoint [" + endpoint + "] on registration key [" + key +
@@ -106,7 +104,7 @@ public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapp
     /**
      * Helper method that registers the methods of the given bean. This method iterates over the methods of the bean,
      * and calls {@link #getLookupKeyForMethod(Method)} for each. If this returns a string, the method is registered
-     * using {@link #registerEndpoint(String,MethodEndpoint)}.
+     * using {@link #registerEndpoint(T,MethodEndpoint)}.
      *
      * @see #getLookupKeyForMethod(Method)
      */
@@ -116,8 +114,8 @@ public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapp
         ReflectionUtils.doWithMethods(endpointClass, new ReflectionUtils.MethodCallback() {
 
             public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
-                String key = getLookupKeyForMethod(method);
-                if (StringUtils.hasLength(key)) {
+                T key = getLookupKeyForMethod(method);
+                if (key != null) {
                     registerEndpoint(key, new MethodEndpoint(endpoint, method));
                 }
             }
@@ -137,8 +135,8 @@ public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapp
         ReflectionUtils.doWithMethods(endpointClass, new ReflectionUtils.MethodCallback() {
 
             public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
-                String key = getLookupKeyForMethod(method);
-                if (StringUtils.hasLength(key)) {
+                T key = getLookupKeyForMethod(method);
+                if (key != null) {
                     registerEndpoint(key, new MethodEndpoint(beanName, getApplicationContext(), method));
                 }
             }
@@ -153,7 +151,7 @@ public abstract class AbstractMethodEndpointMapping extends AbstractEndpointMapp
      * @param method the method
      * @return a registration key, or <code>null</code> if the method is not to be registered
      */
-    protected String getLookupKeyForMethod(Method method) {
+    protected T getLookupKeyForMethod(Method method) {
         return null;
     }
 
