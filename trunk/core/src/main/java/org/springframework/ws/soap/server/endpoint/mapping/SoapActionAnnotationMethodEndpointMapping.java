@@ -47,7 +47,7 @@ import org.springframework.ws.soap.server.endpoint.annotation.SoapAction;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
-public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotationMethodEndpointMapping
+public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotationMethodEndpointMapping<String>
         implements SoapEndpointMapping {
 
     private String[] actorsOrRoles;

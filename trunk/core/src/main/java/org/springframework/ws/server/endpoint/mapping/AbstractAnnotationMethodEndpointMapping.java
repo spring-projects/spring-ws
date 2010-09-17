@@ -32,7 +32,7 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
-public abstract class AbstractAnnotationMethodEndpointMapping extends AbstractMethodEndpointMapping {
+public abstract class AbstractAnnotationMethodEndpointMapping<T> extends AbstractMethodEndpointMapping<T> {
 
     private boolean detectEndpointsInAncestorContexts = false;
 

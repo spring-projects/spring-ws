@@ -47,7 +47,7 @@ import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
  * @see #setEndpoints(Object[])
  * @since 1.0.0
  */
-public class SimpleMethodEndpointMapping extends AbstractMethodEndpointMapping implements InitializingBean {
+public class SimpleMethodEndpointMapping extends AbstractMethodEndpointMapping<String> implements InitializingBean {
 
     /** Default method prefix. */
     public static final String DEFAULT_METHOD_PREFIX = "handle";

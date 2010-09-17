@@ -45,7 +45,7 @@ import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
-public class PayloadRootAnnotationMethodEndpointMapping extends AbstractAnnotationMethodEndpointMapping {
+public class PayloadRootAnnotationMethodEndpointMapping extends AbstractAnnotationMethodEndpointMapping<QName> {
 
     private static TransformerFactory transformerFactory;
 
@@ -54,15 +54,12 @@ public class PayloadRootAnnotationMethodEndpointMapping extends AbstractAnnotati
     }
 
     @Override
-    protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
-        QName qName =
-                PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerFactory)
-                ;
-        return qName != null ? qName.toString() : null;
+    protected QName getLookupKeyForMessage(MessageContext messageContext) throws Exception {
+        return PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerFactory);
     }
 
     @Override
-    protected String getLookupKeyForMethod(Method method) {
+    protected QName getLookupKeyForMethod(Method method) {
         PayloadRoot annotation = method.getAnnotation(PayloadRoot.class);
         if (annotation != null) {
             QName qname;
@@ -72,7 +69,7 @@ public class PayloadRootAnnotationMethodEndpointMapping extends AbstractAnnotati
             else {
                 qname = new QName(annotation.localPart());
             }
-            return qname.toString();
+            return qname;
         }
         else {
             return null;
