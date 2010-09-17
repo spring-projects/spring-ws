@@ -55,14 +55,14 @@ public class PayloadRootAnnotationMethodEndpointMappingTest  {
 
     @Test
     public void testRegistration() throws NoSuchMethodException {
-        MethodEndpoint endpoint = mapping.lookupEndpoint("{http://springframework.org/spring-ws}Request");
+        MethodEndpoint endpoint = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request"));
         assertNotNull("MethodEndpoint not registered", endpoint);
         Method doIt = PayloadRootEndpoint.class.getMethod("doIt", Source.class);
         MethodEndpoint expected = new MethodEndpoint("endpoint", applicationContext, doIt);
         assertEquals("Invalid endpoint registered", expected, endpoint);
 
         assertNull("Invalid endpoint registered",
-                mapping.lookupEndpoint("{http://springframework.org/spring-ws}Request2"));
+                mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request2")));
     }
 
     @Test

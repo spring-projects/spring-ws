@@ -97,7 +97,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
         }
         endpointMap.put(key, endpoint);
         if (logger.isDebugEnabled()) {
-            logger.debug("Mapped key [" + key + "] onto endpoint [" + endpoint + "]");
+            logger.debug("Mapped [" + key + "] onto endpoint [" + endpoint + "]");
         }
     }
 
