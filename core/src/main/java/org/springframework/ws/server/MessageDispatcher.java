@@ -164,8 +164,10 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
     public void receive(MessageContext messageContext) throws Exception {
         // Let's keep a reference to the request content as it came in, it might be changed by interceptors in dispatch()
         String requestContent = "";
+        if (receivedMessageTracingLogger.isTraceEnabled() || sentMessageTracingLogger.isTraceEnabled()) {
+            requestContent = getMessageContent(messageContext.getRequest());            
+        }
         if (receivedMessageTracingLogger.isTraceEnabled()) {
-            requestContent = getMessageContent(messageContext.getRequest());
             receivedMessageTracingLogger.trace("Received request [" + requestContent + "]");
         }
         else if (receivedMessageTracingLogger.isDebugEnabled()) {
