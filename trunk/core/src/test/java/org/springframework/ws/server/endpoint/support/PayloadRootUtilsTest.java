@@ -20,6 +20,7 @@ import java.io.StringReader;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Source;
@@ -36,7 +37,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
-@SuppressWarnings("Since15")
 public class PayloadRootUtilsTest {
 
     @Test
@@ -55,11 +55,24 @@ public class PayloadRootUtilsTest {
     }
 
     @Test
-    public void testGetQNameForStaxSource() throws Exception {
+    public void testGetQNameForStaxSourceStreamReader() throws Exception {
         String contents = "<prefix:localname xmlns:prefix='namespace'/>";
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(contents));
         Source source = new StaxSource(streamReader);
+        QName qName = PayloadRootUtils.getPayloadRootQName(source, TransformerFactory.newInstance());
+        Assert.assertNotNull("getQNameForNode returns null", qName);
+        Assert.assertEquals("QName has invalid localname", "localname", qName.getLocalPart());
+        Assert.assertEquals("Qname has invalid namespace", "namespace", qName.getNamespaceURI());
+        Assert.assertEquals("Qname has invalid prefix", "prefix", qName.getPrefix());
+    }
+
+    @Test
+    public void testGetQNameForStaxSourceEventReader() throws Exception {
+        String contents = "<prefix:localname xmlns:prefix='namespace'/>";
+        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader(contents));
+        Source source = new StaxSource(eventReader);
         QName qName = PayloadRootUtils.getPayloadRootQName(source, TransformerFactory.newInstance());
         Assert.assertNotNull("getQNameForNode returns null", qName);
         Assert.assertEquals("QName has invalid localname", "localname", qName.getLocalPart());
