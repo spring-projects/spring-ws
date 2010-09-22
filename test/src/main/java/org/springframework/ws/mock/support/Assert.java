@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.mock.client;
+package org.springframework.ws.mock.support;
 
 /**
  * JUnit independent assertion class.
@@ -23,14 +23,14 @@ package org.springframework.ws.mock.client;
  * @author Arjen Poutsma
  * @since 2.0
  */
-class Assert {
+public class Assert {
 
     /**
      * Fails a test with the given message.
      *
      * @param message the message
      */
-    static void fail(String message) {
+    public static void fail(String message) {
         throw new AssertionError(message);
     }
 
@@ -40,7 +40,7 @@ class Assert {
      * @param message   the message
      * @param condition the condition to test for
      */
-    static void assertTrue(String message, boolean condition) {
+    public static void assertTrue(String message, boolean condition) {
         if (!condition) {
             fail(message);
         }
@@ -53,7 +53,7 @@ class Assert {
      * @param expected the expected value
      * @param actual   the actual value
      */
-    static void assertEquals(String message, Object expected, Object actual) {
+    public static void assertEquals(String message, Object expected, Object actual) {
         if (expected == null && actual == null) {
             return;
         }

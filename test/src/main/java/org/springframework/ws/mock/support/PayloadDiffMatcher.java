@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.mock.client;
+package org.springframework.ws.mock.support;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
@@ -22,11 +22,12 @@ import javax.xml.transform.dom.DOMResult;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.xml.transform.TransformerHelper;
 
 import org.custommonkey.xmlunit.Diff;
 import org.w3c.dom.Document;
 
-import static org.springframework.ws.mock.client.Assert.fail;
+import static org.springframework.ws.mock.support.Assert.fail;
 
 /**
  * Matches {@link Source} payloads.
@@ -35,11 +36,13 @@ import static org.springframework.ws.mock.client.Assert.fail;
  * @author Lukas Krecan
  * @since 2.0
  */
-class PayloadDiffMatcher extends DiffMatcher {
+public class PayloadDiffMatcher extends DiffMatcher {
 
     private final Source expected;
 
-    PayloadDiffMatcher(Source expected) {
+    private final TransformerHelper transformerHelper = new TransformerHelper();
+
+    public PayloadDiffMatcher(Source expected) {
         Assert.notNull(expected, "'expected' must not be null");
         this.expected = expected;
     }
@@ -61,7 +64,7 @@ class PayloadDiffMatcher extends DiffMatcher {
 
     private Document createDocumentFromSource(Source source) throws TransformerException {
         DOMResult result = new DOMResult();
-        transform(source, result);
+        transformerHelper.transform(source, result);
         return (Document) result.getNode();
     }
 }

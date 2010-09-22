@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.mock.client;
+package org.springframework.ws.mock.support;
 
 import javax.xml.soap.MessageFactory;
 
@@ -37,7 +37,7 @@ public class PayloadDiffMatcherTest {
         replay(message);
 
         PayloadDiffMatcher matcher = new PayloadDiffMatcher(new StringSource(xml));
-        matcher.match(null, message);
+        matcher.match(message);
 
         verify(message);
     }
@@ -51,7 +51,7 @@ public class PayloadDiffMatcherTest {
 
         String expected = "<element2 xmlns='http://example.com'/>";
         PayloadDiffMatcher matcher = new PayloadDiffMatcher(new StringSource(expected));
-        matcher.match(null, message);
+        matcher.match(message);
     }
 
     @Test(expected = AssertionError.class)

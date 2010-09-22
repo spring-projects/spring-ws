@@ -53,10 +53,12 @@ public class ClientIntegrationTest {
 
     @Test
     public void basic() throws Exception {
-        Source expectedRequestPayload = new StringSource("<customerCountRequest xmlns='http://springframework.org/client'>" +
-                "<customerName>John Doe</customerName>" + "</customerCountRequest>");
-        Source responsePayload = new StringSource("<customerCountResponse xmlns='http://springframework.org/client'>" +
-                "<customerCount>10</customerCount>" + "</customerCountResponse>");
+        Source expectedRequestPayload = new StringSource(
+                "<customerCountRequest xmlns='http://springframework.org/spring-ws'>" +
+                        "<customerName>John Doe</customerName>" + "</customerCountRequest>");
+        Source responsePayload = new StringSource(
+                "<customerCountResponse xmlns='http://springframework.org/spring-ws'>" +
+                        "<customerCount>10</customerCount>" + "</customerCountResponse>");
 
         expect(payload(expectedRequestPayload)).andRespond(withPayload(responsePayload));
 
@@ -65,7 +67,7 @@ public class ClientIntegrationTest {
 
         CustomerCountResponse response = (CustomerCountResponse) webServiceTemplate.marshalSendAndReceive(request);
         assertEquals(10, response.getCustomerCount());
-        
+
         verifyConnections();
     }
 

@@ -22,17 +22,49 @@ import javax.xml.transform.Source;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.WebServiceMessageFactory;
+import org.springframework.ws.context.DefaultMessageContext;
+import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.mock.support.PayloadDiffMatcher;
+import org.springframework.ws.transport.WebServiceMessageReceiver;
 import org.springframework.xml.transform.ResourceSource;
+
+import static org.springframework.ws.mock.support.Assert.fail;
 
 /**
  * @author Arjen Poutsma
  */
 public abstract class WebServiceMock {
 
-
+    @SuppressWarnings("unchecked")
     public static ResponseActions receiveMessage(RequestCreator requestCreator) {
+        final WebServiceTestContext testContext = WebServiceTestContextHolder.get();
+        Assert.state(testContext != null, "No test context found. Did you annotate your test class with " +
+                "@TestExecutionListeners(WebServiceTestExecutionListener.class) ?");
+
+        try {
+            WebServiceMessageFactory messageFactory = testContext.getMessageFactory();
+            WebServiceMessage request = requestCreator.createRequest(messageFactory);
+
+            MessageContext messageContext = new DefaultMessageContext(request, messageFactory);
+
+            WebServiceMessageReceiver messageReceiver = testContext.getMessageReceiver();
+            messageReceiver.receive(messageContext);
+
+            return new ResponseActions() {
+                public ResponseActions andExpect(ResponseMatcher responseMatcher) {
+                    testContext.addResponseMatcher(responseMatcher);
+                    return this;
+                }
+            };
+        }
+        catch (Exception ex) {
+            fail(ex.getMessage());
+        }
         return null;
     }
+
+    // RequestCreators
 
     public static RequestCreator withPayload(Source payload) {
         Assert.notNull(payload, "'payload' must not be null");
@@ -44,9 +76,25 @@ public abstract class WebServiceMock {
         return new PayloadRequestCreator(createResourceSource(payload));
     }
 
+    // ResponseMatchers
 
     public static ResponseMatcher payload(Source payload) {
-        return null;
+        Assert.notNull(payload, "'payload' must not be null");
+        return createPayloadDiffMatcher(payload);
+    }
+
+    public static ResponseMatcher payload(Resource payload) {
+        Assert.notNull(payload, "'payload' must not be null");
+        return createPayloadDiffMatcher(createResourceSource(payload));
+    }
+
+    private static ResponseMatcher createPayloadDiffMatcher(Source payload) {
+        final PayloadDiffMatcher matcher = new PayloadDiffMatcher(payload);
+        return new ResponseMatcher() {
+            public void match(WebServiceMessage response) throws IOException, AssertionError {
+                matcher.match(response);
+            }
+        };
     }
 
     /**
@@ -61,8 +109,6 @@ public abstract class WebServiceMock {
         };
     }
 
-
-
     private static ResourceSource createResourceSource(Resource resource) {
         try {
             return new ResourceSource(resource);
@@ -71,5 +117,6 @@ public abstract class WebServiceMock {
             throw new IllegalArgumentException(resource + " could not be opened", ex);
         }
     }
+
 
 }

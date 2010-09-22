@@ -23,7 +23,7 @@ import java.util.Locale;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapMessage;
 
-import static org.springframework.ws.mock.client.Assert.fail;
+import static org.springframework.ws.mock.support.Assert.fail;
 
 /**
  * Implementation of {@link ResponseCreator} that responds with a SOAP fault.
@@ -45,7 +45,7 @@ abstract class SoapFaultResponseCreator extends AbstractResponseCreator<SoapMess
     public abstract void addSoapFault(SoapBody soapBody);
 
     public static SoapFaultResponseCreator createMustUnderstandFault(final String faultStringOrReason,
-                                                                      final Locale locale) {
+                                                                     final Locale locale) {
         return new SoapFaultResponseCreator() {
             @Override
             public void addSoapFault(SoapBody soapBody) {
@@ -56,7 +56,7 @@ abstract class SoapFaultResponseCreator extends AbstractResponseCreator<SoapMess
     }
 
     public static SoapFaultResponseCreator createClientOrSenderFault(final String faultStringOrReason,
-                                                                      final Locale locale) {
+                                                                     final Locale locale) {
         return new SoapFaultResponseCreator() {
             @Override
             public void addSoapFault(SoapBody soapBody) {
@@ -66,7 +66,7 @@ abstract class SoapFaultResponseCreator extends AbstractResponseCreator<SoapMess
     }
 
     public static SoapFaultResponseCreator createServerOrReceiverFault(final String faultStringOrReason,
-                                                                        final Locale locale) {
+                                                                       final Locale locale) {
         return new SoapFaultResponseCreator() {
             @Override
             public void addSoapFault(SoapBody soapBody) {
@@ -77,7 +77,7 @@ abstract class SoapFaultResponseCreator extends AbstractResponseCreator<SoapMess
     }
 
     public static SoapFaultResponseCreator createVersionMismatchFault(final String faultStringOrReason,
-                                                                       final Locale locale) {
+                                                                      final Locale locale) {
         return new SoapFaultResponseCreator() {
             @Override
             public void addSoapFault(SoapBody soapBody) {
