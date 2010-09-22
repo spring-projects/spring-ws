@@ -24,17 +24,16 @@ import java.util.List;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
-import org.springframework.ws.transport.FaultAwareWebServiceConnection;
+import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * Mock implementation of {@link FaultAwareWebServiceConnection}. Implements {@link ResponseActions} to form a fluent
- * API.
+ * Mock implementation of {@link WebServiceConnection}. Implements {@link ResponseActions} to form a fluent API.
  *
  * @author Arjen Poutsma
  * @author Lukas Krecan
  * @since 2.0
  */
-class MockSenderConnection implements FaultAwareWebServiceConnection, ResponseActions {
+class MockSenderConnection implements WebServiceConnection, ResponseActions {
 
     private final List<RequestMatcher> requestMatchers = new LinkedList<RequestMatcher>();
 
@@ -112,14 +111,6 @@ class MockSenderConnection implements FaultAwareWebServiceConnection, ResponseAc
         else {
             return null;
         }
-    }
-
-    public boolean hasFault() throws IOException {
-        return responseCreator instanceof SoapFaultResponseCreator;
-    }
-
-    public void setFault(boolean fault) throws IOException {
-        // Do nothing
     }
 
     public void close() throws IOException {

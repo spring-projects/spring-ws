@@ -19,6 +19,7 @@ package org.springframework.ws.mock.client;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
@@ -31,6 +32,7 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.client.SoapFaultClientException;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringResult;
@@ -258,5 +260,15 @@ public class WebServiceMockTest {
     @Test
     public void verifyOnly() throws Exception {
         verifyConnections();
+    }
+
+    @Test(expected = SoapFaultClientException.class)
+    public void fault() throws Exception {
+        Source request = new StringSource("<request xmlns='http://example.com'/>");
+
+        expect(anything()).andRespond(withClientOrSenderFault("reason", Locale.ENGLISH));
+
+        StringResult result = new StringResult();
+        template.sendSourceAndReceiveToResult(request, result);
     }
 }
