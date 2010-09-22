@@ -26,9 +26,8 @@ import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
 
-import static org.springframework.ws.mock.client.Assert.assertTrue;
-import static org.springframework.ws.mock.client.Assert.fail;
-
+import static org.springframework.ws.mock.support.Assert.assertTrue;
+import static org.springframework.ws.mock.support.Assert.fail;
 
 /**
  * Matches SOAP headers.

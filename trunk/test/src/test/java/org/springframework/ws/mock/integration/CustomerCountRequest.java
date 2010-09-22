@@ -19,12 +19,12 @@ package org.springframework.ws.mock.integration;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(namespace = "http://springframework.org/client")
+@XmlRootElement(namespace = "http://springframework.org/spring-ws")
 public class CustomerCountRequest {
 
     private String customerName;
 
-    @XmlElement(namespace = "http://springframework.org/client")
+    @XmlElement(namespace = "http://springframework.org/spring-ws")
     public String getCustomerName() {
         return customerName;
     }

@@ -19,7 +19,9 @@ package org.springframework.ws.mock.server.integration;
 import javax.xml.transform.Source;
 
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.ws.mock.server.WebServiceTestExecutionListener;
 import org.springframework.xml.transform.StringSource;
 
 import org.junit.Test;
@@ -32,14 +34,18 @@ import static org.springframework.ws.mock.server.WebServiceMock.*;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("integration-test.xml")
+@TestExecutionListeners(WebServiceTestExecutionListener.class)
 public class ServerIntegrationTest {
 
     @Test
     public void basic() throws Exception {
-        Source requestPayload = new StringSource("<customerCountRequest xmlns='http://springframework.org/client'>" +
+        Source requestPayload = new StringSource("<customerCountRequest xmlns='http://springframework.org/spring-ws'>" +
                 "<customerName>John Doe</customerName>" + "</customerCountRequest>");
-        Source responsePayload = new StringSource("<customerCountResponse xmlns='http://springframework.org/client'>" +
-                "<customerCount>10</customerCount>" + "</customerCountResponse>");
+        Source responsePayload = new StringSource(
+                "<customerCountResponse xmlns='http://springframework.org/spring-ws'>" +
+                        "<customerCount>10</customerCount>" + "</customerCountResponse>");
+
+//        expect(payload(responsePayload)).andExpect(anything()).whenReceivingRequest(withPayload(requestPayload));
 
         receiveMessage(withPayload(requestPayload)).andExpect(payload(responsePayload));
     }
