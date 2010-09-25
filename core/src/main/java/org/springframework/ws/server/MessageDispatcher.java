@@ -364,7 +364,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
     }
 
     /**
-     * Initialize the <code>EndpointAdapters</code> used by this class. If no adapter beans are explictely set by using
+     * Initialize the <code>EndpointAdapters</code> used by this class. If no adapter beans are explicitly set by using
      * the <code>endpointAdapters</code> property, we use the default strategies.
      *
      * @see #setEndpointAdapters(java.util.List)
