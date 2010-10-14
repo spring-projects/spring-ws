@@ -40,7 +40,12 @@ import org.springframework.ws.soap.stroap.StroapMessageFactory;
 import org.springframework.ws.stream.StreamingPayload;
 import org.springframework.ws.stream.StreamingWebServiceMessage;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class PerformanceTest {
+
+    private static final Log logger = LogFactory.getLog(PerformanceTest.class);
 
     private static final int ITERATIONS = 1000;
 
@@ -56,7 +61,7 @@ public class PerformanceTest {
 
     private OutputStream os;
 
-    private boolean streaming = true;
+    private boolean streaming = false;
 
     private static final QName NAME = new QName("http://springframework.org", "root");
 
@@ -83,12 +88,14 @@ public class PerformanceTest {
         this.transformer = TransformerFactory.newInstance().newTransformer();
     }
 
-    public void test() throws Exception {
-        stopWatch.start(messageFactory.toString());
+    public void test(boolean streaming) throws Exception {
+        String s = messageFactory.toString() + " streaming " + (streaming ? "enabled" : "disabled");
+        stopWatch.start(s);
+        logger.info(s);
         for (int i = 0; i < ITERATIONS; i++) {
             SoapMessage message = (SoapMessage) messageFactory.createWebServiceMessage();
 
-            marshal(message);
+            marshal(message, streaming);
 
             transformer.transform(message.getPayloadSource(), new StreamResult(os));
 
@@ -99,7 +106,7 @@ public class PerformanceTest {
         stopWatch.stop();
     }
 
-    private void marshal(SoapMessage message) throws JAXBException {
+    private void marshal(SoapMessage message, boolean streaming) throws JAXBException {
         if (streaming && message instanceof StreamingWebServiceMessage) {
             StreamingWebServiceMessage streamingMessage = (StreamingWebServiceMessage) message;
             StreamingPayload payload = new JaxbStreamingPayload(jaxbElement, NAME, marshaller);
@@ -116,10 +123,14 @@ public class PerformanceTest {
 
         try {
             saaj(stopWatch);
-            axiomCaching(stopWatch);
-            axiomNoCaching(stopWatch);
-            stroapCaching(stopWatch);
-            stroapNoCaching(stopWatch);
+            axiom(stopWatch, false, false);
+            axiom(stopWatch, true, false);
+            axiom(stopWatch, false, true);
+            axiom(stopWatch, true, true);
+            stroap(stopWatch, false, false);
+            stroap(stopWatch, true, false);
+            stroap(stopWatch, false, true);
+            stroap(stopWatch, true, true);
 
         }
         finally {
@@ -130,37 +141,21 @@ public class PerformanceTest {
     private static void saaj(StopWatch stopWatch) throws Exception {
         SaajSoapMessageFactory ssmf = new SaajSoapMessageFactory();
         PerformanceTest performanceTest = new PerformanceTest(ssmf, stopWatch);
-        performanceTest.test();
+        performanceTest.test(false);
     }
 
-    private static void axiomCaching(StopWatch stopWatch) throws Exception {
-        axiom(stopWatch, true);
-    }
-
-    private static void axiomNoCaching(StopWatch stopWatch) throws Exception {
-        axiom(stopWatch, false);
-    }
-
-    private static void stroapCaching(StopWatch stopWatch) throws Exception {
-        stroap(stopWatch, true);
-    }
-
-    private static void stroapNoCaching(StopWatch stopWatch) throws Exception {
-        stroap(stopWatch, false);
-    }
-
-    private static void axiom(StopWatch stopWatch, boolean caching) throws Exception {
+    private static void axiom(StopWatch stopWatch, boolean caching, boolean streaming) throws Exception {
         AxiomSoapMessageFactory axmf = new AxiomSoapMessageFactory();
         axmf.setPayloadCaching(caching);
         PerformanceTest performanceTest = new PerformanceTest(axmf, stopWatch);
-        performanceTest.test();
+        performanceTest.test(streaming);
     }
 
-    private static void stroap(StopWatch stopWatch, boolean caching) throws Exception {
+    private static void stroap(StopWatch stopWatch, boolean caching, boolean streaming) throws Exception {
         StroapMessageFactory smf = new StroapMessageFactory();
         smf.setPayloadCaching(caching);
         PerformanceTest performanceTest = new PerformanceTest(smf, stopWatch);
-        performanceTest.test();
+        performanceTest.test(streaming);
     }
 
     @XmlRootElement(name = "root", namespace = "http://springframework.org")
