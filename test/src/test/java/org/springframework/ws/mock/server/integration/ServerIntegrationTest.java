@@ -24,6 +24,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.ws.mock.server.WebServiceTestExecutionListener;
 import org.springframework.xml.transform.StringSource;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -32,6 +33,7 @@ import static org.springframework.ws.mock.server.WebServiceMock.*;
 /**
  * @author Arjen Poutsma
  */
+@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("integration-test.xml")
 @TestExecutionListeners(WebServiceTestExecutionListener.class)
