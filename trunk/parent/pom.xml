@@ -31,8 +31,7 @@
     <properties>
         <osgi.version>2.0.0.M4</osgi.version>
         <osgi.range>"${osgi.version:[=.=.=, =.=.+1)}"</osgi.range>
-        <!--TODO: remove as soon as Spring 3.0.5 is out -->
-        <spring.framework.version>3.0.5.BUILD-SNAPSHOT</spring.framework.version>
+        <spring.framework.version>3.0.5.RELEASE</spring.framework.version>
         <spring.framework.osgi.range>"[3.0.5, 4.0.0)"</spring.framework.osgi.range>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -43,19 +42,6 @@
             <url>http://repository.springsource.com/maven/bundles/release/</url>
         </pluginRepository>
     </pluginRepositories>
-    <!--TODO: remove as soon as Spring 3.0.5 is out -->
-    <repositories>
-        <repository>
-            <id>s2-maven-snapshot</id>
-            <url>http://maven.springframework.org/snapshot</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
-    </repositories>
     <build>
         <extensions>
             <extension>
