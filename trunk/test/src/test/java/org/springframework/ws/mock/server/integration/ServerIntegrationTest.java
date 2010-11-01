@@ -18,26 +18,33 @@ package org.springframework.ws.mock.server.integration;
 
 import javax.xml.transform.Source;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.ws.mock.server.WebServiceTestExecutionListener;
+import org.springframework.ws.mock.server.MockWebServiceClient;
 import org.springframework.xml.transform.StringSource;
 
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.springframework.ws.mock.server.WebServiceMock.*;
 
 /**
  * @author Arjen Poutsma
  */
-@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("integration-test.xml")
-@TestExecutionListeners(WebServiceTestExecutionListener.class)
 public class ServerIntegrationTest {
+
+    @Autowired
+    private ApplicationContext applicationContext;
+
+    private MockWebServiceClient mockClient;
+
+    @Before
+    public void createClient() {
+        mockClient = MockWebServiceClient.createClient(applicationContext);
+    }
 
     @Test
     public void basic() throws Exception {
@@ -45,11 +52,9 @@ public class ServerIntegrationTest {
                 "<customerName>John Doe</customerName>" + "</customerCountRequest>");
         Source responsePayload = new StringSource(
                 "<customerCountResponse xmlns='http://springframework.org/spring-ws'>" +
-                        "<customerCount>10</customerCount>" + "</customerCountResponse>");
+                        "<customerCount>42</customerCount>" + "</customerCountResponse>");
 
-//        expect(payload(responsePayload)).andExpect(anything()).whenReceivingRequest(withPayload(requestPayload));
-
-        receiveMessage(withPayload(requestPayload)).andExpect(payload(responsePayload));
+        mockClient.sendPayload(requestPayload).andExpectPayload(responsePayload);
     }
 
 

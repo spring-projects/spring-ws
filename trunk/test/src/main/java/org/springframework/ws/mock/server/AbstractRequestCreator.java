@@ -20,20 +20,18 @@ import java.io.IOException;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
-import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
  * @author Arjen Poutsma
  */
-abstract class AbstractRequestCreator<T extends WebServiceMessage> extends TransformerObjectSupport
-        implements RequestCreator<T> {
+abstract class AbstractRequestCreator implements RequestCreator {
 
-    public final T createRequest(WebServiceMessageFactory<? extends T> messageFactory) throws IOException {
-        T request = messageFactory.createWebServiceMessage();
+    public final WebServiceMessage createRequest(WebServiceMessageFactory messageFactory) throws IOException {
+        WebServiceMessage request = messageFactory.createWebServiceMessage();
         doWithRequest(request);
         return request;
     }
 
-    protected abstract void doWithRequest(T request) throws IOException;
+    protected abstract void doWithRequest(WebServiceMessage request) throws IOException;
 
 }
