@@ -14,7 +14,7 @@
             <url>file:///Users/arjen/Projects/Spring/repos/repo</url>
         </repository>
         <snapshotRepository>
-            <id>spring-maven-snapshot</id>
+            <id>spring-snapshot</id>
             <name>Spring Snapshot Repository</name>
             <url>s3://maven.springframework.org/snapshot</url>
         </snapshotRepository>
