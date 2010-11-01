@@ -21,6 +21,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.xml.transform.TransformerHelper;
 
 /**
  * Implementation of {@link org.springframework.ws.mock.client.ResponseCreator} that writes a {@link
@@ -29,9 +30,11 @@ import org.springframework.ws.WebServiceMessage;
  * @author Arjen Poutsma
  * @since 2.0
  */
-class PayloadRequestCreator extends AbstractRequestCreator<WebServiceMessage> {
+class PayloadRequestCreator extends AbstractRequestCreator {
 
     private final Source payload;
+
+    private TransformerHelper transformerHelper = new TransformerHelper();
 
     PayloadRequestCreator(Source payload) {
         this.payload = payload;
@@ -40,7 +43,7 @@ class PayloadRequestCreator extends AbstractRequestCreator<WebServiceMessage> {
     @Override
     protected void doWithRequest(WebServiceMessage request) throws IOException {
         try {
-            transform(payload, request.getPayloadResult());
+            transformerHelper.transform(payload, request.getPayloadResult());
         }
         catch (TransformerException ex) {
             throw new AssertionError("Could not transform request payload to message: " + ex.getMessage());

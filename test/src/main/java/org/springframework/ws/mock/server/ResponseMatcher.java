@@ -24,7 +24,7 @@ import org.springframework.ws.WebServiceMessage;
  * @author Arjen Poutsma
  * @since 2.0
  */
-public interface ResponseMatcher<T extends WebServiceMessage> {
+public interface ResponseMatcher {
 
     /**
      * Matches the given response message against the expectations. Implementations typically make use of JUnit-based
@@ -34,6 +34,6 @@ public interface ResponseMatcher<T extends WebServiceMessage> {
      * @throws IOException    in case of I/O errors
      * @throws AssertionError if expectations are not met
      */
-    void match(T response) throws IOException, AssertionError;
+    void match(WebServiceMessage response) throws IOException, AssertionError;
 
 }

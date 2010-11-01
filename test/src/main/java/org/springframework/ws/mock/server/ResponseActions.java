@@ -16,6 +16,11 @@
 
 package org.springframework.ws.mock.server;
 
+import java.io.IOException;
+import javax.xml.transform.Source;
+
+import org.springframework.core.io.Resource;
+
 /**
  * @author Arjen Poutsma
  */
@@ -27,6 +32,10 @@ public interface ResponseActions {
      * @return the request expectations
      */
     ResponseActions andExpect(ResponseMatcher responseMatcher);
+
+    ResponseActions andExpectPayload(Source payload);
+
+    ResponseActions andExpectPayload(Resource payload) throws IOException;
 
 
 }
