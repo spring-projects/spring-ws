@@ -23,8 +23,8 @@ import org.springframework.ws.WebServiceMessage;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLUnit;
 
-import static org.springframework.ws.test.support.Assert.assertTrue;
-import static org.springframework.ws.test.support.Assert.fail;
+import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
+import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
  * Implementation of {@link org.springframework.ws.test.client.RequestMatcher} based on XMLUnit's {@link Diff}.

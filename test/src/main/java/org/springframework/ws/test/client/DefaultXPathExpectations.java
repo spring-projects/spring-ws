@@ -30,8 +30,8 @@ import org.springframework.xml.xpath.XPathExpressionFactory;
 
 import org.w3c.dom.Node;
 
-import static org.springframework.ws.test.support.Assert.assertEquals;
-import static org.springframework.ws.test.support.Assert.fail;
+import static org.springframework.ws.test.support.AssertionErrors.assertEquals;
+import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
  * Default implementation of {@link XPathExpectations}.

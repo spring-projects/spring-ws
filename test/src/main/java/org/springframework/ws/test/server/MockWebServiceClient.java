@@ -34,7 +34,7 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import static org.springframework.ws.test.support.Assert.fail;
+import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
  * <strong>Main entry point for server-side Web service testing</strong>. Typically used to test a {@link
