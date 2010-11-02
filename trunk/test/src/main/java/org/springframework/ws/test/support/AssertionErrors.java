@@ -23,7 +23,10 @@ package org.springframework.ws.test.support;
  * @author Arjen Poutsma
  * @since 2.0
  */
-public class Assert {
+public abstract class AssertionErrors {
+
+    private AssertionErrors() {
+    }
 
     /**
      * Fails a test with the given message.

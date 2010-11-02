@@ -23,7 +23,7 @@ import java.util.Locale;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapMessage;
 
-import static org.springframework.ws.test.support.Assert.fail;
+import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
  * Implementation of {@link ResponseCreator} that responds with a SOAP fault.

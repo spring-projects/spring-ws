@@ -27,7 +27,7 @@ import org.springframework.xml.transform.TransformerHelper;
 import org.custommonkey.xmlunit.Diff;
 import org.w3c.dom.Document;
 
-import static org.springframework.ws.test.support.Assert.fail;
+import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
  * Matches {@link Source} payloads.

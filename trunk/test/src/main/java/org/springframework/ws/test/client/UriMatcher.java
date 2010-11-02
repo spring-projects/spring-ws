@@ -20,7 +20,7 @@ import java.net.URI;
 
 import org.springframework.ws.WebServiceMessage;
 
-import static org.springframework.ws.test.support.Assert.assertEquals;
+import static org.springframework.ws.test.support.AssertionErrors.assertEquals;
 
 /**
  * Matches {@link URI}s.
