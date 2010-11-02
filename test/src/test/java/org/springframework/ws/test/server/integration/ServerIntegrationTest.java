@@ -29,6 +29,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.springframework.ws.test.server.RequestCreators.withPayload;
+import static org.springframework.ws.test.server.ResponseMatchers.payload;
+
 /**
  * @author Arjen Poutsma
  */
@@ -54,7 +57,7 @@ public class ServerIntegrationTest {
                 "<customerCountResponse xmlns='http://springframework.org/spring-ws'>" +
                         "<customerCount>42</customerCount>" + "</customerCountResponse>");
 
-        mockClient.sendPayload(requestPayload).andExpectPayload(responsePayload);
+        mockClient.sendMessage(withPayload(requestPayload)).andExpect(payload(responsePayload));
     }
 
 
