@@ -21,6 +21,9 @@ import java.io.IOException;
 import org.springframework.ws.WebServiceMessage;
 
 /**
+ * Defines the contract for matching response messages to expectations. Implementations of this interface are returned
+ * by {@link ResponseMatchers}.
+ *
  * @author Arjen Poutsma
  * @since 2.0
  */

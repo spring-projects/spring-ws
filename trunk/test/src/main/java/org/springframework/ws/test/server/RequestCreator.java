@@ -22,7 +22,11 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 
 /**
+ * Creates request messages. Implementations of this interface are returned by {@link RequestCreators}.
+ *
  * @author Arjen Poutsma
+ * @see RequestCreators
+ * @since 2.0
  */
 public interface RequestCreator {
 
@@ -30,7 +34,7 @@ public interface RequestCreator {
      * Create a request.
      *
      * @param messageFactory the message that can be used to create responses
-     * @throws java.io.IOException in case of I/O errors
+     * @throws IOException in case of I/O errors
      */
     WebServiceMessage createRequest(WebServiceMessageFactory messageFactory) throws IOException;
 
