@@ -29,7 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.springframework.ws.mock.client.WebServiceMock.*;
+import static org.springframework.ws.test.client.WebServiceMock.*;
 
 /**
  * This test illustrates the use of the client-side testing API, introduced in Spring-WS 2.0.
