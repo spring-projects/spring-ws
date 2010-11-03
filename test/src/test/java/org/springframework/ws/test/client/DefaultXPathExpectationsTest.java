@@ -32,7 +32,7 @@ public class DefaultXPathExpectationsTest {
 
     @Test
     public void existsMatch() throws IOException, AssertionError {
-        RequestMatcher requestMatcher = WebServiceMock.xpath("//b").exists();
+        RequestMatcher requestMatcher = RequestMatchers.xpath("//b").exists();
         assertNotNull(requestMatcher);
 
         WebServiceMessage message = createMock(WebServiceMessage.class);
@@ -47,7 +47,7 @@ public class DefaultXPathExpectationsTest {
 
     @Test(expected = AssertionError.class)
     public void existsNonMatch() throws IOException, AssertionError {
-        RequestMatcher requestMatcher = WebServiceMock.xpath("//c").exists();
+        RequestMatcher requestMatcher = RequestMatchers.xpath("//c").exists();
         assertNotNull(requestMatcher);
 
         WebServiceMessage message = createMock(WebServiceMessage.class);
@@ -60,7 +60,7 @@ public class DefaultXPathExpectationsTest {
 
     @Test
     public void notExistsMatch() throws IOException, AssertionError {
-        RequestMatcher requestMatcher = WebServiceMock.xpath("//c").doesNotExist();
+        RequestMatcher requestMatcher = RequestMatchers.xpath("//c").doesNotExist();
         assertNotNull(requestMatcher);
 
         WebServiceMessage message = createMock(WebServiceMessage.class);
@@ -75,7 +75,7 @@ public class DefaultXPathExpectationsTest {
 
     @Test(expected = AssertionError.class)
     public void notExistsNonMatch() throws IOException, AssertionError {
-        RequestMatcher requestMatcher = WebServiceMock.xpath("//a").doesNotExist();
+        RequestMatcher requestMatcher = RequestMatchers.xpath("//a").doesNotExist();
         assertNotNull(requestMatcher);
 
         WebServiceMessage message = createMock(WebServiceMessage.class);
@@ -88,7 +88,7 @@ public class DefaultXPathExpectationsTest {
 
     @Test
     public void evaluatesToTrueMatch() throws IOException, AssertionError {
-        RequestMatcher requestMatcher = WebServiceMock.xpath("//b=1").evaluatesTo(true);
+        RequestMatcher requestMatcher = RequestMatchers.xpath("//b=1").evaluatesTo(true);
         assertNotNull(requestMatcher);
 
         WebServiceMessage message = createMock(WebServiceMessage.class);
@@ -103,7 +103,7 @@ public class DefaultXPathExpectationsTest {
 
     @Test(expected = AssertionError.class)
     public void evaluatesToTrueNonMatch() throws IOException, AssertionError {
-        RequestMatcher requestMatcher = WebServiceMock.xpath("//b=2").evaluatesTo(true);
+        RequestMatcher requestMatcher = RequestMatchers.xpath("//b=2").evaluatesTo(true);
         assertNotNull(requestMatcher);
 
         WebServiceMessage message = createMock(WebServiceMessage.class);
@@ -116,7 +116,7 @@ public class DefaultXPathExpectationsTest {
 
     @Test
     public void evaluatesToFalseMatch() throws IOException, AssertionError {
-        RequestMatcher requestMatcher = WebServiceMock.xpath("//b!=1").evaluatesTo(false);
+        RequestMatcher requestMatcher = RequestMatchers.xpath("//b!=1").evaluatesTo(false);
         assertNotNull(requestMatcher);
 
         WebServiceMessage message = createMock(WebServiceMessage.class);
@@ -131,7 +131,7 @@ public class DefaultXPathExpectationsTest {
 
     @Test(expected = AssertionError.class)
     public void evaluatesToFalseNonMatch() throws IOException, AssertionError {
-        RequestMatcher requestMatcher = WebServiceMock.xpath("//b!=2").evaluatesTo(false);
+        RequestMatcher requestMatcher = RequestMatchers.xpath("//b!=2").evaluatesTo(false);
         assertNotNull(requestMatcher);
 
         WebServiceMessage message = createMock(WebServiceMessage.class);
@@ -145,7 +145,7 @@ public class DefaultXPathExpectationsTest {
     @Test
     public void existsWithNamespacesMatch() throws IOException, AssertionError {
         Map<String, String> ns = Collections.singletonMap("x", "http://example.org");
-        RequestMatcher requestMatcher = WebServiceMock.xpath("//x:b", ns).exists();
+        RequestMatcher requestMatcher = RequestMatchers.xpath("//x:b", ns).exists();
         assertNotNull(requestMatcher);
 
         WebServiceMessage message = createMock(WebServiceMessage.class);
@@ -162,7 +162,7 @@ public class DefaultXPathExpectationsTest {
     @Test(expected = AssertionError.class)
     public void existsWithNamespacesNonMatch() throws IOException, AssertionError {
         Map<String, String> ns = Collections.singletonMap("x", "http://example.org");
-        RequestMatcher requestMatcher = WebServiceMock.xpath("//b", ns).exists();
+        RequestMatcher requestMatcher = RequestMatchers.xpath("//b", ns).exists();
         assertNotNull(requestMatcher);
 
         WebServiceMessage message = createMock(WebServiceMessage.class);
@@ -176,7 +176,7 @@ public class DefaultXPathExpectationsTest {
 
     @Test
     public void evaluatesToIntegerMatch() throws IOException, AssertionError {
-        RequestMatcher requestMatcher = WebServiceMock.xpath("//b").evaluatesTo(1);
+        RequestMatcher requestMatcher = RequestMatchers.xpath("//b").evaluatesTo(1);
         assertNotNull(requestMatcher);
 
         WebServiceMessage message = createMock(WebServiceMessage.class);
@@ -191,7 +191,7 @@ public class DefaultXPathExpectationsTest {
 
     @Test(expected = AssertionError.class)
     public void evaluatesToIntegerNonMatch() throws IOException, AssertionError {
-        RequestMatcher requestMatcher = WebServiceMock.xpath("//b").evaluatesTo(2);
+        RequestMatcher requestMatcher = RequestMatchers.xpath("//b").evaluatesTo(2);
         assertNotNull(requestMatcher);
 
         WebServiceMessage message = createMock(WebServiceMessage.class);

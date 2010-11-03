@@ -51,7 +51,7 @@ public class SchemaValidatingRequestMatcherTest {
         expect(message.getPayloadSource()).andReturn(new StringSource(
                 "<test xmlns=\"http://www.example.org/schema\"><number>0</number><text>text</text></test>"));
 
-        RequestMatcher requestMatcher = WebServiceMock.validPayload(schema1);
+        RequestMatcher requestMatcher = RequestMatchers.validPayload(schema1);
 
         replay(message);
 
@@ -65,7 +65,7 @@ public class SchemaValidatingRequestMatcherTest {
         expect(message.getPayloadSource()).andReturn(new StringSource(
                 "<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"));
 
-        RequestMatcher requestMatcher = WebServiceMock.validPayload(schema1);
+        RequestMatcher requestMatcher = RequestMatchers.validPayload(schema1);
 
         replay(message);
 
@@ -79,7 +79,7 @@ public class SchemaValidatingRequestMatcherTest {
         expect(message.getPayloadSource()).andReturn(new StringSource(
                 "<test xmlns=\"http://www.example.org/schema\"><number>0</number><text>text</text></test>"));
 
-        RequestMatcher requestMatcher = WebServiceMock.validPayload(schema1, schema2);
+        RequestMatcher requestMatcher = RequestMatchers.validPayload(schema1, schema2);
 
         replay(message);
 
@@ -93,7 +93,7 @@ public class SchemaValidatingRequestMatcherTest {
         expect(message.getPayloadSource()).andReturn(new StringSource(
                 "<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"));
 
-        RequestMatcher requestMatcher = WebServiceMock.validPayload(schema1, schema2);
+        RequestMatcher requestMatcher = RequestMatchers.validPayload(schema1, schema2);
 
         replay(message);
 
@@ -107,7 +107,7 @@ public class SchemaValidatingRequestMatcherTest {
         expect(message.getPayloadSource()).andReturn(new StringSource(
                 "<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"));
 
-        RequestMatcher requestMatcher = WebServiceMock.validPayload(schema2, schema1);
+        RequestMatcher requestMatcher = RequestMatchers.validPayload(schema2, schema1);
 
         replay(message);
 

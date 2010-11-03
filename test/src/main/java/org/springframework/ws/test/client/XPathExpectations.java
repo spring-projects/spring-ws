@@ -19,14 +19,14 @@ package org.springframework.ws.test.client;
 /**
  * Allows for setting up expectations on XPath expressions.
  * <p/>
- * Implementations of this interface are returned by {@link WebServiceMock#xpath(String)} and {@link
- * WebServiceMock#xpath(String, java.util.Map)}, as part of the fluent API. As such, it is not typical to implement this
+ * Implementations of this interface are returned by {@link RequestMatchers#xpath(String)} and {@link
+ * RequestMatchers#xpath(String, java.util.Map)}, as part of the fluent API. As such, it is not typical to implement this
  * interface yourself.
  *
  * @author Lukas Krecan
  * @author Arjen Poutsma
- * @see WebServiceMock#xpath(String)
- * @see WebServiceMock#xpath(String, java.util.Map)
+ * @see RequestMatchers#xpath(String)
+ * @see RequestMatchers#xpath(String, java.util.Map)
  * @since 2.0
  */
 public interface XPathExpectations {

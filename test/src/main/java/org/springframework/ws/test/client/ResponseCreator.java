@@ -23,7 +23,7 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 
 /**
- * Allows for creating up responses. Implementations of this interface are returned by {@link WebServiceMock}.
+ * Allows for creating up responses. Implementations of this interface are returned by {@link ResponseCreators}.
  *
  * @author Arjen Poutsma
  * @author Lukas Krecan
