@@ -21,7 +21,6 @@ import java.net.URI;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
-import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
  * Abstract base class for the {@link ResponseCreator} interface.
@@ -32,11 +31,12 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * @author Arjen Poutsma
  * @since 2.0
  */
-abstract class AbstractResponseCreator<T extends WebServiceMessage> extends TransformerObjectSupport
-        implements ResponseCreator<T> {
+abstract class AbstractResponseCreator implements ResponseCreator {
 
-    public final T createResponse(URI uri, T request, WebServiceMessageFactory<? extends T> messageFactory) throws IOException {
-        T response = messageFactory.createWebServiceMessage();
+    public final WebServiceMessage createResponse(URI uri,
+                                                  WebServiceMessage request,
+                                                  WebServiceMessageFactory messageFactory) throws IOException {
+        WebServiceMessage response = messageFactory.createWebServiceMessage();
         doWithResponse(uri, request, response);
         return response;
     }
@@ -49,6 +49,7 @@ abstract class AbstractResponseCreator<T extends WebServiceMessage> extends Tran
      * @param response the response message
      * @throws IOException in case of I/O errors
      */
-    protected abstract void doWithResponse(URI uri, T request, T response) throws IOException;
+    protected abstract void doWithResponse(URI uri, WebServiceMessage request, WebServiceMessage response)
+            throws IOException;
 
 }

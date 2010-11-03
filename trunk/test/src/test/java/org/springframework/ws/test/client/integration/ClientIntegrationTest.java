@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.ws.client.core.WebServiceTemplate;
+import org.springframework.ws.test.client.MockWebServiceServer;
 import org.springframework.ws.test.integration.CustomerCountRequest;
 import org.springframework.ws.test.integration.CustomerCountResponse;
 import org.springframework.xml.transform.StringSource;
@@ -31,7 +32,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
-import static org.springframework.ws.test.client.WebServiceMock.*;
+import static org.springframework.ws.test.client.RequestMatchers.payload;
+import static org.springframework.ws.test.client.ResponseCreators.withPayload;
 
 /**
  * Integration test for client-side WebService testing. In different package so we can't use the package-protected
@@ -46,9 +48,11 @@ public class ClientIntegrationTest {
     @Autowired
     private WebServiceTemplate webServiceTemplate;
 
+    private MockWebServiceServer mockServer;
+
     @Before
-    public void setUpMocks() throws Exception {
-        mockWebServiceTemplate(webServiceTemplate);
+    public void createServer() throws Exception {
+        mockServer = MockWebServiceServer.createServer(webServiceTemplate);
     }
 
     @Test
@@ -60,7 +64,7 @@ public class ClientIntegrationTest {
                 "<customerCountResponse xmlns='http://springframework.org/spring-ws'>" +
                         "<customerCount>10</customerCount>" + "</customerCountResponse>");
 
-        expect(payload(expectedRequestPayload)).andRespond(withPayload(responsePayload));
+        mockServer.expect(payload(expectedRequestPayload)).andRespond(withPayload(responsePayload));
 
         CustomerCountRequest request = new CustomerCountRequest();
         request.setCustomerName("John Doe");
@@ -68,7 +72,7 @@ public class ClientIntegrationTest {
         CustomerCountResponse response = (CustomerCountResponse) webServiceTemplate.marshalSendAndReceive(request);
         assertEquals(10, response.getCustomerCount());
 
-        verifyConnections();
+        mockServer.verify();
     }
 
 }

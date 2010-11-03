@@ -29,7 +29,7 @@ import org.springframework.ws.WebServiceMessageFactory;
  * @author Lukas Krecan
  * @since 2.0
  */
-class ErrorResponseCreator implements ResponseCreator<WebServiceMessage> {
+class ErrorResponseCreator implements ResponseCreator {
 
     private final String errorMessage;
 
@@ -39,7 +39,7 @@ class ErrorResponseCreator implements ResponseCreator<WebServiceMessage> {
 
     public WebServiceMessage createResponse(URI uri,
                                             WebServiceMessage request,
-                                            WebServiceMessageFactory<? extends WebServiceMessage> factory) throws IOException {
+                                            WebServiceMessageFactory factory) throws IOException {
         // Do nothing
         return null;
     }

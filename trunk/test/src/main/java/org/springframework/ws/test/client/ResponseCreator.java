@@ -29,7 +29,7 @@ import org.springframework.ws.WebServiceMessageFactory;
  * @author Lukas Krecan
  * @since 2.0
  */
-public interface ResponseCreator<T extends WebServiceMessage> {
+public interface ResponseCreator {
 
     /**
      * Create a response for the given the request and URI.
@@ -39,6 +39,6 @@ public interface ResponseCreator<T extends WebServiceMessage> {
      * @param messageFactory the message that can be used to create responses
      * @throws IOException in case of I/O errors
      */
-    T createResponse(URI uri, T request, WebServiceMessageFactory<? extends T> messageFactory) throws IOException;
+    WebServiceMessage createResponse(URI uri, WebServiceMessage request, WebServiceMessageFactory messageFactory) throws IOException;
 
 }

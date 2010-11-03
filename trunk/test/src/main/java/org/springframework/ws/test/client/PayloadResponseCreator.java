@@ -22,6 +22,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.xml.transform.TransformerHelper;
 
 /**
  * Implementation of {@link ResponseCreator} that writes a {@link Source} response.
@@ -29,9 +30,11 @@ import org.springframework.ws.WebServiceMessage;
  * @author Arjen Poutsma
  * @since 2.0
  */
-class PayloadResponseCreator extends AbstractResponseCreator<WebServiceMessage> {
+class PayloadResponseCreator extends AbstractResponseCreator {
 
     private final Source payload;
+
+    private TransformerHelper transformerHelper = new TransformerHelper();
 
     PayloadResponseCreator(Source payload) {
         this.payload = payload;
@@ -40,7 +43,7 @@ class PayloadResponseCreator extends AbstractResponseCreator<WebServiceMessage> 
     @Override
     protected void doWithResponse(URI uri, WebServiceMessage request, WebServiceMessage response) throws IOException {
         try {
-            transform(payload, response.getPayloadResult());
+            transformerHelper.transform(payload, response.getPayloadResult());
         }
         catch (TransformerException ex) {
             throw new AssertionError("Could not transform response payload to message: " + ex.getMessage());
