@@ -27,12 +27,9 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import org.springframework.beans.factory.BeanInitializationException;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
@@ -297,9 +294,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      * @see #setMessageSender(WebServiceMessageSender)
      */
     protected void initDefaultStrategies() {
-        Resource resource = new ClassPathResource(ClassUtils.getShortName(WebServiceTemplate.class) + ".properties",
-                WebServiceTemplate.class);
-        DefaultStrategiesHelper strategiesHelper = new DefaultStrategiesHelper(resource);
+        DefaultStrategiesHelper strategiesHelper = new DefaultStrategiesHelper(WebServiceTemplate.class);
         if (getMessageFactory() == null) {
             initMessageFactory(strategiesHelper);
         }

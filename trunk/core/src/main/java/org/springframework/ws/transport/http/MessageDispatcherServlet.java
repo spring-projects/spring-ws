@@ -27,7 +27,6 @@ import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.FrameworkServlet;
 import org.springframework.web.util.WebUtils;
@@ -84,12 +83,6 @@ public class MessageDispatcherServlet extends FrameworkServlet {
     /** Well-known name for the {@link XsdSchemaHandlerAdapter} object in the bean factory for this namespace. */
     public static final String DEFAULT_XSD_SCHEMA_HANDLER_ADAPTER_BEAN_NAME = "xsdSchemaHandlerAdapter";
 
-    /**
-     * Name of the class path resource (relative to the {@link MessageDispatcherServlet} class) that defines
-     * <code>MessageDispatcherServlet's</code> default strategy names.
-     */
-    private static final String DEFAULT_STRATEGIES_PATH = "MessageDispatcherServlet.properties";
-
     /** Suffix of a WSDL request uri. */
     private static final String WSDL_SUFFIX_NAME = ".wsdl";
 
@@ -129,8 +122,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 
     /** Public constructor, necessary for some Web application servers. */
     public MessageDispatcherServlet() {
-        defaultStrategiesHelper = new DefaultStrategiesHelper(
-                new ClassPathResource(DEFAULT_STRATEGIES_PATH, MessageDispatcherServlet.class));
+        defaultStrategiesHelper = new DefaultStrategiesHelper(MessageDispatcherServlet.class);
     }
 
     /** Returns the bean name used to lookup a {@link WebServiceMessageFactory}. */

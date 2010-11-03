@@ -38,6 +38,7 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.OrderComparator;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.util.Assert;
@@ -76,6 +77,15 @@ public class DefaultStrategiesHelper {
         catch (IOException ex) {
             throw new IllegalStateException("Could not load '" + resource + "': " + ex.getMessage());
         }
+    }
+
+    /**
+     * Initializes a new instance of the <code>DefaultStrategiesHelper</code> based on the given type.
+     * <p/>
+     * This constructor will attempt to load a 'typeName'.properties file in the same package as the given type.
+     */
+    public DefaultStrategiesHelper(Class<?> type) {
+        this(new ClassPathResource(ClassUtils.getShortName(type) + ".properties", type));
     }
 
     /**
