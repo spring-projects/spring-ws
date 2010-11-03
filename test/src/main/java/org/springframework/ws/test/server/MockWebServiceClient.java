@@ -54,6 +54,47 @@ import static org.springframework.ws.test.support.AssertionErrors.fail;
  * <p/>
  * For example:
  * <blockquote><pre>
+ * import org.junit.*;
+ * import org.springframework.beans.factory.annotation.Autowired;
+ * import org.springframework.context.ApplicationContext;
+ * import org.springframework.test.context.ContextConfiguration;
+ * import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+ * import org.springframework.xml.transform.StringSource;
+ * <strong>import org.springframework.ws.test.server.MockWebServiceClient</strong>;
+ * <strong>import static org.springframework.ws.test.server.RequestCreators.*</strong>;
+ * <strong>import static org.springframework.ws.test.server.ResponseMatchers.*</strong>;
+ * 
+ * &#064;RunWith(SpringJUnit4ClassRunner.class)
+ * &#064;ContextConfiguration("applicationContext.xml")
+ * public class MyWebServiceIntegrationTest {
+ *
+ *   // a standard MessageDispatcherServlet application context, containing endpoints, mappings, etc.
+ *   &#064;Autowired
+ *   private ApplicationContext applicationContext;
+ *
+ *   private MockWebServiceClient mockClient;
+ *
+ *   &#064;Before
+ *   public void createClient() throws Exception {
+ *     <strong>mockClient = MockWebServiceClient.createClient(applicationContext)</strong>;
+ *   }
+ *
+ *   // test the CustomerCountEndpoint, which is wired up in the application context above
+ *   // and handles &lt;customerCount/&gt; messages
+ *   &#064;Test
+ *   public void customerCountEndpoint() throws Exception {
+ *     Source requestPayload = new StringSource(
+ *       "&lt;customerCountRequest xmlns='http://springframework.org/spring-ws'&gt;" +
+ *       "&lt;customerName&gt;John Doe&lt;/customerName&gt;" +
+ *       "&lt;/customerCountRequest&gt;");
+ *     Source expectedResponsePayload = new StringSource(
+ *       "&lt;customerCountResponse xmlns='http://springframework.org/spring-ws'&gt;" +
+ *       "&lt;customerCount&gt;42&lt;/customerCount&gt;" +
+ *       "&lt;/customerCountResponse&gt;");
+ *
+ *     <strong>mockClient.sendMessage(withPayload(requestPayload)).andExpect(payload(expectedResponsePayload))</strong>;
+ *   }
+ * }
  * </pre></blockquote>
  *
  * @author Arjen Poutsma
