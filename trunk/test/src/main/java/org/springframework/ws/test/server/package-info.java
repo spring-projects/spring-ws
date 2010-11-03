@@ -16,6 +16,6 @@
 
 /**
  * Provides a testing framework for server-side Web service testing. This package contains the
- * {@link org.springframework.ws.test.client.MockWebServiceClient}, and various related test interfaces.
+ * {@link org.springframework.ws.test.server.MockWebServiceClient}, and various related test interfaces.
  */
 package org.springframework.ws.test.server;
