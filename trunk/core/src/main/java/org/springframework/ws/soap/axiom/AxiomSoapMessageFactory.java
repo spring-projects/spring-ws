@@ -78,7 +78,6 @@ import org.apache.commons.logging.LogFactory;
  * @see #setPayloadCaching(boolean)
  * @since 1.0.0
  */
-@SuppressWarnings("Since15")
 public class AxiomSoapMessageFactory implements SoapMessageFactory<AxiomSoapMessage>, InitializingBean {
 
     private static final String CHARSET_PARAMETER = "charset";
@@ -89,7 +88,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory<AxiomSoapMess
 
     private static final Log logger = LogFactory.getLog(AxiomSoapMessageFactory.class);
 
-    private XMLInputFactory inputFactory;
+    private final XMLInputFactory inputFactory = createXmlInputFactory();
 
     private boolean payloadCaching = true;
 
@@ -104,10 +103,6 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory<AxiomSoapMess
 
     private boolean langAttributeOnSoap11FaultString = true;
 
-    /** Default constructor. */
-    public AxiomSoapMessageFactory() {
-        inputFactory = XMLInputFactory.newInstance();
-    }
 
     /**
      * Indicates whether the SOAP Body payload should be cached or not. Default is <code>true</code>.
@@ -323,6 +318,19 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory<AxiomSoapMess
             return value.trim();
         }
     }
+
+    /**
+     * Create a {@code XMLInputFactory} that this resolver will use to create {@link XMLStreamReader} objects.
+     * <p/>
+     * Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
+     * so this method will only be called once.
+     *
+     * @return the created factory
+     */
+    protected XMLInputFactory createXmlInputFactory() {
+        return XMLInputFactory.newInstance();
+    }
+
 
     public String toString() {
         StringBuilder builder = new StringBuilder("AxiomSoapMessageFactory[");
