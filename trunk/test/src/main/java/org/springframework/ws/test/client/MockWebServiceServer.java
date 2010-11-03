@@ -29,7 +29,8 @@ import org.springframework.ws.test.support.MockStrategiesHelper;
  * <p/>
  * The typical usage of this class is:
  * <ol>
- * <li>Create a {@code MockWebServiceServer} instance by calling {@link #createServer(WebServiceTemplate)}.
+ * <li>Create a {@code MockWebServiceServer} instance by calling {@link #createServer(WebServiceTemplate)},
+ * or any other the other {@code createServer()} methods.
  * Typically, the template is configured as a Spring bean, either explicitly or as a property of a class that extends
  * {@link WebServiceGatewaySupport WebServiceGatewaySupport}.</li>
  * <li>Set up request expectations by calling {@link #expect(RequestMatcher)}, possibly by using the default 
@@ -66,7 +67,7 @@ import org.springframework.ws.test.support.MockStrategiesHelper;
  *
  *   &#064;Before
  *   public void createServer() throws Exception {
- *     <strong>mockServer = MockWebServiceServer.createServer(client.getWebServiceTemplate())</strong>;
+ *     <strong>mockServer = MockWebServiceServer.createServer(client)</strong>;
  *   }
  * 
  *   &#064;Test
