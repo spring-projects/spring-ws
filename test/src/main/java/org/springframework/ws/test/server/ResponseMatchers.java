@@ -52,7 +52,8 @@ public abstract class ResponseMatchers {
      */
     public static ResponseMatcher anything() {
         return new ResponseMatcher() {
-            public void match(WebServiceMessage response) {
+            public void match(WebServiceMessage request, WebServiceMessage response)
+                    throws IOException, AssertionError {
             }
         };
     }
@@ -68,7 +69,8 @@ public abstract class ResponseMatchers {
     public static ResponseMatcher payload(Source payload) {
         final PayloadDiffMatcher matcher = new PayloadDiffMatcher(payload);
         return new ResponseMatcher() {
-            public void match(WebServiceMessage response) throws IOException {
+            public void match(WebServiceMessage request, WebServiceMessage response)
+                    throws IOException, AssertionError {
                 matcher.match(response);
             }
         };
@@ -94,7 +96,7 @@ public abstract class ResponseMatchers {
     public static ResponseMatcher noFault() {
         return new SoapResponseMatcher() {
             @Override
-            protected void match(SoapMessage response) throws IOException, AssertionError {
+            protected void matchSoap(SoapMessage request, SoapMessage response) throws IOException, AssertionError {
                 SoapBody responseBody = response.getSoapBody();
                 assertTrue("Response has no SOAP Body", responseBody != null);
                 assertTrue("Response has a SOAP Fault", !responseBody.hasFault());
@@ -205,12 +207,13 @@ public abstract class ResponseMatchers {
 
     private static abstract class SoapResponseMatcher implements ResponseMatcher {
 
-        public final void match(WebServiceMessage response) throws IOException, AssertionError {
+        public final void match(WebServiceMessage request, WebServiceMessage response) throws IOException, AssertionError {
+            assertTrue("Request is not a SOAP message", request instanceof SoapMessage);
             assertTrue("Response is not a SOAP message", response instanceof SoapMessage);
-            match((SoapMessage) response);
+            matchSoap((SoapMessage)request, (SoapMessage) response);
         }
 
-        protected abstract void match(SoapMessage response) throws IOException, AssertionError;
+        protected abstract void matchSoap(SoapMessage request, SoapMessage response) throws IOException, AssertionError;
 
     }
     private static abstract class SoapFaultResponseMatcher extends SoapResponseMatcher {
@@ -222,7 +225,7 @@ public abstract class ResponseMatchers {
         }
 
         @Override
-        protected void match(SoapMessage response) throws IOException, AssertionError {
+        protected void matchSoap(SoapMessage request, SoapMessage response) throws IOException, AssertionError {
             SoapBody responseBody = response.getSoapBody();
             assertTrue("Response has no SOAP Body", responseBody != null);
             assertTrue("Response has no SOAP Fault", responseBody.hasFault());
