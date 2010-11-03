@@ -198,13 +198,14 @@ public class MockWebServiceClient {
         }
 
         public ResponseActions andExpect(ResponseMatcher responseMatcher) {
+            WebServiceMessage request = messageContext.getRequest();
             WebServiceMessage response = messageContext.getResponse();
             if (response == null) {
                 fail("No response received");
                 return null;
             }
             try {
-                responseMatcher.match(response);
+                responseMatcher.match(request, response);
                 return this;
             }
             catch (IOException ex) {

@@ -33,10 +33,11 @@ public interface ResponseMatcher {
      * Matches the given response message against the expectations. Implementations typically make use of JUnit-based
      * assertions.
      *
-     * @param response the request message to make assertions on
+     * @param response the request message
+     * @param response the response message to make assertions on
      * @throws IOException    in case of I/O errors
      * @throws AssertionError if expectations are not met
      */
-    void match(WebServiceMessage response) throws IOException, AssertionError;
+    void match(WebServiceMessage request, WebServiceMessage response) throws IOException, AssertionError;
 
 }
