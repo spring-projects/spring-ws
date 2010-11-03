@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Locale;
 
+import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapMessage;
 
@@ -31,11 +32,16 @@ import static org.springframework.ws.test.support.AssertionErrors.fail;
  * @author Arjen Poutsma
  * @since 2.0
  */
-abstract class SoapFaultResponseCreator extends AbstractResponseCreator<SoapMessage> {
+abstract class SoapFaultResponseCreator extends AbstractResponseCreator {
 
     @Override
-    protected void doWithResponse(URI uri, SoapMessage request, SoapMessage response) throws IOException {
-        SoapBody responseBody = response.getSoapBody();
+    protected void doWithResponse(URI uri, WebServiceMessage request, WebServiceMessage response) throws IOException {
+        if (!(response instanceof SoapMessage)) {
+            fail("Response is not a SOAP message");
+            return;
+        }
+        SoapMessage soapResponse = (SoapMessage) response;
+        SoapBody responseBody = soapResponse.getSoapBody();
         if (responseBody == null) {
             fail("SOAP message [" + response + "] does not contain SOAP body");
         }
