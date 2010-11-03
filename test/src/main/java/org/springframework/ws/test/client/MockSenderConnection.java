@@ -39,8 +39,6 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 
     private URI uri;
 
-    private boolean lastConnection = false;
-
     private WebServiceMessage request;
 
     private ResponseCreator responseCreator;
@@ -53,10 +51,6 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
     void setUri(URI uri) {
         Assert.notNull(uri, "'uri' must not be null");
         this.uri = uri;
-    }
-
-    void lastConnection() {
-        lastConnection = true;
     }
 
     // ResponseActions implementation
@@ -118,9 +112,6 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
         request = null;
         responseCreator = null;
         uri = null;
-        if (lastConnection) {
-            MockWebServiceMessageSenderHolder.clear();
-        }
     }
 
 }
