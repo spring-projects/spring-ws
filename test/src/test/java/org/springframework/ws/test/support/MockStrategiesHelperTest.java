@@ -31,7 +31,7 @@ public class MockStrategiesHelperTest {
         StaticApplicationContext applicationContext = new StaticApplicationContext();
 
         MockStrategiesHelper helper = new MockStrategiesHelper(applicationContext);
-        assertNull(helper.getStrategy(MyBean.class));
+        assertNull(helper.getStrategy(IMyBean.class));
     }
 
     @Test
@@ -40,7 +40,7 @@ public class MockStrategiesHelperTest {
         applicationContext.registerSingleton("myBean", MyBean.class);
 
         MockStrategiesHelper helper = new MockStrategiesHelper(applicationContext);
-        assertNotNull(helper.getStrategy(MyBean.class));
+        assertNotNull(helper.getStrategy(IMyBean.class));
     }
 
     @Test(expected = BeanInitializationException.class)
@@ -50,10 +50,24 @@ public class MockStrategiesHelperTest {
         applicationContext.registerSingleton("myBean2", MyBean.class);
 
         MockStrategiesHelper helper = new MockStrategiesHelper(applicationContext);
-        helper.getStrategy(MyBean.class);
+        helper.getStrategy(IMyBean.class);
+    }
+    
+    @Test
+    public void noneWithDefault() {
+        StaticApplicationContext applicationContext = new StaticApplicationContext();
+
+
+        MockStrategiesHelper helper = new MockStrategiesHelper(applicationContext);
+        assertNotNull(helper.getStrategy(IMyBean.class, MyBean.class));
     }
 
-    public static class MyBean {
+
+    public interface IMyBean {
+
+    }
+
+    public static class MyBean implements IMyBean {
 
     }
 

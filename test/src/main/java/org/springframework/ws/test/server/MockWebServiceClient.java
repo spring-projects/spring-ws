@@ -17,18 +17,16 @@
 package org.springframework.ws.test.server;
 
 import java.io.IOException;
-import java.util.Map;
 
-import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.server.SoapMessageDispatcher;
+import org.springframework.ws.test.support.MockStrategiesHelper;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
 
 import org.apache.commons.logging.Log;
@@ -110,54 +108,15 @@ public class MockWebServiceClient {
      * @return the created client
      */
     public static MockWebServiceClient createClient(ApplicationContext applicationContext) {
-        WebServiceMessageReceiver messageReceiver = getMessageReceiver(applicationContext);
-        WebServiceMessageFactory messageFactory = getMessageFactory(applicationContext);
+        Assert.notNull(applicationContext, "'applicationContext' must not be null");
+
+        MockStrategiesHelper strategiesHelper = new MockStrategiesHelper(applicationContext);
+
+        WebServiceMessageReceiver messageReceiver =
+                strategiesHelper.getStrategy(WebServiceMessageReceiver.class, SoapMessageDispatcher.class);
+        WebServiceMessageFactory messageFactory =
+                strategiesHelper.getStrategy(WebServiceMessageFactory.class, SaajSoapMessageFactory.class);
         return new MockWebServiceClient(messageReceiver, messageFactory);
-    }
-
-    private static WebServiceMessageReceiver getMessageReceiver(ApplicationContext applicationContext) {
-        WebServiceMessageReceiver messageReceiver = getStrategy(applicationContext, WebServiceMessageReceiver.class);
-        if (messageReceiver == null) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("No WebServiceMessageReceiver found, using default");
-            }
-            SoapMessageDispatcher soapMessageDispatcher = new SoapMessageDispatcher();
-            soapMessageDispatcher.setApplicationContext(applicationContext);
-            messageReceiver = soapMessageDispatcher;
-        }
-        return messageReceiver;
-    }
-
-    private static WebServiceMessageFactory getMessageFactory(ApplicationContext applicationContext) {
-        WebServiceMessageFactory messageFactory = getStrategy(applicationContext, WebServiceMessageFactory.class);
-        if (messageFactory == null) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("No WebServiceMessageFactory found, using default");
-            }
-            SaajSoapMessageFactory saajSoapMessageFactory = new SaajSoapMessageFactory();
-            saajSoapMessageFactory.afterPropertiesSet();
-            messageFactory = saajSoapMessageFactory;
-        }
-        return messageFactory;
-    }
-
-    private static <T> T getStrategy(ApplicationContext applicationContext, Class<T> strategyInterface) {
-        Map<String, T> map = applicationContext.getBeansOfType(strategyInterface);
-        if (map.isEmpty()) {
-            return null;
-        }
-        else if (map.size() == 1) {
-            Map.Entry<String, T> entry = map.entrySet().iterator().next();
-            if (logger.isDebugEnabled()) {
-                logger.debug("Using " + ClassUtils.getShortName(strategyInterface) + " [" + entry.getKey() + "]");
-            }
-            return entry.getValue();
-        }
-        else {
-            throw new BeanInitializationException(
-                    "Could not find exactly 1 " + ClassUtils.getShortName(strategyInterface) +
-                            " in application context");
-        }
     }
 
     // Sending
