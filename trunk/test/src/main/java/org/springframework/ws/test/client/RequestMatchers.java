@@ -31,14 +31,18 @@ import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 
 /**
+ * Factory methods for {@link RequestMatcher} classes. Typically used to provide input for {@link
+ * MockWebServiceServer#expect(RequestMatcher)}.
+ *
  * @author Arjen Poutsma
+ * @since 2.0
  */
 public abstract class RequestMatchers {
 
     private RequestMatchers() {
     }
 
-        /**
+   /**
      * Expects any request.
      *
      * @return the request matcher
