@@ -29,7 +29,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.springframework.ws.test.client.WebServiceMock.*;
+import org.springframework.ws.test.client.MockWebServiceServer;
+import static org.springframework.ws.test.client.RequestMatchers.*;
+import static org.springframework.ws.test.client.ResponseCreators.*;
+
 
 /**
  * This test illustrates the use of the client-side testing API, introduced in Spring-WS 2.0.
@@ -42,6 +45,8 @@ public class GetFlightsTest {
 
     @Autowired
     GetFlights getFlights;
+    
+    private MockWebServiceServer mockServer;
 
     private static final String MESSAGES_NS =
             "http://www.springframework.org/spring-ws/samples/airline/schemas/messages";
@@ -50,7 +55,7 @@ public class GetFlightsTest {
 
     @Before
     public void setUpMocks() throws Exception {
-        mockWebServiceTemplate(getFlights.getWebServiceTemplate());
+        mockServer = MockWebServiceServer.createServer(getFlights);
     }
 
     @Test
@@ -70,7 +75,7 @@ public class GetFlightsTest {
                 "<m:GetFlightsResponse xmlns:m='" + MESSAGES_NS + "' xmlns:t='" + TYPES_NS + "'>" + "<m:flight>" +
                         flightInfo + "</m:flight>" + "</m:GetFlightsResponse>");
 
-        expect(payload(getFlightsRequest)).andRespond(withPayload(getFlightsResponse));
+        mockServer.expect(payload(getFlightsRequest)).andRespond(withPayload(getFlightsResponse));
 
         Source bookFlightResponse = new StringSource(
                 "<m:BookFlightResponse xmlns:m='" + MESSAGES_NS + "' xmlns:t='" + TYPES_NS + "'>" + "<t:id>4</t:id>" +
@@ -80,14 +85,14 @@ public class GetFlightsTest {
 
         Map<String, String> namespaces = Collections.singletonMap("m", MESSAGES_NS);
 
-        expect(xpath("/m:BookFlightRequest/m:flightNumber", namespaces).exists())
+        mockServer.expect(xpath("/m:BookFlightRequest/m:flightNumber", namespaces).exists())
                 .andExpect(xpath("/m:BookFlightRequest/m:departureTime", namespaces).exists())
                 .andExpect(xpath("/m:BookFlightRequest/m:passengers", namespaces).exists())
                 .andRespond(withPayload(bookFlightResponse));
 
         getFlights.getFlights();
 
-        verifyConnections();
+        mockServer.verify();
 
     }
 
