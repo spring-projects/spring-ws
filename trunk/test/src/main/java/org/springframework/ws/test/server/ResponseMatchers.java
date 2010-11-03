@@ -31,7 +31,7 @@ import org.springframework.ws.test.support.PayloadDiffMatcher;
 import org.springframework.xml.transform.ResourceSource;
 
 import static org.springframework.ws.test.support.AssertionErrors.assertEquals;
-import static org.springframework.ws.test.support.AssertionErrors.fail;
+import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
 
 /**
  * Factory methods for {@link ResponseMatcher} classes. Typically used to provide input for {@link
@@ -85,6 +85,22 @@ public abstract class ResponseMatchers {
     }
 
     // SOAP Fault
+
+    /**
+     * Expects the response <strong>not</strong> to contain a SOAP fault.
+     *
+     * @return the response matcher
+     */
+    public static ResponseMatcher noFault() {
+        return new SoapResponseMatcher() {
+            @Override
+            protected void match(SoapMessage response) throws IOException, AssertionError {
+                SoapBody responseBody = response.getSoapBody();
+                assertTrue("Response has no SOAP Body", responseBody != null);
+                assertTrue("Response has a SOAP Fault", !responseBody.hasFault());
+            }
+        };
+    }
 
     /**
      * Expects a {@code MustUnderstand} fault.
@@ -190,12 +206,8 @@ public abstract class ResponseMatchers {
     private static abstract class SoapResponseMatcher implements ResponseMatcher {
 
         public final void match(WebServiceMessage response) throws IOException, AssertionError {
-            if (!(response instanceof SoapMessage)) {
-                fail("Response is not a SOAP message");
-                return;
-            }
-            SoapMessage soapResponse = (SoapMessage) response;
-            match(soapResponse);
+            assertTrue("Response is not a SOAP message", response instanceof SoapMessage);
+            match((SoapMessage) response);
         }
 
         protected abstract void match(SoapMessage response) throws IOException, AssertionError;
@@ -212,14 +224,8 @@ public abstract class ResponseMatchers {
         @Override
         protected void match(SoapMessage response) throws IOException, AssertionError {
             SoapBody responseBody = response.getSoapBody();
-            if (responseBody == null) {
-                fail("Response has no SOAP Body");
-                return;
-            }
-            if (!responseBody.hasFault()) {
-                fail("Response has no SOAP Fault");
-                return;
-            }
+            assertTrue("Response has no SOAP Body", responseBody != null);
+            assertTrue("Response has no SOAP Fault", responseBody.hasFault());
             SoapFault soapFault = responseBody.getFault();
             QName expectedFaultCode = getExpectedFaultCode(response.getVersion());
             assertEquals("Invalid SOAP Fault code", expectedFaultCode, soapFault.getFaultCode());
