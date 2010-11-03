@@ -29,9 +29,6 @@ import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.OrderComparator;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.ws.FaultAwareWebServiceMessage;
@@ -117,8 +114,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 
     /** Initializes a new instance of the <code>MessageDispatcher</code>. */
     public MessageDispatcher() {
-        Resource resource = new ClassPathResource(ClassUtils.getShortName(getClass()) + ".properties", getClass());
-        defaultStrategiesHelper = new DefaultStrategiesHelper(resource);
+        defaultStrategiesHelper = new DefaultStrategiesHelper(getClass());
     }
 
     /** Returns the <code>EndpointAdapter</code>s to use by this <code>MessageDispatcher</code>. */
