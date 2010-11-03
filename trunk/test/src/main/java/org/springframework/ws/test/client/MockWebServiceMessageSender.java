@@ -50,9 +50,6 @@ class MockWebServiceMessageSender implements WebServiceMessageSender {
 
         MockSenderConnection currentConnection = connectionIterator.next();
         currentConnection.setUri(uri);
-        if (!connectionIterator.hasNext()) {
-            currentConnection.lastConnection();
-        }
         return currentConnection;
     }
 
