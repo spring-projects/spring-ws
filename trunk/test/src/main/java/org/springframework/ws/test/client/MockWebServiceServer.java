@@ -168,9 +168,9 @@ public class MockWebServiceServer {
     }
 
     /**
-     * Verifies that all connections were used.
+     * Verifies that all expectations were met.
      *
-     * @throws AssertionError in case of unused connections.
+     * @throws AssertionError in case of unmet expectations
      */
     public void verify() {
         mockMessageSender.verifyConnections();
