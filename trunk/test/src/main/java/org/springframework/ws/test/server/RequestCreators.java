@@ -18,14 +18,10 @@ package org.springframework.ws.test.server;
 
 import java.io.IOException;
 import javax.xml.transform.Source;
-import javax.xml.transform.TransformerException;
 
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
-import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.xml.transform.ResourceSource;
-import org.springframework.xml.transform.TransformerHelper;
 
 /**
  * Factory methods for {@link RequestCreator} classes. Typically used to provide input for {@link
@@ -61,47 +57,5 @@ public abstract class RequestCreators {
         return withPayload(new ResourceSource(payload));
     }
 
-    /**
-     * Abstract base class for the {@link RequestCreator} interface.
-     * <p/>
-     * Creates a response using the given {@link org.springframework.ws.WebServiceMessageFactory}, and passes it on to
-     * {@link #doWithRequest(org.springframework.ws.WebServiceMessage)}.
-     */
-    private static abstract class AbstractRequestCreator implements RequestCreator {
-
-        public final WebServiceMessage createRequest(WebServiceMessageFactory messageFactory) throws IOException {
-            WebServiceMessage request = messageFactory.createWebServiceMessage();
-            doWithRequest(request);
-            return request;
-        }
-
-        protected abstract void doWithRequest(WebServiceMessage request) throws IOException;
-
-    }
-
-
-    /**
-     * Implementation of {@link RequestCreator} that creates a request based on a {@link javax.xml.transform.Source}.
-     */
-    private static class PayloadRequestCreator extends AbstractRequestCreator {
-
-        private final Source payload;
-
-        private TransformerHelper transformerHelper = new TransformerHelper();
-
-        PayloadRequestCreator(Source payload) {
-            this.payload = payload;
-        }
-
-        @Override
-        protected void doWithRequest(WebServiceMessage request) throws IOException {
-            try {
-                transformerHelper.transform(payload, request.getPayloadResult());
-            }
-            catch (TransformerException ex) {
-                throw new AssertionError("Could not transform request payload to message: " + ex.getMessage());
-            }
-        }
-    }
 
 }

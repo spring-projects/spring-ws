@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.test.support;
+package org.springframework.ws.test.support.matcher;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
@@ -48,23 +48,29 @@ public class PayloadDiffMatcher extends DiffMatcher {
     }
 
     @Override
-    protected final Diff createDiff(WebServiceMessage request) throws Exception {
-        Source payload = request.getPayloadSource();
+    protected final Diff createDiff(WebServiceMessage message) {
+        Source payload = message.getPayloadSource();
         if (payload == null) {
             fail("Request message does not contain payload");
         }
         return createDiff(payload);
     }
 
-    protected Diff createDiff(Source payload) throws TransformerException {
+    protected Diff createDiff(Source payload) {
         Document expectedDocument = createDocumentFromSource(expected);
         Document actualDocument = createDocumentFromSource(payload);
         return new Diff(expectedDocument, actualDocument);
     }
 
-    private Document createDocumentFromSource(Source source) throws TransformerException {
-        DOMResult result = new DOMResult();
-        transformerHelper.transform(source, result);
-        return (Document) result.getNode();
+    private Document createDocumentFromSource(Source source) {
+        try {
+            DOMResult result = new DOMResult();
+            transformerHelper.transform(source, result);
+            return (Document) result.getNode();
+        }
+        catch (TransformerException ex) {
+            fail("Could not transform source to DOMResult" + ex.getMessage());
+            return null;
+        }
     }
 }
