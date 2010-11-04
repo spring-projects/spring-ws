@@ -18,6 +18,7 @@ package org.springframework.ws.test.server;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
@@ -29,7 +30,6 @@ import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.test.support.matcher.PayloadDiffMatcher;
 import org.springframework.ws.test.support.matcher.SchemaValidatingMatcher;
 import org.springframework.ws.test.support.matcher.SoapHeaderMatcher;
-import org.springframework.ws.test.support.matcher.WebServiceMessageMatcher;
 import org.springframework.xml.transform.ResourceSource;
 
 import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
@@ -90,6 +90,27 @@ public abstract class ResponseMatchers {
      */
     public static ResponseMatcher validPayload(Resource schema, Resource... furtherSchemas) throws IOException {
         return new WebServiceMessageMatcherAdapter(new SchemaValidatingMatcher(schema, furtherSchemas));
+    }
+
+    /**
+     * Expects the given XPath expression to (not) exist or be evaluated to a value.
+     *
+     * @param xpathExpression the XPath expression
+     * @return the XPath expectations, to be further configured
+     */
+    public static ResponseXPathExpectations xpath(String xpathExpression) {
+        return new XPathExpectationsHelperAdapter(xpathExpression, null);
+    }
+
+    /**
+     * Expects the given XPath expression to (not) exist or be evaluated to a value.
+     *
+     * @param xpathExpression  the XPath expression
+     * @param namespaceMapping the namespaces
+     * @return the XPath expectations, to be further configured
+     */
+    public static ResponseXPathExpectations xpath(String xpathExpression, Map<String, String> namespaceMapping) {
+        return new XPathExpectationsHelperAdapter(xpathExpression, namespaceMapping);
     }
 
 
@@ -222,22 +243,6 @@ public abstract class ResponseMatchers {
                 return version.getVersionMismatchFaultName();
             }
         };
-    }
-
-    /**
-     * Adapts a {@link WebServiceMessageMatcher} to the {@link ResponseMatcher} contract.
-     */
-    private static class WebServiceMessageMatcherAdapter implements ResponseMatcher {
-
-        private final WebServiceMessageMatcher adaptee;
-
-        private WebServiceMessageMatcherAdapter(WebServiceMessageMatcher adaptee) {
-            this.adaptee = adaptee;
-        }
-
-        public void match(WebServiceMessage request, WebServiceMessage response) throws IOException, AssertionError {
-            adaptee.match(response);
-        }
     }
 
 }

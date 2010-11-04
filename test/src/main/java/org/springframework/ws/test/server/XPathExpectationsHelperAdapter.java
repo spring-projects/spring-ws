@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.test.client;
+package org.springframework.ws.test.server;
 
 import java.util.Map;
 
 import org.springframework.ws.test.support.matcher.XPathExpectationsHelper;
 
 /**
- * Adapts {@link XPathExpectationsHelper} into the {@link RequestXPathExpectations} contract.
+ * Adapts {@link XPathExpectationsHelper} into the {@link ResponseXPathExpectations} contract.
  *
  * @author Arjen Poutsma
  * @since 2.0
  */
-class XPathExpectationsHelperAdapter implements RequestXPathExpectations {
+class XPathExpectationsHelperAdapter implements ResponseXPathExpectations {
 
     private final XPathExpectationsHelper helper;
 
@@ -34,27 +34,27 @@ class XPathExpectationsHelperAdapter implements RequestXPathExpectations {
         helper = new XPathExpectationsHelper(expression, namespaces);
     }
 
-    public RequestMatcher exists() {
+    public ResponseMatcher exists() {
         return new WebServiceMessageMatcherAdapter(helper.exists());
     }
 
-    public RequestMatcher doesNotExist() {
+    public ResponseMatcher doesNotExist() {
         return new WebServiceMessageMatcherAdapter(helper.doesNotExist());
     }
 
-    public RequestMatcher evaluatesTo(boolean expectedValue) {
+    public ResponseMatcher evaluatesTo(boolean expectedValue) {
         return new WebServiceMessageMatcherAdapter(helper.evaluatesTo(expectedValue));
     }
 
-    public RequestMatcher evaluatesTo(int expectedValue) {
+    public ResponseMatcher evaluatesTo(int expectedValue) {
         return new WebServiceMessageMatcherAdapter(helper.evaluatesTo(expectedValue));
     }
 
-    public RequestMatcher evaluatesTo(double expectedValue) {
+    public ResponseMatcher evaluatesTo(double expectedValue) {
         return new WebServiceMessageMatcherAdapter(helper.evaluatesTo(expectedValue));
     }
 
-    public RequestMatcher evaluatesTo(String expectedValue) {
+    public ResponseMatcher evaluatesTo(String expectedValue) {
         return new WebServiceMessageMatcherAdapter(helper.evaluatesTo(expectedValue));
     }
 

@@ -14,36 +14,36 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.test.client;
+package org.springframework.ws.test.server;
 
 /**
  * Allows for setting up expectations on XPath expressions.
  * <p/>
- * Implementations of this interface are returned by {@link RequestMatchers#xpath(String)} and {@link
- * RequestMatchers#xpath(String, java.util.Map)}, as part of the fluent API. As such, it is not typical to implement this
+ * Implementations of this interface are returned by {@link org.springframework.ws.test.client.RequestMatchers#xpath(String)} and {@link
+ * org.springframework.ws.test.client.RequestMatchers#xpath(String, java.util.Map)}, as part of the fluent API. As such, it is not typical to implement this
  * interface yourself.
  *
  * @author Lukas Krecan
  * @author Arjen Poutsma
- * @see RequestMatchers#xpath(String)
- * @see RequestMatchers#xpath(String, java.util.Map)
+ * @see org.springframework.ws.test.client.RequestMatchers#xpath(String)
+ * @see org.springframework.ws.test.client.RequestMatchers#xpath(String, java.util.Map)
  * @since 2.0
  */
-public interface XPathExpectations {
+public interface ResponseXPathExpectations {
 
     /**
      * Expects the XPath expression to exist.
      *
      * @return the request matcher
      */
-    RequestMatcher exists();
+    ResponseMatcher exists();
 
     /**
      * Expects the XPath expression to not exist.
      *
      * @return the request matcher
      */
-    RequestMatcher doesNotExist();
+    ResponseMatcher doesNotExist();
 
     /**
      * Expects the XPath expression to evaluate to the given boolean.
@@ -51,7 +51,7 @@ public interface XPathExpectations {
      * @param expectedValue the expected value
      * @return the request matcher
      */
-    RequestMatcher evaluatesTo(final boolean expectedValue);
+    ResponseMatcher evaluatesTo(final boolean expectedValue);
 
     /**
      * Expects the XPath expression to evaluate to the given integer.
@@ -59,7 +59,7 @@ public interface XPathExpectations {
      * @param expectedValue the expected value
      * @return the request matcher
      */
-    RequestMatcher evaluatesTo(int expectedValue);
+    ResponseMatcher evaluatesTo(int expectedValue);
 
     /**
      * Expects the XPath expression to evaluate to the given double.
@@ -67,7 +67,7 @@ public interface XPathExpectations {
      * @param expectedValue the expected value
      * @return the request matcher
      */
-    RequestMatcher evaluatesTo(double expectedValue);
+    ResponseMatcher evaluatesTo(double expectedValue);
 
     /**
      * Expects the XPath expression to evaluate to the given string.
@@ -75,6 +75,6 @@ public interface XPathExpectations {
      * @param expectedValue the expected value
      * @return the request matcher
      */
-    RequestMatcher evaluatesTo(String expectedValue);
+    ResponseMatcher evaluatesTo(String expectedValue);
 
 }
