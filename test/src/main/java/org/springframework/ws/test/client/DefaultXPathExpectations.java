@@ -24,7 +24,7 @@ import javax.xml.transform.dom.DOMResult;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.xml.transform.TransformerObjectSupport;
+import org.springframework.xml.transform.TransformerHelper;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
 
@@ -40,11 +40,13 @@ import static org.springframework.ws.test.support.AssertionErrors.fail;
  * @author Arjen Poutsma
  * @since 2.0
  */
-class DefaultXPathExpectations extends TransformerObjectSupport implements XPathExpectations {
+class DefaultXPathExpectations implements XPathExpectations {
 
     private final XPathExpression expression;
 
     private final String expressionString;
+
+    private final TransformerHelper transformerHelper = new TransformerHelper();
 
     DefaultXPathExpectations(String expression, Map<String, String> namespaces) {
         Assert.hasLength(expression, "'expression' must not be empty");
@@ -119,7 +121,7 @@ class DefaultXPathExpectations extends TransformerObjectSupport implements XPath
     private Node transformToNode(WebServiceMessage request) {
         DOMResult domResult = new DOMResult();
         try {
-            transform(request.getPayloadSource(), domResult);
+            transformerHelper.transform(request.getPayloadSource(), domResult);
             return domResult.getNode();
         }
         catch (TransformerException ex) {

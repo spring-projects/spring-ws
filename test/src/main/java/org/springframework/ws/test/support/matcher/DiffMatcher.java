@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.test.support;
+package org.springframework.ws.test.support.matcher;
 
 import java.io.IOException;
 
@@ -24,40 +24,31 @@ import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLUnit;
 
 import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
-import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
- * Implementation of {@link org.springframework.ws.test.client.RequestMatcher} based on XMLUnit's {@link Diff}.
+ * Implementation of {@link WebServiceMessageMatcher} based on XMLUnit's {@link Diff}.
  *
  * @author Arjen Poutsma
  * @since 2.0
  */
-public abstract class DiffMatcher {
+public abstract class DiffMatcher implements WebServiceMessageMatcher {
 
     static {
         XMLUnit.setIgnoreWhitespace(true);
     }
 
-    public final void match(WebServiceMessage request) throws IOException, AssertionError {
-        try {
-            Diff diff = createDiff(request);
-            assertTrue("Messages are different, " + diff.toString(), diff.similar());
-        }
-        catch (IOException ex) {
-            throw ex;
-        }
-        catch (Exception ex) {
-            fail("Could not create Diff: " + ex.getMessage());
-        }
+    public final void match(WebServiceMessage message) throws IOException, AssertionError {
+        Diff diff = createDiff(message);
+        assertTrue("Messages are different, " + diff.toString(), diff.similar());
     }
 
     /**
-     * Creates a {@link org.custommonkey.xmlunit.Diff} for the given request message.
+     * Creates a {@link Diff} for the given message.
      *
-     * @param request the request message
+     * @param message the message
      * @return the diff
      * @throws Exception in case of errors
      */
-    protected abstract Diff createDiff(WebServiceMessage request) throws Exception;
+    protected abstract Diff createDiff(WebServiceMessage message);
 
 }

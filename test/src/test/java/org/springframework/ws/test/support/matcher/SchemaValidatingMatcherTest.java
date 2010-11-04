@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.test.client;
+package org.springframework.ws.test.support.matcher;
 
 import java.io.IOException;
 
@@ -23,15 +23,13 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.xml.transform.StringSource;
-import org.springframework.xml.validation.XmlValidator;
-import org.springframework.xml.validation.XmlValidatorFactory;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.easymock.EasyMock.*;
 
-public class SchemaValidatingRequestMatcherTest {
+public class SchemaValidatingMatcherTest {
 
     private Resource schema2;
 
@@ -42,7 +40,7 @@ public class SchemaValidatingRequestMatcherTest {
     @Before
     public void setUp() {
         message = createMock(WebServiceMessage.class);
-        schema1 = new ClassPathResource("schemaValidatingRequestMatcherTest.xsd", SchemaValidatingRequestMatcherTest.class);
+        schema1 = new ClassPathResource("schemaValidatingMatcherTest.xsd", SchemaValidatingMatcherTest.class);
         schema2 = new ByteArrayResource("".getBytes());
     }
 
@@ -51,11 +49,11 @@ public class SchemaValidatingRequestMatcherTest {
         expect(message.getPayloadSource()).andReturn(new StringSource(
                 "<test xmlns=\"http://www.example.org/schema\"><number>0</number><text>text</text></test>"));
 
-        RequestMatcher requestMatcher = RequestMatchers.validPayload(schema1);
+        SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema1);
 
         replay(message);
 
-        requestMatcher.match(null, message);
+        matcher.match(message);
 
         verify(message);
     }
@@ -65,11 +63,11 @@ public class SchemaValidatingRequestMatcherTest {
         expect(message.getPayloadSource()).andReturn(new StringSource(
                 "<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"));
 
-        RequestMatcher requestMatcher = RequestMatchers.validPayload(schema1);
+        SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema1);
 
         replay(message);
 
-        requestMatcher.match(null, message);
+        matcher.match(message);
 
         verify(message);
     }
@@ -79,11 +77,11 @@ public class SchemaValidatingRequestMatcherTest {
         expect(message.getPayloadSource()).andReturn(new StringSource(
                 "<test xmlns=\"http://www.example.org/schema\"><number>0</number><text>text</text></test>"));
 
-        RequestMatcher requestMatcher = RequestMatchers.validPayload(schema1, schema2);
+        SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema1, schema2);
 
         replay(message);
 
-        requestMatcher.match(null, message);
+        matcher.match(message);
 
         verify(message);
     }
@@ -93,11 +91,11 @@ public class SchemaValidatingRequestMatcherTest {
         expect(message.getPayloadSource()).andReturn(new StringSource(
                 "<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"));
 
-        RequestMatcher requestMatcher = RequestMatchers.validPayload(schema1, schema2);
+        SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema1, schema2);
 
         replay(message);
 
-        requestMatcher.match(null, message);
+        matcher.match(message);
 
         verify(message);
     }
@@ -107,11 +105,11 @@ public class SchemaValidatingRequestMatcherTest {
         expect(message.getPayloadSource()).andReturn(new StringSource(
                 "<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"));
 
-        RequestMatcher requestMatcher = RequestMatchers.validPayload(schema2, schema1);
+        SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema2, schema1);
 
         replay(message);
 
-        requestMatcher.match(null, message);
+        matcher.match(message);
 
         verify(message);
     }
@@ -121,12 +119,11 @@ public class SchemaValidatingRequestMatcherTest {
         expect(message.getPayloadSource()).andReturn(new StringSource(
                 "<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"));
 
-        XmlValidator validator = XmlValidatorFactory.createValidator(schema1, XmlValidatorFactory.SCHEMA_W3C_XML);
-        RequestMatcher requestMatcher = new SchemaValidatingRequestMatcher(validator);
+        SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema1);
 
         replay(message);
 
-        requestMatcher.match(null, message);
+        matcher.match(message);
 
         verify(message);
     }

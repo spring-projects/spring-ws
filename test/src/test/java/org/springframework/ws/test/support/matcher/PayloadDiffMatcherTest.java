@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.test.support;
+package org.springframework.ws.test.support.matcher;
 
 import javax.xml.soap.MessageFactory;
 

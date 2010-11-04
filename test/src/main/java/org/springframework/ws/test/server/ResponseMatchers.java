@@ -27,7 +27,9 @@ import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
-import org.springframework.ws.test.support.PayloadDiffMatcher;
+import org.springframework.ws.test.support.matcher.PayloadDiffMatcher;
+import org.springframework.ws.test.support.matcher.SchemaValidatingMatcher;
+import org.springframework.ws.test.support.matcher.WebServiceMessageMatcher;
 import org.springframework.xml.transform.ResourceSource;
 
 import static org.springframework.ws.test.support.AssertionErrors.assertEquals;
@@ -67,13 +69,7 @@ public abstract class ResponseMatchers {
      * @return the response matcher
      */
     public static ResponseMatcher payload(Source payload) {
-        final PayloadDiffMatcher matcher = new PayloadDiffMatcher(payload);
-        return new ResponseMatcher() {
-            public void match(WebServiceMessage request, WebServiceMessage response)
-                    throws IOException, AssertionError {
-                matcher.match(response);
-            }
-        };
+        return new WebServiceMessageMatcherAdapter(new PayloadDiffMatcher(payload));
     }
 
     /**
@@ -85,6 +81,18 @@ public abstract class ResponseMatchers {
     public ResponseMatcher payload(Resource payload) throws IOException {
         return payload(new ResourceSource(payload));
     }
+
+    /**
+     * Expects the payload to validate against the given XSD schema(s).
+     *
+     * @param schema         the schema
+     * @param furtherSchemas further schemas, if necessary
+     * @return the response matcher
+     */
+    public static ResponseMatcher validPayload(Resource schema, Resource... furtherSchemas) throws IOException {
+        return new WebServiceMessageMatcherAdapter(new SchemaValidatingMatcher(schema, furtherSchemas));
+    }
+
 
     // SOAP Fault
 
@@ -240,6 +248,22 @@ public abstract class ResponseMatchers {
 
         protected abstract QName getExpectedFaultCode(SoapVersion version);
 
+    }
+
+    /**
+     * Adapts a {@link WebServiceMessageMatcher} to the {@link ResponseMatcher} contract.
+     */
+    private static class WebServiceMessageMatcherAdapter implements ResponseMatcher {
+
+        private final WebServiceMessageMatcher adaptee;
+
+        private WebServiceMessageMatcherAdapter(WebServiceMessageMatcher adaptee) {
+            this.adaptee = adaptee;
+        }
+
+        public void match(WebServiceMessage request, WebServiceMessage response) throws IOException, AssertionError {
+            adaptee.match(response);
+        }
     }
 
 }

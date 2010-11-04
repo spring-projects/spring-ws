@@ -25,10 +25,10 @@ import javax.xml.transform.Source;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.test.support.PayloadDiffMatcher;
+import org.springframework.ws.test.support.matcher.PayloadDiffMatcher;
+import org.springframework.ws.test.support.matcher.SchemaValidatingMatcher;
+import org.springframework.ws.test.support.matcher.WebServiceMessageMatcher;
 import org.springframework.xml.transform.ResourceSource;
-import org.springframework.xml.validation.XmlValidator;
-import org.springframework.xml.validation.XmlValidatorFactory;
 
 /**
  * Factory methods for {@link RequestMatcher} classes. Typically used to provide input for {@link
@@ -62,12 +62,7 @@ public abstract class RequestMatchers {
      */
     public static RequestMatcher payload(Source payload) {
         Assert.notNull(payload, "'payload' must not be null");
-        final PayloadDiffMatcher matcher = new PayloadDiffMatcher(payload);
-        return new RequestMatcher() {
-            public void match(URI uri, WebServiceMessage request) throws IOException, AssertionError {
-                matcher.match(request);
-            }
-        };
+        return new WebServiceMessageMatcherAdapter(new PayloadDiffMatcher(payload));
     }
 
     /**
@@ -88,18 +83,8 @@ public abstract class RequestMatchers {
      * @param furtherSchemas further schemas, if necessary
      * @return the request matcher
      */
-    public static RequestMatcher validPayload(Resource schema, Resource... furtherSchemas) {
-        try {
-            Resource[] joinedSchemas = new Resource[furtherSchemas.length + 1];
-            joinedSchemas[0] = schema;
-            System.arraycopy(furtherSchemas, 0, joinedSchemas, 1, furtherSchemas.length);
-            XmlValidator validator =
-                    XmlValidatorFactory.createValidator(joinedSchemas, XmlValidatorFactory.SCHEMA_W3C_XML);
-            return new SchemaValidatingRequestMatcher(validator);
-        }
-        catch (IOException ex) {
-            throw new IllegalArgumentException("Schema(s) could not be opened", ex);
-        }
+    public static RequestMatcher validPayload(Resource schema, Resource... furtherSchemas) throws IOException {
+        return new WebServiceMessageMatcherAdapter(new SchemaValidatingMatcher(schema, furtherSchemas));
     }
 
     /**
@@ -155,4 +140,21 @@ public abstract class RequestMatchers {
         Assert.notNull(uri, "'uri' must not be null");
         return new UriMatcher(uri);
     }
+
+    /**
+     * Adapts a {@link org.springframework.ws.test.support.matcher.WebServiceMessageMatcher} to the {@link RequestMatcher} contract.
+     */
+    private static class WebServiceMessageMatcherAdapter implements RequestMatcher {
+
+        private final WebServiceMessageMatcher adaptee;
+
+        private WebServiceMessageMatcherAdapter(WebServiceMessageMatcher adaptee) {
+            this.adaptee = adaptee;
+        }
+
+        public void match(URI uri, WebServiceMessage request) throws IOException, AssertionError {
+            adaptee.match(request);
+        }
+    }
+
 }
