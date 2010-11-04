@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.test.client;
+package org.springframework.ws.test.support.matcher;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
@@ -48,7 +48,7 @@ public class SoapHeaderMatcherTest {
         saajMessage.getSOAPHeader().addHeaderElement(expectedHeaderName);
         SoapMessage soapMessage = new SaajSoapMessage(saajMessage);
 
-        matcher.match(null, soapMessage);
+        matcher.match(soapMessage);
     }
 
     @Test(expected = AssertionError.class)
@@ -57,14 +57,14 @@ public class SoapHeaderMatcherTest {
         SOAPMessage saajMessage = messageFactory.createMessage();
         SoapMessage soapMessage = new SaajSoapMessage(saajMessage);
 
-        matcher.match(null, soapMessage);
+        matcher.match(soapMessage);
     }
 
     @Test(expected = AssertionError.class)
     public void nonSoap() throws Exception {
         WebServiceMessage message = createMock(WebServiceMessage.class);
 
-        matcher.match(null, message);
+        matcher.match(message);
     }
 
 }
