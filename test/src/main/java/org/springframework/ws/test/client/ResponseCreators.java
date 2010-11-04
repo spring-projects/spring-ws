@@ -30,7 +30,11 @@ import org.springframework.ws.test.support.creator.WebServiceMessageCreator;
 import org.springframework.xml.transform.ResourceSource;
 
 /**
+ * Factory methods for {@link ResponseCreator} classes. Typically used to provide input for {@link
+ * ResponseActions#andRespond(ResponseCreator)}.
+ *
  * @author Arjen Poutsma
+ * @since 2.0
  */
 public abstract class ResponseCreators {
 
