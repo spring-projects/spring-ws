@@ -93,7 +93,7 @@ public abstract class RequestMatchers {
      * @param xpathExpression the XPath expression
      * @return the XPath expectations, to be further configured
      */
-    public static XPathExpectations xpath(String xpathExpression) {
+    public static RequestXPathExpectations xpath(String xpathExpression) {
         return new XPathExpectationsHelperAdapter(xpathExpression, null);
     }
 
@@ -104,7 +104,7 @@ public abstract class RequestMatchers {
      * @param namespaceMapping the namespaces
      * @return the XPath expectations, to be further configured
      */
-    public static XPathExpectations xpath(String xpathExpression, Map<String, String> namespaceMapping) {
+    public static RequestXPathExpectations xpath(String xpathExpression, Map<String, String> namespaceMapping) {
         return new XPathExpectationsHelperAdapter(xpathExpression, namespaceMapping);
     }
 
