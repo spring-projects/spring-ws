@@ -28,7 +28,6 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.test.support.matcher.PayloadDiffMatcher;
 import org.springframework.ws.test.support.matcher.SchemaValidatingMatcher;
 import org.springframework.ws.test.support.matcher.SoapHeaderMatcher;
-import org.springframework.ws.test.support.matcher.WebServiceMessageMatcher;
 import org.springframework.xml.transform.ResourceSource;
 
 /**
@@ -95,7 +94,7 @@ public abstract class RequestMatchers {
      * @return the XPath expectations, to be further configured
      */
     public static XPathExpectations xpath(String xpathExpression) {
-        return new DefaultXPathExpectations(xpathExpression, null);
+        return new XPathExpectationsHelperAdapter(xpathExpression, null);
     }
 
     /**
@@ -106,7 +105,7 @@ public abstract class RequestMatchers {
      * @return the XPath expectations, to be further configured
      */
     public static XPathExpectations xpath(String xpathExpression, Map<String, String> namespaceMapping) {
-        return new DefaultXPathExpectations(xpathExpression, namespaceMapping);
+        return new XPathExpectationsHelperAdapter(xpathExpression, namespaceMapping);
     }
 
     /**
@@ -140,22 +139,6 @@ public abstract class RequestMatchers {
     public static RequestMatcher connectionTo(URI uri) {
         Assert.notNull(uri, "'uri' must not be null");
         return new UriMatcher(uri);
-    }
-
-    /**
-     * Adapts a {@link WebServiceMessageMatcher} to the {@link RequestMatcher} contract.
-     */
-    private static class WebServiceMessageMatcherAdapter implements RequestMatcher {
-
-        private final WebServiceMessageMatcher adaptee;
-
-        private WebServiceMessageMatcherAdapter(WebServiceMessageMatcher adaptee) {
-            this.adaptee = adaptee;
-        }
-
-        public void match(URI uri, WebServiceMessage request) throws IOException, AssertionError {
-            adaptee.match(request);
-        }
     }
 
 }
