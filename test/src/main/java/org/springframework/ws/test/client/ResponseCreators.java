@@ -17,11 +17,16 @@
 package org.springframework.ws.test.client;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Locale;
 import javax.xml.transform.Source;
 
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
+import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.WebServiceMessageFactory;
+import org.springframework.ws.test.support.creator.PayloadMessageCreator;
+import org.springframework.ws.test.support.creator.WebServiceMessageCreator;
 import org.springframework.xml.transform.ResourceSource;
 
 /**
@@ -40,7 +45,7 @@ public abstract class ResponseCreators {
      */
     public static ResponseCreator withPayload(Source payload) {
         Assert.notNull(payload, "'payload' must not be null");
-        return new PayloadResponseCreator(payload);
+        return new WebServiceMessageCreatorAdapter(new PayloadMessageCreator(payload));
     }
 
     /**
@@ -136,5 +141,24 @@ public abstract class ResponseCreators {
         Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
         return SoapFaultResponseCreator.createVersionMismatchFault(faultStringOrReason, locale);
     }
+
+    /**
+     * Adapts a {@link WebServiceMessageCreator} to the {@link ResponseCreator} contract.
+     */
+    private static class WebServiceMessageCreatorAdapter implements ResponseCreator {
+
+        private final WebServiceMessageCreator adaptee;
+
+        private WebServiceMessageCreatorAdapter(WebServiceMessageCreator adaptee) {
+            this.adaptee = adaptee;
+        }
+
+        public WebServiceMessage createResponse(URI uri,
+                                                WebServiceMessage request,
+                                                WebServiceMessageFactory messageFactory) throws IOException {
+            return adaptee.createMessage(messageFactory);
+        }
+    }
+
 
 }

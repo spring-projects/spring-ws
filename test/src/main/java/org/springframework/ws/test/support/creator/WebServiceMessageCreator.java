@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.test.server;
+package org.springframework.ws.test.support.creator;
 
 import java.io.IOException;
 
@@ -22,22 +22,20 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 
 /**
- * Abstract base class for the {@link org.springframework.ws.test.server.RequestCreator} interface.
- * <p/>
- * Creates a response using the given {@link org.springframework.ws.WebServiceMessageFactory}, and passes it on to
- * {@link #doWithRequest(org.springframework.ws.WebServiceMessage)}.
+ * Defines the general contract for creating messages used in test scenarios.
  *
  * @author Arjen Poutsma
  * @since 2.0
  */
-abstract class AbstractRequestCreator implements RequestCreator {
+public interface WebServiceMessageCreator {
 
-    public final WebServiceMessage createRequest(WebServiceMessageFactory messageFactory) throws IOException {
-        WebServiceMessage request = messageFactory.createWebServiceMessage();
-        doWithRequest(request);
-        return request;
-    }
+    /**
+     * Create a message.
+     *
+     * @param messageFactory the message that can be used to create the message
+     * @throws IOException in case of I/O errors
+     */
+    WebServiceMessage createMessage(WebServiceMessageFactory messageFactory) throws IOException;
 
-    protected abstract void doWithRequest(WebServiceMessage request) throws IOException;
 
 }

@@ -21,6 +21,10 @@ import javax.xml.transform.Source;
 
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
+import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.WebServiceMessageFactory;
+import org.springframework.ws.test.support.creator.PayloadMessageCreator;
+import org.springframework.ws.test.support.creator.WebServiceMessageCreator;
 import org.springframework.xml.transform.ResourceSource;
 
 /**
@@ -43,7 +47,7 @@ public abstract class RequestCreators {
      */
     public static RequestCreator withPayload(Source payload) {
         Assert.notNull(payload, "'payload' must not be null");
-        return new PayloadRequestCreator(payload);
+        return new WebServiceMessageCreatorAdapter(new PayloadMessageCreator(payload));
     }
 
     /**
@@ -55,6 +59,22 @@ public abstract class RequestCreators {
     public static RequestCreator withPayload(Resource payload) throws IOException {
         Assert.notNull(payload, "'payload' must not be null");
         return withPayload(new ResourceSource(payload));
+    }
+
+    /**
+     * Adapts a {@link WebServiceMessageCreator} to the {@link RequestCreator} contract.
+     */
+    private static class WebServiceMessageCreatorAdapter implements RequestCreator {
+
+        private final WebServiceMessageCreator adaptee;
+
+        private WebServiceMessageCreatorAdapter(WebServiceMessageCreator adaptee) {
+            this.adaptee = adaptee;
+        }
+
+        public WebServiceMessage createRequest(WebServiceMessageFactory messageFactory) throws IOException {
+            return adaptee.createMessage(messageFactory);
+        }
     }
 
 
