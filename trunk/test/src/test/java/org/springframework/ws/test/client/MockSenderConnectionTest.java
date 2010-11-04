@@ -23,6 +23,8 @@ import org.springframework.xml.transform.StringSource;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import static org.springframework.ws.test.client.ResponseCreators.withError;
+import static org.springframework.ws.test.client.ResponseCreators.withPayload;
 
 public class MockSenderConnectionTest {
 
@@ -30,7 +32,7 @@ public class MockSenderConnectionTest {
     public void error() throws IOException {
         String testErrorMessage = "Test Error Message";
         MockSenderConnection connection = new MockSenderConnection();
-        connection.andRespond(new ErrorResponseCreator(testErrorMessage));
+        connection.andRespond(withError(testErrorMessage));
         assertTrue(connection.hasError());
         assertEquals(testErrorMessage, connection.getErrorMessage());
     }
@@ -38,7 +40,7 @@ public class MockSenderConnectionTest {
     @Test
     public void normal() throws IOException {
         MockSenderConnection connection = new MockSenderConnection();
-        connection.andRespond(new PayloadResponseCreator(new StringSource("<response/>")));
+        connection.andRespond(withPayload(new StringSource("<response/>")));
         assertFalse(connection.hasError());
         assertNull(connection.getErrorMessage());
     }
@@ -46,7 +48,7 @@ public class MockSenderConnectionTest {
     @Test(expected = AssertionError.class)
     public void noRequestMatchers() throws IOException {
         MockSenderConnection connection = new MockSenderConnection();
-        connection.andRespond(new PayloadResponseCreator(new StringSource("<response/>")));
+        connection.andRespond(withPayload(new StringSource("<response/>")));
         connection.send(null);
     }
 }

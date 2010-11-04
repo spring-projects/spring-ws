@@ -14,39 +14,47 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.test.client;
+package org.springframework.ws.test.support.creator;
 
 import java.io.IOException;
-import java.net.URI;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
+import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.xml.transform.TransformerHelper;
 
+import static org.springframework.ws.test.support.AssertionErrors.fail;
+
 /**
- * Implementation of {@link ResponseCreator} that writes a {@link Source} response.
+ * Implementation of {@link WebServiceMessageCreator} that creates a request based on a {@link Source}.
  *
  * @author Arjen Poutsma
  * @since 2.0
  */
-class PayloadResponseCreator extends AbstractResponseCreator {
+public class PayloadMessageCreator extends AbstractMessageCreator {
 
     private final Source payload;
 
     private TransformerHelper transformerHelper = new TransformerHelper();
 
-    PayloadResponseCreator(Source payload) {
+    /**
+     * Creates a new instance of the {@code PayloadMessageCreator} with the given payload source.
+     *
+     * @param payload the payload source
+     */
+    public PayloadMessageCreator(Source payload) {
+        Assert.notNull(payload, "'payload' must not be null");
         this.payload = payload;
     }
 
     @Override
-    protected void doWithResponse(URI uri, WebServiceMessage request, WebServiceMessage response) throws IOException {
+    protected void doWithMessage(WebServiceMessage message) throws IOException {
         try {
-            transformerHelper.transform(payload, response.getPayloadResult());
+            transformerHelper.transform(payload, message.getPayloadResult());
         }
         catch (TransformerException ex) {
-            throw new AssertionError("Could not transform response payload to message: " + ex.getMessage());
+            fail("Could not transform request payload to message: " + ex.getMessage());
         }
     }
 }
