@@ -16,7 +16,6 @@
 
 package org.springframework.ws.test.client;
 
-import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.Assert;
 import org.springframework.ws.client.core.WebServiceTemplate;
@@ -135,8 +134,8 @@ public class MockWebServiceServer {
      *
      * @param applicationContext the application context to base the client on
      * @return the created server
-     * @throws BeanInitializationException if the given application context contains neither a {@link
-     *                                     WebServiceTemplate} nor a {@link WebServiceGatewaySupport}.
+     * @throws IllegalArgumentException if the given application context contains neither a {@link WebServiceTemplate}
+     *                                  nor a {@link WebServiceGatewaySupport}.
      */
     public static MockWebServiceServer createServer(ApplicationContext applicationContext) {
         MockStrategiesHelper strategiesHelper = new MockStrategiesHelper(applicationContext);
@@ -148,7 +147,7 @@ public class MockWebServiceServer {
         if (gatewaySupport != null) {
             return createServer(gatewaySupport);
         }
-        throw new BeanInitializationException(
+        throw new IllegalArgumentException(
                 "Could not find either WebServiceTemplate or WebServiceGatewaySupport in application context");
     }
 
