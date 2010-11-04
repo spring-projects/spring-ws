@@ -26,7 +26,6 @@ import javax.xml.soap.MessageFactory;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
-import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -101,7 +100,7 @@ public class MockWebServiceServerTest {
         assertNotNull(server);
     }
 
-    @Test(expected = BeanInitializationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void createServerApplicationContextEmpty() throws Exception {
         StaticApplicationContext applicationContext = new StaticApplicationContext();
         applicationContext.refresh();
