@@ -27,6 +27,7 @@ import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.test.support.matcher.PayloadDiffMatcher;
 import org.springframework.ws.test.support.matcher.SchemaValidatingMatcher;
+import org.springframework.ws.test.support.matcher.SoapHeaderMatcher;
 import org.springframework.ws.test.support.matcher.WebServiceMessageMatcher;
 import org.springframework.xml.transform.ResourceSource;
 
@@ -116,7 +117,7 @@ public abstract class RequestMatchers {
      */
     public static RequestMatcher soapHeader(QName soapHeaderName) {
         Assert.notNull(soapHeaderName, "'soapHeaderName' must not be null");
-        return new SoapHeaderMatcher(soapHeaderName);
+        return new WebServiceMessageMatcherAdapter(new SoapHeaderMatcher(soapHeaderName));
     }
 
     /**
@@ -142,7 +143,7 @@ public abstract class RequestMatchers {
     }
 
     /**
-     * Adapts a {@link org.springframework.ws.test.support.matcher.WebServiceMessageMatcher} to the {@link RequestMatcher} contract.
+     * Adapts a {@link WebServiceMessageMatcher} to the {@link RequestMatcher} contract.
      */
     private static class WebServiceMessageMatcherAdapter implements RequestMatcher {
 

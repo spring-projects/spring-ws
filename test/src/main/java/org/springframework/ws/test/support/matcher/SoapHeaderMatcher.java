@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.test.client;
+package org.springframework.ws.test.support.matcher;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.Iterator;
 import javax.xml.namespace.QName;
 
-import org.springframework.ws.WebServiceMessage;
+import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
 
 import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
-import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
  * Matches SOAP headers.
@@ -35,25 +33,26 @@ import static org.springframework.ws.test.support.AssertionErrors.fail;
  * @author Arjen Poutsma
  * @since 2.0
  */
-class SoapHeaderMatcher implements RequestMatcher {
+public class SoapHeaderMatcher extends AbstractSoapMessageMatcher {
 
     private final QName soapHeaderName;
 
-    SoapHeaderMatcher(QName soapHeaderName) {
+    /**
+     * Creates a new instance of the {@code SoapHeaderMatcher} that checks for the presence of the given SOAP header
+     * name.
+     *
+     * @param soapHeaderName the header name to check for
+     */
+    public SoapHeaderMatcher(QName soapHeaderName) {
+        Assert.notNull(soapHeaderName, "'soapHeaderName' must not be null");
         this.soapHeaderName = soapHeaderName;
     }
 
-    public void match(URI uri, WebServiceMessage request) throws IOException, AssertionError {
-        if (!(request instanceof SoapMessage)) {
-            fail("Request message is not a SOAP message");
-            return;
-        }
-        SoapMessage soapMessage = (SoapMessage) request;
+    @Override
+    protected void match(SoapMessage soapMessage) throws IOException, AssertionError {
         SoapHeader soapHeader = soapMessage.getSoapHeader();
-        if (soapHeader == null) {
-            fail("SOAP message [" + soapMessage + "] does not contain SOAP header");
-            return;
-        }
+        assertTrue("SOAP message [" + soapMessage + "] does not contain SOAP header", soapHeader != null);
+
         Iterator<SoapHeaderElement> soapHeaderElementIterator = soapHeader.examineAllHeaderElements();
         boolean found = false;
         while (soapHeaderElementIterator.hasNext()) {
