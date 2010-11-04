@@ -33,7 +33,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class SoapFaultResponseCallbackTest {
+public class SoapFaultResponseCreatorTest {
 
     private SoapMessage response;
 

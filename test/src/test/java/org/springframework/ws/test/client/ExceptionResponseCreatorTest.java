@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-public class ExceptionResponseCallbackTest {
+public class ExceptionResponseCreatorTest {
 
     @Test(expected = IOException.class)
     public void ioException() throws Exception {

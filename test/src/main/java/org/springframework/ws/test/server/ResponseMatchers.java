@@ -22,17 +22,16 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
 import org.springframework.core.io.Resource;
+import org.springframework.util.Assert;
+import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.soap.SoapBody;
-import org.springframework.ws.soap.SoapFault;
-import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.test.support.matcher.PayloadDiffMatcher;
 import org.springframework.ws.test.support.matcher.SchemaValidatingMatcher;
+import org.springframework.ws.test.support.matcher.SoapHeaderMatcher;
 import org.springframework.ws.test.support.matcher.WebServiceMessageMatcher;
 import org.springframework.xml.transform.ResourceSource;
 
-import static org.springframework.ws.test.support.AssertionErrors.assertEquals;
 import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
 
 /**
@@ -94,7 +93,18 @@ public abstract class ResponseMatchers {
     }
 
 
-    // SOAP Fault
+    // SOAP
+
+    /**
+     * Expects the given SOAP header in the outgoing message.
+     *
+     * @param soapHeaderName the qualified name of the SOAP header to expect
+     * @return the request matcher
+     */
+    public static ResponseMatcher soapHeader(QName soapHeaderName) {
+        Assert.notNull(soapHeaderName, "'soapHeaderName' must not be null");
+        return new WebServiceMessageMatcherAdapter(new SoapHeaderMatcher(soapHeaderName));
+    }
 
     /**
      * Expects the response <strong>not</strong> to contain a SOAP fault.
@@ -102,13 +112,15 @@ public abstract class ResponseMatchers {
      * @return the response matcher
      */
     public static ResponseMatcher noFault() {
-        return new SoapResponseMatcher() {
-            @Override
-            protected void matchSoap(SoapMessage request, SoapMessage response) throws IOException, AssertionError {
-                SoapBody responseBody = response.getSoapBody();
-                assertTrue("Response has no SOAP Body", responseBody != null);
-                assertTrue("Response has a SOAP Fault", !responseBody.hasFault());
+        return new ResponseMatcher() {
+            public void match(WebServiceMessage request, WebServiceMessage response)
+                    throws IOException, AssertionError {
+                if (response instanceof FaultAwareWebServiceMessage) {
+                    FaultAwareWebServiceMessage faultMessage = (FaultAwareWebServiceMessage) response;
+                    assertTrue("Response has a SOAP Fault", !faultMessage.hasFault());
+                }
             }
+
         };
     }
 
@@ -210,44 +222,6 @@ public abstract class ResponseMatchers {
                 return version.getVersionMismatchFaultName();
             }
         };
-    }
-
-
-    private static abstract class SoapResponseMatcher implements ResponseMatcher {
-
-        public final void match(WebServiceMessage request, WebServiceMessage response) throws IOException, AssertionError {
-            assertTrue("Request is not a SOAP message", request instanceof SoapMessage);
-            assertTrue("Response is not a SOAP message", response instanceof SoapMessage);
-            matchSoap((SoapMessage)request, (SoapMessage) response);
-        }
-
-        protected abstract void matchSoap(SoapMessage request, SoapMessage response) throws IOException, AssertionError;
-
-    }
-    private static abstract class SoapFaultResponseMatcher extends SoapResponseMatcher {
-
-        private final String expectedFaultStringOrReason;
-
-        protected SoapFaultResponseMatcher(String expectedFaultStringOrReason) {
-            this.expectedFaultStringOrReason = expectedFaultStringOrReason;
-        }
-
-        @Override
-        protected void matchSoap(SoapMessage request, SoapMessage response) throws IOException, AssertionError {
-            SoapBody responseBody = response.getSoapBody();
-            assertTrue("Response has no SOAP Body", responseBody != null);
-            assertTrue("Response has no SOAP Fault", responseBody.hasFault());
-            SoapFault soapFault = responseBody.getFault();
-            QName expectedFaultCode = getExpectedFaultCode(response.getVersion());
-            assertEquals("Invalid SOAP Fault code", expectedFaultCode, soapFault.getFaultCode());
-            if (expectedFaultStringOrReason != null) {
-                assertEquals("Invalid SOAP Fault string/reason", expectedFaultStringOrReason,
-                        soapFault.getFaultStringOrReason());
-            }
-        }
-
-        protected abstract QName getExpectedFaultCode(SoapVersion version);
-
     }
 
     /**
