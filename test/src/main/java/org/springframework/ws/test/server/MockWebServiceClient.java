@@ -43,7 +43,7 @@ import static org.springframework.ws.test.support.AssertionErrors.fail;
  * <ol>
  * <li>Create a {@code MockWebServiceClient} instance by using {@link #createClient(ApplicationContext)} or
  * {@link #createClient(WebServiceMessageReceiver, WebServiceMessageFactory)}</li>
- * <li>Send request messages by calling {@link #sendMessage(RequestCreator)}, possibly by using the default
+ * <li>Send request messages by calling {@link #sendRequest(RequestCreator)}, possibly by using the default
  * {@link RequestCreator} implementations provided in {@link RequestCreators} (which can be statically imported).</li>
  * <li>Set up response expectations by calling {@link ResponseActions#andExpect(ResponseMatcher) andExpect(ResponseMatcher)},
  * possibly by using the default {@link ResponseMatcher} implementations provided in {@link ResponseMatchers}
@@ -170,7 +170,7 @@ public class MockWebServiceClient {
      * @return the response actions
      * @see RequestCreators
      */
-    public ResponseActions sendMessage(RequestCreator requestCreator) {
+    public ResponseActions sendRequest(RequestCreator requestCreator) {
         Assert.notNull(requestCreator, "'requestCreator' must not be null");
         try {
             WebServiceMessage request = requestCreator.createRequest(messageFactory);

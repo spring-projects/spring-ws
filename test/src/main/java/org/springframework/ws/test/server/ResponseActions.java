@@ -18,7 +18,7 @@ package org.springframework.ws.test.server;
 
 /**
  * Allows for setting up expectation about response messages. Implementations of this interface are returned by
- * {@link MockWebServiceClient#sendMessage(RequestCreator)}.
+ * {@link MockWebServiceClient#sendRequest(RequestCreator)}.
  *
  * @author Arjen Poutsma
  * @since 2.0
