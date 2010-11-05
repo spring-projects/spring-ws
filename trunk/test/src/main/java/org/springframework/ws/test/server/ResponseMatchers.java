@@ -46,19 +46,6 @@ public abstract class ResponseMatchers {
     private ResponseMatchers() {
     }
 
-    /**
-     * Expects any response.
-     *
-     * @return the response matcher
-     */
-    public static ResponseMatcher anything() {
-        return new ResponseMatcher() {
-            public void match(WebServiceMessage request, WebServiceMessage response)
-                    throws IOException, AssertionError {
-            }
-        };
-    }
-
     // Payload
 
     /**
