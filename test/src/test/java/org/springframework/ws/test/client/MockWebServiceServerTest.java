@@ -304,7 +304,7 @@ public class MockWebServiceServerTest {
         StringResult result = new StringResult();
         template.sendSourceAndReceiveToResult(request, result);
     }
-
+       
     public static class MyClient extends WebServiceGatewaySupport {
 
     }
