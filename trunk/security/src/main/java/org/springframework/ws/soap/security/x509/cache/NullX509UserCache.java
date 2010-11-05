@@ -1,10 +1,11 @@
-/* Copyright 2004, 2005, 2006 Acegi Technology Pty Limited
+/*
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,11 +16,9 @@
 
 package org.springframework.ws.soap.security.x509.cache;
 
-import org.springframework.ws.soap.security.x509.X509UserCache;
+import java.security.cert.X509Certificate;
 
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.security.cert.X509Certificate;
 
 
 /**
@@ -27,7 +26,6 @@ import java.security.cert.X509Certificate;
  * <p>Migrated from Spring Security 2 since it has been removed in Spring Security 3.</p>
  *
  * @author Luke Taylor
- * @version $Id: NullX509UserCache.java 2544 2008-01-29 11:50:33Z luke_t $
  */
 public class NullX509UserCache implements X509UserCache {
     //~ Methods ========================================================================================================
