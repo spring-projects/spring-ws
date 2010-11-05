@@ -29,7 +29,7 @@ import org.springframework.xml.transform.ResourceSource;
 
 /**
  * Factory methods for {@link RequestCreator} classes. Typically used to provide input for {@link
- * MockWebServiceClient#sendMessage(RequestCreator)}.
+ * MockWebServiceClient#sendRequest(RequestCreator)}.
  *
  * @author Arjen Poutsma
  * @since 2.0

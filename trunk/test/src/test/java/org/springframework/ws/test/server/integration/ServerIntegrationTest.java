@@ -57,7 +57,7 @@ public class ServerIntegrationTest {
                 "<customerCountResponse xmlns='http://springframework.org/spring-ws'>" +
                         "<customerCount>42</customerCount>" + "</customerCountResponse>");
 
-        mockClient.sendMessage(withPayload(requestPayload)).andExpect(payload(expectedResponsePayload));
+        mockClient.sendRequest(withPayload(requestPayload)).andExpect(payload(expectedResponsePayload));
     }
 
 
