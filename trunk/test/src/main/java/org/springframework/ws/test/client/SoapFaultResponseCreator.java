@@ -18,7 +18,6 @@ package org.springframework.ws.test.client;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Locale;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapBody;
@@ -48,50 +47,10 @@ abstract class SoapFaultResponseCreator extends AbstractResponseCreator {
         addSoapFault(responseBody);
     }
 
-    public abstract void addSoapFault(SoapBody soapBody);
-
-    public static SoapFaultResponseCreator createMustUnderstandFault(final String faultStringOrReason,
-                                                                     final Locale locale) {
-        return new SoapFaultResponseCreator() {
-            @Override
-            public void addSoapFault(SoapBody soapBody) {
-                soapBody.addMustUnderstandFault(faultStringOrReason, locale);
-            }
-        };
-
-    }
-
-    public static SoapFaultResponseCreator createClientOrSenderFault(final String faultStringOrReason,
-                                                                     final Locale locale) {
-        return new SoapFaultResponseCreator() {
-            @Override
-            public void addSoapFault(SoapBody soapBody) {
-                soapBody.addClientOrSenderFault(faultStringOrReason, locale);
-            }
-        };
-    }
-
-    public static SoapFaultResponseCreator createServerOrReceiverFault(final String faultStringOrReason,
-                                                                       final Locale locale) {
-        return new SoapFaultResponseCreator() {
-            @Override
-            public void addSoapFault(SoapBody soapBody) {
-                soapBody.addServerOrReceiverFault(faultStringOrReason, locale);
-            }
-        };
-
-    }
-
-    public static SoapFaultResponseCreator createVersionMismatchFault(final String faultStringOrReason,
-                                                                      final Locale locale) {
-        return new SoapFaultResponseCreator() {
-            @Override
-            public void addSoapFault(SoapBody soapBody) {
-                soapBody.addVersionMismatchFault(faultStringOrReason, locale);
-            }
-        };
-
-    }
-
-
+    /**
+     * Abstract template method that allows subclasses to add a SOAP Fault to the given Body.
+     *
+     * @param soapBody the body to attach a fault to
+     */
+    protected abstract void addSoapFault(SoapBody soapBody);
 }

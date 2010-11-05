@@ -25,6 +25,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
+import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.test.support.creator.PayloadMessageCreator;
 import org.springframework.ws.test.support.creator.WebServiceMessageCreator;
 import org.springframework.xml.transform.ResourceSource;
@@ -103,11 +104,16 @@ public abstract class ResponseCreators {
      *
      * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text
      * @param locale              the language of faultStringOrReason. Optional for SOAP 1.1
-     * @see org.springframework.ws.soap.SoapBody#addMustUnderstandFault(String, java.util.Locale)
+     * @see SoapBody#addMustUnderstandFault(String, java.util.Locale)
      */
-    public static ResponseCreator withMustUnderstandFault(String faultStringOrReason, Locale locale) {
+    public static ResponseCreator withMustUnderstandFault(final String faultStringOrReason, final Locale locale) {
         Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
-        return SoapFaultResponseCreator.createMustUnderstandFault(faultStringOrReason, locale);
+        return new SoapFaultResponseCreator() {
+            @Override
+            public void addSoapFault(SoapBody soapBody) {
+                soapBody.addMustUnderstandFault(faultStringOrReason, locale);
+            }
+        };
     }
 
     /**
@@ -117,9 +123,14 @@ public abstract class ResponseCreators {
      * @param locale              the language of faultStringOrReason. Optional for SOAP 1.1
      * @see org.springframework.ws.soap.SoapBody#addClientOrSenderFault(String, Locale)
      */
-    public static ResponseCreator withClientOrSenderFault(String faultStringOrReason, Locale locale) {
+    public static ResponseCreator withClientOrSenderFault(final String faultStringOrReason, final Locale locale) {
         Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
-        return SoapFaultResponseCreator.createClientOrSenderFault(faultStringOrReason, locale);
+        return new SoapFaultResponseCreator() {
+            @Override
+            public void addSoapFault(SoapBody soapBody) {
+                soapBody.addClientOrSenderFault(faultStringOrReason, locale);
+            }
+        };
     }
 
     /**
@@ -129,9 +140,14 @@ public abstract class ResponseCreators {
      * @param locale              the language of faultStringOrReason. Optional for SOAP 1.1
      * @see org.springframework.ws.soap.SoapBody#addServerOrReceiverFault(String, Locale)
      */
-    public static ResponseCreator withServerOrReceiverFault(String faultStringOrReason, Locale locale) {
+    public static ResponseCreator withServerOrReceiverFault(final String faultStringOrReason, final Locale locale) {
         Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
-        return SoapFaultResponseCreator.createServerOrReceiverFault(faultStringOrReason, locale);
+        return new SoapFaultResponseCreator() {
+            @Override
+            public void addSoapFault(SoapBody soapBody) {
+                soapBody.addServerOrReceiverFault(faultStringOrReason, locale);
+            }
+        };
     }
 
     /**
@@ -141,9 +157,14 @@ public abstract class ResponseCreators {
      * @param locale              the language of faultStringOrReason. Optional for SOAP 1.1
      * @see org.springframework.ws.soap.SoapBody#addVersionMismatchFault(String, Locale)
      */
-    public static ResponseCreator withVersionMismatchFault(String faultStringOrReason, Locale locale) {
+    public static ResponseCreator withVersionMismatchFault(final String faultStringOrReason, final Locale locale) {
         Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
-        return SoapFaultResponseCreator.createVersionMismatchFault(faultStringOrReason, locale);
+        return new SoapFaultResponseCreator() {
+            @Override
+            public void addSoapFault(SoapBody soapBody) {
+                soapBody.addVersionMismatchFault(faultStringOrReason, locale);
+            }
+        };
     }
 
     /**
