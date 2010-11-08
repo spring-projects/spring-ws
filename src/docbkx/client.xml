@@ -75,7 +75,7 @@
 </beans>]]></programlisting>
                     </para>
                     <para>
-                        The folowing example shows how override the default configuration, and to use Commons Http to
+                        The following example shows how override the default configuration, and to use Commons Http to
                         authenticate using HTTP authentication:
                         <programlisting><![CDATA[<bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
     <constructor-arg ref="messageFactory"/>
@@ -110,7 +110,7 @@
                         JMS URIs are: <uri>jms:SomeQueue</uri>,
                         <uri>jms:SomeTopic?priority=3&amp;deliveryMode=NON_PERSISTENT</uri>, and
                         <uri>jms:RequestQueue?replyToName=ResponseName</uri>.
-                        For more information on this URI syntax, refer to the class level Javadocs of the
+                        For more information on this URI syntax, refer to the class level Javadoc of the
                         <classname>JmsMessageSender</classname>.
                     </para>
                     <para>
@@ -119,8 +119,8 @@
                         this can be overriden to use <interfacename>TextMessages</interfacename> by using the
                         <literal>messageType</literal> parameter on the JMS URI. For example:
                         <uri>jms:Queue?messageType=TEXT_MESSAGE</uri>.
-                        Note that <interfacename>BytesMessages</interfacename> are the prefered type, because 
-                        <interfacename>TextMessages</interfacename> do not support attachments and charactering
+                        Note that <interfacename>BytesMessages</interfacename> are the preferred type, because
+                        <interfacename>TextMessages</interfacename> do not support attachments and character
                         encodings reliably.
                     </para>
                     <para>
@@ -302,8 +302,8 @@ public class WebServiceClient {
                 in the Java code.
             </para>
             <para>
-                Please note that the <classname>WebServiceTemplate</classname> class is threadsafe once
-                configured (assuming that all of it's dependencies are threadsafe too, which is the case for
+                Please note that the <classname>WebServiceTemplate</classname> class is thread-safe once
+                configured (assuming that all of it's dependencies are thread-safe too, which is the case for
                 all of the dependencies that ship with Spring-WS), and so multiple objects can use the same
                 shared <classname>WebServiceTemplate</classname> instance if so desired.
                 The <classname>WebServiceTemplate</classname> exposes a zero argument constructor and
@@ -413,6 +413,292 @@ public void marshalWithSoapActionHeader(final Source s) {
             }
         });
 }]]></programlisting>
+        </section>
+    </section>
+    <section>
+        <title>Client-side testing</title>
+        <para>
+            When it comes to testing your Web service clients (i.e. classes that uses the
+            <classname>WebServiceTemplate</classname> to access a Web service), there are two possible
+            approaches:
+        </para>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    Write <emphasis>Unit Tests</emphasis>, which simply mock away the
+                    <classname>WebServiceTemplate</classname> class,
+                    <interfacename>WebServiceOperations</interfacename> interface, or the complete client class.
+                </para>
+                <para>
+                    The advantage of this approach is that it's quite easy to accomplish; the disadvantage is that
+                    you are not really testing the exact content of the XML messages that are sent over the wire,
+                    especially when mocking out the entire client class.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    Write <emphasis>Integrations Tests</emphasis>, which do test the contents of the message.
+                </para>
+            </listitem>
+        </itemizedlist>
+        <para>
+            The first approach can easily be accomplished with mocking frameworks such as EasyMock, JMock, etc.
+            The next section will focus on writing integration tests, using the test features introduced in Spring
+            Web Services 2.0.
+        </para>
+        <section>
+            <title>Writing integration tests</title>
+            <para>
+                Spring Web Services 2.0 introduced support for creating Web service client tests.
+                In this context, a client is a class that uses the <classname>WebServiceTemplate</classname>
+                to access a Web service.
+            </para>
+            <para>
+                The integration test support lives in the <package>org.springframework.ws.test.client</package> package.
+                The core class in that package is the <classname>MockWebServiceServer</classname>.
+                The underlying idea is that the web service template connects to this mock server, sends it request
+                message, which the mock server then verifies against the registered expectations.
+                If the expectations are met, the mock server then prepares a response message, which is send back to the
+                template.
+            </para>
+            <para>
+                The typical usage of the <classname>MockWebServiceServer</classname> is:
+                <itemizedlist>
+                    <listitem>
+                        <para>
+                            Create a <classname>MockWebServiceServer</classname> instance by calling
+                            <methodname>MockWebServiceServer.createServer(WebServiceTemplate)</methodname>,
+                            <methodname>MockWebServiceServer.createServer(WebServiceGatewaySupport)</methodname>, or
+                            <methodname>MockWebServiceServer.createServer(ApplicationContext)</methodname>.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Set up request expectations by calling <methodname>expect(RequestMatcher)</methodname>,
+                            possibly by using the default <interfacename>RequestMatcher</interfacename> implementations
+                            provided in <classname>RequestMatchers</classname> (which can be statically imported).
+                            Multiple expectations can be set up by chaining
+                            <methodname>andExpect(RequestMatcher)</methodname> calls.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Create an appropriate response message by calling
+                            <methodname>andRespond(ResponseCreator)</methodname>, possibly by using the default
+                            <interfacename>ResponseCreator</interfacename> implementations provided in
+                            <classname>ResponseCreators</classname> (which can be statically imported).
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Use the <classname>WebServiceTemplate</classname> as normal, either directly of through
+                            client code.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Call <methodname>MockWebServiceServer.verify()</methodname> to make sure that all
+                            expectations have been met.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <note>
+                <para>
+                    Note that the <classname>MockWebServiceServer</classname> (and related classes) offers a
+                    'fluent' API, so you can typically use the Code Completion features (i.e. ctrl-space) in your IDE
+                    to guide you through the process of setting up the mock server.
+                </para>
+            </note>
+            <para>
+                Consider, for example, this Web service client class:
+            </para>
+            <programlistingco>
+                <areaspec>
+                    <area id="client.test.client.gateway" coords="3"/>
+                    <area id="client.test.client.request" coords="6"/>
+                    <area id="client.test.client.response" coords="10"/>
+                </areaspec>
+                <programlisting><![CDATA[import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
+
+public class CustomerClient extends WebServiceGatewaySupport {
+
+  public int getCustomerCount() {
+    CustomerCountRequest request = new CustomerCountRequest();
+    request.setCustomerName("John Doe");
+
+    CustomerCountResponse response =
+      (CustomerCountResponse) getWebServiceTemplate().marshalSendAndReceive(request);
+      
+    return response.getCustomerCount();
+  }
+
+}]]></programlisting>
+                <calloutlist>
+                    <callout arearefs="client.test.client.gateway">
+                        <para>
+                            The <classname>CustomerClient</classname> extends
+                            <classname>WebServiceGatewaySupport</classname>, which provides it with a
+                            <property>webServiceTemplate</property> property.
+                        </para>
+                    </callout>
+                    <callout arearefs="client.test.client.request">
+                        <para>
+                            <classname>CustomerCountRequest</classname> is an object supported by a marshaller.
+                            For instance, it could have a <interfacename>@XmlRootElement</interfacename> annotation
+                            to be supported by JAXB2.
+                        </para>
+                    </callout>
+                    <callout arearefs="client.test.client.response">
+                        <para>
+                            The <classname>CustomerClient</classname> uses the <classname>WebServiceTemplate</classname>
+                            offered by <classname>WebServiceGatewaySupport</classname> to marshal the request object
+                            into a SOAP message, and sends that to the web service.
+                            The response object is unmarshalled into a <classname>CustomerCountResponse</classname>.
+                        </para>
+                    </callout>
+                </calloutlist>
+            </programlistingco>
+            <para>
+                A typical test for <classname>CustomerClient</classname> would look like this:
+            </para>
+            <programlistingco>
+                <areaspec>
+                    <areaset id="client.test.test.imports" coords="">
+                        <area id="client.test.test.imports.server" coords="13"/>
+                        <area id="client.test.test.imports.requestmatchers" coords="14"/>
+                        <area id="client.test.test.imports.resonsecreators" coords="15"/>
+                    </areaset>
+                    <areaset id="client.test.test.spring" coords="">
+                        <area id="client.test.test.spring.runwith" coords="17"/>
+                        <area id="client.test.test.spring.configuration" coords="18"/>
+                    </areaset>
+                    <area id="client.test.test.client" coords="22"/>
+                    <area id="client.test.test.mockserver" coords="24"/>
+                    <area id="client.test.test.expectAndRespond" coords="42"/>
+                    <areaset id="client.test.test.client.invoke" coords="">
+                        <area id="client.test.test.client.invoke.actual" coords="44"/>
+                        <area id="client.test.test.client.invoke.assert" coords="45"/>
+                    </areaset>
+                    <area id="client.test.test.client.verify" coords="47"/>
+                </areaspec>
+                <programlisting><![CDATA[import javax.xml.transform.Source;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.xml.transform.StringSource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import static org.junit.Assert.assertEquals;
+
+import org.springframework.ws.test.client.MockWebServiceServer;
+import static org.springframework.ws.test.client.RequestMatchers.payload;
+import static org.springframework.ws.test.client.ResponseCreators.withPayload;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("integration-test.xml")
+public class CustomerClientIntegrationTest {
+
+  @Autowired
+  private CustomerClient client;
+
+  private MockWebServiceServer mockServer;
+
+  @Before
+  public void createServer() throws Exception {
+    mockServer = MockWebServiceServer.createServer(client);
+  }
+
+  @Test
+  public void basic() throws Exception {
+    Source requestPayload = new StringSource(
+      "<customerCountRequest xmlns='http://springframework.org/spring-ws'>" +
+        "<customerName>John Doe</customerName>" +
+      "</customerCountRequest>");
+    Source responsePayload = new StringSource(
+      "<customerCountResponse xmlns='http://springframework.org/spring-ws'>" +
+        "<customerCount>10</customerCount>" +
+      "</customerCountResponse>");
+
+    mockServer.expect(payload(requestPayload)).andRespond(withPayload(responsePayload));
+
+    int result = client.getCustomerCount();
+    assertEquals(10, result);
+
+    mockServer.verify();
+  }
+
+}]]></programlisting>
+                <calloutlist>
+                    <callout arearefs="client.test.test.imports">
+                        <para>
+                            The <classname>CustomerClientIntegrationTest</classname> imports the
+                            <classname>MockWebServiceServer</classname>, and statically imports
+                            <classname>RequestMatchers</classname> and <classname>ResponseCreators</classname>.
+                        </para>
+                    </callout>
+                    <callout arearefs="client.test.test.spring">
+                        <para>
+                            This tests uses the standard testing facilities provided in the Spring Framework.
+                            This is not required, but is generally the easiest way to set up the test.
+                        </para>
+                    </callout>
+                    <callout arearefs="client.test.test.client">
+                        <para>
+                            The <classname>CustomerClient</classname> is configured in
+                            <filename>integration-test.xml</filename>, and wired into this test using
+                            <interfacename>@Autowired</interfacename>.
+                        </para>
+                    </callout>
+                    <callout arearefs="client.test.test.mockserver">
+                        <para>
+                            In a <interfacename>@Before</interfacename> method, we create a
+                            <classname>MockWebServiceServer</classname> by using the
+                            <methodname>createServer</methodname> factory method.
+                        </para>
+                    </callout>
+                    <callout arearefs="client.test.test.expectAndRespond">
+                        <para>
+                            We define expectations by calling <methodname>expect()</methodname> with a
+                            <methodname>payload()</methodname> <interfacename>RequestMatcher</interfacename> provided
+                            by the statically imported <classname>RequestMatchers</classname>.
+                            We also set up a response by calling <methodname>andRespond()</methodname> with a
+                            <methodname>withPayload()</methodname> <interfacename>ResponseCreator</interfacename>
+                            provided by the statically imported <classname>ResponseCreators</classname>.
+                        </para>
+                        <para>
+                            This part of the test might look a bit confusing, but the Code Completion features of your
+                            IDE are of great help.
+                            After typing <methodname>expect(</methodname>, simply type ctrl-space, and your IDE will
+                            provide you with a list of possible request matching strategies, provided you
+                            statically imported <classname>RequestMatchers</classname>.
+                            The same applies to <methodname>andRespond(</methodname>, provided you statically imported
+                            <classname>ResponseCreators</classname>.
+                        </para>
+                    </callout>
+                    <callout arearefs="client.test.test.client.invoke">
+                        <para>
+                            We call <methodname>getCustomerCount()</methodname> on the
+                            <classname>CustomerClient</classname>, thus using the
+                            <classname>WebServiceTemplate</classname>.
+                            The template has been set up for 'testing mode' by now, so no real
+                            (HTTP) connection is made by this method call.
+                            We also make some JUnit assertions based on the result of the method call.
+                        </para>
+                    </callout>
+                    <callout arearefs="client.test.test.client.verify">
+                        <para>
+                            We call <methodname>verify()</methodname> on the
+                            <classname>MockWebServiceServer</classname>, thus verifying that the expected
+                            message was actually received.
+                        </para>
+                    </callout>
+                </calloutlist>
+            </programlistingco>
+
         </section>
     </section>
 </chapter>
