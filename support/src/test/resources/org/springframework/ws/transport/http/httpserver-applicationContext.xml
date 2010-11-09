@@ -2,8 +2,13 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
+    <bean id="port" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetClass" value="org.springframework.ws.transport.support.FreePortScanner"/>
+        <property name="targetMethod" value="getFreePort"/>
+    </bean>
+
     <bean id="httpServer" class="org.springframework.remoting.support.SimpleHttpServerFactoryBean">
-        <property name="port" value="8888"/>
+        <property name="port" ref="port"/>
         <property name="contexts">
             <map>
                 <entry key="/service" value-ref="webServiceHandler"/>

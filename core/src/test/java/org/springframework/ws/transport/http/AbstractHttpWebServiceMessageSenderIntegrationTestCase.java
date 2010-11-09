@@ -44,6 +44,7 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
+import org.springframework.ws.transport.support.FreePortScanner;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
@@ -97,8 +98,9 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase {
 
     @Before
     public final void setUp() throws Exception {
-        connectionUri = new URI("http://localhost:8888/");
-        jettyServer = new Server(8888);
+        int port = FreePortScanner.getFreePort();
+        connectionUri = new URI("http", null, "localhost", port, null, null, null);
+        jettyServer = new Server(port);
         jettyContext = new Context(jettyServer, "/");
         messageSender = createMessageSender();
         if (messageSender instanceof InitializingBean) {

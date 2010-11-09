@@ -167,6 +167,13 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.ws</groupId>
+                <artifactId>spring-ws-core</artifactId>
+                <version>${project.version}</version>
+                <classifier>tests</classifier>
+                <scope>test</scope>
+            </dependency>            
+            <dependency>
+                <groupId>org.springframework.ws</groupId>
                 <artifactId>spring-ws-support</artifactId>
                 <version>${project.version}</version>
             </dependency>

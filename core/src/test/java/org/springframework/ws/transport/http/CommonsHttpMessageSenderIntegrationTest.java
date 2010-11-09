@@ -34,6 +34,7 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
+import org.springframework.ws.transport.support.FreePortScanner;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.URIException;
@@ -73,7 +74,8 @@ public class CommonsHttpMessageSenderIntegrationTest extends AbstractHttpWebServ
     @Test
     public void testContextClose() throws Exception {
         MessageFactory messageFactory = MessageFactory.newInstance();
-        Server jettyServer = new Server(8888);
+        int port = FreePortScanner.getFreePort();
+        Server jettyServer = new Server(port);
         Context jettyContext = new Context(jettyServer, "/");
         jettyContext.addServlet(new ServletHolder(new EchoServlet()), "/");
         jettyServer.start();
@@ -86,7 +88,7 @@ public class CommonsHttpMessageSenderIntegrationTest extends AbstractHttpWebServ
 
             CommonsHttpMessageSender messageSender = appContext
                     .getBean("messageSender", CommonsHttpMessageSender.class);
-            connection = messageSender.createConnection(new URI("http://localhost:8888/"));
+            connection = messageSender.createConnection(new URI("http://localhost:" + port));
 
             appContext.close();
 

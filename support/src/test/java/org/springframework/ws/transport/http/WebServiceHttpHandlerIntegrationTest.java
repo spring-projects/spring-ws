@@ -18,6 +18,7 @@ package org.springframework.ws.transport.http;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
@@ -41,14 +42,20 @@ public class WebServiceHttpHandlerIntegrationTest {
 
     private HttpClient client;
 
+    @Autowired
+    private int port;
+
+    private String url;
+
     @Before
     public void createHttpClient() throws Exception {
         client = new HttpClient();
+        url = "http://localhost:" + port + "/service";
     }
 
     @Test
     public void testInvalidMethod() throws IOException {
-        GetMethod getMethod = new GetMethod("http://localhost:8888/service");
+        GetMethod getMethod = new GetMethod(url);
         client.executeMethod(getMethod);
         assertEquals("Invalid Response Code", HttpTransportConstants.STATUS_METHOD_NOT_ALLOWED,
                 getMethod.getStatusCode());
@@ -57,7 +64,7 @@ public class WebServiceHttpHandlerIntegrationTest {
 
     @Test
     public void testNoResponse() throws IOException {
-        PostMethod postMethod = new PostMethod("http://localhost:8888/service");
+        PostMethod postMethod = new PostMethod(url);
         postMethod.addRequestHeader(HttpTransportConstants.HEADER_CONTENT_TYPE, "text/xml");
         postMethod.addRequestHeader(TransportConstants.HEADER_SOAP_ACTION,
                 "http://springframework.org/spring-ws/NoResponse");
@@ -70,7 +77,7 @@ public class WebServiceHttpHandlerIntegrationTest {
 
     @Test
     public void testResponse() throws IOException {
-        PostMethod postMethod = new PostMethod("http://localhost:8888/service");
+        PostMethod postMethod = new PostMethod(url);
         postMethod.addRequestHeader(HttpTransportConstants.HEADER_CONTENT_TYPE, "text/xml");
         postMethod.addRequestHeader(TransportConstants.HEADER_SOAP_ACTION,
                 "http://springframework.org/spring-ws/Response");
@@ -83,7 +90,7 @@ public class WebServiceHttpHandlerIntegrationTest {
 
     @Test
     public void testNoEndpoint() throws IOException {
-        PostMethod postMethod = new PostMethod("http://localhost:8888/service");
+        PostMethod postMethod = new PostMethod(url);
         postMethod.addRequestHeader(HttpTransportConstants.HEADER_CONTENT_TYPE, "text/xml");
         postMethod.addRequestHeader(TransportConstants.HEADER_SOAP_ACTION,
                 "http://springframework.org/spring-ws/NoEndpoint");
@@ -96,7 +103,7 @@ public class WebServiceHttpHandlerIntegrationTest {
 
     @Test
     public void testFault() throws IOException {
-        PostMethod postMethod = new PostMethod("http://localhost:8888/service");
+        PostMethod postMethod = new PostMethod(url);
         postMethod.addRequestHeader(HttpTransportConstants.HEADER_CONTENT_TYPE, "text/xml");
         postMethod
                 .addRequestHeader(TransportConstants.HEADER_SOAP_ACTION, "http://springframework.org/spring-ws/Fault");
