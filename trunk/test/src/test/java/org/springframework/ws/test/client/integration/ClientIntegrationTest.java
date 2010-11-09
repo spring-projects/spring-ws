@@ -21,10 +21,7 @@ import javax.xml.transform.Source;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.test.client.MockWebServiceServer;
-import org.springframework.ws.test.integration.CustomerCountRequest;
-import org.springframework.ws.test.integration.CustomerCountResponse;
 import org.springframework.xml.transform.StringSource;
 
 import org.junit.Before;
@@ -46,13 +43,13 @@ import static org.springframework.ws.test.client.ResponseCreators.withPayload;
 public class ClientIntegrationTest {
 
     @Autowired
-    private WebServiceTemplate webServiceTemplate;
+    private CustomerClient client;
 
     private MockWebServiceServer mockServer;
 
     @Before
     public void createServer() throws Exception {
-        mockServer = MockWebServiceServer.createServer(webServiceTemplate);
+        mockServer = MockWebServiceServer.createServer(client);
     }
 
     @Test
@@ -66,11 +63,8 @@ public class ClientIntegrationTest {
 
         mockServer.expect(payload(expectedRequestPayload)).andRespond(withPayload(responsePayload));
 
-        CustomerCountRequest request = new CustomerCountRequest();
-        request.setCustomerName("John Doe");
-
-        CustomerCountResponse response = (CustomerCountResponse) webServiceTemplate.marshalSendAndReceive(request);
-        assertEquals(10, response.getCustomerCount());
+        int result = client.getCustomerCount();
+        assertEquals(10, result);
 
         mockServer.verify();
     }

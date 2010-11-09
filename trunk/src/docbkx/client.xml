@@ -510,6 +510,15 @@ public void marshalWithSoapActionHeader(final Source s) {
                     to guide you through the process of setting up the mock server.
                 </para>
             </note>
+            <note>
+                <para>
+                    Also note that you rely on the standard logging features available in Spring Web Services in your
+                    unit tests.
+                    Sometimes it might be useful to inspect the request or response message to find out why a
+                    particular tests failed.
+                    See <xref linkend="logging"/> for more information.
+                </para>
+            </note>
             <para>
                 Consider, for example, this Web service client class:
             </para>
@@ -664,10 +673,14 @@ public class CustomerClientIntegrationTest {
                         <para>
                             We define expectations by calling <methodname>expect()</methodname> with a
                             <methodname>payload()</methodname> <interfacename>RequestMatcher</interfacename> provided
-                            by the statically imported <classname>RequestMatchers</classname>.
+                            by the statically imported <classname>RequestMatchers</classname> (see <xref
+                                linkend="client-test-request-matcher"/>).
+                        </para>
+                        <para>
                             We also set up a response by calling <methodname>andRespond()</methodname> with a
                             <methodname>withPayload()</methodname> <interfacename>ResponseCreator</interfacename>
-                            provided by the statically imported <classname>ResponseCreators</classname>.
+                            provided by the statically imported <classname>ResponseCreators</classname> (see
+                            <xref linkend="client-test-response-creator"/>).
                         </para>
                         <para>
                             This part of the test might look a bit confusing, but the Code Completion features of your
@@ -698,7 +711,158 @@ public class CustomerClientIntegrationTest {
                     </callout>
                 </calloutlist>
             </programlistingco>
+        </section>
+        <section id="client-test-request-matcher">
+            <title><interfacename>RequestMatcher</interfacename> and <classname>RequestMatchers</classname></title>
+            <para>
+                To verify whether the request message meets certain expectations, the
+                <classname>MockWebServiceServer</classname> uses the <interfacename>RequestMatcher</interfacename>
+                strategy interface.
+                The contract defined by this interface is quite simple:
+            </para>
+            <programlisting><![CDATA[public interface RequestMatcher {
 
+  void match(URI uri,
+             WebServiceMessage request)
+    throws IOException,
+           AssertionError;
+
+}]]></programlisting>
+            <para>
+                You can write your own implementations of this interface, throwing
+                <classname>AssertionError</classname>s when the message does not meet your expectations, but you
+                certainly do not have to.
+                The <classname>RequestMatchers</classname> class provides standard
+                <interfacename>RequestMatcher</interfacename> implementations for you to use in your tests.
+                You will typically statically import this class.
+            </para>
+            <para>
+                The <classname>RequestMatchers</classname> class provides the following request matchers:
+                <informaltable>
+                    <tgroup cols="2">
+                        <thead>
+                            <row>
+                                <entry><classname>RequestMatchers</classname> method</entry>
+                                <entry>Description</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><methodname>anything()</methodname></entry>
+                                <entry>Expects any sort of request.</entry>
+                            </row>
+                            <row>
+                                <entry><methodname>payload()</methodname></entry>
+                                <entry>Expects a given request payload.</entry>
+                            </row>
+                            <row>
+                                <entry><methodname>validPayload()</methodname></entry>
+                                <entry>Expects the request payload to validate against given XSD schema(s).</entry>
+                            </row>
+                            <row>
+                                <entry><methodname>xpath()</methodname></entry>
+                                <entry>
+                                    Expects a given XPath expression to exist, not exist, or evaluate to a given
+                                    value.
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><methodname>soapHeader()</methodname></entry>
+                                <entry>Expects a given SOAP header to exist in the request message.</entry>
+                            </row>
+                            <row>
+                                <entry><methodname>connectionTo()</methodname></entry>
+                                <entry>Expects a connection to the given URL.</entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </informaltable>
+                You can set up multiple request expectations by chaining <methodname>andExpect()</methodname> calls,
+                like so:
+                <programlisting>mockServer.expect(connectionTo("http://example.com")).
+ andExpect(payload(expectedRequestPayload)).
+ andExpect(validPayload(schemaResource)).
+ andRespond(...);
+</programlisting>
+            </para>
+            <para>
+                For more information on the request matchers provided by <classname>RequestMatchers</classname>,
+                refer to the class level Javadoc.
+            </para>
+        </section>
+        <section id="client-test-response-creator">
+            <title><interfacename>ResponseCreator</interfacename> and <classname>ResponseCreators</classname></title>
+            <para>
+                When the request message has been verified and meets the defined expectations, the
+                <classname>MockWebServiceServer</classname> will create a response message for the
+                <classname>WebServiceTemplate</classname> to consume.
+                The server uses the <interfacename>ResponseCreator</interfacename>
+                strategy interface for this purpose:
+            </para>
+            <programlisting><![CDATA[public interface ResponseCreator {
+
+  WebServiceMessage createResponse(URI uri,
+                                   WebServiceMessage request,
+                                   WebServiceMessageFactory messageFactory)
+    throws IOException;
+
+}]]></programlisting>
+            <para>
+                Once again you can write your own implementations of this interface, creating a response message
+                by using the message factory, but you certainly do not have to, as the
+                <classname>ResponseCreators</classname> class provides standard
+                <interfacename>ResponseCreator</interfacename> implementations for you to use in your tests.
+                You will typically statically import this class.
+            </para>
+            <para>
+                The <classname>ResponseCreators</classname> class provides the following responses:
+                <informaltable>
+                    <tgroup cols="2">
+                        <thead>
+                            <row>
+                                <entry><classname>ResponseCreators</classname> method</entry>
+                                <entry>Description</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><methodname>withPayload()</methodname></entry>
+                                <entry>Creates a response message with a given payload.</entry>
+                            </row>
+                            <row>
+                                <entry><methodname>withError()</methodname></entry>
+                                <entry>
+                                    Creates an error in the response connection.
+                                    This method gives you the opportunity to test your error handling.
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><methodname>withException()</methodname></entry>
+                                <entry>
+                                    Throws an exception when reading from the response connection.
+                                    This method gives you the opportunity to test your exception handling.
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <methodname>withMustUnderstandFault()</methodname>,
+                                    <methodname>withClientOrSenderFault()</methodname>,
+                                    <methodname>withServerOrReceiverFault()</methodname>, and
+                                    <methodname>withVersionMismatchFault()</methodname>
+                                </entry>
+                                <entry>
+                                    Creates a response message with a given SOAP fault.
+                                    This method gives you the opportunity to test your Fault handling.
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </informaltable>
+            </para>
+            <para>
+                For more information on the request matchers provided by <classname>RequestMatchers</classname>,
+                refer to the class level Javadoc.
+            </para>
         </section>
     </section>
 </chapter>
