@@ -30,7 +30,7 @@ import org.springframework.ws.soap.SoapVersion;
 /**
  * @author Arjen Poutsma
  */
-public class StroapMessageFactory implements SoapMessageFactory<StroapMessage> {
+public class StroapMessageFactory implements SoapMessageFactory {
 
     private final XMLInputFactory inputFactory = createXmlInputFactory();
 

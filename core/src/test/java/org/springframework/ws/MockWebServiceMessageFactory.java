@@ -21,7 +21,7 @@ import java.io.InputStream;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
 
-public class MockWebServiceMessageFactory implements WebServiceMessageFactory<MockWebServiceMessage> {
+public class MockWebServiceMessageFactory implements WebServiceMessageFactory {
 
     public MockWebServiceMessage createWebServiceMessage() {
         return new MockWebServiceMessage();

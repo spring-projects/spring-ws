@@ -29,14 +29,14 @@ import java.io.InputStream;
  * @see org.springframework.ws.WebServiceMessage
  * @since 1.0.0
  */
-public interface WebServiceMessageFactory<T extends WebServiceMessage> {
+public interface WebServiceMessageFactory {
 
     /**
      * Creates a new, empty <code>WebServiceMessage</code>.
      *
      * @return the empty message
      */
-    T createWebServiceMessage();
+    WebServiceMessage createWebServiceMessage();
 
     /**
      * Reads a {@link WebServiceMessage} from the given input stream.
@@ -48,6 +48,6 @@ public interface WebServiceMessageFactory<T extends WebServiceMessage> {
      * @return the created message
      * @throws java.io.IOException if an I/O exception occurs
      */
-    T createWebServiceMessage(InputStream inputStream) throws IOException;
+    WebServiceMessage createWebServiceMessage(InputStream inputStream) throws IOException;
 
 }

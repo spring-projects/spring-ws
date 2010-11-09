@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
  * @see org.springframework.ws.pox.dom.DomPoxMessage
  * @since 1.0.0
  */
-public class DomPoxMessageFactory extends TransformerObjectSupport implements WebServiceMessageFactory<DomPoxMessage> {
+public class DomPoxMessageFactory extends TransformerObjectSupport implements WebServiceMessageFactory {
 
     /** The default content type for the POX messages. */
     public static final String DEFAULT_CONTENT_TYPE = "application/xml";

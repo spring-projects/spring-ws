@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2010 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ import org.apache.commons.logging.LogFactory;
  * @see org.springframework.ws.soap.saaj.SaajSoapMessage
  * @since 1.0.0
  */
-public class SaajSoapMessageFactory implements SoapMessageFactory<SaajSoapMessage>, InitializingBean {
+public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingBean {
 
     private static final Log logger = LogFactory.getLog(SaajSoapMessageFactory.class);
 
