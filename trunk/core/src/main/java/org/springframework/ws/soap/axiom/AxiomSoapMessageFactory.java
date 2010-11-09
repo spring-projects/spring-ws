@@ -78,7 +78,7 @@ import org.apache.commons.logging.LogFactory;
  * @see #setPayloadCaching(boolean)
  * @since 1.0.0
  */
-public class AxiomSoapMessageFactory implements SoapMessageFactory<AxiomSoapMessage>, InitializingBean {
+public class AxiomSoapMessageFactory implements SoapMessageFactory, InitializingBean {
 
     private static final String CHARSET_PARAMETER = "charset";
 
