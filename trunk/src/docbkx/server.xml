@@ -149,7 +149,7 @@
                 <literal>[servlet-name]-servlet.xml</literal></emphasis> in the <literal>WEB-INF</literal> directory
                 of your web application and create the beans defined there in a Spring container. In the example above,
                 that means that it looks for '<filename>/WEB-INF/spring-ws-servlet.xml</filename>'. This file will
-                contain all of the SWS-specific beans such as endpoints, marshallers and suchlike.
+                contain all of the Spring Web Services beans such as endpoints, marshallers and suchlike.
             </para>
             <section id="server-automatic-wsdl-exposure">
                 <title>Automatic WSDL exposure</title>
@@ -583,7 +583,7 @@
             </para>
         </section>
     </section>
-    <section>
+    <section id="server-endpoints">
         <title>Endpoints</title>
         <para>
             Endpoints are the central concept in Spring-WS's server-side support. Endpoints provide access to the
@@ -1565,5 +1565,366 @@ public class MyBusinessException extends Exception {
     </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>]]></programlisting>
             </section>
+    </section>
+    <section>
+        <title>Server-side testing</title>
+        <para>
+            When it comes to testing your Web service endpoints, there are two possible approaches:
+        </para>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    Write <emphasis>Unit Tests</emphasis>, where you provide (mock) arguments for your endpoint to
+                    consume.
+                </para>
+                <para>
+                    The advantage of this approach is that it's quite easy to accomplish (especially for classes
+                    annotated with <interfacename>@Endpoint</interfacename>); the disadvantage is that
+                    you are not really testing the exact content of the XML messages that are sent over the wire.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    Write <emphasis>Integrations Tests</emphasis>, which do test the contents of the message.
+                </para>
+            </listitem>
+        </itemizedlist>
+        <para>
+            The first approach can easily be accomplished with mocking frameworks such as EasyMock, JMock, etc.
+            The next section will focus on writing integration tests, using the test features introduced in Spring
+            Web Services 2.0.
+        </para>
+        <section>
+            <title>Writing server-side integration tests</title>
+            <para>
+                Spring Web Services 2.0 introduced support for creating endpoint integration tests.
+                In this context, an endpoint is class handles (SOAP) messages (see <xref linkend="server-endpoints"/>).
+            </para>
+            <para>
+                The integration test support lives in the <package>org.springframework.ws.test.server</package> package.
+                The core class in that package is the <classname>MockWebServiceClient</classname>.
+                The underlying idea is that this client creates a request message, and then sends it over to the
+                endpoint(s) that are configured in a standard <classname>MessageDispatcherServlet</classname>
+                application context (see <xref linkend="message-dispatcher-servlet"/>).
+                These endpoints will handle the message, and create a response.
+                The client then receives this response, and verifies it against registered expectations.
+            </para>
+            <para>
+                The typical usage of the <classname>MockWebServiceClient</classname> is:
+                <orderedlist>
+                    <listitem>
+                        <para>
+                            Create a <classname>MockWebServiceClient</classname> instance by calling
+                            <methodname>MockWebServiceClient.createClient(ApplicationContext)</methodname> or
+                            <methodname>MockWebServiceClient.createClient(WebServiceMessageReceiver, WebServiceMessageFactory)</methodname>.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Send request messages by calling <methodname>sendRequest(RequestCreator)</methodname>,
+                            possibly by using the default <interfacename>RequestCreator</interfacename> implementations
+                            provided in <classname>RequestCreators</classname> (which can be statically imported).
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Set up response expectations by calling <methodname>andExpect(ResponseMatcher)</methodname>,
+                            possibly by using the default <interfacename>ResponseMatcher</interfacename> implementations
+                            provided in <classname>ResponseMatchers</classname> (which can be statically imported).
+                            Multiple expectations can be set up by chaining
+                            <methodname>andExpect(ResponseMatcher)</methodname> calls.
+                        </para>
+                    </listitem>
+                </orderedlist>
+            </para>
+            <note>
+                <para>
+                    Note that the <classname>MockWebServiceClient</classname> (and related classes) offers a
+                    'fluent' API, so you can typically use the Code Completion features (i.e. ctrl-space) in your IDE
+                    to guide you through the process of setting up the mock server.
+                </para>
+            </note>
+            <note>
+                <para>
+                    Also note that you rely on the standard logging features available in Spring Web Services in your
+                    unit tests.
+                    Sometimes it might be useful to inspect the request or response message to find out why a
+                    particular tests failed.
+                    See <xref linkend="logging"/> for more information.
+                </para>
+            </note>
+            <para>
+                Consider, for example, this simple Web service endpoint class:
+            </para>
+            <programlistingco>
+                <areaspec>
+                    <area id="server.test.endpoint.annotation" coords="5"/>
+                    <areaset id="server.test.endpoint.method" coords="">
+                        <area id="server.test.endpoint.method.responsePayload" coords="8"/>
+                        <area id="server.test.endpoint.method.method" coords="9"/>
+                        <area id="server.test.endpoint.method.requestPayload" coords="10"/>
+                    </areaset>
+                </areaspec>
+                <programlisting><![CDATA[import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.RequestPayload;
+import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+
+@Endpoint
+public class CustomerEndpoint {
+
+  @ResponsePayload
+  public CustomerCountResponse getCustomerCount(
+      @RequestPayload CustomerCountRequest request) {
+    CustomerCountResponse response = new CustomerCountResponse();
+    response.setCustomerCount(10);
+    return response;
+  }
+
+}]]></programlisting>
+                <calloutlist>
+                    <callout arearefs="server.test.endpoint.annotation">
+                        <para>
+                            The <classname>CustomerEndpoint</classname> in annotated with
+                            <interfacename>@Endpoint</interfacename>.
+                            See <xref linkend="server-at-endpoint"/>.
+                        </para>
+                    </callout>
+                    <callout arearefs="server.test.endpoint.method">
+                        <para>
+                            The <methodname>getCustomerCount()</methodname> method takes a
+                            <classname>CustomerCountRequest</classname> as argument, and returns a
+                            <classname>CustomerCountResponse</classname>.
+                            Both of these classes are objects supported by a marshaller.
+                            For instance, they can have a <interfacename>@XmlRootElement</interfacename> annotation
+                            to be supported by JAXB2.
+                        </para>
+                    </callout>
+                </calloutlist>
+            </programlistingco>
+            <para>
+                A typical test for <classname>CustomerEndpoint</classname> would look like this:
+            </para>
+            <programlistingco>
+                <areaspec>
+                    <areaset id="server.test.test.imports" coords="">
+                        <area id="server.test.test.imports.client" coords="12"/>
+                        <area id="server.test.test.imports.requestCreators" coords="13"/>
+                        <area id="client.test.test.imports.responseMatchers" coords="14"/>
+                    </areaset>
+                    <areaset id="server.test.test.spring" coords="">
+                        <area id="server.test.test.spring.runWith" coords="16"/>
+                        <area id="server.test.test.spring.configuration" coords="17"/>
+                    </areaset>
+                    <area id="server.test.test.applicationContext" coords="21"/>
+                    <area id="server.test.test.mockClient" coords="27"/>
+                    <areaset id="server.test.test.sendAndExpect" coords="">
+                        <area id="server.test.test.send" coords="41"/>
+                        <area id="server.test.test.expect" coords="42"/>
+                    </areaset>
+                </areaspec>
+                <programlisting><![CDATA[import javax.xml.transform.Source;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.xml.transform.StringSource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import org.springframework.ws.test.server.MockWebServiceClient;
+import static org.springframework.ws.test.server.RequestCreators.*;
+import static org.springframework.ws.test.server.ResponseMatchers.*;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("spring-ws-servlet.xml")
+public class CustomerEndpointIntegrationTest {
+
+  @Autowired
+  private ApplicationContext applicationContext;
+
+  private MockWebServiceClient mockClient;
+
+  @Before
+  public void createClient() {
+    mockClient = MockWebServiceClient.createClient(applicationContext);
+  }
+
+  @Test
+  public void customerEndpoint() throws Exception {
+    Source requestPayload = new StringSource(
+      "<customerCountRequest xmlns='http://springframework.org/spring-ws'>" +
+        "<customerName>John Doe</customerName>" +
+      "</customerCountRequest>");
+    Source responsePayload = new StringSource(
+      "<customerCountResponse xmlns='http://springframework.org/spring-ws'>" +
+        "<customerCount>10</customerCount>" +
+      "</customerCountResponse>");
+
+    mockClient.sendRequest(withPayload(requestPayload)).
+      andExpect(payload(responsePayload));
+  }
+}]]></programlisting>
+                <calloutlist>
+                    <callout arearefs="server.test.test.imports">
+                        <para>
+                            The <classname>CustomerEndpointIntegrationTest</classname> imports the
+                            <classname>MockWebServiceClient</classname>, and statically imports
+                            <classname>RequestCreators</classname> and <classname>ResponseMatchers</classname>.
+                        </para>
+                    </callout>
+                    <callout arearefs="server.test.test.spring">
+                        <para>
+                            This test uses the standard testing facilities provided in the Spring Framework.
+                            This is not required, but is generally the easiest way to set up the test.
+                        </para>
+                    </callout>
+                    <callout arearefs="server.test.test.applicationContext">
+                        <para>
+                            The application context is a standard Spring-WS application context (see
+                            <xref linkend="message-dispatcher-servlet"/>), read from
+                            <filename>spring-ws-servlet.xml</filename>.
+                            In this case, the application context will contain a bean definition for
+                            <classname>CustomerEndpoint</classname> (or a perhaps a
+                            <literal>&lt;context:component-scan /&gt;</literal> is used).
+                        </para>
+                    </callout>
+                    <callout arearefs="server.test.test.mockClient">
+                        <para>
+                            In a <interfacename>@Before</interfacename> method, we create a
+                            <classname>MockWebServiceClient</classname> by using the
+                            <methodname>createClient</methodname> factory method.
+                        </para>
+                    </callout>
+                    <callout arearefs="server.test.test.sendAndExpect">
+                        <para>
+                            We send a request by calling <methodname>sendRequest()</methodname> with a
+                            <methodname>withPayload()</methodname> <interfacename>RequestCreator</interfacename>
+                            provided by the statically imported <classname>RequestCreators</classname> (see <xref
+                                linkend="server-test-request-creator"/>).
+                        </para>
+                        <para>
+                            We also set up response expectations by calling <methodname>andExpect()</methodname> with a
+                            <methodname>payload()</methodname> <interfacename>ResponseMatcher</interfacename> provided
+                            by the statically imported <classname>ResponseMatchers</classname> (see <xref
+                                linkend="server-test-response-matcher"/>).
+                        </para>
+                        <para>
+                            This part of the test might look a bit confusing, but the Code Completion features of your
+                            IDE are of great help.
+                            After typing <methodname>sendRequest(</methodname>, simply type ctrl-space, and your IDE
+                            will provide you with a list of possible request creating strategies, provided you
+                            statically imported <classname>RequestCreators</classname>.
+                            The same applies to <methodname>andExpect(</methodname>, provided you statically imported
+                            <classname>ResponseMatchers</classname>.
+                        </para>
+                    </callout>
+                </calloutlist>
+            </programlistingco>
+        </section>
+        <section id="server-test-request-creator">
+            <title><interfacename>RequestCreator</interfacename> and <classname>RequestCreators</classname></title>
+            <para>
+                Initially, the <classname>MockWebServiceClient</classname> will need to create a request message for the
+                endpoint to consume.
+                The client uses the <interfacename>RequestCreator</interfacename>
+                strategy interface for this purpose:
+            </para>
+            <programlisting><![CDATA[public interface RequestCreator {
+
+  WebServiceMessage createRequest(WebServiceMessageFactory messageFactory)
+    throws IOException;
+
+}]]></programlisting>
+            <para>
+                You can write your own implementations of this interface, creating a request message
+                by using the message factory, but you certainly do not have to.
+                The <classname>RequestCreators</classname> class provides a way to create a
+                <interfacename>RequestCreator</interfacename> based on a given payload in the
+                <methodname>withPayload()</methodname> method.
+                You will typically statically import <classname>RequestCreators</classname>.
+            </para>
+        </section>
+        <section id="server-test-response-matcher">
+            <title><interfacename>ResponseMatcher</interfacename> and <classname>ResponseMatchers</classname></title>
+            <para>
+                When the request message has been processed by the endpoint, and a response has been received,
+                the <classname>MockWebServiceClient</classname> can verify whether this response message meets certain
+                expectations.
+                The client uses the <interfacename>ResponseMatcher</interfacename> strategy interface for this purpose:
+            </para>
+            <programlisting><![CDATA[public interface ResponseMatcher {
+
+    void match(WebServiceMessage request,
+               WebServiceMessage response)
+      throws IOException, AssertionError;
+
+}]]></programlisting>
+            <para>
+                Once again you can write your own implementations of this interface, throwing
+                <classname>AssertionError</classname>s when the message does not meet your expectations, but you
+                certainly do not have to, as the <classname>ResponseMatchers</classname> class provides standard
+                <interfacename>ResponseMatcher</interfacename> implementations for you to use in your tests.
+                You will typically statically import this class.
+            </para>
+            <para>
+                The <classname>ResponseMatchers</classname> class provides the following request matchers:
+                <informaltable>
+                    <tgroup cols="2">
+                        <thead>
+                            <row>
+                                <entry><classname>ResponseMatchers</classname> method</entry>
+                                <entry>Description</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><methodname>payload()</methodname></entry>
+                                <entry>Expects a given response payload.</entry>
+                            </row>
+                            <row>
+                                <entry><methodname>validPayload()</methodname></entry>
+                                <entry>Expects the response payload to validate against given XSD schema(s).</entry>
+                            </row>
+                            <row>
+                                <entry><methodname>xpath()</methodname></entry>
+                                <entry>
+                                    Expects a given XPath expression to exist, not exist, or evaluate to a given
+                                    value.
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><methodname>soapHeader()</methodname></entry>
+                                <entry>Expects a given SOAP header to exist in the response message.</entry>
+                            </row>
+                            <row>
+                                <entry><methodname>noFault()</methodname></entry>
+                                <entry>Expects that the response message does not contain a SOAP Fault.</entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <methodname>mustUnderstandFault()</methodname>,
+                                    <methodname>clientOrSenderFault()</methodname>,
+                                    <methodname>serverOrReceiverFault()</methodname>, and
+                                    <methodname>versionMismatchFault()</methodname>
+                                </entry>
+                                <entry>Expects the response message to contain a specific SOAP Fault.</entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </informaltable>
+                You can set up multiple response expectations by chaining <methodname>andExpect()</methodname> calls,
+                like so:
+                <programlisting>mockClient.sendRequest(...).
+ andExpect(payload(expectedResponsePayload)).
+ andExpect(validPayload(schemaResource));
+</programlisting>
+            </para>
+            <para>
+                For more information on the request matchers provided by <classname>ResponseMatchers</classname>,
+                refer to the class level Javadoc.
+            </para>
+        </section>
     </section>
 </chapter>
