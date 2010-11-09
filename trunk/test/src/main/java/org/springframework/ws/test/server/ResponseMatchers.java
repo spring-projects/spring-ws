@@ -32,7 +32,7 @@ import org.springframework.ws.test.support.matcher.SchemaValidatingMatcher;
 import org.springframework.ws.test.support.matcher.SoapHeaderMatcher;
 import org.springframework.xml.transform.ResourceSource;
 
-import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
+import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
  * Factory methods for {@link ResponseMatcher} classes. Typically used to provide input for {@link
@@ -125,7 +125,9 @@ public abstract class ResponseMatchers {
                     throws IOException, AssertionError {
                 if (response instanceof FaultAwareWebServiceMessage) {
                     FaultAwareWebServiceMessage faultMessage = (FaultAwareWebServiceMessage) response;
-                    assertTrue("Response has a SOAP Fault", !faultMessage.hasFault());
+                    if (faultMessage.hasFault()) {
+                        fail("Response has a SOAP Fault: \"" + faultMessage.getFaultReason() + "\"");
+                    }
                 }
             }
 
