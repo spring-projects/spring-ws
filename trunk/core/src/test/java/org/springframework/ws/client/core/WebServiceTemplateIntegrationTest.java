@@ -60,6 +60,7 @@ import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.ws.soap.client.SoapFaultClientException;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.http.CommonsHttpMessageSender;
+import org.springframework.ws.transport.support.FreePortScanner;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
@@ -81,14 +82,18 @@ public class WebServiceTemplateIntegrationTest {
 
     private static Server jettyServer;
 
-    private WebServiceTemplate template;
+    private static String baseUrl;
 
+
+    private WebServiceTemplate template;
 
     private String messagePayload = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
 
     @BeforeClass
     public static void startJetty() throws Exception {
-        jettyServer = new Server(8888);
+        int port = FreePortScanner.getFreePort();
+        baseUrl = "http://localhost:" + port;
+        jettyServer = new Server(port);
         Context jettyContext = new Context(jettyServer, "/");
         jettyContext.addServlet(new ServletHolder(new EchoSoapServlet()), "/soap/echo");
         jettyContext.addServlet(new ServletHolder(new SoapFaultServlet()), "/soap/fault");
@@ -145,10 +150,10 @@ public class WebServiceTemplateIntegrationTest {
         template.setMessageSender(new CommonsHttpMessageSender());
         String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
         StringResult result = new StringResult();
-        template.sendSourceAndReceiveToResult("http://localhost:8888/pox", new StringSource(content), result);
+        template.sendSourceAndReceiveToResult(baseUrl + "/pox", new StringSource(content), result);
         assertXMLEqual(content, result.toString());
         try {
-            template.sendSourceAndReceiveToResult("http://localhost:8888/errors/notfound", new StringSource(content),
+            template.sendSourceAndReceiveToResult(baseUrl + "/errors/notfound", new StringSource(content),
                     new StringResult());
             Assert.fail("WebServiceTransportException expected");
         }
@@ -156,7 +161,7 @@ public class WebServiceTemplateIntegrationTest {
             //expected
         }
         try {
-            template.sendSourceAndReceiveToResult("http://localhost:8888/errors/server", new StringSource(content),
+            template.sendSourceAndReceiveToResult(baseUrl + "/errors/server", new StringSource(content),
                     result);
             Assert.fail("WebServiceTransportException expected");
         }
@@ -180,14 +185,14 @@ public class WebServiceTemplateIntegrationTest {
 
     private void sendSourceAndReceiveToResult() throws SAXException, IOException {
         StringResult result = new StringResult();
-        boolean b = template.sendSourceAndReceiveToResult("http://localhost:8888/soap/echo",
+        boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/echo",
                 new StringSource(messagePayload), result);
         Assert.assertTrue("Invalid result", b);
         assertXMLEqual(messagePayload, result.toString());
     }
 
     private void sendSourceAndReceiveToResultNoResponse() {
-        boolean b = template.sendSourceAndReceiveToResult("http://localhost:8888/soap/noResponse",
+        boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/noResponse",
                 new StringSource(messagePayload), new StringResult());
         Assert.assertFalse("Invalid result", b);
     }
@@ -226,7 +231,7 @@ public class WebServiceTemplateIntegrationTest {
         };
         template.setMarshaller(marshaller);
         template.setUnmarshaller(unmarshaller);
-        Object result = template.marshalSendAndReceive("http://localhost:8888/soap/echo", requestObject);
+        Object result = template.marshalSendAndReceive(baseUrl + "/soap/echo", requestObject);
         Assert.assertEquals("Invalid response object", responseObject, result);
     }
 
@@ -251,13 +256,13 @@ public class WebServiceTemplateIntegrationTest {
             }
         };
         template.setMarshaller(marshaller);
-        Object result = template.marshalSendAndReceive("http://localhost:8888/soap/noResponse", requestObject);
+        Object result = template.marshalSendAndReceive(baseUrl + "/soap/noResponse", requestObject);
         Assert.assertNull("Invalid response object", result);
     }
 
     private void notFound() {
         try {
-            template.sendSourceAndReceiveToResult("http://localhost:8888/errors/notfound",
+            template.sendSourceAndReceiveToResult(baseUrl + "/errors/notfound",
                     new StringSource(messagePayload), new StringResult());
             Assert.fail("WebServiceTransportException expected");
         }
@@ -269,7 +274,7 @@ public class WebServiceTemplateIntegrationTest {
     private void fault() {
         Result result = new StringResult();
         try {
-            template.sendSourceAndReceiveToResult("http://localhost:8888/soap/fault", new StringSource(messagePayload),
+            template.sendSourceAndReceiveToResult(baseUrl + "/soap/fault", new StringSource(messagePayload),
                     result);
             Assert.fail("SoapFaultClientException expected");
         }
@@ -283,7 +288,7 @@ public class WebServiceTemplateIntegrationTest {
         template.setCheckConnectionForFault(false);
         template.setCheckConnectionForError(false);
         try {
-            template.sendSourceAndReceiveToResult("http://localhost:8888/soap/badRequestFault",
+            template.sendSourceAndReceiveToResult(baseUrl + "/soap/badRequestFault",
                     new StringSource(messagePayload), result);
             Assert.fail("SoapFaultClientException expected");
         }
@@ -293,7 +298,7 @@ public class WebServiceTemplateIntegrationTest {
     }
 
     private void attachment() {
-        template.sendSourceAndReceiveToResult("http://localhost:8888/soap/attachment", new StringSource(messagePayload),
+        template.sendSourceAndReceiveToResult(baseUrl + "/soap/attachment", new StringSource(messagePayload),
                 new WebServiceMessageCallback() {
 
                     public void doWithMessage(WebServiceMessage message) throws IOException, TransformerException {
