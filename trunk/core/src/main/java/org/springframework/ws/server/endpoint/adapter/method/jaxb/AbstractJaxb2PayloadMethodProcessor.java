@@ -314,6 +314,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
         private JaxbStreamingPayload(Class<?> clazz, Object jaxbElement) throws JAXBException {
             JAXBContext jaxbContext = getJaxbContext(clazz);
             this.marshaller = jaxbContext.createMarshaller();
+            this.marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
             this.jaxbElement = jaxbElement;
             JAXBIntrospector introspector = jaxbContext.createJAXBIntrospector();
             this.name = introspector.getElementName(jaxbElement);
