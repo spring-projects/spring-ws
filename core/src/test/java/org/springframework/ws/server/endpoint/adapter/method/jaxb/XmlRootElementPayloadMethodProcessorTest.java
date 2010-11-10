@@ -139,6 +139,29 @@ public class XmlRootElementPayloadMethodProcessorTest {
 
     }
 
+    @Test
+    public void handleReturnValueAxiomNoPayloadCaching() throws Exception {
+        AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
+        messageFactory.setPayloadCaching(false);
+        MessageContext messageContext = new DefaultMessageContext(messageFactory);
+
+        MyRootElement rootElement = new MyRootElement();
+        rootElement.setString("Foo");
+
+        processor.handleReturnValue(messageContext, rootElementReturnType, rootElement);
+        assertTrue("context has no response", messageContext.hasResponse());
+        AxiomSoapMessage response = (AxiomSoapMessage) messageContext.getResponse();
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        response.writeTo(bos);
+        String messageResult = bos.toString("UTF-8");
+
+        assertXMLEqual("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Body>" +
+                "<root xmlns='http://springframework.org'><string>Foo</string></root>" +
+                "</soapenv:Body></soapenv:Envelope>", messageResult);
+
+    }
+
     @ResponsePayload
     public MyRootElement rootElement(@RequestPayload MyRootElement rootElement) {
         return rootElement;
