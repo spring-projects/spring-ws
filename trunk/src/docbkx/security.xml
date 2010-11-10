@@ -13,9 +13,7 @@
         <formalpara>
             <title>Authentication</title>
             <para>
-                This is the process of determining whether a
-                <emphasis>principal</emphasis>
-                is who they claim to be.
+                This is the process of determining whether a <emphasis>principal</emphasis> is who they claim to be.
                 In this context, a "principal" generally means a user, device or some other system which can perform
                 an action in your application.
             </para>
@@ -31,12 +29,10 @@
         <formalpara>
             <title>Encryption and Decryption</title>
             <para>
-                <emphasis>Encryption</emphasis>
-                is the process of transforming data into a form that is impossible to
+                <emphasis>Encryption</emphasis> is the process of transforming data into a form that is impossible to
                 read without the appropriate key. It is mainly used to keep information hidden from anyone for whom it
                 is not intended.
-                <emphasis>Decryption</emphasis>
-                is the reverse of encryption; it is the process of transforming of
+                <emphasis>Decryption</emphasis> is the reverse of encryption; it is the process of transforming of
                 encrypted data back into an readable form.
             </para>
         </formalpara>
@@ -1092,6 +1088,36 @@
                 </section>
             </section>
         </section>
+        <section id="security-xws-exception-handling">
+            <title>Security Exception Handling</title>
+            <para>
+                When an securement or validation action fails, the <classname>XwsSecurityInterceptor</classname>
+                will throw a <exceptionname>WsSecuritySecurementException</exceptionname> or
+                <exceptionname>WsSecurityValidationException</exceptionname> respectively.
+                These exceptions bypass the <link linkend="server-endpoint-exception-resolver">standard
+                exception handling mechanism</link>, but are handled in the interceptor itself.
+            </para>
+            <para>
+                <exceptionname>WsSecuritySecurementException</exceptionname> exceptions are handled in the
+                <methodname>handleSecurementException</methodname> method of the
+                <classname>XwsSecurityInterceptor</classname>.
+                By default, this method will simply log an error, and stop further processing of the message.
+            </para>
+            <para>
+                Similarly, <exceptionname>WsSecurityValidationException</exceptionname> exceptions are handled in the
+                <methodname>handleValidationException</methodname> method of the
+                <classname>XwsSecurityInterceptor</classname>.
+                By default, this method will create a SOAP 1.1 Client or SOAP 1.2 Sender Fault, and send that back as
+                a response.
+            </para>
+            <note>
+                <para>
+                    Both <methodname>handleSecurementException</methodname> and
+                    <methodname>handleValidationException</methodname> are protected methods, which you can override
+                    to change their default behavior.
+                </para>
+            </note>
+        </section>
     </section>
     <section id="security-wss4j-security-interceptor">
         <title>
@@ -1938,6 +1964,14 @@
                     default.
                 </para>
             </section>
+        </section>
+        <section>
+            <title>Security Exception Handling</title>
+            <para>
+                The exception handling of the <classname>Wss4jSecurityInterceptor</classname> is identical to that of
+                the <classname>XwsSecurityInterceptor</classname>. See <xref linkend="security-xws-exception-handling"/>
+                for more information.
+            </para>
         </section>
     </section>
 </chapter>
