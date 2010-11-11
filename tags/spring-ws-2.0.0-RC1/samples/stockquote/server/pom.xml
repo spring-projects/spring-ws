@@ -1,0 +1,66 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>stockquote</artifactId>
+        <groupId>org.springframework.ws</groupId>
+        <version>2.0.0-RC1</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>stockquote-server</artifactId>
+    <packaging>jar</packaging>
+    <name>Spring WS Stock Quote Sample - Server</name>
+    <description>A Spring-WS sample that shows usage of WS-Addressing and the HTTP Server built into JDK 1.6.</description>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
+               </executions>
+               <configuration>
+                   <schemaDirectory>src/main/resources/org/springframework/ws/samples/stockquote/ws</schemaDirectory>
+                   <schemaFiles>stockquote.wsdl</schemaFiles>
+                   <packageName>org.springframework.ws.samples.stockquote.schema</packageName>
+                   <wsdl>true</wsdl>
+                   <xmlschema>false</xmlschema>
+               </configuration>
+           </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>org.springframework.ws.samples.stockquote.Driver</mainClass>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <!-- Spring-WS dependencies -->
+        <dependency>
+            <groupId>org.springframework.ws</groupId>
+            <artifactId>spring-ws-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ws</groupId>
+            <artifactId>spring-ws-support</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+</project>
