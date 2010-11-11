@@ -2,6 +2,65 @@ SPRING WEB SERVICES CHANGELOG
 =============================
 http://www.springframework.org/spring-ws
 
+Changes in version 2.0 Release Candidate 1
+----------------------------------
+
+** Sub-task
+    * [SWS-631] - Create Client-Side testing framework
+    * [SWS-632] - Create Server-Side testing framework
+    * [SWS-651] - Add documentation for testing framework
+
+** Bug
+    * [SWS-640] - evaluateAsBoolean returns true for node with text content "false"
+
+** Improvement
+    * [SWS-544] - Add test framework for Spring WS
+    * [SWS-635] - handleUsernameTokenUnknown() should attach root cause
+    * [SWS-641] - Make sentMessageTracingLogger independent from receivedMessageTracingLogger
+    * [SWS-648] - Document Spring-WS Security exception handling
+    * [SWS-650] - AxiomSoapMessageFactory does not provide way to set properties on XMLInputFactory
+
+** New Feature
+    * [SWS-352] - Full streaming WebServiceMessage/SoapMessage
+    * [SWS-642] - Support resolving SOAP header elements in @Endpoint method parameters
+    * [SWS-643] - Create TransformerHelper class
+
+** Task
+    * [SWS-639] - Deprecate redundant XML classes
+
+Changes in version 2.0 Milestone 3
+----------------------------------
+
+** Sub-task
+    * [SWS-631] - Create Client-Side testing framework
+
+** Improvement
+    * [SWS-610] - Incompatibility with WS-I requirement R2750
+
+** Task
+    * [SWS-620] - Add the Spring-OXM jar to the "with dependencies" distribution
+    * [SWS-624] - Documentation- explain that WSDL generation should better not be used in production
+
+Changes in version 2.0 Milestone 2
+----------------------------------
+
+** Bug
+    * [SWS-613] - Jaxp13XPathTemplate uses thread-unsafe XPathFactory as field
+
+** Improvement
+    * [SWS-538] - Add support for XWSS 3.1
+
+** New Feature
+    * [SWS-193] - XwsSecurityInterceptor  : funtionality for skipping the validate of a SOAP message when there are no WSSE headers in SOAP envelope.
+    * [SWS-349] - Support @PayloadRoot annotation on methods with DOM, JDOM, DOM4J and XOM type method signatures
+    * [SWS-351] - Arbitrary parameter injection for @Endpoints
+    * [SWS-428] - XMPP support
+    * [SWS-540] - Adding XML declaration to a response
+
+** Task
+    * [SWS-559] - Upgrade Spring Security to 3.0.2
+    * [SWS-603] - Drop OXM chapter from ref docs
+    * [SWS-604] - Upgrade XSD schemas
 
 Changes in version 2.0 Milestone 1
 ------------------------
