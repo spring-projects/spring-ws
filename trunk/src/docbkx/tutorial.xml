@@ -483,7 +483,9 @@
             there is a <filename>'src/main/webapp'</filename> directory, which will contain the root of the WAR file.
             You will find the standard web application deployment descriptor <filename>'WEB-INF/web.xml'</filename>
             here, which defines a Spring-WS <classname>MessageDispatcherServlet</classname> and maps all incoming
-            requests to this servlet:
+            requests to this servlet.
+            We also set the <literal>transformWsdlLocations</literal> parameter to true, which we will get back to
+            later.
         </para>
         <programlisting><![CDATA[
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee"
@@ -504,6 +506,11 @@
         <servlet-name>spring-ws</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
+
+    <init-param>
+        <param-name>transformWsdlLocations</param-name>
+        <param-value>true</param-value>
+    </init-param>
 
 </web-app>]]></programlisting>
         <para>
@@ -756,9 +763,13 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
                 <callout arearefs="tutorial.wsdl.gen.locationUri">
                     <para>
                         We set the location where the service can be reached:
-                        <uri>/holidayService/</uri>. We use a a relative URI and we instruct the framework to transform it
-                        dynamically to an absolute URI. Hence, if the service is deployed to different contexts we don't have
-                        to change the URI manually. For more information, please refer to <xref linkend="server-automatic-wsdl-exposure"/>
+                        <uri>/holidayService/</uri>.
+                        We use a relative URI and we instruct the framework to transform it
+                        dynamically to an absolute URI (hence the <literal>transformWsdlLocations</literal> setting in
+                        <filename>web.xml</filename>).
+                        Hence, if the service is deployed to different contexts we don't have
+                        to change the URI manually.
+                        For more information, please refer to <xref linkend="server-automatic-wsdl-exposure"/>
                     </para>
                 </callout>
                 <callout arearefs="tutorial.wsdl.gen.tns">
