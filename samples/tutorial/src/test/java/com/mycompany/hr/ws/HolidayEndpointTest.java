@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,19 +20,18 @@ import java.io.InputStream;
 import java.util.Calendar;
 
 import com.mycompany.hr.service.HumanResourceService;
-import junit.framework.TestCase;
-import org.easymock.MockControl;
 import org.jdom.Document;
-import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.junit.Before;
+import org.junit.Test;
 
-public class HolidayEndpointTest extends TestCase {
+import static org.easymock.EasyMock.*;
+
+public class HolidayEndpointTest {
 
     private Document holidayRequest;
 
     private HolidayEndpoint endpoint;
-
-    private MockControl mockControl;
 
     private HumanResourceService serviceMock;
 
@@ -40,10 +39,9 @@ public class HolidayEndpointTest extends TestCase {
 
     private Calendar endCalendar;
 
-    @Override
-    protected void setUp() throws Exception {
-        mockControl = MockControl.createControl(HumanResourceService.class);
-        serviceMock = (HumanResourceService) mockControl.getMock();
+    @Before
+    public void setUp() throws Exception {
+        serviceMock = createMock(HumanResourceService.class);
         SAXBuilder builder = new SAXBuilder();
         InputStream is = getClass().getResourceAsStream("holidayRequest.xml");
         try {
@@ -61,12 +59,12 @@ public class HolidayEndpointTest extends TestCase {
         endCalendar.set(2006, Calendar.JULY, 7);
     }
 
-    public void testInvokeInternal() throws Exception {
+    @Test
+    public void handleHolidayRequest() throws Exception {
         serviceMock.bookHoliday(startCalendar.getTime(), endCalendar.getTime(), "John Doe");
-        mockControl.replay();
-        Element result = endpoint.invokeInternal(holidayRequest.getRootElement());
-        assertNull("No result expected", result);
-        mockControl.verify();
+        replay(serviceMock);
+        endpoint.handleHolidayRequest(holidayRequest.getRootElement());
+        verify(serviceMock);
     }
 
 
