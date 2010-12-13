@@ -519,9 +519,10 @@
             This file contains all of the Spring-WS-specific beans such as <literal>EndPoints</literal>,
             <literal>WebServiceMessageReceivers</literal>, and suchlike, and is used to create a new Spring container.
             The name of this file is derived from the name of the attendant servlet (in this case
-            <literal>'spring-ws'</literal>) with <literal>'-servlet.xml'</literal> appended to it. So if you defined a
-            <classname>MessageDispatcherServlet</classname> with the name <literal>'dynamite'</literal>, the name of the
-            Spring-WS-specific configuration file would be <filename>'WEB-INF/dynamite-servlet.xml'</filename>.
+            <literal>'spring-ws'</literal>) with <literal>'-servlet.xml'</literal> appended to it.
+            So if you defined a <classname>MessageDispatcherServlet</classname> with the name
+            <literal>'dynamite'</literal>, the name of the Spring-WS-specific configuration file would be
+            <filename>'WEB-INF/dynamite-servlet.xml'</filename>.
         </para>
         <para>
             (You can see the contents of the <filename>'WEB-INF/spring-ws-servlet.xml'</filename> file for this
@@ -532,94 +533,132 @@
         <title>Implementing the Endpoint</title>
         <para>
            In Spring-WS, you will implement <emphasis>Endpoints</emphasis> to handle incoming XML messages.
-           There are two flavors of endpoints: <link linkend="message-endpoint">message endpoints</link> and
-           <link linkend="payload-endpoint">payload endpoints</link>. <emphasis>Message endpoints</emphasis>
-           give access to the entire XML message, including SOAP headers. Typically, the endpoint will only be
-           interested in the <emphasis>payload</emphasis> of the message, that is the contents of the SOAP body.
-           In that case, creating a <emphasis>payload endpoint</emphasis> makes more sense.
+           An endpoint is typically created by annotating a class with the <interfacename>@Endpoint</interfacename>
+           annotation.
+           In this endpoint class, you will create one or more methods that handle incoming request.
+           The method signatures can be quite flexible: you can include just about any sort of parameter type related
+           to the incoming XML message, as will be explained later.
         </para>
         <section>
             <title>Handling the XML Message</title>
             <para>
                 In this sample application, we are going to use <ulink url="http://www.jdom.org">JDom</ulink> to handle
-                the XML message. We are also using <ulink url="http://www.w3schools.com/xpath/">XPath</ulink>, because
-                it allows us to select particular parts of the XML JDOM tree, without requiring strict schema
-                conformance. We extend our endpoint from <classname>AbstractJDomPayloadEndpoint</classname>,
-                because that will give us a JDOM element to execute the XPath queries on.
+                the XML message.
+                We are also using <ulink url="http://www.w3schools.com/xpath/">XPath</ulink>, because it allows us to
+                select particular parts of the XML JDOM tree, without requiring strict schema conformance.
             </para>
             <programlistingco>
                 <areaspec>
-                    <area id="tutorial.endpoint.constr" coords="24"/>
-                    <area id="tutorial.endpoint.invokeInternal" coords="35"/>
+                    <area id="tutorial.endpoint.atEndpoint" coords="17"/>
+                    <area id="tutorial.endpoint.constr" coords="31"/>
+                    <area id="tutorial.endpoint.payloadRoot" coords="47"/>
+                    <area id="tutorial.endpoint.method" coords="48"/>
                 </areaspec>
-                <programlisting>
-package com.mycompany.hr.ws;
+                <programlisting><![CDATA[package com.mycompany.hr.ws;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 
 import com.mycompany.hr.service.HumanResourceService;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.xpath.XPath;
-import org.springframework.ws.server.endpoint.AbstractJDomPayloadEndpoint;
 
-public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
+@Endpoint
+public class HolidayEndpoint {
 
-    private XPath startDateExpression;
+  private static final String NAMESPACE_URI = "http://mycompany.com/hr/schemas";
 
-    private XPath endDateExpression;
+  private XPath startDateExpression;
 
-    private XPath nameExpression;
+  private XPath endDateExpression;
 
-    private final HumanResourceService humanResourceService;
+  private XPath nameExpression;
 
-    public HolidayEndpoint(HumanResourceService humanResourceService) throws JDOMException {
-        this.humanResourceService = humanResourceService;
-        Namespace namespace = Namespace.getNamespace("hr", "http://mycompany.com/hr/schemas");
-        startDateExpression = XPath.newInstance("//hr:StartDate");
-        startDateExpression.addNamespace(namespace);
-        endDateExpression = XPath.newInstance("//hr:EndDate");
-        endDateExpression.addNamespace(namespace);
-        nameExpression = XPath.newInstance("concat(//hr:FirstName,' ',//hr:LastName)");
-        nameExpression.addNamespace(namespace);
-    }
+  private HumanResourceService humanResourceService;
 
-    protected Element invokeInternal(Element holidayRequest) throws Exception {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date startDate = dateFormat.parse(startDateExpression.valueOf(holidayRequest));
-        Date endDate = dateFormat.parse(endDateExpression.valueOf(holidayRequest));
-        String name = nameExpression.valueOf(holidayRequest);
+  @Autowired
+  public HolidayEndpoint(HumanResourceService humanResourceService)
+      throws JDOMException {
+    this.humanResourceService = humanResourceService;
 
-        humanResourceService.bookHoliday(startDate, endDate, name);
-        return null;
-    }
-}</programlisting>
+    Namespace namespace = Namespace.getNamespace("hr", NAMESPACE_URI);
+
+    startDateExpression = XPath.newInstance("//hr:StartDate");
+    startDateExpression.addNamespace(namespace);
+
+    endDateExpression = XPath.newInstance("//hr:EndDate");
+    endDateExpression.addNamespace(namespace);
+
+    nameExpression = XPath.newInstance("concat(//hr:FirstName,' ',//hr:LastName)");
+    nameExpression.addNamespace(namespace);
+  }
+
+  @PayloadRoot(namespace = NAMESPACE_URI, localPart = "HolidayRequest")
+  public void handleHolidayRequest(@RequestPayload Element holidayRequest)
+      throws Exception {
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    Date startDate = dateFormat.parse(startDateExpression.valueOf(holidayRequest));
+    Date endDate = dateFormat.parse(endDateExpression.valueOf(holidayRequest));
+    String name = nameExpression.valueOf(holidayRequest);
+
+    humanResourceService.bookHoliday(startDate, endDate, name);
+  }
+
+}]]></programlisting>
                 <calloutlist>
+                    <callout arearefs="tutorial.endpoint.atEndpoint">
+                        <para>
+                            The <classname>HolidayEndpoint</classname> is annotated with
+                            <interfacename>@Endpoint</interfacename>.
+                            This marks the class as a special sort of <interfacename>@Component</interfacename>,
+                            suitable for handling XML messages in Spring-WS, and also making it eligible for suitable
+                            for component scanning.
+                        </para>
+                    </callout>
                     <callout arearefs="tutorial.endpoint.constr">
                         <para>
                             The <classname>HolidayEndpoint</classname> requires the
                             <interfacename>HumanResourceService</interfacename> business service to operate, so we
-                            inject the dependency via the constructor. Next, we set up XPath expressions
-                            using the JDOM API. There are three expressions: <literal>//hr:StartDate</literal> for
+                            inject the dependency via the constructor and annotate it with
+                            <interfacename>@Autowired</interfacename>.
+                            Next, we set up XPath expressions using the JDOM API.
+                            There are three expressions: <literal>//hr:StartDate</literal> for
                             extracting the <literal>&lt;StartDate&gt;</literal> text value,
                             <literal>//hr:EndDate</literal> for
                             extracting the end date and <literal>concat(//hr:FirstName,' ',//hr:LastName)</literal>
                             for extracting and concatenating the names of the employee.
                         </para>
                     </callout>
-                    <callout arearefs="tutorial.endpoint.invokeInternal">
+                    <callout arearefs="tutorial.endpoint.payloadRoot">
                         <para>
-                            The <methodname>invokeInternal(..)</methodname> method is a template method, which gets passed
-                            with the <literal>&lt;HolidayRequest/&gt;</literal> element from the incoming XML message. We
-                            use the XPath expressions to extract the string values from the XML messages,
+                            The <interfacename>@PayloadRoot</interfacename> annotation tells Spring-WS that the
+                            <methodname>handleHolidayRequest</methodname> method is suitable for handling XML messages.
+                            The sort of message that this method can handle is indicated by the annotation values,
+                            in this case, it can handle XML elements that have the <literal>HolidayRequest</literal>
+                            local part and the <literal>http://mycompany.com/hr/schemas</literal> namespace.
+                            More information about mapping messages to endpoints is provided in the next section.
+                        </para>
+                    </callout>
+                    <callout arearefs="tutorial.endpoint.method">
+                        <para>
+                            The <methodname>handleHolidayRequest(..)</methodname> method is the main handling method method, which gets passed
+                            with the <literal>&lt;HolidayRequest/&gt;</literal> element from the incoming XML message.
+                            We use the XPath expressions to extract the string values from the XML messages,
                             and convert these values to <classname>Date</classname> objects using a
-                            <classname>SimpleDateFormat</classname>. With these values, we invoke a method on the
-                            business service. Typically, this will result in a database transaction being
-                            started, and some records being altered in the database. Finally, we return
-                            <literal>null</literal>, which indicates to Spring-WS that we do not want to send a
-                            response message. If we wanted a response message, we could have returned a JDOM Element
+                            <classname>SimpleDateFormat</classname>.
+                            With these values, we invoke a method on the business service.
+                            Typically, this will result in a database transaction being started, and some records being
+                            altered in the database.
+                            Finally, we define a <literal>void</literal> return type, which indicates to Spring-WS
+                            that we do not want to send a response message.
+                            If we wanted a response message, we could have returned a JDOM Element
                             that represents the payload of the response message.
                         </para>
                     </callout>
@@ -628,7 +667,8 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
             <para>
                  Using JDOM is just one of the options to handle the XML: other options include DOM, dom4j, XOM,
                  SAX, and StAX, but also marshalling techniques like JAXB, Castor, XMLBeans,
-                 JiBX, and XStream. We chose JDOM because it gives us access to the raw XML, and because it
+                 JiBX, and XStream, as is explained in the next chapter.
+                 We chose JDOM because it gives us access to the raw XML, and because it
                  is based on classes (not interfaces and factory methods as with W3C DOM and dom4j), which makes the
                  code less verbose. We use XPath because it is less fragile than marshalling technologies: we don't
                  care for strict schema conformance, as long as we can find the dates and the name.
@@ -641,7 +681,7 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
     <dependency>
         <groupId>org.springframework.ws</groupId>
         <artifactId>spring-ws-core</artifactId>
-        <version>2.0.0-M1</version>
+        <version>2.0.0</version>
     </dependency>
     <dependency>
         <groupId>jdom</groupId>
@@ -653,61 +693,40 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
         <artifactId>jaxen</artifactId>
         <version>1.1</version>
     </dependency>
-    <dependency>
-        <groupId>javax.xml.soap</groupId>
-        <artifactId>saaj-api</artifactId>
-        <version>1.3</version>
-        <scope>runtime</scope>
-    </dependency>
-    <dependency>
-        <groupId>com.sun.xml.messaging.saaj</groupId>
-        <artifactId>saaj-impl</artifactId>
-        <version>1.3</version>
-        <scope>runtime</scope>
-    </dependency>
 </dependencies>]]></programlisting>
              <para>
                 Here is how we would configure these classes in our <filename>spring-ws-servlet.xml</filename>
-                Spring XML configuration file:
+                Spring XML configuration file, by using component scanning.
             </para>
-            <programlisting id="tutorial.example.sws-conf-file"><![CDATA[
-<beans xmlns="http://www.springframework.org/schema/beans">
+            <programlisting id="tutorial.example.sws-conf-file"><![CDATA[<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-    <bean id="holidayEndpoint" class="com.mycompany.hr.ws.HolidayEndpoint">
-        <constructor-arg ref="hrService"/>
-    </bean>
-
-    <bean id="hrService" class="com.mycompany.hr.service.StubHumanResourceService"/>
+  <context:component-scan base-package="com.mycompany.hr"/>
 
 </beans>]]></programlisting>
             </section>
             <section>
                 <title>Routing the Message to the Endpoint</title>
                 <para>
-                    Now that we have written an endpoint that handles the message, we must define how incoming messages
-                    are routed to that endpoint. In Spring-WS, this is the responsibility of an
-                    <interfacename>EndpointMapping</interfacename>. In this tutorial, we will route messages based on
-                    their content, by using a <classname>PayloadRootQNameEndpointMapping</classname>. Here is how we
-                    configure a <classname>PayloadRootQNameEndpointMapping</classname> in <filename>spring-ws-servlet.xml</filename>:
-                </para>
-            <programlisting><![CDATA[
-<bean class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
-    <property name="mappings">
-        <props>
-            <prop key="{http://mycompany.com/hr/schemas}HolidayRequest">holidayEndpoint</prop>
-        </props>
-    </property>
-    <property name="interceptors">
-        <bean class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor"/>
-    </property>
-</bean>]]></programlisting>
-                <para>
-                    This means that whenever an XML message is received with the namespace
+                    As part of writing the endpoint, we also used the <interfacename>@PayloadRoot</interfacename>
+                    annotation to indicate which sort of messages can be handled by the
+                    <methodname>handleHolidayRequest</methodname> method.
+                    In Spring-WS, this process is the responsibility of an
+                    <interfacename>EndpointMapping</interfacename>.
+                    In this tutorial, we route messages based on
+                    their content, by using a <classname>PayloadRootAnnotationMethodEndpointMapping</classname>.
+                    The annotation used above:<programlisting>
+@PayloadRoot(namespace = "http://mycompany.com/hr/schemas", localPart = "HolidayRequest")</programlisting>
+                    basically means that whenever an XML message is received with the namespace
                     <literal>http://mycompany.com/hr/schemas</literal> and the
                     <literal>HolidayRequest</literal> local name, it will be routed to the
-                    <varname>holidayEndpoint</varname>.
-                    (It also adds a <classname>PayloadLoggingInterceptor</classname>,
-                    that dumps incoming and outgoing messages to the log.)
+                    <methodname>handleHolidayRequest</methodname> method.
+                </para>
+                <para>
+                    There are also other ways to map endpoints to XML messages, which will be described in the next
+                    chapter.
                 </para>
         </section>
     </section>

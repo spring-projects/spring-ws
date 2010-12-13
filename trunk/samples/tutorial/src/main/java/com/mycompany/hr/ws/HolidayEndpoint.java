@@ -1,11 +1,11 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,12 +19,16 @@ package com.mycompany.hr.ws;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.server.endpoint.annotation.RequestPayload;
+
 import com.mycompany.hr.service.HumanResourceService;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.xpath.XPath;
-import org.springframework.ws.server.endpoint.AbstractJDomPayloadEndpoint;
 
 /**
  * This endpoint handles holiday requests. It uses a combination of JDOM and XPath to extract interesting pieces of XML
@@ -32,7 +36,10 @@ import org.springframework.ws.server.endpoint.AbstractJDomPayloadEndpoint;
  *
  * @author Arjen Poutsma
  */
-public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
+@Endpoint
+public class HolidayEndpoint {
+
+    private static final String NAMESPACE_URI = "http://mycompany.com/hr/schemas";
 
     private XPath startDateExpression;
 
@@ -42,9 +49,10 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
 
     private HumanResourceService humanResourceService;
 
+    @Autowired
     public HolidayEndpoint(HumanResourceService humanResourceService) throws JDOMException {
         this.humanResourceService = humanResourceService;
-        Namespace namespace = Namespace.getNamespace("hr", "http://mycompany.com/hr/schemas");
+        Namespace namespace = Namespace.getNamespace("hr", NAMESPACE_URI);
         startDateExpression = XPath.newInstance("//hr:StartDate");
         startDateExpression.addNamespace(namespace);
         endDateExpression = XPath.newInstance("//hr:EndDate");
@@ -53,14 +61,14 @@ public class HolidayEndpoint extends AbstractJDomPayloadEndpoint {
         nameExpression.addNamespace(namespace);
     }
 
-    protected Element invokeInternal(Element holidayRequest) throws Exception {
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "HolidayRequest")
+    public void handleHolidayRequest(@RequestPayload Element holidayRequest) throws Exception {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date startDate = dateFormat.parse(startDateExpression.valueOf(holidayRequest));
         Date endDate = dateFormat.parse(endDateExpression.valueOf(holidayRequest));
         String name = nameExpression.valueOf(holidayRequest);
 
         humanResourceService.bookHoliday(startDate, endDate, name);
-        return null;
     }
 
 }
