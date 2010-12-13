@@ -95,13 +95,20 @@
             </listitem>
             <listitem>
                 <para>
-                    The Core package (<filename>spring-ws-core.jar</filename>)
-                    is the central part of the Spring's Web services functionality.
+                    The Core module (<filename>spring-ws-core.jar</filename>) is the central part of the Spring's
+                    Web services functionality.
                     It provides the central <link linkend="web-service-messages">
                     <classname>WebServiceMessage</classname></link> and <link linkend="soap-message">
                     <classname>SoapMessage</classname></link> interfaces, the <link linkend="server">server-side</link> 
-                    framework, with powerful message dispatching, and the various support classes for implementing Web service
-                    endpoints; and the <link linkend="client">client-side</link> <classname>WebServiceTemplate</classname>.
+                    framework, with powerful message dispatching, and the various support classes for implementing Web
+                    service endpoints; and the <link linkend="client">client-side</link>
+                    <classname>WebServiceTemplate</classname>.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    The Support module (<filename>spring-ws-support.jar</filename>) contains additional transports
+                    (JMS, Email, and others).
                 </para>
             </listitem>
             <listitem>
