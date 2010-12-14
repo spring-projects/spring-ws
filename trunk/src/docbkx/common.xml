@@ -160,9 +160,10 @@
                 <para>
                     To increase reading performance on the <classname>AxiomSoapMessageFactory</classname>,
                     you can set the <property>payloadCaching</property> property to false (default is true).
-                    This will read the contents of the SOAP body directly from the stream.
+                    This will read the contents of the SOAP body directly from the socket stream.
                     When this setting is enabled, the payload can only be read once.
-                    This means that you have to make sure that any preprocessing of the message does not consume it.
+                    This means that you have to make sure that any pre-processing (logging etc.) of the message does
+                    not consume it.
                 </para>
                 <para>
                     You use the <classname>AxiomSoapMessageFactory</classname> as follows:
@@ -170,6 +171,23 @@
 <bean id="messageFactory" class="org.springframework.ws.soap.axiom.AxiomSoapMessageFactory">
     <property name="payloadCaching" value="true"/>
 </bean>]]></programlisting>
+                </para>
+                <para>
+                    In addition to payload caching, <acronym>AXIOM</acronym> also supports full streaming messages,
+                    as defined in the <interfacename>StreamingWebServiceMessage</interfacename>.
+                    This means that the payload can be directly set on the response message, rather than being written
+                    to a DOM tree or buffer.
+                </para>
+                <para>
+                    Full streaming for <acronym>AXIOM</acronym> is used when a handler method returns a
+                    <acronym>JAXB2</acronym>-supported object.
+                    It will automatically set this marshalled object into the response message, and write it out to
+                    the outgoing socket stream when the response is going out.
+                </para>
+                <para>
+                    For more information about full streaming, refer to the class-level Javadoc for
+                    <interfacename>StreamingWebServiceMessage</interfacename> and
+                    <interfacename>StreamingPayload</interfacename>.
                 </para>
             </section>
             <section id="soap_11_or_12">
