@@ -474,7 +474,7 @@
         </para>
 <screen>mvn archetype:create -DarchetypeGroupId=org.springframework.ws \
   -DarchetypeArtifactId=spring-ws-archetype \
-  -DarchetypeVersion=2.0.0-M1 \
+  -DarchetypeVersion=2.0.0-RC2 \
   -DgroupId=com.mycompany.hr \
   -DartifactId=holidayService
 </screen>
@@ -484,8 +484,6 @@
             You will find the standard web application deployment descriptor <filename>'WEB-INF/web.xml'</filename>
             here, which defines a Spring-WS <classname>MessageDispatcherServlet</classname> and maps all incoming
             requests to this servlet.
-            We also set the <literal>transformWsdlLocations</literal> parameter to true, which we will get back to
-            later.
         </para>
         <programlisting><![CDATA[
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee"
@@ -506,11 +504,6 @@
         <servlet-name>spring-ws</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
-
-    <init-param>
-        <param-name>transformWsdlLocations</param-name>
-        <param-value>true</param-value>
-    </init-param>
 
 </web-app>]]></programlisting>
         <para>
@@ -648,8 +641,12 @@ public class HolidayEndpoint {
                     </callout>
                     <callout arearefs="tutorial.endpoint.method">
                         <para>
-                            The <methodname>handleHolidayRequest(..)</methodname> method is the main handling method method, which gets passed
-                            with the <literal>&lt;HolidayRequest/&gt;</literal> element from the incoming XML message.
+                            The <methodname>handleHolidayRequest(..)</methodname> method is the main handling method
+                            method, which gets passed with the <literal>&lt;HolidayRequest/&gt;</literal> element from
+                            the incoming XML message.
+                            The <interfacename>@RequestPayload</interfacename> annotation indicates that the
+                            <parameter>holidayRequest</parameter> parameter should be mapped to the payload of the
+                            request message.
                             We use the XPath expressions to extract the string values from the XML messages,
                             and convert these values to <classname>Date</classname> objects using a
                             <classname>SimpleDateFormat</classname>.
@@ -715,7 +712,7 @@ public class HolidayEndpoint {
                     <methodname>handleHolidayRequest</methodname> method.
                     In Spring-WS, this process is the responsibility of an
                     <interfacename>EndpointMapping</interfacename>.
-                    In this tutorial, we route messages based on
+                    Here we route messages based on
                     their content, by using a <classname>PayloadRootAnnotationMethodEndpointMapping</classname>.
                     The annotation used above:<programlisting>
 @PayloadRoot(namespace = "http://mycompany.com/hr/schemas", localPart = "HolidayRequest")</programlisting>
@@ -723,6 +720,8 @@ public class HolidayEndpoint {
                     <literal>http://mycompany.com/hr/schemas</literal> and the
                     <literal>HolidayRequest</literal> local name, it will be routed to the
                     <methodname>handleHolidayRequest</methodname> method.
+                    It is possible (and quite common) to have multiple, related handling methods in an endpoint, each
+                    of them handling different XML messages.
                 </para>
                 <para>
                     There are also other ways to map endpoints to XML messages, which will be described in the next
@@ -784,11 +783,17 @@ public class HolidayEndpoint {
                         We set the location where the service can be reached:
                         <uri>/holidayService/</uri>.
                         We use a relative URI and we instruct the framework to transform it
-                        dynamically to an absolute URI (hence the <literal>transformWsdlLocations</literal> setting in
-                        <filename>web.xml</filename>).
+                        dynamically to an absolute URI.
                         Hence, if the service is deployed to different contexts we don't have
                         to change the URI manually.
                         For more information, please refer to <xref linkend="server-automatic-wsdl-exposure"/>
+                    </para>
+                    <para>
+                        For the location transformation to work, we need to add one more parameter to the
+                        <filename>web.xml</filename>:<programlisting><![CDATA[<init-param>
+  <param-name>transformWsdlLocations</param-name>
+  <param-value>true</param-value>
+</init-param>]]></programlisting>
                     </para>
                 </callout>
                 <callout arearefs="tutorial.wsdl.gen.tns">
