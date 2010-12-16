@@ -1,11 +1,11 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -87,7 +87,7 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
      * Sets the single XSD schema to inline. Either this property, or {@link #setSchemaCollection(XsdSchemaCollection)
      * schemaCollection} must be set.
      */
-    public void setSchema(final XsdSchema schema) {
+    public void setSchema(XsdSchema schema) {
         typesProvider.setSchema(schema);
     }
 
@@ -122,12 +122,20 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
         messagesProvider.setFaultSuffix(faultSuffix);
     }
 
-    /** Indicates whether a SOAP 1.1 binding should be created. */
+    /**
+     * Indicates whether a SOAP 1.1 binding should be created.
+     * <p/>
+     * Defaults to <code>true</code>.
+     */
     public void setCreateSoap11Binding(boolean createSoap11Binding) {
         soapProvider.setCreateSoap11Binding(createSoap11Binding);
     }
 
-    /** Indicates whether a SOAP 1.2 binding should be created. */
+    /**
+     * Indicates whether a SOAP 1.2 binding should be created.
+     * <p/>
+     * Defaults to <code>false</code>.
+     */
     public void setCreateSoap12Binding(boolean createSoap12Binding) {
         soapProvider.setCreateSoap12Binding(createSoap12Binding);
     }
@@ -152,7 +160,11 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
         soapProvider.setLocationUri(locationUri);
     }
 
-    /** Sets the service name. */
+    /**
+     * Sets the service name.
+     * <p/>
+     * Defaults to the port type name, with the suffix {@code Service} appended to it.
+     */
     public void setServiceName(String serviceName) {
         soapProvider.setServiceName(serviceName);
         this.serviceName = serviceName;

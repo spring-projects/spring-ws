@@ -1,11 +1,11 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,7 +25,7 @@ import javax.wsdl.WSDLException;
  * SOAP 1.2. Delegates to {@link Soap11Provider} and {@link Soap12Provider}.
  * <p/>
  * By setting the {@link #setSoapActions(java.util.Properties) soapActions} property, the SOAP Actions defined in the
- * resulting WSDL can be set. Additionaly, the transport uri can be changed from the default HTTP transport by using the
+ * resulting WSDL can be set. Additionally, the transport uri can be changed from the default HTTP transport by using the
  * {@link #setTransportUri(String) transportUri} property.
  * <p/>
  * The {@link #setCreateSoap11Binding(boolean) createSoap11} and {@link #setCreateSoap12Binding(boolean) createSoap12}

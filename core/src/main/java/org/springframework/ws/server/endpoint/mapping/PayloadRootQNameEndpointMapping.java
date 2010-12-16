@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -43,7 +43,9 @@ import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
  * @author Arjen Poutsma
  * @see org.springframework.xml.namespace.QNameEditor
  * @since 1.0.0
+ * @deprecated as of Spring Web Services 2.0, in favor of {@link PayloadRootAnnotationMethodEndpointMapping}.
  */
+@Deprecated
 public class PayloadRootQNameEndpointMapping extends AbstractQNameEndpointMapping {
 
     private static TransformerFactory transformerFactory;
