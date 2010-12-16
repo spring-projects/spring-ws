@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,7 +31,9 @@ import org.w3c.dom.Element;
  *
  * @author Arjen Poutsma
  * @since 1.5.0
+ * @deprecated as of Spring Web Services 2.0, in favor of {@link AnnotationDrivenBeanDefinitionParser}
  */
+@Deprecated
 class XPathEndpointsBeanDefinitionParser extends AbstractSimpleBeanDefinitionParser {
 
     private static final String XPATH_PARAM_ANNOTATION_METHOD_ENDPOINT_ADAPTER_CLASS_NAME =
