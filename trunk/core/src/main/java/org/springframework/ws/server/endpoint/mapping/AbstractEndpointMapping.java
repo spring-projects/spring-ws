@@ -1,11 +1,11 @@
 /*
- * Copyright 2005 the original author or authors.
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,12 +16,20 @@
 
 package org.springframework.ws.server.endpoint.mapping;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.support.ApplicationObjectSupport;
 import org.springframework.core.Ordered;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.EndpointInvocationChain;
 import org.springframework.ws.server.EndpointMapping;
+import org.springframework.ws.server.SmartEndpointInterceptor;
 
 /**
  * Abstract base class for EndpointMapping implementations. Supports a default endpoint, and endpoint interceptors.
@@ -38,6 +46,8 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
     private Object defaultEndpoint;
 
     private EndpointInterceptor[] interceptors;
+
+    private SmartEndpointInterceptor[] smartInterceptors;
 
     /**
      * Returns the the endpoint interceptors to apply to all endpoints mapped by this endpoint mapping.
@@ -73,6 +83,30 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
     }
 
     /**
+     * Initializes the interceptors.
+     *
+     * @see #initInterceptors()
+     */
+    @Override
+    protected void initApplicationContext() throws BeansException {
+        initInterceptors();
+    }
+
+    /**
+     * Initialize the specified interceptors, adapting them where necessary.
+     *
+     * @see #setInterceptors
+     */
+    protected void initInterceptors() {
+        Map<String, SmartEndpointInterceptor> smartInterceptors = BeanFactoryUtils
+                .beansOfTypeIncludingAncestors(getApplicationContext(), SmartEndpointInterceptor.class, true, false);
+        if (!smartInterceptors.isEmpty()) {
+            this.smartInterceptors =
+                    smartInterceptors.values().toArray(new SmartEndpointInterceptor[smartInterceptors.size()]);
+        }
+    }
+
+    /**
      * Look up an endpoint for the given message context, falling back to the default endpoint if no specific one is
      * found.
      *
@@ -94,7 +128,22 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
                 return null;
             }
         }
-        return createEndpointInvocationChain(messageContext, endpoint, interceptors);
+
+        List<EndpointInterceptor> interceptors = new ArrayList<EndpointInterceptor>();
+        if (this.interceptors != null) {
+            interceptors.addAll(Arrays.asList(this.interceptors));
+        }
+
+        if (this.smartInterceptors != null) {
+            for (SmartEndpointInterceptor smartInterceptor : smartInterceptors) {
+                if (smartInterceptor.shouldIntercept(messageContext, endpoint)) {
+                    interceptors.add(smartInterceptor);
+                }
+            }
+        }
+
+        return createEndpointInvocationChain(messageContext, endpoint,
+                interceptors.toArray(new EndpointInterceptor[interceptors.size()]));
     }
 
     /**
@@ -139,7 +188,7 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
      * context.
      *
      * @param endpointName the endpoint name
-     * @return the resolved enpoint, or <code>null</code> if the name could not be resolved
+     * @return the resolved endpoint, or <code>null</code> if the name could not be resolved
      */
     protected Object resolveStringEndpoint(String endpointName) {
         if (getApplicationContext().containsBean(endpointName)) {

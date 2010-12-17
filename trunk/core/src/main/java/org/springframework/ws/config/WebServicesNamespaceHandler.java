@@ -29,9 +29,10 @@ public class WebServicesNamespaceHandler extends NamespaceHandlerSupport {
 
     public void init() {
         registerBeanDefinitionParser("annotation-driven", new AnnotationDrivenBeanDefinitionParser());
-        registerBeanDefinitionParser("marshalling-endpoints", new MarshallingEndpointsBeanDefinitionParser());
-        registerBeanDefinitionParser("xpath-endpoints", new XPathEndpointsBeanDefinitionParser());
+        registerBeanDefinitionParser("interceptors", new InterceptorsBeanDefinitionParser());
         registerBeanDefinitionParser("static-wsdl", new StaticWsdlBeanDefinitionParser());
         registerBeanDefinitionParser("dynamic-wsdl", new DynamicWsdlBeanDefinitionParser());
+        registerBeanDefinitionParser("marshalling-endpoints", new MarshallingEndpointsBeanDefinitionParser());
+        registerBeanDefinitionParser("xpath-endpoints", new XPathEndpointsBeanDefinitionParser());
     }
 }

@@ -53,6 +53,64 @@
         </xsd:complexType>
     </xsd:element>
 
+    <xsd:element name="interceptors">
+        <xsd:annotation>
+            <xsd:documentation>
+    The ordered set of interceptors that intercept web service messages handled by endpoints.
+    Interceptors allow requests to be pre/post processed before/after handling.
+    Each interceptor must implement the org.springframework.ws.server.EndpointInterceptor interface.
+    The interceptors in this set are automatically configured on each registered EndpointMapping.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:choice maxOccurs="unbounded">
+                <xsd:element ref="beans:bean">
+                    <xsd:annotation>
+                        <xsd:documentation source="java:org.springframework.ws.server.endpoint.interceptor.DelegatingSmartEndpointInterceptor">
+    Registers an interceptor that intercepts every request.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="payloadRoot">
+                    <xsd:annotation>
+                        <xsd:documentation source="java:org.springframework.ws.server.endpoint.interceptor.DelegatingSmartEndpointInterceptor"><![CDATA[
+    Registers an interceptor that intercepts requests that have the specified namespace URI and local part as
+    payload root.
+                        ]]></xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:complexType>
+                        <xsd:sequence maxOccurs="unbounded">
+                            <xsd:element ref="beans:bean">
+                                <xsd:annotation>
+                                    <xsd:documentation>The interceptor's bean definition.</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                        </xsd:sequence>
+                        <xsd:attribute name="namespaceUri" type="xsd:anyURI" use="required" />
+                        <xsd:attribute name="localPart" type="xsd:anyURI" />
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="soapAction">
+                    <xsd:annotation>
+                        <xsd:documentation source="java:org.springframework.ws.server.endpoint.interceptor.DelegatingSmartEndpointInterceptor"><![CDATA[
+    Registers an interceptor that intercepts requests that have the specified SOAP Action.
+                        ]]></xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:complexType>
+                        <xsd:sequence maxOccurs="unbounded">
+                            <xsd:element ref="beans:bean">
+                                <xsd:annotation>
+                                    <xsd:documentation>The interceptor's bean definition.</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                        </xsd:sequence>
+                        <xsd:attribute name="value" type="xsd:anyURI" use="required" />
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:choice>
+        </xsd:complexType>
+    </xsd:element>
+
     <xsd:element name="static-wsdl">
         <xsd:annotation>
             <xsd:documentation source="java:org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition"><![CDATA[
