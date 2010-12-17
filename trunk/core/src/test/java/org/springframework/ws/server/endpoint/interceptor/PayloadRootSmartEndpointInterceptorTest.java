@@ -81,13 +81,4 @@ public class PayloadRootSmartEndpointInterceptorTest {
         assertTrue("Interceptor should apply", result);
     }
 
-    @Test
-    public void shouldInterceptLocalPartMatch() throws Exception {
-        PayloadRootSmartEndpointInterceptor interceptor =
-                new PayloadRootSmartEndpointInterceptor(delegate, null, localPart);
-
-        boolean result = interceptor.shouldIntercept(messageContext, null);
-        assertTrue("Interceptor should apply", result);
-    }
-
 }
