@@ -76,12 +76,14 @@
             <para>
                 The <interfacename>SoapMessage</interfacename> is a subclass of
                 <interfacename>WebServiceMessage</interfacename>. It contains SOAP-specific methods, such as getting
-                SOAP Headers, SOAP Faults, etc. Generally, your code should not be dependent on
-                <interfacename>SoapMessage</interfacename>, because the content of the SOAP Body can be obtained via
+                SOAP Headers, SOAP Faults, etc.
+                Generally, your code should not be dependent on <interfacename>SoapMessage</interfacename>, because
+                the content of the SOAP Body (the payload of the message) can be obtained via
                 <methodname>getPayloadSource()</methodname> and <methodname>getPayloadResult()</methodname> in the
-                <interfacename>WebServiceMessage</interfacename>. Only when it is necessary to perform SOAP-specific
-                actions, such as adding a header, get an attachment, etc., should you need to cast
-                <interfacename>WebServiceMessage</interfacename> to <interfacename>SoapMessage</interfacename>.
+                <interfacename>WebServiceMessage</interfacename>.
+                Only when it is necessary to perform SOAP-specific actions, such as adding a header, getting an
+                attachment, etc., should you need to cast <interfacename>WebServiceMessage</interfacename> to
+                <interfacename>SoapMessage</interfacename>.
             </para>
         </section>
         <section id="message-factories">
