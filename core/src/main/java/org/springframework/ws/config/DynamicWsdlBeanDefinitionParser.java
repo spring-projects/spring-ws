@@ -25,9 +25,11 @@ import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition;
+import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection;
 
 import org.w3c.dom.Element;
@@ -39,6 +41,9 @@ import org.w3c.dom.Element;
  * @since 2.0
  */
 class DynamicWsdlBeanDefinitionParser extends AbstractBeanDefinitionParser {
+
+    private static final boolean commonsSchemaPresent = ClassUtils.isPresent("org.apache.ws.commons.schema.XmlSchema",
+            DynamicWsdlBeanDefinitionParser.class.getClassLoader());
 
     @Override
     protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
@@ -60,16 +65,30 @@ class DynamicWsdlBeanDefinitionParser extends AbstractBeanDefinitionParser {
         addProperty(element, wsdlBuilder, "serviceName");
 
         List<Element> schemas = DomUtils.getChildElementsByTagName(element, "xsd");
-        RootBeanDefinition collectionDef = createBeanDefinition(CommonsXsdSchemaCollection.class, source);
-        collectionDef.getPropertyValues().addPropertyValue("inline", "true");
-        ManagedList<String> xsds = new ManagedList<String>();
-        xsds.setSource(source);
-        for (Element schema : schemas) {
-            xsds.add(schema.getAttribute("location"));
+        if (commonsSchemaPresent) {
+            RootBeanDefinition collectionDef = createBeanDefinition(CommonsXsdSchemaCollection.class, source);
+            collectionDef.getPropertyValues().addPropertyValue("inline", "true");
+            ManagedList<String> xsds = new ManagedList<String>();
+            xsds.setSource(source);
+            for (Element schema : schemas) {
+                xsds.add(schema.getAttribute("location"));
+            }
+            collectionDef.getPropertyValues().addPropertyValue("xsds", xsds);
+            String collectionName = parserContext.getReaderContext().registerWithGeneratedName(collectionDef);
+            wsdlBuilder.addPropertyReference("schemaCollection", collectionName);
         }
-        collectionDef.getPropertyValues().addPropertyValue("xsds", xsds);
-        String collectionName = parserContext.getReaderContext().registerWithGeneratedName(collectionDef);
-        wsdlBuilder.addPropertyReference("schemaCollection", collectionName);
+        else {
+            if (schemas.size() > 1) {
+                throw new IllegalArgumentException(
+                        "Multiple <xsd/> elements requires Commons XMLSchema." +
+                                "Please put Commons XMLSchema on the classpath.");
+            }
+            RootBeanDefinition schemaDef = createBeanDefinition(SimpleXsdSchema.class, source);
+            Element schema = schemas.iterator().next();
+            schemaDef.getPropertyValues().addPropertyValue("xsd", schema.getAttribute("location"));
+            String schemaName = parserContext.getReaderContext().registerWithGeneratedName(schemaDef);
+            wsdlBuilder.addPropertyReference("schema", schemaName);
+        }
         return wsdlBuilder.getBeanDefinition();
     }
 
