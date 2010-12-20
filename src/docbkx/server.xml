@@ -10,15 +10,12 @@
             <classname>MessageDispatcher</classname> that dispatches incoming
             messages to endpoints, with configurable endpoint mappings, response
             generation, and endpoint interception.
-            The simplest endpoint is a <interfacename>PayloadEndpoint</interfacename>, which just offers the
-            <literal>Source invoke(Source request)</literal> method. You are of course free to
-            implement this interface directly, but you will probably prefer to extend one of
-            the included abstract implementations such as
-            <classname>AbstractDomPayloadEndpoint</classname>, <classname>AbstractSaxPayloadEndpoint</classname>, and
-            <classname>AbstractMarshallingPayloadEndpoint</classname>.
-            Alternatively, there is a endpoint development that uses Java 5 annotations, such as
-            <interfacename>@Endpoint</interfacename> for marking a POJO as endpoint, and marking a method with
-            <interfacename>@PayloadRoot</interfacename> or <interfacename>@SoapAction</interfacename>.
+            Endpoints are typically annotated with the <interfacename>@Endpoint</interfacename> annotation, and have
+            one or more handling methods.
+            These methods handle incoming XML request messages by inspecting parts of the message (typically the
+            payload), and create some sort of response.
+            You annotate the method with another annotation, typically <interfacename>@PayloadRoot</interfacename>,
+            to indicate what sort of messages it can handle.
         </para>
         <para>
            Spring-WS's XML handling is extremely flexible. An endpoint can choose from
@@ -62,8 +59,8 @@
             <listitem>
                 <para>
                     An appropriate endpoint is searched for using the configured <literal>EndpointMapping(s)</literal>.
-                    If an endpoint is found, the invocation chain associated with the endpoint (preprocessors,
-                    postprocessors, and endpoints) will be executed in order to create a response.
+                    If an endpoint is found, the invocation chain associated with the endpoint (pre-processors,
+                    post-processors, and endpoints) will be executed in order to create a response.
                 </para>
             </listitem>
             <listitem>
@@ -185,7 +182,7 @@
                     </para>
                 </note>
                 <para>
-                    Another cool feature of the <classname>MessageDispatcherServlet</classname> (or more correctly the
+                    Another nice feature of the <classname>MessageDispatcherServlet</classname> (or more correctly the
                     <classname>WsdlDefinitionHandlerAdapter</classname>) is that it is able to
                     transform the value of the '<literal>location</literal>' of all the WSDL that it exposes to reflect
                     the URL of the incoming request.
@@ -257,9 +254,6 @@
                 </para>
                 <programlisting><![CDATA[
 <bean id="schemaCollection" class="org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection">
-    <description>
-        This bean wrap the messages.xsd (which imports types.xsd), and inlines them as a one.
-    </description>
     <property name="xsds">
         <list>
             <value>/WEB-INF/xsds/Orders.xsd</value>
@@ -281,7 +275,7 @@
                     Refer to the class-level Javadoc of these classes to see how you can extend this mechanism,
                     if necessary.
                 </para>
-                <note>
+                <caution>
                     <para>
                         Even though it can be quite handy to create the WSDL at runtime from your XSDs, there
                         are a couple of drawbacks to this approach. First off, though we try to keep the WSDL generation
@@ -296,7 +290,7 @@
                         <classname>SimpleWsdl11Definition</classname>. This is the only way to be really sure that
                         the WSDL does not change over time.
                     </para>
-                </note>
+                </caution>
             </section>
         </section>
         <section>
@@ -591,36 +585,123 @@
             request message and uses that input to invoke a method on the business service (typically). The result of that service
             invocation is represented as a response message. Spring-WS has a wide variety of endpoints, using various
             ways to handle the XML message, and to create a response.
-           </para>
-        <para>
-            The basis for most endpoints in Spring Web Services is the
-            <interfacename>org.springframework.ws.server.endpoint.PayloadEndpoint</interfacename> interface, the source
-            code of which is listed below.
         </para>
-        <programlisting><![CDATA[public interface PayloadEndpoint {
+        <para>
+            You create an endpoint by annotating a class with the <interfacename>@Endpoint</interfacename> annotation.
+            In the class, you define one or more methods that handle the incoming XML request, by using a wide
+            variety of parameter types (such as DOM elements, JAXB2 objects, etc).
+            You indicate the sort of messages a method can handle by using another annotation (typically
+            <interfacename>@PayloadRoot</interfacename>).
+        </para>
+        <para>
+            Consider the following sample endpoint:
+            <programlistingco>
+                <areaspec>
+                    <area coords="9" id="server-endpoint-atEndpoint"/>
+                    <area coords="14" id="server-endpoint-constructor"/>
+                    <area coords="20" id="server-endpoint-order"/>
+                    <area coords="27" id="server-endpoint-getOrder"/>
+                    <areaset coords="" id="server-endpoint-payloadRoot">
+                        <area coords="19" id="server-endpoint-payloadRoot-1"/>
+                        <area coords="25" id="server-endpoint-payloadRoot-2"/>
+                    </areaset>
+                </areaspec>
+            <programlisting><![CDATA[package samples;
 
-    ]]><lineannotation>/**
-     * Invokes an operation.
-     */</lineannotation><![CDATA[
-    Source invoke(Source request) throws Exception;
+import org.w3c.dom.Element;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+
+@Endpoint
+public class AnnotationOrderEndpoint {
+
+  private final OrderService orderService;
+
+  @Autowired
+  public AnnotationOrderEndpoint(OrderService orderService) {
+      this.orderService = orderService;
+  }
+
+  @PayloadRoot(localPart = "order", namespace = "http://samples")
+  public void order(@RequestPayload Element orderElement) {
+    Order order = createOrder(orderElement);
+    orderService.createOrder(order);
+  }
+
+  @PayloadRoot(localPart = "orderRequest", namespace = "http://samples")
+  @ResponsePayload
+  public Order getOrder(@RequestPayload OrderRequest orderRequest) {
+    return orderService.getOrder(orderRequest.getId());
+  }
+
+  ...
+
 }]]></programlisting>
-        <para>
-            As you can see, the <interfacename>PayloadEndpoint</interfacename> interface defines a single method that
-            is invoked with the XML payload of a request (typically the contents of the SOAP Body, see
-            <xref linkend="soap-message"/>). The returned <interfacename>Source</interfacename>, if any, is stored in the
-            response XML message. While the <interfacename>PayloadEndpoint</interfacename> interface is quite abstract,
-            Spring-WS offers a lot of endpoint implementations out of the box that already contain a lot of the
-            functionality you might need. The <interfacename>PayloadEndpoint</interfacename> interface just defines the
-            most basic responsibility required of every endpoint; namely handling a request and returning a response.
+                <calloutlist>
+                    <callout arearefs="server-endpoint-atEndpoint">
+                        <para>
+                            The class is annotated with <interfacename>@Endpoint</interfacename>, marking it as a
+                            Spring-WS endpoint.
+                        </para>
+                    </callout>
+                    <callout arearefs="server-endpoint-constructor">
+                        <para>
+                            The constructor is marked with <interfacename>@Autowired</interfacename>, so that the
+                            <classname>OrderService</classname> business service is injected into this endpoint.
+                        </para>
+                    </callout>
+                    <callout arearefs="server-endpoint-order">
+                        <para>
+                            The <methodname>order</methodname> method takes a <interfacename>Element</interfacename>
+                            as a parameter, annotated with <interfacename>@RequestPayload</interfacename>.
+                            This means that the payload of the message is passed on this method as a DOM element.
+                            The method has a <literal>void</literal> return type, indicating that no response message
+                            is sent.
+                        </para>
+                        <para>
+                            For more information about endpoint methods, refer to
+                            <xref linkend="server-atEndpoint-methods"/>.
+                        </para>
+                    </callout>
+                    <callout arearefs="server-endpoint-getOrder">
+                        <para>
+                            The <methodname>getOrder</methodname> method takes a <classname>OrderRequest</classname>
+                            as a parameter, annotated with <interfacename>@RequestPayload</interfacename> as well.
+                            This parameter is a JAXB2-supported object (it is annotated with
+                            <interfacename>@XmlRootElement</interfacename>).
+                            This means that the payload of the message is passed on to this method as a unmarshalled
+                            object.
+                            The method is also annotated with <interfacename>@ResponseBody</interfacename>,
+                            indicating that the return value (the <classname>Order</classname>) is used as the payload
+                            of the response message.
+                        </para>
+                        <para>
+                            For more information about endpoint methods, refer to
+                            <xref linkend="server-atEndpoint-methods"/>.
+                        </para>
+                    </callout>
+                    <callout arearefs="server-endpoint-payloadRoot">
+                        <para>
+                            The two handling methods of this endpoint are marked with
+                            <interfacename>@PayloadRoot</interfacename>, indicating what sort of request messages
+                            can be handled by the method: the <methodname>getOrder</methodname> method
+                            will be invoked for requests with a <literal>orderRequest</literal> local name and a
+                            <uri>http://samples</uri> namespace URI; the <methodname>order</methodname> method
+                            for requests with a <literal>order</literal> local name.
+                        </para>
+                        <para>
+                            For more information about <interfacename>@PayloadRoot</interfacename>, refer to
+                            <xref linkend="server-endpoint-mapping"/>.
+                        </para>
+                    </callout>
+                </calloutlist>
+            </programlistingco>
         </para>
         <para>
-            Alternatively, there is the <interfacename>MessageEndpoint</interfacename>, which operates on a
-            whole <link linkend="message-context"><interfacename>MessageContext</interfacename></link> rather than just
-            the payload. Typically, your code should not be dependent on messages, because the payload should
-            contain the information of interest. Only when it is necessary to perform actions on the message as a whole,
-            such as adding a SOAP header, get an attachment, and so forth, should you need to implement
-            <interfacename>MessageEndpoint</interfacename>, though these actions are usually performed in an
-            <link linkend="server-endpoint-interceptor">endpoint interceptor</link>.
+            In the next couple of sections, a more elaborate description of the <interfacename>@Endpoint</interfacename>
+            programming model is given.
         </para>
         <note>
             <para>
@@ -631,10 +712,58 @@
                 <ulink url="http://static.springframework.org/spring/docs/2.5.x/reference/beans.html#beans-factory-scopes">Spring Reference documentation</ulink>.
             </para>
             <para>
-                Note that all abstract base classes provided in Spring-WS (like AbstractDomPayloadEndpoint etc) are
-                thread safe. 
+                Note that all abstract base classes provided in Spring-WS are thread safe, unless otherwise indicated
+                in the class-level Javadoc.
             </para>
         </note>
+        <section id="server-atEndpoint-methods">
+            <title><interfacename>@Endpoint</interfacename> handling methods</title>
+            <para>
+                In order for an endpoint to actually handle incoming XML messages, it needs to have one or more handling
+                methods.
+                Handling methods can take wide range of parameters and return types, but typically they have one
+                parameter that will contain the message payload, and they return the payload of the response message
+                (if any).
+                You will learn which parameter and return types are supported in this section.
+            </para>
+            <para>
+                To indicate what sort of messages a method can handle, the method is typically annotated with either the
+                <interfacename>@PayloadRoot</interfacename> or <interfacename>@SoapAction</interfacename> annotation.
+                You will learn more about these annotations in <xref linkend="server-endpoint-mapping"/>.
+            </para>
+            <para>
+                Here is an example of a handling method:
+                <programlisting>@PayloadRoot(localPart = "order", namespace = "http://samples")
+public void order(@RequestPayload Element orderElement) {
+  Order order = createOrder(orderElement);
+  orderService.createOrder(order);
+}</programlisting>
+                The <methodname>order</methodname> method takes a <interfacename>Element</interfacename>
+                as a parameter, annotated with <interfacename>@RequestPayload</interfacename>.
+                This means that the payload of the message is passed on this method as a DOM element.
+                The method has a <literal>void</literal> return type, indicating that no response message
+                is sent.
+            </para>
+            <section>
+                <title>Handling method parameters</title>
+                <para>
+                    The handling method typically has one or more parameters that refer to various parts of the
+                    incoming XML message.
+                    Most commonly, the handling method will have a single parameter that will map to the payload of
+                    the message, but it is also possible to map to other parts of the message, such as a SOAP header.
+                    This section will describe the parameters you can use in your handling method signatures.
+                </para>
+                <para>
+                    One
+                </para>
+            </section>
+            <section>
+                <title>Handling method return types</title>
+                <para>
+
+                </para>
+            </section>
+        </section>
         <section>
             <title><classname>AbstractDomPayloadEndpoint</classname> and other DOM endpoints</title>
             <para>

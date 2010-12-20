@@ -13,7 +13,7 @@
             and this tutorial will help you get started. Note that the first part of this
             tutorial contains almost no Spring-WS specific information: it is mostly about
             XML, XSD, and WSDL. The <link linkend="tutorial-creating-project">second part</link>
-            focusses on implementing this contract using Spring-WS .
+            focuses on implementing this contract using Spring-WS .
         </para>
         <para>
             The most important thing when doing contract-first Web service development is
@@ -678,7 +678,7 @@ public class HolidayEndpoint {
     <dependency>
         <groupId>org.springframework.ws</groupId>
         <artifactId>spring-ws-core</artifactId>
-        <version>2.0.0</version>
+        <version>2.0.0-RC2</version>
     </dependency>
     <dependency>
         <groupId>jdom</groupId>
@@ -694,13 +694,20 @@ public class HolidayEndpoint {
              <para>
                 Here is how we would configure these classes in our <filename>spring-ws-servlet.xml</filename>
                 Spring XML configuration file, by using component scanning.
+                We also instruct Spring-WS to use annotation-driven endpoints, with the
+                <literal>&lt;sws:annotation-driven&gt;</literal> element.
             </para>
-            <programlisting id="tutorial.example.sws-conf-file"><![CDATA[<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            <programlisting id="tutorial.example.sws-conf-file"><![CDATA[<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:sws="http://www.springframework.org/schema/web-services"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+  http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-2.0.xsd
+  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
   <context:component-scan base-package="com.mycompany.hr"/>
+
+  <sws:annotation-driven/>
 
 </beans>]]></programlisting>
             </section>
@@ -720,6 +727,8 @@ public class HolidayEndpoint {
                     <literal>http://mycompany.com/hr/schemas</literal> and the
                     <literal>HolidayRequest</literal> local name, it will be routed to the
                     <methodname>handleHolidayRequest</methodname> method.
+                    By using the <literal>&lt;sws:annotation-driven&gt;</literal> element in our configuration, we
+                    enable the detection of the <interfacename>@PayloadRoot</interfacename> annotations.
                     It is possible (and quite common) to have multiple, related handling methods in an endpoint, each
                     of them handling different XML messages.
                 </para>
@@ -739,43 +748,29 @@ public class HolidayEndpoint {
         <programlistingco>
             <areaspec>
                 <area id="tutorial.wsdl.gen.bean" coords="1"/>
-                <areaset id="tutorial.wsdl.gen.schema" coords="">
-                    <area id="tutorial.wsdl.gen.schema.ref" coords="2"/>
-                    <area id="tutorial.wsdl.gen.schema.def" coords="8"/>
-                </areaset>
-                <area id="tutorial.wsdl.gen.portType" coords="3"/>
-                <area id="tutorial.wsdl.gen.locationUri" coords="4"/>
-                <area id="tutorial.wsdl.gen.tns" coords="5"/>
+                <area id="tutorial.wsdl.gen.schema" coords="5"/>
+                <area id="tutorial.wsdl.gen.portType" coords="2"/>
+                <area id="tutorial.wsdl.gen.locationUri" coords="3"/>
+                <area id="tutorial.wsdl.gen.tns" coords="4"/>
             </areaspec>
-            <programlisting><![CDATA[<bean id="holiday" class="org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition">
-    <property name="schema" ref="schema"/>
-    <property name="portTypeName" value="HumanResource"/>
-    <property name="locationUri" value="/holidayService/"/>
-    <property name="targetNamespace" value="http://mycompany.com/hr/definitions"/>
-</bean>
-
-<bean id="schema" class="org.springframework.xml.xsd.SimpleXsdSchema">
-    <property name="xsd" value="/WEB-INF/hr.xsd"/>
-</bean>]]></programlisting>
+            <programlisting><![CDATA[<sws:dynamic-wsdl id="holiday"
+    portTypeName="HumanResource"
+    locationUri="/holidayService/"
+    targetNamespace="http://mycompany.com/hr/definitions">
+  <sws:xsd location="/WEB-INF/hr.xsd"/>
+</sws:dynamic-wsdl>]]></programlisting>
             <calloutlist>
                 <callout arearefs="tutorial.wsdl.gen.bean">
                     <para>
-                        The bean id determines the URL where the WSDL can be retrieved. In this case, the bean id is
-                        <varname>holiday</varname>, which means that the WSDL can be retrieved as
-                        <filename>holiday.wsdl</filename> in the servlet context. The full URL will typically be
-                        <uri>http://localhost:8080/holidayService/holiday.wsdl</uri>.
-                    </para>
-                </callout>
-                <callout arearefs="tutorial.wsdl.gen.schema">
-                    <para>
-                        The <varname>schema</varname> property refers to the human resource schema we defined in
-                        <xref linkend="tutorial.xsd"/>, wrapped in a <classname>SimpleXsdSchema</classname>. We simply
-                        placed the schema in the <filename>WEB-INF</filename> directory of the application.
+                        The id determines the URL where the WSDL can be retrieved.
+                        In this case, the id is <varname>holiday</varname>, which means that the WSDL can be retrieved
+                        as <filename>holiday.wsdl</filename> in the servlet context.
+                        The full URL will typically be <uri>http://localhost:8080/holidayService/holiday.wsdl</uri>.
                     </para>
                 </callout>
                 <callout arearefs="tutorial.wsdl.gen.portType">
                     <para>
-                        Next, we define the WSDL port type to be <literal>HumanResource</literal>.
+                        Next, we set the WSDL port type to be <literal>HumanResource</literal>.
                     </para>
                 </callout>
                 <callout arearefs="tutorial.wsdl.gen.locationUri">
@@ -798,8 +793,16 @@ public class HolidayEndpoint {
                 </callout>
                 <callout arearefs="tutorial.wsdl.gen.tns">
                     <para>
-                        Finally, we define the target namespace for the WSDL definition itself. Setting these
-                        is not required. If not set, we give the WSDL the same namespace as the schema.
+                        We define the target namespace for the WSDL definition itself.
+                        Setting this attribute is not required.
+                        If not set, the WSDL will have the same namespace as the XSD schema.
+                    </para>
+                </callout>
+                <callout arearefs="tutorial.wsdl.gen.schema">
+                    <para>
+                        The <varname>xsd</varname> element refers to the human resource schema we defined in
+                        <xref linkend="tutorial.xsd"/>.
+                        We simply placed the schema in the <filename>WEB-INF</filename> directory of the application.
                     </para>
                 </callout>
             </calloutlist>
