@@ -158,14 +158,13 @@
                     WSDL to clients simply by just defining some beans.
                 </para>
                 <para>
-                    By way of an example, consider the following bean definition, defined in the Spring-WS framework's
-                    configuration file ('<filename>/WEB-INF/[servlet-name]-servlet.xml</filename>'). Take notice of the
-                    value of the bean's '<literal>id</literal>' attribute, because this will be used when exposing
-                    the WSDL.
+                    By way of an example, consider the following <literal>&lt;static-wsdl&gt;</literal>definition,
+                    defined in the Spring-WS configuration file
+                    (<filename>/WEB-INF/[servlet-name]-servlet.xml</filename>).
+                    Take notice of the value of the '<literal>id</literal>' attribute, because this will be used when
+                    exposing the WSDL.
                 </para>
-                <programlisting><![CDATA[<bean id="orders" class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
-    <constructor-arg value="/WEB-INF/wsdl/Orders.wsdl"/>
-</bean>]]></programlisting>
+                <programlisting><![CDATA[<sws:static-wsdl id="orders" location="/WEB-INF/wsdl/orders.wsdl"/>]]></programlisting>
                 <para>
                     The WSDL defined in the '<filename>Orders.wsdl</filename>' file can then be accessed via
                     <literal>GET</literal> requests to a URL of the following form (substitute the host, port and
@@ -176,9 +175,10 @@
                     <para>
                         All <interfacename>WsdlDefinition</interfacename> bean definitions are exposed by the
                         <classname>MessageDispatcherServlet</classname> under their bean id (or bean name) with the
-                        suffix <literal>.wsdl</literal>. So if the bean id is <literal>echo</literal>, the host name
-                        is "server", and the Servlet context (war name) is "spring-ws", the WSDL can be
-                        obtained via <uri>http://server/spring-ws/echo.wsdl</uri>
+                        suffix <literal>.wsdl</literal>.
+                        So if the bean id is <literal>echo</literal>, the host name is "server", and the Servlet
+                        context (war name) is "spring-ws", the WSDL can be obtained via
+                        <uri>http://server/spring-ws/echo.wsdl</uri>
                     </para>
                 </note>
                 <para>
@@ -194,81 +194,70 @@
                 </para>
                 <programlisting><![CDATA[<web-app>
 
-    <servlet>
-        <servlet-name>spring-ws</servlet-name>
-        <servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
-        <init-param>
-            <param-name>transformWsdlLocations</param-name>
-            <param-value>true</param-value>
-        </init-param>
-    </servlet>
+  <servlet>
+    <servlet-name>spring-ws</servlet-name>
+    <servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>transformWsdlLocations</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </servlet>
 
-    <servlet-mapping>
-        <servlet-name>spring-ws</servlet-name>
-        <url-pattern>/*</url-pattern>
-    </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>spring-ws</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
 
 </web-app>]]></programlisting>
                 <para>
                     Consult the class-level Javadoc on the <classname>WsdlDefinitionHandlerAdapter</classname> class
-                    which explains the whole transformation process in more detail.
+                    to learn more about the whole transformation process.
                 </para>
                 <para>
-                    As an alternative to writing the WSDL by hand, and exposing it with the
-                    <classname>SimpleWsdl11Definition</classname>, Spring Web Services can also generate a WSDL
-                    from an XSD schema. This is the approach shown in <xref linkend="tutorial-publishing-wsdl"/>.
+                    As an alternative to writing the WSDL by hand, and exposing it with
+                    <literal>&lt;static-wsdl&gt;</literal>, Spring Web Services can also generate a WSDL
+                    from an XSD schema.
+                    This is the approach shown in <xref linkend="tutorial-publishing-wsdl"/>.
                     The next application context snippet shows how to create such a dynamic WSDL file:
                 </para>
-                <programlisting><![CDATA[
-<bean id="orders" class="org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition">
-  <property name="schema" ref="schema"/>
-  <property name="portTypeName" value="Orders"/>
-  <property name="locationUri" value="http://localhost:8080/ordersService/"/>
-</bean>
-
-<bean id="schema" class="org.springframework.xml.xsd.SimpleXsdSchema">
-    <property name="xsd" value="/WEB-INF/xsd/Orders.xsd"/>
-</bean>]]></programlisting>
+                <programlisting><![CDATA[<sws:dynamic-wsdl id="orders"
+    portTypeName="Orders"
+    locationUri="http://localhost:8080/ordersService/">
+  <sws:xsd location="/WEB-INF/xsd/Orders.xsd"/>
+</sws:dynamic-wsdl>]]></programlisting>
                 <para>
-                    The <classname>DefaultWsdl11Definition</classname> which builds
-                    a WSDL from a XSD schema.  This definition iterates over all <literal>element</literal> elements
-                    found in the schema, and creates a <literal>message</literal> for all elements. Next, it creates
-                    WSDL <literal>operation</literal> for all messages that end with the
-                    defined request or response suffix. The default request suffix is <literal>Request</literal>;
+                    The <literal>&lt;dynamic-wsdl&gt;</literal> builds a WSDL from a XSD schema by using conventions.
+                    It iterates over all <literal>element</literal> elements
+                    found in the schema, and creates a <literal>message</literal> for all elements.
+                    Next, it creates WSDL <literal>operation</literal> for all messages that end with the
+                    defined request or response suffix.
+                    The default request suffix is <literal>Request</literal>;
                     the default response suffix is <literal>Response</literal>, though these can be changed by
                     setting the <property>requestSuffix</property> and <property>responseSuffix</property>
-                    properties, respectively.
-                    It also builds a <literal>portType</literal>, <literal>binding</literal>, and <literal>service</literal> based on the operations.
+                    attributes on <literal>&lt;dynamic-wsdl /&gt;</literal>, respectively.
+                    It also builds a <literal>portType</literal>, <literal>binding</literal>, and
+                    <literal>service</literal> based on the operations.
                 </para>
                 <para>
                     For instance, if our <filename>Orders.xsd</filename> schema defines the
-                    <literal>GetOrdersRequest</literal> and <literal>GetOrdersResponse</literal> elements, the
-                    <classname>XsdBasedSoap11Wsdl4jDefinitionBuilder</classname> will create a
+                    <literal>GetOrdersRequest</literal> and <literal>GetOrdersResponse</literal> elements,
+                    <literal>&lt;dynamic-wsdl&gt;</literal> will create a
                     <literal>GetOrdersRequest</literal> and <literal>GetOrdersResponse</literal> message, and a
                     <literal>GetOrders</literal> operation, which is put in a <literal>Orders</literal> port type.
                 </para>
                 <para>
-                    If you want to use multiple schemas, either by includes or imports, you might want to use the
-                    <classname>CommonsXsdSchemaCollection</classname>, and refer to that from the
-                    <classname>DefaultWsdl11Definition</classname>, like so:
-                </para>
-                <programlisting><![CDATA[
-<bean id="schemaCollection" class="org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection">
-    <property name="xsds">
-        <list>
-            <value>/WEB-INF/xsds/Orders.xsd</value>
-            <value>/WEB-INF/xsds/Customers.xsd</value>
-        </list>
-    </property>
-    <property name="inline" value="true"/>
-</bean>]]></programlisting>
-                <para>
-                    When the <property>inline</property> property is enabled, it follows all XSD imports and includes,
-                    and inlines them in the WSDL. This greatly simplifies the deployment of the schemas, which still
-                    making it possible to edit them separately. 
+                    If you want to use multiple schemas, either by includes or imports, you will want to
+                    put Commons XMLSchema on the class path.
+                    If Commons XMLSchema is on the class path, the above <literal>&lt;dynamic-wsdl&gt;</literal>
+                    element will follow all XSD imports and includes,
+                    and will inline them in the WSDL as a single XSD.
+                    This greatly simplifies the deployment of the schemas, which still making it possible to edit them
+                    separately.
                 </para>
                 <para>
-                    The <classname>DefaultWsdl11Definition</classname> uses WSDL providers in the
+                    The <literal>&lt;dynamic-wsdl&gt;</literal> element depends on the
+                    <classname>DefaultWsdl11Definition</classname> class.
+                    This definition class uses WSDL providers in the
                     <package>org.springframework.ws.wsdl.wsdl11.provider</package> package and the
                     <classname>ProviderBasedWsdl4jDefinition</classname>
                     to generate a WSDL the first time it is requested.
@@ -284,11 +273,11 @@
                         reference.
                     </para>
                     <para>
-                        It is therefore recommended to only use the <classname>DefaultWsdl11Definition</classname>
-                        during the development stages of your project. Then, we recommend to use your browser to
-                        download the generated WSDL, store it in the project, and expose it with the
-                        <classname>SimpleWsdl11Definition</classname>. This is the only way to be really sure that
-                        the WSDL does not change over time.
+                        It is therefore recommended to only use <literal>&lt;dynamic-wsdl&gt;</literal>
+                        during the development stages of your project.
+                        Then, we recommend to use your browser to download the generated WSDL, store it in the project,
+                        and expose it with <literal>&lt;static-wsdl&gt;</literal>.
+                        This is the only way to be really sure that the WSDL does not change over time.
                     </para>
                 </caution>
             </section>
@@ -397,7 +386,7 @@
                 As an alternative to the <classname>WebServiceMessageListener</classname>, Spring Web Services provides
                 a <classname>WebServiceMessageDrivenBean</classname>, an EJB
                 <interfacename>MessageDrivenBean</interfacename>. For more information on EJB, refer to the class level
-                Javadocs of the <classname>WebServiceMessageDrivenBean</classname>.
+                Javadoc of the <classname>WebServiceMessageDrivenBean</classname>.
             </para>
         </section>
         <section>
@@ -700,6 +689,22 @@ public class AnnotationOrderEndpoint {
             </programlistingco>
         </para>
         <para>
+            To enable the support for <interfacename>@Endpoint</interfacename> and related Spring-WS annotations,
+            you will need to add the following to your Spring application context:
+
+            <programlisting>&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+  xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+  <emphasis role="bold">xmlns:sws=&quot;http://www.springframework.org/schema/web-services&quot;</emphasis>
+  xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    <emphasis role="bold">http://www.springframework.org/schema/web-services
+      http://www.springframework.org/schema/web-services/web-services-2.0.xsd&quot;&gt;</emphasis>
+
+  <emphasis role="bold">&lt;sws:annotation-driven /&gt;</emphasis>
+
+&lt;/beans&gt;</programlisting>
+        </para>
+        <para>
             In the next couple of sections, a more elaborate description of the <interfacename>@Endpoint</interfacename>
             programming model is given.
         </para>
@@ -750,17 +755,167 @@ public void order(@RequestPayload Element orderElement) {
                     The handling method typically has one or more parameters that refer to various parts of the
                     incoming XML message.
                     Most commonly, the handling method will have a single parameter that will map to the payload of
-                    the message, but it is also possible to map to other parts of the message, such as a SOAP header.
+                    the message, but it is also possible to map to other parts of the request message, such as a SOAP
+                    header.
                     This section will describe the parameters you can use in your handling method signatures.
                 </para>
                 <para>
-                    One
+                    To map a parameter to the payload of the request message, you will need to annotate this parameter
+                    with the <interfacename>@RequestPayload</interfacename> annotation.
+                    This annotation tells Spring-WS that the parameter needs to be bound to the request payload.
+                </para>
+                <para>
+                    The following table describes the supported parameter types.
+                    It shows the supported types, whether the parameter should be annotated with
+                    <interfacename>@RequestPayload</interfacename>, and any additional notes.
+                    <informaltable>
+                        <tgroup cols="4">
+                            <thead>
+                                <row>
+                                    <entry>Name</entry>
+                                    <entry>Supported parameter types</entry>
+                                    <entry><interfacename>@RequestPayload</interfacename> required?</entry>
+                                    <entry>Additional notes</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry align="center">TrAX</entry>
+                                    <entry>
+                                        <interfacename>javax.xml.transform.Source</interfacename> and sub-interfaces
+                                        (<interfacename>DOMSource</interfacename>, <interfacename>SAXSource</interfacename>,
+                                        <interfacename>StreamSource</interfacename>, and <interfacename>StAXSource</interfacename>)
+                                    </entry>
+                                    <entry align="center">&check;</entry>
+                                    <entry>Enabled by default.</entry>
+                                </row>
+                                <row>
+                                    <entry align="center">W3C DOM</entry>
+                                    <entry><interfacename>org.w3c.dom.Element</interfacename></entry>
+                                    <entry align="center">&check;</entry>
+                                    <entry>Enabled by default</entry>
+                                </row>
+                                <row>
+                                    <entry align="center">dom4j</entry>
+                                    <entry><interfacename>org.dom4j.Element</interfacename></entry>
+                                    <entry align="center">&check;</entry>
+                                    <entry>Enabled when dom4j is on the classpath.</entry>
+                                </row>
+                                <row>
+                                    <entry align="center">JDOM</entry>
+                                    <entry><classname>org.jdom.Element</classname></entry>
+                                    <entry align="center">&check;</entry>
+                                    <entry>Enabled when JDOM is on the classpath.</entry>
+                                </row>
+                                <row>
+                                    <entry align="center">XOM</entry>
+                                    <entry><classname>nu.xom.Element</classname></entry>
+                                    <entry align="center">&check;</entry>
+                                    <entry>Enabled when XOM is on the classpath.</entry>
+                                </row>
+                                <row>
+                                    <entry align="center">StAX</entry>
+                                    <entry>
+                                        <interfacename>javax.xml.stream.XMLStreamReader</interfacename> and
+                                        <interfacename>javax.xml.stream.XMLEventReader</interfacename>
+                                    </entry>
+                                    <entry align="center">&check;</entry>
+                                    <entry>Enabled when StAX is on the classpath.</entry>
+                                </row>
+                                <row>
+                                    <entry align="center">XPath</entry>
+                                    <entry>
+                                        Any boolean, double, <classname>String</classname>,
+                                        <interfacename>org.w3c.Node</interfacename>,
+                                        <interfacename>org.w3c.dom.NodeList</interfacename>, or
+                                        type that can be converted from a <classname>String</classname> by a Spring 3
+                                        <ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/validation.html#core-convert">conversion service</ulink>,
+                                        and that is annotated with <interfacename>@XPathParam</interfacename>.
+                                   </entry>
+                                    <entry align="center">&cross;</entry>
+                                    <entry>Enabled by default.</entry>
+                                </row>
+                                <row>
+                                    <entry align="center">Message context</entry>
+                                    <entry><interfacename>org.springframework.ws.context.MessageContext</interfacename></entry>
+                                    <entry align="center">&cross;</entry>
+                                    <entry>Enabled by default.</entry>
+                                </row>
+                                <row>
+                                    <entry align="center">SOAP</entry>
+                                    <entry>
+                                        <interfacename>org.springframework.ws.soap.SoapMessage</interfacename>,
+                                        <interfacename>org.springframework.ws.soap.SoapBody</interfacename>,
+                                        <interfacename>org.springframework.ws.soap.SoapEnvelope</interfacename>, and
+                                        <interfacename>org.springframework.ws.soap.SoapHeader</interfacename>
+                                   </entry>
+                                    <entry align="center">&cross;</entry>
+                                    <entry>Enabled by default.</entry>
+                                </row>
+                                <row>
+                                    <entry align="center">JAXB2</entry>
+                                    <entry>
+                                        Any type that is annotated with
+                                        <interfacename>javax.xml.bind.annotation.XmlRootElement</interfacename>,
+                                        and <classname>javax.xml.bind.JAXBElement</classname>.
+                                   </entry>
+                                    <entry align="center">&check;</entry>
+                                    <entry>Enabled when JAXB2 is on the classpath.</entry>
+                                </row>
+                                <row>
+                                    <entry align="center">OXM</entry>
+                                    <entry>
+                                        Any type supported by a Spring OXM
+                                        <ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/oxm.html#d0e26164"><interfacename>Unmarshaller</interfacename></ulink>.
+                                   </entry>
+                                    <entry align="center">&check;</entry>
+                                    <entry>
+                                        Enabled when the <literal>unmarshaller</literal> attribute of
+                                        <literal>&lt;sws:annotation-driven/&gt;</literal> is specified.
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </informaltable>
+                </para>
+                <para>
+                    Here are some examples of possible method signatures:
+                    <itemizedlist>
+                        <listitem><para>
+                            <programlisting>public void handle(@RequestPayload Element element)</programlisting>
+                            This method will be invoked with the payload of the request message as a DOM
+                            <interfacename>org.w3c.dom.Element</interfacename>.
+                        </para></listitem>
+                        <listitem><para>
+                            <programlisting>public void handle(@RequestPayload DOMSource domSource, SoapHeader header)</programlisting>
+                            This method will be invoked with the payload of the request message as a
+                            <interfacename>javax.xml.transform.dom.DOMSource</interfacename>.
+                            The <parameter>header</parameter> parameter will be bound to the SOAP header of the request
+                            message.
+                        </para></listitem>
+                        <listitem><para>
+                            <programlisting>public void handle(@RequestPayload MyJaxb2Object requestObject, @RequestPayload Element element, Message messageContext)</programlisting>
+                            This method will be invoked with the payload of the request message unmarshalled into
+                            a <classname>MyJaxb2Object</classname> (which is annotated with
+                            <interfacename>@XmlRootElement</interfacename>).
+                            The payload of the message is also given as a DOM <interfacename>Element</interfacename>.
+                            The whole <link linkend="message-context">message context</link> is passed on as the
+                            third parameter.
+                        </para></listitem>
+                    </itemizedlist>
+                    As you can see, there are a lot of possibilities when it comes to defining handling method
+                    signatures.
+                    It is even possible to extend this mechanism, and to support your own parameter types.
+                    Refer to the class-level Javadoc of <classname>DefaultMethodEndpointAdapter</classname> and
+                    <interfacename>MethodArgumentResolver</interfacename> to see how.
                 </para>
             </section>
             <section>
                 <title>Handling method return types</title>
                 <para>
-
+                    To map the return value to the payload of the response message, you will need to annotate the
+                    method with the <interfacename>@ResponsePayload</interfacename> annotation.
+                    This annotation tells Spring-WS that the return value needs to be bound to the response payload.
                 </para>
             </section>
         </section>
@@ -1998,7 +2153,7 @@ public class CustomerEndpointIntegrationTest {
                 You will typically statically import this class.
             </para>
             <para>
-                The <classname>ResponseMatchers</classname> class provides the following request matchers:
+                The <classname>ResponseMatchers</classname> class provides the following response matchers:
                 <informaltable>
                     <tgroup cols="2">
                         <thead>

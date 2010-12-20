@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,7 +31,7 @@ import org.springframework.core.convert.support.ConversionServiceFactory;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.annotation.XPathParam;
 import org.springframework.ws.server.endpoint.support.NamespaceUtils;
-import org.springframework.xml.transform.TransformerObjectSupport;
+import org.springframework.xml.transform.TransformerHelper;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -49,9 +49,11 @@ import org.w3c.dom.NodeList;
  * @author Arjen Poutsma
  * @since 2.0
  */
-public class XPathParamMethodArgumentResolver extends TransformerObjectSupport implements MethodArgumentResolver {
+public class XPathParamMethodArgumentResolver implements MethodArgumentResolver {
 
     private final XPathFactory xpathFactory = createXPathFactory();
+
+    private TransformerHelper transformerHelper = new TransformerHelper();
 
     private ConversionService conversionService = ConversionServiceFactory.createDefaultConversionService();
 
@@ -63,6 +65,10 @@ public class XPathParamMethodArgumentResolver extends TransformerObjectSupport i
      */
     public void setConversionService(ConversionService conversionService) {
         this.conversionService = conversionService;
+    }
+
+    public void setTransformerHelper(TransformerHelper transformerHelper) {
+        this.transformerHelper = transformerHelper;
     }
 
     public boolean supportsParameter(MethodParameter parameter) {
@@ -129,7 +135,7 @@ public class XPathParamMethodArgumentResolver extends TransformerObjectSupport i
 
     private Element getRootElement(Source source) throws TransformerException {
         DOMResult domResult = new DOMResult();
-        transform(source, domResult);
+        transformerHelper.transform(source, domResult);
         Document document = (Document) domResult.getNode();
         return document.getDocumentElement();
     }
