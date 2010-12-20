@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -77,6 +77,19 @@ public class MarshallingPayloadMethodProcessorTest extends AbstractMethodArgumen
     }
 
     @Test
+    public void supportsParameterNoUnmarshallerSupported() {
+        processor = new MarshallingPayloadMethodProcessor();
+        processor.setMarshaller(marshaller);
+
+        replay(marshaller, unmarshaller);
+
+        assertFalse("processor supports parameter with no unmarshaller set",
+                processor.supportsParameter(supportedParameter));
+
+        verify(marshaller, unmarshaller);
+    }
+
+    @Test
     public void supportsReturnTypeSupported() {
         expect(marshaller.supports(isA(Type.class))).andReturn(true);
 
@@ -99,6 +112,20 @@ public class MarshallingPayloadMethodProcessorTest extends AbstractMethodArgumen
     }
 
     @Test
+    public void supportsReturnTypeNoMarshaller() {
+        processor = new MarshallingPayloadMethodProcessor();
+        processor.setUnmarshaller(unmarshaller);
+
+        replay(marshaller, unmarshaller);
+
+        assertFalse("processor supports return type with no marshaller set",
+                processor.supportsReturnType(supportedReturnType));
+
+        verify(marshaller, unmarshaller);
+    }
+
+
+    @Test
     public void resolveArgument() throws Exception {
         MyObject expected = new MyObject();
 
@@ -113,6 +140,17 @@ public class MarshallingPayloadMethodProcessorTest extends AbstractMethodArgumen
         verify(marshaller, unmarshaller);
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void resolveArgumentNoUnmarshaller() throws Exception {
+        processor = new MarshallingPayloadMethodProcessor();
+        processor.setMarshaller(marshaller);
+
+        replay(marshaller, unmarshaller);
+        MessageContext messageContext = createMockMessageContext();
+
+        processor.resolveArgument(messageContext, supportedParameter);
+    }
+
     @Test
     public void handleReturnValue() throws Exception {
         MyObject returnValue = new MyObject();
@@ -125,6 +163,19 @@ public class MarshallingPayloadMethodProcessorTest extends AbstractMethodArgumen
         processor.handleReturnValue(messageContext, supportedReturnType, returnValue);
 
         verify(marshaller, unmarshaller);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void handleReturnValueNoMarshaller() throws Exception {
+        processor = new MarshallingPayloadMethodProcessor();
+        processor.setUnmarshaller(unmarshaller);
+
+        MyObject returnValue = new MyObject();
+
+        replay(marshaller, unmarshaller);
+        MessageContext messageContext = createMockMessageContext();
+
+        processor.handleReturnValue(messageContext, supportedReturnType, returnValue);
     }
 
     @ResponsePayload
