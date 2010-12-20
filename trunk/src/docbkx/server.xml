@@ -586,13 +586,13 @@
             Consider the following sample endpoint:
             <programlistingco>
                 <areaspec>
-                    <area coords="9" id="server-endpoint-atEndpoint"/>
-                    <area coords="14" id="server-endpoint-constructor"/>
-                    <area coords="20" id="server-endpoint-order"/>
-                    <area coords="27" id="server-endpoint-getOrder"/>
+                    <area coords="10" id="server-endpoint-atEndpoint"/>
+                    <area coords="15" id="server-endpoint-constructor"/>
+                    <area coords="21" id="server-endpoint-order"/>
+                    <area coords="28" id="server-endpoint-getOrder"/>
                     <areaset coords="" id="server-endpoint-payloadRoot">
-                        <area coords="19" id="server-endpoint-payloadRoot-1"/>
-                        <area coords="25" id="server-endpoint-payloadRoot-2"/>
+                        <area coords="20" id="server-endpoint-payloadRoot-1"/>
+                        <area coords="26" id="server-endpoint-payloadRoot-2"/>
                     </areaset>
                 </areaspec>
             <programlisting><![CDATA[package samples;
@@ -602,6 +602,7 @@ import org.w3c.dom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.soap.SoapHeader;
 
 @Endpoint
 public class AnnotationOrderEndpoint {
@@ -621,7 +622,8 @@ public class AnnotationOrderEndpoint {
 
   @PayloadRoot(localPart = "orderRequest", namespace = "http://samples")
   @ResponsePayload
-  public Order getOrder(@RequestPayload OrderRequest orderRequest) {
+  public Order getOrder(@RequestPayload OrderRequest orderRequest, SoapHeader header) {
+    checkSoapHeaderForSomething(header);
     return orderService.getOrder(orderRequest.getId());
   }
 
@@ -662,7 +664,9 @@ public class AnnotationOrderEndpoint {
                             <interfacename>@XmlRootElement</interfacename>).
                             This means that the payload of the message is passed on to this method as a unmarshalled
                             object.
-                            The method is also annotated with <interfacename>@ResponseBody</interfacename>,
+                            The <interfacename>SoapHeader</interfacename> type is also given as a parameter.
+                            On invocation, this parameter will contain the SOAP header of the request message.
+                            The method is also annotated with <interfacename>@ResponsePayload</interfacename>,
                             indicating that the return value (the <classname>Order</classname>) is used as the payload
                             of the response message.
                         </para>
@@ -833,7 +837,7 @@ public void order(@RequestPayload Element orderElement) {
                                         and that is annotated with <interfacename>@XPathParam</interfacename>.
                                    </entry>
                                     <entry align="center">&cross;</entry>
-                                    <entry>Enabled by default.</entry>
+                                    <entry>Enabled by default, see <xref linkend="server-xpath-param" />.</entry>
                                 </row>
                                 <row>
                                     <entry align="center">Message context</entry>
@@ -909,451 +913,170 @@ public void order(@RequestPayload Element orderElement) {
                     Refer to the class-level Javadoc of <classname>DefaultMethodEndpointAdapter</classname> and
                     <interfacename>MethodArgumentResolver</interfacename> to see how.
                 </para>
-            </section>
-            <section>
-                <title>Handling method return types</title>
-                <para>
-                    To map the return value to the payload of the response message, you will need to annotate the
-                    method with the <interfacename>@ResponsePayload</interfacename> annotation.
-                    This annotation tells Spring-WS that the return value needs to be bound to the response payload.
-                </para>
-            </section>
-        </section>
-        <section>
-            <title><classname>AbstractDomPayloadEndpoint</classname> and other DOM endpoints</title>
-            <para>
-                One of the most basic ways to handle the incoming XML payload is by using a DOM (Document Object Model)
-                API. By extending from <classname>AbstractDomPayloadEndpoint</classname>, you can use the
-                <package>org.w3c.dom.Element</package> and related classes to handle the request and create the
-                response. When using the <classname>AbstractDomPayloadEndpoint</classname> as the baseclass for your
-                endpoints you only have to override the <methodname>invokeInternal(Element, Document)</methodname>
-                method, implement your logic, and return an <interfacename>Element</interfacename> if a response is
-                necessary. Here is a short example consisting of a class and a declaration in the application context.
-            </para>
-            <programlisting><![CDATA[package samples;
-            
-public class SampleEndpoint extends AbstractDomPayloadEndpoint {
-
-    private String responseText;
-
-    public SampleEndpoint(String responseText) {
-        this.responseText = responseText;
-    }
-
-    protected Element invokeInternal(
-            Element requestElement,
-            Document document) throws Exception {
-        String requestText = requestElement.getTextContent();
-        System.out.println("Request text: " + requestText);
-
-        Element responseElement = document.createElementNS("http://samples", "response");
-        responseElement.setTextContent(responseText);
-        return responseElement;
-    }
-}]]></programlisting>
-               <programlisting><![CDATA[<bean id="sampleEndpoint" class="samples.SampleEndpoint">
-    <constructor-arg value="Hello World!"/>
-</bean>]]></programlisting>
-            <para>
-                The above class and the declaration in the application context are all you need besides setting up an
-                endpoint mapping (see the section entitled <xref linkend="server-endpoint-mapping"/>) to get this very
-                simple endpoint working. The SOAP message handled by this endpoint will look something like:
-            </para>
-            <programlisting><![CDATA[<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-    <SOAP-ENV:Body>]]><emphasis role="bold"><![CDATA[
-        <request xmlns="http://samples">
-            Hello
-        </request>]]></emphasis><![CDATA[
-    </SOAP-ENV:Body>
-</SOAP-ENV:Envelope>]]></programlisting>
-            <para>
-                Though it could also handle the following Plain Old XML (POX) message, since we are only working on
-                the <emphasis>payload</emphasis> of the message, and do not care whether it is SOAP or POX.
-            </para>
-            <programlisting><![CDATA[<request xmlns="http://samples">
-    Hello
-</request>]]></programlisting>
-            <para>
-                The SOAP response looks like:
-            </para>
-            <programlisting><![CDATA[<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-    <SOAP-ENV:Body>]]><emphasis role="bold"><![CDATA[
-        <response xmlns="http://samples">
-            Hello World!
-        </response>]]></emphasis><![CDATA[
-    </SOAP-ENV:Body>
-</SOAP-ENV:Envelope>]]></programlisting>
-            <para>
-                Besides the <classname>AbstractDomPayloadEndpoint</classname>, which uses W3C DOM, there are other
-                base classes which use alternative DOM APIs. Spring Web Services supports most DOM APIs, so that you
-                can use the one you are familiar with. For instance, the
-                <classname>AbstractJDomPayloadEndpoint</classname> allows you to use JDOM, and the
-                <classname>AbstractXomPayloadEndpoint</classname> uses XOM to handle the XML. All of these endpoints
-                have an <methodname>invokeInternal</methodname> method similar to above.
-                Also, consider using Spring-WS's XPath support to extract the information you need out of the payload.
-                (See the section entitled <xref linkend="xpath"/> for details.)
-            </para>
-        </section>
-        <section>
-            <title><classname>AbstractMarshallingPayloadEndpoint</classname></title>
-            <para>
-                Rather than handling XML directly using DOM, you can use marshalling to convert the payload of the XML
-                message into a Java Object. Spring Web Services offers the
-                <classname>AbstractMarshallingPayloadEndpoint</classname> for this purpose, which is built on the
-                Spring's OXM package. The
-                <classname>AbstractMarshallingPayloadEndpoint</classname> has two properties:
-                <property>marshaller</property> and <property>unmarshaller</property>, in which you can inject in the
-                constructor or by setters.
-            </para>
-            <para>
-                When extending from <classname>AbstractMarshallingPayloadEndpoint</classname>, you have to override
-                the <methodname>invokeInternal(Object)</methodname> method, where the passed
-                <classname>Object</classname> represents the unmarshalled request payload, and return an
-                <classname>Object</classname> that will be marshalled into the response payload. Here is an
-                example:
-            </para>
-            <programlisting><![CDATA[package samples;
-
-import org.springframework.oxm.Marshaller;
-import org.springframework.oxm.Unmarshaller;
-
-public class MarshallingOrderEndpoint extends AbstractMarshallingPayloadEndpoint{
-
-    private final OrderService orderService;
-
-    public MarshallingOrderEndpoint(OrderService orderService, Marshaller marshaller) {
-        super(marshaller);
-        this.orderService = orderService;
-    }
-
-    protected Object invokeInternal(Object request) throws Exception {
-        OrderRequest orderRequest = (OrderRequest) request;
-        Order order = orderService.getOrder(orderRequest.getId());
-        return order;
-    }
-}]]></programlisting>
-               <programlisting><![CDATA[<beans>
-    <bean id="orderEndpoint" class="samples.MarshallingOrderEndpoint">
-        <constructor-arg ref="orderService"/>
-        <constructor-arg ref="marshaller"/>
-    </bean>
-
-    <bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
-        <property name="classesToBeBound">
-            <list>
-                <value>samples.OrderRequest</value>
-                <value>samples.Order</value>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="orderService" class="samples.DefaultOrderService"/>
-
-    ]]><lineannotation>&lt;!-- Other beans, such as the endpoint mapping --&gt;</lineannotation><![CDATA[
-</beans>]]></programlisting>
-            <para>
-                In this sample, we configure a
-                <ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/oxm.html#oxm-jaxb2">Jaxb2Marshaller</ulink>
-                for the
-                <classname>OrderRequest</classname> and <classname>Order</classname> classes, and inject that
-                marshaller together with the
-                <classname>DefaultOrderService</classname> into our endpoint. This business service is not shown, but
-                it is a normal transactional service, probably using DAOs to obtain data from a database.
-                In the <methodname>invokeInternal</methodname> method, we cast the request object to an
-                <classname>OrderRequest</classname> object, which is the JAXB object representing the payload of the
-                request. Using the identifier of that request, we obtain an order from our business service and return
-                it. The returned object is marshalled into XML, and used as the payload of the response message.
-                The SOAP request handled by this endpoint will look like:
-            </para>
-            <programlisting id="server-order-request"><![CDATA[<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-    <SOAP-ENV:Body>
-        <orderRequest xmlns="http://samples" id="42"/>
-    </SOAP-ENV:Body>
-</SOAP-ENV:Envelope>
-]]></programlisting>
-            <para>
-                The resulting response will be something like:
-            </para>
-            <programlisting><![CDATA[<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-    <SOAP-ENV:Body>
-        <order xmlns="http://samples" id="42">
-            <item id="100">
-                <quantity>1</quantity>
-                <price>20.0</price>
-            </item>
-            <item id="101">
-                <quantity>1</quantity>
-                <price>10.0</price>
-            </item>
-        </order>
-    </SOAP-ENV:Body>
-</SOAP-ENV:Envelope>]]></programlisting>
-            <para>
-                Instead of JAXB 2, we could have used <ulink
-                url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/oxm.html">any Spring OXM marshallers</ulink>.
-                The only thing that would change in the above example is the configuration of the
-                <literal>marshaller</literal> bean.
-            </para>
-        </section>
-        <section>
-			<title>Using Spring <interfacename>Validator</interfacename> with Marshalling Endpoints</title>
-           	<para>
-           		It is possible to use <ulink url="http://static.springframework.org/spring/docs/2.5.x/reference/validation.html#validator"><interfacename>Validator</interfacename></ulink> 
-           		objects in conjunction with marshalling endpoints in order to validate the unmarshalled payloads.
-           		Spring-WS provides 2 extensions of <classname>AbstractMarshallingPayloadEndpoint</classname> for that purpose:
-           		<classname>AbstractValidatingMarshallingPayloadEndpoint</classname> and 
-           		<classname>AbstractFaultCreatingValidatingMarshallingPayloadEndpoint</classname>. The former is the most
-           		general whereas the latter specializes in creating SOAP faults in response to validation errors. 
-           	</para>
-           	<para>
-           		Both classes support setting one or more <interfacename>Validator</interfacename> objects via the 
-           		<property>validator</property> and <property>validators</property> properties respectively.
-           		Note that all of the injected validators
-           		<emphasis role="bold">must</emphasis> support the request object (through the <methodname>supports</methodname> method)
-           		or else an <exceptionname>IllegalArgumentException</exceptionname> will be thrown.
-           	</para>
-           	<note>
-				<para>
-					The default request object name used in the validator is <literal>request</literal>.
-					The error codes are	generated in consequence. For instance, assuming a POJO with a 
-					"<property>name</property>" property of type <literal>java.lang.String</literal>,
-					calling <methodname>errors.rejectValue("name","invalidValue")</methodname> in the 
-					<methodname>validate</methodname> method of a <interfacename>Validator</interfacename>
-					 generates the following error codes:
-					<literal>invalidValue.request.name</literal>, <literal>invalidValue.name</literal>, 
-					<literal>invalidValue.java.lang.String</literal> and <literal>invalidValue</literal>.
-					 Similarly, calling <methodname>errors.reject("invalidValue")</methodname>
-					 generates  <literal>invalidValue.request</literal> and <literal>invalidValue</literal> as error codes.  
-				</para>	           	
-           	</note>           	
-           	<section>
-           		<title><classname>AbstractValidatingMarshallingPayloadEndpoint</classname></title>
-           		<para>
-           			Subclasses of <classname>AbstractValidatingMarshallingPayloadEndpoint</classname> 
-           			implement the validation error handling logic by overriding the <methodname>onValidationErrors</methodname>
-           			method. This method is called when a validation error occurs and its return value
-           			indicates whether the endpoint should continue processing the request or not.
-           		</para>
-           		<para>
-           			In the following example, a custom error POJO is marshalled and sent as a response:
-           		</para>
-           			<programlisting><![CDATA[public class MyMarshallingEndpoint extends AbstractValidatingMarshallingPayloadEndpoint{
-
-    private MessageSource messageSource;
-
-    protected Object invokeInternal(Object requestObject) throws Exception {
-    	// process the payload
-    }
-
-    protected boolean onValidationErrors(MessageContext messageContext, Object requestObject, Errors errors) {
-        FieldError error = errors.getFieldError("name");
-        CustomError customError = new CustomError();
-        String message = messageSource.getMessage(error, Locale.ENGLISH);
-        customError.setMessage(message);
-        try {
-            getMarshaller().marshal(customError, messageContext.getResponse().getPayloadResult());
-        } catch (XmlMappingException ex) {
-            // handle the exception
-        } catch (IOException ex) {
-            // handle the exception
-        }
-        return false;
-    }
-}
-]]></programlisting>
-           	</section>
-           	<section>
-           		<title><classname>AbstractFaultCreatingValidatingMarshallingPayloadEndpoint</classname></title>
-           		<para>
-           			Endpoints of this type generate a SOAP fault whenever a validation error occurs.
-           			By default, a fault detail element is generated for each validation error.
-           			The error codes are resolved using the application context message source.
-           		</para>
-           		<para>
-           			The properties of <classname>AbstractFaultCreatingValidatingMarshallingPayloadEndpoint</classname>
-           			have sensible defaults, which makes its subclasses quite simple to configure as in the following example:
-           		</para>
-					<programlisting><![CDATA[<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-    <property name="basename" value="message"/>
-</bean>
-    
-<bean id="orderValidator" class="samples.OrderValidator"/>
-
-<bean id="marshallingOrderEndpoint" class="samples.MarshallingOrderEndpoint">
-    <property name="marshaller" ref="marshaller"/>
-    <property name="unmarshaller" ref="marshaller"/>
-    <property name="validator" ref="orderValidator"/>
-</bean>
-]]></programlisting>
-				<para>
-					In case of validation error, here is how the response might look like:
-				</para>
-				<programlisting><![CDATA[<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-   <SOAP-ENV:Header/>
-   <SOAP-ENV:Body>
-      <SOAP-ENV:Fault>
-         <faultcode>SOAP-ENV:Client</faultcode>
-         <faultstring xml:lang="en">Validation error</faultstring>
-         <detail>
-            <spring-ws:ValidationError xmlns:spring-ws="http://springframework.org/spring-ws">
-                invalid user id: Ernie
-            </spring-ws:ValidationError>
-            <spring-ws:ValidationError xmlns:spring-ws="http://springframework.org/spring-ws">
-                invalid order
-            </spring-ws:ValidationError>
-         </detail>
-      </SOAP-ENV:Fault>
-   </SOAP-ENV:Body>
-</SOAP-ENV:Envelope>
-]]></programlisting>				
-				<para>	
-					It is possible though to customize various aspects of the generated SOAP faults, such as the fault string
-					and the soap detail.
-					Please refer to the <ulink url="http://static.springframework.org/spring-ws/site/apidocs/org/springframework/ws/soap/server/endpoint/AbstractFaultCreatingValidatingMarshallingPayloadEndpoint.html">Javadoc</ulink> 
-					for the full list of available options.           			
-           		</para>
-           	</section>
-        </section>
-        <section id="server-at-endpoint">
-            <title><interfacename>@Endpoint</interfacename></title>
-            <para>
-                The previous two programming models were based on inheritance, and handled individual XML messages.
-                Spring Web Services offer another endpoint with which you can aggregate multiple handling into one
-                controller, thus grouping functionality together. This model is based on annotations, so you can use
-                it only with Java 5 and higher. Here is an example that uses the same marshalled objects as above:
-            </para>
-            <programlisting><![CDATA[package samples;
-
-import org.springframework.ws.server.endpoint.annotation.Endpoint;
-import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
-
-@Endpoint
-public class AnnotationOrderEndpoint {
-    private final OrderService orderService;
-
-    public AnnotationOrderEndpoint(OrderService orderService) {
-        this.orderService = orderService;
-    }
-
-    @PayloadRoot(localPart = "orderRequest", namespace = "http://samples")
-    public Order getOrder(OrderRequest orderRequest) {
-        return orderService.getOrder(orderRequest.getId());
-    }
-
-    @PayloadRoot(localPart = "order", namespace = "http://samples")
-    public void order(Order order) {
-        orderService.createOrder(order);
-    }
-
-}]]></programlisting>
-            <para>
-                By annotating the class with <interfacename>@Endpoint</interfacename>, you mark it as a Spring-WS
-                endpoint. Because the endpoint class can have multiple request handling methods, we need to instruct
-                Spring-WS which method to invoke for which request. This is done using the
-                <interfacename>@PayloadRoot</interfacename> annotation: the <methodname>getOrder</methodname> method
-                will be invoked for requests with a <literal>orderRequest</literal> local name and a
-                <uri>http://samples</uri> namespace URI; the <methodname>order</methodname> method for requests with
-                a <literal>order</literal> local name. For more information about these annotations, refer to
-                <xref linkend="server-method-endpoint-mapping"/>.
-                We also need to configure Spring-WS to support the JAXB objects <classname>OrderRequest</classname> and
-                <classname>Order</classname> by defining a <classname>Jaxb2Marshaller</classname>:
-            </para>
-            <programlisting><![CDATA[<beans>
-
-    <bean id="orderEndpoint" class="samples.AnnotationOrderEndpoint">
-        <constructor-arg ref="orderService"/>
-    </bean>
-
-    <bean id="orderService" class="samples.DefaultOrderService"/>
-
-    <bean class="org.springframework.ws.server.endpoint.adapter.GenericMarshallingMethodEndpointAdapter">
-        <constructor-arg ref="marshaller"/>
-    </bean>
-
-    <bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
-        <property name="classesToBeBound">
-            <list>
-                <value>samples.OrderRequest</value>
-                <value>samples.Order</value>
-            </list>
-        </property>        
-    </bean>
-
-    <bean class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping"/>
-
-</beans>]]></programlisting>
-            <para>
-                The <classname>GenericMarshallingMethodEndpointAdapter</classname> converts the incoming
-                XML messages to marshalled objects used as parameters and return value; the
-                <classname>PayloadRootAnnotationMethodEndpointMapping</classname> is the mapping that detects and
-                handles the <interfacename>@PayloadRoot</interfacename> annotations.
-            </para>
-            <section>
-                <title><interfacename>@XPathParam</interfacename></title>
-                <para>
-                    As an alternative to using marshalling, we could have used <link linkend="xpath">XPath</link> to
-                    extract the information out of the incoming XML request. Spring-WS offers another annotation for
-                    this purpose: <interfacename>@XPathParam</interfacename>. You simply annotate one or more method
-                    parameter with this annotation (each), and each such annotated parameter will be bound to the
-                    evaluation of that annotation. Here is an example:
-                </para>
-                <programlisting id="server-payload-root-annotation"><![CDATA[package samples;
+                <section id="server-xpath-param">
+                    <title><interfacename>@XPathParam</interfacename></title>
+                    <para>
+                        One parameter type needs some extra explanation: <interfacename>@XPathParam</interfacename>.
+                        The idea here is that you simply annotate one or more method
+                        parameter with an XPath expression, and that each such annotated parameter will be bound to the
+                        evaluation of the expression.
+                        Here is an example:
+                    </para>
+                    <programlisting id="server-payload-root-annotation">package samples;
 
 import javax.xml.transform.Source;
 
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.Namespace;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.XPathParam;
 
 @Endpoint
 public class AnnotationOrderEndpoint {
 
-    private final OrderService orderService;
+  private final OrderService orderService;
 
-    public AnnotationOrderEndpoint(OrderService orderService) {
-        this.orderService = orderService;
-    }
+  public AnnotationOrderEndpoint(OrderService orderService) {
+    this.orderService = orderService;
+  }
 
-    @PayloadRoot(localPart = "orderRequest", namespace = "http://samples")
-    public Source getOrder(]]><emphasis role="bold"><![CDATA[@XPathParam("/s:orderRequest/@id") double orderId]]></emphasis><![CDATA[) {
-        Order order = orderService.getOrder((int) orderId);
-        ]]><lineannotation>// create <interfacename>Source</interfacename> from order and return it</lineannotation><![CDATA[
-    }
+  @PayloadRoot(localPart = "orderRequest", namespace = "http://samples")
+  <emphasis role="bold">@Namespace(prefix = "s", uri="http://samples")</emphasis>
+  public Order getOrder(<emphasis role="bold">@XPathParam("/s:orderRequest/@id") int orderId</emphasis>) {
+    Order order = orderService.getOrder(orderId);
+    <lineannotation>// create <interfacename>Source</interfacename> from order and return it</lineannotation>
+}
 
-}]]></programlisting>
+}</programlisting>
+                    <para>
+                        Since we use the prefix '<literal>s</literal>' in our XPath expression, we must bind it to the
+                        <uri>http://samples</uri> namespace.
+                        This is accomplished with the <interfacename>@Namespace</interfacename> annotation.
+                        Alternatively, we could have placed this annotation on the type-level to use the same namespace
+                        mapping for all handler methods, or even the package-level
+                        (in <filename>package-info.java</filename>) to use it for multiple endpoints.
+                    </para>
+                    <para>
+                        Using the <interfacename>@XPathParam</interfacename>, you can bind to all the data types
+                        supported by XPath:
+                        <itemizedlist>
+                            <listitem><para><type>boolean</type> or <classname>Boolean</classname></para></listitem>
+                            <listitem><para><type>double</type> or <classname>Double</classname></para></listitem>
+                            <listitem><para><classname>String</classname></para></listitem>
+                            <listitem><para><interfacename>Node</interfacename></para></listitem>
+                            <listitem><para><interfacename>NodeList</interfacename></para></listitem>
+                        </itemizedlist>
+                        In addition to this list, you can use any type that can be converted from a
+                        <classname>String</classname> by a Spring 3
+                        <ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/validation.html#core-convert">conversion service</ulink>.
+                    </para>
+                </section>
+
+            </section>
+            <section>
+                <title>Handling method return types</title>
                 <para>
-                    Since we use the prefix '<literal>s</literal>' in our XPath expression, we must bind it to the
-                    <uri>http://samples</uri> namespace:
+                    To send a response message, the handling needs to specify a return type.
+                    If no response message is required, the method can simply declare a <literal>void</literal> return
+                    type.
+                    Most commonly, the return type is used to create the payload of the response message, but it is
+                    also possible to map to other parts of the response message.
+                    This section will describe the return types you can use in your handling method signatures.
                 </para>
-
-                <programlisting><![CDATA[<beans>
-    <bean id="orderEndpoint" class="samples.AnnotationOrderEndpoint">
-        <constructor-arg ref="orderService"/>
-    </bean>
-
-    <bean id="orderService" class="samples.DefaultOrderService"/>
-
-    <bean class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping"/>
-
-    ]]><emphasis role="bold"><![CDATA[<bean class="org.springframework.ws.server.endpoint.adapter.XPathParamAnnotationMethodEndpointAdapter">
-        <property name="namespaces">
-            <props>
-                <prop key="s">http://samples</prop>
-            </props>
-        </property>
-    </bean>]]></emphasis><![CDATA[
-
-</beans>]]></programlisting>
                 <para>
-                    Using the <interfacename>@XPathParam</interfacename>, you can bind to all the data types supported by
-                    XPath:
-                    <itemizedlist>
-                        <listitem><para><type>boolean</type> or <classname>Boolean</classname></para></listitem>
-                        <listitem><para><type>double</type> or <classname>Double</classname></para></listitem>
-                        <listitem><para><classname>String</classname></para></listitem>
-                        <listitem><para><interfacename>Node</interfacename></para></listitem>
-                        <listitem><para><interfacename>NodeList</interfacename></para></listitem>
-                    </itemizedlist>
+                    To map the return value to the payload of the response message, you will need to annotate the
+                    method with the <interfacename>@ResponsePayload</interfacename> annotation.
+                    This annotation tells Spring-WS that the return value needs to be bound to the response payload.
+                </para>
+                <para>
+                    The following table describes the supported return types.
+                    It shows the supported types, whether the parameter should be annotated with
+                    <interfacename>@ResponsePayload</interfacename>, and any additional notes.
+                    <informaltable>
+                        <tgroup cols="4">
+                            <thead>
+                                <row>
+                                    <entry>Name</entry>
+                                    <entry>Supported return types</entry>
+                                    <entry><interfacename>@ResponsePayload</interfacename> required?</entry>
+                                    <entry>Additional notes</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry align="center">No response</entry>
+                                    <entry>
+                                        <literal>void</literal>
+                                    </entry>
+                                    <entry align="center">&cross;</entry>
+                                    <entry>Enabled by default.</entry>
+                                </row>
+                                <row>
+                                    <entry align="center">TrAX</entry>
+                                    <entry>
+                                        <interfacename>javax.xml.transform.Source</interfacename> and sub-interfaces
+                                        (<interfacename>DOMSource</interfacename>, <interfacename>SAXSource</interfacename>,
+                                        <interfacename>StreamSource</interfacename>, and <interfacename>StAXSource</interfacename>)
+                                    </entry>
+                                    <entry align="center">&check;</entry>
+                                    <entry>Enabled by default.</entry>
+                                </row>
+                                <row>
+                                    <entry align="center">W3C DOM</entry>
+                                    <entry><interfacename>org.w3c.dom.Element</interfacename></entry>
+                                    <entry align="center">&check;</entry>
+                                    <entry>Enabled by default</entry>
+                                </row>
+                                <row>
+                                    <entry align="center">dom4j</entry>
+                                    <entry><interfacename>org.dom4j.Element</interfacename></entry>
+                                    <entry align="center">&check;</entry>
+                                    <entry>Enabled when dom4j is on the classpath.</entry>
+                                </row>
+                                <row>
+                                    <entry align="center">JDOM</entry>
+                                    <entry><classname>org.jdom.Element</classname></entry>
+                                    <entry align="center">&check;</entry>
+                                    <entry>Enabled when JDOM is on the classpath.</entry>
+                                </row>
+                                <row>
+                                    <entry align="center">XOM</entry>
+                                    <entry><classname>nu.xom.Element</classname></entry>
+                                    <entry align="center">&check;</entry>
+                                    <entry>Enabled when XOM is on the classpath.</entry>
+                                </row>
+                                <row>
+                                    <entry align="center">JAXB2</entry>
+                                    <entry>
+                                        Any type that is annotated with
+                                        <interfacename>javax.xml.bind.annotation.XmlRootElement</interfacename>,
+                                        and <classname>javax.xml.bind.JAXBElement</classname>.
+                                   </entry>
+                                    <entry align="center">&check;</entry>
+                                    <entry>Enabled when JAXB2 is on the classpath.</entry>
+                                </row>
+                                <row>
+                                    <entry align="center">OXM</entry>
+                                    <entry>
+                                        Any type supported by a Spring OXM
+                                        <ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/oxm.html#d0e26096"><interfacename>Marshaller</interfacename></ulink>.
+                                   </entry>
+                                    <entry align="center">&check;</entry>
+                                    <entry>
+                                        Enabled when the <literal>marshaller</literal> attribute of
+                                        <literal>&lt;sws:annotation-driven/&gt;</literal> is specified.
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </informaltable>
+                </para>
+                <para>
+                    As you can see, there are a lot of possibilities when it comes to defining handling method
+                    signatures.
+                    It is even possible to extend this mechanism, and to support your own parameter types.
+                    Refer to the class-level Javadoc of <classname>DefaultMethodEndpointAdapter</classname> and
+                    <interfacename>MethodReturnValueHandler</interfacename> to see how.
                 </para>
             </section>
         </section>
@@ -1361,8 +1084,8 @@ public class AnnotationOrderEndpoint {
     <section id="server-endpoint-mapping">
         <title>Endpoint mappings</title>
         <para>
-            The endpoint mapping is responsible for mapping incoming messages to appropriate endpoints. There are some
-            endpoint mappings you can use out of the box, for example, the
+            The endpoint mapping is responsible for mapping incoming messages to appropriate endpoints.
+            There are some endpoint mappings you can use out of the box, for example, the
             <classname>PayloadRootQNameEndpointMapping</classname> or the
             <classname>SoapActionEndpointMapping</classname>, but let's first examine the general concept of an
             <interfacename>EndpointMapping</interfacename>.
