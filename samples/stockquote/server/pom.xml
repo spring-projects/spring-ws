@@ -60,7 +60,6 @@
         <dependency>
             <groupId>org.springframework.ws</groupId>
             <artifactId>spring-ws-support</artifactId>
-            <scope>runtime</scope>
         </dependency>
     </dependencies>
 </project>
