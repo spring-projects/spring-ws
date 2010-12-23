@@ -1,4 +1,4 @@
-SPRING WEB SERVICES 2.0 M1 (March 2010)
+SPRING WEB SERVICES 2.0 RC2 (December 2010)
 -------------------------------
 http://www.springframework.org/spring-ws
 http://forum.springframework.org/forumdisplay.php?f=39
@@ -36,27 +36,27 @@ The following distinct jar files are included in the distribution. This list spe
 third-party dependencies. Libraries in [brackets] are optional, i.e. just necessary for certain functionality. For an 
 exact list of Spring-WS project dependencies see the respective Maven2 pom.xml files.
 
-* spring-ws-core-2.0.0-M1.jar
+* spring-ws-core-2.0.0-RC2.jar
 - Contents: The Spring-WS Core
 - Dependencies: Commons Logging, spring-beans, spring-core, spring-context, spring-oxm
                 [Log4J, spring-web, spring-webmvc, SAAJ, JDOM, StAX, Servlet API, JAF, Axiom, DOM4J, XOM, WSDL4J]
 
-* spring-ws-support-2.0.0-M1.jar
+* spring-ws-support-2.0.0-RC2.jar
 - Contents: The Spring-WS Support
 - Dependencies: Commons Logging, spring-beans, spring-core, spring-context, spring-core
                 [JMS, JavaMail]
 
-* spring-ws-security-2.0.0-M1.jar
+* spring-ws-security-2.0.0-RC2.jar
 - Contents: Spring-WS Security integration
 - Dependencies: Commons Logging, spring-beans, spring-core, spring-context, spring-ws-core
                 [Log4J, xmlsdig, xmlsec, XWS-security, Acegi, WSS4J]
 
-* spring-xml-2.0.0-M1.jar
+* spring-xml-2.0.0-RC2.jar
 - Contents: Spring XML utility framework
 - Dependencies: Commons Logging, spring-beans, spring-core
                 [StAX, Xalan, Jaxen]
 
-* spring-ws-2.0.0-M1.jar
+* spring-ws-2.0.0-RC2.jar
 - Contents: Convenient al-in-one jar containing all of the jars described above
 
 
