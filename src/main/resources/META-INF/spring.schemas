@@ -1,1 +1,3 @@
 http\://www.springframework.org/schema/web-services/web-services-1.5.xsd=/org/springframework/ws/config/web-services-1.5.xsd
+http\://www.springframework.org/schema/web-services/web-services-2.0.xsd=/org/springframework/ws/config/web-services-2.0.xsd
+http\://www.springframework.org/schema/web-services/web-services.xsd=/org/springframework/ws/config/web-services-2.0.xsd
