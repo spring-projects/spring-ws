@@ -1,11 +1,11 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,18 +17,31 @@
 package org.springframework.ws.samples.airline.dao.jpa;
 
 import java.util.List;
+import javax.sql.DataSource;
 
-import org.joda.time.DateTime;
-import org.joda.time.Interval;
-import org.springframework.test.jpa.AbstractJpaTests;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.BeforeTransaction;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ws.samples.airline.dao.FlightDao;
 import org.springframework.ws.samples.airline.domain.Airport;
 import org.springframework.ws.samples.airline.domain.Flight;
 import org.springframework.ws.samples.airline.domain.ServiceClass;
 
-public class JpaFlightDaoTest extends AbstractJpaTests {
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-    private FlightDao flightDao;
+import static org.junit.Assert.*;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("applicationContext-jpa.xml")
+@Transactional
+public class JpaFlightDaoTest {
 
     private DateTime departureTime;
 
@@ -40,17 +53,18 @@ public class JpaFlightDaoTest extends AbstractJpaTests {
 
     private Airport toAirport;
 
-    public void setFlightDao(FlightDao flightDao) {
-        this.flightDao = flightDao;
+    @Autowired
+    private FlightDao flightDao;
+
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public void setDataSource(DataSource dataSource) {
+        jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    @Override
-    protected String[] getConfigPaths() {
-        return new String[]{"applicationContext-jpa.xml"};
-    }
-
-    @Override
-    protected void onSetUpBeforeTransaction() throws Exception {
+    @BeforeTransaction
+    public void createTestData() {
         departureTime = new DateTime(2006, 1, 31, 10, 5, 0, 0);
         arrivalTime = new DateTime(2006, 1, 31, 12, 25, 0, 0);
         interval = departureTime.toLocalDate().toInterval();
@@ -58,13 +72,14 @@ public class JpaFlightDaoTest extends AbstractJpaTests {
         toAirport = new Airport("OSL", "Gardermoen", "Oslo");
     }
 
-    @Override
-    protected void onSetUpInTransaction() throws Exception {
+    @Before
+    public void insertTestData() {
         jdbcTemplate.update("INSERT INTO AIRPORT(CODE, NAME, CITY) VALUES('RTM', 'Rotterdam Airport', 'Rotterdam')");
         jdbcTemplate.update("INSERT INTO AIRPORT(CODE, NAME, CITY) VALUES('OSL', 'Gardermoen', 'Oslo')");
     }
 
-    public void testGetFlightsInPeriod() throws Exception {
+    @Test
+    public void getFlightsInPeriod() throws Exception {
         jdbcTemplate
                 .update("INSERT INTO FLIGHT(NUMBER, DEPARTURE_TIME, FROM_AIRPORT_CODE, ARRIVAL_TIME, TO_AIRPORT_CODE, SERVICE_CLASS, SEATS_AVAILABLE, MILES) " +
                         "VALUES ('KL020','2006-01-31 10:05:00', 'RTM', '2006-01-31 12:25:00', 'OSL', 'BUSINESS', 90, 10)");
@@ -73,7 +88,8 @@ public class JpaFlightDaoTest extends AbstractJpaTests {
         assertEquals("Invalid amount of flights", 1, flights.size());
     }
 
-    public void testGetFlightsOutOfPeriod() throws Exception {
+    @Test
+    public void getFlightsOutOfPeriod() throws Exception {
         jdbcTemplate
                 .update("INSERT INTO FLIGHT(NUMBER, DEPARTURE_TIME, FROM_AIRPORT_CODE, ARRIVAL_TIME, TO_AIRPORT_CODE, SERVICE_CLASS, SEATS_AVAILABLE, MILES) " +
                         "VALUES ('KL020','2006-01-31 10:05:00', 'RTM', '2006-01-31 12:25:00', 'OSL', 'BUSINESS', 90, 10)");
@@ -83,7 +99,8 @@ public class JpaFlightDaoTest extends AbstractJpaTests {
         assertEquals("Invalid amount of flights", 0, flights.size());
     }
 
-    public void testGetFlightByNumberDepartureTime() throws Exception {
+    @Test
+    public void getFlightByNumberDepartureTime() throws Exception {
         jdbcTemplate
                 .update("INSERT INTO FLIGHT(NUMBER, DEPARTURE_TIME, FROM_AIRPORT_CODE, ARRIVAL_TIME, TO_AIRPORT_CODE, SERVICE_CLASS, SEATS_AVAILABLE, MILES) " +
                         "VALUES ('KL020','2006-01-31 10:05:00', 'RTM', '2006-01-31 12:25:00', 'OSL', 'BUSINESS', 90, 10)");
@@ -98,20 +115,8 @@ public class JpaFlightDaoTest extends AbstractJpaTests {
         assertEquals("Invalid flight service class", ServiceClass.BUSINESS, flight.getServiceClass());
     }
 
-    public void testUpdate() throws Exception {
-        jdbcTemplate
-                .update("INSERT INTO FLIGHT(NUMBER, DEPARTURE_TIME, FROM_AIRPORT_CODE, ARRIVAL_TIME, TO_AIRPORT_CODE, SERVICE_CLASS, SEATS_AVAILABLE, MILES) " +
-                        "VALUES ('KL020','2006-01-31 10:05:00', 'RTM', '2006-01-31 12:25:00', 'OSL', 'BUSINESS', 90, 10)");
-        Flight flight = flightDao.getFlight("KL020", departureTime);
-        flight.setSeatsAvailable(0);
-        flightDao.update(flight);
-        sharedEntityManager.flush();
-        int count = jdbcTemplate
-                .queryForInt("SELECT SEATS_AVAILABLE FROM FLIGHT WHERE ID = ?", new Object[]{flight.getId()});
-        assertEquals("Flight not updated", 0, count);
-    }
-
-    public void testNoSuchFlight() {
+    @Test
+    public void noSuchFlight() {
         Flight flight = flightDao.getFlight("INVALID", departureTime);
         assertNull("Flight returned", flight);
     }

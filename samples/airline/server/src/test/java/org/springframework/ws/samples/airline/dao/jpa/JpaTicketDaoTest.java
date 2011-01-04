@@ -1,11 +1,11 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,28 +16,45 @@
 
 package org.springframework.ws.samples.airline.dao.jpa;
 
-import org.joda.time.LocalDate;
-import org.springframework.test.jpa.AbstractJpaTests;
-import org.springframework.ws.samples.airline.dao.TicketDao;
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ws.samples.airline.domain.Flight;
 import org.springframework.ws.samples.airline.domain.Passenger;
 import org.springframework.ws.samples.airline.domain.Ticket;
 
-public class JpaTicketDaoTest extends AbstractJpaTests {
+import org.joda.time.LocalDate;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-    private TicketDao ticketDao;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-    public void setTicketDao(TicketDao ticketDao) {
-        this.ticketDao = ticketDao;
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("applicationContext-jpa.xml")
+@Transactional
+public class JpaTicketDaoTest {
+
+    @Autowired
+    private JpaTicketDao ticketDao;
+
+    @Autowired
+    private JpaFlightDao flightDao;
+
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public void setDataSource(DataSource dataSource) {
+        jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    @Override
-    protected String[] getConfigPaths() {
-        return new String[]{"applicationContext-jpa.xml"};
-    }
-
-    @Override
-    protected void onSetUpInTransaction() throws Exception {
+    @Before
+    public void insertTestData() {
         jdbcTemplate.update("INSERT INTO AIRPORT(CODE, NAME, CITY) VALUES('RTM', 'Rotterdam Airport', 'Rotterdam')");
         jdbcTemplate.update("INSERT INTO AIRPORT(CODE, NAME, CITY) VALUES('OSL', 'Gardermoen', 'Oslo')");
         jdbcTemplate
@@ -45,9 +62,10 @@ public class JpaTicketDaoTest extends AbstractJpaTests {
                         "VALUES (42, 'KL020','2006-01-31 10:05:00', 'RTM', '2006-01-31 12:25:00', 'OSL', 'BUSINESS', 90, 10)");
     }
 
-    public void testSave() throws Exception {
+    @Test
+    public void save() throws Exception {
         Passenger passenger = new Passenger("Arjen", "Poutsma");
-        Flight flight = sharedEntityManager.find(Flight.class, 42L);
+        Flight flight = flightDao.getFlight(42L);
         Ticket ticket = new Ticket();
         ticket.addPassenger(passenger);
         ticket.setFlight(flight);
@@ -55,7 +73,6 @@ public class JpaTicketDaoTest extends AbstractJpaTests {
         int startTicketCount = jdbcTemplate.queryForInt("SELECT COUNT(0) FROM TICKET");
         int startPassengerCount = jdbcTemplate.queryForInt("SELECT COUNT(0) FROM PASSENGER");
         ticketDao.save(ticket);
-        sharedEntityManager.flush();
         assertNotNull("No Id generated", ticket.getId());
         int endTicketCount = jdbcTemplate.queryForInt("SELECT COUNT(0) FROM TICKET");
         int endPassengerCount = jdbcTemplate.queryForInt("SELECT COUNT(0) FROM PASSENGER");
