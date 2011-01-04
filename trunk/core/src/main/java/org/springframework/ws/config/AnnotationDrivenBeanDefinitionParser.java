@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -39,6 +39,8 @@ import org.springframework.ws.server.endpoint.adapter.method.dom.XomPayloadMetho
 import org.springframework.ws.server.endpoint.adapter.method.jaxb.JaxbElementPayloadMethodProcessor;
 import org.springframework.ws.server.endpoint.adapter.method.jaxb.XmlRootElementPayloadMethodProcessor;
 import org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping;
+import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
+import org.springframework.ws.soap.server.endpoint.SoapFaultAnnotationExceptionResolver;
 import org.springframework.ws.soap.server.endpoint.adapter.method.SoapMethodArgumentResolver;
 import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping;
 
@@ -76,6 +78,8 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
         registerEndpointMappings(source, parserContext);
 
         registerEndpointAdapters(element, source, parserContext);
+
+        registerEndpointExceptionResolvers(source, parserContext);
 
         parserContext.popAndRegisterContainingComponent();
 
@@ -171,6 +175,19 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 
         parserContext.getReaderContext().registerWithGeneratedName(adapterDef);
     }
+
+    private void registerEndpointExceptionResolvers(Object source, ParserContext parserContext) {
+        RootBeanDefinition simpleExceptionResolverDef =
+                createBeanDefinition(SimpleSoapExceptionResolver.class, source);
+        simpleExceptionResolverDef.getPropertyValues().add("order", 0);
+        parserContext.getReaderContext().registerWithGeneratedName(simpleExceptionResolverDef);
+
+        RootBeanDefinition soapFaultAnnotationExceptionResolverDef =
+                createBeanDefinition(SoapFaultAnnotationExceptionResolver.class, source);
+        soapFaultAnnotationExceptionResolverDef.getPropertyValues().add("order", 1);
+        parserContext.getReaderContext().registerWithGeneratedName(soapFaultAnnotationExceptionResolverDef);
+    }
+
 
     private RuntimeBeanReference createBeanReference(Class<?> beanClass, Object source, ParserContext parserContext) {
         RootBeanDefinition beanDefinition = createBeanDefinition(beanClass, source);
