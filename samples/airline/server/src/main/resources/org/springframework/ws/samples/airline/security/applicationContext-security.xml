@@ -20,7 +20,6 @@
         <description>
             A security service used to obtain Frequent Flyer information.
         </description>
-        <constructor-arg ref="frequentFlyerDao"/>
     </bean>
 
     <bean id="wsSecurityInterceptor" class="org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor">

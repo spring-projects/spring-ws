@@ -1,11 +1,11 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,13 +16,12 @@
 
 package org.springframework.ws.samples.airline.dao.jpa;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.joda.time.DateTime;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
@@ -32,15 +31,22 @@ import org.springframework.ws.samples.airline.domain.Flight;
 import org.springframework.ws.samples.airline.domain.FrequentFlyer;
 import org.springframework.ws.samples.airline.domain.ServiceClass;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
+
 /**
  * A simple class that uses JPA to initialize the database.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
  */
-public class DatabaseInitializer implements InitializingBean {
+@Component
+public class DatabaseInitializer {
 
     private static final Log logger = LogFactory.getLog(DatabaseInitializer.class);
+
+    private final TransactionTemplate transactionTemplate;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -49,13 +55,13 @@ public class DatabaseInitializer implements InitializingBean {
 
     private Airport venice;
 
-    private TransactionTemplate transactionTemplate;
-
-    public void setTransactionManager(PlatformTransactionManager transactionManager) {
+    @Autowired
+    public DatabaseInitializer(PlatformTransactionManager transactionManager) {
         this.transactionTemplate = new TransactionTemplate(transactionManager);
     }
 
-    public void afterPropertiesSet() throws Exception {
+    @PostConstruct
+    public void initDatabase() {
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
             protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
                 logger.info("Initializing Database");

@@ -1,11 +1,11 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,21 +16,24 @@
 
 package org.springframework.ws.samples.airline.web;
 
-import org.joda.time.LocalDate;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ws.samples.airline.domain.Flight;
 import org.springframework.ws.samples.airline.domain.ServiceClass;
 import org.springframework.ws.samples.airline.service.AirlineService;
+import org.springframework.ws.samples.airline.service.NoSuchFlightException;
+
+import org.joda.time.LocalDate;
 
 /** @author Arjen Poutsma */
 @Controller
+@RequestMapping("/flights")
 public class FlightsController {
 
     private AirlineService airlineService;
@@ -41,7 +44,7 @@ public class FlightsController {
         this.airlineService = airlineService;
     }
 
-    @RequestMapping("/flights")
+    @RequestMapping
     public String flightList(@RequestParam(value = "from", required = false)String fromAirportCode,
                              @RequestParam(value = "to", required = false)String toAirportCode,
                              @RequestParam(value = "departureDate", required = false)String departureDateString,
@@ -67,8 +70,8 @@ public class FlightsController {
         return "flights";
     }
 
-    @RequestMapping(value = "/flight")
-    public String singleFlight(@RequestParam("id")long id, ModelMap model) throws Exception {
+    @RequestMapping(value = "{id}")
+    public String singleFlight(@PathVariable("id") long id, ModelMap model) throws NoSuchFlightException {
         Flight flight = airlineService.getFlight(id);
         model.addAttribute(flight);
         return "flight";
