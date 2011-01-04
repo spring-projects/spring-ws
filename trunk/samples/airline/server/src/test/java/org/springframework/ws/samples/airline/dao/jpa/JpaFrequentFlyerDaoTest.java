@@ -1,11 +1,11 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,25 +16,38 @@
 
 package org.springframework.ws.samples.airline.dao.jpa;
 
-import org.springframework.test.jpa.AbstractJpaTests;
-import org.springframework.ws.samples.airline.dao.FrequentFlyerDao;
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ws.samples.airline.domain.FrequentFlyer;
 
-public class JpaFrequentFlyerDaoTest extends AbstractJpaTests {
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-    private FrequentFlyerDao frequentFlyerDao;
+import static org.junit.Assert.*;
 
-    public void setFrequentFlyerDao(FrequentFlyerDao frequentFlyerDao) {
-        this.frequentFlyerDao = frequentFlyerDao;
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("applicationContext-jpa.xml")
+@Transactional
+public class JpaFrequentFlyerDaoTest {
+
+    @Autowired
+    private JpaFrequentFlyerDao frequentFlyerDao;
+
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public void setDataSource(DataSource dataSource) {
+        jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    @Override
-    protected String[] getConfigPaths() {
-        return new String[]{"applicationContext-jpa.xml"};
-    }
-
-    @Override
-    protected void onSetUpInTransaction() throws Exception {
+    @Before
+    public void insertTestData() {
         jdbcTemplate
                 .update("INSERT INTO PASSENGER(ID, FIRST_NAME, LAST_NAME) " + "VALUES (42, 'Arjen', 'Poutsma')");
         jdbcTemplate
@@ -42,7 +55,8 @@ public class JpaFrequentFlyerDaoTest extends AbstractJpaTests {
                         "VALUES (42, 'arjen', 'changeme', 0)");
     }
 
-    public void testGetByUsername() throws Exception {
+    @Test
+    public void getByUsername() throws Exception {
         FrequentFlyer flyer = frequentFlyerDao.get("arjen");
         assertNotNull("No frequent flyer returned", flyer);
         assertEquals("Invalid username", "arjen", flyer.getUsername());
@@ -51,7 +65,8 @@ public class JpaFrequentFlyerDaoTest extends AbstractJpaTests {
         assertEquals("Invalid last name", "Poutsma", flyer.getLastName());
     }
 
-    public void testNoSuchUsername() {
+    @Test
+    public void noSuchUsername() {
         FrequentFlyer flyer = frequentFlyerDao.get("invalid");
         assertNull("FrequentFlyer returned", flyer);
     }
