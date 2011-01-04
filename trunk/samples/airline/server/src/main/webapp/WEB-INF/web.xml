@@ -36,11 +36,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>mvc</servlet-name>
-        <url-pattern>/flights</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>mvc</servlet-name>
-        <url-pattern>/flight</url-pattern>
+        <url-pattern>*.html</url-pattern>
     </servlet-mapping>
     <mime-mapping>
         <extension>xsd</extension>

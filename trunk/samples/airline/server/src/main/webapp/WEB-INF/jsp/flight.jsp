@@ -42,6 +42,6 @@
         </td>
     </tr>
 </table>
-<a href='<c:url value="/flights"/>'>Flights</a>
+<a href='<c:url value="/flights.html"/>'>Flights</a>
 </body>
 </html>

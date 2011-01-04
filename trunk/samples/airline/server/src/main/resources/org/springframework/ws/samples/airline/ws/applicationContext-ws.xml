@@ -3,8 +3,8 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:oxm="http://www.springframework.org/schema/oxm"
        xmlns:sws="http://www.springframework.org/schema/web-services"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-       http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-1.5.xsd
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-3.0.xsd
        http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-1.5.xsd">
 
     <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
@@ -31,7 +31,6 @@
         <description>
             This endpoint handles the Airline Web Service messages using JAXB2 marshalling.
         </description>
-        <constructor-arg ref="airlineService"/>
     </bean>
 
     <!--
@@ -39,8 +38,6 @@
             <description>
                 This endpoint handles the Airline Web Service messages using XPath expressions and JAXB2 marshalling.
             </description>
-            <constructor-arg ref="airlineService"/>
-            <constructor-arg ref="marshaller"/>
         </bean>
     -->
 
@@ -49,7 +46,6 @@
         <description>
             This endpoint handles get frequent flyer mileage requests.
         </description>
-        <constructor-arg ref="airlineService"/>
     </bean>
 
     <oxm:jaxb2-marshaller id="marshaller" contextPath="org.springframework.ws.samples.airline.schema"/>

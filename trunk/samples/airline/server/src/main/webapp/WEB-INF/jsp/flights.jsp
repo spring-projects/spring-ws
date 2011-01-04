@@ -1,10 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="joda" uri="http://www.joda.org/joda/time/tags" %>
 <html>
 <head><title>Flights</title></head>
 <body>
-<form a method="get" action='<c:url value="/flights"/>'>
+<form a method="get" action='<c:url value="/flights.html"/>'>
     <table>
         <tr>
             <td>From:</td>
@@ -44,9 +45,9 @@
             <c:forEach var="flight" items="${flights}">
                 <tr>
                     <td>
-                        <c:url var="flightUrl" value="flight">
-                            <c:param name="id" value="${flight.id}"/>
-                        </c:url>
+                        <spring:url var="flightUrl" value="flights/{id}.html">
+                            <spring:param name="id" value="${flight.id}"/>
+                        </spring:url>
                         <a href='<c:out value="${flightUrl}"/>'><c:out value="${flight.number}"/></a>
                     </td>
                     <td>
