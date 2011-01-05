@@ -22,20 +22,5 @@
         </description>
     </bean>
 
-    <bean id="wsSecurityInterceptor" class="org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor">
-        <description>
-            This interceptor validates incoming messages according to the policy defined in 'securityPolicy.xml'.
-            The policy defines that all incoming requests must have a UsernameToken with a password digest in it.
-            The actual authentication is performed by the Spring Security callback handler.
-        </description>
-        <property name="secureResponse" value="false"/>
-        <property name="policyConfiguration"
-                  value="classpath:org/springframework/ws/samples/airline/security/securityPolicy.xml"/>
-        <property name="callbackHandler">
-            <bean class="org.springframework.ws.soap.security.xwss.callback.SpringDigestPasswordValidationCallbackHandler">
-                <property name="userDetailsService" ref="securityService"/>
-            </bean>
-        </property>
-    </bean>
 
 </beans>

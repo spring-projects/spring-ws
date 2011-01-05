@@ -52,7 +52,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>org.springframework.ws.samples.airline.client.sws.GetFlights</mainClass>
+                    <mainClass>org.springframework.ws.samples.airline.client.sws.Driver</mainClass>
                 </configuration>
             </plugin>
         </plugins>

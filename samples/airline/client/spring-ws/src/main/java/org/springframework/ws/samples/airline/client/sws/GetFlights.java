@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,8 +19,6 @@ package org.springframework.ws.samples.airline.client.sws;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.springWs.samples.airline.schemas.messages.BookFlightRequestDocument;
 import org.springframework.springWs.samples.airline.schemas.messages.BookFlightResponseDocument;
 import org.springframework.springWs.samples.airline.schemas.messages.GetFlightsRequestDocument;
@@ -99,13 +97,6 @@ public class GetFlights extends WebServiceGatewaySupport {
         System.out.println("Arrive:\t" + flight.getTo().getCode() + "-" + flight.getTo().getName() + "\t" +
                 dateFormat.format(flight.getArrivalTime().getTime()));
         System.out.println("\t" + flight.getTo().getCity());
-    }
-
-    public static void main(String[] args) {
-        ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
-                "org/springframework/ws/samples/airline/client/sws/applicationContext.xml");
-        GetFlights getFlights = applicationContext.getBean("getFlights", GetFlights.class);
-        getFlights.getFlights();
     }
 
 }
