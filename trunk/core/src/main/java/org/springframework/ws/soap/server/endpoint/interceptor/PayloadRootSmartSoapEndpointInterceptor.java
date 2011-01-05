@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.server.endpoint.interceptor;
+package org.springframework.ws.soap.server.endpoint.interceptor;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.TransformerException;
@@ -27,13 +27,14 @@ import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
 import org.springframework.xml.transform.TransformerHelper;
 
 /**
- * Implementation of the {@link org.springframework.ws.server.SmartEndpointInterceptor} interface that only intercepts
- * requests that have a specified namespace URI or local part (or both) as payload root.
+ * Implementation of the {@link org.springframework.ws.soap.server.SmartSoapEndpointInterceptor
+ * SmartSoapEndpointInterceptor} interface that only intercepts requests that have a specified namespace URI or local
+ * part (or both) as payload root.
  *
  * @author Arjen Poutsma
  * @since 2.0
  */
-public class PayloadRootSmartEndpointInterceptor extends DelegatingSmartEndpointInterceptor {
+public class PayloadRootSmartSoapEndpointInterceptor extends DelegatingSmartSoapEndpointInterceptor {
 
     private TransformerHelper transformerHelper = new TransformerHelper();
 
@@ -41,7 +42,9 @@ public class PayloadRootSmartEndpointInterceptor extends DelegatingSmartEndpoint
 
     private final String localPart;
 
-    public PayloadRootSmartEndpointInterceptor(EndpointInterceptor delegate, String namespaceUri, String localPart) {
+    public PayloadRootSmartSoapEndpointInterceptor(EndpointInterceptor delegate,
+                                                   String namespaceUri,
+                                                   String localPart) {
         super(delegate);
         Assert.hasLength(namespaceUri, "namespaceUri can not be empty");
         this.namespaceUri = namespaceUri;
@@ -56,8 +59,10 @@ public class PayloadRootSmartEndpointInterceptor extends DelegatingSmartEndpoint
     protected boolean shouldIntercept(WebServiceMessage request, Object endpoint) {
         try {
             QName payloadRootName = PayloadRootUtils.getPayloadRootQName(request.getPayloadSource(), transformerHelper);
-            return !(StringUtils.hasLength(namespaceUri) && !namespaceUri.equals(payloadRootName.getNamespaceURI()) ||
-                    StringUtils.hasLength(localPart) && !localPart.equals(payloadRootName.getLocalPart()));
+            if (!namespaceUri.equals(payloadRootName.getNamespaceURI())) {
+                return false;
+            }
+            return !StringUtils.hasLength(localPart) || localPart.equals(payloadRootName.getLocalPart());
 
         }
         catch (TransformerException e) {
