@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,8 +27,8 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.springframework.ws.server.SmartEndpointInterceptor;
-import org.springframework.ws.server.endpoint.interceptor.DelegatingSmartEndpointInterceptor;
-import org.springframework.ws.server.endpoint.interceptor.PayloadRootSmartEndpointInterceptor;
+import org.springframework.ws.soap.server.endpoint.interceptor.DelegatingSmartSoapEndpointInterceptor;
+import org.springframework.ws.soap.server.endpoint.interceptor.PayloadRootSmartSoapEndpointInterceptor;
 import org.springframework.ws.soap.server.endpoint.interceptor.SoapActionSmartEndpointInterceptor;
 
 import org.w3c.dom.Element;
@@ -50,7 +50,7 @@ class InterceptorsBeanDefinitionParser implements BeanDefinitionParser {
         for (Element childElement : childElements) {
             if ("bean".equals(childElement.getLocalName())) {
                 RootBeanDefinition smartInterceptorDef =
-                        createSmartInterceptorDefinition(DelegatingSmartEndpointInterceptor.class, childElement,
+                        createSmartInterceptorDefinition(DelegatingSmartSoapEndpointInterceptor.class, childElement,
                                 parserContext);
                 BeanDefinitionHolder interceptorDef = createInterceptorDefinition(parserContext, childElement);
 
@@ -62,7 +62,7 @@ class InterceptorsBeanDefinitionParser implements BeanDefinitionParser {
                 List<Element> beanElements = DomUtils.getChildElementsByTagName(childElement, "bean");
                 for (Element beanElement : beanElements) {
                     RootBeanDefinition smartInterceptorDef =
-                            createSmartInterceptorDefinition(PayloadRootSmartEndpointInterceptor.class, childElement,
+                            createSmartInterceptorDefinition(PayloadRootSmartSoapEndpointInterceptor.class, childElement,
                                     parserContext);
                     BeanDefinitionHolder interceptorDef = createInterceptorDefinition(parserContext, beanElement);
 

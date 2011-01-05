@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -44,6 +44,14 @@ public class DelegatingSmartEndpointInterceptor implements SmartEndpointIntercep
     }
 
     /**
+     * Returns the delegate.
+     * @return
+     */
+    protected EndpointInterceptor getDelegate() {
+        return delegate;
+    }
+
+    /**
      * {@inheritDoc}
      * <p/>
      * This implementation delegates to {@link #shouldIntercept(WebServiceMessage, Object)}.
@@ -67,14 +75,14 @@ public class DelegatingSmartEndpointInterceptor implements SmartEndpointIntercep
     }
 
     public boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
-        return delegate.handleRequest(messageContext, endpoint);
+        return getDelegate().handleRequest(messageContext, endpoint);
     }
 
     public boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
-        return delegate.handleResponse(messageContext, endpoint);
+        return getDelegate().handleResponse(messageContext, endpoint);
     }
 
     public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
-        return delegate.handleFault(messageContext, endpoint);
+        return getDelegate().handleFault(messageContext, endpoint);
     }
 }
