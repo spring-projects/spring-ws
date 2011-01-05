@@ -43,8 +43,10 @@ import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.w3c.dom.Element;
 
 import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertNotNull;
 
 public class AirlineEndpointTest {
 
@@ -110,7 +112,7 @@ public class AirlineEndpointTest {
     }
 
     @Test
-    public void testBookFlightPassenger() throws Exception {
+    public void bookFlightPassenger() throws Exception {
         BookFlightRequest request = objectFactory.createBookFlightRequest();
         request.setDepartureTime(datatypeFactory.newXMLGregorianCalendar(2007, 6, 13, 12, 0, 0, 0, 0));
         request.setFlightNumber("ABC1234");
@@ -169,8 +171,9 @@ public class AirlineEndpointTest {
         domainTicket.setPassengers(domainPassengers);
 
         List<Passenger> domainPassengerList = new ArrayList<Passenger>(domainPassengers);
-        expect(airlineServiceMock.bookFlight("ABC1234", new DateTime(2007, 6, 13, 12, 0, 0, 0, DateTimeZone.UTC),
-                domainPassengerList)).andReturn(domainTicket);
+        expect(airlineServiceMock
+                .bookFlight("ABC1234", new DateTime(2007, 6, 13, 12, 0, 0, 0, DateTimeZone.UTC), domainPassengerList))
+                .andReturn(domainTicket);
 
         replay(airlineServiceMock);
 
@@ -185,6 +188,18 @@ public class AirlineEndpointTest {
         Assert.assertEquals("Invalid passenger first name", "John", schemaPassenger.getFirst());
         Assert.assertEquals("Invalid passenger first name", "Doe", schemaPassenger.getLast());
         verifySchemaFlight(schemaTicket.getFlight());
+
+        verify(airlineServiceMock);
+    }
+
+    @Test
+    public void testGetFrequentFlyerMileage() throws Exception {
+        expect(airlineServiceMock.getFrequentFlyerMileage()).andReturn(42);
+
+        replay(airlineServiceMock);
+
+        Element response = endpoint.getFrequentFlyerMileage();
+        assertNotNull("Invalid response", response);
 
         verify(airlineServiceMock);
     }

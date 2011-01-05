@@ -1,11 +1,11 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
@@ -125,17 +124,5 @@ public class GetFrequentFlyerMileage {
             System.err.println("SOAP Fault Code:   " + fault.getFaultCode());
             System.err.println("SOAP Fault String: " + fault.getFaultString());
         }
-    }
-
-    public static void main(String[] args) throws Exception {
-        if (!System.getProperty("java.version").startsWith("1.5")) {
-            System.out.println("This sample will only run under JDK 1.5");
-            return;
-        }
-        String url = "http://localhost:8080/airline-server/services";
-        String username = "john";
-        String password = "changeme";
-        GetFrequentFlyerMileage getMileage = new GetFrequentFlyerMileage(url);
-        getMileage.getMileage(username, password);
     }
 }

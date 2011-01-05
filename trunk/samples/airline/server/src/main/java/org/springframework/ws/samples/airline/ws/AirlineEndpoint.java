@@ -22,6 +22,8 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -49,6 +51,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import static org.springframework.ws.samples.airline.ws.AirlineWebServiceConstants.*;
 
@@ -64,6 +68,8 @@ public class AirlineEndpoint {
     private static final Log logger = LogFactory.getLog(AirlineEndpoint.class);
 
     private final ObjectFactory objectFactory = new ObjectFactory();
+
+    private final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
     private final AirlineService airlineService;
 
@@ -156,5 +162,18 @@ public class AirlineEndpoint {
         return SchemaConversionUtils.toSchemaType(domainTicket);
     }
 
+    @PayloadRoot(localPart = GET_FREQUENT_FLYER_MILEAGE_REQUEST, namespace = MESSAGES_NAMESPACE)
+    @ResponsePayload
+    public Element getFrequentFlyerMileage() throws Exception {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Received GetFrequentFlyerMileageRequest");
+        }
+        int mileage = airlineService.getFrequentFlyerMileage();
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        Document document = documentBuilder.newDocument();
+        Element response = document.createElementNS(MESSAGES_NAMESPACE, GET_FREQUENT_FLYER_MILEAGE_RESPONSE);
+        response.setTextContent(Integer.toString(mileage));
+        return response;
+    }
 
 }
