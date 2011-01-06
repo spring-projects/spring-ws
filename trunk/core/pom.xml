@@ -161,7 +161,7 @@
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
-            <version>1.5.4</version>
+            <version>1.6.9</version>
             <scope>test</scope>
         </dependency>
         <dependency>
