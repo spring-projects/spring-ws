@@ -9,8 +9,9 @@
     <distributionManagement>
         <downloadUrl>http://static.springframework.org/spring-ws/site/downloads/releases.html</downloadUrl>
         <repository>
-            <id>local</id>
-            <url>file:///Users/arjen/Projects/Spring/repos/repo</url>
+            <id>spring-release</id>
+            <name>Spring Release Repository</name>
+            <url>s3://maven.springframework.org/release</url>
         </repository>
         <snapshotRepository>
             <id>spring-snapshot</id>
@@ -41,12 +42,19 @@
             <url>http://repository.springsource.com/maven/bundles/release/</url>
         </pluginRepository>
     </pluginRepositories>
+    <repositories>
+        <repository>
+            <id>spring-release</id>
+            <name>Spring Release Repository</name>
+            <url>http://maven.springframework.org/release</url>
+        </repository>
+    </repositories>
     <build>
         <extensions>
             <extension>
                 <groupId>org.springframework.build.aws</groupId>
                 <artifactId>org.springframework.build.aws.maven</artifactId>
-                <version>3.0.0.RELEASE</version>
+                <version>3.1.0.RELEASE</version>
             </extension>
         </extensions>
         <pluginManagement>
