@@ -1,16 +1,20 @@
 Dear Spring community,
 
-I'm pleased to announce that Spring Web Services 2.0 Milestone 1 has been
-released!
+I'm pleased to announce that Spring Web Services 2.0.0.RELEASE has
+been released!
 
-This is the first milestone release in the 2.0 release cycle. It does not
-introduce any new features (yet), but does add the following:
+This is the first GA release in the 2.0 release cycle. Spring Web Services 2.0
+contains the following new features:
 
-- Usage of Spring's OXM
-- Java 5 API (including generics, varargs, etc)
+- Java 5+ and Spring 3.0 support
+- Improved @Endpoint programming model
+- New Integration Testing Module
+- And numerous other new features
 
-Please see the changelog for details.
+For more information, refer to 
 
-Spring Web Services 2.0 is due in the second quarter of 2010.
+http://blog.springsource.com/2011/01/11/spring-web-services-2-0-released/
 
-For more information, see http://static.springframework.org/spring-ws/site/
+Please see the changelog for more details.
+
+For more information, see http://static.springframework.org/spring-ws/sites/2.0
