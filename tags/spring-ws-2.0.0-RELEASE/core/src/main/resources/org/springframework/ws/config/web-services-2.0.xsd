@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns="http://www.springframework.org/schema/web-services"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:beans="http://www.springframework.org/schema/beans"
+            xmlns:tool="http://www.springframework.org/schema/tool"
+            targetNamespace="http://www.springframework.org/schema/web-services" elementFormDefault="qualified"
+            attributeFormDefault="unqualified">
+
+    <xsd:import namespace="http://www.springframework.org/schema/beans" schemaLocation="http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" />
+    <xsd:import namespace="http://www.springframework.org/schema/tool" schemaLocation="http://www.springframework.org/schema/tool/spring-tool-3.0.xsd" />
+
+    <xsd:annotation>
+        <xsd:documentation>
+            Defines the configuration elements for Spring Web Services.
+        </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:element name="annotation-driven">
+        <xsd:annotation>
+            <xsd:documentation source="java:org.springframework.ws.server.endpoint.adapter.DefaultMethodEndpointAdapter"><![CDATA[
+    Configures the annotation-driven Spring WS endpoint programming model.
+            ]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:attribute name="marshaller" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation source="java:org.springframework.oxm.Marshaller"><![CDATA[
+    The bean name of the Marshaller that is to be used to convert objects into XML.
+    This attribute is not required, and only needs to be specified
+    explicitly if a custom, non-JAXB2 marshaller is used.
+    JAXB2 marshallers are detected automatically.]]></xsd:documentation>
+                    <xsd:appinfo>
+                        <tool:annotation kind="ref">
+                            <tool:expected-type type="java:org.springframework.oxm.Marshaller"/>
+                        </tool:annotation>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="unmarshaller" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation source="java:org.springframework.oxm.Unmarshaller"><![CDATA[
+    The bean name of the Unmarshaller that is to be used to convert objects into XML.
+    This attribute is not required, and only needs to be specified
+    explicitly if a custom, non-JAXB2 unmarshaller is used.
+    JAXB2 marshallers are detected automatically.]]></xsd:documentation>
+                    <xsd:appinfo>
+                        <tool:annotation kind="ref">
+                            <tool:expected-type type="java:org.springframework.oxm.Unmarshaller"/>
+                        </tool:annotation>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="interceptors">
+        <xsd:annotation>
+            <xsd:documentation>
+    The ordered set of interceptors that intercept web service messages handled by endpoints.
+    Interceptors allow requests to be pre/post processed before/after handling.
+    Each interceptor must implement the org.springframework.ws.server.EndpointInterceptor interface.
+    The interceptors in this set are automatically configured on each registered EndpointMapping.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:choice maxOccurs="unbounded">
+                <xsd:element ref="beans:bean">
+                    <xsd:annotation>
+                        <xsd:documentation source="java:org.springframework.ws.server.endpoint.interceptor.DelegatingSmartEndpointInterceptor">
+    Registers an interceptor that intercepts every request.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="payloadRoot">
+                    <xsd:annotation>
+                        <xsd:documentation source="java:org.springframework.ws.server.endpoint.interceptor.DelegatingSmartEndpointInterceptor"><![CDATA[
+    Registers an interceptor that intercepts requests that have the specified namespace URI and local part as
+    payload root.
+                        ]]></xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:complexType>
+                        <xsd:sequence maxOccurs="unbounded">
+                            <xsd:element ref="beans:bean">
+                                <xsd:annotation>
+                                    <xsd:documentation>The interceptor's bean definition.</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                        </xsd:sequence>
+                        <xsd:attribute name="namespaceUri" type="xsd:anyURI" use="required" />
+                        <xsd:attribute name="localPart" type="xsd:anyURI" />
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="soapAction">
+                    <xsd:annotation>
+                        <xsd:documentation source="java:org.springframework.ws.server.endpoint.interceptor.DelegatingSmartEndpointInterceptor"><![CDATA[
+    Registers an interceptor that intercepts requests that have the specified SOAP Action.
+                        ]]></xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:complexType>
+                        <xsd:sequence maxOccurs="unbounded">
+                            <xsd:element ref="beans:bean">
+                                <xsd:annotation>
+                                    <xsd:documentation>The interceptor's bean definition.</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                        </xsd:sequence>
+                        <xsd:attribute name="value" type="xsd:anyURI" use="required" />
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:choice>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="static-wsdl">
+        <xsd:annotation>
+            <xsd:documentation source="java:org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition"><![CDATA[
+    Exposes a static WSDL file.
+            ]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="beans:identifiedType">
+                    <xsd:attribute name="location" type="xsd:string" use="required">
+                        <xsd:annotation>
+                            <xsd:documentation><![CDATA[
+                The location of the WSDL file to expose, as a Spring resource location: a URL, a "classpath:" pseudo URL, or a
+                relative file path.
+                            ]]></xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="dynamic-wsdl">
+        <xsd:annotation>
+            <xsd:documentation source="java:org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition">
+                Exposes a dynamic WSDL file, creating a SOAP 1.1 or 1.2 binding based on naming conventions in one or
+                more inlined XSD schemas.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="xsd" minOccurs="1" maxOccurs="unbounded">
+                    <xsd:complexType>
+                        <xsd:annotation>
+                            <xsd:documentation>An XSD schema to base the WSDL on.</xsd:documentation>
+                        </xsd:annotation>
+                        <xsd:attribute name="location" type="xsd:string" use="required">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                    The location of the XSD file, as a Spring resource location: a URL, a "classpath:"
+                                    pseudo URL, or a relative file path.
+                                </xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:attribute>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+            <xsd:attribute name="id" type="xsd:ID" use="required">
+                <xsd:annotation>
+                    <xsd:documentation>The unique identifier for the wsdl.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="portTypeName" type="xsd:string" use="required">
+                <xsd:annotation>
+                    <xsd:documentation>Sets the port type name used for this definition.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="targetNamespace" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Sets the target namespace used for this definition. Defaults to the target namespace of the XSD.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="requestSuffix" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Sets the suffix used to detect request elements in the schema. Defaults to 'Request'.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="responseSuffix" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Sets the suffix used to detect response elements in the schema. Defaults to 'Response'.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="faultSuffix" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Sets the suffix used to detect fault elements in the schema. Defaults to 'Fault'.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="createSoap11Binding" type="xsd:boolean" default="true">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Indicates whether a SOAP 1.1 binding should be created. Defaults to true.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="createSoap12Binding" type="xsd:boolean" default="false">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Indicates whether a SOAP 1.2 binding should be created. Defaults to false.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="transportUri" type="xsd:anyURI" default="http://schemas.xmlsoap.org/soap/http">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Sets the value used for the binding transport attribute value. Defaults to HTTP.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="locationUri" type="xsd:anyURI">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Sets the value used for the SOAP Address location attribute value.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="serviceName" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Sets the service name. Defaults to the port type name, with the suffix 'Service'
+                        appended to it.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+
+</xsd:schema>

@@ -1,0 +1,5 @@
+<xwss:SecurityConfiguration dumpMessages="false" xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+    <xwss:Sign includeTimestamp="false">
+        <xwss:X509Token certificateAlias="alias"/>
+    </xwss:Sign>
+</xwss:SecurityConfiguration>
