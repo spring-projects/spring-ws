@@ -1,0 +1,74 @@
+                                                  -------------------
+                                                  Resources and Tools
+                                                  -------------------
+
+Resources
+
+	On this page, we give some general resource related to XML, SOAP, XSD, WSDL, and WS-Security. Note that these
+	resources are generic, and not tied to Spring Web Services.
+
+* XML 
+
+
+** XML
+
+	* {{{http://www.w3schools.com/xml/default.asp}XML tutorial}}
+	
+	* {{{http://www.amazon.com/gp/product/0321150406/}Effective XML}}, a good book on XML
+
+** XSD
+
+	* {{{http://www.w3.org/XML/Schema}the XSD 1.1 specification}}
+
+	* {{{http://www.w3schools.com/schema/default.asp}XSD tutorial}}
+
+	* {{{http://www.amazon.com/gp/product/0130655678}Definite XML Schema}}, a good book on XSDs
+
+	* {{{http://www.amazon.com/gp/product/0201740958}Essential XML Quick Reference}}, a good reference on XML, XPath, 	XSL, XSD, and more
+
+    * {{{http://www.xfront.com/GlobalVersusLocal.html}XML Schemas: Best Practices}}
+
+* Web Services
+
+** SOAP
+
+	* {{{http://www.w3.org/TR/2000/NOTE-SOAP-20000508/}the SOAP 1.1 specification}}
+
+	* {{{http://www.ws-i.org/Profiles/BasicProfile-1.1.html}the WS-Interop basic profile}}, to make sure your Web services are interopable with other platforms
+
+	* {{{http://www.w3schools.com/soap/default.asp}SOAP tutorial}}
+
+	* {{{http://www.jguru.com/forums/SOAP}the jGuru SOAP forum}}
+
+	* {{{http://www.daniweb.com/techtalkforums/forum151.html}another XML and SOAP forum}}
+
+	* {{{http://www.amazon.com/gp/product/0131488740}Web Services Platform Architecture}} is a good book on SOAP, WSDL, and all current and upcoming WS-* specifications
+
+** WSDL
+
+	* {{{http://www.w3.org/TR/wsdl}the WSDL 1.1 specification}}
+
+	* {{{http://www.ws-i.org/Profiles/BasicProfile-1.1-2004-08-24.html}the WS-I basic profile}}, something every Web service should adhere to
+
+	* {{{http://www.w3schools.com/wsdl/default.asp}WSDL tutorial}}
+
+	* {{{http://www.amazon.com/gp/product/0131488740}Web Services Platform Architecture}} is a good book on SOAP, WSDL, and all current and upcoming WS-* specifications
+
+** WS-Security
+
+	* {{{http://www.oasis-open.org/committees/tc_home.php?wg_abbrev=wss}the WS-Security 1.1 specification}}
+
+	* {{{http://dev2dev.bea.com/pub/a/2004/05/WS-Security.html}WS-Security and Java: Practical, In-Depth, Message-Based Security}}
+
+	* {{{http://www.amazon.com/gp/product/0131488740}Web Services Platform Architecture}} is a good book on SOAP, WSDL, and all current and upcoming WS-* specifications
+	
+Tools
+
+	These tools can help you test your Web service applications.
+	
+	* {{{http://www.soapui.org/}soapui}} is a desktop application for inspecting, invoking and testing (functional and load) of web services over HTTP.
+
+	* {{{http://www.ws-i.org/deliverables/workinggroup.aspx?wg=testingtools}the WS-I testing tools}}, which make sure your Web service is {{{http://www.ws-i.org/Profiles/BasicProfile-1.1-2004-08-24.html}interoperable}}.
+
+	* {{{http://ws.apache.org/axis/java/user-guide.html#AppendixUsingTheAxisTCPMonitorTcpmon}Axis Tcpmon}} is a monitoring tool which allows you to see the XML as it is sent and received across the wire.
+
