@@ -7,7 +7,7 @@
 
     <sws:static-wsdl location="classpath:org/springframework/ws/client/support/destination/simple.wsdl"/>
 
-    <sws:dynamic-wsdl id="single" portTypeName="Order">
+    <sws:dynamic-wsdl id="single" portTypeName="Order" locationUri="http://test">
         <sws:xsd location="classpath:/org/springframework/ws/wsdl/wsdl11/single.xsd"/>
     </sws:dynamic-wsdl>
 

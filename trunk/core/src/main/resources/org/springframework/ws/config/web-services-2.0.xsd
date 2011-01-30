@@ -217,7 +217,7 @@
                     </xsd:documentation>
                 </xsd:annotation>
             </xsd:attribute>
-            <xsd:attribute name="locationUri" type="xsd:anyURI">
+            <xsd:attribute name="locationUri" type="xsd:anyURI" use="required">
                 <xsd:annotation>
                     <xsd:documentation>
                         Sets the value used for the SOAP Address location attribute value.
