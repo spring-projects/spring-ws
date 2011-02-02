@@ -20,6 +20,7 @@ import org.springframework.ws.context.MessageContext;
 
 /**
  * Extension of the {@link EndpointInterceptor} interface that adds a way to
+ * decide whether the interceptor should intercept a given message context.
  * @author Arjen Poutsma
  * @since 2.0
  */
