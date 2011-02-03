@@ -71,6 +71,13 @@
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:element>
+                <xsd:element ref="beans:ref">
+                    <xsd:annotation>
+                        <xsd:documentation source="java:org.springframework.ws.server.endpoint.interceptor.DelegatingSmartEndpointInterceptor">
+    Registers a reference to an interceptor that intercepts every request.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
                 <xsd:element name="payloadRoot">
                     <xsd:annotation>
                         <xsd:documentation source="java:org.springframework.ws.server.endpoint.interceptor.DelegatingSmartEndpointInterceptor"><![CDATA[
@@ -79,13 +86,20 @@
                         ]]></xsd:documentation>
                     </xsd:annotation>
                     <xsd:complexType>
-                        <xsd:sequence maxOccurs="unbounded">
+                        <xsd:choice maxOccurs="unbounded">
                             <xsd:element ref="beans:bean">
                                 <xsd:annotation>
                                     <xsd:documentation>The interceptor's bean definition.</xsd:documentation>
                                 </xsd:annotation>
                             </xsd:element>
-                        </xsd:sequence>
+                            <xsd:element ref="beans:ref">
+                                <xsd:annotation>
+                                    <xsd:documentation>
+                                        The interceptor's bean reference.
+                                    </xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                        </xsd:choice>
                         <xsd:attribute name="namespaceUri" type="xsd:anyURI" use="required" />
                         <xsd:attribute name="localPart" type="xsd:anyURI" />
                     </xsd:complexType>
@@ -97,13 +111,20 @@
                         ]]></xsd:documentation>
                     </xsd:annotation>
                     <xsd:complexType>
-                        <xsd:sequence maxOccurs="unbounded">
+                        <xsd:choice maxOccurs="unbounded">
                             <xsd:element ref="beans:bean">
                                 <xsd:annotation>
                                     <xsd:documentation>The interceptor's bean definition.</xsd:documentation>
                                 </xsd:annotation>
                             </xsd:element>
-                        </xsd:sequence>
+                            <xsd:element ref="beans:ref">
+                                <xsd:annotation>
+                                    <xsd:documentation>
+                                        The interceptor's bean reference.
+                                    </xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                        </xsd:choice>
                         <xsd:attribute name="value" type="xsd:anyURI" use="required" />
                     </xsd:complexType>
                 </xsd:element>
