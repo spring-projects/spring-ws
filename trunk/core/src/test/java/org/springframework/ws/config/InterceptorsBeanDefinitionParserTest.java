@@ -41,13 +41,13 @@ public class InterceptorsBeanDefinitionParserTest {
     @Test
     public void namespace() throws Exception {
         Map<String, ?> result = applicationContext.getBeansOfType(DelegatingSmartEndpointInterceptor.class);
-        assertEquals("no smart interceptors found", 5, result.size());
+        assertEquals("no smart interceptors found", 8, result.size());
 
         result = applicationContext.getBeansOfType(PayloadRootSmartSoapEndpointInterceptor.class);
-        assertEquals("no interceptors found", 2, result.size());
+        assertEquals("no interceptors found", 3, result.size());
 
         result = applicationContext.getBeansOfType(SoapActionSmartEndpointInterceptor.class);
-        assertEquals("no interceptors found", 2, result.size());
+        assertEquals("no interceptors found", 3, result.size());
     }
 
 }
