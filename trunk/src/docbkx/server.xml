@@ -1270,9 +1270,11 @@ public class AnnotationOrderEndpoint {
   </sws:payloadRoot>
   <sws:soapAction value="http://www.example.com/SoapAction">
     <bean class="samples.MySoapActionInterceptor1"/>
-    <bean class="samples.MySoapActionInterceptor2"/>
+    <ref bean="mySoapActionInterceptor2"/>
   </sws:soapAction>
-</sws:interceptors>]]></programlisting>
+</sws:interceptors>
+
+<bean id="mySoapActionInterceptor2" class="samples.MySoapActionInterceptor2"/>]]></programlisting>
                 Here, we define one 'global' interceptor (<classname>MyGlobalInterceptor</classname>) that intercepts
                 all request and responses.
                 We also define an interceptor that only applies to XML messages that have the
@@ -1280,7 +1282,9 @@ public class AnnotationOrderEndpoint {
                 Here, we could have defined a <literal>localPart</literal> attribute in addition to the
                 <literal>namespaceUri</literal> to further limit the messages the interceptor applies to.
                 Finally, we define two interceptors that apply when the message has a
-                <uri>http://www.example.com/SoapAction</uri> SOAP action.
+                <uri>http://www.example.com/SoapAction</uri> SOAP action. Notice how the second interceptor
+                is actually a reference to a bean definition outside of the <literal>&lt;interceptors&gt;</literal>
+                element. You can use bean references anywhere inside the <literal>&lt;interceptors&gt;</literal> element.
             </para>
             <para>
                 Interceptors must implement the
