@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -61,7 +61,7 @@ public class SchemaValidatingMatcherTest {
     @Test(expected = AssertionError.class)
     public void singleSchemaNonMatch() throws IOException, AssertionError {
         expect(message.getPayloadSource()).andReturn(new StringSource(
-                "<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"));
+                "<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>")).times(2);
 
         SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema1);
 
@@ -89,7 +89,7 @@ public class SchemaValidatingMatcherTest {
     @Test(expected = AssertionError.class)
     public void multipleSchemaNotOk() throws IOException, AssertionError {
         expect(message.getPayloadSource()).andReturn(new StringSource(
-                "<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"));
+                "<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>")).times(2);
 
         SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema1, schema2);
 
@@ -103,7 +103,7 @@ public class SchemaValidatingMatcherTest {
     @Test(expected = AssertionError.class)
     public void multipleSchemaDifferentOrderNotOk() throws IOException, AssertionError {
         expect(message.getPayloadSource()).andReturn(new StringSource(
-                "<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"));
+                "<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>")).times(2);
 
         SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema2, schema1);
 
@@ -117,7 +117,7 @@ public class SchemaValidatingMatcherTest {
     @Test(expected = AssertionError.class)
     public void xmlValidatorNotOk() throws IOException, AssertionError {
         expect(message.getPayloadSource()).andReturn(new StringSource(
-                "<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"));
+                "<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>")).times(2);
 
         SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema1);
 
