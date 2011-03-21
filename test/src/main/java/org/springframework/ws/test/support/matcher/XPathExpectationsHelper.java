@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -73,7 +73,7 @@ public class XPathExpectationsHelper {
                 Node payload = transformToNode(message);
                 Node result = expression.evaluateAsNode(payload);
                 if (result == null) {
-                    fail("No match for \"" + expressionString + "\" found");
+                    fail("No match for \"" + expressionString + "\" found", "Payload", message.getPayloadSource());
                 }
             }
         };
@@ -85,7 +85,7 @@ public class XPathExpectationsHelper {
                 Node payload = transformToNode(message);
                 Node result = expression.evaluateAsNode(payload);
                 if (result != null) {
-                    fail("Match for \"" + expressionString + "\" found");
+                    fail("Match for \"" + expressionString + "\" found", "Payload", message.getPayloadSource());
                 }
             }
         };
@@ -97,7 +97,7 @@ public class XPathExpectationsHelper {
                 Node payload = transformToNode(message);
                 boolean result = expression.evaluateAsBoolean(payload);
                 assertEquals("Evaluation of XPath expression \"" + expressionString + "\" failed.", expectedValue,
-                        result);
+                        result, "Payload", message.getPayloadSource());
 
             }
         };
@@ -113,7 +113,7 @@ public class XPathExpectationsHelper {
                 Node payload = transformToNode(message);
                 double result = expression.evaluateAsNumber(payload);
                 assertEquals("Evaluation of XPath expression \"" + expressionString + "\" failed.", expectedValue,
-                        result);
+                        result, "Payload", message.getPayloadSource());
 
             }
         };
@@ -126,7 +126,7 @@ public class XPathExpectationsHelper {
                 Node payload = transformToNode(message);
                 String result = expression.evaluateAsString(payload);
                 assertEquals("Evaluation of XPath expression \"" + expressionString + "\" failed.", expectedValue,
-                        result);
+                        result, "Payload", message.getPayloadSource());
             }
         };
     }

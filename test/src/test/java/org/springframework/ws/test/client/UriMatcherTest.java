@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,7 +18,11 @@ package org.springframework.ws.test.client;
 
 import java.net.URI;
 
+import org.springframework.ws.WebServiceMessage;
+
 import org.junit.Test;
+
+import static org.easymock.EasyMock.*;
 
 public class UriMatcherTest {
 
@@ -26,13 +30,19 @@ public class UriMatcherTest {
 
     @Test
     public void match() {
+    	WebServiceMessage message = createMock(WebServiceMessage.class);
+    	expect(message.getPayloadSource()).andReturn(null);
+    	replay(message);
         UriMatcher matcher = new UriMatcher(GOOD_URI);
-        matcher.match(GOOD_URI, null);
+        matcher.match(GOOD_URI, message);
     }
 
     @Test(expected = AssertionError.class)
     public void nonMatch() {
+    	WebServiceMessage message = createMock(WebServiceMessage.class);
+    	expect(message.getPayloadSource()).andReturn(null);
+    	replay(message);
         UriMatcher matcher = new UriMatcher(GOOD_URI);
-        matcher.match(URI.create("http://www.example.org"), null);
+        matcher.match(URI.create("http://www.example.org"), message);
     }
 }
