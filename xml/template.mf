@@ -7,7 +7,7 @@ Bundle-ManifestVersion: 2
 Import-Template: 
  javax.xml.namespace.*;version="0",
  javax.xml.parsers.*;version="0",
- javax.xml.stream.*;version="[1.0.1, 2.0.0)",
+ javax.xml.stream.*;version="0",
  javax.xml.transform.*;version="0",
  javax.xml.transform.stax.*;version="0";resolution:=optional,
  javax.xml.validation.*;version="0",
