@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,8 +33,8 @@ import org.springframework.ws.soap.addressing.server.annotation.Action;
 import org.springframework.ws.soap.addressing.server.annotation.Address;
 
 /**
- * Implementation of the {@link org.springframework.ws.server.EndpointMapping} interface that uses the {@link Action}
- * annotation to map methods to a WS-Addressing <code>Action</code> header.
+ * Implementation of the {@link org.springframework.ws.server.EndpointMapping} interface that uses the
+ * {@link Action @Action} annotation to map methods to a WS-Addressing {@code Action} header.
  * <p/>
  * Endpoints typically have the following form:
  * <pre>
@@ -48,9 +48,9 @@ import org.springframework.ws.soap.addressing.server.annotation.Address;
  * }
  * </pre>
  * <p/>
- * If set, the {@link Address} annotation on the endpoint class should be equal to the {@link
+ * If set, the {@link Address @Address} annotation on the endpoint class should be equal to the {@link
  * org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo() destination} property of the
- * incominging message.
+ * incoming message.
  *
  * @author Arjen Poutsma
  * @see Action
