@@ -23,7 +23,6 @@ import java.util.Map;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ws.server.EndpointAdapter;
-import org.springframework.ws.server.EndpointExceptionResolver;
 import org.springframework.ws.server.EndpointMapping;
 import org.springframework.ws.server.endpoint.adapter.DefaultMethodEndpointAdapter;
 import org.springframework.ws.server.endpoint.adapter.method.MessageContextMethodArgumentResolver;
@@ -39,8 +38,6 @@ import org.springframework.ws.server.endpoint.adapter.method.dom.XomPayloadMetho
 import org.springframework.ws.server.endpoint.adapter.method.jaxb.JaxbElementPayloadMethodProcessor;
 import org.springframework.ws.server.endpoint.adapter.method.jaxb.XmlRootElementPayloadMethodProcessor;
 import org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping;
-import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
-import org.springframework.ws.soap.server.endpoint.SoapFaultAnnotationExceptionResolver;
 import org.springframework.ws.soap.server.endpoint.adapter.method.SoapMethodArgumentResolver;
 import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping;
 
@@ -69,15 +66,6 @@ public class AnnotationDrivenBeanDefinitionParserTest {
         assertEquals("invalid amount of endpoint mappings found", 2, result.size());
         assertContainsInstanceOf(result.values(), PayloadRootAnnotationMethodEndpointMapping.class);
         assertContainsInstanceOf(result.values(), SoapActionAnnotationMethodEndpointMapping.class);
-    }
-
-    @Test
-    public void endpointExceptionResolvers() {
-        Map<String, EndpointExceptionResolver> result =
-                applicationContext.getBeansOfType(EndpointExceptionResolver.class);
-        assertEquals("invalid amount of endpoint mappings found", 2, result.size());
-        assertContainsInstanceOf(result.values(), SimpleSoapExceptionResolver.class);
-        assertContainsInstanceOf(result.values(), SoapFaultAnnotationExceptionResolver.class);
     }
 
     @Test
