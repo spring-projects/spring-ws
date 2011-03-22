@@ -39,8 +39,6 @@ import org.springframework.ws.server.endpoint.adapter.method.dom.XomPayloadMetho
 import org.springframework.ws.server.endpoint.adapter.method.jaxb.JaxbElementPayloadMethodProcessor;
 import org.springframework.ws.server.endpoint.adapter.method.jaxb.XmlRootElementPayloadMethodProcessor;
 import org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping;
-import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
-import org.springframework.ws.soap.server.endpoint.SoapFaultAnnotationExceptionResolver;
 import org.springframework.ws.soap.server.endpoint.adapter.method.SoapMethodArgumentResolver;
 import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping;
 
@@ -78,8 +76,6 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
         registerEndpointMappings(source, parserContext);
 
         registerEndpointAdapters(element, source, parserContext);
-
-        registerEndpointExceptionResolvers(source, parserContext);
 
         parserContext.popAndRegisterContainingComponent();
 
@@ -175,19 +171,6 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 
         parserContext.getReaderContext().registerWithGeneratedName(adapterDef);
     }
-
-    private void registerEndpointExceptionResolvers(Object source, ParserContext parserContext) {
-        RootBeanDefinition simpleExceptionResolverDef =
-                createBeanDefinition(SimpleSoapExceptionResolver.class, source);
-        simpleExceptionResolverDef.getPropertyValues().add("order", 0);
-        parserContext.getReaderContext().registerWithGeneratedName(simpleExceptionResolverDef);
-
-        RootBeanDefinition soapFaultAnnotationExceptionResolverDef =
-                createBeanDefinition(SoapFaultAnnotationExceptionResolver.class, source);
-        soapFaultAnnotationExceptionResolverDef.getPropertyValues().add("order", 1);
-        parserContext.getReaderContext().registerWithGeneratedName(soapFaultAnnotationExceptionResolverDef);
-    }
-
 
     private RuntimeBeanReference createBeanReference(Class<?> beanClass, Object source, ParserContext parserContext) {
         RootBeanDefinition beanDefinition = createBeanDefinition(beanClass, source);
