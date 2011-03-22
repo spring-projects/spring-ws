@@ -38,6 +38,7 @@ import org.springframework.ws.server.endpoint.adapter.method.dom.XomPayloadMetho
 import org.springframework.ws.server.endpoint.adapter.method.jaxb.JaxbElementPayloadMethodProcessor;
 import org.springframework.ws.server.endpoint.adapter.method.jaxb.XmlRootElementPayloadMethodProcessor;
 import org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping;
+import org.springframework.ws.soap.addressing.server.AnnotationActionEndpointMapping;
 import org.springframework.ws.soap.server.endpoint.adapter.method.SoapMethodArgumentResolver;
 import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping;
 
@@ -63,9 +64,10 @@ public class AnnotationDrivenBeanDefinitionParserTest {
     @Test
     public void endpointMappings() {
         Map<String, EndpointMapping> result = applicationContext.getBeansOfType(EndpointMapping.class);
-        assertEquals("invalid amount of endpoint mappings found", 2, result.size());
+        assertEquals("invalid amount of endpoint mappings found", 3, result.size());
         assertContainsInstanceOf(result.values(), PayloadRootAnnotationMethodEndpointMapping.class);
         assertContainsInstanceOf(result.values(), SoapActionAnnotationMethodEndpointMapping.class);
+        assertContainsInstanceOf(result.values(), AnnotationActionEndpointMapping.class);
     }
 
     @Test

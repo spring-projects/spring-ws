@@ -39,6 +39,7 @@ import org.springframework.ws.server.endpoint.adapter.method.dom.XomPayloadMetho
 import org.springframework.ws.server.endpoint.adapter.method.jaxb.JaxbElementPayloadMethodProcessor;
 import org.springframework.ws.server.endpoint.adapter.method.jaxb.XmlRootElementPayloadMethodProcessor;
 import org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping;
+import org.springframework.ws.soap.addressing.server.AnnotationActionEndpointMapping;
 import org.springframework.ws.soap.server.endpoint.adapter.method.SoapMethodArgumentResolver;
 import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping;
 
@@ -92,6 +93,11 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
                 createBeanDefinition(SoapActionAnnotationMethodEndpointMapping.class, source);
         soapActionMappingDef.getPropertyValues().add("order", 1);
         parserContext.getReaderContext().registerWithGeneratedName(soapActionMappingDef);
+
+        RootBeanDefinition annActionMappingDef =
+                createBeanDefinition(AnnotationActionEndpointMapping.class, source);
+        annActionMappingDef.getPropertyValues().add("order", 2);
+        parserContext.getReaderContext().registerWithGeneratedName(annActionMappingDef);
     }
 
     private void registerEndpointAdapters(Element element, Object source, ParserContext parserContext) {

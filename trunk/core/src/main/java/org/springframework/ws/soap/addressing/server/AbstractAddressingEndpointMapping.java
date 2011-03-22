@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,6 +22,7 @@ import java.util.Iterator;
 import javax.xml.transform.TransformerException;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.Ordered;
 import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
@@ -63,7 +64,7 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * @since 1.5.0
  */
 public abstract class AbstractAddressingEndpointMapping extends TransformerObjectSupport
-        implements SoapEndpointMapping, InitializingBean {
+        implements SoapEndpointMapping, InitializingBean, Ordered {
 
     private String[] actorsOrRoles;
 
@@ -78,6 +79,9 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
     private EndpointInterceptor[] preInterceptors = new EndpointInterceptor[0];
 
     private EndpointInterceptor[] postInterceptors = new EndpointInterceptor[0];
+
+    private int order = Integer.MAX_VALUE;  // default: same as non-Ordered
+
 
     /** Protected constructor. Initializes the default settings. */
     protected AbstractAddressingEndpointMapping() {
@@ -107,6 +111,22 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
     public final void setUltimateReceiver(boolean ultimateReceiver) {
         this.isUltimateReceiver = ultimateReceiver;
     }
+
+    public final int getOrder() {
+        return order;
+    }
+
+    /**
+     * Specify the order value for this mapping.
+     * <p/>
+     * Default value is {@link Integer#MAX_VALUE}, meaning that it's non-ordered.
+     *
+     * @see org.springframework.core.Ordered#getOrder()
+     */
+    public final void setOrder(int order) {
+        this.order = order;
+    }
+    
 
     /**
      * Set additional interceptors to be applied before the implicit WS-Addressing interceptor, e.g.
