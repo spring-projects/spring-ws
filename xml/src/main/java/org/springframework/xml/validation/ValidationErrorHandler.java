@@ -16,19 +16,19 @@
 
 package org.springframework.xml.validation;
 
-import java.io.IOException;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXParseException;
 
-import org.springframework.core.io.Resource;
+/**
+ * Subinterface of {@link ErrorHandler} that allows the registered errors to be retrieved.
+ * @author Arjen Poutsma
+ * @since 2.0.1
+ */
+public interface ValidationErrorHandler extends ErrorHandler {
 
-public class Jaxp10ValidatorFactoryTest extends AbstractValidatorFactoryTestCase {
-
-    @Override
-    protected XmlValidator createValidator(Resource[] schemaResources, String schemaLanguage) throws IOException {
-        return Jaxp10ValidatorFactory.createValidator(schemaResources, schemaLanguage);
-    }
-
-    @Override
-    public void customErrorHandler() throws Exception {
-        // Not supported on JAXP 1.0
-    }
+    /**
+     * Returns the errors collected by this error handler.
+     * @return the errors
+     */
+    SAXParseException[] getErrors();
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -44,11 +44,13 @@ import org.springframework.ws.soap.soap11.Soap11Fault;
 import org.springframework.ws.soap.soap12.Soap12Fault;
 import org.springframework.ws.transport.MockTransportInputStream;
 import org.springframework.ws.transport.TransportInputStream;
+import org.springframework.xml.validation.ValidationErrorHandler;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.LocatorImpl;
 
@@ -95,7 +97,7 @@ public class PayloadValidatingInterceptorTest {
 
     @Test
     public void testHandleInvalidRequestSoap11() throws Exception {
-        SoapMessage invalidMessage = (SoapMessage) soap11Factory.createWebServiceMessage();
+        SoapMessage invalidMessage = soap11Factory.createWebServiceMessage();
         InputStream inputStream = getClass().getResourceAsStream(INVALID_MESSAGE);
         transformer.transform(new StreamSource(inputStream), invalidMessage.getPayloadResult());
         context = new DefaultMessageContext(invalidMessage, soap11Factory);
@@ -115,7 +117,7 @@ public class PayloadValidatingInterceptorTest {
 
     @Test
     public void testHandleInvalidRequestSoap12() throws Exception {
-        SoapMessage invalidMessage = (SoapMessage) soap12Factory.createWebServiceMessage();
+        SoapMessage invalidMessage = soap12Factory.createWebServiceMessage();
         InputStream inputStream = getClass().getResourceAsStream(INVALID_MESSAGE);
         transformer.transform(new StreamSource(inputStream), invalidMessage.getPayloadResult());
         context = new DefaultMessageContext(invalidMessage, soap12Factory);
@@ -363,6 +365,33 @@ public class PayloadValidatingInterceptorTest {
         boolean result = interceptor.handleRequest(context, null);
         Assert.assertTrue("Invalid response from interceptor", result);
 
+    }
+
+    @Test
+    public void customErrorHandler() throws Exception {
+        ValidationErrorHandler errorHandler = new ValidationErrorHandler() {
+            public SAXParseException[] getErrors() {
+                return new SAXParseException[0];
+            }
+
+            public void warning(SAXParseException exception) throws SAXException {
+            }
+
+            public void error(SAXParseException exception) throws SAXException {
+            }
+
+            public void fatalError(SAXParseException exception) throws SAXException {
+            }
+        };
+        interceptor.setErrorHandler(errorHandler);
+        SoapMessage invalidMessage = soap11Factory.createWebServiceMessage();
+        InputStream inputStream = getClass().getResourceAsStream(INVALID_MESSAGE);
+        transformer.transform(new StreamSource(inputStream), invalidMessage.getPayloadResult());
+        context = new DefaultMessageContext(invalidMessage, soap11Factory);
+
+        boolean result = interceptor.handleRequest(context, null);
+        Assert.assertTrue("Invalid response from interceptor", result);
+        Assert.assertFalse("Context has response", context.hasResponse());
     }
 
 }
