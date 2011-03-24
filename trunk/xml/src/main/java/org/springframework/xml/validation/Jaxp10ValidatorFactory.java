@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -46,7 +46,9 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author Arjen Poutsma
  * @since 1.0.0
+ * @deprecated  in favor of {@link Jaxp13ValidatorFactory}
  */
+@Deprecated
 abstract class Jaxp10ValidatorFactory {
 
     private static final String SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
@@ -80,9 +82,14 @@ abstract class Jaxp10ValidatorFactory {
             parserFactory.setValidating(true);
         }
 
+        public SAXParseException[] validate(Source source, ValidationErrorHandler errorHandler)
+                throws IOException {
+            return validate(source);
+        }
+
         public SAXParseException[] validate(Source source) throws IOException {
             SAXParser parser = createSAXParser();
-            ValidationErrorHandler errorHandler = new ValidationErrorHandler();
+            DefaultValidationErrorHandler errorHandler = new DefaultValidationErrorHandler();
             try {
                 if (source instanceof SAXSource) {
                     validateSAXSource((SAXSource) source, parser, errorHandler);
@@ -104,7 +111,7 @@ abstract class Jaxp10ValidatorFactory {
             }
         }
 
-        private void validateDOMSource(DOMSource domSource, SAXParser parser, ValidationErrorHandler errorHandler)
+        private void validateDOMSource(DOMSource domSource, SAXParser parser, DefaultValidationErrorHandler errorHandler)
                 throws IOException, SAXException {
             try {
                 // Sadly, JAXP 1.0 DOM doesn't implement DOM level 3, so we cannot use Document.normalizeDocument()
@@ -123,7 +130,7 @@ abstract class Jaxp10ValidatorFactory {
 
         private void validateStreamSource(StreamSource streamSource,
                                           SAXParser parser,
-                                          ValidationErrorHandler errorHandler) throws SAXException, IOException {
+                                          DefaultValidationErrorHandler errorHandler) throws SAXException, IOException {
             if (streamSource.getInputStream() != null) {
                 parser.parse(streamSource.getInputStream(), errorHandler);
             }
@@ -135,7 +142,7 @@ abstract class Jaxp10ValidatorFactory {
             }
         }
 
-        private void validateSAXSource(SAXSource source, SAXParser parser, ValidationErrorHandler errorHandler)
+        private void validateSAXSource(SAXSource source, SAXParser parser, DefaultValidationErrorHandler errorHandler)
                 throws SAXException, IOException {
             parser.parse(source.getInputSource(), errorHandler);
         }
@@ -157,7 +164,7 @@ abstract class Jaxp10ValidatorFactory {
     }
 
     /** <code>DefaultHandler</code> extension that stores errors and fatal errors in a list. */
-    private static class ValidationErrorHandler extends DefaultHandler {
+    private static class DefaultValidationErrorHandler extends DefaultHandler {
 
         private List<SAXParseException> errors = new ArrayList<SAXParseException>();
 

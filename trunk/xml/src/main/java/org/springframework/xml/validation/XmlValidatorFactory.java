@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -91,12 +91,8 @@ public abstract class XmlValidatorFactory {
             logger.trace("Creating JAXP 1.3 XmlValidator");
             return Jaxp13ValidatorFactory.createValidator(schemaResources, schemaLanguage);
         }
-        else if (JaxpVersion.getJaxpVersion() >= JaxpVersion.JAXP_10) {
-            logger.trace("Creating JAXP 1.0 XmlValidator");
-            return Jaxp10ValidatorFactory.createValidator(schemaResources, schemaLanguage);
-        }
         else {
-            throw new IllegalStateException("Could not locate JAXP 1.0 or higher.");
+            throw new IllegalStateException("Could not locate JAXP 1.3.");
         }
     }
 

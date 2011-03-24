@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.transform.Source;
 import javax.xml.validation.Schema;
+import javax.xml.validation.Validator;
 
 import org.springframework.core.io.Resource;
 
-import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -55,8 +55,14 @@ abstract class Jaxp13ValidatorFactory {
         }
 
         public SAXParseException[] validate(Source source) throws IOException {
-            javax.xml.validation.Validator validator = schema.newValidator();
-            ValidationErrorHandler errorHandler = new ValidationErrorHandler();
+            return validate(source, null);
+        }
+
+        public SAXParseException[] validate(Source source, ValidationErrorHandler errorHandler) throws IOException {
+            if (errorHandler == null) {
+                errorHandler = new DefaultValidationErrorHandler();
+            }
+            Validator validator = schema.newValidator();
             validator.setErrorHandler(errorHandler);
             try {
                 validator.validate(source);
@@ -69,11 +75,11 @@ abstract class Jaxp13ValidatorFactory {
     }
 
     /** <code>ErrorHandler</code> implementation that stores errors and fatal errors in a list. */
-    private static class ValidationErrorHandler implements ErrorHandler {
+    private static class DefaultValidationErrorHandler implements ValidationErrorHandler {
 
         private List<SAXParseException> errors = new ArrayList<SAXParseException>();
 
-        private SAXParseException[] getErrors() {
+        public SAXParseException[] getErrors() {
             return errors.toArray(new SAXParseException[errors.size()]);
         }
 

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,6 +31,7 @@ import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.xml.transform.TransformerObjectSupport;
+import org.springframework.xml.validation.ValidationErrorHandler;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.XsdSchema;
@@ -64,6 +65,8 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
     private boolean validateResponse = false;
 
     private XmlValidator validator;
+
+    private ValidationErrorHandler errorHandler;
 
     public String getSchemaLanguage() {
         return schemaLanguage;
@@ -131,6 +134,15 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
         this.validator = schemaCollection.createValidator();
     }
 
+    /**
+     * Sets the error handler to use for validation. If not set, a default error handler will be used.
+     * 
+     * @param errorHandler the error handler.
+     */
+    public void setErrorHandler(ValidationErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
+    }
+
     /** Indicates whether the request should be validated against the schema. Default is <code>true</code>. */
     public void setValidateRequest(boolean validateRequest) {
         this.validateRequest = validateRequest;
@@ -171,7 +183,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
         if (validateRequest) {
             Source requestSource = getValidationRequestSource(messageContext.getRequest());
             if (requestSource != null) {
-                SAXParseException[] errors = validator.validate(requestSource);
+                SAXParseException[] errors = validator.validate(requestSource, errorHandler);
                 if (!ObjectUtils.isEmpty(errors)) {
                     return handleRequestValidationErrors(messageContext, errors);
                 }
@@ -213,7 +225,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
         if (validateResponse) {
             Source responseSource = getValidationResponseSource(messageContext.getResponse());
             if (responseSource != null) {
-                SAXParseException[] errors = validator.validate(responseSource);
+                SAXParseException[] errors = validator.validate(responseSource, errorHandler);
                 if (!ObjectUtils.isEmpty(errors)) {
                     return handleResponseValidationErrors(messageContext, errors);
                 }
@@ -227,11 +239,11 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 
     /**
      * Template method that is called when the response message contains validation errors. Default implementation logs
-     * all errors, and returns <code>false</code>, i.e. do not cot continue to process the respone interceptor chain.
+     * all errors, and returns <code>false</code>, i.e. do not cot continue to process the response interceptor chain.
      *
      * @param messageContext the message context
      * @param errors         the validation errors
-     * @return <code>true</code> to continue the reponse interceptor chain, <code>false</code> (the default) otherwise
+     * @return <code>true</code> to continue the response interceptor chain, <code>false</code> (the default) otherwise
      */
     protected boolean handleResponseValidationErrors(MessageContext messageContext, SAXParseException[] errors) {
         for (SAXParseException error : errors) {
