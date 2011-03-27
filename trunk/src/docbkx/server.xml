@@ -1116,7 +1116,7 @@ public class AnnotationOrderEndpoint {
             when this endpoint mapping does not result in a matching endpoint.
         </para>
         <para>
-            As explained in <xref linkend="server-at-endpoint"/>, the <interfacename>@Endpoint</interfacename> style
+            As explained in <xref linkend="server-endpoints"/>, the <interfacename>@Endpoint</interfacename> style
             allows you to handle multiple requests in one endpoint class.
             This is the responsibility of the <classname>MethodEndpointMapping</classname>.
             This mapping determines which method is to be invoked for an incoming request message.
@@ -1193,8 +1193,8 @@ public class AnnotationOrderEndpoint {
                     To use the <classname>AnnotationActionEndpointMapping</classname>, annotate the handling methods
                     with the <interfacename>@Action</interfacename> annotation, similar to the
                     <interfacename>@PayloadRoot</interfacename> and <interfacename>@SoapAction</interfacename>
-                    annotations described in <xref linkend="server-at-endpoint"/> and
-                    <xref linkend="server-method-endpoint-mapping"/>. Here is an example:
+                    annotations described in <xref linkend="server-atEndpoint-methods"/> and
+                    <xref linkend="server-endpoint-mapping"/>. Here is an example:
                     <programlisting><![CDATA[package samples;
 
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
@@ -1611,7 +1611,7 @@ public class CustomerEndpoint {
                         <para>
                             The <classname>CustomerEndpoint</classname> in annotated with
                             <interfacename>@Endpoint</interfacename>.
-                            See <xref linkend="server-at-endpoint"/>.
+                            See <xref linkend="server-endpoints"/>.
                         </para>
                     </callout>
                     <callout arearefs="server.test.endpoint.method">
