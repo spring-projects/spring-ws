@@ -1328,7 +1328,7 @@
                     object.
                 </para>
                 <para>
-                    Callback handlers are configured via<classname>Wss4jSecurityInterceptor</classname>'s
+                    Callback handlers are configured via <classname>Wss4jSecurityInterceptor</classname>'s
                     <property>validationCallbackHandler</property>
                     property.
                 </para>
