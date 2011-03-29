@@ -1,0 +1,12 @@
+<S:Envelope xmlns:S="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://www.w3.org/2005/08/addressing">
+    <S:Header>
+        <wsa:MessageID>http://example.com/someuniquestring</wsa:MessageID>
+        <wsa:To>mailto:fabrikam@example.com</wsa:To>
+        <wsa:Action>http://example.com/fabrikam/mail/Delete</wsa:Action>
+    </S:Header>
+    <S:Body>
+        <f:Delete xmlns:f="http://example.com/fabrikam">
+            <maxCount>42</maxCount>
+        </f:Delete>
+    </S:Body>
+</S:Envelope>

@@ -1,0 +1,1977 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+        "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<chapter id="security">
+    <title>Securing your Web services with Spring-WS</title>
+
+    <section id="security-introduction">
+        <title>Introduction</title>
+        <para>
+            This chapter explains how to add WS-Security aspects to your Web services. We will focus on the
+            three different areas of WS-Security, namely:
+        </para>
+        <formalpara>
+            <title>Authentication</title>
+            <para>
+                This is the process of determining whether a <emphasis>principal</emphasis> is who they claim to be.
+                In this context, a "principal" generally means a user, device or some other system which can perform
+                an action in your application.
+            </para>
+        </formalpara>
+        <formalpara>
+            <title>Digital signatures</title>
+            <para>
+                The digital signature of a message is a piece of information based on both the document and the signer's
+                private key. It is created through the use of a hash function and a private signing function (encrypting
+                with the signer's private key).
+            </para>
+        </formalpara>
+        <formalpara>
+            <title>Encryption and Decryption</title>
+            <para>
+                <emphasis>Encryption</emphasis> is the process of transforming data into a form that is impossible to
+                read without the appropriate key. It is mainly used to keep information hidden from anyone for whom it
+                is not intended.
+                <emphasis>Decryption</emphasis> is the reverse of encryption; it is the process of transforming of
+                encrypted data back into an readable form.
+            </para>
+        </formalpara>
+        <para>
+            All of these three areas are implemented using the <classname>XwsSecurityInterceptor</classname> or
+            <classname>Wss4jSecurityInterceptor</classname>, which we
+            will describe in <xref linkend="security-xws-security-interceptor"/> and
+            <xref linkend="security-wss4j-security-interceptor"/>, respectively
+        </para>
+        <note>
+            <para>
+                Note that WS-Security (especially encryption and signing) requires substantial amounts of memory, and
+                will also decrease performance. If performance is important to you, you might want to consider not using
+                WS-Security, or simply use HTTP-based security.
+            </para>
+        </note>
+    </section>
+    <section id="security-xws-security-interceptor">
+        <title>
+            <classname>XwsSecurityInterceptor</classname>
+        </title>
+        <para>
+            The <classname>XwsSecurityInterceptor</classname> is an <classname>EndpointInterceptor</classname>
+            (see <xref linkend="server-endpoint-interceptor"/>) that is based on SUN's XML and Web Services Security
+            package (XWSS). This WS-Security implementation is part of the Java Web Services Developer Pack
+            (<ulink url="http://java.sun.com/webservices/"><citetitle>Java WSDP</citetitle></ulink>).
+        </para>
+        <para>
+            Like any other endpoint interceptor, it is defined in the endpoint mapping (see
+            <xref linkend="server-endpoint-mapping"/>). This means that you can be selective about adding WS-Security
+            support: some endpoint mappings require it, while others do not.
+        </para>
+        <note>
+            <para>
+                Note that XWSS requires both a SUN 1.5 JDK and the SUN SAAJ reference implementation.
+                The WSS4J interceptor does not have these requirements (see
+                <xref linkend="security-wss4j-security-interceptor"/>).
+            </para>
+        </note>
+        <para>
+            The <classname>XwsSecurityInterceptor</classname> requires a <emphasis>security policy file</emphasis>
+            to operate. This XML file tells the interceptor what security aspects to require from incoming SOAP
+            messages, and what aspects to add to outgoing messages. The basic format of the policy file will be
+            explained in the following sections, but you can find a more in-depth tutorial
+            <ulink url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp564887">
+                <citetitle>here</citetitle>
+            </ulink>.
+            You can set the policy with the <property>policyConfiguration</property> property, which
+            requires a Spring resource. The policy file can contain multiple elements, e.g. require a
+            username token on incoming messages, and sign all outgoing messages. It contains a
+            <literal>SecurityConfiguration</literal> element as root (not a <literal>JAXRPCSecurity</literal> element).
+        </para>
+        <para>
+            Additionally, the security interceptor requires one or more<classname>CallbackHandler</classname>s to
+            operate. These handlers are used to retrieve certificates, private keys, validate user credentials,
+            etc. Spring-WS offers handlers for most common security concerns, e.g. authenticating against a Spring
+            Security authentication manager, signing outgoing messages based on a X509 certificate. The following
+            sections will indicate what callback handler to use for which security concern. You can set the callback
+            handlers using the <property>callbackHandler</property> or <property>callbackHandlers</property>
+            property.
+        </para>
+        <para>
+            Here is an example that shows how to wire the <classname>XwsSecurityInterceptor</classname> up:
+            <programlisting><![CDATA[
+<beans>
+    <bean id="wsSecurityInterceptor"
+        class="org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor">
+        <property name="policyConfiguration" value="classpath:securityPolicy.xml"/>
+        <property name="callbackHandlers">
+            <list>
+                <ref bean="certificateHandler"/>
+                <ref bean="authenticationHandler"/>
+            </list>
+        </property>
+    </bean>
+    ...
+</beans>
+]]></programlisting>
+            This interceptor is configured using the
+            <filename>securityPolicy.xml</filename>
+            file on the classpath. It
+            uses two callback handlers which are defined further on in the file.
+        </para>
+
+        <section id="keystore">
+            <title>Keystores</title>
+            <para>
+                For most cryptographic operations, you will use the standard
+                <classname>java.security.KeyStore</classname> objects.
+                These operations include certificate verification, message signing, signature verification, and encryption, but
+                excludes username and time-stamp verification. This section aims to give you some background knowledge on
+                keystores, and the Java tools that you can use to store keys and certificates in a keystore file. This
+                information is mostly not related to Spring-WS, but to the general cryptographic features of Java.
+            </para>
+            <para>
+                The <classname>java.security.KeyStore</classname>
+                class represents a storage facility for cryptographic keys
+                and certificates. It can contain three different sort of elements:
+            </para>
+            <formalpara>
+                <title>Private Keys</title>
+                <para>
+                    These keys are used for self-authentication. The private key is accompanied by certificate chain for
+                    the corresponding public key. Within the field of WS-Security, this accounts to message signing and
+                    message decryption.
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>Symmetric Keys</title>
+                <para>
+                    Symmetric (or secret) keys are used for message encryption and decryption as well. The difference
+                    being that both sides (sender and recipient) share the same, secret key.
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>Trusted certificates</title>
+                <para>
+                    These X509 certificates are called a
+                    <emphasis>trusted certificate</emphasis>
+                    because the keystore owner
+                    trusts that the public key in the certificates indeed belong to the owner of the certificate. Within
+                    WS-Security, these certificates are used for certificate validation, signature verification, and
+                    encryption.
+                </para>
+            </formalpara>
+            <section>
+                <title>KeyTool</title>
+                <para>
+                    Supplied with your Java Virtual Machine is the
+                    <command>keytool</command>
+                    program, a key and certificate
+                    management utility. You can use this tool to create new keystores, add new private keys and
+                    certificates to them, etc. It is beyond the scope of this document to provide a full reference of
+                    the
+                    <command>keytool</command>
+                    command, but you can find a reference
+                    <ulink url="http://java.sun.com/j2se/1.5.0/docs/tooldocs/windows/keytool.html">
+                        <citetitle>here</citetitle>
+                    </ulink>
+                    ,
+                    or by giving the command
+                    <prompt>keytool -help</prompt>
+                    on the command line.
+                </para>
+            </section>
+            <section>
+                <title>KeyStoreFactoryBean</title>
+                <para>
+                    To easily load a keystore using Spring configuration, you can use the
+                    <classname>KeyStoreFactoryBean</classname>. It has a resource location property, which you can set to
+                    point to the path of the keystore to load. A password may be given to check the integrity of the
+                    keystore data. If a password is not given, integrity checking is not performed.
+                </para>
+                <programlisting><![CDATA[
+<bean id="keyStore" class="org.springframework.ws.soap.security.support.KeyStoreFactoryBean">
+    <property name="password" value="password"/>
+    <property name="location" value="classpath:org/springframework/ws/soap/security/xwss/test-keystore.jks"/>
+</bean>]]></programlisting>
+                <caution>
+                    <para>
+                        If you don't specify the location property, a new, empty keystore will be created, which is most
+                        likely not what you want.
+                    </para>
+                </caution>
+            </section>
+            <section id="security-key-store-callback-handler">
+                <title>KeyStoreCallbackHandler</title>
+                <para>
+                    To use the keystores within a
+                    <classname>XwsSecurityInterceptor</classname>, you will need to define a
+                    <classname>KeyStoreCallbackHandler</classname>. This callback has three properties with type keystore:
+                    (<methodname>keyStore</methodname>,<methodname>trustStore</methodname>, and
+                    <methodname>symmetricStore</methodname>). The exact stores used by the handler depend on the
+                    cryptographic operations that are to be performed by this handler. For private key operation, the
+                    <methodname>keyStore</methodname>
+                    is used, for symmetric key operations the
+                    <methodname>symmetricStore</methodname>, and for determining trust relationships, the
+                    <methodname>trustStore</methodname>. The following table indicates this:
+                    <informaltable>
+                        <tgroup cols="2">
+                            <thead>
+                                <row>
+                                    <entry>Cryptographic operation</entry>
+                                    <entry>Keystore used</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Certificate validation</entry>
+                                    <entry>
+                                        first the<methodname>keyStore</methodname>, then the
+                                        <methodname>trustStore</methodname>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Decryption based on private key</entry>
+                                    <entry>
+                                        <methodname>keyStore</methodname>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Decryption based on symmetric key</entry>
+                                    <entry>
+                                        <methodname>symmetricStore</methodname>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Encryption based on public key certificate</entry>
+                                    <entry>
+                                        <methodname>trustStore</methodname>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Encryption based on symmetric key</entry>
+                                    <entry>
+                                        <methodname>symmetricStore</methodname>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Signing</entry>
+                                    <entry>
+                                        <methodname>keyStore</methodname>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Signature verification</entry>
+                                    <entry>
+                                        <methodname>trustStore</methodname>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </informaltable>
+                    Additionally, the
+                    <classname>KeyStoreCallbackHandler</classname>
+                    has a
+                    <methodname>privateKeyPassword</methodname>
+                    property, which should be set to unlock the private key(s)
+                    contained in the<methodname>keyStore</methodname>.
+                </para>
+                <para>
+                    If the
+                    <methodname>symmetricStore</methodname>
+                    is not set, it will default to the
+                    <methodname>keyStore</methodname>. If the key or trust store is not set, the callback handler will use
+                    the standard Java mechanism to load or create it. Refer to the JavaDoc of the
+                    <classname>KeyStoreCallbackHandler</classname>
+                    to know how this mechanism works.
+                </para>
+                <para>
+                    For instance, if you want to use the
+                    <classname>KeyStoreCallbackHandler</classname>
+                    to validate incoming
+                    certificates or signatures, you would use a trust store, like so:
+                    <programlisting><![CDATA[
+<beans>
+    <bean id="keyStoreHandler" class="org.springframework.ws.soap.security.xwss.callback.KeyStoreCallbackHandler">
+        <property name="trustStore" ref="trustStore"/>
+    </bean>
+
+    <bean id="trustStore" class="org.springframework.ws.soap.security.support.KeyStoreFactoryBean">
+        <property name="location" value="classpath:truststore.jks"/>
+        <property name="password" value="changeit"/>
+    </bean>
+</beans>]]></programlisting>
+                    If you want to use it to decrypt incoming certificates or sign outgoing messages, you would use a key
+                    store, like so:
+                    <programlisting><![CDATA[
+<beans>
+    <bean id="keyStoreHandler" class="org.springframework.ws.soap.security.xwss.callback.KeyStoreCallbackHandler">
+        <property name="keyStore" ref="keyStore"/>
+        <property name="privateKeyPassword" value="changeit"/>
+    </bean>
+
+    <bean id="keyStore" class="org.springframework.ws.soap.security.support.KeyStoreFactoryBean">
+        <property name="location" value="classpath:keystore.jks"/>
+        <property name="password" value="changeit"/>
+    </bean>
+</beans>]]></programlisting>
+                </para>
+                <para>
+                    The following sections will indicate where the
+                    <classname>KeyStoreCallbackHandler</classname>
+                    can be
+                    used, and which properties to set for particular cryptographic operations.
+                </para>
+            </section>
+        </section>
+
+        <section>
+            <title>Authentication</title>
+            <para>
+                As stated in the introduction,
+                <emphasis>authentication</emphasis>
+                is the task of determining whether a
+                principal is who they claim to be. Within WS-Security, authentication can take two forms: using a username
+                and password token (using either a plain text password or a password digest), or using a X509 certificate.
+            </para>
+            <section>
+                <title>Plain Text Username Authentication</title>
+                <para>
+                    The simplest form of username authentication uses<emphasis>plain text passwords</emphasis>. In this
+                    scenario, the SOAP message will contain a
+                    <literal>UsernameToken</literal>
+                    element, which itself
+                    contains a
+                    <literal>Username</literal>
+                    element and a
+                    <literal>Password</literal>
+                    element which contains
+                    the plain text password. Plain text authentication can be compared to the Basic Authentication provided
+                    by HTTP servers.
+                </para>
+                <warning>
+                    <para>
+                        Note that plain text passwords are not very secure. Therefore, you should always add additional
+                        security measures to your transport layer if you are using them (using HTTPS instead of plain HTTP,
+                        for instance).
+                    </para>
+                </warning>
+                <para>
+                    To require that every incoming message contains a
+                    <literal>UsernameToken</literal>
+                    with a plain
+                    text password, the security policy file should contain a
+                    <literal>RequireUsernameToken</literal>
+                    element, with the
+                    <literal>passwordDigestRequired</literal>
+                    attribute set to<literal>false</literal>.
+                    You can find a reference of possible child elements
+                    <ulink
+                            url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp567459">
+                        <citetitle>here</citetitle>
+                    </ulink>
+                    .
+                </para>
+                <programlisting><![CDATA[
+<xwss:SecurityConfiguration xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+    ...
+    <xwss:RequireUsernameToken passwordDigestRequired="false" nonceRequired="false"/>
+    ...
+</xwss:SecurityConfiguration>]]></programlisting>
+                <para>
+                    If the username token is not present, the
+                    <classname>XwsSecurityInterceptor</classname>
+                    will return a
+                    SOAP Fault to the sender. If it is present, it will fire a
+                    <classname>PasswordValidationCallback</classname>
+                    with a
+                    <classname>PlainTextPasswordRequest</classname>
+                    to the registered handlers. Within Spring-WS, there are three classes which handle this particular
+                    callback.
+                </para>
+                <section id="security-simple-password-validation-callback-handler">
+                    <title>SimplePasswordValidationCallbackHandler</title>
+                    <para>
+                        The simplest password validation handler is the
+                        <classname>SimplePasswordValidationCallbackHandler</classname>. This handler validates passwords
+                        against an in-memory
+                        <classname>Properties</classname>
+                        object, which you can specify using the
+                        <methodname>users</methodname>
+                        property, like so:
+                    </para>
+                    <programlisting><![CDATA[
+<bean id="passwordValidationHandler"
+    class="org.springframework.ws.soap.security.xwss.callback.SimplePasswordValidationCallbackHandler">
+    <property name="users">
+        <props>
+            <prop key="Bert">Ernie</prop>
+        </props>
+    </property>
+</bean>]]></programlisting>
+                    <para>
+                        In this case, we are only allowing the user "Bert" to log in using the password "Ernie".
+                    </para>
+                </section>
+                <section>
+                    <title>SpringPlainTextPasswordValidationCallbackHandler</title>
+                    <para>
+                        The <classname>SpringPlainTextPasswordValidationCallbackHandler</classname> uses
+                        <ulink url="http://www.springframework.org/security"><citetitle>Spring Security</citetitle></ulink>
+                        to authenticate users. It is beyond the scope of this document to describe Spring Security,
+                        but suffice it to say that it is a full-fledged security framework.
+                        You can read more about it in the <ulink url="http://www.springframework.org/security">
+                            <citetitle>Spring Security reference documentation</citetitle>
+                        </ulink>.
+                    </para>
+                    <para>
+                        The <classname>SpringPlainTextPasswordValidationCallbackHandler</classname> requires
+                        an <classname>AuthenticationManager</classname> to operate. It uses this manager to
+                        authenticate against a <classname>UsernamePasswordAuthenticationToken</classname>
+                        that it creates. If authentication is successful, the token is stored in the
+                        <classname>SecurityContextHolder</classname>. You can set the authentication manager using the
+                        <methodname>authenticationManager</methodname>property:
+                    </para>
+                    <programlisting><![CDATA[
+<beans>
+  <bean id="springSecurityHandler"
+      class="org.springframework.ws.soap.security.xwss.callback.SpringPlainTextPasswordValidationCallbackHandler">
+    <property name="authenticationManager" ref="authenticationManager"/>
+  </bean>
+
+  <bean id="authenticationManager" class="org.springframework.security.providers.ProviderManager">
+      <property name="providers">
+          <bean class="org.springframework.security.providers.dao.DaoAuthenticationProvider">
+              <property name="userDetailsService" ref="userDetailsService"/>
+          </bean>
+      </property>
+  </bean>
+
+  <bean id="userDetailsService" class="com.mycompany.app.dao.UserDetailService" />
+  ...
+</beans>]]></programlisting>
+                </section>
+                <section>
+                    <title>JaasPlainTextPasswordValidationCallbackHandler</title>
+                    <para>
+                        The
+                        <classname>JaasPlainTextPasswordValidationCallbackHandler</classname>
+                        is based on the standard
+                        <ulink url="http://java.sun.com/products/jaas/">
+                            <citetitle>Java Authentication and Authorization
+                                Service
+                            </citetitle>
+                        </ulink>
+                        . It is beyond the scope of this document to provide a full
+                        introduction into JAAS, but there is a
+                        <ulink
+                                url="http://www.javaworld.com/javaworld/jw-09-2002/jw-0913-jaas.html">
+                            <citetitle>good tutorial</citetitle>
+                        </ulink>
+                        available.
+                    </para>
+                    <para>
+                        The
+                        <classname>JaasPlainTextPasswordValidationCallbackHandler</classname>
+                        requires only a
+                        <methodname>loginContextName</methodname>
+                        to operate. It creates a new JAAS
+                        <classname>LoginContext</classname>
+                        using this name, and handles the standard JAAS
+                        <classname>NameCallback</classname>
+                        and
+                        <classname>PasswordCallback</classname>
+                        using the username
+                        and password provided in the SOAP message. This means that this callback handler
+                        integrates with any JAAS
+                        <classname>LoginModule</classname>
+                        that fires these callbacks during the
+                        <methodname>login()</methodname>
+                        phase, which is standard behavior.
+                    </para>
+                    <para>
+                        You can wire up a
+                        <classname>JaasPlainTextPasswordValidationCallbackHandler</classname>
+                        as follows:
+                    </para>
+                    <programlisting><![CDATA[
+<bean id="jaasValidationHandler"
+    class="org.springframework.ws.soap.security.xwss.callback.jaas.JaasPlainTextPasswordValidationCallbackHandler">
+    <property name="loginContextName" value="MyLoginModule" />
+</bean>]]></programlisting>
+                    <para>
+                        In this case, the callback handler uses the
+                        <classname>LoginContext</classname>
+                        named
+                        "MyLoginModule". This module should be defined in your
+                        <filename>jaas.config</filename>
+                        file, as
+                        explained in the abovementioned tutorial.
+                    </para>
+                </section>
+            </section>
+
+            <section>
+                <title>Digest Username Authentication</title>
+                <para>
+                    When using password digests, the SOAP message also contains a
+                    <literal>UsernameToken</literal>
+                    element,
+                    which itself contains a
+                    <literal>Username</literal>
+                    element and a
+                    <literal>Password</literal>
+                    element.
+                    The difference is that the password is not sent as plain text, but as a
+                    <emphasis>digest</emphasis>. The
+                    recipient compares this digest to the digest he calculated from the known password of the user, and if
+                    they are the same, the user is authenticated. It can be compared to the Digest Authentication provided
+                    by HTTP servers.
+                </para>
+                <para>
+                    To require that every incoming message contains a
+                    <literal>UsernameToken</literal>
+                    element with a
+                    password digest, the security policy file should contain a
+                    <literal>RequireUsernameToken</literal>
+                    element, with the
+                    <literal>passwordDigestRequired</literal>
+                    attribute set to<literal>true</literal>.
+                    Additionally, the
+                    <literal>nonceRequired</literal>
+                    should be set to<literal>true</literal>:
+                    You can find a reference of possible child elements
+                    <ulink
+                            url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp567459">
+                        <citetitle>here</citetitle>
+                    </ulink>
+                    .
+                </para>
+                <programlisting><![CDATA[
+<xwss:SecurityConfiguration xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+    ...
+    <xwss:RequireUsernameToken passwordDigestRequired="true" nonceRequired="true"/>
+    ...
+</xwss:SecurityConfiguration>]]></programlisting>
+                <para>
+                    If the username token is not present, the
+                    <classname>XwsSecurityInterceptor</classname>
+                    will return a
+                    SOAP Fault to the sender. If it is present, it will fire a
+                    <classname>PasswordValidationCallback</classname>
+                    with a
+                    <classname>DigestPasswordRequest</classname>
+                    to the registered handlers. Within Spring-WS, there are two classes which handle this particular
+                    callback.
+                </para>
+                <section>
+                    <title>SimplePasswordValidationCallbackHandler</title>
+                    <para>
+                        The
+                        <classname>SimplePasswordValidationCallbackHandler</classname>
+                        can handle both plain text
+                        passwords as well as password digests. It is described in<xref
+                            linkend="security-simple-password-validation-callback-handler"/>.
+                    </para>
+                </section>
+                <section>
+                    <title>SpringDigestPasswordValidationCallbackHandler</title>
+                    <para>
+                        The <classname>SpringDigestPasswordValidationCallbackHandler</classname>
+                        requires an Spring Security <classname>UserDetailService</classname>
+                        to operate. It uses this service to retrieve the password
+                        of the user specified in the token. The digest of the password contained in this details object
+                        is then compared with the digest in the message. If they are equal, the user has successfully
+                        authenticated, and a <classname>UsernamePasswordAuthenticationToken</classname>
+                        is stored in the <classname>SecurityContextHolder</classname>. You can set the service using the
+                        <methodname>userDetailsService</methodname>. Additionally, you can set a
+                        <methodname>userCache</methodname> property, to cache loaded user details.
+                    </para>
+                    <programlisting><![CDATA[
+<beans>
+    <bean class="org.springframework.ws.soap.security.xwss.callback.SpringDigestPasswordValidationCallbackHandler">
+        <property name="userDetailsService" ref="userDetailsService"/>
+    </bean>
+
+    <bean id="userDetailsService" class="com.mycompany.app.dao.UserDetailService" />
+    ...
+</beans>]]></programlisting>
+                </section>
+            </section>
+
+            <section id="security-certificate-authentication">
+                <title>Certificate Authentication</title>
+                <para>
+                    A more secure way of authentication uses X509 certificates. In this scenerario, the SOAP message
+                    contains a<literal>BinarySecurityToken</literal>, which contains a Base 64-encoded version of a X509
+                    certificate. The certificate is used by the recipient to authenticate. The certificate stored in the
+                    message is also used to sign the message (see<xref linkend="security-verifying-signatures"/>).
+                </para>
+                <para>
+                    To make sure that all incoming SOAP messages carry a<literal>BinarySecurityToken</literal>, the
+                    security policy file should contain a
+                    <literal>RequireSignature</literal>
+                    element. This element can
+                    further carry other elements, which will be covered in<xref
+                        linkend="security-verifying-signatures"/>.
+                    You can find a reference of possible child elements
+                    <ulink url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565769">
+                        <citetitle>here</citetitle>
+                    </ulink>
+                    .
+                </para>
+                <programlisting><![CDATA[
+<xwss:SecurityConfiguration xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+    ...
+    <xwss:RequireSignature requireTimestamp="false">
+    ...
+</xwss:SecurityConfiguration>]]></programlisting>
+                <para>
+                    When a message arrives that carries no certificate, the
+                    <classname>XwsSecurityInterceptor</classname>
+                    will return a SOAP Fault to the sender. If it is present, it will fire a
+                    <classname>CertificateValidationCallback</classname>. There are three handlers within Spring-WS
+                    which handle this callback for authentication purposes.
+                </para>
+                <note>
+                    <para>
+                        In most cases, certificate
+                        <emphasis>authentication</emphasis>
+                        should be preceded by certificate
+                        <emphasis>validation</emphasis>, since you only want to authenticate against valid certificates.
+                        Invalid certificates such as certificates for which the expiration date has passed, or which are not
+                        in your store of trusted certificates, should be ignored.
+                    </para>
+                    <para>
+                        In Spring-WS terms, this means that the
+                        <classname>SpringCertificateValidationCallbackHandler</classname>
+                        or
+                        <classname>JaasCertificateValidationCallbackHandler</classname>
+                        should be preceded by
+                        <classname>KeyStoreCallbackHandler</classname>. This can be accomplished by setting the order of the
+                        <methodname>callbackHandlers</methodname>
+                        property in the configuration of the
+                        <classname>XwsSecurityInterceptor</classname>:
+                        <programlisting><![CDATA[
+<bean id="wsSecurityInterceptor"
+    class="org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor">
+    <property name="policyConfiguration" value="classpath:securityPolicy.xml"/>
+    <property name="callbackHandlers">
+        <list>
+            <ref bean="keyStoreHandler"/>
+            <ref bean="springSecurityHandler"/>
+        </list>
+    </property>
+</bean>
+]]></programlisting>
+                        Using this setup, the interceptor will first determine if the certificate in the message is valid
+                        using the keystore, and then authenticate against it.
+                    </para>
+                </note>
+                <section>
+                    <title>KeyStoreCallbackHandler</title>
+                    <para>
+                        The
+                        <classname>KeyStoreCallbackHandler</classname>
+                        uses a standard Java keystore to validate
+                        certificates. This certificate validation process consists of the following steps:
+                        <orderedlist>
+                            <listitem>
+                                <para>
+                                    First, the handler will check whether the certificate is in the private
+                                    <methodname>keyStore</methodname>. If it is, it is valid.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    If the certificate is not in the private keystore, the handler will check whether
+                                    the current date and time are within the validity period given in the certificate.
+                                    If they are not, the certificate is invalid; if it is, it will continue with the final
+                                    step.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    Finally, a
+                                    <emphasis>certification path</emphasis>
+                                    for the certificate is created. This
+                                    basically means that the handler will determine whether the certificate has been issued
+                                    by any of the certificate authorities in the<methodname>trustStore</methodname>. If
+                                    a certification path can be built successfully, the certificate is valid. Otherwise,
+                                    the certificate is not.
+                                </para>
+                            </listitem>
+                        </orderedlist>
+                    </para>
+                    <para>
+                        To use the
+                        <classname>KeyStoreCallbackHandler</classname>
+                        for certificate validation purposes, you
+                        will most likely set only the
+                        <methodname>trustStore</methodname>
+                        property:
+                        <programlisting><![CDATA[
+<beans>
+    <bean id="keyStoreHandler" class="org.springframework.ws.soap.security.xwss.callback.KeyStoreCallbackHandler">
+        <property name="trustStore" ref="trustStore"/>
+    </bean>
+
+    <bean id="trustStore" class="org.springframework.ws.soap.security.support.KeyStoreFactoryBean">
+        <property name="location" value="classpath:truststore.jks"/>
+        <property name="password" value="changeit"/>
+    </bean>
+</beans>]]></programlisting>
+                        Using this setup, the certificate that is to be validated must either be in the trust store itself,
+                        or the trust store must contain a certificate authority that issued the certificate.
+                    </para>
+                </section>
+                <section>
+                    <title>SpringCertificateValidationCallbackHandler</title>
+                    <para>
+                        The <classname>SpringCertificateValidationCallbackHandler</classname>
+                        requires an Spring Security <classname>AuthenticationManager</classname> to operate. It uses
+                        this manager to authenticate against a <classname>X509AuthenticationToken</classname>
+                        that it creates. The configured authentication manager is expected to supply a provider which
+                        can handle this token (usually an instance of
+                        <classname>X509AuthenticationProvider</classname>). If authentication is succesful, the token is
+                        stored in the <classname>SecurityContextHolder</classname>. You can set the authentication
+                        manager using the <property>authenticationManager</property>
+                        property:
+                    </para>
+                    <programlisting><![CDATA[
+<beans>
+    <bean id="springSecurityCertificateHandler"
+        class="org.springframework.ws.soap.security.xwss.callback.SpringCertificateValidationCallbackHandler">
+        <property name="authenticationManager" ref="authenticationManager"/>
+    </bean>
+
+    <bean id="authenticationManager"
+        class="org.springframework.security.providers.ProviderManager">
+        <property name="providers">
+            <bean class="org.springframework.ws.soap.security.x509.X509AuthenticationProvider">
+                <property name="x509AuthoritiesPopulator">
+                    <bean class="org.springframework.ws.soap.security.x509.populator.DaoX509AuthoritiesPopulator">
+                        <property name="userDetailsService" ref="userDetailsService"/>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+  <bean id="userDetailsService" class="com.mycompany.app.dao.UserDetailService" />
+  ...
+</beans>]]></programlisting>
+                    <para>
+                        In this case, we are using a custom user details service to obtain authentication details based on
+                        the certificate. Refer to the
+                        <ulink url="http://www.springframework.org/security">
+                            <citetitle>Spring Security reference documentation</citetitle>
+                        </ulink>
+                        for more information about authentication against X509 certificates.
+                    </para>
+                </section>
+                <section>
+                    <title>JaasCertificateValidationCallbackHandler</title>
+                    <para>
+                        The
+                        <classname>JaasCertificateValidationCallbackHandler</classname>
+                        requires a
+                        <methodname>loginContextName</methodname>
+                        to operate. It creates a new JAAS
+                        <classname>LoginContext</classname>
+                        using this name and with the
+                        <classname>X500Principal</classname>
+                        of the certificate. This means that this callback handler
+                        integrates with any JAAS
+                        <classname>LoginModule</classname>
+                        that handles X500 principals.
+                    </para>
+                    <para>
+                        You can wire up a
+                        <classname>JaasCertificateValidationCallbackHandler</classname>
+                        as follows:
+                    </para>
+                    <programlisting><![CDATA[
+<bean id="jaasValidationHandler"
+    class="org.springframework.ws.soap.security.xwss.callback.jaas.JaasCertificateValidationCallbackHandler">
+    <property name="loginContextName">MyLoginModule</property>
+</bean>]]></programlisting>
+                    <para>
+                        In this case, the callback handler uses the
+                        <classname>LoginContext</classname>
+                        named
+                        "MyLoginModule". This module should be defined in your
+                        <filename>jaas.config</filename>
+                        file, and
+                        should be able to authenticate against X500 principals.
+                    </para>
+                </section>
+            </section>
+
+        </section>
+
+        <section>
+            <title>Digital Signatures</title>
+            <para>
+                The
+                <emphasis>digital signature</emphasis>
+                of a message is a piece of information based on both the document
+                and the signer's private key. There are two main tasks related to signatures in WS-Security: verifying
+                signatures and signing messages.
+            </para>
+            <section id="security-verifying-signatures">
+                <title>Verifying Signatures</title>
+                <para>
+                    Just like<link
+                        linkend="security-certificate-authentication">certificate-based authentication</link>,
+                    a signed message contains a
+                    <literal>BinarySecurityToken</literal>, which contains the certificate used
+                    to sign the message. Additionally, it contains a
+                    <literal>SignedInfo</literal>
+                    block, which indicates
+                    what part of the message was signed.
+                </para>
+                <para>
+                    To make sure that all incoming SOAP messages carry a<literal>BinarySecurityToken</literal>, the
+                    security policy file should contain a
+                    <literal>RequireSignature</literal>
+                    element.
+                    It can also contain a
+                    <literal>SignatureTarget</literal>
+                    element, which specifies the target message
+                    part which was expected to be signed, and various other subelements. You can also define the private key
+                    alias to use, whether to use a symmetric instead of a private key, and many other properties. You can
+                    find a reference of possible child elements
+                    <ulink
+                            url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565769">
+                        <citetitle>here</citetitle>
+                    </ulink>
+                    .
+                </para>
+                <programlisting><![CDATA[
+<xwss:SecurityConfiguration xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+    <xwss:RequireSignature requireTimestamp="false"/>
+</xwss:SecurityConfiguration>]]></programlisting>
+                <para>
+                    If the signature is not present, the
+                    <classname>XwsSecurityInterceptor</classname>
+                    will return a
+                    SOAP Fault to the sender. If it is present, it will fire a
+                    <classname>SignatureVerificationKeyCallback</classname>
+                    to the registered handlers. Within Spring-WS,
+                    there are is one class which handles this particular callback: the
+                    <classname>KeyStoreCallbackHandler</classname>.
+                </para>
+
+                <section>
+                    <title>KeyStoreCallbackHandler</title>
+                    <para>
+                        As described in<xref linkend="security-key-store-callback-handler"/>, the
+                        <classname>KeyStoreCallbackHandler</classname>
+                        uses a
+                        <classname>java.security.KeyStore</classname>
+                        for handling various cryptographic callbacks, including signature verification. For signature
+                        verification, the handler uses the
+                        <methodname>trustStore</methodname>
+                        property:
+                    </para>
+                    <programlisting><![CDATA[
+<beans>
+    <bean id="keyStoreHandler" class="org.springframework.ws.soap.security.xwss.callback.KeyStoreCallbackHandler">
+        <property name="trustStore" ref="trustStore"/>
+    </bean>
+
+    <bean id="trustStore" class="org.springframework.ws.soap.security.support.KeyStoreFactoryBean">
+        <property name="location" value="classpath:org/springframework/ws/soap/security/xwss/test-truststore.jks"/>
+        <property name="password" value="changeit"/>
+    </bean>
+</beans>]]></programlisting>
+                </section>
+            </section>
+
+            <section>
+                <title>Signing Messages</title>
+                <para>
+                    When signing a message, the
+                    <classname>XwsSecurityInterceptor</classname>
+                    adds the
+                    <literal>BinarySecurityToken</literal>
+                    to the message, and a
+                    <literal>SignedInfo</literal>
+                    block, which
+                    indicates what part of the message was signed.
+                </para>
+                <para>
+                    To sign all outgoing SOAP messages, the
+                    security policy file should contain a
+                    <literal>Sign</literal>
+                    element.
+                    It can also contain a
+                    <literal>SignatureTarget</literal>
+                    element, which specifies the target message
+                    part which was expected to be signed, and various other subelements. You can also define the private key
+                    alias to use, whether to use a symmetric instead of a private key, and many other properties. You can
+                    find a reference of possible child elements
+                    <ulink
+                            url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565497">
+                        <citetitle>here</citetitle>
+                    </ulink>
+                    .
+                </para>
+                <programlisting><![CDATA[
+<xwss:SecurityConfiguration xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+	<xwss:Sign includeTimestamp="false" />
+</xwss:SecurityConfiguration>]]></programlisting>
+                <para>
+                    The
+                    <classname>XwsSecurityInterceptor</classname>
+                    will fire a
+                    <classname>SignatureKeyCallback</classname>
+                    to the registered handlers. Within Spring-WS,
+                    there are is one class which handles this particular callback: the
+                    <classname>KeyStoreCallbackHandler</classname>.
+                </para>
+                <section>
+                    <title>KeyStoreCallbackHandler</title>
+                    <para>
+                        As described in<xref linkend="security-key-store-callback-handler"/>, the
+                        <classname>KeyStoreCallbackHandler</classname>
+                        uses a
+                        <classname>java.security.KeyStore</classname>
+                        for handling various cryptographic callbacks, including signing messages. For adding signatures,
+                        the handler uses the
+                        <methodname>keyStore</methodname>
+                        property. Additionally, you must set
+                        the
+                        <methodname>privateKeyPassword</methodname>
+                        property to unlock the private key used for signing.
+                    </para>
+                    <programlisting><![CDATA[
+<beans>
+    <bean id="keyStoreHandler" class="org.springframework.ws.soap.security.xwss.callback.KeyStoreCallbackHandler">
+        <property name="keyStore" ref="keyStore"/>
+        <property name="privateKeyPassword" value="changeit"/>
+    </bean>
+
+    <bean id="keyStore" class="org.springframework.ws.soap.security.support.KeyStoreFactoryBean">
+        <property name="location" value="classpath:keystore.jks"/>
+        <property name="password" value="changeit"/>
+    </bean>
+</beans>]]></programlisting>
+                </section>
+            </section>
+        </section>
+
+        <section>
+            <title>Encryption and Decryption</title>
+            <para>
+                When
+                <emphasis>encrypting</emphasis>, the message is transformed into a form that can only be read with the
+                appropriate key. The message can be
+                <emphasis>decrypted</emphasis>
+                to reveal the original, readable message.
+            </para>
+            <section>
+                <title>Decryption</title>
+                <para>
+                    To decrypt incoming SOAP messages, the security policy file should contain a
+                    <literal>RequireEncryption</literal>
+                    element. This element can further carry a
+                    <literal>EncryptionTarget</literal>
+                    element which indicates which part of the message should be
+                    encrypted, and a
+                    <literal>SymmetricKey</literal>
+                    to indicate that a shared secret instead of the regular
+                    private key should be used to decrypt the message. You can read a description of the other elements
+                    <ulink url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565951">
+                        <citetitle>here</citetitle>
+                    </ulink>
+                    .
+                </para>
+                <programlisting><![CDATA[
+<xwss:SecurityConfiguration xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+    <xwss:RequireEncryption />
+</xwss:SecurityConfiguration>]]></programlisting>
+                <para>
+                    If an incoming message is not encrypted, the
+                    <classname>XwsSecurityInterceptor</classname>
+                    will return a
+                    SOAP Fault to the sender. If it is present, it will fire a
+                    <classname>DecryptionKeyCallback</classname>
+                    to the registered handlers. Within Spring-WS, there is one class which handled this particular callback:
+                    the<classname>KeyStoreCallbackHandler</classname>.
+                </para>
+                <section>
+                    <title>KeyStoreCallbackHandler</title>
+                    <para>
+                        As described in<xref linkend="security-key-store-callback-handler"/>, the
+                        <classname>KeyStoreCallbackHandler</classname>
+                        uses a
+                        <classname>java.security.KeyStore</classname>
+                        for handling various cryptographic callbacks, including decryption. For decryption,
+                        the handler uses the
+                        <methodname>keyStore</methodname>
+                        property. Additionally, you must set
+                        the
+                        <methodname>privateKeyPassword</methodname>
+                        property to unlock the private key used for
+                        decryption. For decryption based on symmetric keys, it will use the
+                        <methodname>symmetricStore</methodname>.
+                    </para>
+                    <programlisting><![CDATA[
+<beans>
+    <bean id="keyStoreHandler" class="org.springframework.ws.soap.security.xwss.callback.KeyStoreCallbackHandler">
+        <property name="keyStore" ref="keyStore"/>
+        <property name="privateKeyPassword" value="changeit"/>
+    </bean>
+
+    <bean id="keyStore" class="org.springframework.ws.soap.security.support.KeyStoreFactoryBean">
+        <property name="location" value="classpath:keystore.jks"/>
+        <property name="password" value="changeit"/>
+    </bean>
+</beans>]]></programlisting>
+                </section>
+            </section>
+
+            <section>
+                <title>Encryption</title>
+                <para>
+                    To encrypt outgoing SOAP messages, the security policy file should contain a
+                    <literal>Encrypt</literal>
+                    element. This element can further carry a
+                    <literal>EncryptionTarget</literal>
+                    element which indicates
+                    which part of the message should be encrypted, and a
+                    <literal>SymmetricKey</literal>
+                    to indicate that a
+                    shared secret instead of the regular public key should be used to encrypt the message. You can read a
+                    description of the other elements
+                    <ulink
+                            url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565951">
+                        <citetitle>here</citetitle>
+                    </ulink>
+                    .
+                </para>
+                <programlisting><![CDATA[
+<xwss:SecurityConfiguration xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+    <xwss:Encrypt />
+</xwss:SecurityConfiguration>]]></programlisting>
+                <para>
+                    The
+                    <classname>XwsSecurityInterceptor</classname>
+                    will fire a
+                    <classname>EncryptionKeyCallback</classname>
+                    to the registered handlers in order to retrieve the
+                    encryption information. Within Spring-WS, there is one class which handled this particular callback: the
+                    <classname>KeyStoreCallbackHandler</classname>.
+                </para>
+                <section>
+                    <title>KeyStoreCallbackHandler</title>
+                    <para>
+                        As described in<xref linkend="security-key-store-callback-handler"/>, the
+                        <classname>KeyStoreCallbackHandler</classname>
+                        uses a
+                        <classname>java.security.KeyStore</classname>
+                        for handling various cryptographic callbacks, including encryption. For encryption based on public
+                        keys, the handler uses the
+                        <methodname>trustStore</methodname>
+                        property. For encryption based on
+                        symmetric keys, it will use the<methodname>symmetricStore</methodname>.
+                    </para>
+                    <programlisting><![CDATA[<beans>
+    <bean id="keyStoreHandler" class="org.springframework.ws.soap.security.xwss.callback.KeyStoreCallbackHandler">
+        <property name="trustStore" ref="trustStore"/>
+    </bean>
+
+    <bean id="trustStore" class="org.springframework.ws.soap.security.support.KeyStoreFactoryBean">
+        <property name="location" value="classpath:truststore.jks"/>
+        <property name="password" value="changeit"/>
+    </bean>
+</beans>]]></programlisting>
+                </section>
+            </section>
+        </section>
+        <section id="security-xws-exception-handling">
+            <title>Security Exception Handling</title>
+            <para>
+                When an securement or validation action fails, the <classname>XwsSecurityInterceptor</classname>
+                will throw a <exceptionname>WsSecuritySecurementException</exceptionname> or
+                <exceptionname>WsSecurityValidationException</exceptionname> respectively.
+                These exceptions bypass the <link linkend="server-endpoint-exception-resolver">standard
+                exception handling mechanism</link>, but are handled in the interceptor itself.
+            </para>
+            <para>
+                <exceptionname>WsSecuritySecurementException</exceptionname> exceptions are handled in the
+                <methodname>handleSecurementException</methodname> method of the
+                <classname>XwsSecurityInterceptor</classname>.
+                By default, this method will simply log an error, and stop further processing of the message.
+            </para>
+            <para>
+                Similarly, <exceptionname>WsSecurityValidationException</exceptionname> exceptions are handled in the
+                <methodname>handleValidationException</methodname> method of the
+                <classname>XwsSecurityInterceptor</classname>.
+                By default, this method will create a SOAP 1.1 Client or SOAP 1.2 Sender Fault, and send that back as
+                a response.
+            </para>
+            <note>
+                <para>
+                    Both <methodname>handleSecurementException</methodname> and
+                    <methodname>handleValidationException</methodname> are protected methods, which you can override
+                    to change their default behavior.
+                </para>
+            </note>
+        </section>
+    </section>
+    <section id="security-wss4j-security-interceptor">
+        <title>
+            <classname>Wss4jSecurityInterceptor</classname>
+        </title>
+        <para>
+            The <classname>Wss4jSecurityInterceptor</classname> is an <classname>EndpointInterceptor</classname>
+            (see<xref linkend="server-endpoint-interceptor"/>) that is based on
+            <ulink url="http://ws.apache.org/wss4j/">Apache's WSS4J</ulink>.
+        </para>
+        <para>
+            WSS4J implements the following standards:
+            <itemizedlist>
+                <listitem>
+                    <para>OASIS Web Serives Security: SOAP Message Security 1.0 Standard 200401, March 2004</para>
+                </listitem>
+                <listitem>
+                    <para>Username Token profile V1.0</para>
+                </listitem>
+                <listitem>
+                    <para>X.509 Token Profile V1.0</para>
+                </listitem>
+            </itemizedlist>
+        </para>
+        <para>
+            This inteceptor supports messages created by the
+            <classname>AxiomSoapMessageFactory</classname>
+            and the
+            <classname>SaajSoapMessageFactory</classname>.
+        </para>
+
+        <section>
+            <title>Configuring
+                <classname>Wss4jSecurityInterceptor</classname>
+            </title>
+            <para>
+                WSS4J uses no external configuration file; the interceptor is entirely configured by properties.
+                The validation and securement actions executed by this interceptor are specified via
+                <property>validationActions</property>
+                and
+                <property>securementActions</property>
+                properties, respectively.
+                Actions are passed as a space-separated strings. Here is an example configuration:
+            </para>
+            <programlisting><![CDATA[<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+    <property name="validationActions" value="UsernameToken Encrypt"/>
+    ...
+    <property name="securementActions" value="Encrypt"/>
+    ...
+</bean>]]></programlisting>
+            <para>Validation actions are:</para>
+            <informaltable>
+                <tgroup cols="2">
+                    <thead>
+                        <row>
+                            <entry>Validation action</entry>
+                            <entry>Description</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <methodname>UsernameToken</methodname>
+                            </entry>
+                            <entry>Validates username token</entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <methodname>Timestamp</methodname>
+                            </entry>
+                            <entry>Validates the timestamp</entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <methodname>Encrypt</methodname>
+                            </entry>
+                            <entry>Decrypts the message</entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <methodname>Signature</methodname>
+                            </entry>
+                            <entry>Validates the signature</entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <methodname>NoSecurity</methodname>
+                            </entry>
+                            <entry>No action performed</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </informaltable>
+            <para>Securement actions are:</para>
+            <informaltable>
+                <tgroup cols="2">
+                    <thead>
+                        <row>
+                            <entry>Securement action</entry>
+                            <entry>Description</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <methodname>UsernameToken</methodname>
+                            </entry>
+                            <entry>Adds a username token</entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <methodname>UsernameTokenSignature</methodname>
+                            </entry>
+                            <entry>Adds a username token and a signature username token secret key</entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <methodname>Timestamp</methodname>
+                            </entry>
+                            <entry>Adds a timestamp</entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <methodname>Encrypt</methodname>
+                            </entry>
+                            <entry>Encrypts the response</entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <methodname>Signature</methodname>
+                            </entry>
+                            <entry>Signs the response</entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <methodname>NoSecurity</methodname>
+                            </entry>
+                            <entry>No action performed</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </informaltable>
+            <para>
+                The order of the actions is significant and is enforced by the interceptor. The interceptor
+                will reject an incoming SOAP message if its security actions were performed in a different order than
+                the one specified by<methodname>validationActions</methodname>.
+            </para>
+        </section>
+        <section>
+            <title>Handling Digital Certificates</title>
+            <para>
+                For cryptographic operations requiring interaction with a keystore or certificate handling
+                (signature, encryption and decryption operations), WSS4J
+                requires an instance of<interfacename>org.apache.ws.security.components.crypto.Crypto</interfacename>.
+            </para>
+            <para>
+                <interfacename>Crypto</interfacename>
+                instances can be obtained from WSS4J's
+                <classname>CryptoFactory</classname>
+                or more conveniently
+                with the Spring-WS<classname>CryptoFactoryBean</classname>.
+            </para>
+            <section>
+                <title>CryptoFactoryBean</title>
+                <para>
+                    Spring-WS provides a convenient factory bean,
+                    <classname>CryptoFactoryBean</classname>
+                    that constructs and configures
+                    <classname>Crypto</classname>
+                    instances via strong-typed properties
+                    (prefered) or through a
+                    <classname>Properties</classname>
+                    object.
+                </para>
+                <para>
+                    By default,
+                    <classname>CryptoFactoryBean</classname>
+                    returns instances of
+                    <classname>org.apache.ws.security.components.crypto.Merlin</classname>.
+                    This can be changed by setting the
+                    <property>cryptoProvider</property>
+                    property
+                    (or its equivalent
+                    <literal>org.apache.ws.security.crypto.provider</literal>
+                    string property).
+                </para>
+                <para>
+                    Here is a simple example configuration:
+                </para>
+                <programlisting><![CDATA[
+<bean class="org.springframework.ws.soap.security.wss4j.support.CryptoFactoryBean">
+    <property name="keyStorePassword" value="mypassword"/>
+    <property name="keyStoreLocation" value="file:/path_to_keystore/keystore.jks"/>
+</bean>
+				]]></programlisting>
+            </section>
+        </section>
+        <section>
+            <title>Authentication</title>
+            <section>
+                <title>Validating Username Token</title>
+                <para>
+                    Spring-WS provides a set of callback handlers to integrate with Spring Security.
+                    Additionally, a simple callback handler
+                    <classname>SimplePasswordValidationCallbackHandler</classname>
+                    is provided to configure users and passwords with an in-memory
+                    <classname>Properties</classname>
+                    object.
+                </para>
+                <para>
+                    Callback handlers are configured via <classname>Wss4jSecurityInterceptor</classname>'s
+                    <property>validationCallbackHandler</property>
+                    property.
+                </para>
+                <section>
+                    <title>SimplePasswordValidationCallbackHandler</title>
+                    <para>
+                        <classname>SimplePasswordValidationCallbackHandler</classname>
+                        validates plain text and digest
+                        username tokens against an in-memory
+                        <classname>Properties</classname>
+                        object. It is configured
+                        as follows:
+                    </para>
+                    <programlisting><![CDATA[<bean id="callbackHandler"
+    class="org.springframework.ws.soap.security.wss4j.callback.SimplePasswordValidationCallbackHandler">
+    <property name="users">
+        <props>
+            <prop key="Bert">Ernie</prop>
+        </props>
+    </property>
+</bean>]]></programlisting>
+                </section>
+                <section>
+                    <title>SpringPlainTextPasswordValidationCallbackHandler</title>
+                    <para>
+                        The <classname>SpringPlainTextPasswordValidationCallbackHandler</classname> requires an Spring
+                        Security <interfacename>AuthenticationManager</interfacename> to operate. It uses this manager
+                        to authenticate against a
+                        <classname>UsernamePasswordAuthenticationToken</classname>
+                        that it creates. If authentication is successful, the token is stored in the
+                        <classname>SecurityContextHolder</classname>. You can set the
+                        authentication manager using the <property>authenticationManager</property>
+                        property:
+                    </para>
+                    <programlisting><![CDATA[<beans>
+  <bean id="springSecurityHandler"
+      class="org.springframework.ws.soap.security.wss4j.callback.SpringPlainTextPasswordValidationCallbackHandler">
+    <property name="authenticationManager" ref="authenticationManager"/>
+  </bean>
+
+  <bean id="authenticationManager" class="org.springframework.security.providers.ProviderManager">
+      <property name="providers">
+          <bean class="org.springframework.security.providers.dao.DaoAuthenticationProvider">
+              <property name="userDetailsService" ref="userDetailsService"/>
+          </bean>
+      </property>
+  </bean>
+
+  <bean id="userDetailsService" class="com.mycompany.app.dao.UserDetailService" />
+  ...
+</beans>]]></programlisting>
+                </section>
+                <section>
+                    <title>SpringDigestPasswordValidationCallbackHandler</title>
+                    <para>
+                        The <classname>SpringDigestPasswordValidationCallbackHandler</classname>
+                        requires an Spring Security
+                        <classname>UserDetailService</classname>
+                        to operate. It uses this service to retrieve the
+                        password of the user specified in the token. The digest of the password contained in this
+                        details object is then compared with the digest in the message. If they are equal, the user has
+                        successfully authenticated, and a
+                        <classname>UsernamePasswordAuthenticationToken</classname>
+                        is stored in the<classname>SecurityContextHolder</classname>. You can set the service using the
+                        <property>userDetailsService</property>. Additionally, you can set a
+                        <property>userCache</property>
+                        property, to cache loaded user details.
+                    </para>
+                    <programlisting><![CDATA[<beans>
+    <bean class="org.springframework.ws.soap.security.wss4j.callback.SpringDigestPasswordValidationCallbackHandler">
+        <property name="userDetailsService" ref="userDetailsService"/>
+    </bean>
+
+    <bean id="userDetailsService" class="com.mycompany.app.dao.UserDetailService" />
+    ...
+</beans>
+					]]></programlisting>
+                </section>
+            </section>
+            <section>
+                <title>Adding Username Token</title>
+                <para>
+                    Adding a username token to an outgoing message is as simple as adding
+                    <literal>UsernameToken</literal>
+                    to the
+                    <property>securementActions</property>
+                    property of the
+                    <classname>Wss4jSecurityInterceptor</classname>
+                    and specifying
+                    <property>securementUsername</property>
+                    and<property>securementPassword</property>.
+                </para>
+                <para>
+                    The password type can be set via the
+                    <property>securementPasswordType</property>
+                    property. Possible
+                    values are
+                    <literal>PasswordText</literal>
+                    for plain text passwords or
+                    <literal>PasswordDigest</literal>
+                    for digest passwords, which is the default.
+                </para>
+                <para>
+                    The following example generates a username token with a digest password:
+                </para>
+                <programlisting><![CDATA[<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+    <property name="securementActions" value="UsernameToken"/>
+    <property name="securementUsername" value="Ernie"/>
+    <property name="securementPassword" value="Bert"/>
+</bean>]]></programlisting>
+                <para>
+                    If plain text password type is chosen, it is possible to instruct the interceptor to add
+                    <literal>Nonce</literal>
+                    and/or
+                    <literal>Created</literal>
+                    elements using the
+                    <property>securementUsernameTokenElements</property>
+                    property. The value must be a list containing
+                    the desired elements' names separated by spaces (case sensitive).
+                </para>
+                <para>
+                    The next example generates a username token with a plain text password,
+                    a
+                    <literal>Nonce</literal>
+                    and a
+                    <literal>Created</literal>
+                    element:
+                </para>
+                <programlisting><![CDATA[<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+    <property name="securementActions" value="UsernameToken"/>
+    <property name="securementUsername" value="Ernie"/>
+    <property name="securementPassword" value="Bert"/>
+    <property name="securementPasswordType" value="PasswordText"/>
+    <property name="securementUsernameTokenElements" value="Nonce Created"/>
+</bean>]]></programlisting>
+            </section>
+            <section>
+                <title>Certificate Authentication</title>
+                <para>
+                    As certificate authentication is akin to digital signatures, WSS4J handles it as part of the signature
+                    validation and securement.
+                    Specifically, the
+                    <property>securementSignatureKeyIdentifier</property>
+                    property must be set to
+                    <literal>DirectReference</literal>
+                    in order to instruct WSS4J to
+                    generate a
+                    <literal>BinarySecurityToken</literal>
+                    element containing the X509 certificate and to
+                    include it in the outgoing message. The certificate's name and password are passed through the
+                    <property>securementUsername</property>
+                    and
+                    <property>securementPassword</property>
+                    properties respectively.
+                    See the next example:
+                </para>
+                <programlisting><![CDATA[<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+    <property name="securementActions" value="Signature"/>
+    <property name="securementSignatureKeyIdentifier" value="DirectReference"/>
+    <property name="securementUsername" value="mycert"/>
+    <property name="securementPassword" value="certpass"/>
+    <property name="securementSignatureCrypto">
+      <bean class="org.springframework.ws.soap.security.wss4j.support.CryptoFactoryBean">
+        <property name="keyStorePassword" value="123456"/>
+        <property name="keyStoreLocation" value="classpath:/keystore.jks"/>
+      </bean>
+    </property>
+</bean>]]></programlisting>
+                <para>
+                    For the certificate validation, regular signature validation applies:
+                </para>
+                <programlisting><![CDATA[<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+    <property name="validationActions" value="Signature"/>
+    <property name="validationSignatureCrypto">
+      <bean class="org.springframework.ws.soap.security.wss4j.support.CryptoFactoryBean">
+        <property name="keyStorePassword" value="123456"/>
+        <property name="keyStoreLocation" value="classpath:/keystore.jks"/>
+      </bean>
+    </property>
+</bean>]]></programlisting>
+                <para>
+                    At the end of the validation, the interceptor will automatically verify the validity of the certificate
+                    by delegating to the default WSS4J implementation.
+                    If needed, this behavior can be changed by redefining the
+                    <methodname>verifyCertificateTrust</methodname>
+                    method.
+                </para>
+                <para>
+                    For more details, please refer to<xref linkend="security-wss4j-digital-signatures"/>.
+                </para>
+            </section>
+        </section>
+        <section>
+            <title>Security Timestamps</title>
+            <para>
+                This section describes the various timestamp options available in the
+                <classname>Wss4jSecurityInterceptor</classname>.
+            </para>
+            <section>
+                <title>Validating Timestamps</title>
+                <para>
+                    To validate timestamps add
+                    <literal>Timestamp</literal>
+                    to the
+                    <property>validationActions</property>
+                    property.
+                    It is possible to override timestamp semantics specified by the initiator of the SOAP message
+                    by setting
+                    <property>timestampStrict</property>
+                    to
+                    <literal>true</literal>
+                    and
+                    specifying a server-side time to live in seconds (defaults to 300) via the
+                    <property>timeToLive</property>
+                    property
+                    <footnote>
+                        <para>
+                            The interceptor will always reject already expired timestamps whatever the value of
+                            <property>timeToLive</property>
+                            is.
+                        </para>
+                    </footnote>
+                    .
+                </para>
+                <para>
+                    In the following example, the interceptor will limit the timestamp validity window to 10
+                    seconds, rejecting any valid timestamp token outside that window:
+                </para>
+                <programlisting><![CDATA[<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+    <property name="validationActions" value="Timestamp"/>
+    <property name="timestampStrict" value="true"/>
+    <property name="timeToLive" value="10"/>
+</bean>
+					 ]]></programlisting>
+            </section>
+            <section>
+                <title>Adding Timestamps</title>
+                <para>
+                    Adding
+                    <literal>Timestamp</literal>
+                    to the
+                    <property>securementActions</property>
+                    property
+                    generates a timestamp header in outgoing messages. The
+                    <property>timestampPrecisionInMilliseconds</property>
+                    property specifies whether the precision
+                    of the generated timestamp is in milliseconds. The default value is<literal>true</literal>.
+                </para>
+                <programlisting><![CDATA[<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+    <property name="securementActions" value="Timestamp"/>
+    <property name="timestampPrecisionInMilliseconds" value="true"/>
+</bean>
+					]]></programlisting>
+            </section>
+        </section>
+        <section id="security-wss4j-digital-signatures">
+            <title>Digital Signatures</title>
+            <para>
+                This section describes the various signature options available in the
+                <classname>Wss4jSecurityInterceptor</classname>.
+            </para>
+            <section>
+                <title>Verifying Signatures</title>
+                <para>
+                    To instruct the<classname>Wss4jSecurityInterceptor</classname>,
+                    <property>validationActions</property>
+                    must contain the
+                    <literal>Signature</literal>
+                    action.
+                    Additionally, the
+                    <property>validationSignatureCrypto</property>
+                    property
+                    must point to the keystore containing the public certificates of the initiator:
+                </para>
+                <programlisting><![CDATA[<bean id="wsSecurityInterceptor" class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+    <property name="validationActions" value="Signature"/>
+    <property name="validationSignatureCrypto">
+        <bean class="org.springframework.ws.soap.security.wss4j.support.CryptoFactoryBean">
+            <property name="keyStorePassword" value="123456"/>
+            <property name="keyStoreLocation" value="classpath:/keystore.jks"/>
+        </bean>
+    </property>
+</bean>]]></programlisting>
+            </section>
+            <section>
+                <title>Signing Messages</title>
+                <para>
+                    Signing outgoing messages is enabled by adding
+                    <literal>Signature</literal>
+                    action
+                    to the<property>securementActions</property>. The alias and the password of the private key to use
+                    are specified by the
+                    <property>securementUsername</property>
+                    and
+                    <property>securementPassword</property>
+                    properties respectively.
+                    <property>securementSignatureCrypto</property>
+                    must point to the keystore containing the private key:
+                </para>
+                <programlisting><![CDATA[<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+    <property name="securementActions" value="Signature"/>
+    <property name="securementUsername" value="mykey"/>
+    <property name="securementPassword" value="123456"/>
+    <property name="securementSignatureCrypto">
+        <bean class="org.springframework.ws.soap.security.wss4j.support.CryptoFactoryBean">
+            <property name="keyStorePassword" value="123456"/>
+            <property name="keyStoreLocation" value="classpath:/keystore.jks"/>
+        </bean>
+    </property>
+</bean>
+				]]></programlisting>
+                <para>
+                    Furthermore, the signature algorithm can be defined
+                    via the
+                    <property>securementSignatureAlgorithm</property>.
+                </para>
+                <para>
+                    The key identifier type to use can be customized via the
+                    <property>securementSignatureKeyIdentifier</property>
+                    property.
+                    Only
+                    <literal>IssuerSerial</literal>
+                    and
+                    <literal>DirectReference</literal>
+                    are valid for signature.
+                </para>
+                <para>
+                    <property>securementSignatureParts</property>
+                    property controls which part of the message shall be
+                    signed.
+                    The value of this property is a list of semi-colon separated element names that identify the
+                    elements to sign.
+                    The general form of a signature part is
+                    <literal>{}{namespace}Element</literal>
+                    <footnote>
+                        <para>
+                            The first empty brackets are used for encryption parts only.
+                        </para>
+                    </footnote>
+                    .
+                    The default behavior is to sign the SOAP body.
+                </para>
+                <para>
+                    As an example, here is how to sign the
+                    <literal>echoResponse</literal>
+                    element
+                    in the Spring Web Services echo sample:
+                </para>
+                <programlisting><![CDATA[<property name="securementSignatureParts"
+    value="{}{http://www.springframework.org/spring-ws/samples/echo}echoResponse"/>
+    			]]></programlisting>
+                <para>
+                    The WS Security specifications define several formats to transfer the signature tokens
+                    (certificates) or references to these tokens. Thus, the plain element name
+                    <literal>Token</literal>
+                    signs the token and takes care of the different formats.
+                    To sign the SOAP body and the signature token the value
+                    of
+                    <property>securementSignatureParts</property>
+                    must contain:
+                </para>
+                <programlisting><![CDATA[<property name="securementSignatureParts">
+    <value>
+        {}{http://schemas.xmlsoap.org/soap/envelope/}Body;
+        Token
+    </value>
+</property>]]></programlisting>
+                <para>
+                    To specify an element without a namespace use the string
+                    <literal>Null</literal>
+                    as the namespace name (case sensitive).
+                </para>
+                <para>
+                    If there is no other element in the request with a local name of
+                    <methodname>Body</methodname>
+                    then
+                    the SOAP namespace identifier can be empty (<methodname>{}</methodname>).
+                </para>
+            </section>
+            <section>
+                <title>Signature Confirmation</title>
+                <para>
+                    Signature confirmation is enabled by setting
+                    <property>enableSignatureConfirmation</property>
+                    to
+                    <literal>true</literal>.
+                    Note that signature confirmation action spans over the request and the response.
+                    This implies that
+                    <methodname>secureResponse</methodname>
+                    and
+                    <methodname>validateRequest</methodname>
+                    must be set to true (which is the default value) even if there are no corresponding security actions.
+                </para>
+                <programlisting><![CDATA[<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+    <property name="validationActions" value="Signature"/>
+    <property name="enableSignatureConfirmation" value="true"/>
+    <property name="validationSignatureCrypto">
+        <bean class="org.springframework.ws.soap.security.wss4j.support.CryptoFactoryBean">
+            <property name="keyStorePassword" value="123456"/>
+            <property name="keyStoreLocation" value="file:/keystore.jks"/>
+        </bean>
+    </property>
+</bean>]]></programlisting>
+            </section>
+        </section>
+        <section>
+            <title>Encryption and Decryption</title>
+            <para>
+                This section describes the various encryption and descryption options available in the
+                <classname>Wss4jSecurityInterceptor</classname>.
+            </para>
+            <section>
+                <title>Decryption</title>
+                <para>
+                    Decryption of incoming SOAP messages requires
+                    <literal>Encrypt</literal>
+                    action be added
+                    to the
+                    <property>validationActions</property>
+                    property. The rest of the configuration
+                    depends on the key information that appears in the message
+                    <footnote>
+                        <para>
+                            This is because WSS4J needs only a Crypto for encypted keys, whereas embedded key name
+                            validation is delegated to a callback handler.
+                        </para>
+                    </footnote>
+                    .
+                </para>
+                <para>
+                    To decrypt messages with an embedded encypted symmetric key
+                    (
+                    <literal>xenc:EncryptedKey</literal>
+                    element),
+                    <property>validationDecryptionCrypto</property>
+                    needs to point to a keystore containing the
+                    decryption private key. Additionally,
+                    <property>validationCallbackHandler</property>
+                    has to be injected
+                    with a
+                    <classname>org.springframework.ws.soap.security.wss4j.callback.KeyStoreCallbackHandler</classname>
+                    specifying the key's password:
+                </para>
+                <programlisting><![CDATA[<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+    <property name="validationActions" value="Encrypt"/>
+    <property name="validationDecryptionCrypto">
+        <bean class="org.springframework.ws.soap.security.wss4j.support.CryptoFactoryBean">
+            <property name="keyStorePassword" value="123456"/>
+            <property name="keyStoreLocation" value="classpath:/keystore.jks"/>
+        </bean>
+    </property>
+    <property name="validationCallbackHandler">
+        <bean class="org.springframework.ws.soap.security.wss4j.callback.KeyStoreCallbackHandler">
+            <property name="privateKeyPassword" value="mykeypass"/>
+        </bean>
+    </property>
+</bean>]]></programlisting>
+                <para>
+                    To support decryption of messages with an embedded
+                    <emphasis>key name</emphasis>
+                    (
+                    <literal>ds:KeyName</literal>
+                    element),
+                    configure a
+                    <classname>KeyStoreCallbackHandler</classname>
+                    that
+                    points to the keystore with the symmetric secret key. The property
+                    <property>symmetricKeyPassword</property>
+                    indicates the key's password, the key name being the
+                    one specified by
+                    <literal>ds:KeyName</literal>
+                    element:
+                </para>
+                <programlisting><![CDATA[<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+    <property name="validationActions" value="Encrypt"/>
+    <property name="validationCallbackHandler">
+        <bean class="org.springframework.ws.soap.security.wss4j.callback.KeyStoreCallbackHandler">
+            <property name="keyStore">
+                <bean class="org.springframework.ws.soap.security.support.KeyStoreFactoryBean">
+                    <property name="location" value="classpath:keystore.jks"/>
+                    <property name="type" value="JCEKS"/>
+                    <property name="password" value="123456"/>
+                </bean>
+            </property>
+            <property name="symmetricKeyPassword" value="mykeypass"/>
+        </bean>
+    </property>
+</bean>]]></programlisting>
+            </section>
+            <section>
+                <title>Encryption</title>
+                <para>
+                    Adding
+                    <literal>Encrypt</literal>
+                    to the
+                    <property>securementActions</property>
+                    enables encryption
+                    of outgoing messages.
+                    The certifacte's alias to use for the encryption is set via the
+                    <property>securementEncryptionUser</property>
+                    property.
+                    The keystore where the certificate reside is accessed using the
+                    <property>securementEncryptionCrypto</property>
+                    property.
+                    As encryption relies on public certificates, no password needs to be passed.
+                </para>
+                <programlisting><![CDATA[<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+    <property name="securementActions" value="Encrypt"/>
+    <property name="securementEncryptionUser" value="mycert"/>
+    <property name="securementEncryptionCrypto">
+        <bean class="org.springframework.ws.soap.security.wss4j.support.CryptoFactoryBean">
+            <property name="keyStorePassword" value="123456"/>
+            <property name="keyStoreLocation" value="file:/keystore.jks"/>
+        </bean>
+    </property>
+</bean>]]></programlisting>
+                <para>
+                    Encryption can be customized in several ways:
+                    The key identifier type to use is defined by<property>securementEncryptionKeyIdentifier</property>.
+                    Possible values are<literal>IssuerSerial</literal>,<literal>X509KeyIdentifier</literal>,
+                    <literal>DirectReference</literal>,<literal>Thumbprint</literal>,
+                    <literal>SKIKeyIdentifier</literal>
+                    or<literal>EmbeddedKeyName</literal>.
+                </para>
+                <para>
+                    If the
+                    <literal>EmbeddedKeyName</literal>
+                    type is chosen, you need to specify the
+                    <emphasis>secret key</emphasis>
+                    to use for the encryption. The alias of the key is set via the
+                    <property>securementEncryptionUser</property>
+                    property just as for the other key identifier types.
+                    However, WSS4J requires a callback handler to fetch the secret key.
+                    Thus,
+                    <property>securementCallbackHandler</property>
+                    must be provided with a
+                    <classname>KeyStoreCallbackHandler</classname>
+                    pointing to the appropriate keystore.
+                    By default, the
+                    <literal>ds:KeyName</literal>
+                    element in the resulting WS-Security header takes the
+                    value of the
+                    <property>securementEncryptionUser</property>
+                    property. To indicate a different name,
+                    set the
+                    <property>securementEncryptionEmbeddedKeyName</property>
+                    with the desired value.
+                    In the next example, the outgoing message will be encrypted with a key aliased
+                    <literal>secretKey</literal>
+                    whereas
+                    <literal>myKey</literal>
+                    will appear in
+                    <literal>ds:KeyName</literal>
+                    element:
+                </para>
+                <programlisting><![CDATA[<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+    <property name="securementActions" value="Encrypt"/>
+    <property name="securementEncryptionKeyIdentifier" value="EmbeddedKeyName"/> 
+    <property name="securementEncryptionUser" value="secretKey"/>
+    <property name="securementEncryptionEmbeddedKeyName" value="myKey"/>
+    <property name="securementCallbackHandler">
+        <bean class="org.springframework.ws.soap.security.wss4j.callback.KeyStoreCallbackHandler">
+            <property name="symmetricKeyPassword" value="keypass"/>
+            <property name="keyStore">
+                <bean class="org.springframework.ws.soap.security.support.KeyStoreFactoryBean">
+                    <property name="location" value="file:/keystore.jks"/>
+                    <property name="type" value="jceks"/>
+                    <property name="password" value="123456"/>
+                </bean>
+            </property>
+        </bean>
+    </property>
+</bean>]]></programlisting>
+                <para>
+                    The
+                    <property>securementEncryptionKeyTransportAlgorithm</property>
+                    property
+                    defines which algorithm to use to encrypt the generated symmetric key. Supported values are
+                    <literal>http://www.w3.org/2001/04/xmlenc#rsa-1_5</literal>, which is the default, and
+                    <literal>http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p</literal>.
+                </para>
+                <para>
+                    The symmetric encryption algorithm to use can be set via the
+                    <property>securementEncryptionSymAlgorithm</property>
+                    property.
+                    Supported values are
+                    <literal>http://www.w3.org/2001/04/xmlenc#aes128-cbc</literal>
+                    (default value),
+                    <literal>http://www.w3.org/2001/04/xmlenc#tripledes-cbc</literal>,
+                    <literal>http://www.w3.org/2001/04/xmlenc#aes256-cbc</literal>,
+                    <literal>http://www.w3.org/2001/04/xmlenc#aes192-cbc</literal>.
+                </para>
+                <para>
+                    Finally, the
+                    <property>securementEncryptionParts</property>
+                    property defines which parts of the
+                    message will be encrypted. The value of this property is a list of semi-colon separated element
+                    names that identify the elements to encrypt. An encryption mode specifier and a namespace
+                    identification, each inside a pair of curly brackets, may precede each element name.
+                    The encryption mode specifier is either
+                    <literal>{Content}</literal>
+                    or
+                    <literal>{Element}</literal>
+                    <footnote>
+                        <para>
+                            Please refer to the W3C XML Encryption specification about the differences between
+                            Element and Content encryption.
+                        </para>
+                    </footnote>
+                    .
+                    The following example identifies the
+                    <literal>echoResponse</literal>
+                    from the echo sample:
+                </para>
+                <programlisting><![CDATA[<property name="securementEncryptionParts"
+    value="{Content}{http://www.springframework.org/spring-ws/samples/echo}echoResponse"/>]]></programlisting>
+                <para>
+                    Be aware that the element name, the namespace identifier, and the encryption modifier are case
+                    sensitive.
+                    The encryption modifier and the namespace identifier can be omitted. In this case the encryption
+                    mode defaults to
+                    <literal>Content</literal>
+                    and the namespace is set to the SOAP namespace.
+                </para>
+                <para>
+                    To specify an element without a namespace use the value
+                    <literal>Null</literal>
+                    as the namespace
+                    name (case sensitive).
+                    If no list is specified, the handler encrypts the SOAP Body in
+                    <literal>Content</literal>
+                    mode by
+                    default.
+                </para>
+            </section>
+        </section>
+        <section>
+            <title>Security Exception Handling</title>
+            <para>
+                The exception handling of the <classname>Wss4jSecurityInterceptor</classname> is identical to that of
+                the <classname>XwsSecurityInterceptor</classname>. See <xref linkend="security-xws-exception-handling"/>
+                for more information.
+            </para>
+        </section>
+    </section>
+</chapter>

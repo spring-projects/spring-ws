@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>airline-client</artifactId>
+        <groupId>org.springframework.ws</groupId>
+        <version>2.0.1.RELEASE</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>airline-axis1-client</artifactId>
+    <packaging>jar</packaging>
+    <name>Spring WS Airline Sample - Axis 1 Client</name>
+    <build>
+        <plugins>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>axistools-maven-plugin</artifactId>
+                <configuration>
+                   <urls>
+                         <url>file://${project.basedir}/../airline.wsdl</url>
+                   </urls>
+                   <packageSpace>org.springframework.ws.samples.airline.client.axis1</packageSpace>
+                </configuration>
+                <executions>
+                  <execution>
+                    <goals>
+                      <goal>wsdl2java</goal>
+                    </goals>
+                  </execution>
+                </executions>                
+            </plugin>            
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>org.springframework.ws.samples.airline.client.axis1.Main</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>axis</groupId>
+            <artifactId>axis</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>axis</groupId>
+            <artifactId>axis-jaxrpc</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-discovery</groupId>
+            <artifactId>commons-discovery</artifactId>
+            <version>0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>wsdl4j</groupId>
+            <artifactId>wsdl4j</artifactId>
+        </dependency>
+
+
+    </dependencies>
+</project>

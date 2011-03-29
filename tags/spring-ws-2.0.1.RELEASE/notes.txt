@@ -1,0 +1,17 @@
+Dear Spring community,
+
+I'm pleased to announce that Spring Web Services 2.0.1.RELEASE has
+been released!
+
+This is the second GA release in the 2.0 release cycle. It contains bug fixes
+and minor updates.
+
+Please see the changelog for more details.
+
+For more information, refer to 
+
+http://blog.springsource.com/2011/01/11/spring-web-services-2-0-released/
+
+or
+
+http://static.springframework.org/spring-ws/sites/2.0
