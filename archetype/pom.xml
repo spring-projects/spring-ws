@@ -11,4 +11,16 @@
     <packaging>jar</packaging>
     <name>Spring WS Archetype</name>
     <description>Spring Web Services Maven2 Archetype.</description>
+    <build>
+        <resources>
+            <resource>
+              <directory>src/main/resources</directory>
+              <filtering>false</filtering>
+            </resource>
+            <resource>
+              <directory>src/main/filtered-resources</directory>
+              <filtering>true</filtering>
+            </resource>
+        </resources>    
+    </build>
 </project>
