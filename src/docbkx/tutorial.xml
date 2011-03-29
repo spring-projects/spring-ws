@@ -474,7 +474,7 @@
         </para>
 <screen>mvn archetype:create -DarchetypeGroupId=org.springframework.ws \
   -DarchetypeArtifactId=spring-ws-archetype \
-  -DarchetypeVersion=2.0.0-RC2 \
+  -DarchetypeVersion=<?eval ${project.version}?> \
   -DgroupId=com.mycompany.hr \
   -DartifactId=holidayService
 </screen>
