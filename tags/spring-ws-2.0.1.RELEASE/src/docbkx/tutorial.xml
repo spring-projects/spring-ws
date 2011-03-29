@@ -674,23 +674,23 @@ public class HolidayEndpoint {
                  Because we use JDOM, we must add some dependencies to the Maven <filename>pom.xml</filename>, which is in the
                  root of our project directory. Here is the relevant section of the POM:
              </para>
-             <programlisting><![CDATA[<dependencies>
-    <dependency>
-        <groupId>org.springframework.ws</groupId>
-        <artifactId>spring-ws-core</artifactId>
-        <version>2.0.0-RC2</version>
-    </dependency>
-    <dependency>
-        <groupId>jdom</groupId>
-        <artifactId>jdom</artifactId>
-        <version>1.0</version>
-    </dependency>
-    <dependency>
-        <groupId>jaxen</groupId>
-        <artifactId>jaxen</artifactId>
-        <version>1.1</version>
-    </dependency>
-</dependencies>]]></programlisting>
+             <programlisting>&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.ws&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-ws-core&lt;/artifactId&gt;
+        &lt;version&gt;<?eval ${project.version}?>&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;jdom&lt;/groupId&gt;
+        &lt;artifactId&gt;jdom&lt;/artifactId&gt;
+        &lt;version&gt;1.0&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;jaxen&lt;/groupId&gt;
+        &lt;artifactId&gt;jaxen&lt;/artifactId&gt;
+        &lt;version&gt;1.1&lt;/version&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</programlisting>
              <para>
                 Here is how we would configure these classes in our <filename>spring-ws-servlet.xml</filename>
                 Spring XML configuration file, by using component scanning.
