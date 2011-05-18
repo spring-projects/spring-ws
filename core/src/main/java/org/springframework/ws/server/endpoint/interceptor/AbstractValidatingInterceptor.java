@@ -20,9 +20,6 @@ import java.io.IOException;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -38,6 +35,9 @@ import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.XsdSchema;
 import org.springframework.xml.xsd.XsdSchemaCollection;
+
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * Abstract base class for <code>EndpointInterceptor</code> implementations that validate part of the message using a
@@ -243,6 +243,10 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
     /** Does nothing by default. Faults are not validated. */
     public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
         return true;
+    }
+
+    /** Does nothing by default.*/
+    public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
     }
 
     /**

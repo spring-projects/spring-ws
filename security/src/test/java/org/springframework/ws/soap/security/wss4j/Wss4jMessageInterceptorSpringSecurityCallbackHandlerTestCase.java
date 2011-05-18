@@ -18,9 +18,6 @@ package org.springframework.ws.soap.security.wss4j;
 
 import java.util.Properties;
 
-import org.apache.ws.security.WSConstants;
-import org.easymock.MockControl;
-
 import org.springframework.security.Authentication;
 import org.springframework.security.AuthenticationManager;
 import org.springframework.security.GrantedAuthority;
@@ -34,6 +31,9 @@ import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j.callback.SpringDigestPasswordValidationCallbackHandler;
 import org.springframework.ws.soap.security.wss4j.callback.SpringPlainTextPasswordValidationCallbackHandler;
+
+import org.apache.ws.security.WSConstants;
+import org.easymock.MockControl;
 
 public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCase extends Wss4jTestCase {
 
@@ -64,6 +64,7 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCa
         // test clean up
         messageContext.getResponse();
         interceptor.handleResponse(messageContext, null);
+        interceptor.afterCompletion(messageContext, null, null);
         assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
     }
 
@@ -77,6 +78,7 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCa
         // test clean up
         messageContext.getResponse();
         interceptor.handleResponse(messageContext, null);
+        interceptor.afterCompletion(messageContext, null, null);
         assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
     }
 

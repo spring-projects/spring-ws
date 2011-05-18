@@ -18,6 +18,13 @@ package org.springframework.ws.soap.security.wss4j;
 
 import java.util.Properties;
 
+import org.springframework.ws.context.DefaultMessageContext;
+import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.server.EndpointInterceptor;
+import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.security.wss4j.callback.acegi.AcegiDigestPasswordValidationCallbackHandler;
+import org.springframework.ws.soap.security.wss4j.callback.acegi.AcegiPlainTextPasswordValidationCallbackHandler;
+
 import org.acegisecurity.Authentication;
 import org.acegisecurity.AuthenticationManager;
 import org.acegisecurity.GrantedAuthority;
@@ -27,13 +34,6 @@ import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
 import org.acegisecurity.userdetails.memory.InMemoryDaoImpl;
 import org.apache.ws.security.WSConstants;
 import org.easymock.MockControl;
-
-import org.springframework.ws.context.DefaultMessageContext;
-import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.server.EndpointInterceptor;
-import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.security.wss4j.callback.acegi.AcegiDigestPasswordValidationCallbackHandler;
-import org.springframework.ws.soap.security.wss4j.callback.acegi.AcegiPlainTextPasswordValidationCallbackHandler;
 
 public abstract class Wss4jMessageInterceptorAcegiCallbackHandlerTestCase extends Wss4jTestCase {
 
@@ -64,6 +64,7 @@ public abstract class Wss4jMessageInterceptorAcegiCallbackHandlerTestCase extend
         // test clean up
         messageContext.getResponse();
         interceptor.handleResponse(messageContext, null);
+        interceptor.afterCompletion(messageContext, null, null);
         assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
     }
 
@@ -77,6 +78,7 @@ public abstract class Wss4jMessageInterceptorAcegiCallbackHandlerTestCase extend
         // test clean up
         messageContext.getResponse();
         interceptor.handleResponse(messageContext, null);
+        interceptor.afterCompletion(messageContext, null, null);
         assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
     }
 
