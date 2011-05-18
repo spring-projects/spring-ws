@@ -85,4 +85,8 @@ public class DelegatingSmartEndpointInterceptor implements SmartEndpointIntercep
     public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
         return getDelegate().handleFault(messageContext, endpoint);
     }
+
+    public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
+        getDelegate().afterCompletion(messageContext, endpoint, ex);
+    }
 }

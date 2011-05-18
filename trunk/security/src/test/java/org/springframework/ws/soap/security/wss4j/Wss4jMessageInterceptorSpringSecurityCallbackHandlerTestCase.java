@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,12 +18,12 @@ package org.springframework.ws.soap.security.wss4j;
 
 import java.util.Properties;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.memory.InMemoryDaoImpl;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
@@ -69,6 +69,7 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCa
         // test clean up
         messageContext.getResponse();
         interceptor.handleResponse(messageContext, null);
+        interceptor.afterCompletion(messageContext, null, null);
         assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
     }
 
@@ -83,6 +84,7 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCa
         // test clean up
         messageContext.getResponse();
         interceptor.handleResponse(messageContext, null);
+        interceptor.afterCompletion(messageContext, null, null);
         assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
     }
 

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -221,6 +221,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
                     interceptorIndex = i;
                     if (!interceptor.handleRequest(messageContext, mappedEndpoint.getEndpoint())) {
                         triggerHandleResponse(mappedEndpoint, interceptorIndex, messageContext);
+                        triggerAfterCompletion(mappedEndpoint, interceptorIndex, messageContext, null);
                         return;
                     }
                 }
@@ -231,6 +232,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 
             // Apply handleResponse methods of registered interceptors
             triggerHandleResponse(mappedEndpoint, interceptorIndex, messageContext);
+            triggerAfterCompletion(mappedEndpoint, interceptorIndex, messageContext, null);
         }
         catch (NoEndpointFoundException ex) {
             // No triggering of interceptors if no endpoint is found
@@ -243,6 +245,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
             Object endpoint = mappedEndpoint != null ? mappedEndpoint.getEndpoint() : null;
             processEndpointException(messageContext, endpoint, ex);
             triggerHandleResponse(mappedEndpoint, interceptorIndex, messageContext);
+            triggerAfterCompletion(mappedEndpoint, interceptorIndex, messageContext, ex);
         }
     }
 
@@ -358,6 +361,40 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
             }
         }
     }
+
+    /**
+     * Trigger afterCompletion callbacks on the mapped EndpointInterceptors.
+     * Will just invoke afterCompletion for all interceptors whose handleRequest invocation
+     * has successfully completed and returned true, in addition to the last interceptor who
+     * returned <code>false</code>.
+     * 
+     * @param mappedEndpoint   the mapped EndpointInvocationChain
+     * @param interceptorIndex index of last interceptor that successfully completed
+     * @param ex Exception thrown on handler execution, or <code>null</code> if none
+     * @see EndpointInterceptor#afterCompletion
+     */
+    private void triggerAfterCompletion(EndpointInvocationChain mappedEndpoint,
+            int interceptorIndex,
+            MessageContext messageContext,
+            Exception ex) throws Exception {
+
+        // Apply afterCompletion methods of registered interceptors.
+        if (mappedEndpoint != null) {
+            EndpointInterceptor[] interceptors = mappedEndpoint.getInterceptors();
+            if (interceptors != null) {
+                for (int i = interceptorIndex; i >= 0; i--) {
+                    EndpointInterceptor interceptor = interceptors[i];
+                    try {
+                        interceptor.afterCompletion(messageContext, mappedEndpoint.getEndpoint(), ex);
+                    }
+                    catch (Throwable ex2) {
+                        logger.error("EndpointInterceptor.afterCompletion threw exception", ex2);
+                    }
+                }
+            }
+        }
+    }
+
 
     /**
      * Initialize the <code>EndpointAdapters</code> used by this class. If no adapter beans are explicitly set by using
