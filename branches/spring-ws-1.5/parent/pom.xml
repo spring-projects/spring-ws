@@ -375,7 +375,7 @@
             <dependency>
                 <groupId>org.apache.ws.commons.schema</groupId>
                 <artifactId>XmlSchema</artifactId>
-                <version>1.4.3</version>
+                <version>1.4.5</version>
             </dependency>
             <!-- O/X Mapping dependencies -->
             <!-- Castor -->

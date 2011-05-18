@@ -1,11 +1,11 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,9 +19,6 @@ package org.springframework.ws.soap.security;
 import java.util.Locale;
 import javax.xml.namespace.QName;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.springframework.util.Assert;
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
@@ -33,6 +30,9 @@ import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.server.SoapEndpointInterceptor;
 import org.springframework.ws.soap.soap11.Soap11Body;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Interceptor base class for interceptors that handle WS-Security. Can be used on the server side, registered in a
@@ -153,15 +153,17 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
             if (!result) {
                 messageContext.clearResponse();
             }
-            cleanUp();
         }
         return result;
     }
 
     /** Returns <code>true</code>, i.e. fault responses are not secured. */
     public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
-        cleanUp();
         return true;
+    }
+
+    public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
+        cleanUp();
     }
 
     public boolean understands(SoapHeaderElement headerElement) {

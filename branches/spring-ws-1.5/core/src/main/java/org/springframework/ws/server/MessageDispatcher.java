@@ -1,11 +1,11 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,9 +23,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
@@ -45,27 +42,35 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
 import org.springframework.ws.server.endpoint.PayloadEndpoint;
 import org.springframework.ws.server.endpoint.adapter.MessageEndpointAdapter;
-import org.springframework.ws.server.endpoint.adapter.MessageMethodEndpointAdapter;
 import org.springframework.ws.server.endpoint.adapter.PayloadEndpointAdapter;
-import org.springframework.ws.server.endpoint.adapter.PayloadMethodEndpointAdapter;
 import org.springframework.ws.soap.server.SoapMessageDispatcher;
 import org.springframework.ws.support.DefaultStrategiesHelper;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Central dispatcher for use within Spring-WS, dispatching Web service messages to registered endpoints.
  * <p/>
  * This dispatcher is quite similar to Spring MVCs {@link DispatcherServlet}. Just like its counterpart, this dispatcher
  * is very flexible. This class is SOAP agnostic; in typical SOAP Web Services, the {@link SoapMessageDispatcher}
- * subclass is used. <ul> <li>It can use any {@link EndpointMapping} implementation - whether standard, or provided as
+ * subclass is used.
+ * <ul>
+ * <li>It can use any {@link EndpointMapping} implementation - whether standard, or provided as
  * part of an application - to control the routing of request messages to endpoint objects. Endpoint mappings can be
- * registered using the <code>endpointMappings</code> property.</li> <li>It can use any {@link EndpointAdapter}; this
- * allows one to use any endpoint interface or form. Defaults to the {@link MessageEndpointAdapter} and {@link
- * PayloadEndpointAdapter}, for {@link MessageEndpoint} and {@link PayloadEndpoint}, respectively, and the {@link
- * MessageMethodEndpointAdapter} and {@link PayloadMethodEndpointAdapter}. Additional endpoint adapters can be added
- * through the <code>endpointAdapters</code> property.</li> <li>Its exception resolution strategy can be specified via a
+ * registered using the {@link #setEndpointMappings(List) endpointMappings} property.</li>
+ * <li>It can use any {@link EndpointAdapter}; this allows one to use any endpoint interface or form. Defaults to
+ * the {@link MessageEndpointAdapter} and {@link PayloadEndpointAdapter}, for {@link MessageEndpoint} and
+ * {@link PayloadEndpoint}, respectively, and the
+ * {@link org.springframework.ws.server.endpoint.adapter.MessageMethodEndpointAdapter MessageMethodEndpointAdapter} and
+ * {@link org.springframework.ws.server.endpoint.adapter.PayloadMethodEndpointAdapter PayloadMethodEndpointAdapter}.
+ * Additional endpoint adapters can be added through the {@link #setEndpointAdapters(List) endpointAdapters} property.</li>
+ * <li>Its exception resolution strategy can be specified via a
  * {@link EndpointExceptionResolver}, for example mapping certain exceptions to SOAP Faults. Default is none. Additional
- * exception resolvers can be added through the <code>endpointExceptionResolvers</code> property.</li> </ul>
+ * exception resolvers can be added through the {@link #setEndpointExceptionResolvers(List) endpointExceptionResolvers}
+ * property.</li>
+ * </ul>
  *
  * @author Arjen Poutsma
  * @see EndpointMapping
@@ -221,6 +226,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
                     interceptorIndex = i;
                     if (!interceptor.handleRequest(messageContext, mappedEndpoint.getEndpoint())) {
                         triggerHandleResponse(mappedEndpoint, interceptorIndex, messageContext);
+                        triggerAfterCompletion(mappedEndpoint, interceptorIndex, messageContext, null);
                         return;
                     }
                 }
@@ -231,6 +237,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 
             // Apply handleResponse methods of registered interceptors
             triggerHandleResponse(mappedEndpoint, interceptorIndex, messageContext);
+            triggerAfterCompletion(mappedEndpoint, interceptorIndex, messageContext, null);
         }
         catch (NoEndpointFoundException ex) {
             // No triggering of interceptors if no endpoint is found
@@ -243,6 +250,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
             Object endpoint = mappedEndpoint != null ? mappedEndpoint.getEndpoint() : null;
             processEndpointException(messageContext, endpoint, ex);
             triggerHandleResponse(mappedEndpoint, interceptorIndex, messageContext);
+            triggerAfterCompletion(mappedEndpoint, interceptorIndex, messageContext, ex);
         }
     }
 
@@ -363,7 +371,41 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
     }
 
     /**
-     * Initialize the <code>EndpointAdapters</code> used by this class. If no adapter beans are explictely set by using
+     * Trigger afterCompletion callbacks on the mapped EndpointInterceptors.
+     * Will just invoke afterCompletion for all interceptors whose handleRequest invocation
+     * has successfully completed and returned true, in addition to the last interceptor who
+     * returned <code>false</code>.
+     * 
+     * @param mappedEndpoint   the mapped EndpointInvocationChain
+     * @param interceptorIndex index of last interceptor that successfully completed
+     * @param ex Exception thrown on handler execution, or <code>null</code> if none
+     * @see EndpointInterceptor#afterCompletion
+     */
+    private void triggerAfterCompletion(EndpointInvocationChain mappedEndpoint,
+            int interceptorIndex,
+            MessageContext messageContext,
+            Exception ex) throws Exception {
+
+        // Apply afterCompletion methods of registered interceptors.
+        if (mappedEndpoint != null) {
+            EndpointInterceptor[] interceptors = mappedEndpoint.getInterceptors();
+            if (interceptors != null) {
+                for (int i = interceptorIndex; i >= 0; i--) {
+                    EndpointInterceptor interceptor = interceptors[i];
+                    try {
+                        interceptor.afterCompletion(messageContext, mappedEndpoint.getEndpoint(), ex);
+                    }
+                    catch (Throwable ex2) {
+                        logger.error("EndpointInterceptor.afterCompletion threw exception", ex2);
+                    }
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Initialize the <code>EndpointAdapters</code> used by this class. If no adapter beans are explicitly set by using
      * the <code>endpointAdapters</code> property, we use the default strategies.
      *
      * @see #setEndpointAdapters(java.util.List)
