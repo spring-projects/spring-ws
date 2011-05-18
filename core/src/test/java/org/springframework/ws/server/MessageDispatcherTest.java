@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -171,8 +171,8 @@ public class MessageDispatcherTest {
         EndpointMapping mappingMock = createMock(EndpointMapping.class);
         dispatcher.setEndpointMappings(Collections.singletonList(mappingMock));
 
-        EndpointInterceptor interceptorMock1 = createMock("interceptor1", EndpointInterceptor.class);
-        EndpointInterceptor interceptorMock2 = createMock("interceptor2", EndpointInterceptor.class);
+        EndpointInterceptor interceptorMock1 = createStrictMock("interceptor1", EndpointInterceptor.class);
+        EndpointInterceptor interceptorMock2 = createStrictMock("interceptor2", EndpointInterceptor.class);
 
         expect(interceptorMock1.handleRequest(messageContext, endpoint)).andReturn(true);
         expect(interceptorMock2.handleRequest(messageContext, endpoint)).andReturn(true);
@@ -181,6 +181,9 @@ public class MessageDispatcherTest {
 
         expect(interceptorMock2.handleResponse(messageContext, endpoint)).andReturn(true);
         expect(interceptorMock1.handleResponse(messageContext, endpoint)).andReturn(true);
+
+        interceptorMock2.afterCompletion(messageContext, endpoint, null);
+        interceptorMock1.afterCompletion(messageContext, endpoint, null);
 
         EndpointInvocationChain chain =
                 new EndpointInvocationChain(endpoint, new EndpointInterceptor[]{interceptorMock1, interceptorMock2});
@@ -208,8 +211,8 @@ public class MessageDispatcherTest {
         EndpointMapping mappingMock = createMock(EndpointMapping.class);
         dispatcher.setEndpointMappings(Collections.singletonList(mappingMock));
 
-        EndpointInterceptor interceptorMock1 = createMock("interceptor1", EndpointInterceptor.class);
-        EndpointInterceptor interceptorMock2 = createMock("interceptor2", EndpointInterceptor.class);
+        EndpointInterceptor interceptorMock1 = createStrictMock("interceptor1", EndpointInterceptor.class);
+        EndpointInterceptor interceptorMock2 = createStrictMock("interceptor2", EndpointInterceptor.class);
 
         EndpointInvocationChain chain =
                 new EndpointInvocationChain(endpoint, new EndpointInterceptor[]{interceptorMock1, interceptorMock2});
@@ -217,6 +220,8 @@ public class MessageDispatcherTest {
 
         expect(interceptorMock1.handleRequest(messageContext, endpoint)).andReturn(true);
         expect(interceptorMock2.handleRequest(messageContext, endpoint)).andReturn(true);
+        interceptorMock2.afterCompletion(messageContext, endpoint, null);
+        interceptorMock1.afterCompletion(messageContext, endpoint, null);
 
         adapterMock.invoke(messageContext, endpoint);
 
@@ -235,13 +240,14 @@ public class MessageDispatcherTest {
         EndpointMapping mappingMock = createMock(EndpointMapping.class);
         dispatcher.setEndpointMappings(Collections.singletonList(mappingMock));
 
-        EndpointInterceptor interceptorMock1 = createMock("interceptor1", EndpointInterceptor.class);
-        EndpointInterceptor interceptorMock2 = createMock("interceptor2", EndpointInterceptor.class);
+        EndpointInterceptor interceptorMock1 = createStrictMock("interceptor1", EndpointInterceptor.class);
+        EndpointInterceptor interceptorMock2 = createStrictMock("interceptor2", EndpointInterceptor.class);
 
         Object endpoint = new Object();
 
         expect(interceptorMock1.handleRequest(messageContext, endpoint)).andReturn(false);
         expect(interceptorMock1.handleResponse(messageContext, endpoint)).andReturn(true);
+        interceptorMock1.afterCompletion(messageContext, endpoint, null);
 
         EndpointInvocationChain chain =
                 new EndpointInvocationChain(endpoint, new EndpointInterceptor[]{interceptorMock1, interceptorMock2});
@@ -267,13 +273,15 @@ public class MessageDispatcherTest {
         EndpointMapping mappingMock = createMock(EndpointMapping.class);
         dispatcher.setEndpointMappings(Collections.singletonList(mappingMock));
 
-        EndpointInterceptor interceptorMock1 = createMock("interceptor1", EndpointInterceptor.class);
-        EndpointInterceptor interceptorMock2 = createMock("interceptor2", EndpointInterceptor.class);
+        EndpointInterceptor interceptorMock1 = createStrictMock("interceptor1", EndpointInterceptor.class);
+        EndpointInterceptor interceptorMock2 = createStrictMock("interceptor2", EndpointInterceptor.class);
 
         Object endpoint = new Object();
         expect(interceptorMock1.handleRequest(messageContext, endpoint)).andReturn(true);
         expect(interceptorMock2.handleRequest(messageContext, endpoint)).andReturn(false);
         expect(interceptorMock2.handleResponse(messageContext, endpoint)).andReturn(false);
+        interceptorMock1.afterCompletion(messageContext, endpoint, null);
+        interceptorMock2.afterCompletion(messageContext, endpoint, null);
 
         EndpointInvocationChain chain =
                 new EndpointInvocationChain(endpoint, new EndpointInterceptor[]{interceptorMock1, interceptorMock2});
@@ -290,7 +298,7 @@ public class MessageDispatcherTest {
 
         verify(mappingMock, interceptorMock1, interceptorMock2, adapterMock, factoryMock);
     }
-
+    
     @Test
     public void testFaultFlow() throws Exception {
         EndpointAdapter adapterMock = createMock(EndpointAdapter.class);
@@ -302,11 +310,12 @@ public class MessageDispatcherTest {
         EndpointMapping mappingMock = createMock(EndpointMapping.class);
         dispatcher.setEndpointMappings(Collections.singletonList(mappingMock));
 
-        EndpointInterceptor interceptorMock = createMock(EndpointInterceptor.class);
+        EndpointInterceptor interceptorMock = createStrictMock(EndpointInterceptor.class);
 
         expect(interceptorMock.handleRequest(messageContext, endpoint)).andReturn(true);
         adapterMock.invoke(messageContext, endpoint);
         expect(interceptorMock.handleFault(messageContext, endpoint)).andReturn(true);
+        interceptorMock.afterCompletion(messageContext, endpoint, null);
 
         EndpointInvocationChain chain =
                 new EndpointInvocationChain(endpoint, new EndpointInterceptor[]{interceptorMock});
