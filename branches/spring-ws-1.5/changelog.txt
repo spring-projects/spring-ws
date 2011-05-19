@@ -3,6 +3,18 @@ SPRING WEB SERVICES CHANGELOG
 http://www.springframework.org/spring-ws
 
 
+Changes in version 1.5.10
+------------------------
+
+** Bug
+    * [SWS-613] - Jaxp13XPathTemplate uses thread-unsafe XPathFactory as field
+    * [SWS-708] - PayloadValidatingInterceptor errors not clearing SecurityContextHolder 
+
+** Improvement
+    * [SWS-610] - Incompatibility with WS-I requirement R2750
+    * [SWS-641] - Make sentMessageTracingLogger independent from receivedMessageTracingLogger
+    * [SWS-648] - Document Spring-WS Security exception handling
+
 Changes in version 1.5.9
 ------------------------
 
