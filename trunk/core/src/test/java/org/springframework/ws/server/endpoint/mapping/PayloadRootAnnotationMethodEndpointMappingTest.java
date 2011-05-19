@@ -33,6 +33,7 @@ import org.springframework.ws.server.EndpointAdapter;
 import org.springframework.ws.server.EndpointMapping;
 import org.springframework.ws.server.MessageDispatcher;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
+import org.springframework.ws.server.endpoint.adapter.DefaultMethodEndpointAdapter;
 import org.springframework.ws.server.endpoint.adapter.PayloadMethodEndpointAdapter;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
@@ -73,12 +74,13 @@ public class PayloadRootAnnotationMethodEndpointMappingTest  {
         request.getSOAPBody().addBodyElement(QName.valueOf("{http://springframework.org/spring-ws}Request"));
         MessageContext messageContext =
                 new DefaultMessageContext(new SaajSoapMessage(request), new SaajSoapMessageFactory(messageFactory));
-        EndpointAdapter adapter = new PayloadMethodEndpointAdapter();
+        DefaultMethodEndpointAdapter adapter = new DefaultMethodEndpointAdapter();
+        adapter.afterPropertiesSet();
 
         MessageDispatcher messageDispatcher = new SoapMessageDispatcher();
         messageDispatcher.setApplicationContext(applicationContext);
         messageDispatcher.setEndpointMappings(Collections.<EndpointMapping>singletonList(mapping));
-        messageDispatcher.setEndpointAdapters(Collections.singletonList(adapter));
+        messageDispatcher.setEndpointAdapters(Collections.<EndpointAdapter>singletonList(adapter));
 
         messageDispatcher.receive(messageContext);
 
