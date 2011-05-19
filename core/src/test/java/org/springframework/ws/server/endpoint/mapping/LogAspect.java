@@ -40,11 +40,11 @@ public class LogAspect {
     }
 
     @Around("loggedMethod()")
-    public void log(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
         logInvoked = true;
         logger.info("Before: " + joinPoint.getSignature());
         try {
-            joinPoint.proceed();
+            return joinPoint.proceed();
         }
         finally {
             logger.info("After: " + joinPoint.getSignature());
