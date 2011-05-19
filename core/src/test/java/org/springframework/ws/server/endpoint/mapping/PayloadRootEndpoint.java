@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 
 @Endpoint
 public class PayloadRootEndpoint {
@@ -37,7 +38,7 @@ public class PayloadRootEndpoint {
 
     @PayloadRoot(localPart = "Request", namespace = "http://springframework.org/spring-ws")
     @org.springframework.ws.server.endpoint.mapping.Log
-    public void doIt(Source payload) {
+    public void doIt(@RequestPayload Source payload) {
         doItInvoked = true;
         logger.info("In doIt()");
     }
