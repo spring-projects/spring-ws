@@ -1,0 +1,9 @@
+Dear Spring community,
+
+I'm pleased to announce that Spring Web Services 1.5.10 has been released!
+
+This is the latest bug fix and enhancement release in the Spring-WS 1.5
+series. It fixes all bugs found in the 2.0 cycle. 
+Please see the changelog for details.
+
+For more information, see http://static.springframework.org/spring-ws/site/

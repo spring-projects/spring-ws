@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd"> 
+<chapter id="what-is-spring-ws">
+    <title>What is Spring Web Services?</title>
+    <section>
+        <title>Introduction</title>
+        <para>
+            Spring Web Services (Spring-WS) is a product of the Spring community focused on creating document-driven 
+            Web services.
+            Spring Web Services aims to facilitate contract-first SOAP service development, allowing for the creation of
+            flexible web services using one of the many ways to manipulate XML payloads.
+            The product is based on Spring itself, which means you can use the Spring concepts such as dependency 
+            injection as an integral part of your Web service.
+        </para>
+        <para>
+            People use Spring-WS for many reasons, but most are drawn to it after finding alternative SOAP stacks 
+            lacking when it comes to following Web service best practices.
+            Spring-WS makes the best practice an easy practice. This includes practices such as the WS-I basic profile,
+            Contract-First development, and having a loose coupling between contract and implementation.
+            The other key features of Spring Web services are:
+        </para>
+        <formalpara>
+            <title>Powerful mappings</title>
+            <para>
+                You can distribute incoming XML requests to any object, depending on message payload, SOAP Action header, 
+                or an XPath expression.
+            </para>
+        </formalpara>
+        <formalpara>
+            <title>XML API support</title>
+            <para>
+                Incoming XML messages can be handled not only with standard JAXP APIs such as DOM, SAX, and StAX, but also JDOM, 
+                dom4j, XOM, or even marshalling technologies.
+            </para>
+        </formalpara>
+        <formalpara>
+            <title>Flexible XML Marshalling</title>
+            <para>
+                The Object/XML Mapping module in the Spring Web Services distribution supports JAXB 1 and 2, Castor, 
+                XMLBeans, JiBX, and XStream. And because it is a separate module, you can use it in non-Web services code 
+                as well.
+            </para>
+        </formalpara>
+        <formalpara>
+            <title>Reuses your Spring expertise</title>
+            <para>
+                Spring-WS uses Spring application contexts for all configuration, which should help Spring developers 
+                get up-to-speed nice and quickly. Also, the architecture of Spring-WS resembles that of Spring-MVC.
+            </para>
+        </formalpara>
+        <formalpara>
+            <title>Supports WS-Security</title>
+            <para>
+                WS-Security allows you to sign SOAP messages, encrypt and decrypt them, or authenticate against them.
+            </para>
+        </formalpara>
+        <formalpara>
+            <title>Integrates with Acegi Security</title>
+            <para>
+                The WS-Security implementation of Spring Web Services provides integration with 
+                <ulink url="http://acegisecurity.org">Acegi Security</ulink>. This means you can use your existing Acegi 
+                configuration for your SOAP service as well.
+            </para>
+        </formalpara>
+        <formalpara>
+            <title>Built by Maven</title>
+            <para>
+                This assists you in effectively reusing the Spring Web Services artifacts in your own Maven-based projects.
+            </para>
+        </formalpara>
+        <formalpara>
+            <title>Apache license</title>
+            <para>
+                You can confidently use Spring-WS in your project.
+            </para>
+        </formalpara>
+    </section>
+    <section>
+        <title>Runtime environment</title>
+        <para>
+            Spring Web Services runs within a standard Java 1.3 Runtime Environment. It also supports Java 5.0,
+            although the Java types which are specific to this release are packaged in a separate modules with the 
+            suffix "tiger" in their JAR filename. Note that the security module also requires Java 5.
+        </para>
+        <para>
+            Spring-WS consists of a number of modules, which are described in the remainder of this section.
+        </para>
+        <itemizedlist>
+            <listitem>
+            <para>
+                The XML module (<filename>spring-xml.jar</filename>) contains various XML support classes for Spring Web 
+                Services. This module is mainly intended for the Spring-WS framework itself, and not a Web service 
+                developers.
+            </para>
+            </listitem>
+            <listitem>
+                <para>
+                    The Core package (<filename>spring-ws-core.jar</filename> and <filename>spring-ws-core-tiger.jar</filename>)
+                    is the central part of the Spring's Web services functionality.
+                    It provides the central <link linkend="web-service-messages">
+                    <classname>WebServiceMessage</classname></link> and <link linkend="soap-message">
+                    <classname>SoapMessage</classname></link> interfaces, the <link linkend="server">server-side</link> 
+                    framework, with powerful message dispatching, and the various support classes for implementing Web service
+                    endpoints; and the <link linkend="client">client-side</link> <classname>WebServiceTemplate</classname>.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    The <link linkend="security">Security</link> package (<filename>spring-ws-security.jar</filename>)
+                    provides a WS-Security implementation that integrates
+                    with the core Web service package. It allows you to add principal tokens, sign, and decrypt and encrypt SOAP
+                    messages. Addtionally, it allows you to leverage your existing Acegi security implementation for
+                    authentication and authorization.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    The <link linkend="oxm">OXM</link> package (<filename>spring-oxm.jar</filename> and 
+                    <filename>spring-oxm-tiger.jar</filename>) provides integration for popular XML marshalling APIs, including
+                    JAXB 1 and 2. Using the OXM package means that you benefit from a unified exception hierarchy, and can wire
+                    up your favorite XML marshalling technology easily.
+                </para>
+            </listitem>
+        </itemizedlist>
+        <para>
+            The following figure illustrates the Spring-WS modules and the dependencies between them. Arrows indicate 
+            dependencies, i.e. Spring-WS Core depends on Spring-XML and Spring-OXM.
+            <mediaobject>
+                    <imageobject role="fo">
+                        <imagedata fileref="src/docbkx/resources/images/spring-deps.png"
+                                   format="PNG" align="center"/>
+                    </imageobject>
+                    <imageobject role="html">
+                        <imagedata fileref="images/spring-deps.png"
+                                   format="PNG" align="center"/>
+                    </imageobject>
+                    <caption>
+                        <para>
+                            Dependencies between Spring-WS modules
+                        </para>
+                    </caption>
+                </mediaobject>
+        </para>
+    </section>
+</chapter>
