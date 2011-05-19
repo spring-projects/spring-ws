@@ -6,9 +6,9 @@ Downloads
 
 * Get the latest Spring Web Services releases here
 
-	* <<Spring-WS 1.5.9 is the current production release (JDK 1.4+)>>
+	* <<Spring-WS 1.5.10 is the current production release (JDK 1.4+)>>
 
-		* {{{http://www.springsource.com/download/community?project=Spring%20Web%20Services}Download}} | {{{http://static.springframework.org/spring-ws/docs/1.5.9/changelog.txt}Changelog}} | {{{http://forum.springframework.org/showthread.php?t=83900}Announcement}}
+		* {{{http://www.springsource.com/download/community?project=Spring%20Web%20Services}Download}} | {{{http://static.springframework.org/spring-ws/docs/1.5.10/changelog.txt}Changelog}} | {{{http://forum.springframework.org/showthread.php?t=83900}Announcement}}
 
 	* <<Spring-WS 1.0.4 is the previous production release (JDK 1.3)>>
 
