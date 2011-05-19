@@ -11,7 +11,7 @@
         </typedef>
 
         <artifact:dependencies pathId="classpath">
-            <dependency groupId="org.springframework.ws" artifactId="spring-ws-core" version="1.5.9"/>
+            <dependency groupId="org.springframework.ws" artifactId="spring-ws-core" version="1.5.10"/>
             <dependency groupId="com.sun.xml.messaging.saaj" artifactId="saaj-impl" version="1.3"/>
             <dependency groupId="commons-httpclient" artifactId="commons-httpclient" version="3.0.1"/>
         </artifact:dependencies>
