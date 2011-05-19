@@ -254,6 +254,35 @@ public class TraxUtilsTest {
     }
 
     @Test
+    public void testDoWithSystemIdSource() throws Exception {
+        String systemId = "http://www.springframework.org/dtd/spring-beans.dtd";
+
+        TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
+        mock.source(systemId);
+
+        replay(mock);
+
+        TraxUtils.doWithSource(new StreamSource(systemId), mock);
+
+        verify(mock);
+    }
+    
+    @Test
+    public void testDoWithSystemIdResult() throws Exception {
+        String systemId = "http://www.springframework.org/dtd/spring-beans.dtd";
+
+        TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
+        mock.result(systemId);
+
+        replay(mock);
+
+        TraxUtils.doWithResult(new StreamResult(systemId), mock);
+
+        verify(mock);
+    }
+
+
+    @Test
     public void testDoWithInvalidSource() throws Exception {
         Source source = new Source() {
 

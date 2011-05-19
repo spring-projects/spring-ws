@@ -16,32 +16,40 @@
 
 package org.springframework.xml.xpath;
 
+import java.io.InputStream;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.stream.StreamSource;
+import javax.xml.transform.dom.DOMResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import javax.xml.xpath.XPathFactoryConfigurationException;
 
-import org.springframework.util.xml.StaxUtils;
 import org.springframework.xml.namespace.SimpleNamespaceContext;
+import org.springframework.xml.transform.StaxSource;
+import org.springframework.xml.transform.TransformerHelper;
+import org.springframework.xml.transform.TraxUtils;
 
 import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
 
 /**
  * Implementation of {@link XPathOperations} that uses JAXP 1.3. JAXP 1.3 is part of Java SE since 1.5.
  * <p/>
- * Namespaces can be set using the <code>namespaces</code> property.
+ * Namespaces can be set using the {@code namespaces} property.
  *
  * @author Arjen Poutsma
  * @see #setNamespaces(java.util.Map)
@@ -128,35 +136,9 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
             xpath.setNamespaceContext(namespaceContext);
         }
         try {
-            if (StaxUtils.isStaxSource(context)) {
-                Element element = getRootElement(context);
-                return xpath.evaluate(expression, element, returnType);
-            }
-            else if (context instanceof SAXSource) {
-                SAXSource saxSource = (SAXSource) context;
-                return xpath.evaluate(expression, saxSource.getInputSource(), returnType);
-            }
-            else if (context instanceof DOMSource) {
-                DOMSource domSource = (DOMSource) context;
-                return xpath.evaluate(expression, domSource.getNode(), returnType);
-            }
-            else if (context instanceof StreamSource) {
-                StreamSource streamSource = (StreamSource) context;
-                InputSource inputSource;
-                if (streamSource.getInputStream() != null) {
-                    inputSource = new InputSource(streamSource.getInputStream());
-                }
-                else if (streamSource.getReader() != null) {
-                    inputSource = new InputSource(streamSource.getReader());
-                }
-                else {
-                    throw new IllegalArgumentException("StreamSource contains neither InputStream nor Reader");
-                }
-                return xpath.evaluate(expression, inputSource, returnType);
-            }
-            else {
-                throw new IllegalArgumentException("context type unknown");
-            }
+            EvaluationCallback callback = new EvaluationCallback(xpath, expression, returnType);
+            TraxUtils.doWithSource(context, callback);
+            return callback.result;
         }
         catch (javax.xml.xpath.XPathException ex) {
             throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
@@ -164,11 +146,77 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
         catch (TransformerException ex) {
             throw new XPathException("Could not transform context to DOM Node", ex);
         }
+        catch (Exception ex) {
+            throw new XPathException(ex.getMessage(), ex);
+        }
     }
 
     private synchronized XPath createXPath() {
         return xpathFactory.newXPath();
     }
+
+    private static class EvaluationCallback implements TraxUtils.SourceCallback {
+
+        private final XPath xpath;
+
+        private final String expression;
+
+        private final QName returnType;
+
+        private final TransformerHelper transformerHelper = new TransformerHelper();
+
+        private Object result;
+
+        private EvaluationCallback(XPath xpath, String expression, QName returnType) {
+            this.xpath = xpath;
+            this.expression = expression;
+            this.returnType = returnType;
+        }
+
+        public void domSource(Node node) throws XPathExpressionException {
+            result = xpath.evaluate(expression, node, returnType);
+        }
+
+        public void saxSource(XMLReader reader, InputSource inputSource) throws XPathExpressionException {
+            inputSource(inputSource);
+        }
+
+        public void staxSource(XMLEventReader eventReader)
+                throws XPathExpressionException, XMLStreamException, TransformerException {
+            Element element = getRootElement(new StaxSource(eventReader));
+            domSource(element);
+        }
+
+        public void staxSource(XMLStreamReader streamReader) throws TransformerException, XPathExpressionException {
+            Element element = getRootElement(new StaxSource(streamReader));
+            domSource(element);
+        }
+
+        public void streamSource(InputStream inputStream) throws XPathExpressionException {
+            inputSource(new InputSource(inputStream));
+        }
+
+        public void streamSource(Reader reader) throws XPathExpressionException {
+            inputSource(new InputSource(reader));
+        }
+
+        public void source(String systemId) throws XPathExpressionException {
+            inputSource(new InputSource(systemId));
+        }
+
+        private void inputSource(InputSource inputSource) throws XPathExpressionException {
+            result = xpath.evaluate(expression, inputSource, returnType);
+        }
+
+        private Element getRootElement(Source source) throws TransformerException {
+            DOMResult domResult = new DOMResult();
+            transformerHelper.transform(source, domResult);
+            Document document = (Document) domResult.getNode();
+            return document.getDocumentElement();
+        }
+
+    }
+
 
 
 }

@@ -36,6 +36,7 @@ import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.springframework.util.StringUtils;
 import org.springframework.util.xml.StaxUtils;
 
 import org.w3c.dom.Document;
@@ -207,38 +208,41 @@ public abstract class TraxUtils {
     public static void doWithSource(Source source, SourceCallback callback) throws Exception {
         if (source instanceof DOMSource) {
             callback.domSource(((DOMSource) source).getNode());
+            return;
         }
         else if (isStaxSource(source)) {
             XMLStreamReader streamReader = getXMLStreamReader(source);
             if (streamReader != null) {
                 callback.staxSource(streamReader);
+                return;
             }
             else {
                 XMLEventReader eventReader = getXMLEventReader(source);
                 if (eventReader != null) {
                     callback.staxSource(eventReader);
-                }
-                else {
-                    throw new IllegalArgumentException(
-                            "StAX source contains neither XMLStreamReader nor XMLEventReader");
+                    return;
                 }
             }
         }
         else if (source instanceof SAXSource) {
             SAXSource saxSource = (SAXSource) source;
             callback.saxSource(saxSource.getXMLReader(), saxSource.getInputSource());
+            return;
         }
         else if (source instanceof StreamSource) {
             StreamSource streamSource = (StreamSource) source;
             if (streamSource.getInputStream() != null) {
                 callback.streamSource(streamSource.getInputStream());
+                return;
             }
             else if (streamSource.getReader() != null) {
                 callback.streamSource(streamSource.getReader());
+                return;
             }
-            else {
-                throw new IllegalArgumentException("StreamSource contains neither InputStream nor Reader");
-            }
+        }
+        if (StringUtils.hasLength(source.getSystemId())) {
+            String systemId = source.getSystemId();
+            callback.source(systemId);
         }
         else {
             throw new IllegalArgumentException("Unknown Source type: " + source.getClass());
@@ -246,8 +250,8 @@ public abstract class TraxUtils {
     }
 
     /**
-     * Performs the given {@linkplain ResultCallback callback} operation on a {@link Result}. Supports both the JAXP 1.4
-     * {@link StAXResult} and the Spring 3.0 {@link StaxUtils#createStaxResult StaxSource}.
+     * Performs the given {@linkplain org.springframework.xml.transform.TraxUtils.ResultCallback callback} operation on a {@link javax.xml.transform.Result}. Supports both the JAXP 1.4
+     * {@link javax.xml.transform.stax.StAXResult} and the Spring 3.0 {@link org.springframework.util.xml.StaxUtils#createStaxResult StaxSource}.
      *
      * @param result   result to look at
      * @param callback the callback to invoke for each kind of result
@@ -255,38 +259,41 @@ public abstract class TraxUtils {
     public static void doWithResult(Result result, ResultCallback callback) throws Exception{
         if (result instanceof DOMResult) {
             callback.domResult(((DOMResult) result).getNode());
+            return;
         }
         else if (isStaxResult(result)) {
             XMLStreamWriter streamWriter = getXMLStreamWriter(result);
             if (streamWriter != null) {
                 callback.staxResult(streamWriter);
+                return;
             }
             else {
                 XMLEventWriter eventWriter = getXMLEventWriter(result);
                 if (eventWriter != null) {
                     callback.staxResult(eventWriter);
-                }
-                else {
-                    throw new IllegalArgumentException(
-                            "StAX result contains neither XMLStreamWriter nor XMLEventWriter");
+                    return;
                 }
             }
         }
         else if (result instanceof SAXResult) {
             SAXResult saxSource = (SAXResult) result;
             callback.saxResult(saxSource.getHandler(), saxSource.getLexicalHandler());
+            return;
         }
         else if (result instanceof StreamResult) {
             StreamResult streamSource = (StreamResult) result;
             if (streamSource.getOutputStream() != null) {
                 callback.streamResult(streamSource.getOutputStream());
+                return;
             }
             else if (streamSource.getWriter() != null) {
                 callback.streamResult(streamSource.getWriter());
+                return;
             }
-            else {
-                throw new IllegalArgumentException("StreamResult contains neither OutputStream nor Writer");
-            }
+        }
+        if (StringUtils.hasLength(result.getSystemId())) {
+            String systemId = result.getSystemId();
+            callback.result(systemId);
         }
         else {
             throw new IllegalArgumentException("Unknown Result type: " + result.getClass());
@@ -344,6 +351,15 @@ public abstract class TraxUtils {
          * @param reader the reader
          */
         void streamSource(Reader reader) throws Exception;
+
+        /**
+         * Perform an operation on the system identifier contained in any {@link Source}.
+         *
+         * @param systemId the system identifier
+         */
+        void source(String systemId) throws Exception;
+
+
     }
 
     /**
@@ -398,6 +414,14 @@ public abstract class TraxUtils {
          * @param writer the writer
          */
         void streamResult(Writer writer) throws Exception;
+
+        /**
+         * Perform an operation on the system identifier contained in any {@link Result}.
+         *
+         * @param systemId the system identifier
+         */
+        void result(String systemId) throws Exception;
+
     }
 
 

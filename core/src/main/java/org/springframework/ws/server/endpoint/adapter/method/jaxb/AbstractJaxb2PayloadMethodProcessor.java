@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.URL;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import javax.xml.bind.JAXBContext;
@@ -38,6 +39,7 @@ import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.springframework.util.Assert;
@@ -227,6 +229,10 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
         public void streamSource(Reader reader) throws IOException, JAXBException {
             result = unmarshaller.unmarshal(reader);
         }
+
+        public void source(String systemId) throws Exception {
+            result = unmarshaller.unmarshal(new URL(systemId));
+        }
     }
 
     private class JaxbElementSourceCallback<T> implements TraxUtils.SourceCallback {
@@ -265,6 +271,10 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
         public void streamSource(Reader reader) throws IOException, JAXBException {
             result = unmarshaller.unmarshal(new StreamSource(reader), declaredType);
         }
+
+        public void source(String systemId) throws Exception {
+            result = unmarshaller.unmarshal(new StreamSource(systemId), declaredType);
+        }
     }
 
     private class Jaxb2ResultCallback implements TraxUtils.ResultCallback {
@@ -300,6 +310,10 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
         public void streamResult(Writer writer) throws JAXBException {
             marshaller.marshal(jaxbElement, writer);
+        }
+
+        public void result(String systemId) throws Exception {
+            marshaller.marshal(jaxbElement, new StreamResult(systemId));
         }
     }
 
