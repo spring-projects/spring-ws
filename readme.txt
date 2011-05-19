@@ -1,4 +1,4 @@
-SPRING WEB SERVICES 1.5.9 (Januari 2010)
+SPRING WEB SERVICES 1.5.10 (May 2011)
 -------------------------------
 http://www.springframework.org/spring-ws
 http://forum.springframework.org/forumdisplay.php?f=39
@@ -39,40 +39,40 @@ The following distinct jar files are included in the distribution. This list spe
 third-party dependencies. Libraries in [brackets] are optional, i.e. just necessary for certain functionality. For an 
 exact list of Spring-WS project dependencies see the respective Maven2 pom.xml files.
 
-* spring-oxm-1.5.9.jar
+* spring-oxm-1.5.10.jar
 - Contents: The Spring Object/XML Mapping framework
 - Dependencies: Commons Logging, spring-beans, spring-core
                 [Log4J, JAXB 1, Castor, XMLBeans, StAX, JiBX, XStream]
 
-* spring-oxm-tiger-1.5.9.jar
+* spring-oxm-tiger-1.5.10.jar
 - Contents: The Spring Object/XML Mapping framework for Java 5
 - Dependencies: Commons Logging, spring-beans, spring-core, JAXB 2
 
-* spring-ws-core-1.5.9.jar
+* spring-ws-core-1.5.10.jar
 - Contents: The Spring-WS Core
 - Dependencies: Commons Logging, spring-beans, spring-core, spring-context, spring-oxm
                 [Log4J, spring-web, spring-webmvc, SAAJ, JDOM, StAX, Servlet API, JAF, Axiom, DOM4J, XOM, WSDL4J]
 
-* spring-ws-core-tiger-1.5.9.jar
+* spring-ws-core-tiger-1.5.10.jar
 - Contents: The Spring-WS Core for Java 5
 - Dependencies: Commons Logging, spring-beans, spring-core, spring-context, spring-core
 
-* spring-ws-support-1.5.9.jar
+* spring-ws-support-1.5.10.jar
 - Contents: The Spring-WS Support
 - Dependencies: Commons Logging, spring-beans, spring-core, spring-context, spring-core
                 [JMS, JavaMail]
 
-* spring-ws-security-1.5.9.jar
+* spring-ws-security-1.5.10.jar
 - Contents: Spring-WS Security integration
 - Dependencies: Commons Logging, spring-beans, spring-core, spring-context, spring-ws-core
                 [Log4J, xmlsdig, xmlsec, XWS-security, Acegi, WSS4J]
 
-* spring-xml-1.5.9.jar
+* spring-xml-1.5.10.jar
 - Contents: Spring XML utility framework
 - Dependencies: Commons Logging, spring-beans, spring-core
                 [StAX, Xalan, Jaxen]
 
-* spring-ws-1.5.9.jar
+* spring-ws-1.5.10.jar
 - Contents: Convenient al-in-one jar containing all of the jars described above
 
 
