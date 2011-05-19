@@ -4,13 +4,14 @@
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.5.10-SNAPSHOT</version>
+    <version>1.5.10</version>
     <name>Spring Web Services - Parent</name>
     <distributionManagement>
         <downloadUrl>http://static.springframework.org/spring-ws/site/downloads/releases.html</downloadUrl>
         <repository>
-            <id>local</id>
-            <url>file:///Users/arjen/Projects/Spring/repos/repo</url>
+            <id>spring-release</id>
+            <name>Spring Release Repository</name>
+            <url>s3://maven.springframework.org/release</url>
         </repository>
         <snapshotRepository>
             <id>spring-snapshot</id>
@@ -23,9 +24,9 @@
         </site>
     </distributionManagement>
     <scm>
-        <connection>scm:svn:https://src.springframework.org/svn/spring-ws/trunk</connection>
-        <developerConnection>scm:svn:https://src.springframework.org/svn/spring-ws/trunk</developerConnection>
-        <url>https://fisheye.springframework.org/browse/spring-ws/trunk</url>
+        <connection>scm:svn:https://src.springframework.org/svn/spring-ws/tags/spring-ws-1.5.10</connection>
+        <developerConnection>scm:svn:https://src.springframework.org/svn/spring-ws/tags/spring-ws-1.5.10</developerConnection>
+        <url>https://fisheye.springframework.org/browse/spring-ws/tags/spring-ws-1.5.10</url>
     </scm>
     <properties>
         <spring.version>2.5.6</spring.version>
