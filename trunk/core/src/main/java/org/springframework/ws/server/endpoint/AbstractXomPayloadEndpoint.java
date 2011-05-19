@@ -187,6 +187,17 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
                 throw new XomParsingException(ex);
             }
         }
+
+        public void source(String systemId) throws Exception {
+            try {
+                Builder builder = new Builder();
+                Document document = builder.build(systemId);
+                element = document.getRootElement();
+            }
+            catch (ParsingException ex) {
+                throw new XomParsingException(ex);
+            }
+        }
     }
 
     private static class XomParsingException extends NestedRuntimeException {

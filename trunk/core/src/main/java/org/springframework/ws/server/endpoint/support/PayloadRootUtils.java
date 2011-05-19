@@ -143,6 +143,10 @@ public abstract class PayloadRootUtils {
         public void streamSource(Reader reader) throws Exception {
             // Do nothing
         }
+
+        public void source(String systemId) throws Exception {
+            // Do nothing
+        }
     }
 
 

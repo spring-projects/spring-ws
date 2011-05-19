@@ -18,12 +18,17 @@ package org.springframework.xml.xpath;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamSource;
 
 import org.springframework.core.io.ClassPathResource;
@@ -36,6 +41,7 @@ import org.junit.Test;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public abstract class AbstractXPathTemplateTestCase {
@@ -133,9 +139,34 @@ public abstract class AbstractXPathTemplateTestCase {
     }
 
     @Test
-    public void testEvaluateStreamSource() throws IOException, SAXException, ParserConfigurationException {
+    public void testEvaluateSAXSource() throws Exception {
         InputStream in = AbstractXPathTemplateTestCase.class.getResourceAsStream("nonamespaces.xml");
-        String result = template.evaluateAsString("/root/child/text", new StreamSource(in));
+        SAXSource source = new SAXSource(new InputSource(in));
+        String result = template.evaluateAsString("/root/child/text", source);
+        Assert.assertEquals("Invalid result", "text", result);
+    }
+
+    @Test
+    public void testEvaluateStaxSource() throws Exception {
+        InputStream in = AbstractXPathTemplateTestCase.class.getResourceAsStream("nonamespaces.xml");
+        XMLStreamReader streamReader = XMLInputFactory.newFactory().createXMLStreamReader(in);
+        StAXSource source = new StAXSource(streamReader);
+        String result = template.evaluateAsString("/root/child/text", source);
+        Assert.assertEquals("Invalid result", "text", result);
+    }
+
+    @Test
+    public void testEvaluateStreamSourceInputStream() throws IOException, SAXException, ParserConfigurationException {
+        InputStream in = AbstractXPathTemplateTestCase.class.getResourceAsStream("nonamespaces.xml");
+        StreamSource source = new StreamSource(in);
+        String result = template.evaluateAsString("/root/child/text", source);
+        Assert.assertEquals("Invalid result", "text", result);
+    }
+
+    @Test
+    public void testEvaluateStreamSourceSystemId() throws IOException, SAXException, ParserConfigurationException {
+        URL url = AbstractXPathTemplateTestCase.class.getResource("nonamespaces.xml");
+        String result = template.evaluateAsString("/root/child/text", new StreamSource(url.toString()));
         Assert.assertEquals("Invalid result", "text", result);
     }
 
@@ -152,7 +183,7 @@ public abstract class AbstractXPathTemplateTestCase {
 
     @Test
     public void testEvaluateAsObject() throws Exception {
-        String result = (String) template.evaluateAsObject("/root/child", nonamespaces, new NodeMapper<String>() {
+        String result = template.evaluateAsObject("/root/child", nonamespaces, new NodeMapper<String>() {
             public String mapNode(Node node, int nodeNum) throws DOMException {
                 return node.getLocalName();
             }
