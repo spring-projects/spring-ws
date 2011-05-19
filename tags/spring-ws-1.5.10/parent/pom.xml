@@ -53,9 +53,9 @@
     <build>
         <extensions>
             <extension>
-                <groupId>org.springframework.aws</groupId>
-                <artifactId>spring-aws-maven</artifactId>
-                <version>1.2.2</version>
+                <groupId>org.springframework.build.aws</groupId>
+                <artifactId>org.springframework.build.aws.maven</artifactId>
+                <version>3.1.0.RELEASE</version>
             </extension>
         </extensions>
         <pluginManagement>
