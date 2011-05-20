@@ -1,0 +1,3765 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+  targetNamespace="http://codex.corp.obade.com/codex/schemas"
+  xmlns:schemas="http://codex.corp.obade.com/codex/schemas">
+
+  <xs:element name="AddSetRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:manifestfile"/>        
+        <xs:element ref="schemas:certlevel"/>        
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="AddSetResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element> 
+    
+  <xs:element name="AddPartRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:manifestfile"/>        
+        <xs:element ref="schemas:statusname"/>  
+        <xs:element ref="schemas:uri"/>        
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="AddPartResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>   
+  
+  <xs:element name="AddPartNoteRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:notetext"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="AddPartNoteResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:part"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+  
+  <xs:element name="DeletePartRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="DeletePartResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:operationresult"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+  
+  <xs:element name="SetPartMetadataRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:key"/>
+        <xs:element ref="schemas:value"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="SetPartMetadataResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:part"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+  
+  <xs:element name="DeletePartMetadataRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:key"/>        
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="DeletePartMetadataResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:operationresult"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>    
+  
+  <xs:element name="SetPartStatusRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>        
+        <xs:element ref="schemas:statusname"/>                   
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="SetPartStatusResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:part"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+  
+  <xs:element name="SetPartLocationRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:uri"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="SetPartLocationResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:part"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+  
+  <xs:element name="GetLocationsRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:protocol"/>
+        <xs:element ref="schemas:servername"/>
+        <xs:element ref="schemas:path"/>
+        <xs:element ref="schemas:query"/>
+        <xs:element ref="schemas:statusname"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetLocationsResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:locationlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>   
+  
+  <xs:element name="GetPartByIdRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetPartByIdResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:part"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element> 
+  
+  <xs:element name="GetPartsRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:subproductname"/>
+        <xs:element ref="schemas:revisionname"/>
+        <xs:element ref="schemas:platformname"/>
+        <xs:element ref="schemas:languagecode"/>
+        <xs:element ref="schemas:compilertargetname"/>
+        <xs:element ref="schemas:licensemodelname"/>
+        <xs:element ref="schemas:partnumber"/>        
+        <xs:element ref="schemas:formatname"/>
+        <xs:element ref="schemas:statusname"/>
+        <xs:element ref="schemas:date"/>
+        <xs:element name="keyvalpair" type="schemas:keyvalpair" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetPartsResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:partlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+
+  <xs:element name="AddMessageRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:messagestring"/>
+        <xs:element ref="schemas:datevalid"/>
+        <xs:element ref="schemas:datenullified"/>
+        <xs:element ref="schemas:priority"/>        
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="AddMessageResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="ClearMessageRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:datenullified"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="ClearMessageResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:message"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element> 
+  
+  <xs:element name="GetMessageByIdRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:id"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetMessageByIdResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:message"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>       
+  
+  <xs:element name="GetValidMessagesRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:date"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetValidMessagesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:messagelist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element> 
+  
+  <xs:element name="GetMessageHistoryRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:datevalid"/>
+        <xs:element ref="schemas:datenullified"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetMessageHistoryResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:messagelist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>   
+  
+  <xs:element name="messagelist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="schemas:message"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="constraints">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:productlist"/>
+        <xs:element ref="schemas:versionlist"/>
+        <xs:element ref="schemas:subproductlist"/>
+        <xs:element ref="schemas:platformlist"/>
+        <xs:element ref="schemas:compilertargetlist"/>
+        <xs:element ref="schemas:licensemodellist"/>        
+        <xs:element ref="schemas:formatlist"/>
+        <xs:element ref="schemas:certificationlevellist"/>
+        <xs:element ref="schemas:statuslist"/>
+        <xs:element ref="schemas:languagelist"/>  
+        <xs:element name="dateconstraint" type="xs:string" nillable="true"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+
+  
+  <xs:element name="message">  
+    <xs:complexType mixed="true">
+      <xs:attribute name="id" use="optional" type="xs:integer"/>
+      <xs:attribute name="user" use="optional" type="xs:string"/>
+      <xs:attribute name="priority" use="optional" type="xs:integer"/>
+      <xs:attribute name="datemodified" use="optional" type="xs:string"/>
+      <xs:attribute name="datenullified" use="optional" type="xs:string"/>      
+      <xs:attribute name="datevalid" use="optional" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>  
+  
+  <xs:element name="GetRoleByNameRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:rolename"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetRoleByNameResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:role"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetRoleByIdRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetRoleByIdResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:role"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetRolesRequest">
+    <xs:complexType/>
+  </xs:element>
+  
+  <xs:element name="GetRolesResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:rolelist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetUserRoleByIdRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetUserRoleByIdResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:userrole"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DeleteUserRoleRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:personid"/>
+        <xs:element ref="schemas:productname"/>                
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="DeleteUserRoleResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:operationresult"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="SetUserRoleRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:personid"/>
+        <xs:element ref="schemas:productname"/>  
+        <xs:element ref="schemas:rolename"/>                  
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="SetUserRoleResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:userrole"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetUserRolesRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:userid"/>
+        <xs:element ref="schemas:productname"/>  
+        <xs:element ref="schemas:rolename"/>                  
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetUserRolesResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:userrolelist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="userrole">
+    <xs:complexType>
+      <xs:attribute name="userid" use="required" type="xs:string"/>
+      <xs:attribute name="productname" use="required" type="xs:string"/>
+      <xs:attribute name="rolename" use="required" type="xs:string"/>
+      <xs:attribute name="id" use="required" type="xs:integer"/>      
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="userrolelist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="schemas:userrole" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+  
+  <xs:element name="role">
+    <xs:complexType>      
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute name="description" use="required" type="xs:string"/>
+      <xs:attribute name="id" use="required" type="xs:integer"/>      
+    </xs:complexType>
+  </xs:element>  
+  
+  <xs:element name="rolelist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="schemas:role"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element> 
+  
+  
+  
+  <xs:element name="AuthorizeRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:userid"/>
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:methodname"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="AuthorizeResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:operationresult"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="AuthorizeSetCertLevelRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:userid"/>
+        <xs:element ref="schemas:certlevel"/>
+        <xs:element ref="schemas:id"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="AuthorizeSetCertLevelResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:operationresult"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+
+  <xs:element name="AuthenticateRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="AuthenticateResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:operationresult"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetTargetsRequest">
+    <xs:complexType/>
+  </xs:element>
+
+  <xs:element name="GetTargetsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:targetlist" minOccurs="1" maxOccurs="1"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="targetlist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="target" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="contact">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute name="type" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="contacttype">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="contactlist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="schemas:contact"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="contacttypelist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="schemas:contacttype"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="AddContactRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:contactname"/>
+        <xs:element ref="schemas:contacttypename"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetUsersRequest">
+    <xs:complexType/>
+  </xs:element>
+  
+  <xs:element name="GetUsersResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:userlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetUserByNameRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:userid"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetUserByNameResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element minOccurs="1" maxOccurs="1" ref="schemas:user"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+  
+  <xs:element name="GetUserByIdRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetUserByIdResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element minOccurs="1" maxOccurs="1" ref="schemas:user"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>    
+  
+  <xs:element name="SetAdminRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:admin"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="SetAdminResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:user"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="userlist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="schemas:user"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+  
+  
+  <xs:element name="user">
+    <xs:complexType>
+      <xs:attribute name="obadenetid" use="required" type="xs:string"/>
+      <xs:attribute name="kitnid" use="optional" type="xs:integer"/>
+      <xs:attribute name="id" use="required" type="xs:integer"/>  
+      <xs:attribute name="admin" use="required" type="xs:boolean"/>      
+    </xs:complexType>
+  </xs:element>     
+
+  <xs:element name="AddContactResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetContactsRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:productname"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetContactsResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:contactlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetContactByNameRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:contactname"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+  <xs:element name="GetContactByNameResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:contact"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetContacttypesRequest">
+    <xs:complexType/>
+  </xs:element>
+
+  <xs:element name="GetContacttypesResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:contacttypelist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DeleteContactRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DeleteContactResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:operationresult"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetNewDataRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="1">
+        <xs:element name="OldDataSet" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:attribute name="product" use="required" type="xs:string"/>
+            <xs:attribute name="version" use="optional" type="xs:string"/>
+            <xs:attribute name="target" use="optional" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetNewDataResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="1">
+        <xs:element name="NewDataSet" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:attribute name="productid" use="required" type="xs:integer"/>
+            <xs:attribute name="versionid" use="required" type="xs:integer"/>
+            <xs:attribute name="subproductid" use="required" type="xs:integer"/>
+            <xs:attribute name="compiletargetid" use="required" type="xs:integer"/>
+            <xs:attribute name="licensemodelid" use="required" type="xs:integer"/>
+            <xs:attribute name="formatid" use="required" type="xs:integer"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetOldDataRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="1">
+        <xs:element name="NewDataSet" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:attribute name="productid" use="required" type="xs:integer"/>
+            <xs:attribute name="versionid" use="required" type="xs:integer"/>
+            <xs:attribute name="subproductid" use="required" type="xs:integer"/>
+            <xs:attribute name="compiletargetid" use="required" type="xs:integer"/>
+            <xs:attribute name="licensemodelid" use="required" type="xs:integer"/>
+            <xs:attribute name="formatid" use="required" type="xs:integer"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetOldDataResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="1">
+        <xs:element name="OldDataSet" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:attribute name="product" use="required" type="xs:string"/>
+            <xs:attribute name="version" use="required" type="xs:string"/>
+            <xs:attribute name="target" use="required" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetOldDataByNameRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="1">
+        <xs:element name="NewDataSet" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:attribute name="productname" use="required" type="xs:string"/>
+            <xs:attribute name="versionname" use="required" type="xs:string"/>
+            <xs:attribute name="subproductname" use="required" type="xs:string"/>
+            <xs:attribute name="compiletargetname" use="required" type="xs:string"/>
+            <xs:attribute name="licensemodelname" use="required" type="xs:string"/>
+            <xs:attribute name="formatname" use="required" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetOldDataByNameResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="1">
+        <xs:element name="OldDataSet" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:attribute name="product" use="required" type="xs:string"/>
+            <xs:attribute name="version" use="required" type="xs:string"/>
+            <xs:attribute name="target" use="required" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+
+  <xs:element name="DeleteBuildRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DeleteBuildResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:operationresult"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="AddBuildRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:manifestfile"/>
+        <xs:element ref="schemas:uri"/>
+        <xs:element ref="schemas:certlevel"/>
+        <xs:element ref="schemas:statusname"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="AddBuildResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetBuildByIdRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:buildid"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetBuildByIdResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:build"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetFlatBuildsRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:subproductname"/>  
+        <xs:element ref="schemas:buildname" minOccurs="0"/>        
+        <xs:element ref="schemas:platformname"/>
+        <xs:element ref="schemas:languagecode"/>
+        <xs:element ref="schemas:compilertargetname"/>
+        <xs:element ref="schemas:licensemodelname"/>
+        <xs:element ref="schemas:formatname"/>
+        <xs:element ref="schemas:certlevel"/>
+        <xs:element ref="schemas:statusname"/>
+        <xs:element ref="schemas:date"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetFlatBuildsResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:flatbuildlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetFlatBuildComponentsRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:fetchlanguages"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+  
+  <xs:element name="GetFlatBuildComponentsResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:flatbuildlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+  
+  <xs:element name="GetFlatBuildsUsingRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:fetchlanguages"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetFlatBuildsUsingResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:flatbuildlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>   
+
+  <xs:element name="flatbuildlist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="schemas:flatbuild"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="flatbuild">
+    <xs:complexType>
+      <xs:attribute name="build" use="optional" type="xs:string"/>
+      <xs:attribute name="certlevel" use="required" type="xs:string"/>
+      <xs:attribute name="compilertarget" use="required" type="xs:string"/>
+      <xs:attribute name="date" use="optional" type="xs:string"/>
+      <xs:attribute name="format" use="required" type="xs:string"/>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="language" use="required" type="xs:string"/>
+      <xs:attribute name="licensemodel" use="required" type="xs:string"/>
+      <xs:attribute name="platform" use="required" type="xs:string"/>
+      <xs:attribute name="product" use="required" type="xs:string"/>
+      <xs:attribute name="status" use="optional" type="xs:string"/>
+      <xs:attribute name="version" use="required" type="xs:string"/>
+      <xs:attribute type="xs:string" name="subproduct" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetLatestBuildRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:subproductname"/>
+        <xs:element ref="schemas:buildname"/>
+        <xs:element ref="schemas:platformname"/>
+        <xs:element ref="schemas:languagecode"/>
+        <xs:element ref="schemas:compilertargetname"/>
+        <xs:element ref="schemas:licensemodelname"/>
+        <xs:element ref="schemas:formatname"/>
+        <xs:element ref="schemas:certlevel"/>
+        <xs:element ref="schemas:statusname"/>
+        <xs:element ref="schemas:date"/>
+        <xs:element name="keyvalpair" type="schemas:keyvalpair" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetLatestBuildResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:build"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetBuildsRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:subproductname"/>
+        <xs:element ref="schemas:buildname"/>
+        <xs:element ref="schemas:platformname"/>
+        <xs:element ref="schemas:languagecode"/>
+        <xs:element ref="schemas:compilertargetname"/>
+        <xs:element ref="schemas:licensemodelname"/>
+        <xs:element ref="schemas:formatname"/>
+        <xs:element ref="schemas:certlevel"/>
+        <xs:element ref="schemas:statusname"/>
+        <xs:element ref="schemas:date"/>
+        <xs:element name="keyvalpair" type="schemas:keyvalpair" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetBuildsResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:buildlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetBuildsCountRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:subproductname"/>
+        <xs:element ref="schemas:buildname"/>
+        <xs:element ref="schemas:platformname"/>
+        <xs:element ref="schemas:languagecode"/>
+        <xs:element ref="schemas:compilertargetname"/>
+        <xs:element ref="schemas:licensemodelname"/>
+        <xs:element ref="schemas:formatname"/>
+        <xs:element ref="schemas:certlevel"/>
+        <xs:element ref="schemas:statusname"/>
+        <xs:element ref="schemas:date"/>
+        <xs:element name="keyvalpair" type="schemas:keyvalpair" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetBuildsCountResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element name="buildcount" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+
+  <xs:element name="GetBuildFromProfileRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:profilename"/>
+        <xs:element ref="schemas:component"/>
+        <xs:element ref="schemas:subproductname"/>
+        <xs:element ref="schemas:platformname"/>
+        <xs:element ref="schemas:languagecode"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetBuildFromProfileResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:build"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetFlatBuildFromProfileRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:profilename"/>
+        <xs:element ref="schemas:component"/>
+        <xs:element ref="schemas:subproductname"/>
+        <xs:element ref="schemas:platformname"/>
+        <xs:element ref="schemas:languagecode"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetFlatBuildFromProfileResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:flatbuild"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+
+  <xs:element name="GetBuildsFromProfileRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:profilename"/>
+        <xs:element ref="schemas:component"/>
+        <xs:element ref="schemas:subproductname"/>
+        <xs:element ref="schemas:platformname"/>
+        <xs:element ref="schemas:languagecode"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetBuildsFromProfileResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:buildlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetFlatBuildsFromProfileRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:profilename"/>
+        <xs:element ref="schemas:component"/>
+        <xs:element ref="schemas:subproductname"/>
+        <xs:element ref="schemas:platformname"/>
+        <xs:element ref="schemas:languagecode"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetFlatBuildsFromProfileResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:flatbuildlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  
+  <xs:element name="GetBuildsFromProfileWithComponentRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:profilename"/>
+        <xs:element ref="schemas:component"/>
+        <xs:element ref="schemas:subproductname"/>
+        <xs:element ref="schemas:platformname"/>
+        <xs:element ref="schemas:languagecode"/>
+        <xs:element ref="schemas:filtercomponent"/>
+        <xs:element ref="schemas:buildname"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetBuildsFromProfileWithComponentResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:buildlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+  
+  <xs:element name="GetAllFlatBuildsFromProfileRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:profilename"/>
+        <xs:element ref="schemas:platformname"/>
+        <xs:element ref="schemas:languagecode"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetAllFlatBuildsFromProfileResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:flatbuildlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+
+  <xs:element name="GetAllBuildsFromProfileRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:profilename"/>
+        <xs:element ref="schemas:platformname"/>
+        <xs:element ref="schemas:languagecode"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetAllBuildsFromProfileResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:buildlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetBuildHistoryRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetBuildHistoryResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:buildlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+
+  <xs:element name="GetProductSubproductRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:profilename"/>
+        <xs:element ref="schemas:oldcomponent"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetProductSubproductResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productsubproductpair"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="productsubproductpair">
+    <xs:complexType>
+      <xs:attribute name="product" use="optional" type="xs:string"/>
+      <xs:attribute name="subproduct" use="optional" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetBuildsByLocationRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:protocol"/>
+        <xs:element ref="schemas:servername"/>
+        <xs:element ref="schemas:path"/>
+        <xs:element ref="schemas:query"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetBuildsByLocationResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:buildlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetBuildComponentsRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetBuildComponentsResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:buildlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetBuildsUsingRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetBuildsUsingResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:buildlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element> 
+
+  <xs:element name="AddNoteRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:buildid"/>
+        <xs:element ref="schemas:notetext"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="AddNoteResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:build"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetCertLevelRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:certlevel"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetCertLevelResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:build"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetStatusRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:statusname"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetStatusResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:build"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetLocationRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:uri"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetLocationResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:build"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetMetadataRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:key"/>
+        <xs:element ref="schemas:value"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetMetadataResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:build"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="AddMetadataKeyRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:key"/>
+        <xs:element name="productids" type="xs:string" nillable="true"/>
+        <xs:element name="versionids" type="xs:string" nillable="true"/>
+        <xs:element name="subproductids" type="xs:string" nillable="true"/>
+        <xs:element name="platformids" type="xs:string" nillable="true"/>
+        <xs:element name="licenseids" type="xs:string" nillable="true"/>
+        <xs:element name="compilertargetids" type="xs:string" nillable="true"/>
+        <xs:element name="formatids" type="xs:string" nillable="true"/>
+        <xs:element name="languageids" type="xs:string" nillable="true"/>
+        <xs:element name="statusids" type="xs:string" nillable="true"/>
+        <xs:element name="certlevelids" type="xs:string" nillable="true"/>        
+        <xs:element name="dateconstraint" type="xs:string" nillable="true"/>        
+        <xs:element ref="schemas:ldapcredentials"/>        
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="AddMetadataKeyResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="AddGlobalMetadataKeyRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:key"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="AddGlobalMetadataKeyResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+
+  <xs:element name="GetMetadataKeysRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="1">
+        <xs:element name="id" type="xs:string"/>
+      </xs:sequence>    
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetMetadataKeysResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:metadatakeylist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetMetadataKeyByIdRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:id"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GetMetadataKeyByIdResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:metadatakey"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>    
+  
+  <xs:element name="DeleteMetadataKeyRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="DeleteMetadataKeyResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:operationresult"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+  
+  <xs:element name="DeleteMetadataRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:key"/>        
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="DeleteMetadataResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:operationresult"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>    
+  
+  <xs:element name="DeleteGlobalMetadataKeyRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="DeleteGlobalMetadataKeyResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:operationresult"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>    
+
+  <xs:element name="metadatakeylist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="schemas:metadatakey"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="metadatakey">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:key"/>
+        <xs:element ref="schemas:constraints"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="fileinfo">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element  minOccurs="0" maxOccurs="unbounded" ref="schemas:file"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>    
+  
+  <xs:element name="file">
+    <xs:complexType>
+      <xs:attribute name="filename" use="required" type="xs:string"/>
+      <xs:attribute name="size" use="optional" type="xs:integer"/>
+      <xs:attribute name="md5" use="optional" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>  
+  
+  <xs:element name="partlist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element  minOccurs="0" maxOccurs="unbounded" ref="schemas:part"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+  
+  <xs:element name="part">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element minOccurs="0" ref="schemas:location"/>
+        <xs:element minOccurs="0" ref="schemas:notes"/>
+        <xs:element minOccurs="0" ref="schemas:metadata"/>
+        <xs:element minOccurs="0" ref="schemas:fileinfo"/>        
+      </xs:sequence>
+      <xs:attribute name="revision" use="required" type="xs:string"/>    
+      <xs:attribute name="partnumber" use="required" type="xs:integer"/>      
+      <xs:attribute name="format" use="required" type="xs:string"/>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="buildid" use="optional" type="xs:integer"/>      
+      <xs:attribute name="product" use="required" type="xs:string"/>
+      <xs:attribute name="version" use="optional" type="xs:string"/>
+      <xs:attribute name="subproduct" use="required" type="xs:string"/> 
+      <xs:attribute name="compilertarget" use="required" type="xs:string"/>
+      <xs:attribute name="language" use="optional" type="xs:string"/>
+      <xs:attribute name="licensemodel" use="required" type="xs:string"/>
+      <xs:attribute name="platform" use="required" type="xs:string"/>       
+      <xs:attribute name="user" use="optional" type="xs:string"/>
+      <xs:attribute name="date" use="optional" type="xs:string"/>      
+      <xs:attribute name="datemodified" use="optional" type="xs:string"/>      
+    </xs:complexType>
+  </xs:element>  
+  
+  <xs:element name="locationlist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element  minOccurs="0" maxOccurs="unbounded" ref="schemas:location"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+  
+  <xs:element name="location">
+    <xs:complexType>          
+      <xs:attribute name="path" use="optional" type="xs:string"/>
+      <xs:attribute name="protocol" use="optional" type="xs:string"/>
+      <xs:attribute name="query" use="optional" type="xs:string"/>
+      <xs:attribute name="server" use="optional" type="xs:string"/>
+      <xs:attribute name="status" use="optional" type="xs:string"/>  
+      <xs:attribute name="uri" use="optional" type="xs:string"/>
+      <xs:attribute name="buildid" use="optional" type="xs:integer"/>      
+      <xs:attribute name="partid" use="optional" type="xs:integer"/>   
+      <xs:attribute name="locationid" use="required" type="xs:integer"/>        
+      <xs:attribute name="user" use="optional" type="xs:string"/>
+      <xs:attribute name="date" use="optional" type="xs:string"/>      
+      <xs:attribute name="datemodified" use="optional" type="xs:string"/>              
+    </xs:complexType>
+  </xs:element>  
+  
+  <xs:element name="build">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element minOccurs="0" ref="schemas:location"/>
+        <xs:element minOccurs="0" ref="schemas:sources"/>
+        <xs:element minOccurs="0" ref="schemas:notes"/>
+        <xs:element minOccurs="0" ref="schemas:metadata"/>
+        <xs:element minOccurs="0" ref="schemas:partlist"/>
+        <xs:element minOccurs="0" ref="schemas:fileinfo"/>        
+      </xs:sequence>
+      <xs:attribute name="build" use="optional" type="xs:string"/>
+      <xs:attribute name="certlevel" use="required" type="xs:string"/>
+      <xs:attribute name="compilertarget" use="required" type="xs:string"/>
+      <xs:attribute name="date" use="optional" type="xs:string"/>
+      <xs:attribute name="format" use="required" type="xs:string"/>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="language" use="optional" type="xs:string"/>
+      <xs:attribute name="licensemodel" use="required" type="xs:string"/>
+      <xs:attribute name="platform" use="required" type="xs:string"/>
+      <xs:attribute name="product" use="required" type="xs:string"/>
+      <xs:attribute name="status" use="optional" type="xs:string"/>
+      <xs:attribute name="version" use="required" type="xs:string"/>
+      <xs:attribute type="xs:string" name="subproduct" use="required"/>
+      <xs:attribute name="user" use="optional" type="xs:string"/>
+      <xs:attribute name="datemodified" use="optional" type="xs:string"/>      
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="buildlist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element  minOccurs="0" maxOccurs="unbounded" ref="schemas:build"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <xs:element name="sources">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:source" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="source">
+    <xs:complexType>
+      <xs:attribute name="path" use="optional" type="xs:string"/>
+      <xs:attribute name="protocol" use="optional" type="xs:string"/>
+      <xs:attribute name="query" use="optional" type="xs:string"/>
+      <xs:attribute name="server" use="optional" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="notes">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="schemas:note"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="note">
+    <xs:complexType mixed="true">
+      <xs:attribute name="id" use="optional" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="metadata">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="schemas:item"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="item">
+    <xs:complexType>
+      <xs:attribute name="id" use="optional" type="xs:integer"/>
+      <xs:attribute name="key" use="optional" type="xs:string"/>
+      <xs:attribute name="value" use="optional" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DeleteProfileRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DeleteProfileResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:operationresult"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetProfileDescriptionRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:description"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetProfileDescriptionResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:profile"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetProfileNameRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:name"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetProfileNameResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:profile"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetProfileParentRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetProfileParentResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:profile"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="AddProfileRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:profilename"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="AddProfileResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:profileid"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="CloneProfileRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:profileid"/>
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:profilename"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="CloneProfileResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:profileid"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetProfilesRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetProfilesResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:profiledatalist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetProfilesAndRecordsRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetProfilesAndRecordsResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:profilelist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetProfileByNameRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:profilename"/>
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetProfileByNameResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:profile"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetProfileByIdRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:profileid"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetProfileByIdResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:profile"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetDefaultProfileRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetDefaultProfileResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:profile"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetDefaultProfileRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:profileid"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetDefaultProfileResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:profile"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="profilelist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="schemas:profile"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="profile">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" ref="schemas:profilerecords"/>
+      </xs:sequence>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute name="description" use="optional" type="xs:string"/>
+      <xs:attribute name="parentproduct" use="optional" type="xs:string"/>
+      <xs:attribute name="parentversion" use="optional" type="xs:string"/>
+      <xs:attribute name="product" use="optional" type="xs:string"/>
+      <xs:attribute name="version" use="optional" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="profiledatalist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="schemas:profiledata"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="profiledata">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute name="description" use="optional" type="xs:string"/>
+      <xs:attribute name="parentproduct" use="optional" type="xs:string"/>
+      <xs:attribute name="parentversion" use="optional" type="xs:string"/>
+      <xs:attribute name="product" use="optional" type="xs:string"/>
+      <xs:attribute name="version" use="optional" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="AddPlatformgroupRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:platformgroupname"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="AddPlatformgroupResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DeletePlatformgroupRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DeletePlatformgroupResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:operationresult"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="AddPlatformgroupPlatformRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:platformname"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="AddPlatformgroupPlatformResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DeletePlatformgroupPlatformRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:platformname"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DeletePlatformgroupPlatformResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:operationresult"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetPlatformgroupsRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetPlatformgroupsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:platformgrouplist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+  <xs:element name="platformgrouplist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="schemas:platformgroup"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="platformgroup">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" ref="schemas:platformgrouprecordlist"/>
+      </xs:sequence>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute name="product" use="required" type="xs:string"/>
+      <xs:attribute name="version" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="platformgrouprecordlist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="schemas:platformgrouprecord"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="platformgrouprecord">
+    <xs:complexType>
+      <xs:attribute name="groupid" use="required" type="xs:integer"/>
+      <xs:attribute name="recordid" use="required" type="xs:integer"/>
+      <xs:attribute name="platform" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetPlatformgroupByIdRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:id"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetPlatformgroupByIdResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:platformgroup"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetPlatformgroupByNameRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:platformgroupname"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetPlatformgroupByNameResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:platformgroup"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+  <xs:element name="AddProfilerecordRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:subproductname"/>
+        <xs:element ref="schemas:profileid"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="AddProfilerecordResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DeleteProfilerecordRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DeleteProfilerecordResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:operationresult"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetProfilerecordByNameRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:subproductname"/>
+        <xs:element ref="schemas:profileid"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetProfilerecordByNameResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:profilerecord"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetProfilerecordToLatestRequest">
+    <xs:complexType>
+      <xs:sequence>        
+        <xs:element ref="schemas:profilerecordid"/>
+        <xs:element ref="schemas:certlevel"/>
+        <xs:element ref="schemas:compilertargetname"/>
+        <xs:element ref="schemas:licensemodelname"/>
+        <xs:element ref="schemas:formatname"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetProfilerecordToLatestResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetProfilerecordToBuildRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:profilerecordid"/>
+        <xs:element ref="schemas:buildname"/>
+        <xs:element ref="schemas:compilertargetname"/>
+        <xs:element ref="schemas:licensemodelname"/>
+        <xs:element ref="schemas:formatname"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetProfilerecordToBuildResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetProfilerecordToDefaultRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:profilename"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetProfilerecordToDefaultResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="profilerecords">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="schemas:profilerecord"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="profilerecord">
+    <xs:complexType>
+      <xs:attribute name="build" use="optional" type="xs:string"/>
+      <xs:attribute name="certlevel" use="optional" type="xs:string"/>
+      <xs:attribute name="compiletarget" use="optional" type="xs:string"/>
+      <xs:attribute name="format" use="optional" type="xs:string"/>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="licensemodel" use="optional" type="xs:string"/>
+      <xs:attribute name="parentprofile" use="optional" type="xs:string"/>
+      <xs:attribute name="pickupoption" use="optional" type="xs:string"/>
+      <xs:attribute name="product" use="required" type="xs:string"/>
+      <xs:attribute name="profileid" use="required" type="xs:integer"/>
+      <xs:attribute name="version" use="required" type="xs:string"/>
+      <xs:attribute name="subproduct" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="DeleteProductRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:productid"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DeleteProductResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:operationresult"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetProductDescriptionRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productid"/>
+        <xs:element ref="schemas:description"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetProductDescriptionResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:product"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetProductLinkRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productid"/>
+        <xs:element ref="schemas:link"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetProductLinkResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:product"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetRestrictedRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productid"/>
+        <xs:element ref="schemas:restricted"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="SetRestrictedResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:product"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="SetDeprecatedRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:deprecated"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="SetDeprecatedResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:product"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>   
+  
+  <xs:element name="SetProductSAPCodeRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:sapcode"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="SetProductSAPCodeResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:product"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+  
+  <xs:element name="SetProductWatsonProductRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:watsonproduct"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="SetProductWatsonProductResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:product"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+
+  <xs:element name="SetProductWatsonFamilyRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:watsonfamily"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="SetProductWatsonFamilyResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:product"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetProductNameRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productid"/>
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetProductNameResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:product"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetProductTypeRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productid"/>
+        <xs:element ref="schemas:producttypename"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetProductTypeResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:product"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="AddProductRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:producttypename"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="AddProductResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productid"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="AddSubproductRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:subproductname"/>
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="AddSubproductResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetAllSubproductsRequest">
+    <xs:complexType/>
+  </xs:element>
+
+  <xs:element name="GetAllSubproductsResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:subproductlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetSubproductsRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetSubproductsResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:subproductlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetSubproductByNameRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:subproductname"/>
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetSubproductByNameResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:subproduct"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetSubproductByIdRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetSubproductByIdResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:subproduct"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <xs:element name="SetSubproductDescriptionRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:description"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetSubproductDescriptionResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:subproduct"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+  <xs:element name="SetSubproductNameRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:subproductname"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetSubproductNameResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:subproduct"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DeleteSubproductRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DeleteSubproductResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:operationresult"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="subproduct">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="1">
+        <xs:element ref="schemas:description"/>
+      </xs:sequence>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="subproductlist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="schemas:subproduct"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetProductsRequest">
+    <xs:complexType/>
+  </xs:element>
+
+  <xs:element name="GetProductsResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetProductByNameRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productname"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+  <xs:element name="GetProductByNameResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:product"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetProductByIdRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productid"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetProductByIdResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:product"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+  <xs:element name="product">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="link" type="xs:string" maxOccurs="1" minOccurs="0"/>
+        <xs:element name="description" type="xs:string" maxOccurs="1" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="latestversionid" use="optional" type="xs:integer"/>      
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute name="sapcode" use="optional" type="xs:string"/>   
+      <xs:attribute name="watsonproduct" use="optional" type="xs:string"/>  
+      <xs:attribute name="watsonfamily" use="optional" type="xs:string"/>      
+      <xs:attribute name="type" use="optional" type="xs:string"/>
+      <xs:attribute name="restricted" use="optional" type="xs:boolean"/>
+      <xs:attribute name="deprecated" use="optional" type="xs:boolean"/>      
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="productid" type="xs:integer"/>
+
+  <xs:element name="productlist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="schemas:product"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetProducttypesRequest">
+    <xs:complexType/>
+  </xs:element>
+
+  <xs:element name="GetProducttypesResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:producttypelist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetProducttypeByNameRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:producttypename"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetProducttypeByNameResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:producttype"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetProducttypeByIdRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetProducttypeByIdResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:producttype"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="producttype">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute name="description" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="producttypelist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="schemas:producttype"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetLanguageByIdRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetLanguageByIdResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:language"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetLanguageByNameRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:sequence minOccurs="1" maxOccurs="1">
+          <xs:element ref="schemas:name"/>
+        </xs:sequence>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetLanguageByNameResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:language"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetLanguageByCodeRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:sequence minOccurs="1" maxOccurs="1">
+          <xs:element ref="schemas:languagecode"/>
+        </xs:sequence>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetLanguageByCodeResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:language"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetLanguagesRequest">
+    <xs:complexType/>
+  </xs:element>
+
+  <xs:element name="GetLanguagesResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:languagelist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="language">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute name="code" use="optional" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="languagelist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="schemas:language"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetPlatformByIdRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetPlatformByIdResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:platform"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetPlatformByNameRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:sequence minOccurs="1" maxOccurs="1">
+          <xs:element ref="schemas:name"/>
+        </xs:sequence>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetPlatformByNameResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:platform"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetPlatformsRequest">
+    <xs:complexType/>
+  </xs:element>
+
+  <xs:element name="GetPlatformsResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:platformlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="platform">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute name="description" use="optional" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="platformlist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="schemas:platform"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetFormatByIdRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetFormatByIdResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:format"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetFormatByNameRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:sequence minOccurs="1" maxOccurs="1">
+          <xs:element ref="schemas:name"/>
+        </xs:sequence>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetFormatByNameResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:format"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetFormatsRequest">
+    <xs:complexType/>
+  </xs:element>
+
+  <xs:element name="GetFormatsResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:formatlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="format">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="formatlist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="schemas:format"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetLicenseModelByIdRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetLicenseModelByIdResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:licensemodel"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetLicenseModelByNameRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:sequence minOccurs="1" maxOccurs="1">
+          <xs:element ref="schemas:name"/>
+        </xs:sequence>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetLicenseModelByNameResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:licensemodel"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetLicenseModelsRequest">
+    <xs:complexType/>
+  </xs:element>
+
+  <xs:element name="GetLicenseModelsResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:licensemodellist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="licensemodel">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="licensemodellist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="schemas:licensemodel"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetServerByIdRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetServerByIdResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:server"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetServerByNameRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:sequence minOccurs="1" maxOccurs="1">
+          <xs:element ref="schemas:servername"/>
+        </xs:sequence>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetServerByNameResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:server"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetServersRequest">
+    <xs:complexType/>
+  </xs:element>
+
+  <xs:element name="GetServersResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:serverlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+  <xs:element name="GetStatusByIdRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetStatusByIdResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:status"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetStatusByNameRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:sequence minOccurs="1" maxOccurs="1">
+          <xs:element ref="schemas:statusname"/>
+        </xs:sequence>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetStatusByNameResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:status"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetStatusesRequest">
+    <xs:complexType/>
+  </xs:element>
+
+  <xs:element name="GetStatusesResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:statuslist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetCertificationLevelByIdRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetCertificationLevelByIdResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:certificationlevel"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetCertificationLevelByNameRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:sequence minOccurs="1" maxOccurs="1">
+          <xs:element ref="schemas:name"/>
+        </xs:sequence>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetCertificationLevelByNameResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:certificationlevel"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetCertificationLevelsRequest">
+    <xs:complexType/>
+  </xs:element>
+
+  <xs:element name="GetCertificationLevelsResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:certificationlevellist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetCompilerTargetByIdRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetCompilerTargetByIdResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:compilertarget"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetCompilerTargetByNameRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:sequence minOccurs="1" maxOccurs="1">
+          <xs:element ref="schemas:name"/>
+        </xs:sequence>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetCompilerTargetByNameResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:compilertarget"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetCompilerTargetsRequest">
+    <xs:complexType/>
+  </xs:element>
+
+  <xs:element name="GetCompilerTargetsResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:compilertargetlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="AddVersionRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productname"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="AddVersionResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:versionid"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DeleteVersionRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:versionid"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DeleteVersionResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:operationresult"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetVersionByIdRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:versionid"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetVersionByIdResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:version"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetVersionByNameRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:sequence minOccurs="1" maxOccurs="1">
+          <xs:element ref="schemas:productname"/>
+          <xs:element ref="schemas:versionname"/>
+        </xs:sequence>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetVersionByNameResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:version"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetVersionsRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:productname"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetVersionsResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:versionlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetAllVersionsRequest">
+    <xs:complexType/>
+  </xs:element>
+
+  <xs:element name="GetAllVersionsResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:versionlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetVersionDescriptionRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:versionid"/>
+        <xs:element ref="schemas:description"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetVersionDescriptionResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:version"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetVersionLinkRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:versionid"/>
+        <xs:element ref="schemas:link"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetVersionLinkResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:version"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="SetVersionWatsonVersionRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:id"/>
+        <xs:element ref="schemas:watsonversion"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="SetVersionWatsonVersionResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:version"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+
+  <xs:element name="SetVersionNameRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:versionid"/>
+        <xs:element ref="schemas:versionname"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetVersionNameResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:version"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetVersionCodeNameRequest">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:versionid"/>
+        <xs:element ref="schemas:versioncodename"/>
+        <xs:element ref="schemas:ldapcredentials"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SetVersionCodeNameResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:version"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetPickupOptionsRequest">
+    <xs:complexType/>
+  </xs:element>
+
+  <xs:element name="GetPickupOptionsResponse">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="schemas:pickupoptionlist"/>
+        <xs:element minOccurs="0" ref="schemas:performancedata" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="pickupoptionlist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="schemas:pickupoption"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="pickupoption">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="statuslist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="schemas:status"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+  <xs:element name="serverlist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="schemas:server"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="server">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute name="webname" use="optional" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="versionlist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="schemas:version"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="certificationlevellist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0"  maxOccurs="unbounded" ref="schemas:certificationlevel"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="compilertargetlist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0"  maxOccurs="unbounded" ref="schemas:compilertarget"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="certificationlevel">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute name="color" use="optional" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="status">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute name="isavailable" use="optional" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="compilertarget">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="version">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="schemas:link"/>
+        <xs:element ref="schemas:description"/>
+      </xs:sequence>
+      <xs:attribute name="codename" use="optional" type="xs:string"/>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute name="watsonversion" use="optional" type="xs:string"/>      
+      <xs:attribute name="product" use="required" type="xs:string"/>
+      <xs:attribute name="unified_id" use="optional" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ldapcredentials">
+    <xs:complexType>
+      <xs:sequence maxOccurs="1" minOccurs="1">
+        <xs:element ref="schemas:userid"/>
+        <xs:element ref="schemas:password"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="performancedata">
+    <xs:complexType>
+      <xs:sequence maxOccurs="1" minOccurs="0">
+        <xs:element ref="schemas:response"/>
+        <xs:element ref="schemas:meanresponse"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>  
+
+  <xs:element name="admin" type="xs:boolean"/>
+  <xs:element name="buildid" type="xs:integer"/> 
+  <xs:element name="buildname" type="xs:string"/>     
+  <xs:element name="certlevel" type="xs:string"/>  
+  <xs:element name="component" type="xs:string"/>
+  <xs:element name="contactname" type="xs:string"/>
+  <xs:element name="contacttypename" type="xs:string"/>
+  <xs:element name="compilertargetname" type="xs:string"/>   
+  <xs:element name="datevalid" type="xs:string" nillable="true"/>
+  <xs:element name="datenullified" type="xs:string" nillable="true"/>
+  <xs:element name="date" type="xs:string"/>
+  <xs:element name="defaultid" type="xs:integer"/>
+  <xs:element name="description" type="xs:string" nillable="true"/>
+  <xs:element name="deprecated" type="xs:boolean"/>  
+  <xs:element name="fetchlanguages" type="xs:boolean"/>  
+  <xs:element name="filtercomponent" type="xs:string"/>  
+  <xs:element name="formatname" type="xs:string"/>
+  <xs:element name="id" type="xs:integer"/>  
+  <xs:element name="key" type="xs:string"/>  
+  <xs:element name="link" type="xs:string" nillable="true" />  
+  <xs:element name="languagecode" type="xs:string"/>
+  <xs:element name="licensemodelname" type="xs:string"/>
+  <xs:element name="manifestfile" type="xs:string"/> 
+  <xs:element name="meanresponse" type="xs:decimal"/>  
+  <xs:element name="methodname" type="xs:string" nillable="true"/>  
+  <xs:element name="messagestring" type="xs:string" nillable="true"/>  
+  <xs:element name="name" type="xs:string"/>        
+  <xs:element name="notetext" type="xs:string"/>    
+  <xs:element name="oldcomponent" type="xs:string"/>    
+  <xs:element name="operationresult" type="xs:boolean"/>
+  <xs:element name="partnumber" type="xs:string" nillable="true"/>
+  <xs:element name="parentproduct" type="xs:string"/> 
+  <xs:element name="password" type="xs:string"/>
+  <xs:element name="path" type="xs:string"/>   
+  <xs:element name="personid" type="xs:string" nillable="true"/>     
+  <xs:element name="pickup" type="xs:string"/>
+  <xs:element name="pickupinfo" type="xs:string"/>  
+  <xs:element name="platformname" type="xs:string"/> 
+  <xs:element name="priority" type="xs:integer"/>  
+  <xs:element name="profileid" type="xs:integer"/>  
+  <xs:element name="profilerecordid" type="xs:integer"/>  
+  <xs:element name="profilename" type="xs:string"/>  
+  <xs:element name="protocol" type="xs:string"/>
+  <xs:element name="productname" type="xs:string" nillable="true"/>
+  <xs:element name="platformgroupname" type="xs:string" nillable="true"/>
+  <xs:element name="producttypename" type="xs:string" nillable="true"/>
+  <xs:element name="query" type="xs:string"/>  
+  <xs:element name="response" type="xs:integer"/>  
+  <xs:element name="restricted" type="xs:boolean"/>   
+  <xs:element name="revisionname" type="xs:string"/>    
+  <xs:element name="rolename" type="xs:string" nillable="true"/> 
+  <xs:element name="sapcode" type="xs:string"/>  
+  <xs:element name="servername" type="xs:string"/>  
+  <xs:element name="statusname" type="xs:string"/>  
+  <xs:element name="subproductname" type="xs:string" nillable="true"/>
+  <xs:element name="target" type="xs:string"/> 
+  <xs:element name="uri" type="xs:string" nillable="true"/>  
+  <xs:element name="userid" type="xs:string"/>    
+  <xs:element name="value" type="xs:string"/>  
+  <xs:element name="versioncodename" type="xs:string" nillable="true"/>  
+  <xs:element name="versionname" type="xs:string" nillable="true"/>  
+  <xs:element name="versionid" type="xs:integer"/>
+  <xs:element name="watsonfamily" type="xs:string"/>  
+  <xs:element name="watsonproduct" type="xs:string"/>
+  <xs:element name="watsonversion" type="xs:string"/>
+  
+  <xs:simpleType name="keyvalpair">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="(\S+=\S+)*(:\S+=\S+)*"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>

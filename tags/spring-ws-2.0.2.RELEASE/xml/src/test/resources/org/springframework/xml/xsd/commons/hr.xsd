@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:hr="http://mycompany.com/hr/schemas"
+        xmlns:hrh="http://mycompany.com/hr/schemas/holiday"
+        elementFormDefault="qualified"
+        targetNamespace="http://mycompany.com/hr/schemas">
+
+    <xs:import namespace="http://mycompany.com/hr/schemas/holiday" schemaLocation="holiday.xsd"/>
+    <xs:include schemaLocation="employee.xsd"/>
+    <xs:element name="HolidayRequest">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="Holiday" type="hrh:HolidayType"/>
+                <xs:element name="Employee" type="hr:EmployeeType"/>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:sws="http://www.springframework.org/schema/web-services"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services.xsd">
+
+    <sws:interceptors>
+        <bean class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor"/>
+        <ref bean="externalGlobalInterceptor"/>
+        <sws:payloadRoot namespaceUri="http://www.springframework.org/spring-ws">
+            <bean class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor"/>
+            <ref bean="externalPayloadRootInterceptor"/>
+            <bean class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor"/>
+        </sws:payloadRoot>
+        <sws:soapAction value="mySoapAction">
+            <bean class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor"/>
+            <ref local="externalSoapActionInterceptor"/>
+            <bean class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor"/>
+        </sws:soapAction>
+    </sws:interceptors>
+
+    <bean id="externalGlobalInterceptor" class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor"/>
+    <bean id="externalPayloadRootInterceptor" class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor"/>
+    <bean id="externalSoapActionInterceptor" class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor"/>
+
+</beans>
+
+
