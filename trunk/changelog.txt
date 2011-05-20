@@ -2,6 +2,20 @@ SPRING WEB SERVICES CHANGELOG
 =============================
 http://www.springframework.org/spring-ws
 
+Changes in version 2.0.2.RELEASE
+----------------------------------
+
+** Bug
+    * [SWS-702] - sws:annotation-driven does not pick up @Endpoint annotations on classes that are JDK proxies
+    * [SWS-705] - OSGi import of org.springframework.security.authentication seems to be the wrong version
+    * [SWS-708] - PayloadValidatingInterceptor errors not clearing SecurityContextHolder 
+
+** Improvement
+    * [SWS-706] - Jaxp13XPathTemplate should support StreamSources with only a systemId if it's a valid URL
+
+** New Feature
+    * [SWS-662] - Support for UriEndpointMapping in server-side test
+
 Changes in version 2.0.1.RELEASE
 ----------------------------------
 
