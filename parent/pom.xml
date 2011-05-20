@@ -29,7 +29,7 @@
         <url>https://fisheye.springframework.org/browse/spring-ws/trunk</url>
     </scm>
     <properties>
-        <osgi.version>2.0.1.RELEASE</osgi.version>
+        <osgi.version>2.0.2.RELEASE</osgi.version>
         <osgi.range>"${osgi.version:[=.=.=, =.=.+1)}"</osgi.range>
         <spring.framework.version>3.0.5.RELEASE</spring.framework.version>
         <spring.framework.osgi.range>"[3.0.5, 4.0.0)"</spring.framework.osgi.range>
