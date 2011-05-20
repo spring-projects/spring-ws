@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+
+    <description>
+        This application context contains the WS-Security and Spring Security beans.
+    </description>
+
+    <security:global-method-security secured-annotations="enabled"/>
+
+    <security:authentication-manager>
+        <security:authentication-provider user-service-ref="securityService"/>
+    </security:authentication-manager>
+
+    <bean id="securityService"
+          class="org.springframework.ws.samples.airline.security.SpringFrequentFlyerSecurityService">
+        <description>
+            A security service used to obtain Frequent Flyer information.
+        </description>
+    </bean>
+
+
+</beans>

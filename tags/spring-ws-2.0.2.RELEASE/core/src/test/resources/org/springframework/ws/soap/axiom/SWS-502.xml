@@ -1,0 +1,15 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Body>
+        <ns1:sendMessageResponse soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns1="urn:Sole">
+            <sendMessageReturn xsi:type="soapenc:string" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+                <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+                    <PDresponse>
+                        <isStatusOK>true</isStatusOK>
+                        <status>0</status>
+                        <payLoad><![CDATA[<?xml version="1.0" encoding="UTF-8"?><response>ok</response>]]]]>><![CDATA[</payLoad>
+                        </PDresponse>]]>
+            </sendMessageReturn>
+        </ns1:sendMessageResponse>
+    </soapenv:Body>
+</soapenv:Envelope>
