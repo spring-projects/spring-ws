@@ -163,7 +163,7 @@
                                     <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                                 </manifest>
                                 <manifestEntries>
-                                    <Spring-WS-Version>${pom.version}</Spring-WS-Version>
+                                    <Spring-WS-Version>${project.version}</Spring-WS-Version>
                                 </manifestEntries>
                             </archive>
                             <descriptors>
@@ -183,7 +183,7 @@
                                     <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                                 </manifest>
                                 <manifestEntries>
-                                    <Spring-WS-Version>${pom.version}</Spring-WS-Version>
+                                    <Spring-WS-Version>${project.version}</Spring-WS-Version>
                                 </manifestEntries>
                             </archive>
                             <descriptors>
