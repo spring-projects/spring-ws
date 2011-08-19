@@ -11,14 +11,6 @@
    <packaging>war</packaging>
    <name>Spring WS MTOM Sample - Server</name>
    <description>This sample shows how to use MTOM and JAXB2.</description>
-   <pluginRepositories>
-       <pluginRepository>
-           <id>java.net</id>
-           <name>Java.net Repository for Maven2</name>
-           <url>http://download.java.net/maven/1/</url>
-           <layout>legacy</layout>
-       </pluginRepository>
-   </pluginRepositories>   
     <profiles>
         <profile>
             <id>jdk15</id>
