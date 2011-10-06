@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -174,15 +174,40 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
         }
     }
 
-    private Marshaller createMarshaller(Class<?> clazz) throws JAXBException {
-        JAXBContext jaxbContext = getJaxbContext(clazz);
+    /**
+     * Creates a new {@link Marshaller} to be used for marshalling objects to XML. Defaults to
+     * {@link javax.xml.bind.JAXBContext#createMarshaller()}, but can be overridden in subclasses for further
+     * customization.
+     *
+     * @param jaxbContext the JAXB context to create a marshaller for
+     * @return the marshaller
+     * @throws JAXBException in case of JAXB errors
+     */
+    protected Marshaller createMarshaller(JAXBContext jaxbContext) throws JAXBException {
         return jaxbContext.createMarshaller();
     }
 
-    private Unmarshaller createUnmarshaller(Class<?> clazz) throws JAXBException {
-        JAXBContext jaxbContext = getJaxbContext(clazz);
+    private Marshaller createMarshaller(Class<?> clazz) throws JAXBException {
+        return createMarshaller(getJaxbContext(clazz));
+    }
+
+    /**
+     * Creates a new {@link Unmarshaller} to be used for unmarshalling XML to objects. Defaults to
+     * {@link javax.xml.bind.JAXBContext#createUnmarshaller()}, but can be overridden in subclasses for further
+     * customization.
+     *
+     * @param jaxbContext the JAXB context to create a unmarshaller for
+     * @return the unmarshaller
+     * @throws JAXBException in case of JAXB errors
+     */
+    protected Unmarshaller createUnmarshaller(JAXBContext jaxbContext) throws JAXBException {
         return jaxbContext.createUnmarshaller();
     }
+
+    private Unmarshaller createUnmarshaller(Class<?> clazz) throws JAXBException {
+        return createUnmarshaller(getJaxbContext(clazz));
+    }
+
 
     private JAXBContext getJaxbContext(Class<?> clazz) throws JAXBException {
         Assert.notNull(clazz, "'clazz' must not be null");
