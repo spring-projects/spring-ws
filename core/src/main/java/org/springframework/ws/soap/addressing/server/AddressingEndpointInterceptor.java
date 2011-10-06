@@ -35,7 +35,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * {@link SoapEndpointInterceptor} implementation that deals with WS-Addressing headers. Stateful, and instatiated by
+ * {@link SoapEndpointInterceptor} implementation that deals with WS-Addressing headers. Stateful, and instantiated by
  * the {@link AbstractAddressingEndpointMapping}.
  *
  * @author Arjen Poutsma

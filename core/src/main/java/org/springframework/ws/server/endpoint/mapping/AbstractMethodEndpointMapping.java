@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,7 +34,7 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
  * <p/>
  * Subclasses typically implement {@link org.springframework.beans.factory.config.BeanPostProcessor} to look for beans
  * that qualify as endpoint. The methods of this bean are then registered under a specific key with {@link
- * #registerEndpoint(String,MethodEndpoint)}.
+ * #registerEndpoint(Object, MethodEndpoint)}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -104,7 +104,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
     /**
      * Helper method that registers the methods of the given bean. This method iterates over the methods of the bean,
      * and calls {@link #getLookupKeyForMethod(Method)} for each. If this returns a string, the method is registered
-     * using {@link #registerEndpoint(T,MethodEndpoint)}.
+     * using {@link #registerEndpoint(Object, MethodEndpoint)}.
      *
      * @see #getLookupKeyForMethod(Method)
      */
@@ -125,7 +125,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
     /**
      * Helper method that registers the methods of the given class. This method iterates over the methods of the class,
      * and calls {@link #getLookupKeyForMethod(Method)} for each. If this returns a string, the method is registered
-     * using {@link #registerEndpoint(String,MethodEndpoint)}.
+     * using {@link #registerEndpoint(Object, MethodEndpoint)}.
      *
      * @see #getLookupKeyForMethod(Method)
      */
