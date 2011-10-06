@@ -140,6 +140,46 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
         initDefaultStrategies();
     }
 
+    /**
+     * Creates a new <code>WebServiceTemplate</code> with the given marshaller. If the given {@link
+     * Marshaller} also implements the {@link Unmarshaller} interface, it is used for both marshalling and
+     * unmarshalling. Otherwise, an exception is thrown.
+     * <p/>
+     * Note that all {@link Marshaller} implementations in Spring also implement the {@link Unmarshaller} interface,
+     * so that you can safely use this constructor.
+     *
+     * @param marshaller object used as marshaller and unmarshaller
+     * @throws IllegalArgumentException when <code>marshaller</code> does not implement the {@link Unmarshaller}
+     *                                  interface
+     * @since 2.0.3
+     */
+    public WebServiceTemplate(Marshaller marshaller) {
+        Assert.notNull(marshaller, "marshaller must not be null");
+        if (!(marshaller instanceof Unmarshaller)) {
+            throw new IllegalArgumentException("Marshaller [" + marshaller + "] does not implement the Unmarshaller " +
+                    "interface. Please set an Unmarshaller explicitly by using the " +
+                    "WebServiceTemplate(Marshaller, Unmarshaller) constructor.");
+        }
+        else {
+            this.setMarshaller(marshaller);
+            this.setUnmarshaller((Unmarshaller) marshaller);
+        }
+    }
+
+    /**
+     * Creates a new <code>MarshallingMethodEndpointAdapter</code> with the given marshaller and unmarshaller.
+     *
+     * @param marshaller   the marshaller to use
+     * @param unmarshaller the unmarshaller to use
+     * @since 2.0.3
+     */
+    public WebServiceTemplate(Marshaller marshaller, Unmarshaller unmarshaller) {
+        Assert.notNull(marshaller, "marshaller must not be null");
+        Assert.notNull(unmarshaller, "unmarshaller must not be null");
+        this.setMarshaller(marshaller);
+        this.setUnmarshaller(unmarshaller);
+    }
+
     /** Returns the default URI to be used on operations that do not have a URI parameter. */
     public String getDefaultUri() {
         if (destinationProvider != null) {
