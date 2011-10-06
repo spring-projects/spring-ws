@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -75,7 +75,7 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
      * Marshaller} also implements the {@link Unmarshaller} interface, it is used for both marshalling and
      * unmarshalling. Otherwise, an exception is thrown.
      * <p/>
-     * Note that all {@link Marshaller} implementations in Spring-WS also implement the {@link Unmarshaller} interface,
+     * Note that all {@link Marshaller} implementations in Spring also implement the {@link Unmarshaller} interface,
      * so that you can safely use this constructor.
      *
      * @param marshaller object used as marshaller and unmarshaller
@@ -86,7 +86,7 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
         Assert.notNull(marshaller, "marshaller must not be null");
         if (!(marshaller instanceof Unmarshaller)) {
             throw new IllegalArgumentException("Marshaller [" + marshaller + "] does not implement the Unmarshaller " +
-                    "interface. Please set an Unmarshaller explicitely by using the " +
+                    "interface. Please set an Unmarshaller explicitly by using the " +
                     "MarshallingMethodEndpointAdapter(Marshaller, Unmarshaller) constructor.");
         }
         else {
