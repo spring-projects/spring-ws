@@ -16,6 +16,8 @@
 
 package org.springframework.ws.config;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.context.ApplicationContext;
@@ -24,22 +26,16 @@ import org.springframework.ws.server.endpoint.interceptor.DelegatingSmartEndpoin
 import org.springframework.ws.soap.server.endpoint.interceptor.PayloadRootSmartSoapEndpointInterceptor;
 import org.springframework.ws.soap.server.endpoint.interceptor.SoapActionSmartEndpointInterceptor;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class InterceptorsBeanDefinitionParserTest {
 
-    private ApplicationContext applicationContext;
-
-    @Before
-    public void setUp() throws Exception {
-        applicationContext = new ClassPathXmlApplicationContext("interceptorsBeanDefinitionParserTest.xml", getClass());
-    }
-
     @Test
     public void namespace() throws Exception {
+        ApplicationContext applicationContext =
+                new ClassPathXmlApplicationContext("interceptorsBeanDefinitionParserTest.xml", getClass());
         Map<String, ?> result = applicationContext.getBeansOfType(DelegatingSmartEndpointInterceptor.class);
         assertEquals("no smart interceptors found", 8, result.size());
 
@@ -48,6 +44,22 @@ public class InterceptorsBeanDefinitionParserTest {
 
         result = applicationContext.getBeansOfType(SoapActionSmartEndpointInterceptor.class);
         assertEquals("no interceptors found", 3, result.size());
+    }
+
+    @Test
+    public void ordering() throws Exception {
+        ApplicationContext applicationContext =
+                new ClassPathXmlApplicationContext("interceptorsBeanDefinitionParserOrderTest.xml", getClass());
+
+        List<DelegatingSmartEndpointInterceptor> interceptors = new ArrayList<DelegatingSmartEndpointInterceptor>(
+                applicationContext.getBeansOfType(DelegatingSmartEndpointInterceptor.class).values());
+        assertEquals("not enough smart interceptors found", 6, interceptors.size());
+
+        for (int i = 0; i < interceptors.size(); i++) {
+            DelegatingSmartEndpointInterceptor delegatingInterceptor = interceptors.get(i);
+            MyInterceptor interceptor = (MyInterceptor) delegatingInterceptor.getDelegate();
+            assertEquals("Invalid ordering found for [" + delegatingInterceptor + "]", i, interceptor.getOrder());
+        }
     }
 
 }
