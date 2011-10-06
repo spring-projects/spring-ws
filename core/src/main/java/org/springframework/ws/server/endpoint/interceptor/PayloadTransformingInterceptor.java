@@ -133,7 +133,7 @@ public class PayloadTransformingInterceptor extends TransformerObjectSupport
         if (requestXslt == null && responseXslt == null) {
             throw new IllegalArgumentException("Setting either 'requestXslt' or 'responseXslt' is required");
         }
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        TransformerFactory transformerFactory = getTransformerFactory();
         XMLReader xmlReader = XMLReaderFactory.createXMLReader();
         xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
         if (requestXslt != null) {
