@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -96,7 +96,7 @@ public interface WebServiceOperations {
      * Sends a web service message that contains the given payload, marshalled by the configured
      * <code>Marshaller</code>. Returns the unmarshalled payload of the response message, if any.
      * <p/>
-     * This will only work with a default specified!
+     * This will only work with a default uri specified!
      *
      * @param requestPayload the object to marshal into the request message payload
      * @return the unmarshalled payload of the response message, or <code>null</code> if no response is given
@@ -127,7 +127,7 @@ public interface WebServiceOperations {
      * <code>Marshaller</code>. Returns the unmarshalled payload of the response message, if any. The given callback
      * allows changing of the request message after the payload has been marshalled to it.
      * <p/>
-     * This will only work with a default specified!
+     * This will only work with a default uri specified!
      *
      * @param requestPayload  the object to marshal into the request message payload
      * @param requestCallback callback to change message, can be <code>null</code>
@@ -165,7 +165,7 @@ public interface WebServiceOperations {
      * Sends a web service message that contains the given payload, reading the result with a
      * <code>SourceExtractor</code>.
      * <p/>
-     * This will only work with a default specified!
+     * This will only work with a default uri specified!
      *
      * @param requestPayload    the payload of the request message
      * @param responseExtractor object that will extract results
