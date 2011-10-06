@@ -1,11 +1,11 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -38,7 +38,7 @@ import org.springframework.ws.transport.support.SimpleWebServiceMessageReceiverO
  */
 public class JmsMessageReceiver extends SimpleWebServiceMessageReceiverObjectSupport {
 
-    /** Default encoding used to read fromn and write to {@link TextMessage} messages. */
+    /** Default encoding used to read from and write to {@link TextMessage} messages. */
     public static final String DEFAULT_TEXT_MESSAGE_ENCODING = "UTF-8";
 
     private String textMessageEncoding = DEFAULT_TEXT_MESSAGE_ENCODING;
