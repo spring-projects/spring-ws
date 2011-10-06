@@ -529,7 +529,7 @@
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-core</artifactId>
-                <version>3.0.4.RELEASE</version>
+                <version>3.0.7.RELEASE</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.springframework</groupId>
@@ -540,7 +540,7 @@
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-core</artifactId>
-                <version>3.0.4.RELEASE</version>
+                <version>3.0.7.RELEASE</version>
                 <classifier>tests</classifier>
                 <exclusions>
                     <exclusion>
@@ -548,11 +548,6 @@
                         <artifactId>spring-support</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-config</artifactId>
-                <version>3.0.4.RELEASE</version>
             </dependency>
             <!-- X.509 dependencies -->
             <dependency>
