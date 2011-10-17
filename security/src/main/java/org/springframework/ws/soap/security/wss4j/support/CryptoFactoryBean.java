@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,13 +16,13 @@
 
 package org.springframework.ws.soap.security.wss4j.support;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 
@@ -67,7 +67,7 @@ public class CryptoFactoryBean implements FactoryBean<Crypto>, BeanClassLoaderAw
      * Sets the {@link org.apache.ws.security.components.crypto.Crypto} provider name. Defaults to {@link
      * org.apache.ws.security.components.crypto.Merlin}.
      * <p/>
-     * This property maps to the WSS4J <code>org.apache.ws.security.crypto.provider</code> property.
+     * This property maps to the WSS4J {@code org.apache.ws.security.crypto.provider} property.
      *
      * @param cryptoProviderClass the crypto provider class
      */
@@ -79,20 +79,35 @@ public class CryptoFactoryBean implements FactoryBean<Crypto>, BeanClassLoaderAw
      * Sets the location of the key store to be loaded in the {@link org.apache.ws.security.components.crypto.Crypto}
      * instance.
      * <p/>
-     * This property maps to the WSS4J <code>org.apache.ws.security.crypto.merlin.file</code> property.
+     * This property maps to the WSS4J {@code org.apache.ws.security.crypto.merlin.file} property.
      *
      * @param location the key store location
      * @throws java.io.IOException when the resource cannot be opened
      */
     public void setKeyStoreLocation(Resource location) throws IOException {
-        File keyStoreFile = location.getFile();
-        this.configuration.setProperty("org.apache.ws.security.crypto.merlin.file", keyStoreFile.getAbsolutePath());
+        String resourcePath = getResourcePath(location);
+        this.configuration.setProperty("org.apache.ws.security.crypto.merlin.file", resourcePath);
+    }
+
+    private String getResourcePath(Resource resource) throws IOException {
+        try {
+            return resource.getFile().getAbsolutePath();
+        }
+        catch (IOException ex) {
+            if (resource instanceof ClassPathResource) {
+                ClassPathResource classPathResource = (ClassPathResource) resource;
+                return classPathResource.getPath();
+            }
+            else {
+                throw ex;
+            }
+        }
     }
 
     /**
      * Sets the key store provider.
      * <p/>
-     * This property maps to the WSS4J <code>org.apache.ws.security.crypto.merlin.keystore.provider</code> property.
+     * This property maps to the WSS4J {@code org.apache.ws.security.crypto.merlin.keystore.provider} property.
      *
      * @param provider the key store provider
      */
@@ -101,9 +116,9 @@ public class CryptoFactoryBean implements FactoryBean<Crypto>, BeanClassLoaderAw
     }
 
     /**
-     * Sets the key store password. Defaults to <code>security</code>.
+     * Sets the key store password. Defaults to {@code security}.
      * <p/>
-     * This property maps to the WSS4J <code>org.apache.ws.security.crypto.merlin.keystore.password</code> property.
+     * This property maps to the WSS4J {@code org.apache.ws.security.crypto.merlin.keystore.password} property.
      *
      * @param password the key store password
      */
@@ -114,7 +129,7 @@ public class CryptoFactoryBean implements FactoryBean<Crypto>, BeanClassLoaderAw
     /**
      * Sets the key store type. Defaults to {@link java.security.KeyStore#getDefaultType()}.
      * <p/>
-     * This property maps to the WSS4J <code>org.apache.ws.security.crypto.merlin.keystore.type</code> property.
+     * This property maps to the WSS4J {@code org.apache.ws.security.crypto.merlin.keystore.type} property.
      *
      * @param type the key store type
      */
@@ -123,12 +138,12 @@ public class CryptoFactoryBean implements FactoryBean<Crypto>, BeanClassLoaderAw
     }
 
     /**
-     * Sets the trust store password. Defaults to <code>changeit</code>.
+     * Sets the trust store password. Defaults to {@code changeit}.
      * <p/>
-     * WSS4J crypto uses the standard J2SE trust store, i.e. <code>$JAVA_HOME/lib/security/cacerts</code>.
+     * WSS4J crypto uses the standard J2SE trust store, i.e. {@code $JAVA_HOME/lib/security/cacerts}.
      * <p/>
      * <p/>
-     * This property maps to the WSS4J <code>org.apache.ws.security.crypto.merlin.cacerts.password</code> property.
+     * This property maps to the WSS4J {@code org.apache.ws.security.crypto.merlin.cacerts.password} property.
      *
      * @param password the trust store password
      */
@@ -141,7 +156,7 @@ public class CryptoFactoryBean implements FactoryBean<Crypto>, BeanClassLoaderAw
      * certificate that is used for signature and encryption. This alias corresponds to the certificate that should be
      * used whenever KeyInfo is not present in a signed or an encrypted message.
      * <p/>
-     * This property maps to the WSS4J <code>org.apache.ws.security.crypto.merlin.keystore.alias</code> property.
+     * This property maps to the WSS4J {@code org.apache.ws.security.crypto.merlin.keystore.alias} property.
      *
      * @param defaultX509Alias alias name of the default X509 certificate
      */
