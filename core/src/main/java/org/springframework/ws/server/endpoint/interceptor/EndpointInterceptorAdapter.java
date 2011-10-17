@@ -63,13 +63,13 @@ public class EndpointInterceptorAdapter implements EndpointInterceptor {
      *
      * @return <code>true</code>
      */
-    public boolean handleFault(MessageContext messageContext, Object endpoint) {
+    public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
         return true;
     }
 
     /**
      * Does nothing by default.
      */
-    public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
+    public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) throws Exception {
     }
 }
