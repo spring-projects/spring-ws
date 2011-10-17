@@ -88,6 +88,7 @@ public interface SoapHeader extends SoapElement {
      * @return an iterator over all the header elements
      * @throws SoapHeaderException if the header cannot be returned
      * @see SoapHeaderElement
+     * @since 2.0.3
      */
     Iterator<SoapHeaderElement> examineHeaderElements(QName name) throws SoapHeaderException;
 
