@@ -23,15 +23,15 @@ import org.springframework.ws.context.MessageContext;
  * existing or custom interceptors for certain groups of endpoints, to add common preprocessing behavior without needing
  * to modify each endpoint implementation.
  * <p/>
- * An <code>EndpointInterceptor</code> gets called before the appropriate {@link EndpointAdapter} triggers the
+ * An {@code EndpointInterceptor} gets called before the appropriate {@link EndpointAdapter} triggers the
  * invocation of the endpoint itself. This mechanism can be used for a large field of preprocessing aspects, e.g. for
  * authorization checks, or message header checks. Its main purpose is to allow for factoring out repetitive endpoint
  * code.
  * <p/>
  * Typically an interceptor chain is defined per {@link EndpointMapping} bean, sharing its granularity. To be able to
  * apply a certain interceptor chain to a group of handlers, one needs to map the desired handlers via one
- * <code>EndpointMapping</code> bean. The interceptors themselves are defined as beans in the application context,
- * referenced by the mapping bean definition via its <code>interceptors</code> property (in XML: a &lt;list&gt; of
+ * {@code EndpointMapping} bean. The interceptors themselves are defined as beans in the application context,
+ * referenced by the mapping bean definition via its {@code interceptors} property (in XML: a &lt;list&gt; of
  * &lt;ref&gt;).
  *
  * @author Arjen Poutsma
@@ -52,7 +52,7 @@ public interface EndpointInterceptor {
      *
      * @param messageContext contains the incoming request message
      * @param endpoint       chosen endpoint to invoke
-     * @return <code>true</code> to continue processing of the request interceptor chain; <code>false</code> to indicate
+     * @return {@code true} to continue processing of the request interceptor chain; {@code false} to indicate
      *         blocking of the request endpoint chain, <em>without invoking the endpoint</em>
      * @throws Exception in case of errors
      * @see MessageContext#getRequest()
@@ -71,7 +71,7 @@ public interface EndpointInterceptor {
      *
      * @param messageContext contains both request and response messages
      * @param endpoint       chosen endpoint to invoke
-     * @return <code>true</code> to continue processing of the reponse interceptor chain; <code>false</code> to indicate
+     * @return {@code true} to continue processing of the response interceptor chain; {@code false} to indicate
      *         blocking of the response endpoint chain.
      * @throws Exception in case of errors
      * @see MessageContext#getRequest()
@@ -92,10 +92,25 @@ public interface EndpointInterceptor {
      *
      * @param messageContext contains both request and response messages, the response should contains a Fault
      * @param endpoint       chosen endpoint to invoke
-     * @return <code>true</code> to continue processing of the reponse interceptor chain; <code>false</code> to indicate
+     * @return {@code true} to continue processing of the response interceptor chain; {@code false} to indicate
      *         blocking of the response handler chain.
      */
     boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception;
 
-    void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex);
+    /**
+     * Callback after completion of request and response (fault) processing. Will be called on any outcome of endpoint
+     * invocation, thus allows for proper resource cleanup.
+     * <p/>
+     * Note: Will only be called if this interceptor's {@link #handleRequest}  method has successfully completed.
+     * <p/>
+     * As with the {@link #handleResponse} method, the method will be invoked on each interceptor in the chain in
+     * reverse order, so the first interceptor will be the last to be invoked.
+     *
+     * @param messageContext contains both request and response messages, the response should contains a Fault
+     * @param endpoint       chosen endpoint to invoke
+     * @param ex exception thrown on handler execution, if any
+     * @throws Exception in case of errors
+     * @since 2.0.2
+     */
+    void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) throws Exception;
 }
