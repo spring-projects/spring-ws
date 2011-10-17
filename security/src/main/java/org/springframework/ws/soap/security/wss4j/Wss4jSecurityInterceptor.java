@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -38,6 +38,7 @@ import org.springframework.ws.soap.security.callback.CleanupCallback;
 import org.springframework.ws.soap.security.wss4j.callback.UsernameTokenPrincipalCallback;
 
 import org.apache.ws.security.WSConstants;
+import org.apache.ws.security.WSSConfig;
 import org.apache.ws.security.WSSecurityEngine;
 import org.apache.ws.security.WSSecurityEngineResult;
 import org.apache.ws.security.WSSecurityException;
@@ -51,7 +52,7 @@ import org.apache.ws.security.util.WSSecurityUtil;
 import org.w3c.dom.Document;
 
 /**
- * A WS-Security endpoint interceptor based on Apache's WSS4J. This inteceptor supports messages created by the {@link
+ * A WS-Security endpoint interceptor based on Apache's WSS4J. This interceptor supports messages created by the {@link
  * org.springframework.ws.soap.axiom.AxiomSoapMessageFactory} and the {@link org.springframework.ws.soap.saaj.SaajSoapMessageFactory}.
  * <p/>
  * The validation and securement actions executed by this interceptor are configured via <code>validationActions</code>
@@ -112,6 +113,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
     private int validationTimeToLive = 300;
 
     private int securementTimeToLive = 300;
+    
+    private WSSConfig wssConfig;
 
     private final Wss4jHandler handler = new Wss4jHandler();
 
@@ -441,6 +444,18 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
     public void setSecurementUsernameTokenElements(String securementUsernameTokenElements) {
         handler.setOption(WSHandlerConstants.ADD_UT_ELEMENTS, securementUsernameTokenElements);
     }
+    
+    /**
+     * Sets the web service specification settings.
+     * <p>
+     * The default settings follow the latest OASIS and changing anything might violate the OASIS specs.
+     *  
+     * @param config web service security configuration or {@code null} to use default settings
+     */
+    public void setWssConfig(WSSConfig config) {
+    	securityEngine.setWssConfig(config);
+    	wssConfig = config;
+    }
 
     public void afterPropertiesSet() throws Exception {
         Assert.isTrue(validationActions != null || securementActions != null,
@@ -490,13 +505,17 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         soapMessage.setDocument(envelopeAsDocument);
     }
 
-    /** Creates and initializes a request data */
-    private RequestData initializeRequestData(MessageContext messageContext) {
+    /**
+     * Creates and initializes a request data for the given message context.
+     *
+     * @param messageContext the message context
+     * @return the request data
+     */
+    protected RequestData initializeRequestData(MessageContext messageContext) {
         RequestData requestData = new RequestData();
         requestData.setMsgContext(messageContext);
 
-        // reads securementUsername first from the context then from the
-        // property
+        // reads securementUsername first from the context then from the property
         String contextUsername = (String) messageContext.getProperty(SECUREMENT_USER_PROPERTY_NAME);
         if (StringUtils.hasLength(contextUsername)) {
             requestData.setUsername(contextUsername);
@@ -506,6 +525,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         }
 
         requestData.setTimeToLive(securementTimeToLive);
+        
+        requestData.setWssConfig(wssConfig);
 
         return requestData;
     }
