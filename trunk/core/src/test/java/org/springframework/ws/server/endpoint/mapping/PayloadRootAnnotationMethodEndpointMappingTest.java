@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,18 +34,21 @@ import org.springframework.ws.server.EndpointMapping;
 import org.springframework.ws.server.MessageDispatcher;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.adapter.DefaultMethodEndpointAdapter;
-import org.springframework.ws.server.endpoint.adapter.PayloadMethodEndpointAdapter;
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.server.SoapMessageDispatcher;
 
+import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("applicationContext.xml")
+@ContextConfiguration("payloadRootAnnotationMethodEndpointMapping.xml")
 public class PayloadRootAnnotationMethodEndpointMappingTest  {
 
     @Autowired
@@ -55,10 +58,10 @@ public class PayloadRootAnnotationMethodEndpointMappingTest  {
     private ApplicationContext applicationContext;
 
     @Test
-    public void testRegistration() throws NoSuchMethodException {
+    public void registration() throws NoSuchMethodException {
         MethodEndpoint endpoint = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request"));
         assertNotNull("MethodEndpoint not registered", endpoint);
-        Method doIt = PayloadRootEndpoint.class.getMethod("doIt", Source.class);
+        Method doIt = MyEndpoint.class.getMethod("doIt", Source.class);
         MethodEndpoint expected = new MethodEndpoint("endpoint", applicationContext, doIt);
         assertEquals("Invalid endpoint registered", expected, endpoint);
 
@@ -67,7 +70,7 @@ public class PayloadRootAnnotationMethodEndpointMappingTest  {
     }
 
     @Test
-    public void testInvoke() throws Exception {
+    public void invoke() throws Exception {
 
         MessageFactory messageFactory = MessageFactory.newInstance();
         SOAPMessage request = messageFactory.createMessage();
@@ -84,11 +87,39 @@ public class PayloadRootAnnotationMethodEndpointMappingTest  {
 
         messageDispatcher.receive(messageContext);
 
-        PayloadRootEndpoint endpoint = (PayloadRootEndpoint) applicationContext.getBean("endpoint");
+        MyEndpoint endpoint = applicationContext.getBean("endpoint", MyEndpoint.class);
         assertTrue("doIt() not invoked on endpoint", endpoint.isDoItInvoked());
 
         LogAspect aspect = (LogAspect) applicationContext.getBean("logAspect");
         assertTrue("log() not invoked on aspect", aspect.isLogInvoked());
     }
 
+    @Endpoint
+    public static class MyEndpoint {
+
+        private static final org.apache.commons.logging.Log logger = LogFactory.getLog(MyEndpoint.class);
+
+        private boolean doItInvoked = false;
+
+        public boolean isDoItInvoked() {
+            return doItInvoked;
+        }
+
+        @PayloadRoot(localPart = "Request", namespace = "http://springframework.org/spring-ws")
+        @Log
+        public void doIt(@RequestPayload Source payload) {
+            doItInvoked = true;
+            logger.info("In doIt()");
+        }
+
+    }
+
+    static class OtherBean {
+
+        @PayloadRoot(localPart = "Request2", namespace = "http://springframework.org/spring-ws")
+        public void doIt() {
+
+        }
+
+    }
 }
