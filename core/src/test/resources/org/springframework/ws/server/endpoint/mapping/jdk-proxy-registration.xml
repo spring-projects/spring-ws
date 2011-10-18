@@ -7,11 +7,9 @@
         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
         http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-2.0.xsd">
 
-    <bean id="endpoint" class="org.springframework.ws.server.endpoint.mapping.PayloadRootEndpoint"/>
+    <bean id="jdkProxyEndpoint" class="org.springframework.ws.server.endpoint.mapping.JdkProxyRegistrationTest$MyEndpointImpl"/>
 
-    <aop:aspectj-autoproxy/>
-
-    <bean id="other" class="org.springframework.ws.server.endpoint.mapping.OtherBean"/>
+    <aop:aspectj-autoproxy proxy-target-class="false"/>
 
     <bean id="logAspect" class="org.springframework.ws.server.endpoint.mapping.LogAspect"/>
 

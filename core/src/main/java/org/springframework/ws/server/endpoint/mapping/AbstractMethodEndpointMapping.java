@@ -17,12 +17,17 @@
 package org.springframework.ws.server.endpoint.mapping;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContextException;
+import org.springframework.core.BridgeMethodResolver;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
@@ -129,19 +134,48 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
      *
      * @see #getLookupKeyForMethod(Method)
      */
-    protected void registerMethods(final String beanName) {
+    protected void registerMethods(String beanName) {
         Assert.hasText(beanName, "'beanName' must not be empty");
-        Class<?> endpointClass = getApplicationContext().getType(beanName);
-        ReflectionUtils.doWithMethods(endpointClass, new ReflectionUtils.MethodCallback() {
-
-            public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
-                T key = getLookupKeyForMethod(method);
-                if (key != null) {
-                    registerEndpoint(key, new MethodEndpoint(beanName, getApplicationContext(), method));
-                }
+        Class<?> endpointType = getApplicationContext().getType(beanName);
+        endpointType = ClassUtils.getUserClass(endpointType);
+        
+        Set<Method> methods = findEndpointMethods(endpointType, new ReflectionUtils.MethodFilter() {
+            public boolean matches(Method method) {
+                return getLookupKeyForMethod(method) != null;
             }
-
         });
+
+        for (Method method : methods) {
+            T key = getLookupKeyForMethod(method);
+            registerEndpoint(key, new MethodEndpoint(beanName, getApplicationContext(), method));
+        }
+
+    }
+
+    private Set<Method> findEndpointMethods(Class<?> endpointType,
+                                            final ReflectionUtils.MethodFilter endpointMethodFilter) {
+        final Set<Method> endpointMethods = new LinkedHashSet<Method>();
+        Set<Class<?>> endpointTypes = new LinkedHashSet<Class<?>>();
+        Class<?> specificEndpointType = null;
+        if (!Proxy.isProxyClass(endpointType)) {
+            endpointTypes.add(endpointType);
+            specificEndpointType = endpointType;
+        }
+        endpointTypes.addAll(Arrays.asList(endpointType.getInterfaces()));
+        for (Class<?> currentEndpointType : endpointTypes) {
+            final Class<?> targetClass = (specificEndpointType != null ? specificEndpointType : currentEndpointType);
+            ReflectionUtils.doWithMethods(currentEndpointType, new ReflectionUtils.MethodCallback() {
+                public void doWith(Method method) {
+                    Method specificMethod = ClassUtils.getMostSpecificMethod(method, targetClass);
+                    Method bridgedMethod = BridgeMethodResolver.findBridgedMethod(specificMethod);
+                    if (endpointMethodFilter.matches(specificMethod) &&
+                            (bridgedMethod == specificMethod || !endpointMethodFilter.matches(bridgedMethod))) {
+                        endpointMethods.add(specificMethod);
+                    }
+                }
+            }, ReflectionUtils.USER_DECLARED_METHODS);
+        }
+        return endpointMethods;
     }
 
     /**
