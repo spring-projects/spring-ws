@@ -38,6 +38,11 @@
                     <scope>runtime</scope>
                 </dependency>
                 <dependency>
+                    <groupId>javax.xml.stream</groupId>
+                    <artifactId>stax-api</artifactId>
+                    <scope>compile</scope>
+                </dependency>
+                <dependency>
                     <groupId>javax.xml.soap</groupId>
                     <artifactId>saaj-api</artifactId>
                     <scope>runtime</scope>
@@ -115,6 +120,11 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
+            <groupId>org.codehaus.woodstox</groupId>
+            <artifactId>woodstox-core-asl</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.ws</groupId>
             <artifactId>spring-ws-security</artifactId>
             <exclusions>
@@ -188,11 +198,6 @@
             <groupId>javax.jms</groupId>
             <artifactId>jms</artifactId>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.xml.stream</groupId>
-            <artifactId>stax-api</artifactId>
-            <scope>compile</scope>
         </dependency>
         <!-- O/R Mapping dependencies -->
         <dependency>
