@@ -47,6 +47,7 @@
         <dependency>
             <groupId>javax.jms</groupId>
             <artifactId>jms</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.ws</groupId>
