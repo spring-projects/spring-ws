@@ -1,5 +1,0 @@
-I'm pleased to announce that Spring Web Services 1.0.2 has been released.
-
-Spring-WS 1.0.2 is a bugfix and enhancement release, addressing issues 
-reported since 1.0.1 and introducing further improvements. We recommend to 
-upgrade to Spring-WS 1.0.2 from the previous 1.0.* releases.

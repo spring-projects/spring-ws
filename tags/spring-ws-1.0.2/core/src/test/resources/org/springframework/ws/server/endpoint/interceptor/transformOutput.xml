@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<product xmlns="http://www.springframework.org/spring-ws/test/transformation">
-    <effectiveDate>2006-01-01</effectiveDate>
-    <number>42</number>
-    <size>10</size>
-</product>

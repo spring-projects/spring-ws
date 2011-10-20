@@ -1,3 +1,0 @@
-<root xmlns="http://www.springframework.org/spring-ws" attribute="value">
-    <child xmlns="http://www.springframework.org/spring-ws/child"/>
-</root>

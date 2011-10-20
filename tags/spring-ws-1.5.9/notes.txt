@@ -1,9 +1,0 @@
-Dear Spring community,
-
-I'm pleased to announce that Spring Web Services 1.5.9 has been released!
-
-This is the latest bug fix and enhancement release in the Spring-WS 1.5
-series. It fixes all bugs reported since 1.5.8 and introduces various
-enhancements throughout the framework. Please see the changelog for details.
-
-For more information, see http://static.springframework.org/spring-ws/site/

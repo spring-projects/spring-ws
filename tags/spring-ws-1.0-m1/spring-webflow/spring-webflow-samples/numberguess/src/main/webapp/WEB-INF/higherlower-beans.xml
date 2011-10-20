@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
-	"http://www.springframework.org/dtd/spring-beans.dtd">
-
-<beans>
-	<!-- note: higherlower game is a prototype, it holds caller state in flow scope as instance variables -->
-	<bean id="game" class="org.springframework.webflow.samples.numberguess.HigherLowerGame" singleton="false"/>
-</beans>

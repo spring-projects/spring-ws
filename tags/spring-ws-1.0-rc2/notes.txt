@@ -1,5 +1,0 @@
-This is the second release candidate of Spring-WS: a product of the Spring community focused on creating document-driven
-Web services. This release mostly consists of bug fixes, the one major new feature is that the airline sample has been
-rewritten to use more Java 5 features, including the new @Endpoint programming model, JPA, @Transactional, and more.
-
-For more information, see http://www.springframework.org/spring-ws.

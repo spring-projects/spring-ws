@@ -1,7 +1,0 @@
-<archetype>
-    <id>spring-ws-archetype</id>
-    <resources>
-        <resource>src/main/webapp/WEB-INF/web.xml</resource>
-        <resource>src/main/webapp/WEB-INF/spring-ws-servlet.xml</resource>
-    </resources>
-</archetype>

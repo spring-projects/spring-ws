@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema"
-        targetNamespace="http://springframework.org/spring-ws"
-        xmlns:tns="http://springframework.org/spring-ws" elementFormDefault="qualified">
-
-    <element name="GetAllRuleSetsRequest" />
-
-</schema>
