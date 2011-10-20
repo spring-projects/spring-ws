@@ -1,13 +1,9 @@
 Dear Spring community,
 
-I'm pleased to announce that Spring Web Services 2.0.2.RELEASE has
+I'm pleased to announce that Spring Web Services 2.0.3.RELEASE has
 been released!
 
-This is the third GA release in the 2.0 release cycle. Most importantly, it
-resolves a potential security issue when using WS-Security in combination with
-response payload validation.
-
-It is recommended that all current 2.0.x users upgrade to 2.0.2.
+This is the latest GA release in the 2.0 release cycle. It contains bug fixes.
 
 Please see the changelog for more details.
 
