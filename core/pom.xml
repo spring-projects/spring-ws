@@ -125,6 +125,7 @@
         <dependency>
             <groupId>wsdl4j</groupId>
             <artifactId>wsdl4j</artifactId>
+            <optional>true</optional>
         </dependency>
         <!-- Java EE dependencies -->
         <dependency>

@@ -92,6 +92,7 @@
         <dependency>
             <groupId>jivesoftware</groupId>
             <artifactId>smack</artifactId>
+            <optional>true</optional>
         </dependency>
         <!-- Other dependencies -->
         <dependency>
