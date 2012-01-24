@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ import java.net.URISyntaxException;
 
 import org.springframework.core.io.Resource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.xml.sax.InputSource;
 
 /**
@@ -31,6 +33,8 @@ import org.xml.sax.InputSource;
  * @since 1.0.0
  */
 public abstract class SaxUtils {
+
+    private static final Log logger = LogFactory.getLog(SaxUtils.class);
 
     /**
      * Creates a SAX <code>InputSource</code> from the given resource. Sets the system identifier to the resource's
@@ -53,10 +57,12 @@ public abstract class SaxUtils {
         try {
             return new URI(resource.getURL().toExternalForm()).toString();
         }
-        catch (IOException e) {
+        catch (IOException ex) {
+            logger.debug("Could not get System ID from [" + resource + "], ex");
             return null;
         }
         catch (URISyntaxException e) {
+            logger.debug("Could not get System ID from [" + resource + "], ex");
             return null;
         }
     }
