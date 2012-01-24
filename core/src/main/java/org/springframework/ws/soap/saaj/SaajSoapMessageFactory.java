@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -188,7 +188,7 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
             // "start-info", so let's try and do something about it
             String contentType = StringUtils
                     .arrayToCommaDelimitedString(mimeHeaders.getHeader(TransportConstants.HEADER_CONTENT_TYPE));
-            if (contentType.indexOf("startinfo") != -1) {
+            if (contentType.contains("startinfo")) {
                 contentType = contentType.replace("startinfo", "start-info");
                 mimeHeaders.setHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
                 try {
@@ -231,14 +231,19 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
      */
     private InputStream checkForUtf8ByteOrderMark(InputStream inputStream) throws IOException {
         PushbackInputStream pushbackInputStream = new PushbackInputStream(new BufferedInputStream(inputStream), 3);
-        byte[] bom = new byte[3];
-        if (pushbackInputStream.read(bom) != -1) {
+        byte[] bytes = new byte[3];
+        int bytesRead = pushbackInputStream.read(bytes);
+        if (bytesRead != -1) {
             // check for the UTF-8 BOM, and remove it if there. See SWS-393
-            if (!(bom[0] == (byte) 0xEF && bom[1] == (byte) 0xBB && bom[2] == (byte) 0xBF)) {
-                pushbackInputStream.unread(bom);
+            if (!isByteOrderMark(bytes)) {
+                pushbackInputStream.unread(bytes, 0, bytesRead);
             }
         }
         return pushbackInputStream;
+    }
+
+    private boolean isByteOrderMark(byte[] bytes) {
+        return bytes.length == 3 && bytes[0] == (byte) 0xEF && bytes[1] == (byte) 0xBB && bytes[2] == (byte) 0xBF;
     }
 
     /**
