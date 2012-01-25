@@ -67,8 +67,7 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
         headers.put("Content-Type", "text/xml");
         TransportInputStream tis = new MockTransportInputStream(is, headers);
 
-        WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
-        message.writeTo(System.out);
+        messageFactory.createWebServiceMessage(tis);
     }
 
     @Override
