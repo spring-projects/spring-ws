@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.ws.FaultAwareWebServiceMessage;
+import org.springframework.ws.InvalidXmlException;
 import org.springframework.ws.NoEndpointFoundException;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.MessageContext;
@@ -176,6 +177,28 @@ public class WebServiceMessageReceiverHandlerAdapterTest {
 
         verifyMockControls();
 
+    }
+
+    @Test
+    public void testHandleInvalidXml() throws Exception {
+        httpRequest.setMethod(HttpTransportConstants.METHOD_POST);
+        httpRequest.setContent(REQUEST.getBytes("UTF-8"));
+        httpRequest.setContentType("text/xml; charset=\"utf-8\"");
+        httpRequest.setCharacterEncoding("UTF-8");
+        expect(factoryMock.createWebServiceMessage(isA(InputStream.class))).andThrow(new InvalidXmlException(null, null));
+
+        replayMockControls();
+
+        WebServiceMessageReceiver endpoint = new WebServiceMessageReceiver() {
+
+            public void receive(MessageContext messageContext) throws Exception {
+            }
+        };
+
+        adapter.handle(httpRequest, httpResponse, endpoint);
+        Assert.assertEquals("No 400 returned", HttpServletResponse.SC_BAD_REQUEST, httpResponse.getStatus());
+
+        verifyMockControls();
     }
 
     private void replayMockControls() {

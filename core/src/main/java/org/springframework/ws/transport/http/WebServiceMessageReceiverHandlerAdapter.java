@@ -1,11 +1,11 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.ws.InvalidXmlException;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
 import org.springframework.ws.transport.support.WebServiceMessageReceiverObjectSupport;
@@ -54,7 +55,12 @@ public class WebServiceMessageReceiverHandlerAdapter extends WebServiceMessageRe
                                Object handler) throws Exception {
         if (HttpTransportConstants.METHOD_POST.equals(httpServletRequest.getMethod())) {
             WebServiceConnection connection = new HttpServletConnection(httpServletRequest, httpServletResponse);
-            handleConnection(connection, (WebServiceMessageReceiver) handler);
+            try {
+                handleConnection(connection, (WebServiceMessageReceiver) handler);
+            }
+            catch (InvalidXmlException ex) {
+                httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            }
         }
         else {
             httpServletResponse.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);

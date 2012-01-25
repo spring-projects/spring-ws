@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,6 +22,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 
+import org.springframework.ws.InvalidXmlException;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.soap.soap11.AbstractSoap11MessageFactoryTestCase;
@@ -47,6 +48,12 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
         AxiomSoapMessageFactory factory = new AxiomSoapMessageFactory();
         factory.afterPropertiesSet();
         return factory;
+    }
+
+    @Override
+    public void testCreateSoapMessageIllFormedXml() throws Exception {
+        // Axiom parses the contents of XML lazily, so it will not throw an InvalidXmlException when a message is parsed
+        throw new InvalidXmlException(null, null);
     }
 
     @Test

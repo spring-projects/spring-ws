@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -57,6 +57,17 @@ public abstract class AbstractSoap12MessageFactoryTestCase extends AbstractSoapM
         assertEquals("Invalid soap action", soapAction, soapMessage.getSoapAction());
         assertFalse("Message is a XOP pacakge", soapMessage.isXopPackage());
     }
+
+    @Override
+    public void testCreateSoapMessageIllFormedXml() throws Exception {
+        InputStream is = AbstractSoap12MessageFactoryTestCase.class.getResourceAsStream("soap12-ill-formed.xml");
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put(TransportConstants.HEADER_CONTENT_TYPE, "application/soap+xml");
+        TransportInputStream tis = new MockTransportInputStream(is, headers);
+
+        messageFactory.createWebServiceMessage(tis);
+    }
+
 
     @Override
     public void testCreateSoapMessageSwA() throws Exception {

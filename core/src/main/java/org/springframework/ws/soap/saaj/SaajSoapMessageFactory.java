@@ -1,11 +1,11 @@
 /*
- * Copyright 2002-2012 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,6 +32,7 @@ import javax.xml.soap.SOAPMessage;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.ws.InvalidXmlException;
 import org.springframework.ws.soap.SoapMessageCreationException;
 import org.springframework.ws.soap.SoapMessageFactory;
 import org.springframework.ws.soap.SoapVersion;
@@ -41,6 +42,7 @@ import org.springframework.ws.transport.TransportInputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.xml.sax.SAXParseException;
 
 /**
  * SAAJ-specific implementation of the {@link org.springframework.ws.WebServiceMessageFactory WebServiceMessageFactory}.
@@ -202,6 +204,23 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
                 }
             }
             throw new SoapMessageCreationException("Could not create message from InputStream: " + ex.getMessage(), ex);
+        } catch (SaajSoapEnvelopeException ex) {
+            SAXParseException parseException = getSAXParseException(ex);
+            if (parseException != null) {
+                throw new InvalidXmlException("Could not parse XML", parseException);
+            } else {
+                throw ex;
+            }
+        }
+    }
+
+    private SAXParseException getSAXParseException(Throwable ex) {
+        if (ex instanceof SAXParseException) {
+            return (SAXParseException) ex;
+        } else if (ex.getCause() != null) {
+            return getSAXParseException(ex.getCause());
+        } else {
+            return null;
         }
     }
 
