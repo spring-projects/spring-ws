@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,7 +32,6 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TemporaryQueue;
-import javax.jms.TemporaryTopic;
 import javax.jms.TextMessage;
 
 import org.springframework.jms.connection.ConnectionFactoryUtils;
@@ -80,6 +79,8 @@ public class JmsSenderConnection extends AbstractSenderConnection {
     private MessagePostProcessor postProcessor;
 
     private boolean sessionTransacted = false;
+
+    private boolean temporaryResponseQueueCreated = false;
 
     /** Constructs a new JMS connection with the given parameters. */
     protected JmsSenderConnection(ConnectionFactory connectionFactory,
@@ -211,6 +212,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
             messageProducer.setPriority(priority);
             if (responseDestination == null) {
                 responseDestination = session.createTemporaryQueue();
+                temporaryResponseQueueCreated = true;
             }
             requestMessage.setJMSReplyTo(responseDestination);
             if (postProcessor != null) {
@@ -243,7 +245,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
     protected void onReceiveBeforeRead() throws IOException {
         MessageConsumer messageConsumer = null;
         try {
-            if (responseDestination instanceof TemporaryQueue || responseDestination instanceof TemporaryTopic) {
+            if (temporaryResponseQueueCreated) {
                 messageConsumer = session.createConsumer(responseDestination);
             }
             else {
@@ -266,19 +268,11 @@ public class JmsSenderConnection extends AbstractSenderConnection {
         }
         finally {
             JmsUtils.closeMessageConsumer(messageConsumer);
-            if (responseDestination instanceof TemporaryQueue) {
+            if (temporaryResponseQueueCreated) {
                 try {
                     ((TemporaryQueue) responseDestination).delete();
                 }
-                catch (JMSException e) {
-                    // ignore
-                }
-            }
-            else if (responseDestination instanceof TemporaryTopic) {
-                try {
-                    ((TemporaryTopic) responseDestination).delete();
-                }
-                catch (JMSException e) {
+                catch (JMSException ex) {
                     // ignore
                 }
             }

@@ -10,6 +10,10 @@
         <property name="physicalName" value="SenderRequestQueue"/>
     </bean>
 
+    <bean id="responseQueue" class="org.apache.activemq.command.ActiveMQQueue">
+        <property name="physicalName" value="SenderResponseQueue"/>
+    </bean>
+
     <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
         <property name="connectionFactory" ref="connectionFactory"/>
         <property name="defaultDestination" ref="requestQueue"/>
