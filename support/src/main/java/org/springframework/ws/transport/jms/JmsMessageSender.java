@@ -1,11 +1,11 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -49,21 +49,41 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * themselves. The <i>destination</i> represents the name of the {@link Queue} or {@link Topic} that will be resolved by
  * the {@link #getDestinationResolver() destination resolver}. Valid <i>param-name</i> include:
  * <p/>
- * <blockquote><table> <tr><th><i>param-name</i></th><th><i>Description</i></th></tr>
- * <tr><td><tt>deliveryMode</tt></td><td>Indicates whether the request message is persistent or not. This may be
- * <tt>PERSISTENT</tt> or <tt>NON_PERSISTENT</tt>. See {@link MessageProducer#setDeliveryMode(int)}</td></tr>
- * <tr><td><tt>messageType</tt></td><td>The message type. This may be <tt>BINARY_MESSAGE</tt> (the default) or
- * <tt>TEXT_MESSAGE</tt></td></tr> <tr><td><tt>priority</tt></td><td>The JMS priority (0-9) associated with the request
- * message. See {@link MessageProducer#setPriority(int)}</td></tr> <tr><td><tt>replyToName</tt></td><td>The name of the
- * destination to which the response message must be sent, that will be resolved by the {@link #getDestinationResolver()
- * destination resolver}.</td></tr> <tr><td><tt>timeToLive</tt></td><td>The lifetime, in milliseconds, of the request
- * message. See {@link MessageProducer#setTimeToLive(long)}</td></tr> </table></blockquote>
+ * <blockquote>
+ *     <table>
+ *         <tr><th><i>param-name</i></th><th><i>Description</i></th></tr>
+ *         <tr>
+ *             <td><tt>deliveryMode</tt></td>
+ *             <td>Indicates whether the request message is persistent or not. This may be <tt>PERSISTENT</tt> or
+ *             <tt>NON_PERSISTENT</tt>. See {@link MessageProducer#setDeliveryMode(int)}</td>
+ *         </tr>
+ *         <tr>
+ *             <td><tt>messageType</tt></td>
+ *             <td>The message type. This may be <tt>BINARY_MESSAGE</tt> (the default) or <tt>TEXT_MESSAGE</tt></td>
+ *         </tr>
+ *         <tr>
+ *             <td><tt>priority</tt></td>
+ *             <td>The JMS priority (0-9) associated with the request message. See
+ *             {@link MessageProducer#setPriority(int)}</td>
+ *         </tr>
+ *         <tr>
+ *             <td><tt>replyToName</tt></td>
+ *             <td>The name of the destination to which the response message must be sent, that will be resolved by
+ *             the {@link #getDestinationResolver() destination resolver}.</td>
+ *         </tr>
+ *         <tr>
+ *             <td><tt>timeToLive</tt></td>
+ *             <td>The lifetime, in milliseconds, of the request message. See
+ *             {@link MessageProducer#setTimeToLive(long)}</td>
+ *         </tr>
+ *     </table>
+ * </blockquote>
  * <p/>
  * If the <tt>replyToName</tt> is not set, a {@link Session#createTemporaryQueue() temporary queue} is used.
  * <p/>
  * This class uses {@link BytesMessage} messages by default, but can be configured to send {@link TextMessage} messages
- * instead. <b>Note</b> that <code>BytesMessages</code> are prefered, since <code>TextMessages</code> do not support
- * attachments and charactering encodings reliably.
+ * instead. <b>Note</b> that <code>BytesMessages</code> are preferred, since <code>TextMessages</code> do not support
+ * attachments and character encodings reliably.
  * <p/>
  * Some examples of JMS URIs are:
  * <p/>
