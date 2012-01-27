@@ -158,6 +158,17 @@
                 <version>2.2.1</version>
             </plugin>
             <plugin>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.0</version>
+                <dependencies>
+                  <dependency>
+                    <groupId>org.apache.maven.wagon</groupId>
+                    <artifactId>wagon-ssh</artifactId>
+                    <version>1.0-beta-7</version>
+                  </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.2-beta-5</version>
                 <inherited>false</inherited>
