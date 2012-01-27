@@ -2,6 +2,21 @@ SPRING WEB SERVICES CHANGELOG
 =============================
 http://www.springframework.org/spring-ws
 
+Changes in version 2.0.4.RELEASE
+----------------------------------
+
+** Bug
+    * [SWS-647] - PayloadValidatingInterceptor throws IllegalArgumentException when passed a schema collection
+    * [SWS-742] - JMSCorrelationID together with Oracle AQ
+    * [SWS-748] - Not well formed xml causes server 500 error
+    * [SWS-750] - SaajSoapMessageFactory's checkForUtf8ByteOrderMark is corrupting input stream
+    * [SWS-752] - Provider com.sun.xml.stream.ZephyrParserFactory not found using annotation-driven
+
+** Improvement
+    * [SWS-491] - Digital signing java 6
+    * [SWS-745] - Convenience constructor for SimpleUsernamePasswordCallbackHandler
+    * [SWS-749] - org.springframework.xml.sax.SaxUtils swallows exceptions
+
 Changes in version 2.0.3.RELEASE
 ----------------------------------
 
