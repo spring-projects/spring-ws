@@ -145,6 +145,13 @@
         </profile>
     </profiles>
     <build>
+        <extensions>
+            <extension>
+                <groupId>org.springframework.build.aws</groupId>
+                <artifactId>org.springframework.build.aws.maven</artifactId>
+                <version>3.1.0.RELEASE</version>
+            </extension>
+        </extensions>
         <plugins>
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
