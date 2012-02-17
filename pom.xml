@@ -99,7 +99,7 @@
         <url>https://fisheye.springframework.org/browse/spring-ws/trunk</url>
     </scm>
     <properties>
-        <spring.framework.version>3.1.0.RELEASE</spring.framework.version>
+        <spring.framework.version>3.1.1.RELEASE</spring.framework.version>
     </properties>
     <modules>
         <module>parent</module>
