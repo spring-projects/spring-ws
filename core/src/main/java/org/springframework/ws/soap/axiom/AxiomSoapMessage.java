@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -59,7 +59,6 @@ import org.w3c.dom.Document;
  * @see SOAPMessage
  * @since 1.0.0
  */
-@SuppressWarnings("Since15")
 public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWebServiceMessage {
 
     private static final String EMPTY_SOAP_ACTION = "\"\"";
@@ -97,7 +96,8 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
     public AxiomSoapMessage(SOAPFactory soapFactory, boolean payloadCaching, boolean langAttributeOnSoap11FaultString) {
         SOAPEnvelope soapEnvelope = soapFactory.getDefaultEnvelope();
         axiomFactory = soapFactory;
-        axiomMessage = axiomFactory.createSOAPMessage(soapEnvelope, soapEnvelope.getBuilder());
+        axiomMessage = axiomFactory.createSOAPMessage(soapEnvelope.getBuilder());
+        axiomMessage.setSOAPEnvelope(soapEnvelope);
         attachments = new Attachments();
         this.payloadCaching = payloadCaching;
         this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
@@ -217,6 +217,9 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
     public boolean isXopPackage() {
         try {
             return MTOMConstants.MTOM_TYPE.equals(attachments.getAttachmentSpecType());
+        }
+        catch (OMException ex) {
+            return false;
         }
         catch (NullPointerException ex) {
             // gotta love Axis2

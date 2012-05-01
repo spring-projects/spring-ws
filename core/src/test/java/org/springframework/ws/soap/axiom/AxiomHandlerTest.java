@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,6 +18,7 @@ package org.springframework.ws.soap.axiom;
 
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
+import java.util.Iterator;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMDocument;
@@ -31,6 +32,8 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class AxiomHandlerTest {
 
@@ -48,6 +51,10 @@ public class AxiomHandlerTest {
 
     private static final String XML_3_ENTITY =
             "<predefined-entity-reference>&lt;&gt;&amp;&quot;&apos;</predefined-entity-reference>";
+
+    private static final String XML_4_SNIPPET = "<?xml version='1.0' encoding='UTF-8'?>" + "<child xmlns='namespace1' />";
+    
+    private static final String XML_5_SNIPPET = "<?xml version='1.0' encoding='UTF-8'?>" + "<x:child xmlns:x='namespace1' />";
 
     private AxiomHandler handler;
 
@@ -97,6 +104,48 @@ public class AxiomHandlerTest {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         result.serialize(bos);
         assertXMLEqual("Invalid result", XML_2_EXPECTED, bos.toString("UTF-8"));
+    }
+    
+    @Test
+    public void testContentHandlerElementWithSamePrefixAndDifferentNamespace() throws Exception {
+        OMNamespace namespace = factory.createOMNamespace("namespace1", "");
+        OMElement rootElement = factory.createOMElement("root", namespace, result);
+        handler = new AxiomHandler(rootElement, factory);
+        xmlReader.setContentHandler(handler);
+        xmlReader.parse(new InputSource(new StringReader(XML_2_SNIPPET)));
+        Iterator<?> it = result.getOMDocumentElement().getChildrenWithLocalName("child");
+        assertTrue(it.hasNext());
+        OMElement child = (OMElement) it.next();
+        assertEquals("", child.getQName().getPrefix());
+        assertEquals("namespace2", child.getQName().getNamespaceURI());
+    }
+
+    @Test
+    public void testContentHandlerElementWithSameNamespacesAndPrefix() throws Exception {
+        OMNamespace namespace = factory.createOMNamespace("namespace1", "");
+        OMElement rootElement = factory.createOMElement("root", namespace, result);
+        handler = new AxiomHandler(rootElement, factory);
+        xmlReader.setContentHandler(handler);
+        xmlReader.parse(new InputSource(new StringReader(XML_4_SNIPPET)));
+        Iterator<?> it = result.getOMDocumentElement().getChildrenWithLocalName("child");
+        assertTrue(it.hasNext());
+        OMElement child = (OMElement) it.next();
+        assertEquals("", child.getQName().getPrefix());
+        assertEquals("namespace1", child.getQName().getNamespaceURI());
+    }
+
+    @Test
+    public void testContentHandlerElementWithSameNamespacesAndDifferentPrefix() throws Exception {
+        OMNamespace namespace = factory.createOMNamespace("namespace1", "");
+        OMElement rootElement = factory.createOMElement("root", namespace, result);
+        handler = new AxiomHandler(rootElement, factory);
+        xmlReader.setContentHandler(handler);
+        xmlReader.parse(new InputSource(new StringReader(XML_5_SNIPPET)));
+        Iterator<?> it = result.getOMDocumentElement().getChildrenWithLocalName("child");
+        assertTrue(it.hasNext());
+        OMElement child = (OMElement) it.next();
+        assertEquals("x", child.getQName().getPrefix());
+        assertEquals("namespace1", child.getQName().getNamespaceURI());
     }
 
     @Test

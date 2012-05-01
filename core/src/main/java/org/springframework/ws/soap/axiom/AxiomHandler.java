@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -45,7 +45,6 @@ import org.xml.sax.ext.LexicalHandler;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
-@SuppressWarnings("Since15")
 class AxiomHandler implements ContentHandler, LexicalHandler {
 
     private final OMFactory factory;
@@ -67,7 +66,7 @@ class AxiomHandler implements ContentHandler, LexicalHandler {
 
     private OMContainer getParent() {
         if (!elements.isEmpty()) {
-            return (OMContainer) elements.get(elements.size() - 1);
+            return elements.get(elements.size() - 1);
         }
         else {
             return container;
@@ -84,7 +83,8 @@ class AxiomHandler implements ContentHandler, LexicalHandler {
 
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
         OMContainer parent = getParent();
-        OMElement element = factory.createOMElement(localName, null, parent);
+        OMNamespace ns = factory.createOMNamespace(uri, QNameUtils.toQName(uri, qName).getPrefix());
+        OMElement element = factory.createOMElement(localName, ns, parent);
         for (Map.Entry<String, String> entry : namespaces.entrySet()) {
             String prefix = entry.getKey();
             if (prefix.length() == 0) {
@@ -94,9 +94,6 @@ class AxiomHandler implements ContentHandler, LexicalHandler {
                 element.declareNamespace((String) entry.getValue(), prefix);
             }
         }
-        QName qname = QNameUtils.toQName(uri, qName);
-        element.setLocalName(qname.getLocalPart());
-        element.setNamespace(element.findNamespace(qname.getNamespaceURI(), qname.getPrefix()));
         for (int i = 0; i < atts.getLength(); i++) {
             QName attrName = QNameUtils.toQName(atts.getURI(i), atts.getQName(i));
             String value = atts.getValue(i);
