@@ -6,6 +6,18 @@
     <packaging>pom</packaging>
     <version>2.0.5.RELEASE-SNAPSHOT</version>
     <name>Spring Web Services - Parent</name>
+    <url>http://static.springframework.org/spring-ws/site/index.html</url>
+    <organization>
+        <name>The Spring Web Services Framework</name>
+        <url>http://www.springframework.org/spring-ws</url>
+    </organization>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
     <distributionManagement>
         <downloadUrl>http://static.springframework.org/spring-ws/site/downloads/releases.html</downloadUrl>
         <repository>
