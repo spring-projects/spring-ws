@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.OrderComparator;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.ws.FaultAwareWebServiceMessage;
@@ -206,46 +207,54 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
         EndpointInvocationChain mappedEndpoint = null;
         int interceptorIndex = -1;
         try {
-            // Determine endpoint for the current context
-            mappedEndpoint = getEndpoint(messageContext);
-            if (mappedEndpoint == null || mappedEndpoint.getEndpoint() == null) {
-                throw new NoEndpointFoundException(messageContext.getRequest());
-            }
-            if (!handleRequest(mappedEndpoint, messageContext)) {
-                return;
-            }
-            // Apply handleRequest of registered interceptors
-            if (mappedEndpoint.getInterceptors() != null) {
-                for (int i = 0; i < mappedEndpoint.getInterceptors().length; i++) {
-                    EndpointInterceptor interceptor = mappedEndpoint.getInterceptors()[i];
-                    interceptorIndex = i;
-                    if (!interceptor.handleRequest(messageContext, mappedEndpoint.getEndpoint())) {
-                        triggerHandleResponse(mappedEndpoint, interceptorIndex, messageContext);
-                        triggerAfterCompletion(mappedEndpoint, interceptorIndex, messageContext, null);
-                        return;
+            try {
+                // Determine endpoint for the current context
+                mappedEndpoint = getEndpoint(messageContext);
+                if (mappedEndpoint == null || mappedEndpoint.getEndpoint() == null) {
+                    throw new NoEndpointFoundException(messageContext.getRequest());
+                }
+                if (!handleRequest(mappedEndpoint, messageContext)) {
+                    return;
+                }
+                // Apply handleRequest of registered interceptors
+                if (mappedEndpoint.getInterceptors() != null) {
+                    for (int i = 0; i < mappedEndpoint.getInterceptors().length; i++) {
+                        EndpointInterceptor interceptor = mappedEndpoint.getInterceptors()[i];
+                        interceptorIndex = i;
+                        if (!interceptor.handleRequest(messageContext, mappedEndpoint.getEndpoint())) {
+                            triggerHandleResponse(mappedEndpoint, interceptorIndex, messageContext);
+                            triggerAfterCompletion(mappedEndpoint, interceptorIndex, messageContext, null);
+                            return;
+                        }
                     }
                 }
-            }
-            // Actually invoke the endpoint
-            EndpointAdapter endpointAdapter = getEndpointAdapter(mappedEndpoint.getEndpoint());
-            endpointAdapter.invoke(messageContext, mappedEndpoint.getEndpoint());
+                // Actually invoke the endpoint
+                EndpointAdapter endpointAdapter = getEndpointAdapter(mappedEndpoint.getEndpoint());
+                endpointAdapter.invoke(messageContext, mappedEndpoint.getEndpoint());
 
+            }
+            catch (NoEndpointFoundException ex) {
+                // No triggering of interceptors if no endpoint is found
+                if (endpointNotFoundLogger.isWarnEnabled()) {
+                    endpointNotFoundLogger.warn("No endpoint mapping found for [" + messageContext.getRequest() + "]");
+                }
+                throw ex;
+            }
+            catch (Exception ex) {
+                Object endpoint = mappedEndpoint != null ? mappedEndpoint.getEndpoint() : null;
+                processEndpointException(messageContext, endpoint, ex);
+            }
             // Apply handleResponse methods of registered interceptors
             triggerHandleResponse(mappedEndpoint, interceptorIndex, messageContext);
             triggerAfterCompletion(mappedEndpoint, interceptorIndex, messageContext, null);
         }
         catch (NoEndpointFoundException ex) {
-            // No triggering of interceptors if no endpoint is found
-            if (endpointNotFoundLogger.isWarnEnabled()) {
-                endpointNotFoundLogger.warn("No endpoint mapping found for [" + messageContext.getRequest() + "]");
-            }
             throw ex;
         }
         catch (Exception ex) {
-            Object endpoint = mappedEndpoint != null ? mappedEndpoint.getEndpoint() : null;
-            processEndpointException(messageContext, endpoint, ex);
-            triggerHandleResponse(mappedEndpoint, interceptorIndex, messageContext);
+			// Trigger after-completion for thrown exception.
             triggerAfterCompletion(mappedEndpoint, interceptorIndex, messageContext, ex);
+            throw ex;
         }
     }
 
@@ -316,12 +325,14 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
      */
     protected void processEndpointException(MessageContext messageContext, Object endpoint, Exception ex)
             throws Exception {
-        for (EndpointExceptionResolver resolver : getEndpointExceptionResolvers()) {
-            if (resolver.resolveException(messageContext, endpoint, ex)) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Endpoint invocation resulted in exception - responding with Fault", ex);
+        if (!CollectionUtils.isEmpty(getEndpointExceptionResolvers())) {
+            for (EndpointExceptionResolver resolver : getEndpointExceptionResolvers()) {
+                if (resolver.resolveException(messageContext, endpoint, ex)) {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Endpoint invocation resulted in exception - responding with Fault", ex);
+                    }
+                    return;
                 }
-                return;
             }
         }
         // exception not resolved

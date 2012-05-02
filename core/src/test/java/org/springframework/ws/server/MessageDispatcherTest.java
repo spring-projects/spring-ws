@@ -298,7 +298,54 @@ public class MessageDispatcherTest {
 
         verify(mappingMock, interceptorMock1, interceptorMock2, adapterMock, factoryMock);
     }
-    
+
+    @Test
+    public void testResolveExceptionsWithInterceptors() throws Exception {
+        EndpointAdapter adapterMock = createMock(EndpointAdapter.class);
+        dispatcher.setEndpointAdapters(Collections.singletonList(adapterMock));
+
+        Object endpoint = new Object();
+        expect(adapterMock.supports(endpoint)).andReturn(true);
+
+        EndpointMapping mappingMock = createMock(EndpointMapping.class);
+        dispatcher.setEndpointMappings(Collections.singletonList(mappingMock));
+
+        EndpointExceptionResolver resolverMock = createMock(EndpointExceptionResolver.class);
+        dispatcher.setEndpointExceptionResolvers(Collections.singletonList(resolverMock));
+
+        EndpointInterceptor interceptorMock = createStrictMock("interceptor1", EndpointInterceptor.class);
+
+        expect(interceptorMock.handleRequest(messageContext, endpoint)).andReturn(true);
+
+        adapterMock.invoke(messageContext, endpoint);
+        RuntimeException exception = new RuntimeException();
+        expectLastCall().andThrow(exception);
+
+        expect(resolverMock.resolveException(messageContext, endpoint, exception)).andReturn(true);
+
+        expect(interceptorMock.handleResponse(messageContext, endpoint)).andReturn(true);
+
+        interceptorMock.afterCompletion(messageContext, endpoint, null);
+
+        EndpointInvocationChain chain =
+                new EndpointInvocationChain(endpoint, new EndpointInterceptor[]{interceptorMock});
+
+        expect(mappingMock.getEndpoint(messageContext)).andReturn(chain);
+        expect(factoryMock.createWebServiceMessage()).andReturn(new MockWebServiceMessage());
+
+        replay(mappingMock, interceptorMock, adapterMock, factoryMock, resolverMock);
+
+        //  response required for interceptor invocation
+        messageContext.getResponse();
+        try {
+        dispatcher.dispatch(messageContext);
+        } catch (RuntimeException ex) {
+
+        }
+
+        verify(mappingMock, interceptorMock, adapterMock, factoryMock, resolverMock);
+    }
+
     @Test
     public void testFaultFlow() throws Exception {
         EndpointAdapter adapterMock = createMock(EndpointAdapter.class);
