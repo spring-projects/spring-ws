@@ -373,7 +373,7 @@
     <bean id="messageDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
         <property name="endpointMappings">
             <bean
-              class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
+              class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping">
                 <property name="defaultEndpoint">
                     <bean class="com.example.MyEndpoint"/>
                 </property>
