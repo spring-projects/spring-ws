@@ -272,6 +272,9 @@
                             </fileset>
                         </copy>
                         <move file="target/site/reference/pdf/index.pdf" tofile="target/site/reference/pdf/spring-ws-reference.pdf" failonerror="false" />
+                        <move todir="target/site/reference/html" failonerror="false">
+							<fileset dir="target/site/reference/html/index"/>
+						</move>
                     </postProcess>
                 </configuration>
             </plugin>
