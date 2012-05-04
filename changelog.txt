@@ -2,6 +2,26 @@ SPRING WEB SERVICES CHANGELOG
 =============================
 http://www.springframework.org/spring-ws
 
+Changes in version 2.0.5.RELEASE
+----------------------------------
+
+** Bug
+    * [SWS-754] - EndpointInterceptor.afterCompletion is not always invoked
+    * [SWS-759] - FAQ about Mac OS X test failures needs updating
+    * [SWS-763] - Namespace problems after upgrading to Axiom 1.2.13
+
+** Defect
+    * [SWS-764] - SoapEnvelopeLoggingInterceptor logging only partial request/response when Axis SAAJ API is used along with Xalan 2.7.1 and log4j 1.2.16 (using %m option)
+    * [SWS-766] -  Broken link in SWS 2.0.4 - org.springframework.ws.soap.security.xwss
+    * [SWS-769] - Error in org.springframework.ws.context's content 
+    * [SWS-770] - In documentation, JMS server configuration doesn't work
+
+** Improvement
+    * [SWS-760] - Please specify URL and license in pom.xml
+    * [SWS-761] - Add method to set digest algorithm for signature (WSS4J) 
+    * [SWS-762] - Allow multiple prefixes and suffixes in DefaultWsdl11Definition
+    * [SWS-768] - Make JAXP13ValidatorFactory smarter
+
 Changes in version 2.0.4.RELEASE
 ----------------------------------
 

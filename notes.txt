@@ -1,6 +1,6 @@
 Dear Spring community,
 
-I'm pleased to announce that Spring Web Services 2.0.4.RELEASE has
+I'm pleased to announce that Spring Web Services 2.0.5.RELEASE has
 been released!
 
 This is the latest GA release in the 2.0 release cycle. It contains bug fixes.
