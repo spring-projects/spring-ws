@@ -6,10 +6,10 @@ Downloads
 
 * Get the latest Spring Web Services releases here
 
-	* <<Spring-WS 2.0.4.RELEASE is the current production release (JDK 1.5+)>>
+	* <<Spring-WS 2.0.5.RELEASE is the current production release (JDK 1.5+)>>
 
-	* {{{http://www.springsource.com/download/community?project=Spring%20Web%20Services}Download}} | {{{http://static.springframework.org/spring-ws/docs/2.0.4.RELEASE/changelog.txt}Changelog}} | {{{http://forum.springframework.org/showthread.php?t=122440}Announcement}}
+	* {{{http://www.springsource.com/download/community?project=Spring%20Web%20Services}Download}} | {{{http://static.springframework.org/spring-ws/docs/2.0.4.RELEASE/changelog.txt}Changelog}} | {{{http://forum.springframework.org/showthread.php?t=126098}Announcement}}
 
 	* <<Spring-WS 2.0.5 is the upcoming production release>>
 
-		* {{{snapshots.html}Download nightly snapshots}}
+		* {{{./snapshots.html}Download nightly snapshots}}

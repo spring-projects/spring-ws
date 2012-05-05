@@ -79,10 +79,16 @@
     <distributionManagement>
         <downloadUrl>http://www.springsource.com/download/community?project=Spring%20Web%20Services</downloadUrl>
         <repository>
+            <id>spring-local-repo</id>
+            <url>file:///Users/arjen/Projects/Spring/repo</url>
+        </repository>
+        <!--
+        <repository>
             <id>spring-release</id>
             <name>Spring Release Repository</name>
             <url>s3://maven.springframework.org/release</url>
         </repository>
+        -->
         <snapshotRepository>
             <id>spring-s3</id>
             <name>Spring Snapshot Repository</name>
@@ -272,6 +278,9 @@
                             </fileset>
                         </copy>
                         <move file="target/site/reference/pdf/index.pdf" tofile="target/site/reference/pdf/spring-ws-reference.pdf" failonerror="false" />
+                        <move todir="target/site/reference/html" failonerror="false">
+							<fileset dir="target/site/reference/html/index"/>
+						</move>
                     </postProcess>
                 </configuration>
             </plugin>
