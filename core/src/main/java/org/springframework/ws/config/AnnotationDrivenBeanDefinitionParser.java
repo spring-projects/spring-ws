@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
             ClassUtils.isPresent("javax.xml.bind.Binder", AnnotationDrivenBeanDefinitionParser.class.getClassLoader());
 
     private static final boolean jdomPresent =
-            ClassUtils.isPresent("org.jdom.Element", AnnotationDrivenBeanDefinitionParser.class.getClassLoader());
+            ClassUtils.isPresent("org.jdom2.Element", AnnotationDrivenBeanDefinitionParser.class.getClassLoader());
 
     private static final boolean staxPresent = ClassUtils
             .isPresent("javax.xml.stream.XMLInputFactory", AnnotationDrivenBeanDefinitionParser.class.getClassLoader());

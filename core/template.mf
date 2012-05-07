@@ -19,7 +19,7 @@ Import-Template:
  org.apache.commons.httpclient.*;version="[3.1.0, 4.0.0)";resolution:=optional,
  org.apache.commons.logging.*;version="[1.1.1, 2.0.0)",
  org.dom4j.*;version="[1.6.1, 2.0.0)";resolution:=optional,
- org.jdom.*;version="[1.0.0, 2.0.0)";resolution:=optional,
+ org.jdom2.*;version="[2.0.0, 3.0.0)";resolution:=optional,
  org.springframework.aop.*;version=${spring.framework.osgi.range},
  org.springframework.beans.*;version=${spring.framework.osgi.range},
  org.springframework.context.*;version=${spring.framework.osgi.range},
