@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 
 package org.springframework.ws.soap.security.xwss.callback;
+
+import java.util.Collections;
 
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.TestingAuthenticationToken;
@@ -81,7 +83,7 @@ public class SpringDigestPasswordValidationCallbackHandlerTest {
 
     @Test
     public void testAuthenticateUserDigestValid() throws Exception {
-        User user = new User(username, password, true, true, true, true, new GrantedAuthority[0]);
+        User user = new User(username, password, true, true, true, true, Collections.<GrantedAuthority>emptyList());
         expect(userDetailsService.loadUserByUsername(username)).andReturn(user);
 
         replay(userDetailsService);
@@ -96,7 +98,7 @@ public class SpringDigestPasswordValidationCallbackHandlerTest {
 
     @Test
     public void testAuthenticateUserDigestValidInvalid() throws Exception {
-        User user = new User(username, "Big bird", true, true, true, true, new GrantedAuthority[0]);
+        User user = new User(username, "Big bird", true, true, true, true, Collections.<GrantedAuthority>emptyList());
         expect(userDetailsService.loadUserByUsername(username)).andReturn(user);
 
         replay(userDetailsService);
@@ -111,7 +113,7 @@ public class SpringDigestPasswordValidationCallbackHandlerTest {
 
     @Test
     public void testAuthenticateUserDigestDisabled() throws Exception {
-        User user = new User(username, "Ernie", false, true, true, true, new GrantedAuthority[0]);
+        User user = new User(username, "Ernie", false, true, true, true, Collections.<GrantedAuthority>emptyList());
         expect(userDetailsService.loadUserByUsername(username)).andReturn(user);
 
         replay(userDetailsService);
@@ -128,7 +130,7 @@ public class SpringDigestPasswordValidationCallbackHandlerTest {
     @Test
     public void testCleanUp() throws Exception {
         TestingAuthenticationToken authentication =
-                new TestingAuthenticationToken(new Object(), new Object(), new GrantedAuthority[0]);
+                new TestingAuthenticationToken(new Object(), new Object(), Collections.<GrantedAuthority>emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         CleanupCallback cleanupCallback = new CleanupCallback();

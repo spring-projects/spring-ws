@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,10 +17,11 @@
 package org.springframework.ws.soap.security.wss4j.callback;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -39,7 +40,7 @@ public class SpringDigestPasswordValidationCallbackHandlerTest {
 
     private SpringDigestPasswordValidationCallbackHandler callbackHandler;
 
-    private GrantedAuthorityImpl grantedAuthority;
+    private SimpleGrantedAuthority grantedAuthority;
 
     private UsernameTokenPrincipalCallback callback;
 
@@ -49,8 +50,8 @@ public class SpringDigestPasswordValidationCallbackHandlerTest {
     public void setUp() throws Exception {
         callbackHandler = new SpringDigestPasswordValidationCallbackHandler();
 
-        grantedAuthority = new GrantedAuthorityImpl("ROLE_1");
-        user = new User("Ernie", "Bert", true, true, true, true, new GrantedAuthority[]{grantedAuthority});
+        grantedAuthority = new SimpleGrantedAuthority("ROLE_1");
+        user = new User("Ernie", "Bert", true, true, true, true, Collections.singleton(grantedAuthority));
 
         WSUsernameTokenPrincipal principal = new WSUsernameTokenPrincipal("Ernie", true);
         callback = new UsernameTokenPrincipalCallback(principal);
@@ -70,7 +71,7 @@ public class SpringDigestPasswordValidationCallbackHandlerTest {
         Assert.assertNotNull("SecurityContext must not be null", context);
         Authentication authentication = context.getAuthentication();
         Assert.assertNotNull("Authentication must not be null", authentication);
-        Collection<GrantedAuthority> authorities = authentication.getAuthorities();
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Assert.assertTrue("GrantedAuthority[] must not be null or empty",
                 (authorities != null && authorities.size() > 0));
         Assert.assertEquals("Unexpected authority", grantedAuthority, authorities.iterator().next());

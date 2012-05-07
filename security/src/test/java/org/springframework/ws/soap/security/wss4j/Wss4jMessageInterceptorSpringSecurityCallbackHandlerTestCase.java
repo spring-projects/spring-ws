@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.memory.InMemoryDaoImpl;
 import org.springframework.ws.context.DefaultMessageContext;
@@ -119,7 +118,7 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCa
         else {
             SpringPlainTextPasswordValidationCallbackHandler callbackHandler =
                     new SpringPlainTextPasswordValidationCallbackHandler();
-            Authentication authResult = new TestingAuthenticationToken("Bert", "Ernie", new GrantedAuthority[0]);
+            Authentication authResult = new TestingAuthenticationToken("Bert", "Ernie");
             expect(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken("Bert", "Ernie"))).andReturn(authResult);
             callbackHandler.setAuthenticationManager(authenticationManager);
             callbackHandler.afterPropertiesSet();

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,15 +19,16 @@ package org.springframework.ws.soap.security.xwss.callback;
 import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
+import java.util.Collections;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.authentication.TestingAuthenticationToken;
-import org.springframework.ws.soap.security.x509.X509AuthenticationToken;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
+import org.springframework.ws.soap.security.x509.X509AuthenticationToken;
 
 import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
 import org.junit.After;
@@ -75,7 +76,7 @@ public class SpringCertificateValidationCallbackHandlerTest {
     @Test
     public void testValidateCertificateValid() throws Exception {
         expect(authenticationManager.authenticate(isA(X509AuthenticationToken.class)))
-                .andReturn(new TestingAuthenticationToken(certificate, null, new GrantedAuthority[0]));
+                .andReturn(new TestingAuthenticationToken(certificate, null, Collections.<GrantedAuthority>emptyList()));
 
         replay(authenticationManager);
 
@@ -105,7 +106,7 @@ public class SpringCertificateValidationCallbackHandlerTest {
     @Test
     public void testCleanUp() throws Exception {
         TestingAuthenticationToken authentication =
-                new TestingAuthenticationToken(new Object(), new Object(), new GrantedAuthority[0]);
+                new TestingAuthenticationToken(new Object(), new Object(), Collections.<GrantedAuthority>emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         CleanupCallback cleanupCallback = new CleanupCallback();
