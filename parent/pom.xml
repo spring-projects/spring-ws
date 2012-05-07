@@ -733,7 +733,7 @@
                 <groupId>org.easymock</groupId>
                 <artifactId>easymock</artifactId>
                 <scope>test</scope>
-                <version>2.5.2</version>
+                <version>3.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
