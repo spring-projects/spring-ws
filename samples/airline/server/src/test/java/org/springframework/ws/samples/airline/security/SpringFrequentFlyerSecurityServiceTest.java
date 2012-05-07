@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,16 +16,16 @@
 
 package org.springframework.ws.samples.airline.security;
 
-import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
-
+import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
-import org.springframework.security.authentication.TestingAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.ws.samples.airline.dao.FrequentFlyerDao;
 import org.springframework.ws.samples.airline.domain.FrequentFlyer;
+
+import junit.framework.TestCase;
+
+import static org.easymock.EasyMock.*;
 
 public class SpringFrequentFlyerSecurityServiceTest extends TestCase {
 
@@ -42,7 +42,7 @@ public class SpringFrequentFlyerSecurityServiceTest extends TestCase {
     public void testGetCurrentlyAuthenticatedFrequentFlyer() throws Exception {
         FrequentFlyer frequentFlyer = new FrequentFlyer("john");
         FrequentFlyerDetails detail = new FrequentFlyerDetails(frequentFlyer);
-        TestingAuthenticationToken token = new TestingAuthenticationToken(detail, null, new GrantedAuthority[]{});
+        TestingAuthenticationToken token = new TestingAuthenticationToken(detail, null);
         SecurityContext context = new SecurityContextImpl();
         context.setAuthentication(token);
         SecurityContextHolder.setContext(context);
