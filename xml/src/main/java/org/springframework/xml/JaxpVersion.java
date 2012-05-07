@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -79,19 +79,6 @@ public abstract class JaxpVersion {
      */
     public static int getJaxpVersion() {
         return jaxpVersion;
-    }
-
-    /**
-     * Convenience method to determine if the current JAXP version is at least 1.3 (packaged with JDK 1.5).
-     *
-     * @return <code>true</code> if the current JAXP version is at least JAXP 1.3
-     * @see #getJaxpVersion()
-     * @see #JAXP_13
-     * @deprecated as of Spring-WS 2.0 which requires Java 1.5+
-     */
-    @Deprecated
-    public static boolean isAtLeastJaxp13() {
-        return getJaxpVersion() >= JAXP_13;
     }
 
     /**

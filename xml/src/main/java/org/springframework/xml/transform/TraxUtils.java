@@ -22,7 +22,6 @@ import java.io.Reader;
 import java.io.Writer;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Result;
@@ -55,131 +54,6 @@ import org.xml.sax.ext.LexicalHandler;
 public abstract class TraxUtils {
 
     /**
-     * Indicates whether the given {@link Source} is a StAX Source.
-     *
-     * @return <code>true</code> if <code>source</code> is a Spring-WS {@link StaxSource} or JAXP 1.4 {@link
-     *         StAXSource}; <code>false</code> otherwise.
-     * @deprecated In favor of {@link StaxUtils#isStaxSource(Source)}
-     */
-    @Deprecated
-    public static boolean isStaxSource(Source source) {
-        if (source instanceof StaxSource) {
-            return true;
-        }
-        return StaxUtils.isStaxSource(source);
-    }
-
-    /**
-     * Indicates whether the given {@link Result} is a StAX Result.
-     *
-     * @return <code>true</code> if <code>result</code> is a Spring-WS {@link StaxResult} or JAXP 1.4 {@link
-     *         StAXResult}; <code>false</code> otherwise.
-     * @deprecated In favor of {@link StaxUtils#isStaxResult(Result)}
-     */
-    @Deprecated
-    public static boolean isStaxResult(Result result) {
-        if (result instanceof StaxResult) {
-            return true;
-        }
-        return StaxUtils.isStaxResult(result);
-    }
-
-    /**
-     * Returns the {@link XMLStreamReader} for the given StAX Source.
-     *
-     * @param source a Spring-WS {@link StaxSource} or {@link StAXSource}
-     * @return the {@link XMLStreamReader}
-     * @throws IllegalArgumentException if <code>source</code> is neither a Spring-WS {@link StaxSource} or {@link
-     *                                  StAXSource}
-     * @deprecated In favor of {@link StaxUtils#getXMLStreamReader(Source)}
-     */
-    @Deprecated
-    public static XMLStreamReader getXMLStreamReader(Source source) {
-        if (source instanceof StaxSource) {
-            return ((StaxSource) source).getXMLStreamReader();
-        }
-        return StaxUtils.getXMLStreamReader(source);
-    }
-
-    /**
-     * Returns the {@link XMLEventReader} for the given StAX Source.
-     *
-     * @param source a Spring-WS {@link StaxSource} or {@link StAXSource}
-     * @return the {@link XMLEventReader}
-     * @throws IllegalArgumentException if <code>source</code> is neither a Spring-WS {@link StaxSource} or {@link
-     *                                  StAXSource}
-     * @deprecated In favor of {@link StaxUtils#getXMLEventReader(Source)}
-     */
-    @Deprecated
-    public static XMLEventReader getXMLEventReader(Source source) {
-        if (source instanceof StaxSource) {
-            return ((StaxSource) source).getXMLEventReader();
-        }
-        return StaxUtils.getXMLEventReader(source);
-    }
-
-    /**
-     * Returns the {@link XMLStreamWriter} for the given StAX Result.
-     *
-     * @param result a Spring-WS {@link StaxResult} or {@link StAXResult}
-     * @return the {@link XMLStreamReader}
-     * @throws IllegalArgumentException if <code>source</code> is neither a Spring-WS {@link StaxResult} or {@link
-     *                                  StAXResult}
-     * @deprecated In favor of {@link StaxUtils#getXMLStreamWriter(Result)}
-     */
-    @Deprecated
-    public static XMLStreamWriter getXMLStreamWriter(Result result) {
-        if (result instanceof StaxResult) {
-            return ((StaxResult) result).getXMLStreamWriter();
-        }
-        return StaxUtils.getXMLStreamWriter(result);
-    }
-
-    /**
-     * Returns the {@link XMLEventWriter} for the given StAX Result.
-     *
-     * @param result a Spring-WS {@link StaxResult} or {@link StAXResult}
-     * @return the {@link XMLStreamReader}
-     * @throws IllegalArgumentException if <code>source</code> is neither a Spring-WS {@link StaxResult} or {@link
-     *                                  StAXResult}
-     * @deprecated In favor of {@link StaxUtils#getXMLEventWriter(Result)}
-     */
-    @Deprecated
-    public static XMLEventWriter getXMLEventWriter(Result result) {
-        if (result instanceof StaxResult) {
-            return ((StaxResult) result).getXMLEventWriter();
-        }
-        return StaxUtils.getXMLEventWriter(result);
-    }
-
-    /**
-     * Creates a StAX {@link Source} for the given {@link XMLStreamReader}. Returns a {@link StAXSource} under JAXP 1.4
-     * or higher, or a {@link StaxSource} otherwise.
-     *
-     * @param streamReader the StAX stream reader
-     * @return a source wrapping <code>streamReader</code>
-     * @deprecated In favor of {@link StaxUtils#createStaxSource(XMLStreamReader)}
-     */
-    @Deprecated
-    public static Source createStaxSource(XMLStreamReader streamReader) {
-        return StaxUtils.createStaxSource(streamReader);
-    }
-
-    /**
-     * Creates a StAX {@link Source} for the given {@link XMLEventReader}. Returns a {@link StAXSource} under JAXP 1.4
-     * or higher, or a {@link StaxSource} otherwise.
-     *
-     * @param eventReader the StAX event reader
-     * @return a source wrapping <code>eventReader</code>
-     * @throws XMLStreamException in case of StAX errors
-     * @deprecated In favor of {@link StaxUtils#createStaxSource(XMLEventReader)}
-     */
-    @Deprecated
-    public static Source createStaxSource(XMLEventReader eventReader) throws XMLStreamException {
-        return StaxUtils.createStaxSource(eventReader);
-    }
-
-    /**
      * Returns the {@link Document} of the given {@link DOMSource}.
      *
      * @param source the DOM source
@@ -210,14 +84,14 @@ public abstract class TraxUtils {
             callback.domSource(((DOMSource) source).getNode());
             return;
         }
-        else if (isStaxSource(source)) {
-            XMLStreamReader streamReader = getXMLStreamReader(source);
+        else if (StaxUtils.isStaxSource(source)) {
+            XMLStreamReader streamReader = StaxUtils.getXMLStreamReader(source);
             if (streamReader != null) {
                 callback.staxSource(streamReader);
                 return;
             }
             else {
-                XMLEventReader eventReader = getXMLEventReader(source);
+                XMLEventReader eventReader = StaxUtils.getXMLEventReader(source);
                 if (eventReader != null) {
                     callback.staxSource(eventReader);
                     return;
@@ -261,14 +135,14 @@ public abstract class TraxUtils {
             callback.domResult(((DOMResult) result).getNode());
             return;
         }
-        else if (isStaxResult(result)) {
-            XMLStreamWriter streamWriter = getXMLStreamWriter(result);
+        else if (StaxUtils.isStaxResult(result)) {
+            XMLStreamWriter streamWriter = StaxUtils.getXMLStreamWriter(result);
             if (streamWriter != null) {
                 callback.staxResult(streamWriter);
                 return;
             }
             else {
-                XMLEventWriter eventWriter = getXMLEventWriter(result);
+                XMLEventWriter eventWriter = StaxUtils.getXMLEventWriter(result);
                 if (eventWriter != null) {
                     callback.staxResult(eventWriter);
                     return;
@@ -324,7 +198,7 @@ public abstract class TraxUtils {
 
         /**
          * Perform an operation on the {@code XMLEventReader} contained in a JAXP 1.4 {@link StAXSource} or Spring
-         * {@link StaxSource}.
+         * {@link StaxUtils#createStaxSource StaxSource}.
          *
          * @param eventReader the reader
          */
@@ -332,7 +206,7 @@ public abstract class TraxUtils {
 
         /**
          * Perform an operation on the {@code XMLStreamReader} contained in a JAXP 1.4 {@link StAXSource} or Spring
-         * {@link StaxSource}.
+         * {@link StaxUtils#createStaxSource StaxSource}.
          *
          * @param streamReader the reader
          */
@@ -387,7 +261,7 @@ public abstract class TraxUtils {
 
         /**
          * Perform an operation on the {@code XMLEventWriter} contained in a JAXP 1.4 {@link StAXResult} or Spring
-         * {@link StaxResult}.
+         * {@link StaxUtils#createStaxResult StaxResult}.
          *
          * @param eventWriter the writer
          */
@@ -395,7 +269,7 @@ public abstract class TraxUtils {
 
         /**
          * Perform an operation on the {@code XMLStreamWriter} contained in a JAXP 1.4 {@link StAXResult} or Spring
-         * {@link StaxResult}.
+         * {@link StaxUtils#createStaxResult StaxResult}.
          *
          * @param streamWriter the writer
          */

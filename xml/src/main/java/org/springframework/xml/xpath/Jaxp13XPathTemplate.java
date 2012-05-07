@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,8 +33,8 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import javax.xml.xpath.XPathFactoryConfigurationException;
 
+import org.springframework.util.xml.StaxUtils;
 import org.springframework.xml.namespace.SimpleNamespaceContext;
-import org.springframework.xml.transform.StaxSource;
 import org.springframework.xml.transform.TransformerHelper;
 import org.springframework.xml.transform.TraxUtils;
 
@@ -183,12 +183,12 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 
         public void staxSource(XMLEventReader eventReader)
                 throws XPathExpressionException, XMLStreamException, TransformerException {
-            Element element = getRootElement(new StaxSource(eventReader));
+            Element element = getRootElement(StaxUtils.createCustomStaxSource(eventReader));
             domSource(element);
         }
 
         public void staxSource(XMLStreamReader streamReader) throws TransformerException, XPathExpressionException {
-            Element element = getRootElement(new StaxSource(streamReader));
+            Element element = getRootElement(StaxUtils.createCustomStaxSource(streamReader));
             domSource(element);
         }
 

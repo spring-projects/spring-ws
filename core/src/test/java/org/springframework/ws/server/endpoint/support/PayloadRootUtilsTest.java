@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,7 +29,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
-import org.springframework.xml.transform.StaxSource;
+import org.springframework.util.xml.StaxUtils;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -59,7 +59,7 @@ public class PayloadRootUtilsTest {
         String contents = "<prefix:localname xmlns:prefix='namespace'/>";
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(contents));
-        Source source = new StaxSource(streamReader);
+        Source source = StaxUtils.createStaxSource(streamReader);
         QName qName = PayloadRootUtils.getPayloadRootQName(source, TransformerFactory.newInstance());
         Assert.assertNotNull("getQNameForNode returns null", qName);
         Assert.assertEquals("QName has invalid localname", "localname", qName.getLocalPart());
@@ -72,7 +72,7 @@ public class PayloadRootUtilsTest {
         String contents = "<prefix:localname xmlns:prefix='namespace'/>";
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader(contents));
-        Source source = new StaxSource(eventReader);
+        Source source = StaxUtils.createStaxSource(eventReader);
         QName qName = PayloadRootUtils.getPayloadRootQName(source, TransformerFactory.newInstance());
         Assert.assertNotNull("getQNameForNode returns null", qName);
         Assert.assertEquals("QName has invalid localname", "localname", qName.getLocalPart());

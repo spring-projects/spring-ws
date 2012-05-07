@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,8 +20,6 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
-import org.springframework.xml.JaxpVersion;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,12 +38,6 @@ import org.apache.commons.logging.LogFactory;
 public abstract class XPathExpressionFactory {
 
     private static final Log logger = LogFactory.getLog(XPathExpressionFactory.class);
-
-    private static boolean jaxp13Available = JaxpVersion.isAtLeastJaxp13();
-
-    private static boolean jaxenAvailable =
-            ClassUtils.isPresent("org.jaxen.XPath", XPathExpressionFactory.class.getClassLoader());
-
 
     /**
      * Create a compiled XPath expression using the given string.
@@ -76,24 +68,13 @@ public abstract class XPathExpressionFactory {
         if (namespaces == null) {
             namespaces = Collections.emptyMap();
         }
-        if (jaxp13Available) {
-            try {
-                logger.trace("Creating [javax.xml.xpath.XPathExpression]");
-                return Jaxp13XPathExpressionFactory.createXPathExpression(expression, namespaces);
-            }
-            catch (XPathException e) {
-                throw e;
-            }
-            catch (Throwable e) {
-                jaxp13Available = false;
-            }
+        try {
+            logger.trace("Creating [javax.xml.xpath.XPathExpression]");
+            return Jaxp13XPathExpressionFactory.createXPathExpression(expression, namespaces);
         }
-        if (jaxenAvailable) {
-            logger.trace("Creating [org.jaxen.XPath]");
-            return JaxenXPathExpressionFactory.createXPathExpression(expression, namespaces);
+        catch (XPathException e) {
+            throw e;
         }
-        throw new IllegalStateException(
-                "Could not create XPathExpression: could not locate JAXP 1.3, or Jaxen on the class path");
     }
 
 
