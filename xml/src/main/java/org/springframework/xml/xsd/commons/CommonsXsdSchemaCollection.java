@@ -37,14 +37,12 @@ import org.springframework.xml.xsd.XsdSchemaCollection;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.ws.commons.schema.ValidationEventHandler;
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.apache.ws.commons.schema.XmlSchemaExternal;
 import org.apache.ws.commons.schema.XmlSchemaImport;
 import org.apache.ws.commons.schema.XmlSchemaInclude;
 import org.apache.ws.commons.schema.XmlSchemaObject;
-import org.apache.ws.commons.schema.XmlSchemaObjectCollection;
 import org.apache.ws.commons.schema.resolver.DefaultURIResolver;
 import org.apache.ws.commons.schema.resolver.URIResolver;
 import org.xml.sax.InputSource;
@@ -54,7 +52,7 @@ import org.xml.sax.InputSource;
  * <p/>
  * Setting the {@link #setInline(boolean) inline} flag to <code>true</code> will result in all referenced schemas
  * (included and imported) being merged into the referred schema. When including the schemas into a WSDL, this greatly
- * simplifies the deloyment of the schemas.
+ * simplifies the deployment of the schemas.
  *
  * @author Arjen Poutsma
  * @see <a href="http://ws.apache.org/commons/XmlSchema/">Commons XML Schema</a>
@@ -71,8 +69,6 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
     private Resource[] xsdResources;
 
     private boolean inline = false;
-
-    private ValidationEventHandler validationEventHandler;
 
     private URIResolver uriResolver = new ClasspathUriResolver();
 
@@ -105,19 +101,12 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
     }
 
     /**
-     * Defines whether included schemas should be inlinded into the including schema.
+     * Defines whether included schemas should be inlined into the including schema.
      * <p/>
      * Defaults to <code>false</code>.
      */
     public void setInline(boolean inline) {
         this.inline = inline;
-    }
-
-    /**
-     * Sets the WS-Commons validation event handler to use while parsing schemas.
-     */
-    public void setValidationEventHandler(ValidationEventHandler validationEventHandler) {
-        this.validationEventHandler = validationEventHandler;
     }
 
     /**
@@ -146,7 +135,7 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
             Assert.isTrue(xsdResource.exists(), xsdResource + " does not exit");
             try {
                 XmlSchema xmlSchema =
-                        schemaCollection.read(SaxUtils.createInputSource(xsdResource), validationEventHandler);
+                        schemaCollection.read(SaxUtils.createInputSource(xsdResource));
                 xmlSchemas.add(xmlSchema);
 
                 if (inline) {
@@ -188,22 +177,21 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
     private void inlineIncludes(XmlSchema schema, Set<XmlSchema> processedIncludes, Set<XmlSchema> processedImports) {
         processedIncludes.add(schema);
 
-        XmlSchemaObjectCollection schemaItems = schema.getItems();
-        for (int i = 0; i < schemaItems.getCount(); i++) {
-            XmlSchemaObject schemaObject = schemaItems.getItem(i);
+        List<XmlSchemaObject> schemaItems = schema.getItems();
+        for (int i = 0; i < schemaItems.size(); i++) {
+            XmlSchemaObject schemaObject = schemaItems.get(i);
             if (schemaObject instanceof XmlSchemaInclude) {
                 XmlSchema includedSchema = ((XmlSchemaInclude) schemaObject).getSchema();
                 if (!processedIncludes.contains(includedSchema)) {
                     inlineIncludes(includedSchema, processedIncludes, processedImports);
                     findImports(includedSchema, processedImports, processedIncludes);
-                    XmlSchemaObjectCollection includeItems = includedSchema.getItems();
-                    for (int j = 0; j < includeItems.getCount(); j++) {
-                        XmlSchemaObject includedItem = includeItems.getItem(j);
+                    List<XmlSchemaObject> includeItems = includedSchema.getItems();
+                    for (XmlSchemaObject includedItem : includeItems) {
                         schemaItems.add(includedItem);
                     }
                 }
                 // remove the <include/>
-                schemaItems.removeAt(i);
+                schemaItems.remove(i);
                 i--;
             }
         }
@@ -211,9 +199,8 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 
     private void findImports(XmlSchema schema, Set<XmlSchema> processedImports, Set<XmlSchema> processedIncludes) {
         processedImports.add(schema);
-        XmlSchemaObjectCollection includes = schema.getIncludes();
-        for (int i = 0; i < includes.getCount(); i++) {
-            XmlSchemaExternal external = (XmlSchemaExternal) includes.getItem(i);
+        List<XmlSchemaExternal> externals = schema.getExternals();
+        for (XmlSchemaExternal external : externals) {
             if (external instanceof XmlSchemaImport) {
                 XmlSchemaImport schemaImport = (XmlSchemaImport) external;
                 XmlSchema importedSchema = schemaImport.getSchema();

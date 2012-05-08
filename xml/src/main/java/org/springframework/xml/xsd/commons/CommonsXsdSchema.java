@@ -19,8 +19,8 @@ package org.springframework.xml.xsd.commons;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
@@ -55,7 +55,7 @@ public class CommonsXsdSchema implements XsdSchema {
     private final XmlSchemaCollection collection;
 
     /**
-     * Create a new instance of the  {@link CommonsXsdSchema} class with the specified {@link XmlSchema} reference.
+     * Create a new instance of the  {@code CommonsXsdSchema} class with the specified {@link XmlSchema} reference.
      *
      * @param schema the Commons <code>XmlSchema</code> object; must not be <code>null</code>
      * @throws IllegalArgumentException if the supplied <code>schema</code> is <code>null</code>
@@ -65,7 +65,7 @@ public class CommonsXsdSchema implements XsdSchema {
     }
 
     /**
-     * Create a new instance of the  {@link CommonsXsdSchema} class with the specified {@link XmlSchema} and {@link
+     * Create a new instance of the  {@code CommonsXsdSchema} class with the specified {@link XmlSchema} and {@link
      * XmlSchemaCollection} reference.
      *
      * @param schema     the Commons <code>XmlSchema</code> object; must not be <code>null</code>
@@ -83,12 +83,7 @@ public class CommonsXsdSchema implements XsdSchema {
     }
 
     public QName[] getElementNames() {
-        List<QName> result = new ArrayList<QName>();
-        Iterator<?> iterator = schema.getElements().getNames();
-        while (iterator.hasNext()) {
-            QName name = (QName) iterator.next();
-            result.add(name);
-        }
+        List<QName> result = new ArrayList<QName>(schema.getElements().keySet());
         return result.toArray(new QName[result.size()]);
     }
 
@@ -109,7 +104,12 @@ public class CommonsXsdSchema implements XsdSchema {
             // ignore
         }
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        schema.write(bos);
+        try {
+            schema.write(bos);
+        }
+        catch (UnsupportedEncodingException ex) {
+            throw new CommonsXsdSchemaException(ex.getMessage(), ex);
+        }
         ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
         return new StreamSource(bis);
     }
