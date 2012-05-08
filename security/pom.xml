@@ -11,11 +11,11 @@
     <name>Spring WS Security</name>
     <description>Spring-WS WS-Security implementation</description>
     <repositories>
-        <repository>
-            <id>jboss.repository.releases.public</id>
-            <name>JBoss Repo Public</name>
-            <url>http://repository.jboss.org/nexus/content/groups/public-jboss</url>
-        </repository>
+<repository>
+    <id>jboss.repository.releases.public</id>
+    <name>JBoss Repo Public</name>
+    <url>http://repository.jboss.org/nexus/content/groups/public-jboss</url>
+</repository>
     </repositories>
     <profiles>
         <profile>
@@ -118,13 +118,6 @@
             <artifactId>mail</artifactId>
         </dependency>
         <!-- Test dependencies -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-            <version>3.0.2.RELEASE</version>
-            <classifier>tests</classifier>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>woodstox-core-asl</artifactId>

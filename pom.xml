@@ -150,6 +150,13 @@
             </build>
         </profile>
     </profiles>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-release</id>
+            <name>Spring Release Repository</name>
+            <url>http://maven.springframework.org/release</url>
+        </pluginRepository>
+    </pluginRepositories>
     <build>
         <extensions>
             <extension>
