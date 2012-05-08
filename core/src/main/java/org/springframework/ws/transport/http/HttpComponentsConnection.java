@@ -29,67 +29,65 @@ import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.WebServiceConnection;
 
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
-import org.apache.commons.httpclient.URIException;
-import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
-import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.util.EntityUtils;
 
 /**
- * Implementation of {@link WebServiceConnection} that is based on Jakarta Commons HttpClient. Exposes a {@link
- * PostMethod}.
+ * Implementation of {@link WebServiceConnection} that is based on Apache HttpClient. Exposes a {@link HttpPost} and
+ * {@link HttpResponse}.
  *
+ * @author Alan Stewart
+ * @author Barry Pitman
  * @author Arjen Poutsma
- * @since 1.0.0
- * @deprecated In favor of {@link HttpComponentsConnection}
+ * @since 2.1.0
  */
-@Deprecated
-public class CommonsHttpConnection extends AbstractHttpSenderConnection {
+public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 
     private final HttpClient httpClient;
 
-    private final PostMethod postMethod;
+    private final HttpPost httpPost;
+
+    private HttpResponse httpResponse;
 
     private ByteArrayOutputStream requestBuffer;
 
-    private MultiThreadedHttpConnectionManager connectionManager;
-
-    protected CommonsHttpConnection(HttpClient httpClient, PostMethod postMethod) {
+    protected HttpComponentsConnection(HttpClient httpClient, HttpPost httpPost) {
         Assert.notNull(httpClient, "httpClient must not be null");
-        Assert.notNull(postMethod, "postMethod must not be null");
+        Assert.notNull(httpPost, "httpPost must not be null");
         this.httpClient = httpClient;
-        this.postMethod = postMethod;
+        this.httpPost = httpPost;
     }
 
-    public PostMethod getPostMethod() {
-        return postMethod;
+    public HttpPost getHttpPost() {
+        return httpPost;
+    }
+
+    public HttpResponse getHttpResponse() {
+        return httpResponse;
     }
 
     @Override
     public void onClose() throws IOException {
-        postMethod.releaseConnection();
-        if (connectionManager != null) {
-            connectionManager.shutdown();
+        if (httpResponse != null && httpResponse.getEntity() != null) {
+            EntityUtils.consume(httpResponse.getEntity());
         }
     }
 
     /*
-     * URI
-     */
-
+      * URI
+      */
     public URI getUri() throws URISyntaxException {
-        try {
-            return new URI(postMethod.getURI().toString());
-        }
-        catch (URIException ex) {
-            throw new URISyntaxException("", ex.getMessage());
-        }
+        return new URI(httpPost.getURI().toString());
     }
 
     /*
-     * Sending request
-     */
+      * Sending request
+      */
 
     @Override
     protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
@@ -98,7 +96,7 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 
     @Override
     protected void addRequestHeader(String name, String value) throws IOException {
-        postMethod.addRequestHeader(name, value);
+        httpPost.addHeader(name, value);
     }
 
     @Override
@@ -108,21 +106,9 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 
     @Override
     protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-        postMethod.setRequestEntity(new ByteArrayRequestEntity(requestBuffer.toByteArray()));
+        httpPost.setEntity(new ByteArrayEntity(requestBuffer.toByteArray()));
         requestBuffer = null;
-        try {
-            httpClient.executeMethod(postMethod);
-        } catch (IllegalStateException ex) {
-            if ("Connection factory has been shutdown.".equals(ex.getMessage())) {
-                // The application context has been closed, resulting in a connection factory shutdown and an ISE.
-                // Let's create a new connection factory for this connection only.
-                connectionManager = new MultiThreadedHttpConnectionManager();
-                httpClient.setHttpConnectionManager(connectionManager);
-                httpClient.executeMethod(postMethod);
-            } else {
-                throw ex;
-            }
-        }
+        httpResponse = httpClient.execute(httpPost);
     }
 
     /*
@@ -131,27 +117,35 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 
     @Override
     protected int getResponseCode() throws IOException {
-        return postMethod.getStatusCode();
+        return httpResponse.getStatusLine().getStatusCode();
     }
 
     @Override
     protected String getResponseMessage() throws IOException {
-        return postMethod.getStatusText();
+        return httpResponse.getStatusLine().getReasonPhrase();
     }
 
     @Override
     protected long getResponseContentLength() throws IOException {
-        return postMethod.getResponseContentLength();
+        HttpEntity entity = httpResponse.getEntity();
+        if (entity != null) {
+            return entity.getContentLength();
+        }
+        return 0;
     }
 
     @Override
     protected InputStream getRawResponseInputStream() throws IOException {
-        return postMethod.getResponseBodyAsStream();
+        HttpEntity entity = httpResponse.getEntity();
+        if (entity != null) {
+            return entity.getContent();
+        }
+        throw new IllegalStateException("Response has no enclosing response entity, cannot create input stream");
     }
 
     @Override
     protected Iterator<String> getResponseHeaderNames() throws IOException {
-        Header[] headers = postMethod.getResponseHeaders();
+        Header[] headers = httpResponse.getAllHeaders();
         String[] names = new String[headers.length];
         for (int i = 0; i < headers.length; i++) {
             names[i] = headers[i].getName();
@@ -161,12 +155,11 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 
     @Override
     protected Iterator<String> getResponseHeaders(String name) throws IOException {
-        Header[] headers = postMethod.getResponseHeaders(name);
+        Header[] headers = httpResponse.getHeaders(name);
         String[] values = new String[headers.length];
         for (int i = 0; i < headers.length; i++) {
             values[i] = headers[i].getValue();
         }
         return Arrays.asList(values).iterator();
     }
-
 }
