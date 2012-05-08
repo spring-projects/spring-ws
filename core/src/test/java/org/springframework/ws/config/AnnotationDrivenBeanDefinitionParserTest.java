@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import java.util.Map;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ws.server.EndpointAdapter;
+import org.springframework.ws.server.EndpointExceptionResolver;
 import org.springframework.ws.server.EndpointMapping;
 import org.springframework.ws.server.endpoint.adapter.DefaultMethodEndpointAdapter;
 import org.springframework.ws.server.endpoint.adapter.method.MessageContextMethodArgumentResolver;
@@ -39,6 +40,8 @@ import org.springframework.ws.server.endpoint.adapter.method.jaxb.JaxbElementPay
 import org.springframework.ws.server.endpoint.adapter.method.jaxb.XmlRootElementPayloadMethodProcessor;
 import org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping;
 import org.springframework.ws.soap.addressing.server.AnnotationActionEndpointMapping;
+import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
+import org.springframework.ws.soap.server.endpoint.SoapFaultAnnotationExceptionResolver;
 import org.springframework.ws.soap.server.endpoint.adapter.method.SoapMethodArgumentResolver;
 import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping;
 
@@ -101,6 +104,15 @@ public class AnnotationDrivenBeanDefinitionParserTest {
         assertContainsInstanceOf(returnValueHandlers, JDomPayloadMethodProcessor.class);
         assertContainsInstanceOf(returnValueHandlers, XomPayloadMethodProcessor.class);
     }
+
+    @Test
+    public void endpointExceptionResolver() {
+        Map<String, EndpointExceptionResolver> result = applicationContext.getBeansOfType(EndpointExceptionResolver.class);
+        assertEquals("invalid amount of endpoint exception resolvers found", 2, result.size());
+        assertContainsInstanceOf(result.values(), SoapFaultAnnotationExceptionResolver.class);
+        assertContainsInstanceOf(result.values(), SimpleSoapExceptionResolver.class);
+    }
+
 
     private <T> void assertContainsInstanceOf(Collection<T> collection, Class<? extends T> clazz) {
         boolean found = false;

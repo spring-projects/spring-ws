@@ -40,6 +40,8 @@ import org.springframework.ws.server.endpoint.adapter.method.jaxb.JaxbElementPay
 import org.springframework.ws.server.endpoint.adapter.method.jaxb.XmlRootElementPayloadMethodProcessor;
 import org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping;
 import org.springframework.ws.soap.addressing.server.AnnotationActionEndpointMapping;
+import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
+import org.springframework.ws.soap.server.endpoint.SoapFaultAnnotationExceptionResolver;
 import org.springframework.ws.soap.server.endpoint.adapter.method.SoapMethodArgumentResolver;
 import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping;
 
@@ -77,6 +79,8 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
         registerEndpointMappings(source, parserContext);
 
         registerEndpointAdapters(element, source, parserContext);
+
+        registerEndpointExceptionResolvers(source, parserContext);
 
         parserContext.popAndRegisterContainingComponent();
 
@@ -176,6 +180,18 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
         adapterDef.getPropertyValues().add("methodReturnValueHandlers", returnValueHandlers);
 
         parserContext.getReaderContext().registerWithGeneratedName(adapterDef);
+    }
+
+    private void registerEndpointExceptionResolvers(Object source, ParserContext parserContext) {
+        RootBeanDefinition annotationResolverDef =
+                createBeanDefinition(SoapFaultAnnotationExceptionResolver.class, source);
+        annotationResolverDef.getPropertyValues().add("order", 0);
+        parserContext.getReaderContext().registerWithGeneratedName(annotationResolverDef);
+
+        RootBeanDefinition simpleResolverDef =
+                createBeanDefinition(SimpleSoapExceptionResolver.class, source);
+        simpleResolverDef.getPropertyValues().add("order", 1);
+        parserContext.getReaderContext().registerWithGeneratedName(simpleResolverDef);
     }
 
     private RuntimeBeanReference createBeanReference(Class<?> beanClass, Object source, ParserContext parserContext) {
