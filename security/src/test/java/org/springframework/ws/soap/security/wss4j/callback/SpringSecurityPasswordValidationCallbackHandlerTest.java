@@ -36,9 +36,9 @@ import org.junit.Test;
 import static org.easymock.EasyMock.*;
 
 /** @author tareq */
-public class SpringDigestPasswordValidationCallbackHandlerTest {
+public class SpringSecurityPasswordValidationCallbackHandlerTest {
 
-    private SpringDigestPasswordValidationCallbackHandler callbackHandler;
+    private SpringSecurityPasswordValidationCallbackHandler callbackHandler;
 
     private SimpleGrantedAuthority grantedAuthority;
 
@@ -48,7 +48,7 @@ public class SpringDigestPasswordValidationCallbackHandlerTest {
 
     @Before
     public void setUp() throws Exception {
-        callbackHandler = new SpringDigestPasswordValidationCallbackHandler();
+        callbackHandler = new SpringSecurityPasswordValidationCallbackHandler();
 
         grantedAuthority = new SimpleGrantedAuthority("ROLE_1");
         user = new User("Ernie", "Bert", true, true, true, true, Collections.singleton(grantedAuthority));

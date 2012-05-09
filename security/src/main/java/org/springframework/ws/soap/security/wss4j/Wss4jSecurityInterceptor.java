@@ -19,7 +19,8 @@ package org.springframework.ws.soap.security.wss4j;
 import java.io.IOException;
 import java.security.Principal;
 import java.security.cert.X509Certificate;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
@@ -49,6 +50,9 @@ import org.apache.ws.security.handler.WSHandlerConstants;
 import org.apache.ws.security.handler.WSHandlerResult;
 import org.apache.ws.security.message.token.Timestamp;
 import org.apache.ws.security.util.WSSecurityUtil;
+import org.apache.ws.security.validate.Credential;
+import org.apache.ws.security.validate.SignatureTrustValidator;
+import org.apache.ws.security.validate.TimestampValidator;
 import org.w3c.dom.Document;
 
 /**
@@ -88,7 +92,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     private String securementActions;
 
-    private Vector<Integer> securementActionsVector;
+    private List<Integer> securementActionsVector;
 
     private String securementUsername;
 
@@ -98,7 +102,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     private String validationActions;
 
-    private Vector<Integer> validationActionsVector;
+    private List<Integer> validationActionsVector;
 
     private String validationActor;
 
@@ -118,11 +122,17 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     private final Wss4jHandler handler = new Wss4jHandler();
 
-    private final WSSecurityEngine securityEngine = WSSecurityEngine.getInstance();
+    private final WSSecurityEngine securityEngine = new WSSecurityEngine();
+
+    private boolean enableRevocation;
+
+    private boolean bspCompliant;
+
+    private boolean securementUseDerivedKey;
 
     public void setSecurementActions(String securementActions) {
         this.securementActions = securementActions;
-        securementActionsVector = new Vector<Integer>();
+        securementActionsVector = new ArrayList<Integer>();
         try {
             securementAction = WSSecurityUtil.decodeAction(securementActions, securementActionsVector);
         }
@@ -140,24 +150,6 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
      */
     public void setSecurementActor(String securementActor) {
         handler.setOption(WSHandlerConstants.ACTOR, securementActor);
-    }
-
-    /**
-     * Sets the {@link org.apache.ws.security.WSPasswordCallback} handler to use when securing messages.
-     *
-     * @see #setSecurementCallbackHandlers(CallbackHandler[])
-     */
-    public void setSecurementCallbackHandler(CallbackHandler securementCallbackHandler) {
-        handler.setSecurementCallbackHandler(securementCallbackHandler);
-    }
-
-    /**
-     * Sets the {@link org.apache.ws.security.WSPasswordCallback} handlers to use when securing messages.
-     *
-     * @see #setSecurementCallbackHandler(CallbackHandler)
-     */
-    public void setSecurementCallbackHandlers(CallbackHandler[] securementCallbackHandler) {
-        handler.setSecurementCallbackHandler(new CallbackHandlerChain(securementCallbackHandler));
     }
 
     public void setSecurementEncryptionCrypto(Crypto securementEncryptionCrypto) {
@@ -354,6 +346,13 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         this.securementTimeToLive = securementTimeToLive;
     }
 
+    /**
+     * Enables the derivation of keys as per the UsernameTokenProfile 1.1 spec. Default is {@code true}.
+     */
+    public void setSecurementUseDerivedKey(boolean securementUseDerivedKey) {
+        this.securementUseDerivedKey = securementUseDerivedKey;
+    }
+
     /** Sets the server-side time to live */
     public void setValidationTimeToLive(int validationTimeToLive) {
         if (validationTimeToLive <= 0) {
@@ -362,19 +361,11 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         this.validationTimeToLive = validationTimeToLive;
     }
 
-    /** Sets the server-side time to live
-     * @deprecated Use  {@link #setValidationTimeToLive(int)} instead.
-     */
-    @Deprecated
-    public void setTimeToLive(int timeToLive) {
-        setValidationTimeToLive(timeToLive);
-    }
-
     /** Sets the validation actions to be executed by the interceptor. */
     public void setValidationActions(String actions) {
         this.validationActions = actions;
         try {
-            validationActionsVector = new Vector<Integer>();
+            validationActionsVector = new ArrayList<Integer>();
             validationAction = WSSecurityUtil.decodeAction(actions, validationActionsVector);
         }
         catch (WSSecurityException ex) {
@@ -464,6 +455,20 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
     	wssConfig = config;
     }
 
+    /**
+     * Set whether to enable CRL checking or not when verifying trust in a certificate.
+     */
+    public void setEnableRevocation(boolean enableRevocation) {
+        this.enableRevocation = enableRevocation;
+    }
+
+    /**
+     * Set the WS-I Basic Security Profile compliance mode. Default is {@code true}.
+     */
+    public void setBspCompliant(boolean bspCompliant) {
+        this.bspCompliant = bspCompliant;
+    }
+
     public void afterPropertiesSet() throws Exception {
         Assert.isTrue(validationActions != null || securementActions != null,
                 "validationActions or securementActions are required");
@@ -481,6 +486,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
         // allow for qualified password types for .Net interoperability
         securityEngine.getWssConfig().setAllowNamespaceQualifiedPasswordTypes(true);
+        securityEngine.getWssConfig().setWsiBSPCompliant(bspCompliant);
     }
 
     @Override
@@ -500,7 +506,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
             // action, we need to pass an empty securementActionsVector to avoid
             // NPE
             if (securementAction == WSConstants.NO_SECURITY) {
-                securementActionsVector = new Vector<Integer>(0);
+                securementActionsVector = new ArrayList<Integer>(0);
             }
 
             handler.doSenderAction(securementAction, envelopeAsDocument, requestData, securementActionsVector, false);
@@ -532,6 +538,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         }
 
         requestData.setTimeToLive(securementTimeToLive);
+
+        requestData.setUseDerivedKey(securementUseDerivedKey);
         
         requestData.setWssConfig(wssConfig);
 
@@ -555,7 +563,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         // Header processing
 
         try {
-            Vector<WSSecurityEngineResult> results = securityEngine
+            List<WSSecurityEngineResult> results = securityEngine
                     .processSecurityHeader(envelopeAsDocument, validationActor, validationCallbackHandler,
                             validationSignatureCrypto, validationDecryptionCrypto);
 
@@ -588,13 +596,15 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
     /**
      * Checks whether the received headers match the configured validation actions. Subclasses could override this method
      * for custom verification behavior.
+     *
+     *
      * @param results the results of the validation function
-     * @param validationActionsVector the decoded validation actions
+     * @param validationActions the decoded validation actions
      * @throws Wss4jSecurityValidationException if the results are deemed invalid
      */
-    protected void checkResults(Vector<WSSecurityEngineResult> results, Vector<Integer> validationActionsVector)
+    protected void checkResults(List<WSSecurityEngineResult> results, List<Integer> validationActions)
             throws Wss4jSecurityValidationException {
-        if (!handler.checkReceiverResultsAnyOrder(results, validationActionsVector)) {
+        if (!handler.checkReceiverResultsAnyOrder(results, validationActions)) {
             throw new Wss4jSecurityValidationException("Security processing failed (actions mismatch)");
         }
     }
@@ -604,10 +614,10 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
      * Confirmation require this.
      */
     @SuppressWarnings("unchecked")
-    private void updateContextWithResults(MessageContext messageContext, Vector<WSSecurityEngineResult> results) {
-        Vector<WSHandlerResult> handlerResults;
-        if ((handlerResults = (Vector<WSHandlerResult>) messageContext.getProperty(WSHandlerConstants.RECV_RESULTS)) == null) {
-            handlerResults = new Vector<WSHandlerResult>();
+    private void updateContextWithResults(MessageContext messageContext, List<WSSecurityEngineResult> results) {
+        List<WSHandlerResult> handlerResults;
+        if ((handlerResults = (List<WSHandlerResult>) messageContext.getProperty(WSHandlerConstants.RECV_RESULTS)) == null) {
+            handlerResults = new ArrayList<WSHandlerResult>();
             messageContext.setProperty(WSHandlerConstants.RECV_RESULTS, handlerResults);
         }
         WSHandlerResult rResult = new WSHandlerResult(validationActor, results);
@@ -616,35 +626,47 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
     }
 
     /** Verifies the trust of a certificate. */
-    protected void verifyCertificateTrust(Vector<WSSecurityEngineResult> results) throws WSSecurityException {
-        RequestData requestData = new RequestData();
-        requestData.setSigCrypto(validationSignatureCrypto);
+    protected void verifyCertificateTrust(List<WSSecurityEngineResult> results) throws WSSecurityException {
         WSSecurityEngineResult actionResult = WSSecurityUtil.fetchActionResult(results, WSConstants.SIGN);
 
         if (actionResult != null) {
-            X509Certificate returnCert = (X509Certificate) actionResult.get(WSSecurityEngineResult.TAG_X509_CERTIFICATE)
-                    ;
-            if (!handler.verifyTrust(returnCert, requestData)) {
-                throw new Wss4jSecurityValidationException("The certificate used for the signature is not trusted");
-            }
+            X509Certificate returnCert =
+                    (X509Certificate) actionResult.get(WSSecurityEngineResult.TAG_X509_CERTIFICATE);
+            Credential credential = new Credential();
+            credential.setCertificates(new X509Certificate[] { returnCert});
+
+            RequestData requestData = new RequestData();
+            requestData.setSigCrypto(validationSignatureCrypto);
+            requestData.setEnableRevocation(enableRevocation);
+
+            SignatureTrustValidator validator = new SignatureTrustValidator();
+            validator.validate(credential, requestData);
         }
     }
 
     /** Verifies the timestamp. */
-    protected void verifyTimestamp(Vector<WSSecurityEngineResult> results) throws WSSecurityException {
+    protected void verifyTimestamp(List<WSSecurityEngineResult> results) throws WSSecurityException {
         WSSecurityEngineResult actionResult = WSSecurityUtil.fetchActionResult(results, WSConstants.TS);
 
         if (actionResult != null) {
             Timestamp timestamp = (Timestamp) actionResult.get(WSSecurityEngineResult.TAG_TIMESTAMP);
             if (timestamp != null && timestampStrict) {
-                if (!handler.verifyTimestamp(timestamp, validationTimeToLive)) {
-                    throw new Wss4jSecurityValidationException("Invalid timestamp : " + timestamp.getID());
-                }
+                Credential credential = new Credential();
+                credential.setTimestamp(timestamp);
+
+                RequestData requestData = new RequestData();
+                WSSConfig config = new WSSConfig();
+                config.setTimeStampTTL(validationTimeToLive);
+                config.setTimeStampStrict(timestampStrict);
+                requestData.setWssConfig(config);
+
+                TimestampValidator validator = new TimestampValidator();
+                validator.validate(credential, requestData);
             }
         }
     }
 
-    private void processPrincipal(Vector<WSSecurityEngineResult> results) {
+    private void processPrincipal(List<WSSecurityEngineResult> results) {
         WSSecurityEngineResult actionResult = WSSecurityUtil.fetchActionResult(results, WSConstants.UT);
 
         if (actionResult != null) {

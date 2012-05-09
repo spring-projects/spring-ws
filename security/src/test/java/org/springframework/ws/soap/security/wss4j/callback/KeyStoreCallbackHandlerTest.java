@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -35,14 +35,14 @@ public class KeyStoreCallbackHandlerTest {
     @Before
     public void setUp() throws Exception {
         callbackHandler = new KeyStoreCallbackHandler();
-        callback = new WSPasswordCallback("secretkey", WSPasswordCallback.KEY_NAME);
+        callback = new WSPasswordCallback("secretkey", WSPasswordCallback.SECRET_KEY);
 
         KeyStoreFactoryBean factory = new KeyStoreFactoryBean();
         factory.setLocation(new ClassPathResource("private.jks"));
         factory.setPassword("123456");
         factory.setType("JCEKS");
         factory.afterPropertiesSet();
-        KeyStore keyStore = (KeyStore) factory.getObject();
+        KeyStore keyStore = factory.getObject();
         callbackHandler.setKeyStore(keyStore);
         callbackHandler.setSymmetricKeyPassword("123456");
     }

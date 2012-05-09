@@ -19,17 +19,13 @@ package org.springframework.ws.soap.security.wss4j;
 import java.util.Properties;
 
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.TestingAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.memory.InMemoryDaoImpl;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.security.wss4j.callback.SpringDigestPasswordValidationCallbackHandler;
-import org.springframework.ws.soap.security.wss4j.callback.SpringPlainTextPasswordValidationCallbackHandler;
+import org.springframework.ws.soap.security.wss4j.callback.SpringSecurityPasswordValidationCallbackHandler;
 
 import org.apache.ws.security.WSConstants;
 import org.junit.After;
@@ -104,28 +100,18 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCa
         else {
             interceptor.setSecurementActions(actions);
         }
+        SpringSecurityPasswordValidationCallbackHandler callbackHandler =
+                new SpringSecurityPasswordValidationCallbackHandler();
+        InMemoryUserDetailsManager userDetailsManager = new InMemoryUserDetailsManager(users);
+        callbackHandler.setUserDetailsService(userDetailsManager);
         if (digest) {
-            SpringDigestPasswordValidationCallbackHandler callbackHandler =
-                    new SpringDigestPasswordValidationCallbackHandler();
-            InMemoryDaoImpl userDetailsService = new InMemoryDaoImpl();
-            userDetailsService.setUserProperties(users);
-            userDetailsService.afterPropertiesSet();
-            callbackHandler.setUserDetailsService(userDetailsService);
             interceptor.setSecurementPasswordType(WSConstants.PW_DIGEST);
-            interceptor.setValidationCallbackHandler(callbackHandler);
-            interceptor.afterPropertiesSet();
         }
         else {
-            SpringPlainTextPasswordValidationCallbackHandler callbackHandler =
-                    new SpringPlainTextPasswordValidationCallbackHandler();
-            Authentication authResult = new TestingAuthenticationToken("Bert", "Ernie");
-            expect(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken("Bert", "Ernie"))).andReturn(authResult);
-            callbackHandler.setAuthenticationManager(authenticationManager);
-            callbackHandler.afterPropertiesSet();
             interceptor.setSecurementPasswordType(WSConstants.PW_TEXT);
-            interceptor.setValidationCallbackHandler(callbackHandler);
-            interceptor.afterPropertiesSet();
         }
+        interceptor.setValidationCallbackHandler(callbackHandler);
+        interceptor.afterPropertiesSet();
         replay(authenticationManager);
         return interceptor;
     }
