@@ -35,6 +35,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 /**
@@ -52,15 +53,18 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 
     private final HttpPost httpPost;
 
+    private final HttpContext httpContext;
+
     private HttpResponse httpResponse;
 
     private ByteArrayOutputStream requestBuffer;
 
-    protected HttpComponentsConnection(HttpClient httpClient, HttpPost httpPost) {
+    protected HttpComponentsConnection(HttpClient httpClient, HttpPost httpPost, HttpContext httpContext) {
         Assert.notNull(httpClient, "httpClient must not be null");
         Assert.notNull(httpPost, "httpPost must not be null");
         this.httpClient = httpClient;
         this.httpPost = httpPost;
+        this.httpContext = httpContext;
     }
 
     public HttpPost getHttpPost() {
@@ -108,7 +112,12 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
     protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
         httpPost.setEntity(new ByteArrayEntity(requestBuffer.toByteArray()));
         requestBuffer = null;
-        httpResponse = httpClient.execute(httpPost);
+        if (httpContext != null) {
+            httpResponse = httpClient.execute(httpPost, httpContext);
+        }
+        else {
+            httpResponse = httpClient.execute(httpPost);
+        }
     }
 
     /*

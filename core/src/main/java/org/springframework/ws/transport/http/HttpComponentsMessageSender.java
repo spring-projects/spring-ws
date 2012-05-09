@@ -42,7 +42,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.protocol.BasicHttpProcessor;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 
@@ -78,14 +77,10 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
      * default {@link SingleClientConnManager}.
      */
     public HttpComponentsMessageSender() {
-        httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager()) {
-            @Override
-            protected BasicHttpProcessor createHttpProcessor() {
-                BasicHttpProcessor processor = super.createHttpProcessor();
-                processor.addInterceptor(new ProtocolExceptionOverrideInterceptor(), 0);
-                return processor;
-            }
-        };
+        DefaultHttpClient defaultClient = new DefaultHttpClient(new ThreadSafeClientConnManager());
+        defaultClient.addRequestInterceptor(new RemoveSoapHeadersInterceptor(), 0);
+
+        this.httpClient = defaultClient;
         setConnectionTimeout(DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS);
         setReadTimeout(DEFAULT_READ_TIMEOUT_MILLISECONDS);
     }
@@ -226,7 +221,19 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
             httpPost.addHeader(HttpTransportConstants.HEADER_ACCEPT_ENCODING,
                     HttpTransportConstants.CONTENT_ENCODING_GZIP);
         }
-        return new HttpComponentsConnection(getHttpClient(), httpPost);
+        HttpContext httpContext = createContext(uri);
+        return new HttpComponentsConnection(getHttpClient(), httpPost, httpContext);
+    }
+
+    /**
+     * Template method that allows for creation of a {@link HttpContext} for the given uri. Default implementation
+     * returns {@code null}.
+     *
+     * @param uri the URI to create the context for
+     * @return the context, or {@code null}
+     */
+    protected HttpContext createContext(URI uri) {
+        return null;
     }
 
     public void destroy() throws Exception {
@@ -238,7 +245,7 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
      * {@code Transfer-Encoding} headers from the request. Necessary, because SAAJ and other SOAP implementations set these
      * headers themselves, and HttpClient throws an exception if they have been set.
      */
-    private static class ProtocolExceptionOverrideInterceptor implements HttpRequestInterceptor {
+    private static class RemoveSoapHeadersInterceptor implements HttpRequestInterceptor {
 
         public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
             if (request instanceof HttpEntityEnclosingRequest) {
