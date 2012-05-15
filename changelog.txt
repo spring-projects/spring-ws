@@ -2,6 +2,21 @@ SPRING WEB SERVICES CHANGELOG
 =============================
 http://www.springframework.org/spring-ws
 
+Changes in version 2.1.0.RC1
+----------------------------------
+
+** Bug
+    * [SWS-757] - Airline Sample Maven Build Error
+
+** Improvement
+    * [SWS-711] - Upgrade to wss4j 1.6
+    * [SWS-758] - Upgrade XmlSchemaCollection
+    * [SWS-771] - Upgrade template.mf
+    * [SWS-772] - <sws:annotation-driven/> should register a SoapFaultAnnotationExceptionResolver
+
+** New Feature
+    * [SWS-563] - Provide support for Apache HttpClient 4.0
+
 Changes in version 2.0.5.RELEASE
 ----------------------------------
 

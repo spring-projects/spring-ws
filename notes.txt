@@ -1,9 +1,37 @@
 Dear Spring community,
 
-I'm pleased to announce that Spring Web Services 2.0.5.RELEASE has
-been released!
+I'm pleased to announce that Spring Web Services 2.1.0.RC1 has been released!
 
-This is the latest GA release in the 2.0 release cycle. It contains bug fixes.
+This is the first Release Candidate in the 2.1 release cycle. It mainly
+consists of necessary upgrades to third party dependencies. Specifically:
+
+- WSS4J has been upgraded to 1.6.
+- XmlSchema has been upgraded to 2.0
+- Support for Apache HttpClient 4.0
+- JDOM has been upgraded to 2.0
+
+and various other minor library upgrades.
+
+Some of the library upgrades contain changes that are not backwards compatible.
+As such, you might be required to change your code and/or configuration as a
+consequence. More specifically:
+
+WSS4J:
+- SpringDigestPasswordValidationCallbackHandler and
+  SpringPlainTestPasswordValidationCallbackHandler have been merged into
+  SpringSecurityPasswordValidationCallbackHandler, which works the same way as
+  the SpringDigestPasswordValidationCallbackHandler (i.e. supply it with a
+  UserDetailsService).
+- The Wss4jSecurityInterceptor no longer has the securementCallbackHandler
+  property, as it's no longer used by WS4J.
+
+JDOM:
+- JDOM 2.0 changed the package name from org.jdom.x to org.jdom2.x. Make sure
+  to switch to this new package when using JDOM in combination with
+  @RequestBody/@ResponseBody as well as the AbstractJDomPayloadEndpoint.
+
+Note that there were no milestone releases before this RC: it is a library
+upgrade release only.
 
 Please see the changelog for more details.
 
