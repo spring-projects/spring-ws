@@ -4,7 +4,7 @@
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws</artifactId>
     <packaging>pom</packaging>
-    <version>2.1.0.RC1-SNAPSHOT</version>
+    <version>2.1.0.RC1</version>
     <name>Spring Web Services</name>
     <description>
         Spring Web Services is a product of the Spring community focused on creating document-driven Web services. It
@@ -107,9 +107,9 @@
         </site>
     </distributionManagement>
     <scm>
-        <connection>scm:svn:https://src.springframework.org/svn/spring-ws/trunk</connection>
-        <developerConnection>scm:svn:https://src.springframework.org/svn/spring-ws/trunk/</developerConnection>
-        <url>https://fisheye.springframework.org/browse/spring-ws/trunk</url>
+        <connection>scm:svn:https://src.springframework.org/svn/spring-ws/tags/spring-ws-2.1.0.RC1</connection>
+        <developerConnection>scm:svn:https://src.springframework.org/svn/spring-ws/tags/spring-ws-2.1.0.RC1</developerConnection>
+        <url>https://fisheye.springframework.org/browse/spring-ws/tags/spring-ws-2.1.0.RC1</url>
     </scm>
     <properties>
         <spring.framework.version>3.1.1.RELEASE</spring.framework.version>
@@ -293,7 +293,7 @@
                         </copy>
                         <move file="target/site/reference/pdf/index.pdf" tofile="target/site/reference/pdf/spring-ws-reference.pdf" failonerror="false" />
                         <move todir="target/site/reference/html" failonerror="false">
-							<fileset dir="target/site/reference/html/index"/>
+							<fileset dir="target/site/reference/html/index" />
 						</move>
                     </postProcess>
                 </configuration>
