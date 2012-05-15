@@ -20,9 +20,16 @@
     </licenses>
     <distributionManagement>
         <downloadUrl>http://static.springframework.org/spring-ws/site/downloads/releases.html</downloadUrl>
+<!--
         <repository>
             <id>spring-local-repo</id>
             <url>file:///Users/arjen/Projects/Spring/repo</url>
+        </repository>
+-->
+        <repository>
+            <id>spring-milestone</id>
+            <name>Spring Milestone Repository</name>
+            <url>s3://maven.springframework.org/milestone</url>
         </repository>
 		<!--
         <repository>
