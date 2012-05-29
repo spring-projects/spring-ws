@@ -25,6 +25,7 @@ import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.core.Ordered;
 import org.springframework.util.ClassUtils;
 import org.springframework.ws.server.endpoint.adapter.DefaultMethodEndpointAdapter;
 import org.springframework.ws.server.endpoint.adapter.method.MarshallingPayloadMethodProcessor;
@@ -190,7 +191,7 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 
         RootBeanDefinition simpleResolverDef =
                 createBeanDefinition(SimpleSoapExceptionResolver.class, source);
-        simpleResolverDef.getPropertyValues().add("order", 1);
+        simpleResolverDef.getPropertyValues().add("order", Ordered.LOWEST_PRECEDENCE);
         parserContext.getReaderContext().registerWithGeneratedName(simpleResolverDef);
     }
 
