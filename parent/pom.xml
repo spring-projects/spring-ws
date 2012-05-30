@@ -4,7 +4,7 @@
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws-parent</artifactId>
     <packaging>pom</packaging>
-    <version>2.1.0.RC2-SNAPSHOT</version>
+    <version>2.1.0.RELEASE-SNAPSHOT</version>
     <name>Spring Web Services - Parent</name>
     <url>http://static.springframework.org/spring-ws/site/index.html</url>
     <organization>
@@ -22,22 +22,22 @@
         <downloadUrl>http://static.springframework.org/spring-ws/site/downloads/releases.html</downloadUrl>
 <!--
         <repository>
+            <id>spring-milestone</id>
+            <name>Spring Milestone Repository</name>
+            <url>s3://maven.springframework.org/milestone</url>
+        </repository>
+-->
+<!--
+        <repository>
             <id>spring-local-repo</id>
             <url>file:///Users/arjen/Projects/Spring/repo</url>
         </repository>
 -->
         <repository>
-            <id>spring-milestone</id>
-            <name>Spring Milestone Repository</name>
-            <url>s3://maven.springframework.org/milestone</url>
-        </repository>
-		<!--
-        <repository>
             <id>spring-release</id>
             <name>Spring Release Repository</name>
             <url>s3://maven.springframework.org/release</url>
         </repository>
-		-->
         <snapshotRepository>
             <id>spring-snapshot</id>
             <name>Spring Snapshot Repository</name>
@@ -54,7 +54,7 @@
         <url>https://fisheye.springframework.org/browse/spring-ws/trunk</url>
     </scm>
     <properties>
-        <osgi.version>2.1.0.RC1</osgi.version>
+        <osgi.version>2.1.0.RELEASE</osgi.version>
         <osgi.range>"${osgi.version:[=.=.=, =.=.+1)}"</osgi.range>
         <spring.framework.version>3.1.1.RELEASE</spring.framework.version>
         <spring.framework.osgi.range>"[3.1.0, 4.0.0)"</spring.framework.osgi.range>
