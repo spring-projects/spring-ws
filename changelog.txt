@@ -2,8 +2,14 @@ SPRING WEB SERVICES CHANGELOG
 =============================
 http://www.springframework.org/spring-ws
 
+Changes in version 2.1.0.RELEASE
+----------------------------
+
+** Bug
+    * [SWS-777] - SoapFaultMappingExceptionResolver not handling exception
+
 Changes in version 2.1.0.RC1
-----------------------------------
+----------------------------
 
 ** Bug
     * [SWS-757] - Airline Sample Maven Build Error
@@ -18,7 +24,7 @@ Changes in version 2.1.0.RC1
     * [SWS-563] - Provide support for Apache HttpClient 4.0
 
 Changes in version 2.0.5.RELEASE
-----------------------------------
+--------------------------------
 
 ** Bug
     * [SWS-754] - EndpointInterceptor.afterCompletion is not always invoked
@@ -38,7 +44,7 @@ Changes in version 2.0.5.RELEASE
     * [SWS-768] - Make JAXP13ValidatorFactory smarter
 
 Changes in version 2.0.4.RELEASE
-----------------------------------
+--------------------------------
 
 ** Bug
     * [SWS-647] - PayloadValidatingInterceptor throws IllegalArgumentException when passed a schema collection
@@ -53,7 +59,7 @@ Changes in version 2.0.4.RELEASE
     * [SWS-749] - org.springframework.xml.sax.SaxUtils swallows exceptions
 
 Changes in version 2.0.3.RELEASE
-----------------------------------
+--------------------------------
 
 ** Bug
     * [SWS-687] - Attachment content id is resetted by spring web service
@@ -89,7 +95,7 @@ Changes in version 2.0.3.RELEASE
     * [SWS-728] - OXM chapter not linked from the index page
 
 Changes in version 2.0.2.RELEASE
-----------------------------------
+--------------------------------
 
 ** Bug
     * [SWS-702] - sws:annotation-driven does not pick up @Endpoint annotations on classes that are JDK proxies
@@ -103,7 +109,7 @@ Changes in version 2.0.2.RELEASE
     * [SWS-662] - Support for UriEndpointMapping in server-side test
 
 Changes in version 2.0.1.RELEASE
-----------------------------------
+--------------------------------
 
 ** Bug
     * [SWS-242] - Allow for custom ErrorHandler in PayloadValidatingInterceptor
@@ -125,7 +131,7 @@ Changes in version 2.0.1.RELEASE
     * [SWS-685] - Fix broken references in the reference doc
 
 Changes in version 2.0.0.RELEASE
-----------------------------------
+--------------------------------
 
 ** Bug
     * [SWS-585] - POMs of Spring-WS artifacts at maven central repo wrongfuly contain references to external repositories
@@ -142,7 +148,7 @@ Changes in version 2.0.0.RELEASE
     * [SWS-263] - Provide xml based Mock for Web Services
 
 Changes in version 2.0 Release Candidate 2
-----------------------------------
+------------------------------------------
 
 ** Sub-task
     * [SWS-668] - sws:annotation-driven
@@ -165,7 +171,7 @@ Changes in version 2.0 Release Candidate 2
     * [SWS-666] - Update tutorial
 
 Changes in version 2.0 Release Candidate 1
-----------------------------------
+------------------------------------------
 
 ** Sub-task
     * [SWS-631] - Create Client-Side testing framework

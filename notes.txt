@@ -1,8 +1,8 @@
 Dear Spring community,
 
-I'm pleased to announce that Spring Web Services 2.1.0.RC1 has been released!
+I'm pleased to announce that Spring Web Services 2.1.0.RELEASE has been released!
 
-This is the first Release Candidate in the 2.1 release cycle. It mainly
+This is the first GA release in the 2.1 release cycle. It mainly
 consists of necessary upgrades to third party dependencies. Specifically:
 
 - WSS4J has been upgraded to 1.6.
@@ -30,8 +30,11 @@ JDOM:
   to switch to this new package when using JDOM in combination with
   @RequestBody/@ResponseBody as well as the AbstractJDomPayloadEndpoint.
 
-Note that there were no milestone releases before this RC: it is a library
-upgrade release only.
+<sws:annotation-driven/>
+- When using <sws-annotation-driven/>, it might be required to set "order"
+  property values on custom exception resolvers. See
+  https://jira.springsource.org/browse/SWS-772?focusedCommentId=79384#comment-79384
+  for more details.
 
 Please see the changelog for more details.
 
