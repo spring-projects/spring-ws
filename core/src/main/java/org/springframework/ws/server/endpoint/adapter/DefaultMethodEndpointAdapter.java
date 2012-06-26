@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 
     private static final String JAXB2_CLASS_NAME = "javax.xml.bind.Binder";
 
-    private static final String JDOM_CLASS_NAME = "org.jdom.Element";
+    private static final String JDOM_CLASS_NAME = "org.jdom2.Element";
 
     private static final String STAX_CLASS_NAME = "javax.xml.stream.XMLInputFactory";
 
