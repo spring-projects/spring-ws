@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -46,7 +46,7 @@ public class MethodEndpointTest {
     @Test
     public void testInvoke() throws Exception {
         Assert.assertFalse("Method invoked before invocation", myMethodInvoked);
-        endpoint.invoke(new Object[]{"arg"});
+        endpoint.invoke("arg");
         Assert.assertTrue("Method invoked before invocation", myMethodInvoked);
     }
 
@@ -65,13 +65,13 @@ public class MethodEndpointTest {
         Assert.assertFalse("Equal", new MethodEndpoint(this, otherMethod).hashCode() == endpoint.hashCode());
     }
 
+    @Test
+    public void testToString() throws Exception {
+        Assert.assertNotNull("No valid toString", endpoint.toString());
+    }
+
     public void myMethod(String arg) {
         Assert.assertEquals("Invalid argument", "arg", arg);
         myMethodInvoked = true;
-    }
-
-    @Test
-    public void testToString() throws Exception {
-        Assert.assertNotNull("Na valid toString", endpoint.toString());
     }
 }
