@@ -128,11 +128,7 @@ public final class MethodEndpoint {
      * @throws Exception when the method invocation results in an exception
      */
     public Object invoke(Object... args) throws Exception {
-        Object endpoint = bean;
-        if (endpoint instanceof String) {
-            String endpointName = (String) endpoint;
-            endpoint = beanFactory.getBean(endpointName);
-        }
+        Object endpoint = getBean();
         ReflectionUtils.makeAccessible(method);
         try {
             return method.invoke(endpoint, args);
