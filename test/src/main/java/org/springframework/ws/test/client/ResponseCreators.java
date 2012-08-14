@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,6 +27,7 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.test.support.creator.PayloadMessageCreator;
+import org.springframework.ws.test.support.creator.SoapEnvelopeMessageCreator;
 import org.springframework.ws.test.support.creator.WebServiceMessageCreator;
 import org.springframework.xml.transform.ResourceSource;
 
@@ -41,6 +42,8 @@ public abstract class ResponseCreators {
 
     private ResponseCreators() {
     }
+
+    // Payload
 
     /**
      * Respond with the given {@link javax.xml.transform.Source} XML as payload response.
@@ -64,6 +67,8 @@ public abstract class ResponseCreators {
         return withPayload(new ResourceSource(payload));
     }
 
+    // Error/Exception
+    
     /**
      * Respond with an error.
      *
@@ -98,6 +103,33 @@ public abstract class ResponseCreators {
         Assert.notNull(ex, "'ex' must not be null");
         return new ExceptionResponseCreator(ex);
     }
+
+    // SOAP
+
+    /**
+     * Respond with the given {@link javax.xml.transform.Source} XML as SOAP envelope response.
+     *
+     * @param soapEnvelope the response SOAP envelope
+     * @return the response callback
+     * @since 2.1.1
+     */
+    public static ResponseCreator withSoapEnvelope(Source soapEnvelope) {
+        Assert.notNull(soapEnvelope, "'soapEnvelope' must not be null");
+        return new WebServiceMessageCreatorAdapter(new SoapEnvelopeMessageCreator(soapEnvelope));
+    }
+
+    /**
+     * Respond with the given {@link org.springframework.core.io.Resource} XML as SOAP envelope response.
+     *
+     * @param soapEnvelope the response SOAP envelope
+     * @return the response callback
+     * @since 2.1.1
+     */
+    public static ResponseCreator withSoapEnvelope(Resource soapEnvelope) throws IOException {
+        Assert.notNull(soapEnvelope, "'soapEnvelope' must not be null");
+        return withSoapEnvelope(new ResourceSource(soapEnvelope));
+    }
+
 
     /**
      * Respond with a {@code MustUnderstand} fault.

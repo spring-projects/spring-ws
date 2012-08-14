@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,6 +29,7 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.test.support.matcher.PayloadDiffMatcher;
 import org.springframework.ws.test.support.matcher.SchemaValidatingMatcher;
+import org.springframework.ws.test.support.matcher.SoapEnvelopeDiffMatcher;
 import org.springframework.ws.test.support.matcher.SoapHeaderMatcher;
 import org.springframework.xml.transform.ResourceSource;
 
@@ -45,7 +46,7 @@ public abstract class ResponseMatchers {
 
     private ResponseMatchers() {
     }
-
+    
     // Payload
 
     /**
@@ -100,8 +101,29 @@ public abstract class ResponseMatchers {
         return new XPathExpectationsHelperAdapter(xpathExpression, namespaceMapping);
     }
 
-
     // SOAP
+
+    /**
+     * Expects the given {@link Source} XML SOAP envelope.
+     *
+     * @param soapEnvelope the XML SOAP envelope
+     * @return the response matcher
+     * @since 2.1.1
+     */
+    public static ResponseMatcher soapEnvelope(Source soapEnvelope) {
+        return new WebServiceMessageMatcherAdapter(new SoapEnvelopeDiffMatcher(soapEnvelope));
+    }
+
+    /**
+     * Expects the given {@link Resource} XML SOAP envelope.
+     *
+     * @param soapEnvelope the XML SOAP envelope
+     * @return the response matcher
+     * @since 2.1.1
+     */
+    public static ResponseMatcher soapEnvelope(Resource soapEnvelope) throws IOException {
+        return soapEnvelope(new ResourceSource(soapEnvelope));
+    }
 
     /**
      * Expects the given SOAP header in the outgoing message.
