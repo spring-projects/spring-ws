@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -43,27 +43,27 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 /**
- * Adapter to use the <code>WsdlDefinition</code> interface with the generic <code>DispatcherServlet</code>.
+ * Adapter to use the {@code WsdlDefinition} interface with the generic {@code DispatcherServlet}.
  * <p/>
- * Reads the source from the mapped <code>WsdlDefinition</code> implementation, and writes that as the result to the
- * <code>HttpServletResponse</code>.
+ * Reads the source from the mapped {@code WsdlDefinition} implementation, and writes that as the result to the
+ * {@code HttpServletResponse}.
  * <p/>
- * If the property <code>transformLocations</code> is set to <code>true</code>, this adapter will change
- * <code>location</code> attributes in the WSDL definition to reflect the URL of the incoming request. If the location
+ * If the property {@code transformLocations} is set to {@code true}, this adapter will change
+ * {@code location} attributes in the WSDL definition to reflect the URL of the incoming request. If the location
  * field in the original WSDL is an absolute path, the scheme, hostname, and port will be changed. If the location is a
  * relative path, the scheme, hostname, port, and context path will be prepended. This behavior can be customized by
- * overriding the <code>transformLocation()</code> method.
+ * overriding the {@code transformLocation()} method.
  * <p/>
- * For instance, if the location attribute defined in the WSDL is <code>http://localhost:8080/context/services/myService</code>,
- * and the request URI for the WSDL is <code>http://example.com/context/myService.wsdl</code>, the location will be
- * changed to <code>http://example.com/context/services/myService</code>.
+ * For instance, if the location attribute defined in the WSDL is {@code http://localhost:8080/context/services/myService},
+ * and the request URI for the WSDL is {@code http://example.com/context/myService.wsdl}, the location will be
+ * changed to {@code http://example.com/context/services/myService}.
  * <p/>
- * If the location attribute defined in the WSDL is <code>/services/myService</code>, and the request URI for the WSDL
- * is <code>http://example.com:8080/context/myService.wsdl</code>, the location will be changed to
- * <code>http://example.com:8080/context/services/myService</code>.
+ * If the location attribute defined in the WSDL is {@code /services/myService}, and the request URI for the WSDL
+ * is {@code http://example.com:8080/context/myService.wsdl}, the location will be changed to
+ * {@code http://example.com:8080/context/services/myService}.
  * <p/>
- * When <code>transformLocations</code> is enabled, all <code>location</code> attributes found in the WSDL definition
- * are changed by default. This behavior can be customized by changing the <code>locationExpression</code> property,
+ * When {@code transformLocations} is enabled, all {@code location} attributes found in the WSDL definition
+ * are changed by default. This behavior can be customized by changing the {@code locationExpression} property,
  * which is an XPath expression that matches the attributes to change.
  *
  * @author Arjen Poutsma
@@ -75,8 +75,11 @@ import org.w3c.dom.Node;
  */
 public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport implements HandlerAdapter, InitializingBean {
 
-    /** Default XPath expression used for extracting all <code>location</code> attributes from the WSDL definition. */
+    /** Default XPath expression used for extracting all {@code location} attributes from the WSDL definition. */
     public static final String DEFAULT_LOCATION_EXPRESSION = "//@location";
+
+    /** Default XPath expression used for extracting all {@code schemaLocation} attributes from the WSDL definition. */
+    public static final String DEFAULT_SCHEMA_LOCATION_EXPRESSION = "//@schemaLocation";
 
     private static final String CONTENT_TYPE = "text/xml";
 
@@ -86,27 +89,48 @@ public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport imple
 
     private String locationExpression = DEFAULT_LOCATION_EXPRESSION;
 
+    private String schemaLocationExpression = DEFAULT_SCHEMA_LOCATION_EXPRESSION;
+
     private XPathExpression locationXPathExpression;
+
+    private XPathExpression schemaLocationXPathExpression;
 
     private boolean transformLocations = false;
 
+    private boolean transformSchemaLocations = false;
+
     /**
-     * Sets the XPath expression used for extracting the <code>location</code> attributes from the WSDL 1.1 definition.
+     * Sets the XPath expression used for extracting the {@code location} attributes from the WSDL 1.1 definition.
      * <p/>
-     * Defaults to <code>DEFAULT_LOCATION_EXPRESSION</code>.
-     *
-     * @see #DEFAULT_LOCATION_EXPRESSION
+     * Defaults to {@code DEFAULT_LOCATION_EXPRESSION}.
      */
     public void setLocationExpression(String locationExpression) {
         this.locationExpression = locationExpression;
     }
 
     /**
+     * Sets the XPath expression used for extracting the {@code schemaLocation} attributes from the WSDL 1.1 definition.
+     * <p/>
+     * Defaults to {@code DEFAULT_SCHEMA_LOCATION_EXPRESSION}.
+     */
+    public void setSchemaLocationExpression(String schemaLocationExpression) {
+        this.schemaLocationExpression = schemaLocationExpression;
+    }
+
+    /**
      * Sets whether relative address locations in the WSDL are to be transformed using the request URI of the incoming
-     * <code>HttpServletRequest</code>. Defaults to <code>false</code>.
+     * {@code HttpServletRequest}. Defaults to {@code false}.
      */
     public void setTransformLocations(boolean transformLocations) {
         this.transformLocations = transformLocations;
+    }
+
+    /**
+     * Sets whether relative address schema locations in the WSDL are to be transformed using the request URI of the
+     * incoming {@code HttpServletRequest}. Defaults to {@code false}.
+     */
+    public void setTransformSchemaLocations(boolean transformSchemaLocations) {
+        this.transformSchemaLocations = transformSchemaLocations;
     }
 
     public long getLastModified(HttpServletRequest request, Object handler) {
@@ -117,17 +141,25 @@ public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport imple
     public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         if (HttpTransportConstants.METHOD_GET.equals(request.getMethod())) {
-            response.setContentType(CONTENT_TYPE);
-            Transformer transformer = createTransformer();
             WsdlDefinition definition = (WsdlDefinition) handler;
+
+            Transformer transformer = createTransformer();
             Source definitionSource = definition.getSource();
-            if (transformLocations) {
+
+            if (transformLocations || transformSchemaLocations) {
                 DOMResult domResult = new DOMResult();
                 transformer.transform(definitionSource, domResult);
                 Document definitionDocument = (Document) domResult.getNode();
-                transformLocations(definitionDocument, request);
+                if (transformLocations) {
+                    transformLocations(definitionDocument, request);
+                }
+                if (transformSchemaLocations) {
+                    transformSchemaLocations(definitionDocument, request);
+                }
                 definitionSource = new DOMSource(definitionDocument);
             }
+
+            response.setContentType(CONTENT_TYPE);
             StreamResult responseResult = new StreamResult(response.getOutputStream());
             transformer.transform(definitionSource, responseResult);
         }
@@ -144,22 +176,72 @@ public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport imple
     public void afterPropertiesSet() throws Exception {
         locationXPathExpression =
                 XPathExpressionFactory.createXPathExpression(locationExpression, expressionNamespaces);
+        schemaLocationXPathExpression =
+                XPathExpressionFactory.createXPathExpression(schemaLocationExpression, expressionNamespaces);
     }
+
+    /**
+     * Transforms all {@code location} attributes to reflect the server name given {@code HttpServletRequest}.
+     * Determines the suitable attributes by evaluating the defined XPath expression, and delegates to
+     * {@code transformLocation} to do the transformation for all attributes that match.
+     * <p/>
+     * This method is only called when the {@code transformLocations} property is true.
+     *
+     * @see #setLocationExpression(String)
+     * @see #setTransformLocations(boolean)
+     * @see #transformLocation(String,javax.servlet.http.HttpServletRequest)
+     */
+    protected void transformLocations(Document definitionDocument, HttpServletRequest request) throws Exception {
+        transformLocationsInternal(locationXPathExpression, definitionDocument, request);
+    }
+
+    /**
+     * Transforms all {@code schemaLocation} attributes to reflect the server name given {@code HttpServletRequest}.
+     * Determines the suitable attributes by evaluating the defined XPath expression, and delegates to
+     * {@code transformLocation} to do the transformation for all attributes that match.
+     * <p/>
+     * This method is only called when the {@code transformSchemaLocations} property is true.
+     *
+     * @see #setSchemaLocationExpression(String)
+     * @see #setTransformSchemaLocations(boolean)
+     * @see #transformLocation(String,javax.servlet.http.HttpServletRequest)
+     */
+    protected void transformSchemaLocations(Document definitionDocument, HttpServletRequest request) throws Exception {
+        transformLocationsInternal(schemaLocationXPathExpression, definitionDocument, request);
+    }
+
+    private void transformLocationsInternal(XPathExpression xPathExpression,
+                                            Document definitionDocument,
+                                            HttpServletRequest request) throws Exception {
+            List<Node> locationNodes = xPathExpression.evaluateAsNodeList(definitionDocument);
+            for (Node locationNode : locationNodes) {
+                if (locationNode instanceof Attr) {
+                    Attr location = (Attr) locationNode;
+                    if (StringUtils.hasLength(location.getValue())) {
+                        String newLocation = transformLocation(location.getValue(), request);
+                        if (logger.isDebugEnabled()) {
+                            logger.debug("Transforming [" + location.getValue() + "] to [" + newLocation + "]");
+                        }
+                        location.setValue(newLocation);
+                    }
+                }
+            }
+        }
 
     /**
      * Transform the given location string to reflect the given request. If the given location is a full url, the
      * scheme, server name, and port are changed. If it is a relative url, the scheme, server name, and port are
      * prepended. Can be overridden in subclasses to change this behavior.
      * <p/>
-     * For instance, if the location attribute defined in the WSDL is <code>http://localhost:8080/context/services/myService</code>,
-     * and the request URI for the WSDL is <code>http://example.com:8080/context/myService.wsdl</code>, the location
-     * will be changed to <code>http://example.com:8080/context/services/myService</code>.
+     * For instance, if the location attribute defined in the WSDL is {@code http://localhost:8080/context/services/myService},
+     * and the request URI for the WSDL is {@code http://example.com:80/context/myService.wsdl}, the location
+     * will be changed to {@code http://example.com:80/context/services/myService}.
      * <p/>
-     * If the location attribute defined in the WSDL is <code>/services/myService</code>, and the request URI for the
-     * WSDL is <code>http://example.com:8080/context/myService.wsdl</code>, the location will be changed to
-     * <code>http://example.com:8080/context/services/myService</code>.
+     * If the location attribute defined in the WSDL is {@code /services/myService}, and the request URI for the
+     * WSDL is {@code http://example.com:8080/context/myService.wsdl}, the location will be changed to
+     * {@code http://example.com:8080/context/services/myService}.
      * <p/>
-     * This method is only called when the <code>transformLocations</code> property is true.
+     * This method is only called when the {@code transformLocations} property is true.
      */
     protected String transformLocation(String location, HttpServletRequest request) {
         StringBuilder url = new StringBuilder(request.getScheme());
@@ -183,32 +265,5 @@ public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport imple
         }
         // unknown location, return the original
         return location;
-    }
-
-    /**
-     * Transforms all <code>location</code> attributes to reflect the server name given <code>HttpServletRequest</code>.
-     * Determines the suitable attributes by evaluating the defined XPath expression, and delegates to
-     * <code>transformLocation</code> to do the transformation for all attributes that match.
-     * <p/>
-     * This method is only called when the <code>transformLocations</code> property is true.
-     *
-     * @see #setLocationExpression(String)
-     * @see #setTransformLocations(boolean)
-     * @see #transformLocation(String,javax.servlet.http.HttpServletRequest)
-     */
-    protected void transformLocations(Document definitionDocument, HttpServletRequest request) throws Exception {
-        List<Node> locationNodes = locationXPathExpression.evaluateAsNodeList(definitionDocument);
-        for (Node locationNode : locationNodes) {
-            if (locationNode instanceof Attr) {
-                Attr location = (Attr) locationNode;
-                if (StringUtils.hasLength(location.getValue())) {
-                    String newLocation = transformLocation(location.getValue(), request);
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Transforming [" + location.getValue() + "] to [" + newLocation + "]");
-                    }
-                    location.setValue(newLocation);
-                }
-            }
-        }
     }
 }

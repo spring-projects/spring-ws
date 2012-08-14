@@ -5,8 +5,10 @@
                   targetNamespace="http://www.springframework.org/spring-ws/samples/echo">
     <wsdl:types>
         <schema xmlns="http://www.w3.org/2001/XMLSchema"
-                xmlns:tns="http://www.springframework.org/spring-ws/samples/echo" attributeFormDefault="qualified"
+                attributeFormDefault="qualified"
                 elementFormDefault="qualified" targetNamespace="http://www.springframework.org/spring-ws/samples/echo">
+            <import namespace="http://www.springframework.org/spring-ws/samples/echo/imported"
+                    schemaLocation="http://example.com:80/echo/services/imported.xsd"/>
             <element name="echoRequest">
                 <simpleType>
                     <restriction base="string">
@@ -43,7 +45,7 @@
     </wsdl:binding>
     <wsdl:service name="EchoService">
         <wsdl:port name="EchoPort" binding="schema:EchoBinding">
-            <soap:address location="http://example.com:8080/echo/services"/>
+            <soap:address location="http://example.com:80/echo/services"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

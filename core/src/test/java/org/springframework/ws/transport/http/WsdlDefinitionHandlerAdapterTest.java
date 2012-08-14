@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,9 +20,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
 import javax.servlet.http.HttpServletResponse;
-import javax.wsdl.Definition;
-import javax.wsdl.factory.WSDLFactory;
-import javax.wsdl.xml.WSDLReader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -37,7 +34,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import static org.easymock.EasyMock.*;
@@ -62,7 +58,7 @@ public class WsdlDefinitionHandlerAdapterTest {
     }
 
     @Test
-    public void testHandleGet() throws Exception {
+    public void handleGet() throws Exception {
         request.setMethod(HttpTransportConstants.METHOD_GET);
         String definition = "<definition xmlns='http://schemas.xmlsoap.org/wsdl/'/>";
         expect(definitionMock.getSource()).andReturn(new StringSource(definition));
@@ -76,7 +72,7 @@ public class WsdlDefinitionHandlerAdapterTest {
     }
 
     @Test
-    public void testHandleNonGet() throws Exception {
+    public void handleNonGet() throws Exception {
         request.setMethod(HttpTransportConstants.METHOD_POST);
 
         replay(definitionMock);
@@ -89,7 +85,7 @@ public class WsdlDefinitionHandlerAdapterTest {
     }
 
     @Test
-    public void testTransformLocations() throws Exception {
+    public void transformLocations() throws Exception {
         adapter.setTransformLocations(true);
         request.setMethod(HttpTransportConstants.METHOD_GET);
         request.setScheme("http");
@@ -114,7 +110,7 @@ public class WsdlDefinitionHandlerAdapterTest {
     }
 
     @Test
-    public void testTransformLocationFullUrl() throws Exception {
+    public void transformLocationFullUrl() throws Exception {
         request.setScheme("http");
         request.setServerName("example.com");
         request.setServerPort(8080);
@@ -129,7 +125,7 @@ public class WsdlDefinitionHandlerAdapterTest {
     }
 
     @Test
-    public void testTransformLocationEmptyContextFullUrl() throws Exception {
+    public void transformLocationEmptyContextFullUrl() throws Exception {
         request.setScheme("http");
         request.setServerName("example.com");
         request.setServerPort(8080);
@@ -143,7 +139,7 @@ public class WsdlDefinitionHandlerAdapterTest {
     }
 
     @Test
-    public void testTransformLocationRelativeUrl() throws Exception {
+    public void transformLocationRelativeUrl() throws Exception {
         request.setScheme("http");
         request.setServerName("example.com");
         request.setServerPort(8080);
@@ -158,7 +154,7 @@ public class WsdlDefinitionHandlerAdapterTest {
     }
 
     @Test
-    public void testTransformLocationEmptyContextRelativeUrl() throws Exception {
+    public void transformLocationEmptyContextRelativeUrl() throws Exception {
         request.setScheme("http");
         request.setServerName("example.com");
         request.setServerPort(8080);
@@ -172,7 +168,7 @@ public class WsdlDefinitionHandlerAdapterTest {
     }
 
     @Test
-    public void testHandleSimpleWsdl11DefinitionWithoutTransformLocations() throws Exception {
+    public void handleSimpleWsdl11DefinitionWithoutTransformLocations() throws Exception {
         adapter.setTransformLocations(false);
         request.setMethod(HttpTransportConstants.METHOD_GET);
         request.setScheme("http");
@@ -187,14 +183,8 @@ public class WsdlDefinitionHandlerAdapterTest {
                 new SimpleWsdl11Definition(new ClassPathResource("echo-input.wsdl", getClass()));
 
         adapter.handle(request, response, definition);
+
         InputStream inputStream = new ByteArrayInputStream(response.getContentAsByteArray());
-
-        WSDLFactory factory = WSDLFactory.newInstance();
-        WSDLReader reader = factory.newWSDLReader();
-        Definition wsdl4jDefinition = reader.readWSDL(null, new InputSource(inputStream));
-        Assert.assertNotNull("No definition read", wsdl4jDefinition);
-
-        inputStream = new ByteArrayInputStream(response.getContentAsByteArray());
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -206,12 +196,14 @@ public class WsdlDefinitionHandlerAdapterTest {
     }
 
     @Test
-    public void testHandleSimpleWsdl11DefinitionWithTransformLocation() throws Exception {
+    public void handleSimpleWsdl11DefinitionWithTransformLocation() throws Exception {
         adapter.setTransformLocations(true);
+        adapter.setTransformSchemaLocations(true);
+
         request.setMethod(HttpTransportConstants.METHOD_GET);
         request.setScheme("http");
         request.setServerName("example.com");
-        request.setServerPort(8080);
+        request.setServerPort(80);
         request.setContextPath("/context");
         request.setServletPath("/service.wsdl");
         request.setPathInfo(null);
@@ -221,14 +213,8 @@ public class WsdlDefinitionHandlerAdapterTest {
                 new SimpleWsdl11Definition(new ClassPathResource("echo-input.wsdl", getClass()));
 
         adapter.handle(request, response, definition);
+
         InputStream inputStream = new ByteArrayInputStream(response.getContentAsByteArray());
-
-        WSDLFactory factory = WSDLFactory.newInstance();
-        WSDLReader reader = factory.newWSDLReader();
-        Definition wsdl4jDefinition = reader.readWSDL(null, new InputSource(inputStream));
-        Assert.assertNotNull("No definition read", wsdl4jDefinition);
-
-        inputStream = new ByteArrayInputStream(response.getContentAsByteArray());
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
