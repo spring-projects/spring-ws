@@ -26,6 +26,7 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.xml.transform.TransformerHelper;
 
 import org.custommonkey.xmlunit.Diff;
+import org.custommonkey.xmlunit.XMLUnit;
 import org.w3c.dom.Document;
 
 import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
@@ -42,6 +43,10 @@ public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 	private final Source expected;
 
     private final TransformerHelper transformerHelper = new TransformerHelper();
+
+    static {
+        XMLUnit.setIgnoreWhitespace(true);
+    }
 
     public SoapEnvelopeDiffMatcher(Source expected) {
         Assert.notNull(expected, "'expected' must not be null");
