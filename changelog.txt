@@ -2,8 +2,27 @@ SPRING WEB SERVICES CHANGELOG
 =============================
 http://www.springframework.org/spring-ws
 
+Changes in version 2.1.1.RELEASE
+--------------------------------
+
+** Bug
+    * [SWS-776] - Windows-specific error with relative XSD referencing
+    * [SWS-779] - PayloadValidatingInterceptor 's method is not getting triggered in the echo server sample program when the echo client program is executed. 
+    * [SWS-782] - DefaultMethodEndpointAdapter.JDOM_CLASS_NAME must be updated to "org.jdom2.Element"
+    * [SWS-783] - SaxUtils leaks file handles, locks file on Windows
+    * [SWS-787] - MethodEndpoint.getBean is inconsistent with its API
+    * [SWS-789] - SoapEnvelopeLoggingInterceptor won't log
+
+** Improvement
+    * [SWS-784] - Add URLPathEndpointMapping Feature
+    * [SWS-785] - MTOM sample should not use deprecated api
+
+** New Feature
+    * [SWS-786] - SOAP envelope Matcher / MessageCreator
+    * [SWS-791] - Transform schemaLocation in WsdlDefinitionHandlerAdapter
+
 Changes in version 2.1.0.RELEASE
-----------------------------
+--------------------------------
 
 ** Bug
     * [SWS-777] - SoapFaultMappingExceptionResolver not handling exception
