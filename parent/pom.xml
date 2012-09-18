@@ -27,17 +27,17 @@
             <url>s3://maven.springframework.org/milestone</url>
         </repository>
 -->
+<!--
         <repository>
             <id>spring-local-repo</id>
             <url>file:///Users/arjen/Projects/Spring/repo</url>
         </repository>
-<!--
+-->
         <repository>
             <id>spring-release</id>
             <name>Spring Release Repository</name>
             <url>s3://maven.springframework.org/release</url>
         </repository>
--->
         <snapshotRepository>
             <id>spring-snapshot</id>
             <name>Spring Snapshot Repository</name>
