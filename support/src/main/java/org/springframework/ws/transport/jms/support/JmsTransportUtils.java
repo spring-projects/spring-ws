@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -46,7 +46,8 @@ public abstract class JmsTransportUtils {
     private static final String[] CONVERSION_TABLE = new String[]{JmsTransportConstants.HEADER_CONTENT_TYPE,
             JmsTransportConstants.PROPERTY_CONTENT_TYPE, JmsTransportConstants.HEADER_CONTENT_LENGTH,
             JmsTransportConstants.PROPERTY_CONTENT_LENGTH, JmsTransportConstants.HEADER_SOAP_ACTION,
-            JmsTransportConstants.PROPERTY_SOAP_ACTION};
+            JmsTransportConstants.PROPERTY_SOAP_ACTION, JmsTransportConstants.HEADER_ACCEPT_ENCODING,
+            JmsTransportConstants.PROPERTY_ACCEPT_ENCODING};
 
     private static final Pattern DESTINATION_NAME_PATTERN = Pattern.compile("^([^\\?]+)");
 
@@ -75,7 +76,18 @@ public abstract class JmsTransportUtils {
                 return CONVERSION_TABLE[i + 1];
             }
         }
-        return headerName;
+        // fall-back
+        StringBuilder builder = new StringBuilder(JmsTransportConstants.PROPERTY_PREFIX);
+        for (int i = 0; i < headerName.length(); i++) {
+            char ch = headerName.charAt(i);
+            if (i == 0) {
+                builder.append(Character.toLowerCase(ch));
+            }
+            else if (Character.isJavaIdentifierPart(ch)) {
+                builder.append(ch);
+            }
+        }
+        return builder.toString();
     }
 
     /**
@@ -91,7 +103,27 @@ public abstract class JmsTransportUtils {
                 return CONVERSION_TABLE[i - 1];
             }
         }
-        return propertyName;
+        // fall-back
+        if (propertyName.startsWith(JmsTransportConstants.PROPERTY_PREFIX)) {
+            StringBuilder builder = new StringBuilder(propertyName.length());
+            int start = JmsTransportConstants.PROPERTY_PREFIX.length();
+            for (int i = start; i < propertyName.length(); i++) {
+                char ch = propertyName.charAt(i);
+                if (i == start) {
+                    builder.append(Character.toUpperCase(ch));
+                }
+                else {
+                    if (Character.isUpperCase(ch)) {
+                        builder.append('-');
+                    }
+                    builder.append(ch);
+                }
+            }
+            return builder.toString();
+        }
+        else {
+            return propertyName;
+        }
     }
 
     /**
