@@ -17,7 +17,6 @@
 package org.springframework.ws.transport.http;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,19 +27,13 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.ws.wsdl.WsdlDefinition;
-import org.springframework.xml.transform.TransformerObjectSupport;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
 /**
  * Adapter to use the {@code WsdlDefinition} interface with the generic {@code DispatcherServlet}.
@@ -73,7 +66,7 @@ import org.w3c.dom.Node;
  * @see #transformLocation(String,javax.servlet.http.HttpServletRequest)
  * @since 1.0.0
  */
-public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport implements HandlerAdapter, InitializingBean {
+public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSupport implements HandlerAdapter, InitializingBean {
 
     /** Default XPath expression used for extracting all {@code location} attributes from the WSDL definition. */
     public static final String DEFAULT_LOCATION_EXPRESSION = "//@location";
@@ -82,8 +75,6 @@ public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport imple
     public static final String DEFAULT_SCHEMA_LOCATION_EXPRESSION = "//@schemaLocation";
 
     private static final String CONTENT_TYPE = "text/xml";
-
-    private static final Log logger = LogFactory.getLog(WsdlDefinitionHandlerAdapter.class);
 
     private Map<String, String> expressionNamespaces = new HashMap<String, String>();
 
@@ -192,7 +183,7 @@ public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport imple
      * @see #transformLocation(String,javax.servlet.http.HttpServletRequest)
      */
     protected void transformLocations(Document definitionDocument, HttpServletRequest request) throws Exception {
-        transformLocationsInternal(locationXPathExpression, definitionDocument, request);
+        transformLocations(locationXPathExpression, definitionDocument, request);
     }
 
     /**
@@ -207,63 +198,7 @@ public class WsdlDefinitionHandlerAdapter extends TransformerObjectSupport imple
      * @see #transformLocation(String,javax.servlet.http.HttpServletRequest)
      */
     protected void transformSchemaLocations(Document definitionDocument, HttpServletRequest request) throws Exception {
-        transformLocationsInternal(schemaLocationXPathExpression, definitionDocument, request);
+        transformLocations(schemaLocationXPathExpression, definitionDocument, request);
     }
 
-    private void transformLocationsInternal(XPathExpression xPathExpression,
-                                            Document definitionDocument,
-                                            HttpServletRequest request) throws Exception {
-            List<Node> locationNodes = xPathExpression.evaluateAsNodeList(definitionDocument);
-            for (Node locationNode : locationNodes) {
-                if (locationNode instanceof Attr) {
-                    Attr location = (Attr) locationNode;
-                    if (StringUtils.hasLength(location.getValue())) {
-                        String newLocation = transformLocation(location.getValue(), request);
-                        if (logger.isDebugEnabled()) {
-                            logger.debug("Transforming [" + location.getValue() + "] to [" + newLocation + "]");
-                        }
-                        location.setValue(newLocation);
-                    }
-                }
-            }
-        }
-
-    /**
-     * Transform the given location string to reflect the given request. If the given location is a full url, the
-     * scheme, server name, and port are changed. If it is a relative url, the scheme, server name, and port are
-     * prepended. Can be overridden in subclasses to change this behavior.
-     * <p/>
-     * For instance, if the location attribute defined in the WSDL is {@code http://localhost:8080/context/services/myService},
-     * and the request URI for the WSDL is {@code http://example.com:80/context/myService.wsdl}, the location
-     * will be changed to {@code http://example.com:80/context/services/myService}.
-     * <p/>
-     * If the location attribute defined in the WSDL is {@code /services/myService}, and the request URI for the
-     * WSDL is {@code http://example.com:8080/context/myService.wsdl}, the location will be changed to
-     * {@code http://example.com:8080/context/services/myService}.
-     * <p/>
-     * This method is only called when the {@code transformLocations} property is true.
-     */
-    protected String transformLocation(String location, HttpServletRequest request) {
-        StringBuilder url = new StringBuilder(request.getScheme());
-        url.append("://").append(request.getServerName()).append(':').append(request.getServerPort());
-        if (location.startsWith("/")) {
-            // a relative path, prepend the context path
-            url.append(request.getContextPath()).append(location);
-            return url.toString();
-        }
-        else {
-            int idx = location.indexOf("://");
-            if (idx != -1) {
-                // a full url
-                idx = location.indexOf('/', idx + 3);
-                if (idx != -1) {
-                    String path = location.substring(idx);
-                    url.append(path);
-                    return url.toString();
-                }
-            }
-        }
-        // unknown location, return the original
-        return location;
-    }
 }
