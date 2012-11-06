@@ -1352,43 +1352,13 @@
 </bean>]]></programlisting>
                 </section>
                 <section>
-                    <title>SpringPlainTextPasswordValidationCallbackHandler</title>
+                    <title>SpringSecurityPasswordValidationCallbackHandler</title>
                     <para>
-                        The <classname>SpringPlainTextPasswordValidationCallbackHandler</classname> requires an Spring
-                        Security <interfacename>AuthenticationManager</interfacename> to operate. It uses this manager
-                        to authenticate against a
-                        <classname>UsernamePasswordAuthenticationToken</classname>
-                        that it creates. If authentication is successful, the token is stored in the
-                        <classname>SecurityContextHolder</classname>. You can set the
-                        authentication manager using the <property>authenticationManager</property>
-                        property:
-                    </para>
-                    <programlisting><![CDATA[<beans>
-  <bean id="springSecurityHandler"
-      class="org.springframework.ws.soap.security.wss4j.callback.SpringPlainTextPasswordValidationCallbackHandler">
-    <property name="authenticationManager" ref="authenticationManager"/>
-  </bean>
-
-  <bean id="authenticationManager" class="org.springframework.security.providers.ProviderManager">
-      <property name="providers">
-          <bean class="org.springframework.security.providers.dao.DaoAuthenticationProvider">
-              <property name="userDetailsService" ref="userDetailsService"/>
-          </bean>
-      </property>
-  </bean>
-
-  <bean id="userDetailsService" class="com.mycompany.app.dao.UserDetailService" />
-  ...
-</beans>]]></programlisting>
-                </section>
-                <section>
-                    <title>SpringDigestPasswordValidationCallbackHandler</title>
-                    <para>
-                        The <classname>SpringDigestPasswordValidationCallbackHandler</classname>
-                        requires an Spring Security
+                        The <classname>SpringSecurityPasswordValidationCallbackHandler</classname> validates plain text
+                        and digest passwords using a Spring Security
                         <classname>UserDetailService</classname>
                         to operate. It uses this service to retrieve the
-                        password of the user specified in the token. The digest of the password contained in this
+                        (digest of ) the password of the user specified in the token. The (digest of) the password contained in this
                         details object is then compared with the digest in the message. If they are equal, the user has
                         successfully authenticated, and a
                         <classname>UsernamePasswordAuthenticationToken</classname>
