@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -119,6 +118,8 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 
     private boolean transformWsdlLocations = false;
 
+    private boolean transformSchemaLocations = false;
+
     /** Public constructor, necessary for some Web application servers. */
     public MessageDispatcherServlet() {
         defaultStrategiesHelper = new DefaultStrategiesHelper(MessageDispatcherServlet.class);
@@ -156,6 +157,30 @@ public class MessageDispatcherServlet extends FrameworkServlet {
      */
     public boolean isTransformWsdlLocations() {
         return transformWsdlLocations;
+    }
+
+    /**
+     * Sets whether relative address locations in the WSDL are to be transformed using the request URI of the incoming
+     * {@link HttpServletRequest}. Defaults to <code>false</code>.
+     */
+    public void setTransformWsdlLocations(boolean transformWsdlLocations) {
+        this.transformWsdlLocations = transformWsdlLocations;
+    }
+
+    /**
+     * Indicates whether relative address locations in the XSD are to be transformed using the request URI of the
+     * incoming {@link HttpServletRequest}.
+     */
+    public boolean isTransformSchemaLocations() {
+        return transformSchemaLocations;
+    }
+
+    /**
+     * Sets whether relative address locations in the XSD are to be transformed using the request URI of the incoming
+     * {@link HttpServletRequest}. Defaults to <code>false</code>.
+     */
+    public void setTransformSchemaLocations(boolean transformSchemaLocations) {
+        this.transformSchemaLocations = transformSchemaLocations;
     }
 
     /** Returns the bean name used to lookup a {@link WebServiceMessageReceiverHandlerAdapter}. */
@@ -197,13 +222,6 @@ public class MessageDispatcherServlet extends FrameworkServlet {
         this.xsdSchemaHandlerAdapterBeanName = xsdSchemaHandlerAdapterBeanName;
     }
 
-    /**
-     * Sets whether relative address locations in the WSDL are to be transformed using the request URI of the incoming
-     * {@link HttpServletRequest}. Defaults to <code>false</code>.
-     */
-    public void setTransformWsdlLocations(boolean transformWsdlLocations) {
-        this.transformWsdlLocations = transformWsdlLocations;
-    }
 
     @Override
     protected void doService(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
@@ -363,9 +381,8 @@ public class MessageDispatcherServlet extends FrameworkServlet {
             catch (NoSuchBeanDefinitionException ignored) {
                 xsdSchemaHandlerAdapter = new XsdSchemaHandlerAdapter();
             }
-            if (xsdSchemaHandlerAdapter instanceof InitializingBean) {
-                ((InitializingBean) xsdSchemaHandlerAdapter).afterPropertiesSet();
-            }
+            xsdSchemaHandlerAdapter.setTransformSchemaLocations(isTransformSchemaLocations());
+            xsdSchemaHandlerAdapter.afterPropertiesSet();
         }
         catch (Exception ex) {
             throw new BeanInitializationException("Could not initialize XsdSchemaHandlerAdapter", ex);
