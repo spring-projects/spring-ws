@@ -850,8 +850,11 @@ public void order(@RequestPayload Element orderElement) {
                                     <entry>
                                         <interfacename>org.springframework.ws.soap.SoapMessage</interfacename>,
                                         <interfacename>org.springframework.ws.soap.SoapBody</interfacename>,
-                                        <interfacename>org.springframework.ws.soap.SoapEnvelope</interfacename>, and
-                                        <interfacename>org.springframework.ws.soap.SoapHeader</interfacename>
+                                        <interfacename>org.springframework.ws.soap.SoapEnvelope</interfacename>,
+                                        <interfacename>org.springframework.ws.soap.SoapHeader</interfacename>, and
+                                        <interfacename>org.springframework.ws.soap.SoapHeaderElement</interfacename>s
+                                        when used in combination with the <interfacename>@SoapHeader</interfacename>
+                                        annotation.
                                    </entry>
                                     <entry align="center">&cross;</entry>
                                     <entry>Enabled by default.</entry>
