@@ -59,17 +59,51 @@ public class WebServiceMessageReceiverHandlerAdapter extends WebServiceMessageRe
                 handleConnection(connection, (WebServiceMessageReceiver) handler);
             }
             catch (InvalidXmlException ex) {
-                httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                handleInvalidXmlException(httpServletRequest, httpServletResponse, handler, ex);
             }
         }
         else {
-            httpServletResponse.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+            handleNonPostMethod(httpServletRequest, httpServletResponse, handler);
         }
         return null;
     }
 
     public boolean supports(Object handler) {
         return handler instanceof WebServiceMessageReceiver;
+    }
+
+    /**
+     * Template method that is invoked when the request method is not {@code POST}. Called from {@link
+     * #handle(HttpServletRequest, HttpServletResponse, Object)}.
+     * <p/>
+     * Default implementation set the response status to 405: Method Not Allowed. Can be overridden in subclasses.
+     *
+     * @param httpServletRequest  current HTTP request
+     * @param httpServletResponse current HTTP response
+     * @param handler             current handler
+     */
+    protected void handleNonPostMethod(HttpServletRequest httpServletRequest,
+                                       HttpServletResponse httpServletResponse,
+                                       Object handler) throws Exception {
+        httpServletResponse.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+    }
+
+    /**
+     * Template method that is invoked when parsing the request results in a {@link InvalidXmlException}. Called from
+     * {@link #handle(HttpServletRequest, HttpServletResponse, Object)}.
+     * <p/>
+     * Default implementation set the response status to 400: Bad Request. Can be overridden in subclasses.
+     *
+     * @param httpServletRequest  current HTTP request
+     * @param httpServletResponse current HTTP response
+     * @param handler             current handler
+     * @param ex                  the invalid XML exception that resulted in this method being called
+     */
+    protected void handleInvalidXmlException(HttpServletRequest httpServletRequest,
+                                             HttpServletResponse httpServletResponse,
+                                             Object handler,
+                                             InvalidXmlException ex) throws Exception {
+        httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     }
 
 }
