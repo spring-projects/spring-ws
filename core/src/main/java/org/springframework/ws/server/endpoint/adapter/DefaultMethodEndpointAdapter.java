@@ -64,6 +64,9 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
     private static final String SOAP_METHOD_ARGUMENT_RESOLVER_CLASS_NAME =
             "org.springframework.ws.soap.server.endpoint.adapter.method.SoapMethodArgumentResolver";
 
+    private static final String SOAP_HEADER_ELEMENT_ARGUMENT_RESOLVER_CLASS_NAME =
+            "org.springframework.ws.soap.server.endpoint.adapter.method.SoapHeaderElementMethodArgumentResolver";
+
     private List<MethodArgumentResolver> methodArgumentResolvers;
 
     private List<MethodReturnValueHandler> methodReturnValueHandlers;
@@ -108,7 +111,6 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
         initMethodReturnValueHandlers();
     }
 
-    @SuppressWarnings("unchecked")
     private void initMethodArgumentResolvers() {
         if (CollectionUtils.isEmpty(methodArgumentResolvers)) {
             List<MethodArgumentResolver> methodArgumentResolvers = new ArrayList<MethodArgumentResolver>();
@@ -116,15 +118,8 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
             methodArgumentResolvers.add(new MessageContextMethodArgumentResolver());
             methodArgumentResolvers.add(new SourcePayloadMethodProcessor());
             methodArgumentResolvers.add(new XPathParamMethodArgumentResolver());
-            try {
-                Class<MethodArgumentResolver> soapMethodArgumentResolverClass =
-                        (Class<MethodArgumentResolver>) ClassUtils
-                                .forName(SOAP_METHOD_ARGUMENT_RESOLVER_CLASS_NAME, getClassLoader());
-                methodArgumentResolvers.add(BeanUtils.instantiate(soapMethodArgumentResolverClass));
-            }
-            catch (ClassNotFoundException e) {
-                logger.warn("Could not find \"" + SOAP_METHOD_ARGUMENT_RESOLVER_CLASS_NAME + "\" on the classpath");
-            }
+            addMethodArgumentResolver(SOAP_METHOD_ARGUMENT_RESOLVER_CLASS_NAME, methodArgumentResolvers);
+            addMethodArgumentResolver(SOAP_HEADER_ELEMENT_ARGUMENT_RESOLVER_CLASS_NAME, methodArgumentResolvers);
             if (isPresent(DOM4J_CLASS_NAME)) {
                 methodArgumentResolvers.add(new Dom4jPayloadMethodProcessor());
             }
@@ -145,6 +140,22 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
                 logger.debug("No MethodArgumentResolvers set, using defaults: " + methodArgumentResolvers);
             }
             setMethodArgumentResolvers(methodArgumentResolvers);
+        }
+    }
+
+    /**
+     * Certain (SOAP-specific) {@code MethodArgumentResolver}s have to be instantiated by class name, in order to not
+     * introduce a cyclic dependency.
+     */
+    @SuppressWarnings("unchecked")
+    private void addMethodArgumentResolver(String className, List<MethodArgumentResolver> methodArgumentResolvers) {
+        try {
+            Class<MethodArgumentResolver> methodArgumentResolverClass =
+                    (Class<MethodArgumentResolver>) ClassUtils.forName(className, getClassLoader());
+            methodArgumentResolvers.add(BeanUtils.instantiate(methodArgumentResolverClass));
+        }
+        catch (ClassNotFoundException e) {
+            logger.warn("Could not find \"" + className + "\" on the classpath");
         }
     }
 

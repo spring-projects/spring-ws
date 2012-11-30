@@ -42,6 +42,7 @@ import org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMetho
 import org.springframework.ws.soap.addressing.server.AnnotationActionEndpointMapping;
 import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
 import org.springframework.ws.soap.server.endpoint.SoapFaultAnnotationExceptionResolver;
+import org.springframework.ws.soap.server.endpoint.adapter.method.SoapHeaderElementMethodArgumentResolver;
 import org.springframework.ws.soap.server.endpoint.adapter.method.SoapMethodArgumentResolver;
 import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping;
 
@@ -85,6 +86,7 @@ public class AnnotationDrivenBeanDefinitionParserTest {
         assertContainsInstanceOf(argumentResolvers, MessageContextMethodArgumentResolver.class);
         assertContainsInstanceOf(argumentResolvers, XPathParamMethodArgumentResolver.class);
         assertContainsInstanceOf(argumentResolvers, SoapMethodArgumentResolver.class);
+        assertContainsInstanceOf(argumentResolvers, SoapHeaderElementMethodArgumentResolver.class);
         assertContainsInstanceOf(argumentResolvers, DomPayloadMethodProcessor.class);
         assertContainsInstanceOf(argumentResolvers, SourcePayloadMethodProcessor.class);
         assertContainsInstanceOf(argumentResolvers, Dom4jPayloadMethodProcessor.class);

@@ -43,6 +43,7 @@ import org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMetho
 import org.springframework.ws.soap.addressing.server.AnnotationActionEndpointMapping;
 import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
 import org.springframework.ws.soap.server.endpoint.SoapFaultAnnotationExceptionResolver;
+import org.springframework.ws.soap.server.endpoint.adapter.method.SoapHeaderElementMethodArgumentResolver;
 import org.springframework.ws.soap.server.endpoint.adapter.method.SoapMethodArgumentResolver;
 import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping;
 
@@ -117,6 +118,7 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
         argumentResolvers.add(createBeanDefinition(MessageContextMethodArgumentResolver.class, source));
         argumentResolvers.add(createBeanDefinition(XPathParamMethodArgumentResolver.class, source));
         argumentResolvers.add(createBeanDefinition(SoapMethodArgumentResolver.class, source));
+        argumentResolvers.add(createBeanDefinition(SoapHeaderElementMethodArgumentResolver.class, source));
 
         RuntimeBeanReference domProcessor = createBeanReference(DomPayloadMethodProcessor.class, source, parserContext);
         argumentResolvers.add(domProcessor);
