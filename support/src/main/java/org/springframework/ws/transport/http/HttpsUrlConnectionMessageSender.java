@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,17 +18,15 @@ package org.springframework.ws.transport.http;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.URI;
-import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
-import java.util.Arrays;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
 import org.springframework.beans.factory.InitializingBean;
@@ -59,6 +57,8 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
     private HostnameVerifier hostnameVerifier;
 
     private SecureRandom rnd;
+
+    private SSLSocketFactory sslSocketFactory;
 
     /**
      * Sets the SSL protocol to use. Default is {@code ssl}.
@@ -119,9 +119,19 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
         this.rnd = rnd;
     }
 
+    /**
+     * Specifies the SSLSocketFactory to use for this message sender.
+     *
+     * @see HttpsURLConnection#setSSLSocketFactory(SSLSocketFactory sf)
+     */
+    public void setSslSocketFactory(SSLSocketFactory sslSocketFactory) {
+        this.sslSocketFactory = sslSocketFactory;
+    }
+
     public void afterPropertiesSet() throws Exception {
-        Assert.isTrue(!(ObjectUtils.isEmpty(keyManagers) && ObjectUtils.isEmpty(trustManagers)),
-                "Setting either 'keyManagers' or 'trustManagers' is required");
+        Assert.isTrue(
+                !(ObjectUtils.isEmpty(keyManagers) && ObjectUtils.isEmpty(trustManagers) && (sslSocketFactory == null)),
+                "Setting either 'keyManagers', 'trustManagers' or 'sslSocketFactory' is required");
     }
 
     @Override
@@ -129,41 +139,41 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
         super.prepareConnection(connection);
         if (connection instanceof HttpsURLConnection) {
             HttpsURLConnection httpsConnection = (HttpsURLConnection) connection;
-            try {
-                SSLContext sslContext = createSslContext(sslProtocol, sslProvider);
-                sslContext.init(keyManagers, trustManagers, rnd);
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Initialized SSL Context with key managers [" +
-                            StringUtils.arrayToCommaDelimitedString(keyManagers) + "] trust managers [" +
-                            StringUtils.arrayToCommaDelimitedString(trustManagers) + "] secure random [" + rnd + "]");
-                }
+            httpsConnection.setSSLSocketFactory(createSslSocketFactory());
 
-                httpsConnection.setSSLSocketFactory(sslContext.getSocketFactory());
-
-                if (hostnameVerifier != null) {
-                    httpsConnection.setHostnameVerifier(hostnameVerifier);
-                }
-            }
-            catch (NoSuchProviderException ex) {
-                throw new HttpsTransportException("Could not create SSLContext: " + ex.getMessage(), ex);
-            }
-            catch (NoSuchAlgorithmException ex) {
-                throw new HttpsTransportException("Could not create SSLContext: " + ex.getMessage(), ex);
-            }
-            catch (KeyManagementException ex) {
-                throw new HttpsTransportException("Could not initialize SSLContext: " + ex.getMessage(), ex);
+            if (hostnameVerifier != null) {
+                httpsConnection.setHostnameVerifier(hostnameVerifier);
             }
         }
     }
 
-    private SSLContext createSslContext(String protocol, String provider)
-            throws NoSuchProviderException, NoSuchAlgorithmException {
-        if (!StringUtils.hasLength(provider)) {
-            return SSLContext.getInstance(protocol);
+    private SSLSocketFactory createSslSocketFactory() throws HttpsTransportException {
+        if (this.sslSocketFactory != null) {
+            return this.sslSocketFactory;
         }
-        else {
-            return SSLContext.getInstance(protocol, provider);
+        try {
+            SSLContext sslContext =
+                    StringUtils.hasLength(sslProvider) ? SSLContext.getInstance(sslProtocol, sslProvider) :
+                            SSLContext.getInstance(sslProtocol);
+            sslContext.init(keyManagers, trustManagers, rnd);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Initialized SSL Context with key managers [" +
+                        StringUtils.arrayToCommaDelimitedString(keyManagers) + "] trust managers [" +
+                        StringUtils.arrayToCommaDelimitedString(trustManagers) + "] secure random [" + rnd +
+                        "]");
+            }
+            return sslContext.getSocketFactory();
         }
+        catch (NoSuchAlgorithmException ex) {
+            throw new HttpsTransportException("Could not create SSLContext: " + ex.getMessage(), ex);
+        }
+        catch (NoSuchProviderException ex) {
+            throw new HttpsTransportException("Could not create SSLContext: " + ex.getMessage(), ex);
+        }
+        catch (KeyManagementException ex) {
+            throw new HttpsTransportException("Could not initialize SSLContext: " + ex.getMessage(), ex);
+        }
+
     }
 
 }
