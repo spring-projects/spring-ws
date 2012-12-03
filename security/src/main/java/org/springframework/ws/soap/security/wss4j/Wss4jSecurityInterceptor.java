@@ -26,6 +26,7 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -467,6 +468,14 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
      */
     public void setBspCompliant(boolean bspCompliant) {
         this.bspCompliant = bspCompliant;
+    }
+
+    /**
+     * Sets the location of the SAML properties file.
+     */
+    public void setSamlProperties(Resource location) throws IOException {
+        Assert.isTrue(location.exists(), "SAML properties file [ " + location + "] does not exist");
+        handler.setOption(WSHandlerConstants.SAML_PROP_FILE, location.getFile().getAbsolutePath());
     }
 
     public void afterPropertiesSet() throws Exception {
