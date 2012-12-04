@@ -27,17 +27,17 @@
             <url>s3://maven.springframework.org/milestone</url>
         </repository>
 -->
-<!--
         <repository>
             <id>spring-local-repo</id>
             <url>file:///Users/arjen/Projects/Spring/repo</url>
         </repository>
--->
+<!--
         <repository>
             <id>spring-release</id>
             <name>Spring Release Repository</name>
             <url>s3://maven.springframework.org/release</url>
         </repository>
+-->
         <snapshotRepository>
             <id>spring-snapshot</id>
             <name>Spring Snapshot Repository</name>
@@ -54,7 +54,7 @@
         <url>https://fisheye.springframework.org/browse/spring-ws/trunk</url>
     </scm>
     <properties>
-        <osgi.version>2.1.1.RELEASE</osgi.version>
+        <osgi.version>2.1.2.RELEASE</osgi.version>
         <osgi.range>"${osgi.version:[=.=.=, =.=.+1)}"</osgi.range>
         <spring.framework.version>3.1.3.RELEASE</spring.framework.version>
         <spring.framework.osgi.range>"[3.1.0, 4.0.0)"</spring.framework.osgi.range>

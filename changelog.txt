@@ -2,6 +2,28 @@ SPRING WEB SERVICES CHANGELOG
 =============================
 http://www.springframework.org/spring-ws
 
+Changes in version 2.1.2.RELEASE
+--------------------------------
+
+** Bug
+    * [SWS-797] - XsdSchemaHandlerAdapter does not transform schema locations
+    * [SWS-806] - @ symbol in the content-id is converted to %40. The receiving web server is not able to handle it
+
+** Defect
+    * [SWS-804] - WebServiceMessageReceiverHandlerAdapter not easily overridable to produce SOAP faults
+
+
+** Improvement
+    * [SWS-796] - Ability to specify SAML properties file in Wss4jInterceptor
+    * [SWS-798] - Ensure that only valid Java Identifiers are added to JMS headers
+    * [SWS-803] - WebServiceTemple -> add logRequest method analogue to existing logResponse
+    * [SWS-811] - When using annotation-driven register the SoapHeaderElementMethodArgumentResolver by default.
+    * [SWS-812] - Document @SoapHeader in reference guide
+
+** New Feature
+    * [SWS-807] - Introduce FactoryBean for javax.net.ssl.KeyManagerFactory
+    * [SWS-808] - add support to pass in sslSocketFactory to org.springframework.ws.transport.http.HttpsUrlConnectionMessageSender
+
 Changes in version 2.1.1.RELEASE
 --------------------------------
 
