@@ -151,9 +151,11 @@ public class SimpleNamespaceContext implements NamespaceContext {
      * @param prefix the prefix to be removed
      */
     public void removeBinding(String prefix) {
-        String namespaceUri = (String) prefixToNamespaceUri.get(prefix);
-        List prefixes = getPrefixesInternal(namespaceUri);
-        prefixes.remove(prefix);
+        String namespaceUri = (String) prefixToNamespaceUri.remove(prefix);
+        if (namespaceUri != null) {
+            List prefixes = getPrefixesInternal(namespaceUri);
+            prefixes.remove(prefix);
+        }
     }
 
     public boolean hasBinding(String prefix) {
