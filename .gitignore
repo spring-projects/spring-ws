@@ -1,0 +1,11 @@
+*.ipr
+*.iws
+*.iml
+target
+.clover
+activemq-data
+*.hsp
+atlassian-ide-plugin*.xml
+
+.idea
+
