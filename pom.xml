@@ -107,8 +107,8 @@
         </site>
     </distributionManagement>
     <scm>
-        <connection>scm:svn:https://src.springframework.org/svn/spring-ws/trunk</connection>
-        <developerConnection>scm:svn:https://src.springframework.org/svn/spring-ws/trunk/</developerConnection>
+        <connection>scm:git:https://github.com/SpringSource/spring-ws.git</connection>
+        <developerConnection>scm:git:https://github.com/SpringSource/spring-ws.git</developerConnection>
         <url>https://fisheye.springframework.org/browse/spring-ws/trunk</url>
     </scm>
     <properties>
