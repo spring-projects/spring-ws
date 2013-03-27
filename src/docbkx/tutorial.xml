@@ -464,12 +464,12 @@
     <section id="tutorial-creating-project">
         <title>Creating the project</title>
         <para>
-            In this section, we will be using <ulink url="http://maven.apache.org/">Maven2</ulink> to create the
+            In this section, we will be using <ulink url="http://maven.apache.org/">Maven3</ulink> to create the
             initial project structure for us. Doing so is not required, but greatly reduces the amount of code we
             have to write to setup our HolidayService.
         </para>
         <para>
-            The following command creates a Maven2 web application project for us, using the Spring-WS archetype
+            The following command creates a Maven3 web application project for us, using the Spring-WS archetype
             (that is, project template)
         </para>
 <screen>mvn archetype:create -DarchetypeGroupId=org.springframework.ws \
@@ -520,6 +520,10 @@
         <para>
             (You can see the contents of the <filename>'WEB-INF/spring-ws-servlet.xml'</filename> file for this
             example in <xref linkend="tutorial.example.sws-conf-file"/>.)
+        </para>
+        <para>
+            Once you had the project structure created, you can put the schema and wsdl from previous section into
+            <filename>'WEB-INF/'</filename> folder.
         </para>
     </section>
     <section id="tutorial.implementing.endpoint">
@@ -736,6 +740,52 @@ public class HolidayEndpoint {
                     There are also other ways to map endpoints to XML messages, which will be described in the next
                     chapter.
                 </para>
+            </section>
+            <section>
+                <title>Providing the Service and Stub implementation</title>
+                <para>
+                    Now that we have the <emphasis>Endpoint</emphasis>, we need 
+                    <interfacename>HumanResourceService</interfacename> and its implementation for use by 
+                    <classname>HolidayEndpoint</classname>.
+                </para>
+                <programlisting><![CDATA[package com.mycompany.hr.service;
+
+import java.util.Date;
+
+public interface HumanResourceService {
+    void bookHoliday(Date startDate, Date endDate, String name);
+}]]></programlisting>
+                <para>
+                    For tutorial purposes, we will use a simple stub implementation of the 
+                    <interfacename>HumanResourceService</interfacename>.
+                </para>
+                <programlistingco>
+                    <areaspec>
+                      <aread id="tutorial.stubimpl.atService" coords="7"/>
+                    </areaspec>
+                    <programlisting><![CDATA[package com.mycompany.hr.service;
+
+import java.util.Date;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class StubHumanResourceService implements HumanResourceService {
+    public void bookHoliday(Date startDate, Date endDate, String name) {
+        System.out.println("Booking holiday for [" + startDate + "-" + endDate + "] for [" + name + "] ");
+    }
+}]]></programlisting>
+                <calloutlist>
+                    <callout arearefs="tutorial.stubimpl.atService">
+                        <para>
+                            The <classname>StubHumanResourceService</classname> is annotated with
+                            <interfacename>@Service</interfacename>.
+                            This marks the class as a business facade, which makes this a candidate for injection 
+                            by <interfacename>@Autowired</interfacename> in <classname>HolidayEndpoint</classname>.
+                        </para>
+                    </callout>
+                </calloutlist>
+            </programlistingco>
         </section>
     </section>
     <section id="tutorial-publishing-wsdl">
@@ -784,8 +834,8 @@ public class HolidayEndpoint {
                         For more information, please refer to <xref linkend="server-automatic-wsdl-exposure"/>
                     </para>
                     <para>
-                        For the location transformation to work, we need to add one more parameter to the
-                        <filename>web.xml</filename>:<programlisting><![CDATA[<init-param>
+                        For the location transformation to work, we need to add an init parameter to <classname>spring-ws</classname>
+                        servlet in <filename>web.xml</filename>:<programlisting><![CDATA[<init-param>
   <param-name>transformWsdlLocations</param-name>
   <param-value>true</param-value>
 </init-param>]]></programlisting>
