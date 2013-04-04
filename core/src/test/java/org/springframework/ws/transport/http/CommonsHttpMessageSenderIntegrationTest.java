@@ -50,15 +50,6 @@ public class CommonsHttpMessageSenderIntegrationTest extends AbstractHttpWebServ
         return new CommonsHttpMessageSender();
     }
 
-    @Test(expected = ConnectTimeoutException.class)
-    public void testConnectionTimeout() throws Exception {
-        CommonsHttpMessageSender messageSender = new CommonsHttpMessageSender();
-        messageSender.setConnectionTimeout(1);
-        WebServiceConnection connection = messageSender.createConnection(new URI("http://example.com/"));
-        WebServiceMessage message = new MockWebServiceMessage();
-        connection.send(message);
-    }
-
     @Test
     public void testMaxConnections() throws URISyntaxException, URIException {
         CommonsHttpMessageSender messageSender = new CommonsHttpMessageSender();
