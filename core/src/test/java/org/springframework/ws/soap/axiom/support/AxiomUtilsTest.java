@@ -37,7 +37,6 @@ import org.apache.axiom.soap.SOAP11Constants;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPMessage;
 import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
-import org.apache.axiom.soap.impl.llom.soap11.SOAP11Factory;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Assert;
 import org.junit.Before;
@@ -118,7 +117,7 @@ public class AxiomUtilsTest {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLStreamReader reader = inputFactory.createXMLStreamReader(resource.getInputStream());
         StAXSOAPModelBuilder builder =
-                new StAXSOAPModelBuilder(reader, new SOAP11Factory(), SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI);
+                new StAXSOAPModelBuilder(reader, OMAbstractFactory.getSOAP11Factory(), SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI);
         SOAPMessage soapMessage = builder.getSoapMessage();
 
         Document result = AxiomUtils.toDocument(soapMessage.getSOAPEnvelope());

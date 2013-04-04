@@ -105,14 +105,14 @@ class AxiomSoap12Fault extends AxiomSoapFault implements Soap12Fault {
             return null;
         }
         else {
-            return faultNode.getNodeValue();
+            return faultNode.getFaultNodeValue();
         }
     }
 
     public void setFaultNode(String uri) {
         try {
             SOAPFaultNode faultNode = getAxiomFactory().createSOAPFaultNode(getAxiomFault());
-            faultNode.setNodeValue(uri);
+            faultNode.setFaultNodeValue(uri);
             getAxiomFault().setNode(faultNode);
         }
         catch (SOAPProcessingException ex) {

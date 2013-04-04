@@ -21,9 +21,9 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.springframework.util.xml.StaxUtils;
 
+import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
-import org.apache.axiom.soap.impl.llom.soap11.SOAP11Factory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,7 +38,7 @@ public class NonCachingPayloadTest {
 
     @Before
     public final void setUp() {
-        SOAPFactory soapFactory = new SOAP11Factory();
+        SOAPFactory soapFactory = OMAbstractFactory.getSOAP11Factory();
         body = soapFactory.createSOAPBody();
         payload = new NonCachingPayload(body, soapFactory);
     }

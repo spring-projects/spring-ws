@@ -39,16 +39,17 @@ import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportInputStream;
 
 import org.apache.axiom.attachments.Attachments;
+import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.impl.MTOMConstants;
 import org.apache.axiom.soap.SOAP11Constants;
+import org.apache.axiom.soap.SOAP11Version;
 import org.apache.axiom.soap.SOAP12Constants;
+import org.apache.axiom.soap.SOAP12Version;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPMessage;
 import org.apache.axiom.soap.impl.builder.MTOMStAXSOAPModelBuilder;
 import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
-import org.apache.axiom.soap.impl.llom.soap11.SOAP11Factory;
-import org.apache.axiom.soap.impl.llom.soap12.SOAP12Factory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -99,7 +100,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
     private int attachmentCacheThreshold = 4096;
 
     // use SOAP 1.1 by default
-    private SOAPFactory soapFactory = new SOAP11Factory();
+    private SOAPFactory soapFactory = OMAbstractFactory.getSOAP11Factory();
 
     private boolean langAttributeOnSoap11FaultString = true;
 
@@ -152,10 +153,10 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 
     public void setSoapVersion(SoapVersion version) {
         if (SoapVersion.SOAP_11 == version) {
-            soapFactory = new SOAP11Factory();
+            soapFactory = OMAbstractFactory.getSOAP11Factory();
         }
         else if (SoapVersion.SOAP_12 == version) {
-            soapFactory = new SOAP12Factory();
+            soapFactory = OMAbstractFactory.getSOAP12Factory();
         }
         else {
             throw new IllegalArgumentException(
@@ -252,8 +253,8 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
         Attachments attachments =
                 new Attachments(inputStream, contentType, attachmentCaching, attachmentCacheDir.getAbsolutePath(),
                         Integer.toString(attachmentCacheThreshold));
-        XMLStreamReader reader = inputFactory.createXMLStreamReader(attachments.getSOAPPartInputStream(),
-                getCharSetEncoding(attachments.getSOAPPartContentType()));
+        XMLStreamReader reader = inputFactory.createXMLStreamReader(attachments.getRootPartInputStream(),
+                getCharSetEncoding(attachments.getRootPartContentType()));
         StAXSOAPModelBuilder builder;
         String envelopeNamespace = getSoapEnvelopeNamespace(contentType);
         if (MTOMConstants.SWA_TYPE.equals(attachments.getAttachmentSpecType()) ||
@@ -334,10 +335,10 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 
     public String toString() {
         StringBuilder builder = new StringBuilder("AxiomSoapMessageFactory[");
-        if (soapFactory instanceof SOAP11Factory) {
+        if (soapFactory.getSOAPVersion() == SOAP11Version.getSingleton()) {
             builder.append("SOAP 1.1");
         }
-        else if (soapFactory instanceof SOAP12Factory) {
+        else if (soapFactory.getSOAPVersion() == SOAP12Version.getSingleton()) {
             builder.append("SOAP 1.2");
         }
         builder.append(',');

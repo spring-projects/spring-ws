@@ -18,11 +18,26 @@ package org.springframework.ws.soap.axiom;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.util.Iterator;
 import javax.activation.DataHandler;
 import javax.xml.stream.XMLStreamException;
+
+import org.apache.axiom.attachments.Attachments;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMException;
+import org.apache.axiom.om.OMOutputFormat;
+import org.apache.axiom.om.impl.MTOMConstants;
+import org.apache.axiom.om.impl.OMMultipartWriter;
+import org.apache.axiom.soap.SOAPBody;
+import org.apache.axiom.soap.SOAPEnvelope;
+import org.apache.axiom.soap.SOAPFactory;
+import org.apache.axiom.soap.SOAPMessage;
+import org.apache.axiom.soap.SOAPProcessingException;
+import org.w3c.dom.Document;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -37,19 +52,6 @@ import org.springframework.ws.stream.StreamingPayload;
 import org.springframework.ws.stream.StreamingWebServiceMessage;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportOutputStream;
-
-import org.apache.axiom.attachments.Attachments;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMException;
-import org.apache.axiom.om.OMOutputFormat;
-import org.apache.axiom.om.impl.MIMEOutputUtils;
-import org.apache.axiom.om.impl.MTOMConstants;
-import org.apache.axiom.soap.SOAPBody;
-import org.apache.axiom.soap.SOAPEnvelope;
-import org.apache.axiom.soap.SOAPFactory;
-import org.apache.axiom.soap.SOAPMessage;
-import org.apache.axiom.soap.SOAPProcessingException;
-import org.w3c.dom.Document;
 
 /**
  * AXIOM-specific implementation of the {@link SoapMessage} interface. Created via the {@link AxiomSoapMessageFactory},
@@ -96,8 +98,8 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
     public AxiomSoapMessage(SOAPFactory soapFactory, boolean payloadCaching, boolean langAttributeOnSoap11FaultString) {
         SOAPEnvelope soapEnvelope = soapFactory.getDefaultEnvelope();
         axiomFactory = soapFactory;
-        axiomMessage = axiomFactory.createSOAPMessage(soapEnvelope.getBuilder());
-        axiomMessage.setSOAPEnvelope(soapEnvelope);
+	    axiomMessage = axiomFactory.createSOAPMessage();
+	    axiomMessage.setSOAPEnvelope(soapEnvelope);
         attachments = new Attachments();
         this.payloadCaching = payloadCaching;
         this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
@@ -325,7 +327,25 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
         else {
             envelope.serializeAndConsume(writer, format);
         }
-        MIMEOutputUtils.writeSOAPWithAttachmentsMessage(writer, outputStream, attachments, format);
+
+	    try {
+		    OMMultipartWriter mpw = new OMMultipartWriter(outputStream, format);
+
+		    Writer rootPartWriter = new OutputStreamWriter(mpw.writeRootPart(),
+				    format.getCharSetEncoding());
+		    rootPartWriter.write(writer.toString());
+		    rootPartWriter.close();
+
+		    // Get the collection of ids associated with the attachments
+		    for (String id: attachments.getAllContentIDs()) {
+			    mpw.writePart(attachments.getDataHandler(id), id);
+		    }
+
+		    mpw.complete();
+	    }
+	    catch (IOException ex) {
+		    throw new OMException("Error writing SwA message", ex);
+	    }
     }
 
     public String toString() {
