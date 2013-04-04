@@ -27,6 +27,7 @@ import javax.naming.NamingException;
 
 import org.springframework.ejb.support.AbstractJmsMessageDrivenBean;
 import org.springframework.jms.connection.ConnectionFactoryUtils;
+import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.jndi.JndiLookupFailureException;
 import org.springframework.ws.WebServiceMessageFactory;
@@ -97,6 +98,7 @@ public class WebServiceMessageDrivenBean extends AbstractJmsMessageDrivenBean {
             delegate = new JmsMessageReceiver();
             delegate.setMessageFactory(createMessageFactory());
             delegate.setMessageReceiver(createMessageReceiver());
+	        delegate.setPostProcessor(createPostProcessor());
         }
         catch (NamingException ex) {
             throw new JndiLookupFailureException("Could not create connection", ex);
@@ -154,5 +156,15 @@ public class WebServiceMessageDrivenBean extends AbstractJmsMessageDrivenBean {
     protected Session createSession(Connection connection) throws JMSException {
         return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
     }
+
+	/**
+	 * Creates a JMS {@link MessagePostProcessor} to process JMS messages. Default
+	 * implementation returns {@code null}, meaning that no post processor is used.
+	 *
+	 * @return a message post processor
+	 */
+	protected MessagePostProcessor createPostProcessor() {
+		return null;
+	}
 
 }
