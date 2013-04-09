@@ -126,11 +126,10 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
     public final void setOrder(int order) {
         this.order = order;
     }
-    
 
-    /**
-     * Set additional interceptors to be applied before the implicit WS-Addressing interceptor, e.g.
-     * <code>XwsSecurityInterceptor</code>.
+	/**
+	 * Set additional interceptors to be applied before the implicit WS-Addressing interceptor, e.g.
+	 * <code>XwsSecurityInterceptor</code>.
      */
     public final void setPreInterceptors(EndpointInterceptor[] preInterceptors) {
         Assert.notNull(preInterceptors, "'preInterceptors' must not be null");
@@ -156,15 +155,50 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
         this.messageIdStrategy = messageIdStrategy;
     }
 
-    public final void setMessageSenders(WebServiceMessageSender[] messageSenders) {
-        Assert.notNull(messageSenders, "'messageSenders' must not be null");
-        this.messageSenders = messageSenders;
+	/**
+	 * Returns the message id strategy used for creating WS-Addressing MessageIds.
+	 */
+	public MessageIdStrategy getMessageIdStrategy() {
+		return messageIdStrategy;
+	}
+
+	/**
+	 * Sets a single message senders, which is used to send out-of-band reply messages. If a
+	 * request messages defines a non-anonymous reply address, this senders will be used to
+	 * send the message.
+	 *
+	 * @param messageSender the message sender
+	 */
+	public final void setMessageSender(WebServiceMessageSender messageSender) {
+		Assert.notNull(messageSender, "'messageSender' must not be null");
+		setMessageSenders(new WebServiceMessageSender[]{messageSender});
+	}
+
+	/**
+	 * Sets the message senders, which are used to send out-of-band reply messages.
+	 * If a request messages defines a non-anonymous reply address, these senders will be
+	 * used to send the message.
+	 *
+	 * @param messageSenders the message senders
+	 */
+	public final void setMessageSenders(WebServiceMessageSender[] messageSenders) {
+		Assert.notNull(messageSenders, "'messageSenders' must not be null");
+		this.messageSenders = messageSenders;
     }
 
-    /**
-     * Sets the WS-Addressing versions to be supported by this mapping.
-     * <p/>
-     * By default, this array is set to support {@link org.springframework.ws.soap.addressing.version.Addressing200408
+	/**
+	 * Returns the message senders, which are used to send out-of-band reply messages.
+	 *
+	 * @return the message sender
+	 */
+	public final WebServiceMessageSender[] getMessageSenders() {
+		return this.messageSenders;
+	}
+
+	/**
+	 * Sets the WS-Addressing versions to be supported by this mapping.
+	 * <p/>
+	 * By default, this array is set to support {@link org.springframework.ws.soap.addressing.version.Addressing200408
      * the August 2004} and the {@link org.springframework.ws.soap.addressing.version.Addressing10 May 2006} versions of
      * the specification.
      */
@@ -209,9 +243,14 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
                                                                MessageAddressingProperties requestMap) {
         URI responseAction = getResponseAction(endpoint, requestMap);
         URI faultAction = getFaultAction(endpoint, requestMap);
-        EndpointInterceptor[] interceptors =
-                new EndpointInterceptor[preInterceptors.length + postInterceptors.length + 1];
-        System.arraycopy(preInterceptors, 0, interceptors, 0, preInterceptors.length);
+
+	    WebServiceMessageSender[] messageSenders = getMessageSenders(endpoint);
+	    MessageIdStrategy messageIdStrategy = getMessageIdStrategy(endpoint);
+
+	    EndpointInterceptor[] interceptors =
+			    new EndpointInterceptor[preInterceptors.length + postInterceptors.length +
+					    1];
+	    System.arraycopy(preInterceptors, 0, interceptors, 0, preInterceptors.length);
         AddressingEndpointInterceptor interceptor = new AddressingEndpointInterceptor(version, messageIdStrategy,
                 messageSenders, responseAction, faultAction);
         interceptors[preInterceptors.length] = interceptor;
@@ -232,10 +271,32 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
         return false;
     }
 
-    /**
-     * Lookup an endpoint for the given  {@link MessageAddressingProperties}, returning <code>null</code> if no specific
-     * one is found. This template method is called by {@link #getEndpoint(MessageContext)}.
-     *
+	/**
+	 * Returns the message senders for the given endpoint. Default implementation returns
+	 * {@link #getMessageSenders()}
+	 *
+	 * @param endpoint the endpoint
+	 * @return the message senders for the given endpoint
+	 */
+	protected WebServiceMessageSender[] getMessageSenders(Object endpoint) {
+		return getMessageSenders();
+	}
+
+	/**
+	 * Returns the message ID strategy for the given endpoint. Default implementation
+	 * returns {@link #getMessageIdStrategy()}
+	 *
+	 * @param endpoint the endpoint
+	 * @return the message ID strategy for the given endpoint
+	 */
+	protected MessageIdStrategy getMessageIdStrategy(Object endpoint) {
+		return getMessageIdStrategy();
+	}
+
+	/**
+	 * Lookup an endpoint for the given  {@link MessageAddressingProperties}, returning <code>null</code> if no specific
+	 * one is found. This template method is called by {@link #getEndpoint(MessageContext)}.
+	 *
      * @param map the message addressing properties
      * @return the endpoint, or <code>null</code>
      */
