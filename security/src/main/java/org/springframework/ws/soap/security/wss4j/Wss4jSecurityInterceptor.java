@@ -466,6 +466,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
      * Set the WS-I Basic Security Profile compliance mode. Default is {@code true}.
      */
     public void setBspCompliant(boolean bspCompliant) {
+	    this.handler.setOption(WSHandlerConstants.IS_BSP_COMPLIANT, true);
         this.bspCompliant = bspCompliant;
     }
 
