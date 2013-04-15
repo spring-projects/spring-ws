@@ -232,6 +232,8 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
                 EndpointAdapter endpointAdapter = getEndpointAdapter(mappedEndpoint.getEndpoint());
                 endpointAdapter.invoke(messageContext, mappedEndpoint.getEndpoint());
 
+	            // Apply handleResponse methods of registered interceptors
+	            triggerHandleResponse(mappedEndpoint, interceptorIndex, messageContext);
             }
             catch (NoEndpointFoundException ex) {
                 // No triggering of interceptors if no endpoint is found
@@ -243,9 +245,8 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
             catch (Exception ex) {
                 Object endpoint = mappedEndpoint != null ? mappedEndpoint.getEndpoint() : null;
                 processEndpointException(messageContext, endpoint, ex);
+	            triggerHandleResponse(mappedEndpoint, interceptorIndex, messageContext);
             }
-            // Apply handleResponse methods of registered interceptors
-            triggerHandleResponse(mappedEndpoint, interceptorIndex, messageContext);
             triggerAfterCompletion(mappedEndpoint, interceptorIndex, messageContext, null);
         }
         catch (NoEndpointFoundException ex) {
