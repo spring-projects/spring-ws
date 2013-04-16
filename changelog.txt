@@ -2,6 +2,27 @@ SPRING WEB SERVICES CHANGELOG
 =============================
 http://www.springframework.org/spring-ws
 
+Changes in version 2.1.3.RELEASE
+--------------------------------
+
+** Bug
+    * [SWS-814] - EndPointIntercepters do not respect the (Autowired) properties provided in beans XML
+    * [SWS-815] - Error loading SAML properties file
+    * [SWS-816] - Missing encoding in dom4j element/document
+    * [SWS-817] - Camel Spring-WS and AbstractAddressingEndpointMapping
+    * [SWS-819] - SimpleNamespaceContext.removeBinding() does not clean up all references
+    * [SWS-822] - NoSuchMethodError after upgrading to AXIOM 1.2.14
+    * [SWS-824] - In v 2.1.0, dispatch method of MessageDispatcher does not call processEndpointException method if response schema validation fails 
+    * [SWS-825] - Binary data get inlined when using JAXB for marshaling MTOM-enabled Axiom SOAP messages
+    * [SWS-828] - Setting bspCompliant = false has effect only for first request
+
+** Improvement
+    * [SWS-813] - Cannot use jms MessagePostProcessor support with WebServiceMessageDrivenBean 
+    * [SWS-821] - Not possible to create wrapped doc/literal wsdls with SuffixBasedPortTypesProvider
+
+** Task
+    * [SWS-774] - Migrate to springsource github
+
 Changes in version 2.1.2.RELEASE
 --------------------------------
 

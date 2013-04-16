@@ -54,10 +54,10 @@
         <url>https://fisheye.springframework.org/browse/spring-ws/trunk</url>
     </scm>
     <properties>
-        <osgi.version>2.1.2.RELEASE</osgi.version>
+        <osgi.version>2.1.3.RELEASE</osgi.version>
         <osgi.range>"${osgi.version:[=.=.=, =.=.+1)}"</osgi.range>
-        <spring.framework.version>3.1.3.RELEASE</spring.framework.version>
-        <spring.framework.osgi.range>"[3.1.0, 4.0.0)"</spring.framework.osgi.range>
+        <spring.framework.version>3.2.2.RELEASE</spring.framework.version>
+        <spring.framework.osgi.range>"[3.2.2, 4.0.0)"</spring.framework.osgi.range>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <pluginRepositories>
