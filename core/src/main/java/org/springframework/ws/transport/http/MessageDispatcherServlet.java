@@ -25,6 +25,7 @@ import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.FrameworkServlet;
 import org.springframework.web.util.WebUtils;
@@ -120,8 +121,60 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 
     private boolean transformSchemaLocations = false;
 
-    /** Public constructor, necessary for some Web application servers. */
+    /**
+     * Public constructor, necessary for some Web application servers.
+     */
     public MessageDispatcherServlet() {
+        this(null);
+    }
+
+    /**
+     * Constructor to support programmatic configuration of the Servlet with the specified
+     * web application context. This constructor is useful in Servlet 3.0+ environments
+     * where instance-based registration of servlets is possible through the
+     * {@code ServletContext#addServlet} API.
+     * <p>Using this constructor indicates that the following properties / init-params
+     * will be ignored:
+     * <ul>
+     * <li>{@link #setContextClass(Class)} / 'contextClass'</li>
+     * <li>{@link #setContextConfigLocation(String)} / 'contextConfigLocation'</li>
+     * <li>{@link #setContextAttribute(String)} / 'contextAttribute'</li>
+     * <li>{@link #setNamespace(String)} / 'namespace'</li>
+     * </ul>
+     * <p>The given web application context may or may not yet be {@linkplain
+     * org.springframework.web.context.ConfigurableWebApplicationContext#refresh() refreshed}.
+     * If it has <strong>not</strong> already been refreshed (the recommended approach), then
+     * the following will occur:
+     * <ul>
+     * <li>If the given context does not already have a {@linkplain
+     * org.springframework.web.context.ConfigurableWebApplicationContext#setParent parent},
+     * the root application context will be set as the parent.</li>
+     * <li>If the given context has not already been assigned an {@linkplain
+     * org.springframework.web.context.ConfigurableWebApplicationContext#setId id}, one
+     * will be assigned to it</li>
+     * <li>{@code ServletContext} and {@code ServletConfig} objects will be delegated to
+     * the application context</li>
+     * <li>{@link #postProcessWebApplicationContext} will be called</li>
+     * <li>Any {@code ApplicationContextInitializer}s specified through the
+     * "contextInitializerClasses" init-param or through the {@link
+     * #setContextInitializers} property will be applied.</li>
+     * <li>{@link org.springframework.web.context.ConfigurableWebApplicationContext#refresh refresh()}
+     * will be called if the context implements
+     * {@link org.springframework.web.context.ConfigurableWebApplicationContext}</li>
+     * </ul>
+     * If the context has already been refreshed, none of the above will occur, under the
+     * assumption that the user has performed these actions (or not) per their specific
+     * needs.
+     * <p>See {@link org.springframework.web.WebApplicationInitializer} for usage examples.
+     *
+     * @param webApplicationContext the context to use
+     * @see FrameworkServlet#FrameworkServlet(WebApplicationContext)
+     * @see org.springframework.web.WebApplicationInitializer
+     * @see #initWebApplicationContext()
+     * @see #configureAndRefreshWebApplicationContext(org.springframework.web.context.ConfigurableWebApplicationContext)
+     */
+    public MessageDispatcherServlet(WebApplicationContext webApplicationContext) {
+        super(webApplicationContext);
         defaultStrategiesHelper = new DefaultStrategiesHelper(MessageDispatcherServlet.class);
     }
 
