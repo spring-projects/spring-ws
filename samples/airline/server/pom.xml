@@ -195,8 +195,8 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>javax.jms</groupId>
-            <artifactId>jms</artifactId>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jms_1.1_spec</artifactId>
             <scope>runtime</scope>
         </dependency>
         <!-- O/R Mapping dependencies -->
