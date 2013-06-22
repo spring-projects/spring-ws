@@ -87,6 +87,9 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 
     /**
      * Create a new instance of the <code>HttpClientMessageSender</code> with the given {@link HttpClient} instance.
+     * <p>
+     * Does not add the necessary timeouts and interceptor that are set by the
+     * default constructor.
      *
      * @param httpClient the HttpClient instance to use for this sender
      */
@@ -242,10 +245,10 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 
     /**
      * HttpClient {@link org.apache.http.HttpRequestInterceptor} implementation that removes {@code Content-Length} and
-     * {@code Transfer-Encoding} headers from the request. Necessary, because SAAJ and other SOAP implementations set these
+     * {@code Transfer-Encoding} headers from the request. Necessary, because some SAAJ and other SOAP implementations set these
      * headers themselves, and HttpClient throws an exception if they have been set.
      */
-    private static class RemoveSoapHeadersInterceptor implements HttpRequestInterceptor {
+    public static class RemoveSoapHeadersInterceptor implements HttpRequestInterceptor {
 
         public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
             if (request instanceof HttpEntityEnclosingRequest) {
