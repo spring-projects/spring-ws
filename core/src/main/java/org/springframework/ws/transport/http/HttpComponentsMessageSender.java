@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2012 the original author or authors.
+ * Copyright 2002-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,11 +20,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
-
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.Assert;
-import org.springframework.ws.transport.WebServiceConnection;
 
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpException;
@@ -44,6 +39,11 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
+
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.Assert;
+import org.springframework.ws.transport.WebServiceConnection;
 
 /**
  * {@code WebServiceMessageSender} implementation that uses <a href="http://hc.apache.org/httpcomponents-client">Apache
@@ -86,7 +86,13 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
     }
 
     /**
-     * Create a new instance of the <code>HttpClientMessageSender</code> with the given {@link HttpClient} instance.
+     * Create a new instance of the {@code HttpClientMessageSender} with the given
+     * {@link HttpClient} instance.
+     * <p>
+     * This constructor does not change the given {@code HttpClient} in any way. As such,
+     * it does not set timeouts, nor does it
+     * {@linkplain DefaultHttpClient#addRequestInterceptor(org.apache.http.HttpRequestInterceptor) add}
+     * the {@link RemoveSoapHeadersInterceptor}.
      *
      * @param httpClient the HttpClient instance to use for this sender
      */
@@ -242,10 +248,10 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 
     /**
      * HttpClient {@link org.apache.http.HttpRequestInterceptor} implementation that removes {@code Content-Length} and
-     * {@code Transfer-Encoding} headers from the request. Necessary, because SAAJ and other SOAP implementations set these
+     * {@code Transfer-Encoding} headers from the request. Necessary, because some SAAJ and other SOAP implementations set these
      * headers themselves, and HttpClient throws an exception if they have been set.
      */
-    private static class RemoveSoapHeadersInterceptor implements HttpRequestInterceptor {
+    public static class RemoveSoapHeadersInterceptor implements HttpRequestInterceptor {
 
         public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
             if (request instanceof HttpEntityEnclosingRequest) {
