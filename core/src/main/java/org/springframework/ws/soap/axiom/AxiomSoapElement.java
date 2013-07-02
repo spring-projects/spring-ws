@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2002-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,16 +22,16 @@ import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-import org.springframework.util.xml.StaxUtils;
-import org.springframework.ws.soap.SoapElement;
-
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAPFactory;
+
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+import org.springframework.util.xml.StaxUtils;
+import org.springframework.ws.soap.SoapElement;
 
 /**
  * Axiom-specific version of {@link SoapElement}.
@@ -72,8 +72,14 @@ class AxiomSoapElement implements SoapElement {
 
     public final void addAttribute(QName name, String value) {
         try {
-            OMNamespace namespace = getAxiomFactory().createOMNamespace(name.getNamespaceURI(), name.getPrefix());
-            OMAttribute attribute = getAxiomFactory().createOMAttribute(name.getLocalPart(), namespace, value);
+            String namespaceUri = name.getNamespaceURI();
+            String prefix = name.getPrefix();
+	        if (StringUtils.hasLength(namespaceUri) && !StringUtils.hasLength(prefix)) {
+		        prefix = null;
+	        }
+	        OMNamespace namespace =
+			        getAxiomFactory().createOMNamespace(namespaceUri, prefix);
+	        OMAttribute attribute = getAxiomFactory().createOMAttribute(name.getLocalPart(), namespace, value);
             getAxiomElement().addAttribute(attribute);
         }
         catch (OMException ex) {
