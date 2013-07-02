@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2012 the original author or authors.
+ * Copyright 2002-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,19 +25,6 @@ import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.security.AbstractWsSecurityInterceptor;
-import org.springframework.ws.soap.security.WsSecuritySecurementException;
-import org.springframework.ws.soap.security.WsSecurityValidationException;
-import org.springframework.ws.soap.security.callback.CallbackHandlerChain;
-import org.springframework.ws.soap.security.callback.CleanupCallback;
-import org.springframework.ws.soap.security.wss4j.callback.UsernameTokenPrincipalCallback;
-
 import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSSConfig;
 import org.apache.ws.security.WSSecurityEngine;
@@ -54,6 +41,19 @@ import org.apache.ws.security.validate.Credential;
 import org.apache.ws.security.validate.SignatureTrustValidator;
 import org.apache.ws.security.validate.TimestampValidator;
 import org.w3c.dom.Document;
+
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.security.AbstractWsSecurityInterceptor;
+import org.springframework.ws.soap.security.WsSecuritySecurementException;
+import org.springframework.ws.soap.security.WsSecurityValidationException;
+import org.springframework.ws.soap.security.callback.CallbackHandlerChain;
+import org.springframework.ws.soap.security.callback.CleanupCallback;
+import org.springframework.ws.soap.security.wss4j.callback.UsernameTokenPrincipalCallback;
 
 /**
  * A WS-Security endpoint interceptor based on Apache's WSS4J. This interceptor supports messages created by the {@link
@@ -466,7 +466,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
      * Set the WS-I Basic Security Profile compliance mode. Default is {@code true}.
      */
     public void setBspCompliant(boolean bspCompliant) {
-	    this.handler.setOption(WSHandlerConstants.IS_BSP_COMPLIANT, true);
+	    this.handler.setOption(WSHandlerConstants.IS_BSP_COMPLIANT, bspCompliant);
         this.bspCompliant = bspCompliant;
     }
 
