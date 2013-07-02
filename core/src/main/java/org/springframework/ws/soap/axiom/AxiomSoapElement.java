@@ -72,7 +72,12 @@ class AxiomSoapElement implements SoapElement {
 
     public final void addAttribute(QName name, String value) {
         try {
-            OMNamespace namespace = getAxiomFactory().createOMNamespace(name.getNamespaceURI(), name.getPrefix());
+            String namespaceURI = name.getNamespaceURI();
+            String prefix = name.getPrefix();
+            // If a namespace is specified, but the prefix is empty, then set the prefix to null to
+            // let Axiom generate one.
+            OMNamespace namespace = getAxiomFactory().createOMNamespace(namespaceURI,
+                    namespaceURI.length() > 0 && prefix.length() == 0 ? null : prefix);
             OMAttribute attribute = getAxiomFactory().createOMAttribute(name.getLocalPart(), namespace, value);
             getAxiomElement().addAttribute(attribute);
         }
