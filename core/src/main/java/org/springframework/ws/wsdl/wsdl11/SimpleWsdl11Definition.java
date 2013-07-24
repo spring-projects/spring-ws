@@ -63,7 +63,7 @@ public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBea
 
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(this.wsdlResource, "wsdl is required");
-        Assert.isTrue(this.wsdlResource.exists(), "wsdl '" + this.wsdlResource + "' does not exit");
+        Assert.isTrue(this.wsdlResource.exists(), "wsdl '" + this.wsdlResource + "' does not exist");
     }
 
     public Source getSource() {
