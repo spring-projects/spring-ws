@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2002-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,11 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
-import org.springframework.xml.transform.TransformerObjectSupport;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+
+import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
  * Abstract base class for endpoints that handle the message payload as DOM elements.
@@ -54,6 +54,8 @@ public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSuppor
 
     private boolean namespaceAware = true;
 
+	private boolean expandEntityReferences = false;
+
     private boolean alwaysTransform = false;
 
     /** Set whether or not the XML parser should be XML namespace aware. Default is <code>true</code>. */
@@ -65,6 +67,15 @@ public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSuppor
     public void setValidating(boolean validating) {
         this.validating = validating;
     }
+
+	/**
+	 * Set if the XML parser should expand entity reference nodes. Default is
+	 * {@code false}.
+	 */
+	public void setExpandEntityReferences(boolean expandEntityRef) {
+		documentBuilderFactory.setExpandEntityReferences(expandEntityRef);
+	}
+
 
     /**
      * Set if the request {@link Source} should always be transformed into a new {@link DOMResult}.
@@ -111,6 +122,7 @@ public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSuppor
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(validating);
         factory.setNamespaceAware(namespaceAware);
+	    factory.setExpandEntityReferences(expandEntityReferences);
         return factory;
     }
 

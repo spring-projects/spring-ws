@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2002-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.xml.transform.TransformerObjectSupport;
-
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 /**
  * Implementation of the {@link WebServiceMessageFactory} interface that creates a {@link DomPoxMessage}.
@@ -49,6 +49,7 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
     public DomPoxMessageFactory() {
         documentBuilderFactory.setNamespaceAware(true);
         documentBuilderFactory.setValidating(false);
+	    documentBuilderFactory.setExpandEntityReferences(false);
     }
 
     /** Sets the content-type for the {@link DomPoxMessage}. */
@@ -66,6 +67,14 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
     public void setValidating(boolean validating) {
         documentBuilderFactory.setValidating(validating);
     }
+
+	/**
+	 * Set if the XML parser should expand entity reference nodes. Default is
+	 * {@code false}.
+	 */
+	public void setExpandEntityReferences(boolean expandEntityRef) {
+		documentBuilderFactory.setExpandEntityReferences(expandEntityRef);
+	}
 
     public DomPoxMessage createWebServiceMessage() {
         try {
