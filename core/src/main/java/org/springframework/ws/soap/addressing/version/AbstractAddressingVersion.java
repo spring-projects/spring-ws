@@ -28,6 +28,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Result;
+import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
@@ -154,16 +155,16 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
     }
 
     private Element getSoapHeaderElement(SoapMessage message) {
-        SoapHeader header = message.getSoapHeader();
-        if (header.getSource() instanceof DOMSource) {
-            DOMSource domSource = (DOMSource) header.getSource();
+        Source source = message.getSoapHeader().getSource();
+        if (source instanceof DOMSource) {
+            DOMSource domSource = (DOMSource) source;
             if (domSource.getNode() != null && domSource.getNode().getNodeType() == Node.ELEMENT_NODE) {
                 return (Element) domSource.getNode();
             }
         }
         try {
             DOMResult domResult = new DOMResult();
-            transform(header.getSource(), domResult);
+            transform(source, domResult);
             Document document = (Document) domResult.getNode();
             return document.getDocumentElement();
         }
