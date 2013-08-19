@@ -417,6 +417,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
                 wsdlDefinitionHandlerAdapter = new WsdlDefinitionHandlerAdapter();
             }
             wsdlDefinitionHandlerAdapter.setTransformLocations(isTransformWsdlLocations());
+            wsdlDefinitionHandlerAdapter.setTransformSchemaLocations(isTransformSchemaLocations());
             wsdlDefinitionHandlerAdapter.afterPropertiesSet();
         }
         catch (Exception ex) {
