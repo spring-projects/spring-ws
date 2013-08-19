@@ -164,6 +164,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
             this.setMarshaller(marshaller);
             this.setUnmarshaller((Unmarshaller) marshaller);
         }
+	    initDefaultStrategies();
     }
 
     /**
@@ -178,6 +179,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
         Assert.notNull(unmarshaller, "unmarshaller must not be null");
         this.setMarshaller(marshaller);
         this.setUnmarshaller(unmarshaller);
+	    initDefaultStrategies();
     }
 
     /** Returns the default URI to be used on operations that do not have a URI parameter. */
