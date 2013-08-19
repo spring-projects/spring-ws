@@ -50,9 +50,9 @@
                         There are two implementations of the <classname>WebServiceMessageSender</classname>
                         interface for sending messages via HTTP. The default implementation is the
                         <classname>HttpUrlConnectionMessageSender</classname>, which uses the facilities provided
-                        by Java itself. The alternative is the <classname>CommonsHttpMessageSender</classname>,
+                        by Java itself. The alternative is the <classname>HttpComponentsMessageSender</classname>,
                         which uses the
-                        <ulink url="http://jakarta.apache.org/commons/httpclient/">Jakarta Commons HttpClient</ulink>.
+                        <ulink url="http://hc.apache.org/httpcomponents-client-ga">Apache HttpComponents HttpClient</ulink>.
                         Use the latter if you need more advanced and easy-to-use functionality (such as authentication,
                         HTTP connection pooling, and so forth).
                     </para>
@@ -75,16 +75,15 @@
 </beans>]]></programlisting>
                     </para>
                     <para>
-                        The following example shows how override the default configuration, and to use Commons Http to
+                        The following example shows how override the default configuration, and to use Apache HttpClient to
                         authenticate using HTTP authentication:
                         <programlisting><![CDATA[<bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
     <constructor-arg ref="messageFactory"/>
     <property name="messageSender">
-        <bean class="org.springframework.ws.transport.http.CommonsHttpMessageSender">
+        <bean class="org.springframework.ws.transport.http.HttpComponentsMessageSender">
             <property name="credentials">
-                <bean class="org.apache.commons.httpclient.UsernamePasswordCredentials">
-                    <constructor-arg value="john"/>
-                    <constructor-arg value="secret"/>
+                <bean class="org.apache.http.auth.UsernamePasswordCredentials">
+                    <constructor-arg value="john:secret"/>
                 </bean>
             </property>
         </bean>
