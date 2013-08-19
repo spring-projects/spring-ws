@@ -34,8 +34,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.SingleClientConnManager;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
@@ -74,10 +73,10 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 
     /**
      * Create a new instance of the {@code HttpClientMessageSender} with a default {@link HttpClient} that uses a
-     * default {@link SingleClientConnManager}.
+     * default {@link PoolingClientConnectionManager}.
      */
     public HttpComponentsMessageSender() {
-        DefaultHttpClient defaultClient = new DefaultHttpClient(new ThreadSafeClientConnManager());
+        DefaultHttpClient defaultClient = new DefaultHttpClient(new PoolingClientConnectionManager());
         defaultClient.addRequestInterceptor(new RemoveSoapHeadersInterceptor(), 0);
 
         this.httpClient = defaultClient;
@@ -155,19 +154,19 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
      * Sets the maximum number of connections allowed for the underlying HttpClient.
      *
      * @param maxTotalConnections the maximum number of connections allowed
-     * @see ThreadSafeClientConnManager#setMaxTotal(int)
+     * @see PoolingClientConnectionManager#setMaxTotal(int)
      */
     public void setMaxTotalConnections(int maxTotalConnections) {
         if (maxTotalConnections <= 0) {
             throw new IllegalArgumentException("maxTotalConnections must be a positive value");
         }
         ClientConnectionManager connectionManager = getHttpClient().getConnectionManager();
-        if (!(connectionManager instanceof ThreadSafeClientConnManager)) {
+        if (!(connectionManager instanceof PoolingClientConnectionManager)) {
             throw new IllegalArgumentException("maxTotalConnections is not supported on " +
-                    connectionManager.getClass().getName() + ". Use " + ThreadSafeClientConnManager.class.getName() +
+                    connectionManager.getClass().getName() + ". Use " + PoolingClientConnectionManager.class.getName() +
                     " instead");
         }
-        ((ThreadSafeClientConnManager) connectionManager).setMaxTotal(maxTotalConnections);
+        ((PoolingClientConnectionManager) connectionManager).setMaxTotal(maxTotalConnections);
     }
 
     /**
@@ -183,24 +182,26 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
      * The host can be specified as a URI (with scheme and port).
      *
      * @param maxConnectionsPerHost a properties object specifying the maximum number of connection
-     * @see org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager#setMaxForRoute(org.apache.http.conn.routing.HttpRoute,
-     *      int)
+     * @see PoolingClientConnectionManager#setMaxPerRoute(HttpRoute, int)
      */
     public void setMaxConnectionsPerHost(Map<String, String> maxConnectionsPerHost) throws URISyntaxException {
         ClientConnectionManager connectionManager = getHttpClient().getConnectionManager();
-        if (!(connectionManager instanceof ThreadSafeClientConnManager)) {
+        if (!(connectionManager instanceof PoolingClientConnectionManager)) {
             throw new IllegalArgumentException("maxConnectionsPerHost is not supported on " +
-                    connectionManager.getClass().getName() + ". Use " + ThreadSafeClientConnManager.class.getName() +
+                    connectionManager.getClass().getName() + ". Use " + PoolingClientConnectionManager.class.getName() +
                     " instead");
         }
+	    PoolingClientConnectionManager poolingConnectionManager =
+			    (PoolingClientConnectionManager) connectionManager;
 
-        for (Object o : maxConnectionsPerHost.keySet()) {
-            String host = (String) o;
-            URI uri = new URI(host);
-            HttpHost httpHost = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
-            int maxHostConnections = Integer.parseInt(maxConnectionsPerHost.get(host));
-            ((ThreadSafeClientConnManager) connectionManager)
-                    .setMaxForRoute(new HttpRoute(httpHost), maxHostConnections);
+	    for (Map.Entry<String, String> entry : maxConnectionsPerHost.entrySet()) {
+            URI uri = new URI(entry.getKey());
+            HttpHost host = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
+		    HttpRoute route = new HttpRoute(host);
+
+            int max = Integer.parseInt(entry.getValue());
+
+		    poolingConnectionManager.setMaxPerRoute(route, max);
         }
     }
 
