@@ -1,0 +1,6 @@
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+    <SOAP-ENV:Header>
+<wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" SOAP-ENV:mustUnderstand="1"><wsse:UsernameToken xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="XWSSGID-13769977765581298196166"><wsse:Username>Bert</wsse:Username><wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">Ernie</wsse:Password><wsse:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">rPCuuraVbaTLFVS73/xkKNB2</wsse:Nonce><wsu:Created>2013-08-20T11:22:56Z</wsu:Created></wsse:UsernameToken></wsse:Security></SOAP-ENV:Header><SOAP-ENV:Body>
+        <tru:StockSymbol xmlns:tru="http://fabrikam123.com/payloads">QQQ</tru:StockSymbol>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>2013-08-20 13:22:56,589 INFO [org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor] - <Loading policy configuration from from 'class path resource [org/springframework/ws/soap/security/xwss/requireUsernameToken-plainText-config.xml]'>
