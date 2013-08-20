@@ -251,8 +251,16 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
     private InputStream checkForUtf8ByteOrderMark(InputStream inputStream) throws IOException {
         PushbackInputStream pushbackInputStream = new PushbackInputStream(new BufferedInputStream(inputStream), 3);
         byte[] bytes = new byte[3];
-        int bytesRead = pushbackInputStream.read(bytes);
-        if (bytesRead != -1) {
+        int bytesRead = 0;
+	    while (bytesRead < bytes.length) {
+		    int n = pushbackInputStream.read(bytes, bytesRead, bytes.length - bytesRead);
+		    if (n > 0) {
+			    bytesRead += n;
+		    } else {
+			    break;
+		    }
+	    }
+        if (bytesRead > 0) {
             // check for the UTF-8 BOM, and remove it if there. See SWS-393
             if (!isByteOrderMark(bytes)) {
                 pushbackInputStream.unread(bytes, 0, bytesRead);
