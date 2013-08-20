@@ -112,18 +112,4 @@ public class JmsTransportUtilsTest {
         String replyTo = JmsTransportUtils.getReplyToName(uri);
         assertEquals("Invalid reply to name", "jms/REPLY_QUEUE", replyTo);
     }
-
-    @Test
-    public void headerToJmsPropertyFallback() {
-        String expected = "SOAPJMS_fooBarBaz";
-        String result = JmsTransportUtils.headerToJmsProperty("Foo-Bar-Baz");
-        assertEquals(expected, result);
-    }
-
-    @Test
-    public void jmsPropertyToHeader() {
-        String expected = "Foo-Bar-Baz";
-        String result = JmsTransportUtils.jmsPropertyToHeader("SOAPJMS_fooBarBaz");
-        assertEquals(expected, result);
-    }
 }

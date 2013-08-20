@@ -76,19 +76,8 @@ public abstract class JmsTransportUtils {
                 return CONVERSION_TABLE[i + 1];
             }
         }
-        // fall-back
-        StringBuilder builder = new StringBuilder(JmsTransportConstants.PROPERTY_PREFIX);
-        for (int i = 0; i < headerName.length(); i++) {
-            char ch = headerName.charAt(i);
-            if (i == 0) {
-                builder.append(Character.toLowerCase(ch));
+        return headerName;
             }
-            else if (Character.isJavaIdentifierPart(ch)) {
-                builder.append(ch);
-            }
-        }
-        return builder.toString();
-    }
 
     /**
      * Converts the given JMS property name to a transport header name. Returns the given property name if no match is
@@ -103,27 +92,7 @@ public abstract class JmsTransportUtils {
                 return CONVERSION_TABLE[i - 1];
             }
         }
-        // fall-back
-        if (propertyName.startsWith(JmsTransportConstants.PROPERTY_PREFIX)) {
-            StringBuilder builder = new StringBuilder(propertyName.length());
-            int start = JmsTransportConstants.PROPERTY_PREFIX.length();
-            for (int i = start; i < propertyName.length(); i++) {
-                char ch = propertyName.charAt(i);
-                if (i == start) {
-                    builder.append(Character.toUpperCase(ch));
-                }
-                else {
-                    if (Character.isUpperCase(ch)) {
-                        builder.append('-');
-                    }
-                    builder.append(ch);
-                }
-            }
-            return builder.toString();
-        }
-        else {
             return propertyName;
-        }
     }
 
     /**
