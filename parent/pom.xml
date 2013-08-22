@@ -4,7 +4,7 @@
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws-parent</artifactId>
     <packaging>pom</packaging>
-    <version>2.1.4.RELEASE</version>
+    <version>2.1.5.RELEASE-SNAPSHOT</version>
     <name>Spring Web Services - Parent</name>
     <url>http://static.springframework.org/spring-ws/site/index.html</url>
     <organization>
