@@ -2,6 +2,29 @@ SPRING WEB SERVICES CHANGELOG
 =============================
 http://www.springframework.org/spring-ws
 
+Changes in version 2.1.4.RELEASE
+--------------------------------
+
+** Bug
+    * [SWS-831] - BspCompliant is always set to true in Wss4jSecurityInterceptor
+    * [SWS-833] - All JMS headers ignored, if the are not contained in CONVERSION_TABLE or prefixed with SOAPJMS_
+    * [SWS-837] - Typo in embedded HTTP server documentation
+    * [SWS-840] - I can't set transformSchemaLocation attribute in MessageDispatcherServlet class through web.xml file
+    * [SWS-844] - WebServiceTemplate(Marshaller marshaller) constructor doesn't call initDefaultStrategies()
+    * [SWS-845] - checkForUtf8ByteOrderMark() will not detect BOM with some TLSv1 implementations
+
+** Improvement
+    * [SWS-644] - ejb 2.1 dependency jar - change to freely available jar in M2 Central
+    * [SWS-835] - HttpComponentsMessageSender inintuitive constructor
+    * [SWS-838] - HttpComponentsMessageSender: Use the PoolingClientConnectionManager instead of the deprecated ThreadSafeClientConnManager
+    * [SWS-839] - Update documentation to use HttpComponentsMessageSender in favour of deprecated CommonsHttpMessageSender
+
+** New Feature
+    * [SWS-832] - Add support for programmatically instantiating MessageDispatcherServlet
+
+** Support
+    * [SWS-841] - NullPointerException on First invocation to Spring WS Service with Nonce
+
 Changes in version 2.1.3.RELEASE
 --------------------------------
 

@@ -86,16 +86,10 @@
         </repository>
 -->
         <repository>
-            <id>spring-local-repo</id>
-            <url>file:///Users/arjen/Projects/Spring/repo</url>
-        </repository>
-<!--
-        <repository>
             <id>spring-release</id>
             <name>Spring Release Repository</name>
             <url>s3://maven.springframework.org/release</url>
         </repository>
--->
         <snapshotRepository>
             <id>spring-snapshot</id>
             <name>Spring Snapshot Repository</name>
@@ -112,7 +106,7 @@
         <url>https://fisheye.springframework.org/browse/spring-ws/trunk</url>
     </scm>
     <properties>
-        <spring.framework.version>3.2.2.RELEASE</spring.framework.version>
+        <spring.framework.version>3.2.4.RELEASE</spring.framework.version>
     </properties>
     <modules>
         <module>parent</module>

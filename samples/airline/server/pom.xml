@@ -60,13 +60,6 @@
             </dependencies>
         </profile>
     </profiles>
-    <repositories>
-        <repository>
-            <id>spring-ext</id>
-            <name>Spring External Dependencies Repository</name>
-            <url>https://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo-ext/</url>
-        </repository>
-    </repositories>
     <build>
         <plugins>
             <plugin>
