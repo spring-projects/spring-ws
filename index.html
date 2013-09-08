@@ -1,0 +1,124 @@
+---
+# The name of your project
+title: Spring Web Services
+
+badges:
+
+
+  # Customize your project's badges. Delete any entries that do not apply.
+  custom:
+    - name: Source (GitHub)
+      url:  https://github.com/spring-projects/spring-ws
+      icon: github
+
+    - name: Issues (JIRA)
+      url:  http://jira.springsource.org/browse/SWS
+      icon: tracking
+
+    - name: CI (Bamboo)
+      url:  https://build.springsource.org/browse/SWS
+      icon: ci
+
+    - name: Forum
+      url:  http://forum.spring.io/forum/spring-projects/web-services
+      icon: forum
+
+    - name: StackOverflow
+      url:  http://stackoverflow.com/questions/tagged/spring-ws
+      icon: stackoverflow
+
+
+---
+<!DOCTYPE HTML>
+<html lang="en-US">
+
+{% capture billboard_description %}
+
+Spring Web Services aims to facilitate contract-first SOAP service development, allowing for the creation of flexible web services using one of the many ways to manipulate XML payloads. 
+
+{% endcapture %}
+
+{% capture main_content %}
+
+ Spring Web Services (Spring-WS) is a product of the Spring community focused on creating document-driven Web services. Spring Web Services aims to facilitate contract-first SOAP service development, allowing for the creation of flexible web services using one of the many ways to manipulate XML payloads. The product is based on Spring itself, which means you can use the Spring concepts such as dependency injection as an integral part of your Web service.
+
+People use Spring-WS for many reasons, but most are drawn to it after finding alternative SOAP stacks lacking when it comes to following Web service best practices. Spring-WS makes the best practice an easy practice. This includes practices such as the WS-I basic profile, Contract-First development, and having a loose coupling between contract and implementation. The other key features of Spring Web services are:
+
+
+
+## Features
+
+* Makes the Best Practice an Easy Practice: Spring Web Services makes enforcing best practices easier. This includes practices such as the WS-I basic profile, Contract-First development, and having a loose coupling between contract and implementation.
+* Powerful mappings:  You can distribute incoming XML request to any object, depending on message payload, SOAP Action header, or an XPath expression.
+* XML API support: Incoming XML messages can be handled in standard JAXP APIs such as DOM, SAX, and StAX, but also JDOM, dom4j, XOM, or even marshalling technologies.
+* Flexible XML Marshalling: The Object/XML Mapping module in the Spring Web Services distribution supports JAXB 1 and 2, Castor, XMLBeans, JiBX, and XStream. And because it is a separate module, you can use it in non-Web services code as well.
+* Reuses your Spring expertise: Spring-WS uses Spring application contexts for all configuration, which should help Spring developers get up-to-speed nice and quickly. Also, the architecture of Spring-WS resembles that of Spring-MVC.
+* Supports WS-Security: WS-Security allows you to sign SOAP messages, encrypt and decrypt them, or authenticate against them.
+* Integrates with Acegi Security: The WS-Security implementation of Spring Web Services provides integration with Spring Security. This means you can use your existing configuration for your SOAP service as well.
+* Built by Maven: This assists you in effectively reusing the Spring Web Services artifacts in your own Maven-based projects.
+* Apache license. You can confidently use Spring-WS in your project.
+
+
+<span id="quick-start"></span>
+## Quick Start
+
+{% include download_widget.md %}
+
+####Configure Spring-WS Client
+
+````xml
+<beans xmlns="http://www.springframework.org/schema/beans">
+
+    <bean id="webServiceClient" class="WebServiceClient">
+        <property name="defaultUri" value="http://localhost:8080/WebService"/>
+    </bean>
+
+</beans>
+````
+
+####Inject and use WebServiceTemplate
+
+```java
+public class WebServiceClient {
+
+    private static final String MESSAGE =
+        "<message xmlns=\"http://tempuri.org\">Hello World</message>";
+
+    private final WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
+
+    public void setDefaultUri(String defaultUri) {
+        webServiceTemplate.setDefaultUri(defaultUri);
+    }
+
+    // send to the configured default URI
+    public void simpleSendAndReceive() {
+        StreamSource source = new StreamSource(new StringReader(MESSAGE));
+        StreamResult result = new StreamResult(System.out);
+        webServiceTemplate.sendSourceAndReceiveToResult(source, result);
+    }
+
+    // send to an explicit URI
+    public void customSendAndReceive() {
+        StreamSource source = new StreamSource(new StringReader(MESSAGE));
+        StreamResult result = new StreamResult(System.out);
+        webServiceTemplate.sendSourceAndReceiveToResult("http://localhost:8080/AnotherWebService",
+            source, result);
+    }
+
+}
+```
+
+{% endcapture %}
+
+{% capture related_resources %}
+
+
+### Tutorials
+
+* [Reference Manual Tutorial](http://docs.spring.io/spring-ws/sites/2.0/reference/html/tutorial.html)
+
+{% endcapture %}
+
+
+{% include project_page.html %}
+</html>
