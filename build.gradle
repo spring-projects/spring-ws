@@ -1,0 +1,416 @@
+buildscript {
+	repositories {
+		maven { url 'http://repo.springsource.org/plugins-release' }
+	}
+	dependencies {
+		classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.4'
+		classpath 'org.springframework.build.gradle:docbook-reference-plugin:0.2.7'
+	}
+}
+
+configure(allprojects) {
+	group = "org.springframework.ws"
+	
+	ext.springVersion = "3.2.4.RELEASE"
+	ext.axiomVersion = "1.2.14"
+
+	apply plugin: "java"
+	apply plugin: "idea"
+	apply plugin: "eclipse"
+	apply plugin: "propdeps"
+
+/*	[compileJava, compileTestJava]*.options*.compilerArgs = [
+		"-Xlint:serial",
+		"-Xlint:varargs",
+		"-Xlint:cast",
+		"-Xlint:classfile",
+		"-Xlint:dep-ann",
+		"-Xlint:divzero",
+		"-Xlint:empty",
+		"-Xlint:finally",
+		"-Xlint:overrides",
+		"-Xlint:path",
+		"-Xlint:processing",
+		"-Xlint:static",
+		"-Xlint:try",
+		"-Xlint:-options",	   // intentionally disabled
+		"-Xlint:-fallthrough", // intentionally disabled
+		"-Xlint:-rawtypes",	   // TODO enable and fix warnings
+		"-Xlint:-deprecation", // TODO enable and fix warnings
+		"-Xlint:-unchecked"	   // TODO enable and fix warnings
+	]
+*/
+	compileJava {
+		sourceCompatibility=1.5
+		targetCompatibility=1.5
+	}
+
+	sourceSets.test.resources.srcDirs = ['src/test/resources', 'src/test/java']
+
+	test {
+		systemProperty("java.awt.headless", "true")
+		systemProperty("testGroups", project.properties.get("testGroups"))
+		scanForTestClasses = false
+		include '**/*Test.*'
+		exclude '**/*Abstract*.*'
+	}
+
+	repositories {
+		maven { url 'http://repo.spring.io/libs-release' }
+	}
+
+	dependencies {
+		compile("commons-logging:commons-logging:1.1.1")
+		compile("org.springframework:spring-core:$springVersion")
+
+		testCompile("junit:junit:4.10")
+		testCompile("org.easymock:easymock:3.1")
+		testCompile("xmlunit:xmlunit:1.1")
+		testRuntime("org.codehaus.woodstox:woodstox-core-asl:4.1.3")
+	}
+
+	ext.javadocLinks = [
+		"http://docs.oracle.com/javase/7/docs/api/",
+		"http://docs.oracle.com/javaee/6/api/",
+		"http://jackson.codehaus.org/1.9.12/javadoc/",
+		"http://fasterxml.github.com/jackson-core/javadoc/2.2.2/",
+	] as String[]
+
+}
+
+configure(subprojects) { subproject ->
+
+	jar {
+		manifest.attributes["Created-By"] =
+			"${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
+		manifest.attributes["Implementation-Title"] = subproject.name
+		manifest.attributes["Implementation-Version"] = subproject.version
+
+		from("${rootProject.projectDir}/src/dist") {
+			include "license.txt"
+			include "notice.txt"
+			into "META-INF"
+			expand(copyright: new Date().format("yyyy"), version: project.version)
+		}
+	}
+
+	javadoc {
+		description = "Generates project-level javadoc for use in -javadoc jar"
+
+		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+		options.author = true
+		options.header = project.name
+		options.links(project.ext.javadocLinks)
+//		options.addStringOption('Xdoclint:none', '-quiet')
+
+		// suppress warnings due to cross-module @see and @link references;
+		// note that global 'api' task does display all warnings.
+		logging.captureStandardError LogLevel.INFO
+		logging.captureStandardOutput LogLevel.INFO // suppress "## warnings" message
+	}
+
+	task sourcesJar(type: Jar, dependsOn:classes) {
+		classifier = "sources"
+		from sourceSets.main.allJava.srcDirs
+		include "**/*.java"
+	}
+
+	task javadocJar(type: Jar) {
+		classifier = "javadoc"
+		from javadoc
+	}
+
+	artifacts {
+		archives sourcesJar
+		archives javadocJar
+	}
+}
+
+project('spring-xml') {
+	description = "Spring XML"
+	
+	dependencies {
+		// Spring
+		compile("org.springframework:spring-beans:$springVersion")
+		compile("org.springframework:spring-context:$springVersion")
+
+		//XML
+		optional("org.apache.ws.xmlschema:xmlschema-core:2.0.2")
+		optional("jaxen:jaxen:1.1.4")
+	}
+}
+
+project('spring-ws-core') {
+	description = 'Spring WS Core'
+	dependencies {
+		compile project(":spring-xml")
+
+		// Spring
+		compile("org.springframework:spring-aop:$springVersion")
+		compile("org.springframework:spring-beans:$springVersion")
+		compile("org.springframework:spring-oxm:$springVersion")
+		compile("org.springframework:spring-web:$springVersion")
+		compile("org.springframework:spring-webmvc:$springVersion")
+		testCompile("org.springframework:spring-test:$springVersion")
+
+		// XML
+		optional("org.jdom:jdom:2.0.1")
+		optional("dom4j:dom4j:1.6.1")
+		optional("xom:xom:1.2.5") {
+			exclude group: 'xml-apis', module: 'xml-apis'
+			exclude group: 'xerces', module: 'xercesImpl'
+			exclude group: 'xalan', module: 'xalan'
+		}
+		optional("org.apache.ws.xmlschema:xmlschema-core:2.0.2")
+
+		// SOAP
+		optional("org.apache.ws.commons.axiom:axiom-api:$axiomVersion")
+		optional("org.apache.ws.commons.axiom:axiom-impl:$axiomVersion") {
+			exclude group: 'org.codehaus.woodstox', module: 'wstx-asl'
+		}
+
+		// WSDL
+		optional("wsdl4j:wsdl4j:1.6.1")
+
+		// Transport
+		provided("javax.servlet:servlet-api:2.5")
+		optional("org.apache.httpcomponents:httpclient:4.2.5")
+		optional("commons-httpclient:commons-httpclient:3.1")
+		testCompile("org.mortbay.jetty:jetty:6.1.26")
+
+		testCompile("log4j:log4j:1.2.16")
+		testCompile("org.aspectj:aspectjrt:1.6.9")
+		testRuntime("org.aspectj:aspectjweaver:1.6.9")
+	}
+}
+
+project('spring-ws-support') {
+	description = 'Spring WS Support'
+	dependencies {
+		compile project(":spring-xml")
+		compile project(":spring-ws-core")
+
+		// Spring
+		compile("org.springframework:spring-beans:$springVersion")
+		compile("org.springframework:spring-jms:$springVersion")
+		testCompile("org.springframework:spring-test:$springVersion")
+
+		// Transport
+		provided("org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1")
+		provided("org.apache.geronimo.specs:geronimo-ejb_2.1_spec:1.1")
+		provided("javax.mail:mail:1.4.5")
+		optional("jivesoftware:smack:3.1.0")
+		testCompile("commons-httpclient:commons-httpclient:3.1")
+		testRuntime("org.apache.activemq:activemq-core:4.1.2")
+		testCompile("org.jvnet.mock-javamail:mock-javamail:1.6")
+  }
+}
+
+project('spring-ws-security') {
+	description = 'Spring WS Security'
+	dependencies {
+		compile project(":spring-xml")
+		compile project(":spring-ws-core")
+
+		// Spring
+		compile("org.springframework:spring-beans:$springVersion")
+		compile("org.springframework:spring-tx:$springVersion")
+
+		// Spring Security
+		compile("org.springframework.security:spring-security-core:3.1.0.RELEASE")
+		optional("net.sf.ehcache:ehcache:2.6.3") {
+		  exclude group: 'net.sf.ehcache', module: 'ehcache-terracotta'
+		}
+
+		// WS-Security
+		optional("com.sun.xml.wss:xws-security:3.0") {
+			exclude group: 'javax.xml.crypto', module: 'xmldsig'
+		}
+		optional("org.apache.ws.security:wss4j:1.6.5")
+
+		// SOAP
+		provided("com.sun.xml.messaging.saaj:saaj-impl:1.3.19")
+		optional("org.apache.ws.commons.axiom:axiom-api:$axiomVersion")
+		optional("org.apache.ws.commons.axiom:axiom-impl:$axiomVersion") {
+			exclude group: 'org.codehaus.woodstox', module: 'wstx-asl'
+		}
+
+  }
+}
+
+project('spring-ws-test') {
+	description = 'Spring WS Test'
+
+	dependencies {
+		compile project(":spring-ws-core")
+
+		compile("xmlunit:xmlunit:1.1")
+		testCompile("org.springframework:spring-test:$springVersion")
+	}
+
+
+}
+
+configure(rootProject) {
+	description = 'Spring Web Services'
+
+	apply plugin: 'docbook-reference'
+
+	reference {
+		sourceDir = file('src/reference/docbook')
+		pdfFilename = 'spring-ws-reference.pdf'
+	}
+
+	// don't publish the default jar for the root project
+	configurations.archives.artifacts.clear()
+
+	task api(type: Javadoc) {
+		group = 'Documentation'
+		description = 'Generates aggregated Javadoc API documentation.'
+		title = "${rootProject.description} ${version} API"
+		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+		options.author = true
+		options.header = rootProject.description
+		options.overview = 'src/api/overview.html'
+		options.splitIndex = true
+		options.links(
+			'http://docs.jboss.org/jbossas/javadoc/4.0.5/connector'
+		)
+		source subprojects.collect { project ->
+			project.sourceSets.main.allJava
+		}
+		destinationDir = new File(buildDir, "api")
+		classpath = files(subprojects.collect { project ->
+			project.sourceSets.main.compileClasspath
+		})
+		maxMemory = '1024m'
+	}
+
+	task docsZip(type: Zip) {
+		group = 'Distribution'
+		baseName = 'spring-ws'
+		classifier = 'docs'
+		description = "Builds -${classifier} archive containing api and reference " +
+			"for deployment at http://static.springframework.org/spring-framework/docs."
+
+		from('src/dist') {
+			include 'changelog.txt'
+		}
+
+		from (api) {
+			into 'api'
+		}
+
+		from (reference) {
+			into 'reference'
+		}
+	}
+
+	task schemaZip(type: Zip) {
+		group = 'Distribution'
+		baseName = 'spring-ws'
+		classifier = 'schema'
+		description = "Builds -${classifier} archive containing all " +
+			"XSDs for deployment at http://springframework.org/schema."
+
+		subprojects.each { subproject ->
+			def Properties schemas = new Properties();
+
+			subproject.sourceSets.main.resources.find {
+				it.path.endsWith('META-INF/spring.schemas')
+			}?.withInputStream { schemas.load(it) }
+
+			for (def key : schemas.keySet()) {
+				def shortName = key.replaceAll(/http.*schema\/(.*)\/.*/, '$1')
+				assert shortName != key
+				File xsdFile = subproject.sourceSets.main.resources.find {
+					it.path.endsWith(schemas.get(key))
+				}
+				assert xsdFile != null
+				into (shortName) {
+					from xsdFile.path
+				}
+			}
+		}
+	}
+
+	task distZip(type: Zip, dependsOn: [docsZip, schemaZip]) {
+		group = 'Distribution'
+		baseName = 'spring-ws'
+		classifier = 'dist'
+		description = "Builds -${classifier} archive, containing all jars and docs, " +
+					  "suitable for community download page."
+
+		ext.baseDir = "${baseName}-${project.version}";
+
+		from('src/dist') {
+			include 'readme.txt'
+			include 'license.txt'
+			include 'notice.txt'
+			into "${baseDir}"
+			expand(copyright: new Date().format('yyyy'), version: project.version)
+		}
+
+		from(zipTree(docsZip.archivePath)) {
+			into "${baseDir}/docs"
+		}
+
+		from(zipTree(schemaZip.archivePath)) {
+			into "${baseDir}/schema"
+		}
+
+		subprojects.each { subproject ->
+			into ("${baseDir}/libs") {
+				from subproject.jar
+				if (subproject.tasks.findByPath('sourcesJar')) {
+					from subproject.sourcesJar
+				}
+				if (subproject.tasks.findByPath('javadocJar')) {
+					from subproject.javadocJar
+				}
+			}
+		}
+	}
+
+	// Create an distribution that contains all dependencies (required and optional).
+	// Not published by default; only for use when building from source.
+	task depsZip(type: Zip, dependsOn: distZip) { zipTask ->
+		group = 'Distribution'
+		baseName = 'spring-ws'
+		classifier = 'dist-with-deps'
+		description = "Builds -${classifier} archive, containing everything " +
+			"in the -${distZip.classifier} archive plus all runtime dependencies."
+
+		from zipTree(distZip.archivePath)
+
+		gradle.taskGraph.whenReady { taskGraph ->
+			if (taskGraph.hasTask(":${zipTask.name}")) {
+				def projectNames = rootProject.subprojects*.name
+				def artifacts = new HashSet()
+				subprojects.each { subproject ->
+					subproject.configurations.runtime.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+						def dependency = artifact.moduleVersion.id
+						if (!projectNames.contains(dependency.name)) {
+							artifacts << artifact.file
+						}
+					}
+				}
+
+				zipTask.from(artifacts) {
+					into "${distZip.baseDir}/deps"
+				}
+			}
+		}
+	}
+
+	artifacts {
+		archives docsZip
+		archives schemaZip
+		archives distZip
+	}
+
+	task wrapper(type: Wrapper) {
+		description = 'Generates gradlew[.bat] scripts'
+		gradleVersion = '1.8'
+	}
+}

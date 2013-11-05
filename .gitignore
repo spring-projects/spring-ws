@@ -9,3 +9,6 @@ atlassian-ide-plugin*.xml
 
 .idea
 
+/build
+/spring-*/build
+.gradle
