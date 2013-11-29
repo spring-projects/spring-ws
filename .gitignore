@@ -8,6 +8,7 @@ activemq-data
 atlassian-ide-plugin*.xml
 
 .idea
+out
 
 /build
 /spring-*/build
