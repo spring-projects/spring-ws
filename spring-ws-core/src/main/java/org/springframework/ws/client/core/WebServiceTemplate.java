@@ -683,7 +683,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
             }
         }
         else {
-            if (logger.isDebugEnabled()) {
+            if (receivedMessageTracingLogger.isDebugEnabled()) {
                 receivedMessageTracingLogger
                         .debug("Received no response for request [" + messageContext.getRequest() + "]");
             }
