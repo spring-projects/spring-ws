@@ -34,6 +34,7 @@ import org.apache.axiom.om.OMContainer;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMNamespace;
+import org.apache.axiom.om.util.StAXUtils;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
 import org.w3c.dom.DOMImplementation;
@@ -161,8 +162,10 @@ public abstract class AxiomUtils {
 
             ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
 
-            StAXSOAPModelBuilder stAXSOAPModelBuilder =
-                    new StAXSOAPModelBuilder(XMLInputFactory.newInstance().createXMLStreamReader(bis), null);
+	        XMLInputFactory inputFactory = StAXUtils.getXMLInputFactory();
+
+	        StAXSOAPModelBuilder stAXSOAPModelBuilder =
+                    new StAXSOAPModelBuilder(inputFactory.createXMLStreamReader(bis), null);
             SOAPEnvelope envelope = stAXSOAPModelBuilder.getSOAPEnvelope();
 
             // Necessary to build a correct Axiom tree, see SWS-483
