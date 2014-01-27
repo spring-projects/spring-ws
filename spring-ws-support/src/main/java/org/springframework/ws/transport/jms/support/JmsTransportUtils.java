@@ -102,6 +102,9 @@ public abstract class JmsTransportUtils {
      * @return a jms URI
      */
     public static URI toUri(Destination destination) throws URISyntaxException, JMSException {
+	    if (destination == null) {
+		    return null;
+	    }
         String destinationName;
         if (destination instanceof Queue) {
             destinationName = ((Queue) destination).getQueueName();
