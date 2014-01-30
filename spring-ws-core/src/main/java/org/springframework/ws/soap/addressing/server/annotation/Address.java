@@ -23,9 +23,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks an endpoint with a WS-Addressing <code>Address</code>. If this annotation is applied, the {@link #value()} is
- * compared to the {@link org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo() destination}
- * property of the incominging message.
+ * Marks an endpoint with a WS-Addressing {@code Address}. If this annotation is
+ * applied, the {@linkplain #value() value} is compared to the
+ * {@link org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo()
+ * destination} property of the incoming message.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
@@ -35,12 +36,10 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Address {
 
-    /**
-     * The value may indicate a suggestion for a logical component name, to be turned into a Spring bean in case of an
-     * autodetected component.
-     *
-     * @return the suggested component name, if any
-     */
-    String value();
+	/**
+	 * Signifies the value for the request WS-Addressing destination that
+	 * is handled by the class.
+	 */
+	String value();
 
 }
