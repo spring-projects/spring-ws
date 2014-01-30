@@ -16,8 +16,6 @@
 
 package org.springframework.xml.xsd;
 
-import java.io.IOException;
-
 import org.springframework.xml.validation.XmlValidator;
 
 /**
@@ -39,8 +37,7 @@ public interface XsdSchemaCollection {
      * Creates a {@link XmlValidator} based on the schemas contained in this collection.
      *
      * @return a validator for this collection
-     * @throws IOException in case of I/O errors
      */
-    XmlValidator createValidator() throws IOException;
+    XmlValidator createValidator();
 
 }

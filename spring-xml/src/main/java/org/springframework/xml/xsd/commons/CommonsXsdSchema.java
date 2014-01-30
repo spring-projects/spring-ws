@@ -27,6 +27,11 @@ import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.ws.commons.schema.XmlSchema;
+import org.apache.ws.commons.schema.XmlSchemaCollection;
+import org.apache.ws.commons.schema.XmlSchemaSerializer;
+import org.w3c.dom.Document;
+
 import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.Resource;
@@ -35,11 +40,6 @@ import org.springframework.util.Assert;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.XsdSchema;
-
-import org.apache.ws.commons.schema.XmlSchema;
-import org.apache.ws.commons.schema.XmlSchemaCollection;
-import org.apache.ws.commons.schema.XmlSchemaSerializer;
-import org.w3c.dom.Document;
 
 /**
  * Implementation of the {@link XsdSchema} interface that uses Apache WS-Commons XML Schema.
@@ -114,12 +114,18 @@ public class CommonsXsdSchema implements XsdSchema {
         return new StreamSource(bis);
     }
 
-    public XmlValidator createValidator() throws IOException {
-        Resource resource = new UrlResource(schema.getSourceURI());
-        return XmlValidatorFactory.createValidator(resource, XmlValidatorFactory.SCHEMA_W3C_XML);
+    public XmlValidator createValidator() {
+	    try {
+		    Resource resource = new UrlResource(schema.getSourceURI());
+		    return XmlValidatorFactory
+				    .createValidator(resource, XmlValidatorFactory.SCHEMA_W3C_XML);
+	    }
+	    catch (IOException ex) {
+		    throw new CommonsXsdSchemaException(ex.getMessage(), ex);
+	    }
     }
 
-    /** Returns the wrapped Commons <code>XmlSchema</code> object. */
+	    /** Returns the wrapped Commons <code>XmlSchema</code> object. */
     public XmlSchema getSchema() {
         return schema;
     }

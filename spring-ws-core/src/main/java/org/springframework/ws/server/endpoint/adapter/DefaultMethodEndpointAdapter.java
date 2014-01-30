@@ -69,31 +69,77 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 
     private List<MethodArgumentResolver> methodArgumentResolvers;
 
+	private List<MethodArgumentResolver> customMethodArgumentResolvers;
+
     private List<MethodReturnValueHandler> methodReturnValueHandlers;
+
+    private List<MethodReturnValueHandler> customMethodReturnValueHandlers;
 
     private ClassLoader classLoader;
 
-    /** Returns the list of {@code MethodArgumentResolver}s to use. */
-    public List<MethodArgumentResolver> getMethodArgumentResolvers() {
+	/**
+	 * Returns the list of {@code MethodArgumentResolver}s to use.
+	 */
+	public List<MethodArgumentResolver> getMethodArgumentResolvers() {
         return methodArgumentResolvers;
     }
 
-    /** Sets the list of {@code MethodArgumentResolver}s to use. */
-    public void setMethodArgumentResolvers(List<MethodArgumentResolver> methodArgumentResolvers) {
+	/**
+	 * Sets the list of {@code MethodArgumentResolver}s to use.
+	 */
+	public void setMethodArgumentResolvers(List<MethodArgumentResolver> methodArgumentResolvers) {
         this.methodArgumentResolvers = methodArgumentResolvers;
     }
 
-    /** Returns the list of {@code MethodReturnValueHandler}s to use. */
-    public List<MethodReturnValueHandler> getMethodReturnValueHandlers() {
+	/**
+	 * Returns the custom argument resolvers.
+	 */
+	public List<MethodArgumentResolver> getCustomMethodArgumentResolvers() {
+		return customMethodArgumentResolvers;
+	}
+
+	/**
+	 * Sets the custom handlers for method arguments. Custom handlers are
+	 * ordered after built-in ones. To override the built-in support for
+	 * return value handling use {@link #setMethodArgumentResolvers(List)}.
+	 */
+	public void setCustomMethodArgumentResolvers(
+			List<MethodArgumentResolver> customMethodArgumentResolvers) {
+		this.customMethodArgumentResolvers = customMethodArgumentResolvers;
+	}
+
+	/**
+	 * Returns the list of {@code MethodReturnValueHandler}s to use.
+	 */
+	public List<MethodReturnValueHandler> getMethodReturnValueHandlers() {
         return methodReturnValueHandlers;
     }
 
-    /** Sets the list of {@code MethodReturnValueHandler}s to use. */
-    public void setMethodReturnValueHandlers(List<MethodReturnValueHandler> methodReturnValueHandlers) {
+	/**
+	 * Sets the list of {@code MethodReturnValueHandler}s to use.
+	 */
+	public void setMethodReturnValueHandlers(List<MethodReturnValueHandler> methodReturnValueHandlers) {
         this.methodReturnValueHandlers = methodReturnValueHandlers;
     }
 
-    private ClassLoader getClassLoader() {
+	/**
+	 * Returns the custom return value handlers.
+	 */
+	public List<MethodReturnValueHandler> getCustomMethodReturnValueHandlers() {
+		return customMethodReturnValueHandlers;
+	}
+
+	/**
+	 * Sets the handlers for custom return value types. Custom handlers are
+	 * ordered after built-in ones. To override the built-in support for
+	 * return value handling use {@link #setMethodReturnValueHandlers(List)}.
+	 */
+	public void setCustomMethodReturnValueHandlers(
+			List<MethodReturnValueHandler> customMethodReturnValueHandlers) {
+		this.customMethodReturnValueHandlers = customMethodReturnValueHandlers;
+	}
+
+	private ClassLoader getClassLoader() {
         return this.classLoader != null ? this.classLoader : DefaultMethodEndpointAdapter.class.getClassLoader();
     }
 
@@ -139,6 +185,9 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
             if (logger.isDebugEnabled()) {
                 logger.debug("No MethodArgumentResolvers set, using defaults: " + methodArgumentResolvers);
             }
+	        if (getCustomMethodArgumentResolvers() != null) {
+		        methodArgumentResolvers.addAll(getCustomMethodArgumentResolvers());
+	        }
             setMethodArgumentResolvers(methodArgumentResolvers);
         }
     }
@@ -180,6 +229,9 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
             if (logger.isDebugEnabled()) {
                 logger.debug("No MethodReturnValueHandlers set, using defaults: " + methodReturnValueHandlers);
             }
+	        if (getCustomMethodReturnValueHandlers() != null) {
+		        methodReturnValueHandlers.addAll(getCustomMethodReturnValueHandlers());
+	        }
             setMethodReturnValueHandlers(methodReturnValueHandlers);
         }
     }

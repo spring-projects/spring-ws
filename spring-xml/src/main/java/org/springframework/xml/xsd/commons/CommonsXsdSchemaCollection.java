@@ -22,6 +22,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.ws.commons.schema.XmlSchema;
+import org.apache.ws.commons.schema.XmlSchemaCollection;
+import org.apache.ws.commons.schema.XmlSchemaExternal;
+import org.apache.ws.commons.schema.XmlSchemaImport;
+import org.apache.ws.commons.schema.XmlSchemaInclude;
+import org.apache.ws.commons.schema.XmlSchemaObject;
+import org.apache.ws.commons.schema.resolver.DefaultURIResolver;
+import org.apache.ws.commons.schema.resolver.URIResolver;
+import org.xml.sax.InputSource;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
@@ -34,18 +46,6 @@ import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.XsdSchema;
 import org.springframework.xml.xsd.XsdSchemaCollection;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.ws.commons.schema.XmlSchema;
-import org.apache.ws.commons.schema.XmlSchemaCollection;
-import org.apache.ws.commons.schema.XmlSchemaExternal;
-import org.apache.ws.commons.schema.XmlSchemaImport;
-import org.apache.ws.commons.schema.XmlSchemaInclude;
-import org.apache.ws.commons.schema.XmlSchemaObject;
-import org.apache.ws.commons.schema.resolver.DefaultURIResolver;
-import org.apache.ws.commons.schema.resolver.URIResolver;
-import org.xml.sax.InputSource;
 
 /**
  * Implementation of the {@link XsdSchemaCollection} that uses Apache WS-Commons XML Schema.
@@ -162,16 +162,21 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
         return result;
     }
 
-    public XmlValidator createValidator() throws IOException {
-        Resource[] resources = new Resource[xmlSchemas.size()];
-        for (int i = xmlSchemas.size() - 1; i >= 0; i--) {
-            XmlSchema xmlSchema = xmlSchemas.get(i);
-            String sourceUri = xmlSchema.getSourceURI();
-            if (StringUtils.hasLength(sourceUri)) {
-                resources[i] = new UrlResource(sourceUri);
-            }
-        }
-        return XmlValidatorFactory.createValidator(resources, XmlValidatorFactory.SCHEMA_W3C_XML);
+    public XmlValidator createValidator() {
+	    try {
+		    Resource[] resources = new Resource[xmlSchemas.size()];
+		    for (int i = xmlSchemas.size() - 1; i >= 0; i--) {
+			    XmlSchema xmlSchema = xmlSchemas.get(i);
+			    String sourceUri = xmlSchema.getSourceURI();
+			    if (StringUtils.hasLength(sourceUri)) {
+				    resources[i] = new UrlResource(sourceUri);
+			    }
+		    }
+		    return XmlValidatorFactory
+				    .createValidator(resources, XmlValidatorFactory.SCHEMA_W3C_XML);
+	    } catch (IOException ex) {
+		    throw new CommonsXsdSchemaException(ex.getMessage(), ex);
+	    }
     }
 
     private void inlineIncludes(XmlSchema schema, Set<XmlSchema> processedIncludes, Set<XmlSchema> processedImports) {

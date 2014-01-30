@@ -16,7 +16,6 @@
 
 package org.springframework.ws.wsdl.wsdl11.provider;
 
-import java.io.IOException;
 import javax.wsdl.Definition;
 import javax.wsdl.Types;
 import javax.wsdl.WSDLException;
@@ -64,7 +63,7 @@ public class InliningXsdSchemaTypesProvider extends TransformerObjectSupport imp
                 return new XsdSchema[]{schema};
             }
 
-            public XmlValidator createValidator() throws IOException {
+            public XmlValidator createValidator() {
                 throw new UnsupportedOperationException();
             }
         };

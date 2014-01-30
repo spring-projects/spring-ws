@@ -15,6 +15,7 @@ configure(allprojects) {
 	ext.axiomVersion = "1.2.14"
 
 	apply plugin: "java"
+	apply plugin: "maven"
 	apply plugin: "propdeps-idea"
 	apply plugin: "propdeps"
 
@@ -55,7 +56,6 @@ configure(allprojects) {
 	}
 
 	repositories {
-        mavenLocal()
 		maven { url 'http://repo.spring.io/libs-release' }
 	}
 
@@ -176,7 +176,7 @@ project('spring-ws-core') {
 		optional("wsdl4j:wsdl4j:1.6.1")
 
 		// Transport
-		provided("javax.servlet:javax.servlet-api:3.1.0")
+        provided("javax.servlet:javax.servlet-api:3.0.1")
 		optional("org.apache.httpcomponents:httpclient:4.2.5")
 		optional("commons-httpclient:commons-httpclient:3.1")
 		testCompile("org.mortbay.jetty:jetty:6.1.26")

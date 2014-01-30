@@ -24,6 +24,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -31,10 +35,6 @@ import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 /**
  * The default {@link XsdSchema} implementation.
@@ -98,8 +98,13 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
         return new DOMSource(schemaElement);
     }
 
-    public XmlValidator createValidator() throws IOException {
-        return XmlValidatorFactory.createValidator(xsdResource, XmlValidatorFactory.SCHEMA_W3C_XML);
+    public XmlValidator createValidator() {
+	    try {
+		    return XmlValidatorFactory.createValidator(xsdResource, XmlValidatorFactory.SCHEMA_W3C_XML);
+	    }
+	    catch (IOException ex) {
+		    throw new XsdSchemaException(ex.getMessage(), ex);
+	    }
     }
 
     public void afterPropertiesSet() throws ParserConfigurationException, IOException, SAXException {

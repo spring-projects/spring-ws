@@ -20,6 +20,9 @@ import java.io.IOException;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -36,9 +39,6 @@ import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.XsdSchema;
 import org.springframework.xml.xsd.XsdSchemaCollection;
-
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 /**
  * Abstract base class for <code>EndpointInterceptor</code> implementations that validate part of the message using a
@@ -118,7 +118,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
      * @param schema the xsd schema to use
      * @throws IOException in case of I/O errors
      */
-    public void setXsdSchema(XsdSchema schema) throws IOException {
+    public void setXsdSchema(XsdSchema schema) {
         this.validator = schema.createValidator();
     }
 
@@ -130,7 +130,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
      * @param schemaCollection the xsd schema collection to use
      * @throws IOException in case of I/O errors
      */
-    public void setXsdSchemaCollection(XsdSchemaCollection schemaCollection) throws IOException {
+    public void setXsdSchemaCollection(XsdSchemaCollection schemaCollection) {
         this.validator = schemaCollection.createValidator();
     }
 

@@ -148,6 +148,40 @@
                 that means that it looks for '<filename>/WEB-INF/spring-ws-servlet.xml</filename>'. This file will
                 contain all of the Spring Web Services beans such as endpoints, marshallers and suchlike.
             </para>
+            <para>
+                As an alternative for <filename>web.xml</filename>, if you are running on a Servlet 3+ environment, you
+                can configure Spring-WS programmatically.
+                For this purpose, Spring-WS provides a number of abstract base classes that extend the
+                <interfacename>WebApplicationInitializer</interfacename> interface found in the Spring Framework.
+                If you are also using <interfacename>@Configuration</interfacename> classes for your bean definitions, you are
+                best of extending the <classname>AbstractAnnotationConfigMessageDispatcherServletInitializer</classname>, like so:
+            </para>
+            <programlisting><![CDATA[public class MyServletInitializer
+    extends AbstractAnnotationConfigMessageDispatcherServletInitializer {
+
+    @Override
+    protected Class<?>[] getRootConfigClasses() {
+        return new Class[]{MyRootConfig.class};
+    }
+
+    @Override
+    protected Class<?>[] getServletConfigClasses() {
+        return new Class[]{MyEndpointConfig.class};
+    }
+
+}]]></programlisting>
+            <para>
+                In the example above, we tell Spring that endpoint bean definitions can be found in the <classname>MyEndpointConfig</classname>
+                class (which is a <interfacename>@Configuration</interfacename> class).
+                Other bean definitions (typically services, repositories, etc.) can be found in the <classname>MyRootConfig</classname>
+                class.
+                By default, the <classname>AbstractAnnotationConfigMessageDispatcherServletInitializer</classname> maps the servlet to
+                two patterns: <filename>/services</filename> and <filename>*.wsdl</filename>, though this can be changed by overriding the
+                <methodname>getServletMappings()</methodname> method.
+                For more details on the programmatic configuration of the <classname>MessageDispatcherServlet</classname>, refer to the
+                Javadoc of <classname>AbstractMessageDispatcherServletInitializer</classname> and
+                <classname>AbstractAnnotationConfigMessageDispatcherServletInitializer</classname>.
+            </para>
             <section id="server-automatic-wsdl-exposure">
                 <title>Automatic WSDL exposure</title>
                 <para>
@@ -164,9 +198,16 @@
                     Take notice of the value of the '<literal>id</literal>' attribute, because this will be used when
                     exposing the WSDL.
                 </para>
-                <programlisting><![CDATA[<sws:static-wsdl id="orders" location="/WEB-INF/wsdl/orders.wsdl"/>]]></programlisting>
+                <programlisting><![CDATA[<sws:static-wsdl id="orders" location="orders.wsdl"/>]]></programlisting>
                 <para>
-                    The WSDL defined in the '<filename>Orders.wsdl</filename>' file can then be accessed via
+                    Or as <interfacename>@Bean</interfacename> method in a <interfacename>@Configuration</interfacename> class:
+                </para>
+                <programlisting><![CDATA[@Bean
+public SimpleWsdl11Definition orders() {
+	return new SimpleWsdl11Definition(new ClassPathResource("orders.xml"));
+}]]></programlisting>
+                <para>
+                    The WSDL defined in the '<filename>orders.wsdl</filename>' file on the classpath can then be accessed via
                     <literal>GET</literal> requests to a URL of the following form (substitute the host, port and
                     servlet context path as appropriate).
                 </para>
@@ -174,9 +215,9 @@
                 <note>
                     <para>
                         All <interfacename>WsdlDefinition</interfacename> bean definitions are exposed by the
-                        <classname>MessageDispatcherServlet</classname> under their bean id (or bean name) with the
+                        <classname>MessageDispatcherServlet</classname> under their bean name with the
                         suffix <literal>.wsdl</literal>.
-                        So if the bean id is <literal>echo</literal>, the host name is "server", and the Servlet
+                        So if the bean name is <literal>echo</literal>, the host name is "server", and the Servlet
                         context (war name) is "spring-ws", the WSDL can be obtained via
                         <uri>http://server/spring-ws/echo.wsdl</uri>
                     </para>
@@ -210,6 +251,11 @@
 
 </web-app>]]></programlisting>
                 <para>
+                    If you use the <classname>AbstractAnnotationConfigMessageDispatcherServletInitializer</classname>,
+                    enabling transformation is as simple as overriding the <methodname>isTransformWsdlLocations()</methodname>
+                    method to return <literal>true</literal>.
+                </para>
+                <para>
                     Consult the class-level Javadoc on the <classname>WsdlDefinitionHandlerAdapter</classname> class
                     to learn more about the whole transformation process.
                 </para>
@@ -223,10 +269,33 @@
                 <programlisting><![CDATA[<sws:dynamic-wsdl id="orders"
     portTypeName="Orders"
     locationUri="http://localhost:8080/ordersService/">
-  <sws:xsd location="/WEB-INF/xsd/Orders.xsd"/>
+  <sws:xsd location="Orders.xsd"/>
 </sws:dynamic-wsdl>]]></programlisting>
                 <para>
-                    The <literal>&lt;dynamic-wsdl&gt;</literal> builds a WSDL from a XSD schema by using conventions.
+                    Or, as <interfacename>@Bean</interfacename> method:
+                </para>
+                <programlisting><![CDATA[@Bean
+public DefaultWsdl11Definition orders() {
+    DefaultWsdl11Definition definition = new DefaultWsdl11Definition();
+    definition.setPortTypeName("Orders");
+    definition.setLocationUri("http://localhost:8080/ordersService/");
+    definition.setSchema(new SimpleXsdSchema(new ClassPathResource("echo.xsd")));
+
+    return definition;
+}]]></programlisting>
+                <para>
+                    The <literal>&lt;dynamic-wsdl&gt;</literal> element depends on the
+                    <classname>DefaultWsdl11Definition</classname> class.
+                    This definition class uses WSDL providers in the
+                    <package>org.springframework.ws.wsdl.wsdl11.provider</package> package and the
+                    <classname>ProviderBasedWsdl4jDefinition</classname>
+                    to generate a WSDL the first time it is requested.
+                    Refer to the class-level Javadoc of these classes to see how you can extend this mechanism,
+                    if necessary.
+                </para>
+                <para>
+                    The <classname>DefaultWsdl11Definition</classname> (and therefore, the <literal>&lt;dynamic-wsdl&gt;</literal> tag)
+                    builds a WSDL from a XSD schema by using conventions.
                     It iterates over all <literal>element</literal> elements
                     found in the schema, and creates a <literal>message</literal> for all elements.
                     Next, it creates WSDL <literal>operation</literal> for all messages that end with the
@@ -253,16 +322,6 @@
                     and will inline them in the WSDL as a single XSD.
                     This greatly simplifies the deployment of the schemas, which still making it possible to edit them
                     separately.
-                </para>
-                <para>
-                    The <literal>&lt;dynamic-wsdl&gt;</literal> element depends on the
-                    <classname>DefaultWsdl11Definition</classname> class.
-                    This definition class uses WSDL providers in the
-                    <package>org.springframework.ws.wsdl.wsdl11.provider</package> package and the
-                    <classname>ProviderBasedWsdl4jDefinition</classname>
-                    to generate a WSDL the first time it is requested.
-                    Refer to the class-level Javadoc of these classes to see how you can extend this mechanism,
-                    if necessary.
                 </para>
                 <caution>
                     <para>
@@ -305,13 +364,13 @@
 
     ...
 
-    <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
-    
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"/>
+
 </beans>]]></programlisting>
                 Note that by explicitly adding the <classname>WebServiceMessageReceiverHandlerAdapter</classname>,
                 the dispatcher servlet does not load the default adapters, and is unable to handle standard Spring-MVC
-                <interfacename>Controllers</interfacename>. Therefore, we add the
-                <classname>SimpleControllerHandlerAdapter</classname> at the end.
+                <interfacename>@Controllers</interfacename>. Therefore, we add the
+                <classname>RequestMappingHandlerAdapter</classname> at the end.
             </para>
             <para>
                 In a similar fashion, you can wire up a <classname>WsdlDefinitionHandlerAdapter</classname> to make sure
@@ -381,12 +440,6 @@
         </property>
     </bean>
 </beans>]]></programlisting>
-            </para>
-            <para>
-                As an alternative to the <classname>WebServiceMessageListener</classname>, Spring Web Services provides
-                a <classname>WebServiceMessageDrivenBean</classname>, an EJB
-                <interfacename>MessageDrivenBean</interfacename>. For more information on EJB, refer to the class level
-                Javadoc of the <classname>WebServiceMessageDrivenBean</classname>.
             </para>
         </section>
         <section>
@@ -700,13 +753,46 @@ public class AnnotationOrderEndpoint {
   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
   <emphasis role="bold">xmlns:sws=&quot;http://www.springframework.org/schema/web-services&quot;</emphasis>
   xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
-      http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+      http://www.springframework.org/schema/beans/spring-beans.xsd
     <emphasis role="bold">http://www.springframework.org/schema/web-services
-      http://www.springframework.org/schema/web-services/web-services-2.0.xsd&quot;&gt;</emphasis>
+      http://www.springframework.org/schema/web-services/web-services.xsd&quot;&gt;</emphasis>
 
   <emphasis role="bold">&lt;sws:annotation-driven /&gt;</emphasis>
 
 &lt;/beans&gt;</programlisting>
+        </para>
+        <para>
+            Or, if you are using <interfacename>@Configuration</interfacename> classes instead of Spring XML, you can
+            annotate your configuration class with <interfacename>@EnableWs</interfacename>, like so:
+        </para>
+        <programlisting><emphasis role="bold">@EnableWs</emphasis>
+@Configuration
+public class EchoConfig {
+
+    // @Bean definitions go here
+
+}</programlisting>
+        <para>
+            To customize the <interfacename>@EnableWs</interfacename> configuration, you can implement
+            <interfacename>WsConfigurer</interfacename>, or better yet extend the
+            <classname>WsConfigurerAdapter</classname>.
+            For instance:<programlisting>@Configuration
+@EnableWs
+@ComponentScan(basePackageClasses = { MyConfiguration.class })
+public class MyConfiguration extends WsConfigurerAdapter {
+
+  @Override
+  public void addInterceptors(List&lt;EndpointInterceptor&gt; interceptors) {
+    interceptors.add(new MyInterceptor());
+  }
+
+  @Override
+  public void addArgumentResolvers(List&lt;MethodArgumentResolver&gt; argumentResolvers) {
+    argumentResolvers.add(new MyArgumentResolver());
+  }
+
+  // More overridden methods ...
+}</programlisting>
         </para>
         <para>
             In the next couple of sections, a more elaborate description of the <interfacename>@Endpoint</interfacename>
@@ -1258,7 +1344,7 @@ public class AnnotationOrderEndpoint {
                 security-related SOAP headers, or the logging of request and response message.
             </para>
             <para>
-                Endpoint interceptors are typically defined by using a <literal>&lt;sws;interceptors &gt;</literal>
+                Endpoint interceptors are typically defined by using a <literal>&lt;sws:interceptors&gt;</literal>
                 element in your application context.
                 In this element, you can simply define endpoint interceptor beans that apply to all endpoints defined
                 in that application context.
@@ -1288,6 +1374,20 @@ public class AnnotationOrderEndpoint {
                 <uri>http://www.example.com/SoapAction</uri> SOAP action. Notice how the second interceptor
                 is actually a reference to a bean definition outside of the <literal>&lt;interceptors&gt;</literal>
                 element. You can use bean references anywhere inside the <literal>&lt;interceptors&gt;</literal> element.
+            </para>
+            <para>
+                When using <interfacename>@Configuration</interfacename> classes, you can extend from
+                <classname>WsConfigurerAdapter</classname> to add interceptors.
+                Like so:<programlisting>@Configuration
+@EnableWs
+public class MyWsConfiguration extends WsConfigurerAdapter {
+
+  @Override
+  public void addInterceptors(List&lt;EndpointInterceptor&gt; interceptors) {
+    interceptors.add(new MyPayloadRootInterceptor());
+  }
+
+}</programlisting>
             </para>
             <para>
                 Interceptors must implement the
@@ -1328,13 +1428,15 @@ public class AnnotationOrderEndpoint {
                 <programlisting><![CDATA[
   <sws:interceptors>
     <bean class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor"/>
-  </sws:interceptors>
-
-</beans>]]></programlisting>
+  </sws:interceptors>]]></programlisting>
                 <para>
                     Both of these interceptors have two properties: '<property>logRequest</property>' and
                     '<property>logResponse</property>', which can be set to <literal>false</literal> to disable logging
                     for either request or response messages.
+                </para>
+                <para>
+                    Of course, you could use the <classname>WsConfigurerAdapter</classname> approach, as described above,
+                    for the <classname>PayloadLoggingInterceptor</classname> as well.
                 </para>
             </section>
             <section>
@@ -1367,6 +1469,10 @@ public class AnnotationOrderEndpoint {
     <property name="validateRequest" value="false"/>
     <property name="validateResponse" value="true"/>
 </bean>]]></programlisting>
+                <para>
+                    Of course, you could use the <classname>WsConfigurerAdapter</classname> approach, as described above,
+                    for the <classname>PayloadValidatingInterceptor</classname> as well.
+                </para>
             </section>
             <section>
                 <title><classname>PayloadTransformingInterceptor</classname></title>
@@ -1388,6 +1494,10 @@ public class AnnotationOrderEndpoint {
                     endpoint interceptors are registered at the endpoint mapping level, you can simply create a
                     endpoint mapping that applies to the "old style" messages, and add the interceptor to that mapping.
                     Hence, the transformation will apply only to these "old style" message.
+                </para>
+                <para>
+                    Of course, you could use the <classname>WsConfigurerAdapter</classname> approach, as described above,
+                    for the <classname>PayloadTransformingInterceptor</classname> as well.
                 </para>
             </section>
         </section>
