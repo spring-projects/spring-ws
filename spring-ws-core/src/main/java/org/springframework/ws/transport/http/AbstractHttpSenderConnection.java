@@ -93,7 +93,8 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
         Iterator<String> iterator = getResponseHeaders(HttpTransportConstants.HEADER_CONTENT_ENCODING);
         if (iterator.hasNext()) {
             String encodingHeader = iterator.next();
-            return encodingHeader.toLowerCase().indexOf(HttpTransportConstants.CONTENT_ENCODING_GZIP) != -1;
+            return encodingHeader.toLowerCase()
+		            .contains(HttpTransportConstants.CONTENT_ENCODING_GZIP);
         }
         return false;
     }
@@ -123,7 +124,7 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
         Iterator<String> iterator = getResponseHeaders(HttpTransportConstants.HEADER_CONTENT_TYPE);
         if (iterator.hasNext()) {
             String contentType = iterator.next().toLowerCase();
-            return contentType.indexOf("xml") != -1;
+            return contentType.contains("xml");
         }
         return false;
     }

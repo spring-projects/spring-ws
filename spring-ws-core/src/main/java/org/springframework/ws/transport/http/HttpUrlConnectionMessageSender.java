@@ -25,12 +25,12 @@ import java.net.URLConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * <code>WebServiceMessageSender</code> implementation that uses standard J2SE facilities to execute POST requests,
- * without support for HTTP authentication or advanced configuration options.
+ * {@code WebServiceMessageSender} implementation that uses standard J2SE facilities to
+ * execute POST requests, without support for HTTP authentication or advanced
+ * configuration options.
  * <p/>
- * Designed for easy subclassing, customizing specific template methods. However, consider {@link
- * CommonsHttpMessageSender} for more sophisticated needs: the J2SE <code>HttpURLConnection</code> is rather limited in
- * its capabilities.
+ * Consider {@link HttpComponentsMessageSender} for more sophisticated needs: this class
+ * is rather limited in its capabilities.
  *
  * @author Arjen Poutsma
  * @see java.net.HttpURLConnection
