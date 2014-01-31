@@ -242,7 +242,12 @@ project('spring-ws-test') {
 	description = 'Spring WS Test'
 
 	dependencies {
+		compile project(":spring-xml")
 		compile project(":spring-ws-core")
+
+        // Spring
+		compile("org.springframework:spring-context:$springVersion")
+
 
 		compile("xmlunit:xmlunit:1.1")
 		testCompile("org.springframework:spring-test:$springVersion")
