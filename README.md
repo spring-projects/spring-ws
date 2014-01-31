@@ -71,7 +71,7 @@ docs](http://static.springsource.org/spring-ws/docs/current/spring-ws-reference
 
 ## Issue Tracking
 
-Spring Scala uses [JIRA](https://jira.springsource.org/browse/SWS) for issue tracking purposes
+Spring Web Services uses [JIRA](https://jira.springsource.org/browse/SWS) for issue tracking purposes
 
 ## License
 
