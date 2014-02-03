@@ -98,9 +98,7 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
             }
         }
         catch (NoEndpointFoundException ex) {
-            if (connection instanceof EndpointAwareWebServiceConnection) {
-                ((EndpointAwareWebServiceConnection) connection).endpointNotFound();
-            }
+	        handleNoEndpointFoundException(ex, connection, receiver);
         }
         finally {
             TransportUtils.closeConnection(connection);
@@ -108,7 +106,27 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
         }
     }
 
-    private void logUri(WebServiceConnection connection) {
+	/**
+	 * Template method for handling {@code NoEndpointFoundException}s.
+	 * <p/>
+	 * Default implementation calls
+	 * {@link EndpointAwareWebServiceConnection#endpointNotFound()} on the given
+	 * connection, if possible.
+	 *
+	 * @param ex the {@code NoEndpointFoundException}
+	 * @param connection the current {@code WebServiceConnection}
+	 * @param receiver the {@code WebServiceMessageReceiver}
+	 * @throws Exception in case of errors
+	 */
+	protected void handleNoEndpointFoundException(NoEndpointFoundException ex,
+			WebServiceConnection connection,
+			WebServiceMessageReceiver receiver) throws Exception {
+		if (connection instanceof EndpointAwareWebServiceConnection) {
+			((EndpointAwareWebServiceConnection) connection).endpointNotFound();
+		}
+	}
+
+	private void logUri(WebServiceConnection connection) {
         if (logger.isDebugEnabled()) {
             try {
                 logger.debug("Accepting incoming [" + connection + "] at [" + connection.getUri() + "]");
