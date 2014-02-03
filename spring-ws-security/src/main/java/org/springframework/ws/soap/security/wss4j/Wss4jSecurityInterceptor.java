@@ -117,6 +117,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
     private int validationTimeToLive = 300;
 
     private int securementTimeToLive = 300;
+
+	private int futureTimeToLive = 60;
     
     private WSSConfig wssConfig;
 
@@ -477,7 +479,18 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         handler.setOption(WSHandlerConstants.SAML_PROP_FILE, location);
     }
 
-    public void afterPropertiesSet() throws Exception {
+	/**
+	 * Sets the time in seconds in the future within which the Created time of an
+	 * incoming Timestamp is valid. The default is 60 seconds.
+	 */
+	public void setFutureTimeToLive(int futureTimeToLive) {
+		if (futureTimeToLive <= 0) {
+			throw new IllegalArgumentException("futureTimeToLive must be positive");
+		}
+		this.futureTimeToLive = futureTimeToLive;
+	}
+
+	public void afterPropertiesSet() throws Exception {
         Assert.isTrue(validationActions != null || securementActions != null,
                 "validationActions or securementActions are required");
         if (validationActions != null) {
@@ -666,6 +679,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
                 WSSConfig config = new WSSConfig();
                 config.setTimeStampTTL(validationTimeToLive);
                 config.setTimeStampStrict(timestampStrict);
+	            config.setTimeStampFutureTTL(futureTimeToLive);
                 requestData.setWssConfig(config);
 
                 TimestampValidator validator = new TimestampValidator();
