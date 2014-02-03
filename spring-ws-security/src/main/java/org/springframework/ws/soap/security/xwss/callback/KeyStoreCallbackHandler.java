@@ -35,15 +35,15 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import javax.crypto.SecretKey;
 
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.ws.soap.security.support.KeyStoreUtils;
-
 import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
 import com.sun.xml.wss.impl.callback.DecryptionKeyCallback;
 import com.sun.xml.wss.impl.callback.EncryptionKeyCallback;
 import com.sun.xml.wss.impl.callback.SignatureKeyCallback;
 import com.sun.xml.wss.impl.callback.SignatureVerificationKeyCallback;
 import org.apache.xml.security.utils.RFC2253Parser;
+
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.ws.soap.security.support.KeyStoreUtils;
 
 /**
  * Callback handler that uses Java Security <code>KeyStore</code>s to handle cryptographic callbacks. Allows for
@@ -123,6 +123,8 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
     private char[] privateKeyPassword;
 
     private char[] symmetricKeyPassword;
+
+	private boolean revocationEnabled = false;
 
     private static X509Certificate getCertificate(String alias, KeyStore store) throws IOException {
         try {
@@ -214,7 +216,15 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
         this.trustStore = trustStore;
     }
 
-    public void afterPropertiesSet() throws Exception {
+	/**
+	 * Determines if certificate revocation checking is enabled or not. Default is
+	 * {@code false}.
+	 */
+	public void setRevocationEnabled(boolean revocationEnabled) {
+		this.revocationEnabled = revocationEnabled;
+	}
+
+	public void afterPropertiesSet() throws Exception {
         if (keyStore == null) {
             loadDefaultKeyStore();
         }
@@ -601,6 +611,23 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
         }
     }
 
+	/**
+	 * Creates a {@code PKIXBuilderParameters} instance with the given parameters.
+	 * Default implementation simply instantiates one, without setting additional
+	 * parameters.
+	 *
+	 * @param trustStore the trust store to use
+	 * @param certSelector the certificate selector to use
+	 * @return the builder parameters
+	 * @throws GeneralSecurityException in case of errors
+	 * @see #setRevocationEnabled(boolean)
+	 */
+	protected PKIXBuilderParameters createBuilderParameters(KeyStore trustStore, X509CertSelector certSelector)
+			throws GeneralSecurityException {
+		return new PKIXBuilderParameters(trustStore, certSelector);
+	}
+
+
     //
     // Inner classes
     //
@@ -644,8 +671,8 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
             PKIXBuilderParameters parameters;
             CertPathBuilder builder;
             try {
-                parameters = new PKIXBuilderParameters(trustStore, certSelector);
-                parameters.setRevocationEnabled(false);
+	            parameters = createBuilderParameters(trustStore, certSelector);
+	            parameters.setRevocationEnabled(revocationEnabled);
                 builder = CertPathBuilder.getInstance("PKIX");
             }
             catch (GeneralSecurityException ex) {
@@ -702,4 +729,5 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
             }
         }
     }
+
 }
