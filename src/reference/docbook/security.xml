@@ -1143,7 +1143,7 @@
             </itemizedlist>
         </para>
         <para>
-            This inteceptor supports messages created by the
+            This interceptor supports messages created by the
             <classname>AxiomSoapMessageFactory</classname>
             and the
             <classname>SaajSoapMessageFactory</classname>.
@@ -1650,22 +1650,6 @@
                 <programlisting><![CDATA[<property name="securementSignatureParts"
     value="{}{http://www.springframework.org/spring-ws/samples/echo}echoResponse"/>
     			]]></programlisting>
-                <para>
-                    The WS Security specifications define several formats to transfer the signature tokens
-                    (certificates) or references to these tokens. Thus, the plain element name
-                    <literal>Token</literal>
-                    signs the token and takes care of the different formats.
-                    To sign the SOAP body and the signature token the value
-                    of
-                    <property>securementSignatureParts</property>
-                    must contain:
-                </para>
-                <programlisting><![CDATA[<property name="securementSignatureParts">
-    <value>
-        {}{http://schemas.xmlsoap.org/soap/envelope/}Body;
-        Token
-    </value>
-</property>]]></programlisting>
                 <para>
                     To specify an element without a namespace use the string
                     <literal>Null</literal>
