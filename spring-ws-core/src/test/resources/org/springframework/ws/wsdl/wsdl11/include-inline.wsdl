@@ -16,7 +16,8 @@
             <xsd:element name="GetOrderRequest">
                 <xsd:complexType>
                     <xsd:sequence>
-                        <xsd:element name="child" type="xsd:string"/>
+                        <xsd:element name="child" type="xsd:string" nillable="true" minOccurs="2"
+                                maxOccurs="4"/>
                     </xsd:sequence>
                     <xsd:attribute ref="xml:lang" use="required"/>
                 </xsd:complexType>
