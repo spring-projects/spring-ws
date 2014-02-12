@@ -31,17 +31,20 @@ import static org.easymock.EasyMock.*;
 
 public class SchemaValidatingMatcherTest {
 
-    private Resource schema2;
+    private Resource schema;
 
     private Resource schema1;
+
+    private Resource schema2;
 
     private WebServiceMessage message;
 
     @Before
     public void setUp() {
         message = createMock(WebServiceMessage.class);
-        schema1 = new ClassPathResource("schemaValidatingMatcherTest.xsd", SchemaValidatingMatcherTest.class);
-        schema2 = new ByteArrayResource("".getBytes());
+        schema = new ClassPathResource("schemaValidatingMatcherTest.xsd", SchemaValidatingMatcherTest.class);
+        schema1 = new ClassPathResource("schemaValidatingMatcherTest-1.xsd", SchemaValidatingMatcherTest.class);
+        schema2 = new ClassPathResource("schemaValidatingMatcherTest-2.xsd", SchemaValidatingMatcherTest.class);
     }
 
     @Test
@@ -49,7 +52,7 @@ public class SchemaValidatingMatcherTest {
         expect(message.getPayloadSource()).andReturn(new StringSource(
                 "<test xmlns=\"http://www.example.org/schema\"><number>0</number><text>text</text></test>"));
 
-        SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema1);
+        SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema);
 
         replay(message);
 
@@ -63,7 +66,7 @@ public class SchemaValidatingMatcherTest {
         expect(message.getPayloadSource()).andReturn(new StringSource(
                 "<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>")).times(2);
 
-        SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema1);
+        SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema);
 
         replay(message);
 
@@ -105,7 +108,7 @@ public class SchemaValidatingMatcherTest {
         expect(message.getPayloadSource()).andReturn(new StringSource(
                 "<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>")).times(2);
 
-        SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema2, schema1);
+        SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema1, schema2);
 
         replay(message);
 
@@ -119,7 +122,7 @@ public class SchemaValidatingMatcherTest {
         expect(message.getPayloadSource()).andReturn(new StringSource(
                 "<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>")).times(2);
 
-        SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema1);
+        SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema);
 
         replay(message);
 

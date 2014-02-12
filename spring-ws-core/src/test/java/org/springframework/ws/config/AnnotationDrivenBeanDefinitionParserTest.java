@@ -124,7 +124,7 @@ public class AnnotationDrivenBeanDefinitionParserTest {
                 break;
             }
         }
-        assertTrue("No [" + clazz.getName() + "] instance found", found);
+        assertTrue("No [" + clazz.getName() + "] instance found in " + collection, found);
     }
 
 }
