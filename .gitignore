@@ -11,5 +11,6 @@ atlassian-ide-plugin*.xml
 out
 
 /build
+/spring-*/bin
 /spring-*/build
 .gradle

@@ -10,13 +10,12 @@ buildscript {
 
 configure(allprojects) {
 	group = "org.springframework.ws"
-	
+
 	ext.springVersion = "3.2.4.RELEASE"
 	ext.axiomVersion = "1.2.14"
 
 	apply plugin: "java"
 	apply plugin: "propdeps-idea"
-	apply plugin: "eclipse"
 	apply plugin: "propdeps"
 
 /*	[compileJava, compileTestJava]*.options*.compilerArgs = [
@@ -80,6 +79,8 @@ configure(allprojects) {
 
 configure(subprojects) { subproject ->
 
+	apply plugin: "eclipse"
+
 	jar {
 		manifest.attributes["Created-By"] =
 			"${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
@@ -128,7 +129,7 @@ configure(subprojects) { subproject ->
 
 project('spring-xml') {
 	description = "Spring XML"
-	
+
 	dependencies {
 		// Spring
 		compile("org.springframework:spring-beans:$springVersion")
