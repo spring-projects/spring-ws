@@ -80,6 +80,7 @@ configure(allprojects) {
 configure(subprojects) { subproject ->
 
 	apply plugin: "eclipse"
+	apply plugin: "maven"
 
 	jar {
 		manifest.attributes["Created-By"] =
