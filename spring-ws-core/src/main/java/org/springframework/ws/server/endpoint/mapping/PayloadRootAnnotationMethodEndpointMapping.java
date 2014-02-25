@@ -17,6 +17,8 @@
 package org.springframework.ws.server.endpoint.mapping;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.transform.TransformerFactory;
 
@@ -25,6 +27,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointMapping;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoots;
 import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
 
 /**
@@ -60,21 +63,33 @@ public class PayloadRootAnnotationMethodEndpointMapping extends AbstractAnnotati
     }
 
     @Override
-    protected QName getLookupKeyForMethod(Method method) {
-        PayloadRoot annotation = AnnotationUtils.findAnnotation(method, PayloadRoot.class);
-        if (annotation != null) {
-            QName qname;
-            if (StringUtils.hasLength(annotation.localPart()) && StringUtils.hasLength(annotation.namespace())) {
-                qname = new QName(annotation.namespace(), annotation.localPart());
-            }
-            else {
-                qname = new QName(annotation.localPart());
-            }
-            return qname;
+    protected List<QName> getLookupKeysForMethod(Method method) {
+	    List<QName> result = new ArrayList<QName>();
+
+        PayloadRoots payloadRoots = AnnotationUtils.findAnnotation(method, PayloadRoots.class);
+	    if (payloadRoots != null) {
+		    for (PayloadRoot payloadRoot : payloadRoots.value()) {
+			    result.add(getQNameFromAnnotation(payloadRoot));
+		    }
+	    }
+	    else {
+            PayloadRoot payloadRoot = AnnotationUtils.findAnnotation(method, PayloadRoot.class);
+		    if (payloadRoot != null) {
+			    result.add(getQNameFromAnnotation(payloadRoot));
+		    }
         }
-        else {
-            return null;
-        }
+
+	    return result;
     }
+
+	private QName getQNameFromAnnotation(PayloadRoot payloadRoot) {
+		if (StringUtils.hasLength(payloadRoot.localPart()) && StringUtils.hasLength(
+				payloadRoot.namespace())) {
+		    return new QName(payloadRoot.namespace(), payloadRoot.localPart());
+		}
+		else {
+		    return new QName(payloadRoot.localPart());
+		}
+	}
 
 }

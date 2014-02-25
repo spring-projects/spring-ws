@@ -19,8 +19,10 @@ package org.springframework.ws.server.endpoint.mapping;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -119,10 +121,10 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
         ReflectionUtils.doWithMethods(endpointClass, new ReflectionUtils.MethodCallback() {
 
             public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
-                T key = getLookupKeyForMethod(method);
-                if (key != null) {
-                    registerEndpoint(key, new MethodEndpoint(endpoint, method));
-                }
+	            List<T> keys = getLookupKeysForMethod(method);
+	            for (T key : keys) {
+		            registerEndpoint(key, new MethodEndpoint(endpoint, method));
+	            }
             }
         });
     }
@@ -133,6 +135,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
      * using {@link #registerEndpoint(Object, MethodEndpoint)}.
      *
      * @see #getLookupKeyForMethod(Method)
+     * @see #getLookupKeysForMethod(Method)
      */
     protected void registerMethods(String beanName) {
         Assert.hasText(beanName, "'beanName' must not be empty");
@@ -141,13 +144,15 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
         
         Set<Method> methods = findEndpointMethods(endpointType, new ReflectionUtils.MethodFilter() {
             public boolean matches(Method method) {
-                return getLookupKeyForMethod(method) != null;
+	            return !getLookupKeysForMethod(method).isEmpty();
             }
         });
 
         for (Method method : methods) {
-            T key = getLookupKeyForMethod(method);
-            registerEndpoint(key, new MethodEndpoint(beanName, getApplicationContext(), method));
+	        List<T> keys = getLookupKeysForMethod(method);
+	        for (T key : keys) {
+		        registerEndpoint(key, new MethodEndpoint(beanName, getApplicationContext(), method));
+	        }
         }
 
     }
@@ -179,14 +184,28 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
     }
 
     /**
-     * Returns the the endpoint keys for the given method. Returns <code>null</code> if the method is not to be
+     * Returns the the endpoint key for the given method. Returns <code>null</code> if the method is not to be
      * registered, which is the default.
      *
      * @param method the method
      * @return a registration key, or <code>null</code> if the method is not to be registered
+     * @see #getLookupKeysForMethod(Method)
      */
     protected T getLookupKeyForMethod(Method method) {
         return null;
+    }
+
+    /**
+     * Returns the the endpoint keys for the given method. Should return an empty array if the method is not to be
+     * registered. The default delegates to {@link #getLookupKeysForMethod(Method)}.
+     *
+     * @param method the method
+     * @return a list of registration keys
+     * @since 2.1.5
+     */
+    protected List<T> getLookupKeysForMethod(Method method) {
+	    T key = getLookupKeyForMethod(method);
+	    return key != null ? Collections.singletonList(key) : Collections.<T>emptyList();
     }
 
     /**

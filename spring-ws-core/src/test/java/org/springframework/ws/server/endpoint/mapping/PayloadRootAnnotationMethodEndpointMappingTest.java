@@ -36,6 +36,7 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.adapter.DefaultMethodEndpointAdapter;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoots;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
@@ -58,15 +59,32 @@ public class PayloadRootAnnotationMethodEndpointMappingTest  {
     private ApplicationContext applicationContext;
 
     @Test
-    public void registration() throws NoSuchMethodException {
+    public void registrationSingle() throws NoSuchMethodException {
         MethodEndpoint endpoint = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request"));
         assertNotNull("MethodEndpoint not registered", endpoint);
         Method doIt = MyEndpoint.class.getMethod("doIt", Source.class);
         MethodEndpoint expected = new MethodEndpoint("endpoint", applicationContext, doIt);
         assertEquals("Invalid endpoint registered", expected, endpoint);
+    }
 
+    @Test
+    public void registrationMultiple() throws NoSuchMethodException {
+	    Method doItMultiple = MyEndpoint.class.getMethod("doItMultiple", Source.class);
+	    MethodEndpoint expected = new MethodEndpoint("endpoint", applicationContext, doItMultiple);
+
+        MethodEndpoint endpoint = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request1"));
+        assertNotNull("MethodEndpoint not registered", endpoint);
+        assertEquals("Invalid endpoint registered", expected, endpoint);
+
+	    endpoint = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request2"));
+        assertNotNull("MethodEndpoint not registered", endpoint);
+        assertEquals("Invalid endpoint registered", expected, endpoint);
+    }
+
+	@Test
+	public void registrationInvalid() {
         assertNull("Invalid endpoint registered",
-                mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request2")));
+                mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Invalid")));
     }
 
     @Test
@@ -112,11 +130,20 @@ public class PayloadRootAnnotationMethodEndpointMappingTest  {
             logger.info("In doIt()");
         }
 
+	    @PayloadRoots({
+			    @PayloadRoot(localPart = "Request1", namespace = "http://springframework.org/spring-ws"),
+			    @PayloadRoot(localPart = "Request2", namespace = "http://springframework.org/spring-ws")
+	    })
+	     public void doItMultiple(@RequestPayload Source payload) {
+	         doItInvoked = true;
+	         logger.info("In doIt()");
+	     }
+
     }
 
     static class OtherBean {
 
-        @PayloadRoot(localPart = "Request2", namespace = "http://springframework.org/spring-ws")
+        @PayloadRoot(localPart = "Invalid", namespace = "http://springframework.org/spring-ws")
         public void doIt() {
 
         }

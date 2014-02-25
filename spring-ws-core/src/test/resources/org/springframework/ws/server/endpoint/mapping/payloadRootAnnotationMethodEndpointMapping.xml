@@ -15,6 +15,6 @@
 
     <bean id="logAspect" class="org.springframework.ws.server.endpoint.mapping.LogAspect"/>
 
-    <sws:annotation-driven/>
+    <bean class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping"/>
 
 </beans>
