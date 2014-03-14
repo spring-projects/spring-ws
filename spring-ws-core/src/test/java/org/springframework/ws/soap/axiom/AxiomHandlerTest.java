@@ -16,24 +16,33 @@
 
 package org.springframework.ws.soap.axiom;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
 import java.util.Iterator;
+import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.sax.SAXResult;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMDocument;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
-import org.junit.Before;
-import org.junit.Test;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
-
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 public class AxiomHandlerTest {
 
@@ -158,4 +167,48 @@ public class AxiomHandlerTest {
         result.serialize(bos);
         assertXMLEqual("Invalid result", XML_3_ENTITY, bos.toString("UTF-8"));
     }
+
+	@Test
+	public void testTransformDom() throws Exception {
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		documentBuilderFactory.setNamespaceAware(true);
+		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		String XML = "<root xmlns=\"http://www.springframework.org/spring-ws\" xmlns:attr=\"http://www.springframework.org/spring-ws/attr\" attr:attribute=\"value\">" +
+				"<prefix:child xmlns:prefix=\"http://www.springframework.org/spring-ws/child\"/>" +
+				"</root>";
+
+		Document document =
+				documentBuilder.parse(new ByteArrayInputStream(XML.getBytes("UTF-8")));
+
+		DOMSource domSource = new DOMSource(document);
+		handler = new AxiomHandler(result, factory);
+
+		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		SAXResult saxResult = new SAXResult(handler);
+		transformer.transform(domSource, saxResult);
+
+		OMElement root = result.getOMDocumentElement();
+		assertEquals(2, getNamespaceCount(root));
+		NamespaceContext namespaceContext = root.getNamespaceContext(false);
+		assertEquals("http://www.springframework.org/spring-ws", namespaceContext.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX));
+		assertEquals("http://www.springframework.org/spring-ws/attr",
+				namespaceContext.getNamespaceURI("attr"));
+
+		OMElement child = root.getFirstElement();
+		assertEquals(1, getNamespaceCount(child));
+		namespaceContext = child.getNamespaceContext(false);
+		assertEquals("http://www.springframework.org/spring-ws", namespaceContext.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX));
+		assertEquals("http://www.springframework.org/spring-ws/child", namespaceContext.getNamespaceURI("prefix"));
+	}
+
+	private int getNamespaceCount(OMElement element) {
+		int i = 0;
+		Iterator namespaces = element.getAllDeclaredNamespaces();
+		while (namespaces.hasNext()) {
+			namespaces.next();
+			i++;
+		}
+		return i;
+	}
+
 }

@@ -31,7 +31,7 @@ import org.springframework.ws.transport.support.SimpleWebServiceMessageReceiverO
  * <code>textMessageEncoding</code> property, which determines the encoding used to read from and write to
  * <code>TextMessages</code>. This property defaults to <code>UTF-8</code>.
  * <p/>
- * Used by {@link WebServiceMessageListener} and {@link WebServiceMessageDrivenBean}.
+ * Used by {@link WebServiceMessageListener}.
  *
  * @author Arjen Poutsma
  * @since 1.5.0

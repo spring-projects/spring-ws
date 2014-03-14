@@ -20,11 +20,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
-
-import org.springframework.util.Assert;
-import org.springframework.xml.namespace.QNameUtils;
 
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMContainer;
@@ -37,145 +35,190 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 
+import org.springframework.util.Assert;
+import org.springframework.xml.namespace.QNameUtils;
+
 /**
- * Specific SAX {@link ContentHandler} and {@link LexicalHandler} that adds the resulting AXIOM OMElement to a specified
- * parent element when <code>endDocument</code> is called. Used for returing <code>SAXResult</code>s from Axiom
- * elements.
- *
+ * Specific SAX {@link ContentHandler} and {@link LexicalHandler} that adds the resulting
+ * AXIOM OMElement to a specified parent element when <code>endDocument</code> is called.
+ * Used for returing <code>SAXResult</code>s from Axiom elements.
  * @author Arjen Poutsma
  * @since 1.0.0
  */
 class AxiomHandler implements ContentHandler, LexicalHandler {
 
-    private final OMFactory factory;
+	private final OMFactory factory;
 
-    private final List<OMContainer> elements = new ArrayList<OMContainer>();
+	private final List<OMContainer> elements = new ArrayList<OMContainer>();
 
-    private Map<String, String> namespaces = new HashMap<String, String>();
+	private final OMContainer container;
 
-    private final OMContainer container;
+	private int charactersType = XMLStreamConstants.CHARACTERS;
 
-    private int charactersType = XMLStreamConstants.CHARACTERS;
+	private List<Map<String, String>> namespaceMappings =
+			new ArrayList<Map<String, String>>();
 
-    AxiomHandler(OMContainer container, OMFactory factory) {
-        Assert.notNull(container, "'container' must not be null");
-        Assert.notNull(factory, "'factory' must not be null");
-        this.factory = factory;
-        this.container = container;
-    }
+	AxiomHandler(OMContainer container, OMFactory factory) {
+		Assert.notNull(container, "'container' must not be null");
+		Assert.notNull(factory, "'factory' must not be null");
+		this.factory = factory;
+		this.container = container;
+	}
 
-    private OMContainer getParent() {
-        if (!elements.isEmpty()) {
-            return elements.get(elements.size() - 1);
-        }
-        else {
-            return container;
-        }
-    }
+	private OMContainer getParent() {
+		if (!elements.isEmpty()) {
+			return elements.get(elements.size() - 1);
+		}
+		else {
+			return container;
+		}
+	}
 
-    public void startPrefixMapping(String prefix, String uri) throws SAXException {
-        namespaces.put(prefix, uri);
-    }
+	public void startDocument() throws SAXException {
+		removeAllNamespaceMappings();
+		newNamespaceMapping();
+	}
 
-    public void endPrefixMapping(String prefix) throws SAXException {
-        namespaces.remove(prefix);
-    }
+	public void endDocument() throws SAXException {
+		removeAllNamespaceMappings();
+	}
 
-    public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-        OMContainer parent = getParent();
-        OMNamespace ns = factory.createOMNamespace(uri, QNameUtils.toQName(uri, qName).getPrefix());
-        OMElement element = factory.createOMElement(localName, ns, parent);
-        for (Map.Entry<String, String> entry : namespaces.entrySet()) {
-            String prefix = entry.getKey();
-            if (prefix.length() == 0) {
-                element.declareDefaultNamespace((String) entry.getValue());
-            }
-            else {
-                element.declareNamespace((String) entry.getValue(), prefix);
-            }
-        }
-        for (int i = 0; i < atts.getLength(); i++) {
-            QName attrName = QNameUtils.toQName(atts.getURI(i), atts.getQName(i));
-            String value = atts.getValue(i);
-            if (!atts.getQName(i).startsWith("xmlns")) {
-                OMNamespace namespace = factory.createOMNamespace(attrName.getNamespaceURI(), attrName.getPrefix());
-                OMAttribute attribute = factory.createOMAttribute(attrName.getLocalPart(), namespace, value);
-                element.addAttribute(attribute);
-            }
-        }
+	public void startPrefixMapping(String prefix, String uri) throws SAXException {
+		currentNamespaceMapping().put(prefix, uri);
+	}
 
-        elements.add(element);
-    }
+	public void endPrefixMapping(String prefix) throws SAXException {
+	}
 
-    public void endElement(String uri, String localName, String qName) throws SAXException {
-        elements.remove(elements.size() - 1);
-    }
+	public void startElement(String uri, String localName, String qName,
+			Attributes attributes) throws SAXException {
+		OMContainer parent = getParent();
+		OMNamespace ns = factory.createOMNamespace(uri,
+				QNameUtils.toQName(uri, qName).getPrefix());
+		OMElement element = factory.createOMElement(localName, ns, parent);
 
-    public void characters(char ch[], int start, int length) throws SAXException {
-        String data = new String(ch, start, length);
-        OMContainer parent = getParent();
-        factory.createOMText(parent, data, charactersType);
-    }
+		// declare namespaces
+		Map<String, String> namespaceMappings = currentNamespaceMapping();
+		for (Map.Entry<String, String> entry : namespaceMappings.entrySet()) {
+			String prefix = entry.getKey();
+			String namespaceUri = entry.getValue();
 
-    public void ignorableWhitespace(char ch[], int start, int length) throws SAXException {
-        charactersType = XMLStreamConstants.SPACE;
-        characters(ch, start, length);
-        charactersType = XMLStreamConstants.CHARACTERS;
-    }
+			if (XMLConstants.DEFAULT_NS_PREFIX.equals(prefix)) {
+				element.declareDefaultNamespace(namespaceUri);
+			} else {
+				element.declareNamespace(namespaceUri, prefix);
+			}
+		}
+		// declare attributes
+		for (int i = 0; i < attributes.getLength(); i++) {
+			QName attrName =
+					QNameUtils.toQName(attributes.getURI(i), attributes.getQName(i));
+			if (!isNamespaceDeclaration(attrName)) {
+				OMNamespace namespace =
+						factory.createOMNamespace(attrName.getNamespaceURI(),
+								attrName.getPrefix());
+				OMAttribute attribute =
+						factory.createOMAttribute(attrName.getLocalPart(), namespace,
+								attributes.getValue(i));
+				element.addAttribute(attribute);
+			}
+		}
+		elements.add(element);
+		newNamespaceMapping();
+	}
 
-    public void processingInstruction(String target, String data) throws SAXException {
-        OMContainer parent = getParent();
-        factory.createOMProcessingInstruction(parent, target, data);
-    }
+	private boolean isNamespaceDeclaration(QName qName) {
+		String prefix = qName.getPrefix();
+		String localPart = qName.getLocalPart();
+		return (XMLConstants.XMLNS_ATTRIBUTE.equals(localPart) && prefix.length() == 0) ||
+				(XMLConstants.XMLNS_ATTRIBUTE.equals(prefix) && localPart.length() != 0);
+	}
 
-    public void comment(char ch[], int start, int length) throws SAXException {
-        String content = new String(ch, start, length);
-        OMContainer parent = getParent();
-        factory.createOMComment(parent, content);
-    }
+	public void endElement(String uri, String localName, String qName)
+			throws SAXException {
+		elements.remove(elements.size() - 1);
+		removeNamespaceMapping();
+	}
 
-    public void startCDATA() throws SAXException {
-        charactersType = XMLStreamConstants.CDATA;
-    }
+	public void characters(char ch[], int start, int length) throws SAXException {
+		String data = new String(ch, start, length);
+		OMContainer parent = getParent();
+		factory.createOMText(parent, data, charactersType);
+	}
 
-    public void endCDATA() throws SAXException {
-        charactersType = XMLStreamConstants.CHARACTERS;
-    }
+	public void ignorableWhitespace(char ch[], int start, int length)
+			throws SAXException {
+		charactersType = XMLStreamConstants.SPACE;
+		characters(ch, start, length);
+		charactersType = XMLStreamConstants.CHARACTERS;
+	}
 
-    public void startEntity(String name) throws SAXException {
-        if (!isPredefinedEntityReference(name)) {
-            charactersType = XMLStreamConstants.ENTITY_REFERENCE;
-        }
-    }
+	public void processingInstruction(String target, String data) throws SAXException {
+		OMContainer parent = getParent();
+		factory.createOMProcessingInstruction(parent, target, data);
+	}
 
-    public void endEntity(String name) throws SAXException {
-        charactersType = XMLStreamConstants.CHARACTERS;
-    }
+	public void comment(char ch[], int start, int length) throws SAXException {
+		String content = new String(ch, start, length);
+		OMContainer parent = getParent();
+		factory.createOMComment(parent, content);
+	}
 
-    private boolean isPredefinedEntityReference(String name) {
-        return "lt".equals(name) || "gt".equals(name) || "amp".equals(name) || "quot".equals(name) ||
-                "apos".equals(name);
-    }
+	public void startCDATA() throws SAXException {
+		charactersType = XMLStreamConstants.CDATA;
+	}
+
+	public void endCDATA() throws SAXException {
+		charactersType = XMLStreamConstants.CHARACTERS;
+	}
+
+	public void startEntity(String name) throws SAXException {
+		if (!isPredefinedEntityReference(name)) {
+			charactersType = XMLStreamConstants.ENTITY_REFERENCE;
+		}
+	}
+
+	public void endEntity(String name) throws SAXException {
+		charactersType = XMLStreamConstants.CHARACTERS;
+	}
+
+	private boolean isPredefinedEntityReference(String name) {
+		return "lt".equals(name) || "gt".equals(name) || "amp".equals(name) ||
+				"quot".equals(name) ||
+				"apos".equals(name);
+	}
 
     /*
     * Unsupported
     */
 
-    public void setDocumentLocator(Locator locator) {
-    }
+	public void setDocumentLocator(Locator locator) {
+	}
 
-    public void startDocument() throws SAXException {
-    }
+	public void skippedEntity(String name) throws SAXException {
+	}
 
-    public void endDocument() throws SAXException {
-    }
+	public void startDTD(String name, String publicId, String systemId)
+			throws SAXException {
+	}
 
-    public void skippedEntity(String name) throws SAXException {
-    }
+	public void endDTD() throws SAXException {
+	}
 
-    public void startDTD(String name, String publicId, String systemId) throws SAXException {
-    }
+	private Map<String, String> currentNamespaceMapping() {
+		return namespaceMappings.get(namespaceMappings.size() - 1);
+	}
 
-    public void endDTD() throws SAXException {
-    }
+	private void newNamespaceMapping() {
+		namespaceMappings.add(new HashMap<String, String>());
+	}
+
+	private void removeNamespaceMapping() {
+		namespaceMappings.remove(namespaceMappings.size() - 1);
+	}
+
+	private void removeAllNamespaceMappings() {
+		namespaceMappings.clear();
+	}
+
 }
