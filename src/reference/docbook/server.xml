@@ -1850,7 +1850,7 @@ public class CustomerEndpointIntegrationTest {
 </programlisting>
             </para>
             <para>
-                For more information on the request matchers provided by <classname>ResponseMatchers</classname>,
+                For more information on the response matchers provided by <classname>ResponseMatchers</classname>,
                 refer to the class level Javadoc.
             </para>
         </section>
