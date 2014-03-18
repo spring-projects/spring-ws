@@ -378,6 +378,8 @@ public class WebServiceTemplateTest {
         expect(interceptorMock2.handleRequest(isA(MessageContext.class))).andReturn(true);
         expect(interceptorMock2.handleResponse(isA(MessageContext.class))).andReturn(true);
         expect(interceptorMock1.handleResponse(isA(MessageContext.class))).andReturn(true);
+        interceptorMock2.afterCompletion(isA(MessageContext.class), (Exception)isNull());
+        interceptorMock1.afterCompletion(isA(MessageContext.class), (Exception)isNull());
 
         WebServiceMessageCallback requestCallback = createMock(WebServiceMessageCallback.class);
         requestCallback.doWithMessage(isA(WebServiceMessage.class));
@@ -409,6 +411,7 @@ public class WebServiceTemplateTest {
         template.setInterceptors(new ClientInterceptor[]{interceptorMock1, interceptorMock2});
         expect(interceptorMock1.handleRequest(isA(MessageContext.class))).andReturn(false);
         expect(interceptorMock1.handleResponse(isA(MessageContext.class))).andReturn(true);
+        interceptorMock1.afterCompletion(isA(MessageContext.class), (Exception)isNull());
 
         WebServiceMessageCallback requestCallback = createMock(WebServiceMessageCallback.class);
         requestCallback.doWithMessage(messageContext.getRequest());
@@ -441,6 +444,7 @@ public class WebServiceTemplateTest {
         template.setInterceptors(new ClientInterceptor[]{interceptorMock1, interceptorMock2});
         expect(interceptorMock1.handleRequest(isA(MessageContext.class))).andReturn(false);
         expect(interceptorMock1.handleResponse(isA(MessageContext.class))).andReturn(true);
+        interceptorMock1.afterCompletion(isA(MessageContext.class), (Exception)isNull());
 
         WebServiceMessageCallback requestCallback = createMock(WebServiceMessageCallback.class);
         requestCallback.doWithMessage(messageContext.getRequest());

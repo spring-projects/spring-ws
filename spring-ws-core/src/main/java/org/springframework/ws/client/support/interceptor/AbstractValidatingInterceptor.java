@@ -257,7 +257,12 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
         return true;
     }
 
-    /**
+	/** Does nothing by default.*/
+	public void afterCompletion(MessageContext messageContext, Exception ex)
+			throws WebServiceClientException {
+	}
+
+	/**
      * Abstract template method that returns the part of the request message that is to be validated.
      *
      * @param request the request message

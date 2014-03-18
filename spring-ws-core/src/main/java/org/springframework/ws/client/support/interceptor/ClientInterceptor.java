@@ -58,6 +58,8 @@ public interface ClientInterceptor {
     /**
      * Processes the incoming response message. Called for non-fault response messages before payload handling in the
      * {@link org.springframework.ws.client.core.WebServiceTemplate}.
+     * <p/>
+     * Note: Will only be called if this interceptor's {@link #handleRequest}  method has successfully completed.
      *
      * @param messageContext contains the outgoing request message
      * @return <code>true</code> to continue processing of the request interceptors; <code>false</code> to indicate
@@ -70,6 +72,8 @@ public interface ClientInterceptor {
     /**
      * Processes the incoming response fault. Called for response fault messages before payload handling in the {@link
      * org.springframework.ws.client.core.WebServiceTemplate}.
+     * <p/>
+     * Note: Will only be called if this interceptor's {@link #handleRequest}  method has successfully completed.
      *
      * @param messageContext contains the outgoing request message
      * @return <code>true</code> to continue processing of the request interceptors; <code>false</code> to indicate
@@ -79,5 +83,19 @@ public interface ClientInterceptor {
      * @see org.springframework.ws.FaultAwareWebServiceMessage#hasFault()
      */
     boolean handleFault(MessageContext messageContext) throws WebServiceClientException;
+
+	/**
+     * Callback after completion of request and response (fault) processing. Will be called on any outcome, thus
+	 * allows for proper resource cleanup.
+     * <p/>
+     * Note: Will only be called if this interceptor's {@link #handleRequest}  method has successfully completed.
+     *
+     * @param messageContext contains both request and response messages, the response should contains a Fault
+     * @param ex exception thrown on handler execution, if any
+     * @throws WebServiceClientException in case of errors
+     * @since 2.2
+     */
+    void afterCompletion(MessageContext messageContext, Exception ex) throws WebServiceClientException;
+
 
 }

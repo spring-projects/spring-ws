@@ -568,12 +568,12 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                                      WebServiceConnection connection,
                                      WebServiceMessageCallback requestCallback,
                                      WebServiceMessageExtractor<T> responseExtractor) throws IOException {
+        int interceptorIndex = -1;
         try {
             if (requestCallback != null) {
                 requestCallback.doWithMessage(messageContext.getRequest());
             }
             // Apply handleRequest of registered interceptors
-            int interceptorIndex = -1;
             if (interceptors != null) {
                 for (int i = 0; i < interceptors.length; i++) {
                     interceptorIndex = i;
@@ -586,7 +586,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
             if (!messageContext.hasResponse()) {
                 sendRequest(connection, messageContext.getRequest());
                 if (hasError(connection, messageContext.getRequest())) {
-                    return (T)handleError(connection, messageContext.getRequest());
+                    triggerAfterCompletion(interceptorIndex, messageContext, null);
+                    return (T) handleError(connection, messageContext.getRequest());
                 }
                 WebServiceMessage response = connection.receive(getMessageFactory());
                 messageContext.setResponse(response);
@@ -595,10 +596,12 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
             if (messageContext.hasResponse()) {
                 if (!hasFault(connection, messageContext.getResponse())) {
                     triggerHandleResponse(interceptorIndex, messageContext);
+                    triggerAfterCompletion(interceptorIndex, messageContext, null);
                     return responseExtractor.extractData(messageContext.getResponse());
                 }
                 else {
                     triggerHandleFault(interceptorIndex, messageContext);
+                    triggerAfterCompletion(interceptorIndex, messageContext, null);
                     return (T)handleFault(connection, messageContext);
                 }
             }
@@ -607,7 +610,18 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
             }
         }
         catch (TransformerException ex) {
+            triggerAfterCompletion(interceptorIndex, messageContext, ex);
             throw new WebServiceTransformerException("Transformation error: " + ex.getMessage(), ex);
+        }
+        catch (RuntimeException ex) {
+            // Trigger after-completion for thrown exception.
+            triggerAfterCompletion(interceptorIndex, messageContext, ex);
+            throw ex;
+        }
+        catch (IOException ex) {
+            // Trigger after-completion for thrown exception.
+            triggerAfterCompletion(interceptorIndex, messageContext, ex);
+            throw ex;
         }
     }
 
@@ -757,6 +771,26 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
             }
         }
     }
+
+	/**
+	 * Trigger afterCompletion callbacks on the mapped ClientInterceptors. Will just
+	 * invoke afterCompletion for all interceptors whose handleRequest invocation has
+	 * successfully completed and returned true, in addition to the last interceptor who
+	 * returned <code>false</code>.
+	 * @param mappedEndpoint the mapped EndpointInvocationChain
+	 * @param interceptorIndex index of last interceptor that successfully completed
+	 * @param ex Exception thrown on handler execution, or <code>null</code> if none
+	 * @see ClientInterceptor#afterCompletion
+	 */
+	private void triggerAfterCompletion(int interceptorIndex,
+			MessageContext messageContext, Exception ex)
+			throws WebServiceClientException {
+		if (interceptors != null) {
+			for (int i = interceptorIndex; i >= 0; i--) {
+				interceptors[i].afterCompletion(messageContext, ex);
+			}
+		}
+	}
 
     /**
      * Handles an fault in the given response message. The default implementation invokes the {@link

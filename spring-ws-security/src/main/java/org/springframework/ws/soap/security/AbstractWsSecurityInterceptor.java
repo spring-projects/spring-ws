@@ -175,6 +175,7 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
         return true;
     }
 
+
     public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
         cleanUp();
     }
@@ -252,7 +253,13 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
         return true;
     }
 
-    /**
+	@Override
+	public void afterCompletion(MessageContext messageContext, Exception ex)
+			throws WebServiceClientException {
+		cleanUp();
+	}
+
+	/**
      * Handles an securement exception. Default implementation logs the given exception, and returns
      * <code>false</code>.
      *
