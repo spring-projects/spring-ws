@@ -482,10 +482,10 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         handler.setOption(WSHandlerConstants.SAML_PROP_FILE, location);
     }
     
-    public void setSamlIssuer(SAMLIssuer issuer) {
-    	handler.setOption(WSHandlerConstants.SAML_PROP_REF_ID, SPRING_SAML_ISSUER_PROP);
-    	this.samlIssuer = issuer;
-    }
+//    public void setSamlIssuer(SAMLIssuer issuer) {
+//    	handler.setOption(WSHandlerConstants.SAML_PROP_REF_ID, SPRING_SAML_ISSUER_PROP);
+//    	this.samlIssuer = issuer;
+//    }
 
     public void afterPropertiesSet() throws Exception {
         Assert.isTrue(validationActions != null || securementActions != null,
@@ -556,6 +556,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         }
         
         messageContext.setProperty(SPRING_SAML_ISSUER_PROP, samlIssuer);
+        
+        messageContext.setProperty(WSHandlerConstants.TTL_TIMESTAMP, Integer.toString(securementTimeToLive));
 
         requestData.setTimeToLive(securementTimeToLive);
 
