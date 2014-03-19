@@ -37,7 +37,7 @@ import org.springframework.util.StringUtils;
  */
 public class KeyManagersFactoryBean implements FactoryBean<KeyManager[]>, InitializingBean {
 
-    private KeyManagerFactory keyManagerFactory;
+	private KeyManager[] keyManagers;
 
     private KeyStore keyStore;
 
@@ -58,14 +58,14 @@ public class KeyManagersFactoryBean implements FactoryBean<KeyManager[]>, Initia
     }
 
     /**
-     * Sets the provider of the key store to use. If this is not set, the default is used.
+     * Sets the provider of the key manager to use. If this is not set, the default is used.
      */
     public void setProvider(String provider) {
         this.provider = provider;
     }
 
     /**
-     * Sets the algorithm of the <code>KeyManager</code> to use. If this is not set, the default is used.
+     * Sets the algorithm of the {@code KeyManager} to use. If this is not set, the default is used.
      *
      * @see KeyManagerFactory#getDefaultAlgorithm()
      */
@@ -83,7 +83,7 @@ public class KeyManagersFactoryBean implements FactoryBean<KeyManager[]>, Initia
     }
 
     public KeyManager[] getObject() throws Exception {
-        return keyManagerFactory.getKeyManagers();
+        return keyManagers;
     }
 
     public Class<?> getObjectType() {
@@ -98,10 +98,12 @@ public class KeyManagersFactoryBean implements FactoryBean<KeyManager[]>, Initia
         String algorithm =
                 StringUtils.hasLength(this.algorithm) ? this.algorithm : KeyManagerFactory.getDefaultAlgorithm();
 
-        keyManagerFactory =
+        KeyManagerFactory keyManagerFactory =
                 StringUtils.hasLength(this.provider) ? KeyManagerFactory.getInstance(algorithm, this.provider) :
                         KeyManagerFactory.getInstance(algorithm);
 
         keyManagerFactory.init(keyStore, password);
+
+	    this.keyManagers = keyManagerFactory.getKeyManagers();
     }
 }
