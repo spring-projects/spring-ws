@@ -60,7 +60,8 @@ public class XmlRootElementPayloadMethodProcessor extends AbstractJaxb2PayloadMe
         return parameterType.isAnnotationPresent(XmlRootElement.class);
     }
 
-    public void handleReturnValue(MessageContext messageContext, MethodParameter returnType, Object returnValue)
+	@Override
+    protected void handleReturnValueInternal(MessageContext messageContext, MethodParameter returnType, Object returnValue)
             throws JAXBException {
         Class<?> parameterType = returnType.getParameterType();
         marshalToResponsePayload(messageContext, parameterType, returnValue);

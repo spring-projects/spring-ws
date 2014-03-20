@@ -151,6 +151,9 @@ public class MarshallingPayloadMethodProcessor extends AbstractPayloadMethodProc
 
     public void handleReturnValue(MessageContext messageContext, MethodParameter returnType, Object returnValue)
             throws Exception {
+	    if (returnValue == null) {
+		    return;
+	    }
         Marshaller marshaller = getMarshaller();
         Assert.state(marshaller != null, "marshaller must not be null");
 

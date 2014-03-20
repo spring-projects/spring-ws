@@ -231,10 +231,7 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
         Object[] args = getMethodArguments(messageContext, methodEndpoint);
 
         if (logger.isTraceEnabled()) {
-            StringBuilder builder = new StringBuilder("Invoking [");
-            builder.append(methodEndpoint).append("] with arguments ");
-            builder.append(Arrays.asList(args));
-            logger.trace(builder.toString());
+	        logger.trace("Invoking [" + methodEndpoint + "] with arguments " + Arrays.asList(args));
         }
 
         Object returnValue = methodEndpoint.invoke(args);

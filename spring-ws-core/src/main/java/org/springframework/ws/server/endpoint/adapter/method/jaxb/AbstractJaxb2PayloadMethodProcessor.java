@@ -42,6 +42,13 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.w3c.dom.Node;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+import org.xml.sax.ext.LexicalHandler;
+
+import org.springframework.core.MethodParameter;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
@@ -49,12 +56,6 @@ import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadMeth
 import org.springframework.ws.stream.StreamingPayload;
 import org.springframework.ws.stream.StreamingWebServiceMessage;
 import org.springframework.xml.transform.TraxUtils;
-
-import org.w3c.dom.Node;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
-import org.xml.sax.ext.LexicalHandler;
 
 /**
  * Abstract base class for {@link org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver
@@ -71,7 +72,18 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
     private final ConcurrentMap<Class, JAXBContext> jaxbContexts = new ConcurrentHashMap<Class, JAXBContext>();
 
-    /**
+	@Override
+	public final void handleReturnValue(MessageContext messageContext,
+			MethodParameter returnType, Object returnValue) throws Exception {
+		if (returnValue != null) {
+			handleReturnValueInternal(messageContext, returnType, returnValue);
+		}
+	}
+
+	protected abstract void handleReturnValueInternal(MessageContext messageContext,
+			MethodParameter returnType, Object returnValue) throws Exception;
+
+	/**
      * Marshals the given {@code jaxbElement} to the response payload of the given message context.
      *
      * @param messageContext the message context to marshal to

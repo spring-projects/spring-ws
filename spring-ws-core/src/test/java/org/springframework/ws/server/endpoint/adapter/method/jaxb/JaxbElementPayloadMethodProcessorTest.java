@@ -17,7 +17,6 @@
 package org.springframework.ws.server.endpoint.adapter.method.jaxb;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlElement;
@@ -25,6 +24,11 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
+
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.MockWebServiceMessage;
@@ -37,14 +41,6 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.xml.transform.StringResult;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.xml.sax.SAXException;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class JaxbElementPayloadMethodProcessorTest {
 
@@ -88,7 +84,7 @@ public class JaxbElementPayloadMethodProcessorTest {
     }
 
     @Test
-    public void handleReturnValue() throws JAXBException, IOException, SAXException {
+    public void handleReturnValue() throws Exception {
         MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 
         MyType type = new MyType();
@@ -101,7 +97,7 @@ public class JaxbElementPayloadMethodProcessorTest {
     }
 
     @Test
-    public void handleReturnValueString() throws JAXBException, IOException, SAXException {
+    public void handleReturnValueString() throws Exception {
         MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 
         String s = "Foo";
@@ -111,6 +107,15 @@ public class JaxbElementPayloadMethodProcessorTest {
         MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
         assertXMLEqual("<string xmlns='http://springframework.org'>Foo</string>", response.getPayloadAsString());
     }
+
+	@Test
+	public void handleNullReturnValue() throws Exception {
+		MessageContext messageContext =
+				new DefaultMessageContext(new MockWebServiceMessageFactory());
+
+		processor.handleReturnValue(messageContext, stringReturnType, null);
+		assertFalse("context has response", messageContext.hasResponse());
+	}
 
     @Test
     public void handleReturnValueAxiom() throws Exception {

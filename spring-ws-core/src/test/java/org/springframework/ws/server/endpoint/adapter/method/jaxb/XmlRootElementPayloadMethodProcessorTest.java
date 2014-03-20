@@ -17,13 +17,17 @@
 package org.springframework.ws.server.endpoint.adapter.method.jaxb;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
+
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.MockWebServiceMessage;
@@ -36,14 +40,6 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.xml.transform.StringResult;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.xml.sax.SAXException;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class XmlRootElementPayloadMethodProcessorTest {
 
@@ -67,13 +63,14 @@ public class XmlRootElementPayloadMethodProcessorTest {
     public void supportsParameter() {
         assertTrue("processor does not support @XmlRootElement parameter",
                 processor.supportsParameter(rootElementParameter));
-        assertTrue("processor does not support @XmlType parameter", processor.supportsParameter(typeParameter));
+        assertTrue("processor does not support @XmlType parameter", processor.supportsParameter(
+		        typeParameter));
     }
 
     @Test
     public void supportsReturnType() {
         assertTrue("processor does not support @XmlRootElement return type",
-                processor.supportsReturnType(rootElementReturnType));
+		        processor.supportsReturnType(rootElementReturnType));
     }
 
     @Test
@@ -99,7 +96,7 @@ public class XmlRootElementPayloadMethodProcessorTest {
     }
 
     @Test
-    public void handleReturnValue() throws JAXBException, IOException, SAXException {
+    public void handleReturnValue() throws Exception {
         MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 
         MyRootElement rootElement = new MyRootElement();
@@ -108,6 +105,15 @@ public class XmlRootElementPayloadMethodProcessorTest {
         assertTrue("context has no response", messageContext.hasResponse());
         MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
         assertXMLEqual("<root xmlns='http://springframework.org'><string>Foo</string></root>", response.getPayloadAsString());
+    }
+
+    @Test
+    public void handleNullReturnValue() throws Exception {
+        MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
+
+        MyRootElement rootElement = null;
+        processor.handleReturnValue(messageContext, rootElementReturnType, rootElement);
+        assertFalse("context has response", messageContext.hasResponse());
     }
 
     @Test

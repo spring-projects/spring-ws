@@ -20,6 +20,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
@@ -28,12 +33,6 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver;
 import org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 
 /** @author Arjen Poutsma */
 public class DefaultMethodEndpointAdapterTest {
@@ -48,21 +47,25 @@ public class DefaultMethodEndpointAdapterTest {
 
     private MethodEndpoint supportedEndpoint;
 
+	private MethodEndpoint nullReturnValue;
+
     private MethodEndpoint unsupportedEndpoint;
 
     private MethodEndpoint exceptionEndpoint;
 
     private String supportedArgument;
 
-    @Before
+	@Before
     public void setUp() throws Exception {
         adapter = new DefaultMethodEndpointAdapter();
         argumentResolver1 = createMock("stringResolver", MethodArgumentResolver.class);
         argumentResolver2 = createMock("intResolver", MethodArgumentResolver.class);
         returnValueHandler = createMock(MethodReturnValueHandler.class);
         adapter.setMethodArgumentResolvers(Arrays.asList(argumentResolver1, argumentResolver2));
-        adapter.setMethodReturnValueHandlers(Collections.singletonList(returnValueHandler));
+        adapter.setMethodReturnValueHandlers(
+		        Collections.singletonList(returnValueHandler));
         supportedEndpoint = new MethodEndpoint(this, "supported", String.class, Integer.class);
+	    nullReturnValue = new MethodEndpoint(this, "nullReturnValue", String.class);
         unsupportedEndpoint = new MethodEndpoint(this, "unsupported", String.class);
         exceptionEndpoint = new MethodEndpoint(this, "exception", String.class);
     }
@@ -147,6 +150,27 @@ public class DefaultMethodEndpointAdapterTest {
     }
 
     @Test
+    public void invokeNullReturnValue() throws Exception {
+        MockWebServiceMessage request = new MockWebServiceMessage("<root xmlns='http://springframework.org'/>");
+        MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
+
+        String value = "Foo";
+
+        expect(argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(true);
+        expect(argumentResolver1.resolveArgument(eq(messageContext), isA(MethodParameter.class))).andReturn(value);
+
+        expect(returnValueHandler.supportsReturnType(isA(MethodParameter.class))).andReturn(true);
+        returnValueHandler.handleReturnValue(eq(messageContext), isA(MethodParameter.class), isNull());
+
+        replay(argumentResolver1, argumentResolver2, returnValueHandler);
+
+        adapter.invoke(messageContext, nullReturnValue);
+        assertEquals("Invalid argument passed", value, supportedArgument);
+
+        verify(argumentResolver1, argumentResolver2, returnValueHandler);
+    }
+
+    @Test
     public void invokeException() throws Exception {
         MockWebServiceMessage request = new MockWebServiceMessage("<root xmlns='http://springframework.org'/>");
         MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
@@ -175,6 +199,11 @@ public class DefaultMethodEndpointAdapterTest {
         supportedArgument = s;
         return s;
 
+    }
+
+    public String nullReturnValue(String s) {
+	    supportedArgument = s;
+        return null;
     }
 
     public String unsupported(String s) {
