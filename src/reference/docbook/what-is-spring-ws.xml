@@ -56,11 +56,10 @@
             </para>
         </formalpara>
         <formalpara>
-            <title>Integrates with Acegi Security</title>
+            <title>Integrates with Spring Security</title>
             <para>
-                The WS-Security implementation of Spring Web Services provides integration with 
-                <ulink url="http://acegisecurity.org">Acegi Security</ulink>. This means you can use your existing Acegi 
-                configuration for your SOAP service as well.
+                The WS-Security implementation of Spring Web Services provides integration with Spring Security.
+                This means you can use your existing Spring Security configuration for your SOAP service as well.
             </para>
         </formalpara>
         <formalpara>
@@ -140,5 +139,18 @@
                     </caption>
                 </mediaobject>
         </para>
+    </section>
+    <section>
+        <title>Supported standards</title>
+        <para>
+            Spring Web Services supports the following standards:
+        </para>
+        <itemizedlist>
+            <listitem><para>SOAP 1.1 and 1.2</para></listitem>
+            <listitem><para>WSDL 1.1 and 2.0 (XSD-based generation only supported for WSDL 1.1)</para></listitem>
+            <listitem><para>WS-I Basic Profile 1.0, 1.1, 1.2 and 2.0</para></listitem>
+            <listitem><para>WS-Addressing 1.0 and the August 2004 draft</para></listitem>
+            <listitem><para>SOAP Message Security 1.1, Username Token Profile 1.1, X.509 Certificate Token Profile 1.1, SAML Token Profile 1.1, Kerberos Token Profile 1.1, Basic Security Profile 1.1</para></listitem>
+        </itemizedlist>
     </section>
 </chapter>
