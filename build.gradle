@@ -137,7 +137,7 @@ project('spring-xml') {
 		compile("org.springframework:spring-context:$springVersion")
 
 		//XML
-		optional("org.apache.ws.xmlschema:xmlschema-core:2.0.2")
+		optional("org.apache.ws.xmlschema:xmlschema-core:2.1.0")
 		optional("jaxen:jaxen:1.1.4")
 	}
 }
@@ -163,7 +163,7 @@ project('spring-ws-core') {
 			exclude group: 'xerces', module: 'xercesImpl'
 			exclude group: 'xalan', module: 'xalan'
 		}
-		optional("org.apache.ws.xmlschema:xmlschema-core:2.0.2")
+		optional("org.apache.ws.xmlschema:xmlschema-core:2.1.0")
 
 		// SOAP
 		optional("org.apache.ws.commons.axiom:axiom-api:$axiomVersion")
