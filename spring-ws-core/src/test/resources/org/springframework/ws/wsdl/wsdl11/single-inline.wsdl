@@ -37,14 +37,14 @@
             </xsd:element>
         </xsd:schema>
     </wsdl:types>
+    <wsdl:message name="GetOrderResponse">
+        <wsdl:part name="GetOrderResponse" element="sch:GetOrderResponse"/>
+    </wsdl:message>
     <wsdl:message name="GetOrderRequest">
         <wsdl:part name="GetOrderRequest" element="sch:GetOrderRequest"/>
     </wsdl:message>
     <wsdl:message name="GetOrderFault">
         <wsdl:part name="GetOrderFault" element="sch:GetOrderFault"/>
-    </wsdl:message>
-    <wsdl:message name="GetOrderResponse">
-        <wsdl:part name="GetOrderResponse" element="sch:GetOrderResponse"/>
     </wsdl:message>
     <wsdl:portType name="Order">
         <wsdl:operation name="GetOrder">

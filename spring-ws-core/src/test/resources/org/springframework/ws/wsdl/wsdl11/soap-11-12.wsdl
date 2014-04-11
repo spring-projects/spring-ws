@@ -38,14 +38,14 @@
             </xsd:element>
         </xsd:schema>
     </wsdl:types>
+    <wsdl:message name="GetOrderResponse">
+        <wsdl:part name="GetOrderResponse" element="sch:GetOrderResponse"/>
+    </wsdl:message>
     <wsdl:message name="GetOrderRequest">
         <wsdl:part name="GetOrderRequest" element="sch:GetOrderRequest"/>
     </wsdl:message>
     <wsdl:message name="GetOrderFault">
         <wsdl:part name="GetOrderFault" element="sch:GetOrderFault"/>
-    </wsdl:message>
-    <wsdl:message name="GetOrderResponse">
-        <wsdl:part name="GetOrderResponse" element="sch:GetOrderResponse"/>
     </wsdl:message>
     <wsdl:portType name="Order">
         <wsdl:operation name="GetOrder">
@@ -54,21 +54,6 @@
             <wsdl:fault message="tns:GetOrderFault" name="GetOrderFault"/>
         </wsdl:operation>
     </wsdl:portType>
-    <wsdl:binding name="OrderSoap12" type="tns:Order">
-        <soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
-        <wsdl:operation name="GetOrder">
-            <soap12:operation soapAction=""/>
-            <wsdl:input name="GetOrderRequest">
-                <soap12:body use="literal"/>
-            </wsdl:input>
-            <wsdl:output name="GetOrderResponse">
-                <soap12:body use="literal"/>
-            </wsdl:output>
-            <wsdl:fault name="GetOrderFault">
-                <soap12:fault name="GetOrderFault" use="literal"/>
-            </wsdl:fault>
-        </wsdl:operation>
-    </wsdl:binding>
     <wsdl:binding name="OrderSoap11" type="tns:Order">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         <wsdl:operation name="GetOrder">
@@ -84,12 +69,27 @@
             </wsdl:fault>
         </wsdl:operation>
     </wsdl:binding>
+    <wsdl:binding name="OrderSoap12" type="tns:Order">
+        <soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="GetOrder">
+            <soap12:operation soapAction=""/>
+            <wsdl:input name="GetOrderRequest">
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="GetOrderResponse">
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GetOrderFault">
+                <soap12:fault name="GetOrderFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
     <wsdl:service name="OrderService">
-        <wsdl:port binding="tns:OrderSoap12" name="OrderSoap12">
-            <soap12:address location="http://localhost:8080/"/>
-        </wsdl:port>
         <wsdl:port binding="tns:OrderSoap11" name="OrderSoap11">
             <soap:address location="http://localhost:8080/"/>
+        </wsdl:port>
+        <wsdl:port binding="tns:OrderSoap12" name="OrderSoap12">
+            <soap12:address location="http://localhost:8080/"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>
