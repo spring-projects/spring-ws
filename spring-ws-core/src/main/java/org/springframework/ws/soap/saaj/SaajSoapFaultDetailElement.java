@@ -19,6 +19,7 @@ package org.springframework.ws.soap.saaj;
 import javax.xml.soap.DetailEntry;
 import javax.xml.soap.SOAPException;
 import javax.xml.transform.Result;
+import javax.xml.transform.dom.DOMResult;
 
 import org.springframework.ws.soap.SoapFaultDetailElement;
 
@@ -36,12 +37,12 @@ class SaajSoapFaultDetailElement extends SaajSoapElement<DetailEntry> implements
     }
 
     public Result getResult() {
-        return getImplementation().getResult(getSaajDetailEntry());
+	    return new DOMResult(getSaajDetailEntry());
     }
 
     public void addText(String text) {
         try {
-            getImplementation().addTextNode(getSaajDetailEntry(), text);
+	        getSaajDetailEntry().addTextNode(text);
         }
         catch (SOAPException ex) {
             throw new SaajSoapFaultException(ex);

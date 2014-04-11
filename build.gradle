@@ -232,7 +232,7 @@ project('spring-ws-security') {
 		optional("org.apache.ws.security:wss4j:1.6.5")
 
 		// SOAP
-		provided("com.sun.xml.messaging.saaj:saaj-impl:1.3.19")
+		provided("com.sun.xml.messaging.saaj:saaj-impl:1.3.19") // required for XWSS
 		optional("org.apache.ws.commons.axiom:axiom-api:$axiomVersion")
 		optional("org.apache.ws.commons.axiom:axiom-impl:$axiomVersion") {
 			exclude group: 'org.codehaus.woodstox', module: 'wstx-asl'

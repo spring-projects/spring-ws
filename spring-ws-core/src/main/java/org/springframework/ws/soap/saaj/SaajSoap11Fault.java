@@ -35,12 +35,12 @@ class SaajSoap11Fault extends SaajSoapFault implements Soap11Fault {
     }
 
     public String getFaultActorOrRole() {
-        return getImplementation().getFaultActor(getSaajFault());
+	    return getSaajFault().getFaultActor();
     }
 
     public void setFaultActorOrRole(String faultActor) {
         try {
-            getImplementation().setFaultActor(getSaajFault(), faultActor);
+	        getSaajFault().setFaultActor(faultActor);
         }
         catch (SOAPException ex) {
             throw new SaajSoapFaultException(ex);
@@ -48,10 +48,10 @@ class SaajSoap11Fault extends SaajSoapFault implements Soap11Fault {
     }
 
     public String getFaultStringOrReason() {
-        return getImplementation().getFaultString(getSaajFault());
+	    return getSaajFault().getFaultString();
     }
 
     public Locale getFaultStringLocale() {
-        return getImplementation().getFaultStringLocale(getSaajFault());
+	    return getSaajFault().getFaultStringLocale();
     }
 }

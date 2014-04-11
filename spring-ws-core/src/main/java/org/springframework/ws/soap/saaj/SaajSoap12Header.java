@@ -45,8 +45,8 @@ class SaajSoap12Header extends SaajSoapHeader implements Soap12Header {
 
     public SoapHeaderElement addNotUnderstoodHeaderElement(QName headerName) {
         try {
-            SOAPHeaderElement headerElement =
-                    getImplementation().addNotUnderstoodHeaderElement(getSaajHeader(), headerName);
+	        SOAPHeaderElement headerElement =
+			        getSaajHeader().addNotUnderstoodHeaderElement(headerName);
             return new SaajSoapHeaderElement(headerElement);
         }
         catch (SOAPException ex) {
@@ -56,8 +56,8 @@ class SaajSoap12Header extends SaajSoapHeader implements Soap12Header {
 
     public SoapHeaderElement addUpgradeHeaderElement(String[] supportedSoapUris) {
         try {
-            SOAPHeaderElement headerElement =
-                    getImplementation().addUpgradeHeaderElement(getSaajHeader(), supportedSoapUris);
+	        SOAPHeaderElement headerElement =
+			        getSaajHeader().addUpgradeHeaderElement(supportedSoapUris);
             return new SaajSoapHeaderElement(headerElement);
         }
         catch (SOAPException ex) {
@@ -68,7 +68,7 @@ class SaajSoap12Header extends SaajSoapHeader implements Soap12Header {
     public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String[] roles, boolean isUltimateDestination)
             throws SoapHeaderException {
         List<SOAPHeaderElement> result = new ArrayList<SOAPHeaderElement>();
-        Iterator<SOAPHeaderElement> iterator = getImplementation().examineAllHeaderElements(getSaajHeader());
+	    Iterator<SOAPHeaderElement> iterator = getSaajHeader().examineAllHeaderElements();
         while (iterator.hasNext()) {
             SOAPHeaderElement saajHeaderElement = iterator.next();
             String headerRole = saajHeaderElement.getRole();

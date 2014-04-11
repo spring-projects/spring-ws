@@ -42,7 +42,7 @@ class SaajSoap11Header extends SaajSoapHeader implements Soap11Header {
 
     public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String[] actors) {
         List<SOAPHeaderElement> result = new ArrayList<SOAPHeaderElement>();
-        Iterator<SOAPHeaderElement> iterator = getImplementation().examineAllHeaderElements(getSaajHeader());
+	    Iterator<SOAPHeaderElement> iterator = getSaajHeader().examineAllHeaderElements();
         while (iterator.hasNext()) {
             SOAPHeaderElement saajHeaderElement = iterator.next();
             String headerActor = saajHeaderElement.getActor();

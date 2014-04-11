@@ -40,7 +40,7 @@ class SaajSoap12Body extends SaajSoapBody implements Soap12Body {
     }
 
     public Soap12Fault getFault() {
-        SOAPFault fault = getImplementation().getFault(getSaajBody());
+	    SOAPFault fault = getSaajBody().getFault();
         return fault != null ? new SaajSoap12Fault(fault) : null;
     }
 
@@ -75,9 +75,16 @@ class SaajSoap12Body extends SaajSoapBody implements Soap12Body {
         Assert.hasLength(faultCode.getLocalPart(), "faultCode's localPart cannot be empty");
         Assert.hasLength(faultCode.getNamespaceURI(), "faultCode's namespaceUri cannot be empty");
         try {
-            getImplementation().removeContents(getSaajBody());
-            SOAPFault saajFault =
-                    getImplementation().addFault(getSaajBody(), faultCode, faultString, faultStringLocale);
+	        getSaajBody().removeContents();
+	        SOAPBody body = getSaajBody();
+	        SOAPFault result;
+	        if (faultStringLocale == null) {
+		        result = body.addFault(faultCode, faultString);
+	        }
+	        else {
+		        result = body.addFault(faultCode, faultString, faultStringLocale);
+	        }
+	        SOAPFault saajFault = result;
             return new SaajSoap12Fault(saajFault);
         }
         catch (SOAPException ex) {

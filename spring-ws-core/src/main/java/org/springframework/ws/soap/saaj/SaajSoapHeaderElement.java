@@ -16,9 +16,9 @@
 
 package org.springframework.ws.soap.saaj;
 
-import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.transform.Result;
+import javax.xml.transform.dom.DOMResult;
 
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapHeaderException;
@@ -36,41 +36,43 @@ class SaajSoapHeaderElement extends SaajSoapElement<SOAPHeaderElement> implement
         super(headerElement);
     }
 
+    @Override
     public Result getResult() throws SoapHeaderException {
-        return getImplementation().getResult(getSaajElement());
+	    return new DOMResult(getSaajElement());
     }
 
+    @Override
     public String getActorOrRole() throws SoapHeaderException {
-        return getImplementation().getActorOrRole(getSaajHeaderElement());
+	    return getSaajHeaderElement().getActor();
     }
 
+    @Override
     public void setActorOrRole(String actorOrRole) throws SoapHeaderException {
-        getImplementation().setActorOrRole(getSaajHeaderElement(), actorOrRole);
+	    getSaajHeaderElement().setActor(actorOrRole);
     }
 
+    @Override
     public boolean getMustUnderstand() throws SoapHeaderException {
-        return getImplementation().getMustUnderstand(getSaajHeaderElement());
+	    return getSaajHeaderElement().getMustUnderstand();
     }
 
+    @Override
     public void setMustUnderstand(boolean mustUnderstand) throws SoapHeaderException {
-        getImplementation().setMustUnderstand(getSaajHeaderElement(), mustUnderstand);
+	    getSaajHeaderElement().setMustUnderstand(mustUnderstand);
     }
 
+    @Override
     public String getText() {
-        return getImplementation().getText(getSaajHeaderElement());
+	    return getSaajHeaderElement().getValue();
     }
 
+    @Override
     public void setText(String content) {
-        try {
-            getImplementation().setText(getSaajHeaderElement(), content);
-        }
-        catch (SOAPException ex) {
-            throw new SaajSoapHeaderException(ex);
-        }
+	    getSaajHeaderElement().setValue(content);
     }
 
     protected SOAPHeaderElement getSaajHeaderElement() {
-        return (SOAPHeaderElement) getSaajElement();
+        return getSaajElement();
     }
 
 }

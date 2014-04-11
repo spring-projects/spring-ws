@@ -23,6 +23,7 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.transform.Result;
+import javax.xml.transform.dom.DOMResult;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapHeader;
@@ -41,30 +42,32 @@ abstract class SaajSoapHeader extends SaajSoapElement<SOAPHeader> implements Soa
         super(header);
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
     public Iterator<SoapHeaderElement> examineAllHeaderElements() throws SoapHeaderException {
-        Iterator<SOAPHeaderElement> iterator = getImplementation().examineAllHeaderElements(getSaajHeader());
+        Iterator<SOAPHeaderElement> iterator = getSaajHeader().examineAllHeaderElements();
         return new SaajSoapHeaderElementIterator(iterator);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public Iterator<SoapHeaderElement> examineHeaderElements(QName name) throws SoapHeaderException {
-        try {
-            Iterator iterator = getImplementation().getChildElements(getSaajHeader(), name);
-            return new SaajSoapHeaderElementIterator(iterator);
-        }
-        catch (SOAPException ex) {
-            throw new SaajSoapHeaderException(ex);
-        }
+	    Iterator iterator = getSaajHeader().getChildElements(name);
+	    return new SaajSoapHeaderElementIterator(iterator);
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
     public Iterator<SoapHeaderElement> examineMustUnderstandHeaderElements(String actorOrRole) throws SoapHeaderException {
-        Iterator<SOAPHeaderElement> iterator = getImplementation().examineMustUnderstandHeaderElements(getSaajHeader(), actorOrRole);
+	    Iterator<SOAPHeaderElement> iterator =
+			    getSaajHeader().examineMustUnderstandHeaderElements(actorOrRole);
         return new SaajSoapHeaderElementIterator(iterator);
     }
 
+    @Override
     public SoapHeaderElement addHeaderElement(QName name) throws SoapHeaderException {
         try {
-            SOAPHeaderElement headerElement = getImplementation().addHeaderElement(getSaajHeader(), name);
+	        SOAPHeaderElement headerElement = getSaajHeader().addHeaderElement(name);
             return new SaajSoapHeaderElement(headerElement);
         }
         catch (SOAPException ex) {
@@ -72,25 +75,23 @@ abstract class SaajSoapHeader extends SaajSoapElement<SOAPHeader> implements Soa
         }
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
     public void removeHeaderElement(QName name) throws SoapHeaderException {
-        try {
-            Iterator<SOAPElement> iterator = getImplementation().getChildElements(getSaajHeader(), name);
-            if (iterator.hasNext()) {
-                SOAPElement element = iterator.next();
-                element.detachNode();
-            }
-        }
-        catch (SOAPException ex) {
-            throw new SaajSoapHeaderException(ex);
-        }
+	    Iterator<SOAPElement> iterator = getSaajHeader().getChildElements(name);
+	    if (iterator.hasNext()) {
+	        SOAPElement element = iterator.next();
+	        element.detachNode();
+	    }
     }
 
     protected SOAPHeader getSaajHeader() {
         return getSaajElement();
     }
 
+    @Override
     public Result getResult() {
-        return getImplementation().getResult(getSaajHeader());
+	    return new DOMResult(getSaajHeader());
     }
 
     protected static class SaajSoapHeaderElementIterator implements Iterator<SoapHeaderElement> {
@@ -102,15 +103,18 @@ abstract class SaajSoapHeader extends SaajSoapElement<SOAPHeader> implements Soa
             this.iterator = iterator;
         }
 
+        @Override
         public boolean hasNext() {
             return iterator.hasNext();
         }
 
+        @Override
         public SoapHeaderElement next() {
             SOAPHeaderElement saajHeaderElement = iterator.next();
             return new SaajSoapHeaderElement(saajHeaderElement);
         }
 
+        @Override
         public void remove() {
             iterator.remove();
         }

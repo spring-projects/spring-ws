@@ -35,12 +35,12 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
     }
 
     public String getFaultActorOrRole() {
-        return getImplementation().getFaultRole(getSaajFault());
+	    return getSaajFault().getFaultRole();
     }
 
     public void setFaultActorOrRole(String faultRole) {
         try {
-            getImplementation().setFaultRole(getSaajFault(), faultRole);
+	        getSaajFault().setFaultRole(faultRole);
         }
         catch (SOAPException ex) {
             throw new SaajSoapFaultException(ex);
@@ -48,12 +48,12 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
     }
 
     public Iterator<QName> getFaultSubcodes() {
-        return getImplementation().getFaultSubcodes(getSaajFault());
+	    return getSaajFault().getFaultSubcodes();
     }
 
     public void addFaultSubcode(QName subcode) {
         try {
-            getImplementation().appendFaultSubcode(getSaajFault(), subcode);
+	        getSaajFault().appendFaultSubcode(subcode);
         }
         catch (SOAPException ex) {
             throw new SaajSoapFaultException(ex);
@@ -61,12 +61,12 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
     }
 
     public String getFaultNode() {
-        return getImplementation().getFaultNode(getSaajFault());
+	    return getSaajFault().getFaultNode();
     }
 
     public void setFaultNode(String uri) {
         try {
-            getImplementation().setFaultNode(getSaajFault(), uri);
+	        getSaajFault().setFaultNode(uri);
         }
         catch (SOAPException ex) {
             throw new SaajSoapFaultException(ex);
@@ -76,7 +76,7 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
 
     public void setFaultReasonText(Locale locale, String text) {
         try {
-            getImplementation().setFaultReasonText(getSaajFault(), locale, text);
+	        getSaajFault().addFaultReasonText(text, locale);
         }
         catch (SOAPException ex) {
             throw new SaajSoapFaultException(ex);
@@ -86,7 +86,7 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
 
     public String getFaultReasonText(Locale locale) {
         try {
-            return getImplementation().getFaultReasonText(getSaajFault(), locale);
+	        return getSaajFault().getFaultReasonText(locale);
         }
         catch (SOAPException ex) {
             throw new SaajSoapFaultException(ex);
@@ -94,6 +94,6 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
     }
 
     public String getFaultStringOrReason() {
-        return getImplementation().getFaultString(getSaajFault());
+	    return getSaajFault().getFaultString();
     }
 }

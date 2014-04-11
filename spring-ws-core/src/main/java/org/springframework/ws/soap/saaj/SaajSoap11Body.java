@@ -43,7 +43,7 @@ class SaajSoap11Body extends SaajSoapBody implements Soap11Body {
     }
 
     public Soap11Fault getFault() {
-        SOAPFault fault = getImplementation().getFault(getSaajBody());
+	    SOAPFault fault = getSaajBody().getFault();
         return fault != null ? new SaajSoap11Fault(fault) : null;
     }
 
@@ -56,9 +56,16 @@ class SaajSoap11Body extends SaajSoapBody implements Soap11Body {
             faultStringLocale = null;
         }
         try {
-            getImplementation().removeContents(getSaajBody());
-            SOAPFault saajFault =
-                    getImplementation().addFault(getSaajBody(), faultCode, faultString, faultStringLocale);
+	        getSaajBody().removeContents();
+	        SOAPBody body = getSaajBody();
+	        SOAPFault result;
+	        if (faultStringLocale == null) {
+		        result = body.addFault(faultCode, faultString);
+	        }
+	        else {
+		        result = body.addFault(faultCode, faultString, faultStringLocale);
+	        }
+	        SOAPFault saajFault = result;
             return new SaajSoap11Fault(saajFault);
         }
         catch (SOAPException ex) {

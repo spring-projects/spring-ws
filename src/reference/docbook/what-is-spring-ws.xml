@@ -78,8 +78,8 @@
     <section>
         <title>Runtime environment</title>
         <para>
-            Spring Web Services requires a standard Java 1.5 Runtime Environment. Java 1.6 is also supported.
-            Spring-WS also requires Spring 3.0 or higher.
+            Spring Web Services requires a standard Java 1.6 Runtime Environment. Java 1.7 and 1.8 are also supported.
+            Spring-WS also requires Spring 3.2 or higher.
         </para>
         <para>
             Spring-WS consists of a number of modules, which are described in the remainder of this section.

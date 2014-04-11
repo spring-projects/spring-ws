@@ -23,6 +23,7 @@ import javax.xml.soap.DetailEntry;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFaultElement;
 import javax.xml.transform.Result;
+import javax.xml.transform.dom.DOMResult;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapFaultDetail;
@@ -42,12 +43,12 @@ class SaajSoapFaultDetail extends SaajSoapElement<SOAPFaultElement> implements S
     }
 
     public Result getResult() {
-        return getImplementation().getResult(getSaajDetail());
+	    return new DOMResult(getSaajDetail());
     }
 
     public SoapFaultDetailElement addFaultDetailElement(QName name) {
         try {
-            DetailEntry detailEntry = getImplementation().addDetailEntry(getSaajDetail(), name);
+	        DetailEntry detailEntry = getSaajDetail().addDetailEntry(name);
             return new SaajSoapFaultDetailElement(detailEntry);
         }
         catch (SOAPException ex) {
@@ -56,7 +57,7 @@ class SaajSoapFaultDetail extends SaajSoapElement<SOAPFaultElement> implements S
     }
 
     public Iterator<SoapFaultDetailElement> getDetailEntries() {
-        Iterator<DetailEntry> iterator = getImplementation().getDetailEntries(getSaajDetail());
+	    Iterator<DetailEntry> iterator = getSaajDetail().getDetailEntries();
         return new SaajSoapFaultDetailElementIterator(iterator);
     }
 

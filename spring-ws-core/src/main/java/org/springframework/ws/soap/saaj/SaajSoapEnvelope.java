@@ -49,8 +49,8 @@ class SaajSoapEnvelope extends SaajSoapElement<SOAPEnvelope> implements SoapEnve
     public SoapBody getBody() {
         if (body == null) {
             try {
-                SOAPBody saajBody = getImplementation().getBody(getSaajEnvelope());
-                if (getImplementation().getName(saajBody).getNamespaceURI()
+	            SOAPBody saajBody = getSaajEnvelope().getBody();
+	            if (saajBody.getElementQName().getNamespaceURI()
                         .equals(SoapVersion.SOAP_11.getEnvelopeNamespaceUri())) {
                     body = new SaajSoap11Body(saajBody, langAttributeOnSoap11FaultString);
                 }
@@ -68,9 +68,9 @@ class SaajSoapEnvelope extends SaajSoapElement<SOAPEnvelope> implements SoapEnve
     public SoapHeader getHeader() {
         if (header == null) {
             try {
-                SOAPHeader saajHeader = getImplementation().getHeader(getSaajEnvelope());
+	            SOAPHeader saajHeader = getSaajEnvelope().getHeader();
                 if (saajHeader != null) {
-                    if (getImplementation().getName(saajHeader).getNamespaceURI()
+	                if (saajHeader.getElementQName().getNamespaceURI()
                             .equals(SoapVersion.SOAP_11.getEnvelopeNamespaceUri())) {
                         header = new SaajSoap11Header(saajHeader);
                     }

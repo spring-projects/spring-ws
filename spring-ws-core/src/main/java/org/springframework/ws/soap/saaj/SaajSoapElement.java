@@ -21,10 +21,10 @@ import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapElement;
-import org.springframework.ws.soap.saaj.support.SaajUtils;
 
 /**
  * SAAJ-specific implementation of the <code>SoapElement</code> interface. Wraps a {@link javax.xml.soap.SOAPElement}.
@@ -36,55 +36,51 @@ class SaajSoapElement<T extends SOAPElement> implements SoapElement {
 
     private final T element;
 
-    private SaajImplementation implementation;
-
     SaajSoapElement(T element) {
         Assert.notNull(element, "element must not be null");
         this.element = element;
     }
 
+    @Override
     public Source getSource() {
-        return getImplementation().getSource(element);
+	    return new DOMSource(element);
     }
 
+    @Override
     public QName getName() {
-        return getImplementation().getName(element);
+	    return element.getElementQName();
     }
 
+    @Override
     public void addAttribute(QName name, String value) {
         try {
-            getImplementation().addAttribute(element, name, value);
+	        element.addAttribute(name, value);
         }
         catch (SOAPException ex) {
             throw new SaajSoapElementException(ex);
         }
     }
 
+    @Override
     public void removeAttribute(QName name) {
-        try {
-            getImplementation().removeAttribute(element, name);
-        }
-        catch (SOAPException ex) {
-            throw new SaajSoapElementException(ex);
-        }
+	    element.removeAttribute(name);
     }
 
+    @Override
     public String getAttributeValue(QName name) {
-        try {
-            return getImplementation().getAttributeValue(element, name);
-        }
-        catch (SOAPException ex) {
-            throw new SaajSoapElementException(ex);
-        }
+	    return element.getAttributeValue(name);
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
     public Iterator<QName> getAllAttributes() {
-        return getImplementation().getAllAttributes(element);
+	    return element.getAllAttributesAsQNames();
     }
 
+    @Override
     public void addNamespaceDeclaration(String prefix, String namespaceUri) {
         try {
-            getImplementation().addNamespaceDeclaration(element, prefix, namespaceUri);
+	        element.addNamespaceDeclaration(prefix, namespaceUri);
         }
         catch (SOAPException ex) {
             throw new SaajSoapElementException(ex);
@@ -95,21 +91,4 @@ class SaajSoapElement<T extends SOAPElement> implements SoapElement {
         return element;
     }
 
-    protected final SaajImplementation getImplementation() {
-        if (implementation == null) {
-            if (SaajUtils.getSaajVersion(element) == SaajUtils.SAAJ_13) {
-                implementation = Saaj13Implementation.getInstance();
-            }
-            else if (SaajUtils.getSaajVersion(element) == SaajUtils.SAAJ_12) {
-                implementation = Saaj12Implementation.getInstance();
-            }
-            else if (SaajUtils.getSaajVersion(element) == SaajUtils.SAAJ_11) {
-                implementation = Saaj11Implementation.getInstance();
-            }
-            else {
-                throw new IllegalStateException("Could not find SAAJ on the classpath");
-            }
-        }
-        return implementation;
-    }
 }

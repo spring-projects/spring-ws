@@ -36,22 +36,25 @@ abstract class SaajSoapFault extends SaajSoapElement<SOAPFault> implements SoapF
         super(fault);
     }
 
+    @Override
     public QName getFaultCode() {
-        return getImplementation().getFaultCode(getSaajFault());
+	    return getSaajFault().getFaultCodeAsQName();
     }
 
     protected SOAPFault getSaajFault() {
         return getSaajElement();
     }
 
+    @Override
     public SoapFaultDetail getFaultDetail() {
-        Detail saajDetail = getImplementation().getFaultDetail(getSaajFault());
-        return saajDetail == null ? null : new SaajSoapFaultDetail(saajDetail);
+        Detail saajDetail = getSaajFault().getDetail();
+        return saajDetail != null ? new SaajSoapFaultDetail(saajDetail) : null;
     }
 
+    @Override
     public SoapFaultDetail addFaultDetail() {
         try {
-            Detail saajDetail = getImplementation().addFaultDetail(getSaajFault());
+            Detail saajDetail = getSaajFault().addDetail();
             return new SaajSoapFaultDetail(saajDetail);
         }
         catch (SOAPException ex) {

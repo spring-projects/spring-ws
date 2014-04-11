@@ -20,8 +20,11 @@ import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
 
 import org.springframework.ws.soap.SoapBody;
+import org.springframework.ws.soap.saaj.support.SaajUtils;
 
 /**
  * SAAJ-specific abstract base class of the <code>SoapBody</code> interface. Wraps a {@link javax.xml.soap.SOAPBody}.
@@ -35,18 +38,21 @@ abstract class SaajSoapBody extends SaajSoapElement<SOAPBody> implements SoapBod
         super(body);
     }
 
+    @Override
     public Source getPayloadSource() {
-        SOAPElement bodyElement = getImplementation().getFirstBodyElement(getSaajBody());
-        return bodyElement == null ? null : getImplementation().getSource(bodyElement);
+        SOAPElement bodyElement = SaajUtils.getFirstBodyElement(getSaajBody());
+        return bodyElement != null ? new DOMSource(bodyElement) : null;
     }
 
+    @Override
     public Result getPayloadResult() {
-        getImplementation().removeContents(getSaajBody());
-        return getImplementation().getResult(getSaajBody());
+	    getSaajBody().removeContents();
+	    return new DOMResult(getSaajBody());
     }
 
+    @Override
     public boolean hasFault() {
-        return getImplementation().hasFault(getSaajBody());
+	    return getSaajBody().hasFault();
     }
 
     protected SOAPBody getSaajBody() {

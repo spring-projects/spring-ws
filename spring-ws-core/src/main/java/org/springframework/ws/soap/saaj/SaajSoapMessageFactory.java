@@ -29,6 +29,10 @@ import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.xml.sax.SAXParseException;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -39,10 +43,6 @@ import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportInputStream;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.xml.sax.SAXParseException;
 
 /**
  * SAAJ-specific implementation of the {@link org.springframework.ws.WebServiceMessageFactory WebServiceMessageFactory}.
@@ -182,6 +182,7 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
         try {
             inputStream = checkForUtf8ByteOrderMark(inputStream);
             SOAPMessage saajMessage = messageFactory.createMessage(mimeHeaders, inputStream);
+	        saajMessage.getSOAPPart().getEnvelope();
             postProcess(saajMessage);
             return new SaajSoapMessage(saajMessage, langAttributeOnSoap11FaultString, messageFactory);
         }
@@ -203,14 +204,14 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
                     // fall-through
                 }
             }
-            throw new SoapMessageCreationException("Could not create message from InputStream: " + ex.getMessage(), ex);
-        } catch (SaajSoapEnvelopeException ex) {
-            SAXParseException parseException = getSAXParseException(ex);
-            if (parseException != null) {
-                throw new InvalidXmlException("Could not parse XML", parseException);
-            } else {
-                throw ex;
-            }
+	        SAXParseException parseException = getSAXParseException(ex);
+	        if (parseException != null) {
+		        throw new InvalidXmlException("Could not parse XML", parseException);
+	        } else {
+		        throw new SoapMessageCreationException(
+				        "Could not create message from InputStream: " + ex.getMessage(),
+				        ex);
+	        }
         }
     }
 
