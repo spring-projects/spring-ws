@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,10 +30,12 @@ public class CertificateLoginModule implements LoginModule {
 
     private boolean loginSuccessful = false;
 
+    @Override
     public boolean abort() {
         return true;
     }
 
+    @Override
     public boolean commit() {
         if (!loginSuccessful) {
             subject.getPrincipals().clear();
@@ -43,6 +45,7 @@ public class CertificateLoginModule implements LoginModule {
         return true;
     }
 
+    @Override
     public void initialize(Subject subject,
                            CallbackHandler callbackHandler,
                            java.util.Map sharedState,
@@ -50,6 +53,7 @@ public class CertificateLoginModule implements LoginModule {
         this.subject = subject;
     }
 
+    @Override
     public boolean login() throws LoginException {
         if (subject == null) {
             return false;
@@ -61,6 +65,7 @@ public class CertificateLoginModule implements LoginModule {
         return loginSuccessful;
     }
 
+    @Override
     public boolean logout() {
         subject.getPrincipals().clear();
         subject.getPrivateCredentials().clear();

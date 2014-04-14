@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,11 +55,13 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 
     // ResponseActions implementation
 
+    @Override
     public ResponseActions andExpect(RequestMatcher requestMatcher) {
         addRequestMatcher(requestMatcher);
         return this;
     }
 
+    @Override
     public void andRespond(ResponseCreator responseCreator) {
         Assert.notNull(responseCreator, "'responseCreator' must not be null");
         this.responseCreator = responseCreator;
@@ -67,6 +69,7 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 
     // FaultAwareWebServiceConnection implementation
 
+    @Override
     @SuppressWarnings("unchecked")
     public void send(WebServiceMessage message) throws IOException {
         if (!requestMatchers.isEmpty()) {
@@ -80,6 +83,7 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
         this.request = message;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException {
         if (responseCreator != null) {
@@ -90,14 +94,17 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
         }
     }
 
+    @Override
     public URI getUri() {
         return uri;
     }
 
+    @Override
     public boolean hasError() throws IOException {
         return responseCreator instanceof ErrorResponseCreator;
     }
 
+    @Override
     public String getErrorMessage() throws IOException {
         if (responseCreator instanceof ErrorResponseCreator) {
             return ((ErrorResponseCreator) responseCreator).getErrorMessage();
@@ -107,6 +114,7 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
         }
     }
 
+    @Override
     public void close() throws IOException {
         requestMatchers.clear();
         request = null;

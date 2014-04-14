@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,6 +66,7 @@ public class HttpServletConnection extends AbstractReceiverConnection
         return httpServletResponse;
     }
 
+    @Override
     public void endpointNotFound() {
         getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_NOT_FOUND);
         statusCodeSet = true;
@@ -75,10 +76,12 @@ public class HttpServletConnection extends AbstractReceiverConnection
      * Errors
      */
 
+    @Override
     public boolean hasError() throws IOException {
         return false;
     }
 
+    @Override
     public String getErrorMessage() throws IOException {
         return null;
     }
@@ -87,6 +90,7 @@ public class HttpServletConnection extends AbstractReceiverConnection
      * URI
      */
 
+    @Override
     public URI getUri() throws URISyntaxException {
         return new URI(httpServletRequest.getScheme(), null, httpServletRequest.getServerName(),
                 httpServletRequest.getServerPort(), httpServletRequest.getRequestURI(),
@@ -144,10 +148,12 @@ public class HttpServletConnection extends AbstractReceiverConnection
      * Faults
      */
 
+    @Override
     public boolean hasFault() throws IOException {
         return false;
     }
 
+    @Override
     public void setFault(boolean fault) throws IOException {
         if (fault) {
             getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR);

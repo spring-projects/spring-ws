@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,6 +51,7 @@ class AxiomSoapEnvelope extends AxiomSoapElement implements SoapEnvelope {
         this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
     }
 
+    @Override
     public SoapHeader getHeader() {
         try {
             if (getAxiomEnvelope().getHeader() == null) {
@@ -75,6 +76,7 @@ class AxiomSoapEnvelope extends AxiomSoapElement implements SoapEnvelope {
         }
     }
 
+    @Override
     public SoapBody getBody() {
         if (body == null) {
             try {

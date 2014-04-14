@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2012 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,19 +25,6 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-import org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor;
-import org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping;
-import org.springframework.ws.soap.SoapMessageFactory;
-import org.springframework.ws.soap.SoapVersion;
-import org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor;
-import org.springframework.ws.soap.server.endpoint.mapping.SoapActionEndpointMapping;
-import org.springframework.ws.soap.support.SoapUtils;
-import org.springframework.ws.transport.TransportConstants;
-import org.springframework.ws.transport.TransportInputStream;
-
 import org.apache.axiom.attachments.Attachments;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMException;
@@ -52,6 +39,19 @@ import org.apache.axiom.soap.impl.builder.MTOMStAXSOAPModelBuilder;
 import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+import org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor;
+import org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping;
+import org.springframework.ws.soap.SoapMessageFactory;
+import org.springframework.ws.soap.SoapVersion;
+import org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor;
+import org.springframework.ws.soap.server.endpoint.mapping.SoapActionEndpointMapping;
+import org.springframework.ws.soap.support.SoapUtils;
+import org.springframework.ws.transport.TransportConstants;
+import org.springframework.ws.transport.TransportInputStream;
 
 /**
  * Axiom-specific implementation of the {@link org.springframework.ws.WebServiceMessageFactory WebServiceMessageFactory}
@@ -151,6 +151,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
         this.attachmentCacheThreshold = attachmentCacheThreshold;
     }
 
+    @Override
     public void setSoapVersion(SoapVersion version) {
         if (SoapVersion.SOAP_11 == version) {
             soapFactory = OMAbstractFactory.getSOAP11Factory();
@@ -176,6 +177,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
         this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         if (logger.isInfoEnabled()) {
             logger.info(payloadCaching ? "Enabled payload caching" : "Disabled payload caching");
@@ -186,10 +188,12 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
         }
     }
 
+    @Override
     public AxiomSoapMessage createWebServiceMessage() {
         return new AxiomSoapMessage(soapFactory, payloadCaching, langAttributeOnSoap11FaultString);
     }
 
+    @Override
     public AxiomSoapMessage createWebServiceMessage(InputStream inputStream) throws IOException {
         Assert.isInstanceOf(TransportInputStream.class, inputStream,
                 "AxiomSoapMessageFactory requires a TransportInputStream");

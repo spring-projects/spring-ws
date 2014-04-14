@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,13 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.easymock.EasyMock.*;
+import org.junit.Assert;
+import static org.junit.Assert.fail;
+import org.junit.Before;
+import org.junit.Test;
+
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
@@ -40,14 +47,6 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.mime.MimeMessage;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.fail;
 
 public class MarshallingPayloadEndpointTest {
 
@@ -214,15 +213,18 @@ public class MarshallingPayloadEndpointTest {
 
     private static class SimpleMarshaller implements Marshaller, Unmarshaller {
 
+        @Override
         public void marshal(Object graph, Result result) throws XmlMappingException, IOException {
             fail("Not expected");
         }
 
+        @Override
         public Object unmarshal(Source source) throws XmlMappingException, IOException {
             fail("Not expected");
             return null;
         }
 
+        @Override
         public boolean supports(Class<?> clazz) {
             return false;
         }

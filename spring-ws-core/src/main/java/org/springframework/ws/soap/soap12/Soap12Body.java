@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,14 +43,19 @@ public interface Soap12Body extends SoapBody {
      */
     Soap12Fault addDataEncodingUnknownFault(QName[] subcodes, String reason, Locale locale) throws SoapFaultException;
     
+    @Override
     Soap12Fault getFault();
 
+    @Override
     Soap12Fault addMustUnderstandFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
 
+    @Override
     Soap12Fault addClientOrSenderFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
 
+    @Override
     Soap12Fault addServerOrReceiverFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
 
+    @Override
     Soap12Fault addVersionMismatchFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
     
 }

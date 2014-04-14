@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,9 @@ package org.springframework.ws.support;
 import java.util.List;
 import java.util.Properties;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.ApplicationContext;
@@ -26,9 +29,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-
-import org.junit.Assert;
-import org.junit.Test;
 
 public class DefaultStrategiesHelperTest {
 
@@ -113,6 +113,7 @@ public class DefaultStrategiesHelperTest {
             return applicationContext;
         }
 
+        @Override
         public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
             this.applicationContext = applicationContext;
         }

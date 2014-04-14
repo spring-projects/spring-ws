@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -214,6 +214,7 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
 
     private class MonitoringRunnable implements SchedulingAwareRunnable {
 
+        @Override
         public void run() {
             try {
                 openFolder();
@@ -245,6 +246,7 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
             }
         }
 
+        @Override
         public boolean isLongLived() {
             return true;
         }
@@ -258,6 +260,7 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
             this.message = message;
         }
 
+        @Override
         public void run() {
             MailReceiverConnection connection = new MailReceiverConnection(message, session);
             connection.setTransportUri(transportUri);
@@ -270,6 +273,7 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
             }
         }
 
+        @Override
         public boolean isLongLived() {
             return false;
         }

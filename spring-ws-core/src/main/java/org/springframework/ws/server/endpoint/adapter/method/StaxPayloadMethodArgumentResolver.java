@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
 
     private final XMLInputFactory inputFactory = createXmlInputFactory();
 
+    @Override
     public boolean supportsParameter(MethodParameter parameter) {
         if (parameter.getParameterAnnotation(RequestPayload.class) == null) {
             return false;
@@ -53,6 +54,7 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
         }
     }
 
+    @Override
     public Object resolveArgument(MessageContext messageContext, MethodParameter parameter)
             throws TransformerException, XMLStreamException {
         Source source = messageContext.getRequest().getPayloadSource();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,14 +29,14 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
-import org.springframework.xml.namespace.QNameUtils;
-import org.springframework.xml.transform.TransformerHelper;
-import org.springframework.xml.transform.TraxUtils;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
+
+import org.springframework.xml.namespace.QNameUtils;
+import org.springframework.xml.transform.TransformerHelper;
+import org.springframework.xml.transform.TraxUtils;
 
 /**
  * Helper class for determining the root qualified name of a Web Service payload.
@@ -92,6 +92,7 @@ public abstract class PayloadRootUtils {
 
         private QName result;
 
+        @Override
         public void domSource(Node node) throws Exception {
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 result = QNameUtils.getQNameForNode(node);
@@ -102,6 +103,7 @@ public abstract class PayloadRootUtils {
             }
         }
 
+        @Override
         public void staxSource(XMLEventReader eventReader) throws Exception {
             XMLEvent event = eventReader.peek();
             if (event != null && event.isStartDocument()) {
@@ -117,6 +119,7 @@ public abstract class PayloadRootUtils {
             }
         }
 
+        @Override
         public void staxSource(XMLStreamReader streamReader) throws Exception {
             if (streamReader.getEventType() == XMLStreamConstants.START_DOCUMENT) {
                 try {
@@ -132,18 +135,22 @@ public abstract class PayloadRootUtils {
             }
         }
 
+        @Override
         public void saxSource(XMLReader reader, InputSource inputSource) throws Exception {
             // Do nothing
         }
 
+        @Override
         public void streamSource(InputStream inputStream) throws Exception {
             // Do nothing
         }
 
+        @Override
         public void streamSource(Reader reader) throws Exception {
             // Do nothing
         }
 
+        @Override
         public void source(String systemId) throws Exception {
             // Do nothing
         }

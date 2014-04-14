@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
  */
 public class WebServiceMessageListener extends JmsMessageReceiver implements SessionAwareMessageListener<Message> {
 
+    @Override
     public void onMessage(Message message, Session session) throws JMSException {
         try {
             handleMessage(message, session);

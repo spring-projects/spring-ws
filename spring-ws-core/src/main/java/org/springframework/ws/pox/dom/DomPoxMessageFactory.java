@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2013 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,6 +76,7 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
 		documentBuilderFactory.setExpandEntityReferences(expandEntityRef);
 	}
 
+    @Override
     public DomPoxMessage createWebServiceMessage() {
         try {
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -90,6 +91,7 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
         }
     }
 
+    @Override
     public DomPoxMessage createWebServiceMessage(InputStream inputStream) throws IOException {
         try {
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();

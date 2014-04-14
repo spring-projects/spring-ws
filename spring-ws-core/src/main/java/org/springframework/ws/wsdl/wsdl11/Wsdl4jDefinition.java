@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@ import javax.wsdl.xml.WSDLWriter;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
+import org.w3c.dom.Document;
+
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.wsdl.WsdlDefinitionException;
-
-import org.w3c.dom.Document;
 
 /**
  * Implementation of the <code>Wsdl11Definition</code> based on WSDL4J. A {@link javax.wsdl.Definition} can be given as
@@ -80,6 +80,7 @@ public class Wsdl4jDefinition implements Wsdl11Definition {
         }
     }
 
+    @Override
     public Source getSource() {
         synchronized (monitor) {
             Assert.notNull(definition, "definition must not be null");

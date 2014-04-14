@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,13 +24,13 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-import org.springframework.ws.stream.StreamingPayload;
-
 import org.apache.axiom.om.OMDataSource;
 import org.apache.axiom.om.OMOutputFormat;
 import org.apache.axiom.om.util.StAXUtils;
+
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+import org.springframework.ws.stream.StreamingPayload;
 
 /**
  * Implementation of {@link OMDataSource} that wraps a {@link StreamingPayload}.
@@ -47,6 +47,7 @@ class StreamingOMDataSource implements OMDataSource {
         this.payload = payload;
     }
 
+    @Override
     public void serialize(OutputStream output, OMOutputFormat format) throws XMLStreamException {
         XMLStreamWriter streamWriter;
         if (format != null && StringUtils.hasLength(format.getCharSetEncoding())) {
@@ -58,16 +59,19 @@ class StreamingOMDataSource implements OMDataSource {
         serialize(streamWriter);
     }
 
+    @Override
     public void serialize(Writer writer, OMOutputFormat format) throws XMLStreamException {
         XMLStreamWriter streamWriter = StAXUtils.createXMLStreamWriter(writer);
         serialize(streamWriter);
     }
 
+    @Override
     public void serialize(XMLStreamWriter xmlWriter) throws XMLStreamException {
         payload.writeTo(xmlWriter);
         xmlWriter.flush();
     }
 
+    @Override
     public XMLStreamReader getReader() throws XMLStreamException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         serialize(bos, null);

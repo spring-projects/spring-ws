@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,18 +93,22 @@ public abstract class MarshallingUtils {
             this.mimeMessage = mimeMessage;
         }
 
+        @Override
         public boolean isXopPackage() {
             return mimeMessage.isXopPackage();
         }
 
+        @Override
         public boolean convertToXopPackage() {
             return mimeMessage.convertToXopPackage();
         }
 
+        @Override
         public void addAttachment(String contentId, DataHandler dataHandler) {
             mimeMessage.addAttachment(contentId, dataHandler);
         }
 
+        @Override
         public DataHandler getAttachment(String contentId) {
             Attachment attachment = mimeMessage.getAttachment(contentId);
             return attachment != null ? attachment.getDataHandler() : null;

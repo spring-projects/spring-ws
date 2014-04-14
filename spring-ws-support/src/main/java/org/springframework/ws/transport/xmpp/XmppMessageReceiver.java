@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
 
 package org.springframework.ws.transport.xmpp;
 
-import org.springframework.ws.transport.support.AbstractStandaloneMessageReceiver;
-
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -25,6 +23,8 @@ import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
+
+import org.springframework.ws.transport.support.AbstractStandaloneMessageReceiver;
 
 /**
  * Server-side component for receiving XMPP (Jabber) messages.  Requires a {@linkplain #setConnection(XMPPConnection)
@@ -94,6 +94,7 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 
     private class WebServicePacketListener implements PacketListener {
 
+        @Override
         public void processPacket(Packet packet) {
             logger.info("Received " + packet);
             if (packet instanceof Message) {

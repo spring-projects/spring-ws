@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,6 +50,7 @@ public abstract class AbstractMonitoringStrategy implements MonitoringStrategy {
         this.deleteMessages = deleteMessages;
     }
 
+    @Override
     public int getFolderOpenMode() {
         return deleteMessages ? Folder.READ_WRITE : Folder.READ_ONLY;
     }
@@ -65,6 +66,7 @@ public abstract class AbstractMonitoringStrategy implements MonitoringStrategy {
      * @throws MessagingException   in case of JavaMail errors
      * @throws InterruptedException when a thread is interrupted
      */
+    @Override
     public final Message[] monitor(Folder folder) throws MessagingException, InterruptedException {
         waitForNewMessages(folder);
         Message[] messages = searchForNewMessages(folder);

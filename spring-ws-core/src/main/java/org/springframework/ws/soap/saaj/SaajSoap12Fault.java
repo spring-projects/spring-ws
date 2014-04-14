@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,10 +34,12 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
         super(fault);
     }
 
+    @Override
     public String getFaultActorOrRole() {
 	    return getSaajFault().getFaultRole();
     }
 
+    @Override
     public void setFaultActorOrRole(String faultRole) {
         try {
 	        getSaajFault().setFaultRole(faultRole);
@@ -47,10 +49,12 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
         }
     }
 
+    @Override
     public Iterator<QName> getFaultSubcodes() {
 	    return getSaajFault().getFaultSubcodes();
     }
 
+    @Override
     public void addFaultSubcode(QName subcode) {
         try {
 	        getSaajFault().appendFaultSubcode(subcode);
@@ -60,10 +64,12 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
         }
     }
 
+    @Override
     public String getFaultNode() {
 	    return getSaajFault().getFaultNode();
     }
 
+    @Override
     public void setFaultNode(String uri) {
         try {
 	        getSaajFault().setFaultNode(uri);
@@ -74,6 +80,7 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
 
     }
 
+    @Override
     public void setFaultReasonText(Locale locale, String text) {
         try {
 	        getSaajFault().addFaultReasonText(text, locale);
@@ -84,6 +91,7 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
 
     }
 
+    @Override
     public String getFaultReasonText(Locale locale) {
         try {
 	        return getSaajFault().getFaultReasonText(locale);
@@ -93,6 +101,7 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
         }
     }
 
+    @Override
     public String getFaultStringOrReason() {
 	    return getSaajFault().getFaultString();
     }

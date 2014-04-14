@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,12 +34,14 @@ import org.springframework.ws.soap.SoapMessage;
  */
 public class SoapMethodArgumentResolver implements MethodArgumentResolver {
 
+    @Override
     public boolean supportsParameter(MethodParameter parameter) {
         Class<?> parameterType = parameter.getParameterType();
         return SoapMessage.class.equals(parameterType) || SoapBody.class.equals(parameterType) ||
                 SoapEnvelope.class.equals(parameterType) || SoapHeader.class.equals(parameterType);
     }
 
+    @Override
     public Object resolveArgument(MessageContext messageContext, MethodParameter parameter) {
         Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
         SoapMessage request = (SoapMessage) messageContext.getRequest();

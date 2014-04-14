@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ import org.w3c.dom.Node;
  */
 public class JaxenXPathTemplate extends AbstractXPathTemplate {
 
+    @Override
     public boolean evaluateAsBoolean(String expression, Source context) throws XPathException {
         try {
             XPath xpath = createXPath(expression);
@@ -54,6 +55,7 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
         }
     }
 
+    @Override
     public Node evaluateAsNode(String expression, Source context) throws XPathException {
         try {
             XPath xpath = createXPath(expression);
@@ -68,6 +70,7 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public List<Node> evaluateAsNodeList(String expression, Source context) throws XPathException {
         try {
@@ -83,6 +86,7 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
         }
     }
 
+    @Override
     public double evaluateAsDouble(String expression, Source context) throws XPathException {
         try {
             XPath xpath = createXPath(expression);
@@ -97,6 +101,7 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
         }
     }
 
+    @Override
     public String evaluateAsString(String expression, Source context) throws XPathException {
         try {
             XPath xpath = createXPath(expression);
@@ -111,6 +116,7 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
         }
     }
 
+    @Override
     public <T> T evaluateAsObject(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException {
         try {
             XPath xpath = createXPath(expression);
@@ -137,6 +143,7 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
         }
     }
 
+    @Override
     public <T> List<T> evaluate(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException {
         try {
             XPath xpath = createXPath(expression);

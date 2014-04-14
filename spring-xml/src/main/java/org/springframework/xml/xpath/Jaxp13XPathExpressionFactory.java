@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,11 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.springframework.xml.namespace.SimpleNamespaceContext;
-
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import org.springframework.xml.namespace.SimpleNamespaceContext;
 
 /**
  * JAXP 1.3-specific factory creating {@link XPathExpression} objects.
@@ -98,10 +98,12 @@ abstract class Jaxp13XPathExpressionFactory {
             this.xpathExpression = xpathExpression;
         }
 
+        @Override
         public String evaluateAsString(Node node) {
             return (String) evaluate(node, XPathConstants.STRING);
         }
 
+        @Override
         public List<Node> evaluateAsNodeList(Node node) {
             NodeList nodeList = (NodeList) evaluate(node, XPathConstants.NODESET);
             return toNodeList(nodeList);
@@ -127,18 +129,22 @@ abstract class Jaxp13XPathExpressionFactory {
             return result;
         }
 
+        @Override
         public double evaluateAsNumber(Node node) {
             return (Double) evaluate(node, XPathConstants.NUMBER);
         }
 
+        @Override
         public boolean evaluateAsBoolean(Node node) {
             return (Boolean) evaluate(node, XPathConstants.BOOLEAN);
         }
 
+        @Override
         public Node evaluateAsNode(Node node) {
             return (Node) evaluate(node, XPathConstants.NODE);
         }
 
+        @Override
         public <T> T evaluateAsObject(Node node, NodeMapper<T> nodeMapper) throws XPathException {
             Node result = (Node) evaluate(node, XPathConstants.NODE);
             if (result != null) {
@@ -154,6 +160,7 @@ abstract class Jaxp13XPathExpressionFactory {
             }
         }
 
+        @Override
         public <T> List<T> evaluate(Node node, NodeMapper<T> nodeMapper) throws XPathException {
             NodeList nodes = (NodeList) evaluate(node, XPathConstants.NODESET);
             List<T> results = new ArrayList<T>(nodes.getLength());

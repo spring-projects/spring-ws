@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -98,20 +98,24 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
         messageIdStrategy = new UuidMessageIdStrategy();
     }
 
+    @Override
     public final void setActorOrRole(String actorOrRole) {
         Assert.notNull(actorOrRole, "actorOrRole must not be null");
         actorsOrRoles = new String[]{actorOrRole};
     }
 
+    @Override
     public final void setActorsOrRoles(String[] actorsOrRoles) {
         Assert.notEmpty(actorsOrRoles, "actorsOrRoles must not be empty");
         this.actorsOrRoles = actorsOrRoles;
     }
 
+    @Override
     public final void setUltimateReceiver(boolean ultimateReceiver) {
         this.isUltimateReceiver = ultimateReceiver;
     }
 
+    @Override
     public final int getOrder() {
         return order;
     }
@@ -206,12 +210,14 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
         this.versions = versions;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         if (logger.isInfoEnabled()) {
             logger.info("Supporting " + Arrays.asList(versions));
         }
     }
 
+    @Override
     public final EndpointInvocationChain getEndpoint(MessageContext messageContext) throws TransformerException {
         Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
         SoapMessage request = (SoapMessage) messageContext.getRequest();

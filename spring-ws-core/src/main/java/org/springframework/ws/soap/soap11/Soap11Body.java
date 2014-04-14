@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,13 +44,18 @@ public interface Soap11Body extends SoapBody {
      */
     Soap11Fault addFault(QName faultCode, String faultString, Locale faultStringLocale) throws SoapFaultException;
 
+    @Override
     Soap11Fault getFault();
 
+    @Override
     Soap11Fault addMustUnderstandFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
 
+    @Override
     Soap11Fault addClientOrSenderFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
 
+    @Override
     Soap11Fault addServerOrReceiverFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
 
+    @Override
     Soap11Fault addVersionMismatchFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
 }

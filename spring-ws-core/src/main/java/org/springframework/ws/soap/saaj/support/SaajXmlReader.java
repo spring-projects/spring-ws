@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,15 +22,15 @@ import javax.xml.soap.Node;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.Text;
 
-import org.springframework.util.StringUtils;
-import org.springframework.xml.sax.AbstractXmlReader;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.helpers.AttributesImpl;
+
+import org.springframework.util.StringUtils;
+import org.springframework.xml.sax.AbstractXmlReader;
 
 /**
  * SAX <code>XMLReader</code> that reads from a SAAJ <code>Node</code>. Consumes <code>XMLEvents</code> from an
@@ -96,6 +96,7 @@ public class SaajXmlReader extends AbstractXmlReader {
      * @param ignored is ignored
      * @throws org.xml.sax.SAXException A SAX exception, possibly wrapping a <code>XMLStreamException</code>
      */
+    @Override
     public final void parse(InputSource ignored) throws SAXException {
         parse();
     }
@@ -108,6 +109,7 @@ public class SaajXmlReader extends AbstractXmlReader {
      * @param ignored is ignored
      * @throws SAXException A SAX exception, possibly wrapping a <code>XMLStreamException</code>
      */
+    @Override
     public final void parse(String ignored) throws SAXException {
         parse();
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,12 @@ package org.springframework.ws.server.endpoint;
 
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.springframework.core.Ordered;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointExceptionResolver;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Abstract base class for {@link EndpointExceptionResolver EndpointExceptionResolvers}.
@@ -83,6 +83,7 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
         this.order = order;
     }
 
+    @Override
     public final int getOrder() {
         return order;
     }
@@ -93,6 +94,7 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
      *
      * @see #resolveExceptionInternal(MessageContext,Object,Exception)
      */
+    @Override
     public final boolean resolveException(MessageContext messageContext, Object endpoint, Exception ex) {
         Object mappedEndpoint = endpoint instanceof MethodEndpoint ? ((MethodEndpoint) endpoint).getBean() : endpoint;
         if (mappedEndpoints != null && !mappedEndpoints.contains(mappedEndpoint)) {

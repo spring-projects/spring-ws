@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,16 +54,19 @@ public class DelegatingSoapEndpointMapping implements InitializingBean, SoapEndp
         this.delegate = delegate;
     }
 
+    @Override
     public final void setActorOrRole(String actorOrRole) {
         Assert.notNull(actorOrRole, "actorOrRole must not be null");
         actorsOrRoles = new String[]{actorOrRole};
     }
 
+    @Override
     public final void setActorsOrRoles(String[] actorsOrRoles) {
         Assert.notEmpty(actorsOrRoles, "actorsOrRoles must not be empty");
         this.actorsOrRoles = actorsOrRoles;
     }
 
+    @Override
     public final void setUltimateReceiver(boolean ultimateReceiver) {
         isUltimateReceiver = ultimateReceiver;
     }
@@ -74,6 +77,7 @@ public class DelegatingSoapEndpointMapping implements InitializingBean, SoapEndp
      *
      * @see #setActorsOrRoles(String[])
      */
+    @Override
     public EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception {
         EndpointInvocationChain delegateChain = delegate.getEndpoint(messageContext);
         if (delegateChain != null) {
@@ -85,6 +89,7 @@ public class DelegatingSoapEndpointMapping implements InitializingBean, SoapEndp
         }
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(delegate, "delegate is required");
     }

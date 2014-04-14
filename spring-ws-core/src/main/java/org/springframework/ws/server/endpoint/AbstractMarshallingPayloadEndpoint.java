@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,9 @@ package org.springframework.ws.server.endpoint;
 
 import java.io.IOException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
@@ -25,9 +28,6 @@ import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.support.MarshallingUtils;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Endpoint that unmarshals the request payload, and marshals the response object. This endpoint needs a
@@ -122,10 +122,12 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
         this.unmarshaller = unmarshaller;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         afterMarshallerSet();
     }
 
+    @Override
     public final void invoke(MessageContext messageContext) throws Exception {
         WebServiceMessage request = messageContext.getRequest();
         Object requestObject = unmarshalRequest(request);

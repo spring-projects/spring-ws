@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,6 +19,9 @@ package org.springframework.ws.soap.addressing.server;
 import java.io.IOException;
 import java.net.URI;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapHeaderElement;
@@ -30,9 +33,6 @@ import org.springframework.ws.soap.addressing.version.AddressingVersion;
 import org.springframework.ws.soap.server.SoapEndpointInterceptor;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * {@link SoapEndpointInterceptor} implementation that deals with WS-Addressing headers. Stateful, and instantiated by
@@ -70,6 +70,7 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
         this.faultAction = faultAction;
     }
 
+    @Override
     public final boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
         Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
         SoapMessage request = (SoapMessage) messageContext.getRequest();
@@ -85,10 +86,12 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
         return true;
     }
 
+    @Override
     public final boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
         return handleResponseOrFault(messageContext, false);
     }
 
+    @Override
     public final boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
         return handleResponseOrFault(messageContext, true);
     }
@@ -178,9 +181,11 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
         return responseMessageId;
     }
 
+    @Override
     public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
     }
 
+    @Override
     public boolean understands(SoapHeaderElement header) {
         return version.understands(header);
     }

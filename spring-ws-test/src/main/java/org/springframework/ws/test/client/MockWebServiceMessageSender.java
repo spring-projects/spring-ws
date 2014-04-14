@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ class MockWebServiceMessageSender implements WebServiceMessageSender {
 
     private Iterator<MockSenderConnection> connectionIterator;
 
+    @Override
     public MockSenderConnection createConnection(URI uri) throws IOException {
         Assert.notNull(uri, "'uri' must not be null");
         if (connectionIterator == null) {
@@ -56,6 +57,7 @@ class MockWebServiceMessageSender implements WebServiceMessageSender {
     /**
      * Always returns {@code true}.
      */
+    @Override
     public boolean supports(URI uri) {
         return true;
     }

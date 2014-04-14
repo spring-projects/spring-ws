@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,15 +26,15 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.pox.PoxMessage;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportOutputStream;
 import org.springframework.xml.namespace.QNameUtils;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 /**
  * Implementation of the <code>PoxMessage</code> interface that is based on a DOM Document.
@@ -70,6 +70,7 @@ public class DomPoxMessage implements PoxMessage {
         return document;
     }
 
+    @Override
     public Result getPayloadResult() {
         NodeList children = document.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
@@ -78,6 +79,7 @@ public class DomPoxMessage implements PoxMessage {
         return new DOMResult(document);
     }
 
+    @Override
     public Source getPayloadSource() {
         return new DOMSource(document);
     }
@@ -100,6 +102,7 @@ public class DomPoxMessage implements PoxMessage {
         return builder.toString();
     }
 
+    @Override
     public void writeTo(OutputStream outputStream) throws IOException {
         try {
             if (outputStream instanceof TransportOutputStream) {

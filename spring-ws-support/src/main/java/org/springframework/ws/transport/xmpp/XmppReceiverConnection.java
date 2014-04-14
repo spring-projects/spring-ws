@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
 
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.packet.Message;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractReceiverConnection;
 import org.springframework.ws.transport.xmpp.support.XmppTransportUtils;
-
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.packet.Message;
 
 /**
  * Implementation of {@link org.springframework.ws.transport.WebServiceConnection} that is used for server-side XMPP
@@ -78,6 +78,7 @@ public class XmppReceiverConnection extends AbstractReceiverConnection {
     * URI
     */
 
+    @Override
     public URI getUri() throws URISyntaxException {
         return XmppTransportUtils.toUri(requestMessage);
     }
@@ -86,10 +87,12 @@ public class XmppReceiverConnection extends AbstractReceiverConnection {
     * Errors
     */
 
+    @Override
     public boolean hasError() {
         return XmppTransportUtils.hasError(responseMessage);
     }
 
+    @Override
     public String getErrorMessage() {
         return XmppTransportUtils.getErrorMessage(responseMessage);
     }

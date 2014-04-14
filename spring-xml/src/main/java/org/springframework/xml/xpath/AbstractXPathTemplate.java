@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,12 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 
-import org.springframework.xml.transform.TransformerObjectSupport;
-
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+
+import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
  * Abstract base class for implementations of {@link XPathOperations}. Contains a namespaces property.
@@ -48,6 +48,7 @@ public abstract class AbstractXPathTemplate extends TransformerObjectSupport imp
         this.namespaces = namespaces;
     }
 
+    @Override
     public final void evaluate(String expression, Source context, NodeCallbackHandler callbackHandler)
             throws XPathException {
         evaluate(expression, context, new NodeCallbackHandlerNodeMapper(callbackHandler));
@@ -62,6 +63,7 @@ public abstract class AbstractXPathTemplate extends TransformerObjectSupport imp
             this.callbackHandler = callbackHandler;
         }
 
+        @Override
         public Object mapNode(Node node, int nodeNum) throws DOMException {
             callbackHandler.processNode(node);
             return null;

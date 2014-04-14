@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,6 +18,10 @@ package org.springframework.ws.test.server;
 
 import java.io.IOException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import static org.springframework.ws.test.support.AssertionErrors.fail;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
@@ -28,11 +32,6 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.server.SoapMessageDispatcher;
 import org.springframework.ws.test.support.MockStrategiesHelper;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
  * <strong>Main entry point for server-side Web service testing</strong>. Typically used to test a {@link
@@ -198,6 +197,7 @@ public class MockWebServiceClient {
             this.messageContext = messageContext;
         }
 
+        @Override
         public ResponseActions andExpect(ResponseMatcher responseMatcher) {
             WebServiceMessage request = messageContext.getRequest();
             WebServiceMessage response = messageContext.getResponse();

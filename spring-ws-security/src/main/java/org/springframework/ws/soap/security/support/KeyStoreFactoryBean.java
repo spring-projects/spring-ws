@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +21,13 @@ import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Spring factory bean for a {@link KeyStore}.
@@ -87,18 +87,22 @@ public class KeyStoreFactoryBean implements FactoryBean<KeyStore>, InitializingB
         this.type = type;
     }
 
+    @Override
     public KeyStore getObject() {
         return keyStore;
     }
 
+    @Override
     public Class<KeyStore> getObjectType() {
         return KeyStore.class;
     }
 
+    @Override
     public boolean isSingleton() {
         return true;
     }
 
+    @Override
     public final void afterPropertiesSet() throws GeneralSecurityException, IOException {
         if (StringUtils.hasLength(provider) && StringUtils.hasLength(type)) {
             keyStore = KeyStore.getInstance(type, provider);

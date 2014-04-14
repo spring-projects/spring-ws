@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,6 +82,7 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
         this.messageSenders = messageSenders;
     }
 
+    @Override
     public void afterPropertiesSet() {
         Assert.notNull(getMessageFactory(), "Property 'messageFactory' is required");
         Assert.notEmpty(getMessageSenders(), "Property 'messageSenders' is required");

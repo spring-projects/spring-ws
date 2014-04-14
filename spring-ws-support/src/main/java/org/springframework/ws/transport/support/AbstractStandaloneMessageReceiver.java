@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,7 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
     }
 
     /** Return whether this server is currently running, that is, whether it has been started and not stopped yet. */
+    @Override
     public final boolean isRunning() {
         synchronized (lifecycleMonitor) {
             return running;
@@ -67,6 +68,7 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
     }
 
     /** Calls {@link #shutdown()} when the BeanFactory destroys the receiver instance. */
+    @Override
     public void destroy() {
         shutdown();
     }
@@ -86,6 +88,7 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
     }
 
     /** Start this server. */
+    @Override
     public final void start() {
         synchronized (lifecycleMonitor) {
             running = true;
@@ -94,6 +97,7 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
     }
 
     /** Stop this server. */
+    @Override
     public final void stop() {
         synchronized (lifecycleMonitor) {
             running = false;

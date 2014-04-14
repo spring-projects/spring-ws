@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,10 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
@@ -38,10 +42,6 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 
@@ -128,10 +128,12 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 
     private static class PersonValidator implements Validator {
 
+        @Override
         public boolean supports(Class<?> clazz) {
             return Person.class.equals(clazz);
         }
 
+        @Override
         public void validate(Object obj, Errors e) {
             ValidationUtils.rejectIfEmpty(e, "name", "name.empty");
             Person p = (Person) obj;
@@ -184,14 +186,17 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
             this.person = person;
         }
 
+        @Override
         public Object unmarshal(Source source) throws XmlMappingException, IOException {
             return person;
         }
 
+        @Override
         public boolean supports(Class<?> clazz) {
             return Person.class.equals(clazz);
         }
 
+        @Override
         public void marshal(Object graph, Result result) throws XmlMappingException, IOException {
         }
     }

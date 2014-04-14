@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -143,11 +143,13 @@ public class MailMessageSender implements WebServiceMessageSender, InitializingB
         this.transportUri = new URLName(transportUri);
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(transportUri, "'transportUri' is required");
         Assert.notNull(storeUri, "'storeUri' is required");
     }
 
+    @Override
     public WebServiceConnection createConnection(URI uri) throws IOException {
         InternetAddress to = MailTransportUtils.getTo(uri);
         MailSenderConnection connection =
@@ -162,6 +164,7 @@ public class MailMessageSender implements WebServiceMessageSender, InitializingB
         return connection;
     }
 
+    @Override
     public boolean supports(URI uri) {
         return uri.getScheme().equals(MailTransportConstants.MAIL_URI_SCHEME);
     }

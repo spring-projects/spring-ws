@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,6 +53,7 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
 
     private XMLEventFactory eventFactory;
 
+    @Override
     public final void invoke(MessageContext messageContext) throws Exception {
         XMLEventReader eventReader = getEventReader(messageContext.getRequest().getPayloadSource());
         XMLEventWriter streamWriter = new ResponseCreatingEventWriter(messageContext);
@@ -163,15 +164,18 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
             this.messageContext = messageContext;
         }
 
+        @Override
         public NamespaceContext getNamespaceContext() {
             return eventWriter.getNamespaceContext();
         }
 
+        @Override
         public void setNamespaceContext(NamespaceContext context) throws XMLStreamException {
             createEventWriter();
             eventWriter.setNamespaceContext(context);
         }
 
+        @Override
         public void add(XMLEventReader reader) throws XMLStreamException {
             createEventWriter();
             while (reader.hasNext()) {
@@ -179,6 +183,7 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
             }
         }
 
+        @Override
         public void add(XMLEvent event) throws XMLStreamException {
             createEventWriter();
             eventWriter.add(event);
@@ -197,28 +202,33 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
             }
         }
 
+        @Override
         public void close() throws XMLStreamException {
             if (eventWriter != null) {
                 eventWriter.close();
             }
         }
 
+        @Override
         public void flush() throws XMLStreamException {
             if (eventWriter != null) {
                 eventWriter.flush();
             }
         }
 
+        @Override
         public String getPrefix(String uri) throws XMLStreamException {
             createEventWriter();
             return eventWriter.getPrefix(uri);
         }
 
+        @Override
         public void setDefaultNamespace(String uri) throws XMLStreamException {
             createEventWriter();
             eventWriter.setDefaultNamespace(uri);
         }
 
+        @Override
         public void setPrefix(String prefix, String uri) throws XMLStreamException {
             createEventWriter();
             eventWriter.setPrefix(prefix, uri);

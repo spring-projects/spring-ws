@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -153,6 +153,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
         this.validateResponse = validateResponse;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         if (validator == null && !ObjectUtils.isEmpty(schemas)) {
             Assert.hasLength(schemaLanguage, "schemaLanguage is required");
@@ -178,6 +179,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
      * @return <code>true</code> if the message is valid; <code>false</code> otherwise
      * @see #setValidateRequest(boolean)
      */
+    @Override
     public boolean handleRequest(MessageContext messageContext, Object endpoint)
             throws IOException, SAXException, TransformerException {
         if (validateRequest) {
@@ -221,6 +223,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
      * @return <code>true</code> if the response is valid; <code>false</code> otherwise
      * @see #setValidateResponse(boolean)
      */
+    @Override
     public boolean handleResponse(MessageContext messageContext, Object endpoint) throws IOException, SAXException {
         if (validateResponse) {
             Source responseSource = getValidationResponseSource(messageContext.getResponse());
@@ -253,11 +256,13 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
     }
 
     /** Does nothing by default. Faults are not validated. */
+    @Override
     public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
         return true;
     }
 
     /** Does nothing by default.*/
+    @Override
     public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
     }
 

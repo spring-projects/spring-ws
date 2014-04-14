@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2012 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
@@ -43,9 +46,6 @@ import org.springframework.ws.server.endpoint.adapter.PayloadEndpointAdapter;
 import org.springframework.ws.soap.server.SoapMessageDispatcher;
 import org.springframework.ws.support.DefaultStrategiesHelper;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Central dispatcher for use within Spring-WS, dispatching Web service messages to registered endpoints.
@@ -148,16 +148,19 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
         this.endpointMappings = endpointMappings;
     }
 
+    @Override
     public final void setBeanName(String beanName) {
         this.beanName = beanName;
     }
 
+    @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         initEndpointAdapters(applicationContext);
         initEndpointExceptionResolvers(applicationContext);
         initEndpointMappings(applicationContext);
     }
 
+    @Override
     public void receive(MessageContext messageContext) throws Exception {
         // Let's keep a reference to the request content as it came in, it might be changed by interceptors in dispatch()
         String requestContent = "";

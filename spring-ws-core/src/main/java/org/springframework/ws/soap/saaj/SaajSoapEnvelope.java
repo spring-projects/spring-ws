@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,7 @@ class SaajSoapEnvelope extends SaajSoapElement<SOAPEnvelope> implements SoapEnve
         this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
     }
 
+    @Override
     public SoapBody getBody() {
         if (body == null) {
             try {
@@ -65,6 +66,7 @@ class SaajSoapEnvelope extends SaajSoapElement<SOAPEnvelope> implements SoapEnve
         return body;
     }
 
+    @Override
     public SoapHeader getHeader() {
         if (header == null) {
             try {

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2012 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,11 +33,6 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import javax.xml.xpath.XPathFactoryConfigurationException;
 
-import org.springframework.util.xml.StaxUtils;
-import org.springframework.xml.namespace.SimpleNamespaceContext;
-import org.springframework.xml.transform.TransformerHelper;
-import org.springframework.xml.transform.TraxUtils;
-
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -45,6 +40,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
+
+import org.springframework.util.xml.StaxUtils;
+import org.springframework.xml.namespace.SimpleNamespaceContext;
+import org.springframework.xml.transform.TransformerHelper;
+import org.springframework.xml.transform.TraxUtils;
 
 /**
  * Implementation of {@link XPathOperations} that uses JAXP 1.3. JAXP 1.3 is part of Java SE since 1.5.
@@ -72,15 +72,18 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
         }
     }
 
+    @Override
     public boolean evaluateAsBoolean(String expression, Source context) throws XPathException {
         Boolean result = (Boolean) evaluate(expression, context, XPathConstants.BOOLEAN);
         return result != null && result;
     }
 
+    @Override
     public Node evaluateAsNode(String expression, Source context) throws XPathException {
         return (Node) evaluate(expression, context, XPathConstants.NODE);
     }
 
+    @Override
     public List<Node> evaluateAsNodeList(String expression, Source context) throws XPathException {
         NodeList result = (NodeList) evaluate(expression, context, XPathConstants.NODESET);
         List<Node> nodes = new ArrayList<Node>(result.getLength());
@@ -90,15 +93,18 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
         return nodes;
     }
 
+    @Override
     public double evaluateAsDouble(String expression, Source context) throws XPathException {
         Double result = (Double) evaluate(expression, context, XPathConstants.NUMBER);
         return result != null ? result : Double.NaN;
     }
 
+    @Override
     public String evaluateAsString(String expression, Source context) throws XPathException {
         return (String) evaluate(expression, context, XPathConstants.STRING);
     }
 
+    @Override
     public <T> T evaluateAsObject(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException {
         Node node = evaluateAsNode(expression, context);
         if (node != null) {
@@ -114,6 +120,7 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
         }
     }
 
+    @Override
     public <T> List<T> evaluate(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException {
         NodeList nodes = (NodeList) evaluate(expression, context, XPathConstants.NODESET);
         List<T> results = new ArrayList<T>(nodes.getLength());
@@ -173,33 +180,40 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
             this.returnType = returnType;
         }
 
+        @Override
         public void domSource(Node node) throws XPathExpressionException {
             result = xpath.evaluate(expression, node, returnType);
         }
 
+        @Override
         public void saxSource(XMLReader reader, InputSource inputSource) throws XPathExpressionException {
             inputSource(inputSource);
         }
 
+        @Override
         public void staxSource(XMLEventReader eventReader)
                 throws XPathExpressionException, XMLStreamException, TransformerException {
             Element element = getRootElement(StaxUtils.createCustomStaxSource(eventReader));
             domSource(element);
         }
 
+        @Override
         public void staxSource(XMLStreamReader streamReader) throws TransformerException, XPathExpressionException {
             Element element = getRootElement(StaxUtils.createCustomStaxSource(streamReader));
             domSource(element);
         }
 
+        @Override
         public void streamSource(InputStream inputStream) throws XPathExpressionException {
             inputSource(new InputSource(inputStream));
         }
 
+        @Override
         public void streamSource(Reader reader) throws XPathExpressionException {
             inputSource(new InputSource(reader));
         }
 
+        @Override
         public void source(String systemId) throws XPathExpressionException {
             inputSource(new InputSource(systemId));
         }

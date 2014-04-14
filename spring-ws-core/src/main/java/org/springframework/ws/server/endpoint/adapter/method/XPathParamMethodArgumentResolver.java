@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,6 +25,11 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.ConversionServiceFactory;
@@ -32,11 +37,6 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.annotation.XPathParam;
 import org.springframework.ws.server.endpoint.support.NamespaceUtils;
 import org.springframework.xml.transform.TransformerHelper;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * Implementation of {@link MethodArgumentResolver} that supports the {@link XPathParam @XPathParam} annotation.
@@ -71,6 +71,7 @@ public class XPathParamMethodArgumentResolver implements MethodArgumentResolver 
         this.transformerHelper = transformerHelper;
     }
 
+    @Override
     public boolean supportsParameter(MethodParameter parameter) {
         if (parameter.getParameterAnnotation(XPathParam.class) == null) {
             return false;
@@ -87,6 +88,7 @@ public class XPathParamMethodArgumentResolver implements MethodArgumentResolver 
         }
     }
 
+    @Override
     public Object resolveArgument(MessageContext messageContext, MethodParameter parameter)
             throws TransformerException, XPathExpressionException {
         Class<?> parameterType = parameter.getParameterType();

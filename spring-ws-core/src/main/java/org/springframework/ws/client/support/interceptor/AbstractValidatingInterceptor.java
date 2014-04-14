@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ package org.springframework.ws.client.support.interceptor;
 import java.io.IOException;
 import javax.xml.transform.Source;
 
+import org.xml.sax.SAXParseException;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -33,8 +35,6 @@ import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.XsdSchema;
 import org.springframework.xml.xsd.XsdSchemaCollection;
-
-import org.xml.sax.SAXParseException;
 
 /**
  * Abstract base class for {@link ClientInterceptor} implementations that validate part of the message using a schema.
@@ -138,6 +138,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
         this.validateResponse = validateResponse;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         if (validator == null && !ObjectUtils.isEmpty(schemas)) {
             Assert.hasLength(schemaLanguage, "schemaLanguage is required");
@@ -162,6 +163,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
      * @return <code>true</code> if the message is valid; <code>false</code> otherwise
      * @see #setValidateRequest(boolean)
      */
+    @Override
     public boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
         if (validateRequest) {
             Source requestSource = getValidationRequestSource(messageContext.getRequest());
@@ -212,6 +214,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
      * @return <code>true</code> if the response is valid; <code>false</code> otherwise
      * @see #setValidateResponse(boolean)
      */
+    @Override
     public boolean handleResponse(MessageContext messageContext) throws WebServiceClientException {
         if (validateResponse) {
             Source responseSource = getValidationResponseSource(messageContext.getResponse());
@@ -253,11 +256,13 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
     }
 
     /** Does nothing by default. Faults are not validated. */
+    @Override
     public boolean handleFault(MessageContext messageContext) throws WebServiceClientException {
         return true;
     }
 
 	/** Does nothing by default.*/
+	@Override
 	public void afterCompletion(MessageContext messageContext, Exception ex)
 			throws WebServiceClientException {
 	}

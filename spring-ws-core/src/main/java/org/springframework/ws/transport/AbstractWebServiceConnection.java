@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
 
     private boolean closed = false;
 
+    @Override
     public final void send(WebServiceMessage message) throws IOException {
         checkClosed();
         onSendBeforeWrite(message);
@@ -80,6 +81,7 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
     protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
     }
 
+    @Override
     public final WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException {
         checkClosed();
         onReceiveBeforeRead();
@@ -123,6 +125,7 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
     protected void onReceiveAfterRead(WebServiceMessage message) throws IOException {
     }
 
+    @Override
     public final void close() throws IOException {
         IOException ioex = null;
         if (tis != null) {

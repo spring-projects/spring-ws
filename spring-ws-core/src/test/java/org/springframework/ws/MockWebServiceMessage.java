@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,16 +105,19 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
         }
     }
 
+    @Override
     public Result getPayloadResult() {
         checkContent();
         content.setLength(0);
         return new StreamResult(new StringBufferWriter());
     }
 
+    @Override
     public Source getPayloadSource() {
         return content != null ? new StringSource(content.toString()) : null;
     }
 
+    @Override
     public boolean hasFault() {
         return fault;
     }
@@ -123,6 +126,7 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
         this.fault = fault;
     }
 
+    @Override
     public String getFaultReason() {
         return faultReason;
     }
@@ -131,6 +135,7 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
         this.faultReason = faultReason;
     }
 
+    @Override
     public void writeTo(OutputStream outputStream) throws IOException {
         if (content != null) {
             PrintWriter writer = new PrintWriter(outputStream);

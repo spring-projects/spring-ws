@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,11 +34,11 @@ import javax.wsdl.Service;
 import javax.wsdl.WSDLException;
 import javax.xml.namespace.QName;
 
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * Default implementation of the {@link BindingsProvider} and {@link ServicesProvider} interfaces.
@@ -95,6 +95,7 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
      * @see #populateBindingOutput(Definition,javax.wsdl.BindingOutput,javax.wsdl.Output)
      * @see #populateBindingFault(Definition,javax.wsdl.BindingFault,javax.wsdl.Fault)
      */
+    @Override
     public void addBindings(Definition definition) throws WSDLException {
         for (Iterator<?> iterator = definition.getPortTypes().values().iterator(); iterator.hasNext();) {
             PortType portType = (PortType) iterator.next();
@@ -248,6 +249,7 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
      * @param definition the WSDL4J <code>Definition</code>
      * @throws WSDLException in case of errors
      */
+    @Override
     public void addServices(Definition definition) throws WSDLException {
         Assert.notNull(getServiceName(), "'serviceName' is required");
         Service service;

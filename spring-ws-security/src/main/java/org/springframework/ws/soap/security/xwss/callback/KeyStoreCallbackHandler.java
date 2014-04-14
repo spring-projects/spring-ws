@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -224,6 +224,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 		this.revocationEnabled = revocationEnabled;
 	}
 
+	@Override
 	public void afterPropertiesSet() throws Exception {
         if (keyStore == null) {
             loadDefaultKeyStore();
@@ -634,6 +635,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 
     private class KeyStoreCertificateValidator implements CertificateValidationCallback.CertificateValidator {
 
+        @Override
         public boolean validate(X509Certificate certificate)
                 throws CertificateValidationCallback.CertificateValidationException {
             if (isOwnedCert(certificate)) {

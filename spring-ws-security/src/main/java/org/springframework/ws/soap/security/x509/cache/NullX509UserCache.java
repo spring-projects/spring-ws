@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,11 +30,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class NullX509UserCache implements X509UserCache {
     //~ Methods ========================================================================================================
 
+    @Override
     public UserDetails getUserFromCache(X509Certificate certificate) {
         return null;
     }
 
+    @Override
     public void putUserInCache(X509Certificate certificate, UserDetails user) {}
 
+    @Override
     public void removeUserFromCache(X509Certificate certificate) {}
 }

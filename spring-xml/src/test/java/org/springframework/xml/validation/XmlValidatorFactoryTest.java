@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +22,12 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import org.springframework.core.io.AbstractResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-
-import org.junit.Assert;
-import org.junit.Test;
 
 public class XmlValidatorFactoryTest {
 
@@ -74,6 +74,7 @@ public class XmlValidatorFactoryTest {
             return false;
         }
 
+        @Override
         public String getDescription() {
             return null;
         }
@@ -103,6 +104,7 @@ public class XmlValidatorFactoryTest {
             return false;
         }
 
+        @Override
         public InputStream getInputStream() throws IOException {
             throw new IOException();
         }

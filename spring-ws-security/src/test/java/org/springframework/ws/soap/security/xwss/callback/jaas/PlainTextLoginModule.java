@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package org.springframework.ws.soap.security.xwss.callback.jaas;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
@@ -38,12 +37,14 @@ public class PlainTextLoginModule implements LoginModule {
 
     private List principals = new ArrayList();
 
+    @Override
     public boolean abort() {
         success = false;
         logout();
         return true;
     }
 
+    @Override
     public boolean commit() throws LoginException {
         if (success) {
             if (subject.isReadOnly()) {
@@ -64,6 +65,7 @@ public class PlainTextLoginModule implements LoginModule {
         return true;
     }
 
+    @Override
     public void initialize(Subject subject,
                            CallbackHandler callbackHandler,
                            java.util.Map sharedState,
@@ -72,6 +74,7 @@ public class PlainTextLoginModule implements LoginModule {
         this.callbackHandler = callbackHandler;
     }
 
+    @Override
     public boolean login() throws LoginException {
         if (callbackHandler == null) {
             return false;
@@ -118,6 +121,7 @@ public class PlainTextLoginModule implements LoginModule {
         }
     }
 
+    @Override
     public boolean logout() {
         principals.clear();
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,6 +51,7 @@ public class XPathExpressionFactoryBean implements FactoryBean<XPathExpression>,
         this.namespaces = namespaces;
     }
 
+    @Override
     public void afterPropertiesSet() throws IllegalStateException, XPathParseException {
         Assert.notNull(expressionString, "expression is required");
         if (CollectionUtils.isEmpty(namespaces)) {
@@ -61,14 +62,17 @@ public class XPathExpressionFactoryBean implements FactoryBean<XPathExpression>,
         }
     }
 
+    @Override
     public XPathExpression getObject() throws Exception {
         return expression;
     }
 
+    @Override
     public Class<? extends XPathExpression> getObjectType() {
         return XPathExpression.class;
     }
 
+    @Override
     public boolean isSingleton() {
         return true;
     }

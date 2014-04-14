@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import org.springframework.util.Assert;
  */
 public abstract class AbstractMimeMessage implements MimeMessage {
 
+    @Override
     public final Attachment addAttachment(String contentId, File file) throws AttachmentException {
         Assert.hasLength(contentId, "contentId must not be empty");
         Assert.notNull(file, "File must not be null");
@@ -43,6 +44,7 @@ public abstract class AbstractMimeMessage implements MimeMessage {
         return addAttachment(contentId, dataHandler);
     }
 
+    @Override
     public final Attachment addAttachment(String contentId, InputStreamSource inputStreamSource, String contentType) {
         Assert.hasLength(contentId, "contentId must not be empty");
         Assert.notNull(inputStreamSource, "InputStreamSource must not be null");
@@ -71,18 +73,22 @@ public abstract class AbstractMimeMessage implements MimeMessage {
             this.contentType = contentType;
         }
 
+        @Override
         public InputStream getInputStream() throws IOException {
             return inputStreamSource.getInputStream();
         }
 
+        @Override
         public OutputStream getOutputStream() {
             throw new UnsupportedOperationException("Read-only javax.activation.DataSource");
         }
 
+        @Override
         public String getContentType() {
             return contentType;
         }
 
+        @Override
         public String getName() {
             if (inputStreamSource instanceof Resource) {
                 Resource resource = (Resource) inputStreamSource;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ public class XmlRootElementPayloadMethodProcessor extends AbstractJaxb2PayloadMe
                 parameterType.isAnnotationPresent(XmlType.class);
     }
 
+    @Override
     public Object resolveArgument(MessageContext messageContext, MethodParameter parameter) throws JAXBException {
         Class<?> parameterType = parameter.getParameterType();
 

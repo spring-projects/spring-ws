@@ -1,10 +1,11 @@
-/* Copyright 2004, 2005, 2006 Acegi Technology Pty Limited
+/*
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,30 +16,25 @@
 
 package org.springframework.ws.soap.security.x509.populator;
 
-import org.springframework.security.core.SpringSecurityMessageSource;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.AuthenticationServiceException;
-
-import org.springframework.ws.soap.security.x509.X509AuthoritiesPopulator;
-
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import java.security.cert.X509Certificate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.springframework.beans.factory.InitializingBean;
-
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.context.support.MessageSourceAccessor;
-
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.SpringSecurityMessageSource;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.Assert;
-
-import java.security.cert.X509Certificate;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
+import org.springframework.ws.soap.security.x509.X509AuthoritiesPopulator;
 
 /**
  * Populates the X509 authorities via an {@link org.springframework.security.core.userdetails.UserDetailsService}.
@@ -61,6 +57,7 @@ public class DaoX509AuthoritiesPopulator implements X509AuthoritiesPopulator, In
 
     //~ Methods ========================================================================================================
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(userDetailsService, "An authenticationDao must be set");
         Assert.notNull(this.messages, "A message source must be set");
@@ -68,6 +65,7 @@ public class DaoX509AuthoritiesPopulator implements X509AuthoritiesPopulator, In
         subjectDNPattern = Pattern.compile(subjectDNRegex, Pattern.CASE_INSENSITIVE);
     }
 
+    @Override
     public UserDetails getUserDetails(X509Certificate clientCert) throws AuthenticationException {
         String subjectDN = clientCert.getSubjectDN().getName();
 
@@ -94,6 +92,7 @@ public class DaoX509AuthoritiesPopulator implements X509AuthoritiesPopulator, In
         return user;
     }
 
+    @Override
     public void setMessageSource(MessageSource messageSource) {
         this.messages = new MessageSourceAccessor(messageSource);
     }

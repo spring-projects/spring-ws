@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,10 +23,10 @@ import javax.xml.transform.Source;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
 
-import org.springframework.core.io.Resource;
-
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+
+import org.springframework.core.io.Resource;
 
 /**
  * Internal class that uses JAXP 1.0 features to create <code>XmlValidator</code> instances.
@@ -54,10 +54,12 @@ abstract class Jaxp13ValidatorFactory {
             this.schema = schema;
         }
 
+        @Override
         public SAXParseException[] validate(Source source) throws IOException {
             return validate(source, null);
         }
 
+        @Override
         public SAXParseException[] validate(Source source, ValidationErrorHandler errorHandler) throws IOException {
             if (errorHandler == null) {
                 errorHandler = new DefaultValidationErrorHandler();
@@ -79,17 +81,21 @@ abstract class Jaxp13ValidatorFactory {
 
         private List<SAXParseException> errors = new ArrayList<SAXParseException>();
 
+        @Override
         public SAXParseException[] getErrors() {
             return errors.toArray(new SAXParseException[errors.size()]);
         }
 
+        @Override
         public void warning(SAXParseException ex) throws SAXException {
         }
 
+        @Override
         public void error(SAXParseException ex) throws SAXException {
             errors.add(ex);
         }
 
+        @Override
         public void fatalError(SAXParseException ex) throws SAXException {
             errors.add(ex);
         }

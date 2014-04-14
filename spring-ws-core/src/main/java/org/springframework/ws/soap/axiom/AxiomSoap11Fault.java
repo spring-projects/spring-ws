@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import javax.xml.namespace.QName;
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPFault;
+
 import org.springframework.ws.soap.axiom.support.AxiomUtils;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 
@@ -37,10 +38,12 @@ class AxiomSoap11Fault extends AxiomSoapFault implements Soap11Fault {
         super(axiomFault, axiomFactory);
     }
 
+    @Override
     public QName getFaultCode() {
         return getAxiomFault().getCode().getTextAsQName();
     }
 
+    @Override
     public String getFaultStringOrReason() {
         if (getAxiomFault().getReason() != null) {
             return getAxiomFault().getReason().getText();
@@ -48,6 +51,7 @@ class AxiomSoap11Fault extends AxiomSoapFault implements Soap11Fault {
         return null;
     }
 
+    @Override
     public Locale getFaultStringLocale() {
         if (getAxiomFault().getReason() != null) {
             OMAttribute langAttribute =

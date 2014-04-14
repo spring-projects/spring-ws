@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,6 @@ import java.util.List;
 import java.util.Locale;
 import javax.xml.namespace.QName;
 
-import org.springframework.util.StringUtils;
-import org.springframework.ws.soap.axiom.support.AxiomUtils;
-import org.springframework.ws.soap.soap12.Soap12Fault;
-import org.springframework.xml.namespace.QNameUtils;
-
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPFault;
@@ -38,6 +33,11 @@ import org.apache.axiom.soap.SOAPFaultText;
 import org.apache.axiom.soap.SOAPFaultValue;
 import org.apache.axiom.soap.SOAPProcessingException;
 
+import org.springframework.util.StringUtils;
+import org.springframework.ws.soap.axiom.support.AxiomUtils;
+import org.springframework.ws.soap.soap12.Soap12Fault;
+import org.springframework.xml.namespace.QNameUtils;
+
 /** Axiom-specific version of <code>org.springframework.ws.soap.Soap12Fault</code>. */
 class AxiomSoap12Fault extends AxiomSoapFault implements Soap12Fault {
 
@@ -45,10 +45,12 @@ class AxiomSoap12Fault extends AxiomSoapFault implements Soap12Fault {
         super(axiomFault, axiomFactory);
     }
 
+    @Override
     public QName getFaultCode() {
         return getAxiomFault().getCode().getValue().getTextAsQName();
     }
 
+    @Override
     public Iterator<QName> getFaultSubcodes() {
         List<QName> subcodes = new ArrayList<QName>();
         SOAPFaultSubCode subcode = getAxiomFault().getCode().getSubCode();
@@ -59,6 +61,7 @@ class AxiomSoap12Fault extends AxiomSoapFault implements Soap12Fault {
         return subcodes.iterator();
     }
 
+    @Override
     public void addFaultSubcode(QName subcode) {
         SOAPFaultCode faultCode = getAxiomFault().getCode();
         SOAPFaultSubCode faultSubCode = null;
@@ -99,6 +102,7 @@ class AxiomSoap12Fault extends AxiomSoapFault implements Soap12Fault {
         faultValue.setText(prefix + ":" + code.getLocalPart());
     }
 
+    @Override
     public String getFaultNode() {
         SOAPFaultNode faultNode = getAxiomFault().getNode();
         if (faultNode == null) {
@@ -109,6 +113,7 @@ class AxiomSoap12Fault extends AxiomSoapFault implements Soap12Fault {
         }
     }
 
+    @Override
     public void setFaultNode(String uri) {
         try {
             SOAPFaultNode faultNode = getAxiomFactory().createSOAPFaultNode(getAxiomFault());
@@ -120,10 +125,12 @@ class AxiomSoap12Fault extends AxiomSoapFault implements Soap12Fault {
         }
     }
 
+    @Override
     public String getFaultStringOrReason() {
         return getFaultReasonText(Locale.getDefault());
     }
 
+    @Override
     public String getFaultReasonText(Locale locale) {
         SOAPFaultReason faultReason = getAxiomFault().getReason();
         String language = AxiomUtils.toLanguage(locale);
@@ -131,6 +138,7 @@ class AxiomSoap12Fault extends AxiomSoapFault implements Soap12Fault {
         return faultText != null ? faultText.getText() : null;
     }
 
+    @Override
     public void setFaultReasonText(Locale locale, String text) {
         SOAPFaultReason faultReason = getAxiomFault().getReason();
         String language = AxiomUtils.toLanguage(locale);

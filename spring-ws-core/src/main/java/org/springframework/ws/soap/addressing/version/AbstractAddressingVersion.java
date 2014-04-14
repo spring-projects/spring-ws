@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,10 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapHeader;
@@ -48,10 +52,6 @@ import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.TransformerObjectSupport;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 /**
  * Abstract base class for {@link AddressingVersion} implementations. Uses {@link XPathExpression}s to retrieve
@@ -121,6 +121,7 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
         return XPathExpressionFactory.createXPathExpression(expression, namespaces);
     }
 
+    @Override
     public MessageAddressingProperties getMessageAddressingProperties(SoapMessage message) {
         Element headerElement = getSoapHeaderElement(message);
         URI to = getUri(headerElement, toExpression);
@@ -191,6 +192,7 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
         return new EndpointReference(address, referenceProperties, referenceParameters);
     }
 
+    @Override
     public void addAddressingHeaders(SoapMessage message, MessageAddressingProperties map) {
         SoapHeader header = message.getSoapHeader();
         header.addNamespaceDeclaration(getNamespacePrefix(), getNamespaceUri());
@@ -232,6 +234,7 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
         addReferenceNodes(header.getResult(), map.getReferenceProperties());
     }
 
+    @Override
     public final boolean understands(SoapHeaderElement headerElement) {
         return getNamespaceUri().equals(headerElement.getName().getNamespaceURI());
     }
@@ -280,11 +283,13 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
         }
     }
 
+    @Override
     public final SoapFault addInvalidAddressingHeaderFault(SoapMessage message) {
         return addAddressingFault(message, getInvalidAddressingHeaderFaultSubcode(),
                 getInvalidAddressingHeaderFaultReason());
     }
 
+    @Override
     public final SoapFault addMessageAddressingHeaderRequiredFault(SoapMessage message) {
         return addAddressingFault(message, getMessageAddressingHeaderRequiredFaultSubcode(),
                 getMessageAddressingHeaderRequiredFaultReason());
@@ -308,11 +313,13 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
     * Address URIs
     */
 
+    @Override
     public final boolean hasAnonymousAddress(EndpointReference epr) {
         URI anonymous = getAnonymous();
         return anonymous != null && anonymous.equals(epr.getAddress());
     }
 
+    @Override
     public final boolean hasNoneAddress(EndpointReference epr) {
         URI none = getNone();
         return none != null && none.equals(epr.getAddress());

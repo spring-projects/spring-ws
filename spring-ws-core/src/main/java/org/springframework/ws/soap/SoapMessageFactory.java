@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,7 @@ public interface SoapMessageFactory extends WebServiceMessageFactory {
      *
      * @return the empty message
      */
+    @Override
     SoapMessage createWebServiceMessage();
 
     /**
@@ -58,6 +59,7 @@ public interface SoapMessageFactory extends WebServiceMessageFactory {
      * @return the created message
      * @throws java.io.IOException if an I/O exception occurs
      */
+    @Override
     SoapMessage createWebServiceMessage(InputStream inputStream) throws IOException;
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
+import org.w3c.dom.Element;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -29,8 +31,6 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
-
-import org.w3c.dom.Element;
 
 /**
  * Implementation of the <code>EndpointMapping</code> interface that maps to endpoint using an XPath expression.
@@ -77,6 +77,7 @@ public class XPathPayloadEndpointMapping extends AbstractMapBasedEndpointMapping
         this.namespaces = namespaces;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(expressionString, "expression is required");
         if (namespaces == null) {

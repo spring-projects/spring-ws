@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,15 @@
 
 package org.springframework.ws.transport.xmpp.support;
 
+import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
+
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-
-import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
 
 /**
  * Factory to make {@link org.jivesoftware.smack.XMPPConnection} and perform connection and login on the XMPP server
@@ -83,6 +83,7 @@ public class XmppConnectionFactoryBean implements FactoryBean<XMPPConnection>, I
         this.resource = resource;
     }
 
+    @Override
     public void afterPropertiesSet() throws XMPPException {
         ConnectionConfiguration configuration = createConnectionConfiguration(host, port, serviceName);
         Assert.notNull(configuration, "'configuration' must not be null");
@@ -99,18 +100,22 @@ public class XmppConnectionFactoryBean implements FactoryBean<XMPPConnection>, I
         }
     }
 
+    @Override
     public void destroy() {
         connection.disconnect();
     }
 
+    @Override
     public XMPPConnection getObject() {
         return connection;
     }
 
+    @Override
     public Class<XMPPConnection> getObjectType() {
         return XMPPConnection.class;
     }
 
+    @Override
     public boolean isSingleton() {
         return true;
     }

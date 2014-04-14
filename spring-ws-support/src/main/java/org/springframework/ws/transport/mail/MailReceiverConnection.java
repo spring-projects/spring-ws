@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,6 +103,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
      * URI
      */
 
+    @Override
     public URI getUri() throws URISyntaxException {
         try {
             Address[] recipients = requestMessage.getRecipients(Message.RecipientType.TO);
@@ -121,10 +122,12 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
      * Errors
      */
 
+    @Override
     public String getErrorMessage() throws IOException {
         return null;
     }
 
+    @Override
     public boolean hasError() throws IOException {
         return false;
     }
@@ -235,18 +238,22 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
             this.contentType = contentType;
         }
 
+        @Override
         public String getContentType() {
             return contentType;
         }
 
+        @Override
         public InputStream getInputStream() throws IOException {
             return new ByteArrayInputStream(data);
         }
 
+        @Override
         public String getName() {
             return "ByteArrayDataSource";
         }
 
+        @Override
         public OutputStream getOutputStream() throws IOException {
             throw new UnsupportedOperationException();
         }

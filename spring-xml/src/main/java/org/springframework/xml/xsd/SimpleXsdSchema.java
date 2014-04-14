@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -90,14 +90,17 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
         this.xsdResource = xsdResource;
     }
 
+    @Override
     public String getTargetNamespace() {
         return schemaElement.getAttribute("targetNamespace");
     }
 
+    @Override
     public Source getSource() {
         return new DOMSource(schemaElement);
     }
 
+    @Override
     public XmlValidator createValidator() {
 	    try {
 		    return XmlValidatorFactory.createValidator(xsdResource, XmlValidatorFactory.SCHEMA_W3C_XML);
@@ -107,6 +110,7 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
 	    }
     }
 
+    @Override
     public void afterPropertiesSet() throws ParserConfigurationException, IOException, SAXException {
         Assert.notNull(xsdResource, "'xsd' is required");
         Assert.isTrue(this.xsdResource.exists(), "xsd '" + this.xsdResource + "' does not exist");

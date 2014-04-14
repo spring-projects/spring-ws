@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,16 +19,16 @@ package org.springframework.ws.soap.security.wss4j.support;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.ws.security.components.crypto.Crypto;
+import org.apache.ws.security.components.crypto.CryptoFactory;
+import org.apache.ws.security.components.crypto.Merlin;
+
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
-
-import org.apache.ws.security.components.crypto.Crypto;
-import org.apache.ws.security.components.crypto.CryptoFactory;
-import org.apache.ws.security.components.crypto.Merlin;
 
 /**
  * Spring factory bean for a WSS4J {@link Crypto}. Allows for strong-typed property configuration, or configuration
@@ -164,10 +164,12 @@ public class CryptoFactoryBean implements FactoryBean<Crypto>, BeanClassLoaderAw
         this.configuration.setProperty("org.apache.ws.security.crypto.merlin.keystore.alias", defaultX509Alias);
     }
 
+    @Override
     public void setBeanClassLoader(ClassLoader classLoader) {
         this.classLoader = classLoader;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         if (!configuration.containsKey(CRYPTO_PROVIDER_PROPERTY)) {
             configuration.setProperty(CRYPTO_PROVIDER_PROPERTY, Merlin.class.getName());
@@ -175,14 +177,17 @@ public class CryptoFactoryBean implements FactoryBean<Crypto>, BeanClassLoaderAw
         this.crypto = CryptoFactory.getInstance(configuration, classLoader);
     }
 
+    @Override
     public Class<Crypto> getObjectType() {
         return Crypto.class;
     }
 
+    @Override
     public boolean isSingleton() {
         return true;
     }
 
+    @Override
     public Crypto getObject() throws Exception {
         return crypto;
     }

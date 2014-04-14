@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,6 +26,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -34,11 +39,6 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.xml.transform.ResourceSource;
 import org.springframework.xml.transform.TransformerObjectSupport;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * Interceptor that transforms the payload of <code>WebServiceMessage</code>s using XSLT stylesheet. Allows for seperate
@@ -85,6 +85,7 @@ public class PayloadTransformingInterceptor extends TransformerObjectSupport
      * @return always returns <code>true</code>
      * @see #setRequestXslt(org.springframework.core.io.Resource)
      */
+    @Override
     public boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
         if (requestTemplates != null) {
             WebServiceMessage request = messageContext.getRequest();
@@ -103,6 +104,7 @@ public class PayloadTransformingInterceptor extends TransformerObjectSupport
      * @return always returns <code>true</code>
      * @see #setResponseXslt(org.springframework.core.io.Resource)
      */
+    @Override
     public boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
         if (responseTemplates != null) {
             WebServiceMessage response = messageContext.getResponse();
@@ -121,14 +123,17 @@ public class PayloadTransformingInterceptor extends TransformerObjectSupport
     }
 
     /** Does nothing by default. Faults are not transformed. */
+    @Override
     public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
         return true;
     }
 
     /** Does nothing by default.*/
+    @Override
     public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         if (requestXslt == null && responseXslt == null) {
             throw new IllegalArgumentException("Setting either 'requestXslt' or 'responseXslt' is required");

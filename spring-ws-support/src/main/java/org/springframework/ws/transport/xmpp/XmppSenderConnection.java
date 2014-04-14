@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
 
-import org.springframework.util.Assert;
-import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.transport.AbstractSenderConnection;
-import org.springframework.ws.transport.xmpp.support.XmppTransportUtils;
-
 import org.jivesoftware.smack.PacketCollector;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.filter.AndFilter;
@@ -36,6 +31,11 @@ import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.filter.ThreadFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
+
+import org.springframework.util.Assert;
+import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.transport.AbstractSenderConnection;
+import org.springframework.ws.transport.xmpp.support.XmppTransportUtils;
 
 /**
  * Implementation of {@link org.springframework.ws.transport.WebServiceConnection} that is used for client-side XMPP
@@ -92,6 +92,7 @@ public class XmppSenderConnection extends AbstractSenderConnection {
     * URI
     */
 
+    @Override
     public URI getUri() throws URISyntaxException {
         return XmppTransportUtils.toUri(requestMessage);
     }
@@ -100,10 +101,12 @@ public class XmppSenderConnection extends AbstractSenderConnection {
      * Errors
      */
 
+    @Override
     public boolean hasError() {
         return XmppTransportUtils.hasError(responseMessage);
     }
 
+    @Override
     public String getErrorMessage() {
         return XmppTransportUtils.getErrorMessage(responseMessage);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,7 @@ public class JaxbElementPayloadMethodProcessor extends AbstractJaxb2PayloadMetho
         return JAXBElement.class.equals(parameterType) && genericType instanceof ParameterizedType;
     }
 
+    @Override
     public JAXBElement<?> resolveArgument(MessageContext messageContext, MethodParameter parameter)
             throws JAXBException {
         ParameterizedType parameterizedType = (ParameterizedType) parameter.getGenericParameterType();

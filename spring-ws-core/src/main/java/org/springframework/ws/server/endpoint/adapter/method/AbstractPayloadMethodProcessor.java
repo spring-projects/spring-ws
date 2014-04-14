@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,7 @@ public abstract class AbstractPayloadMethodProcessor extends TransformerObjectSu
      * This implementation gets checks if the given parameter is annotated with {@link RequestPayload}, and invokes
      * {@link #supportsRequestPayloadParameter(org.springframework.core.MethodParameter)} afterwards.
      */
+    @Override
     public final boolean supportsParameter(MethodParameter parameter) {
         Assert.isTrue(parameter.getParameterIndex() >= 0, "Parameter index larger smaller than 0");
         if (parameter.getParameterAnnotation(RequestPayload.class) == null) {
@@ -73,6 +74,7 @@ public abstract class AbstractPayloadMethodProcessor extends TransformerObjectSu
      * This implementation gets checks if the method of the given return type is annotated with {@link ResponsePayload},
      * and invokes {@link #supportsResponsePayloadReturnType(org.springframework.core.MethodParameter)} afterwards.
      */
+    @Override
     public final boolean supportsReturnType(MethodParameter returnType) {
         Assert.isTrue(returnType.getParameterIndex() == -1, "Parameter index is not -1");
         if (returnType.getMethodAnnotation(ResponsePayload.class) == null) {

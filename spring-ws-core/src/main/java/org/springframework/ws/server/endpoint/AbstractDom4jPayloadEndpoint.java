@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,6 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
 
-import org.springframework.xml.transform.TransformerObjectSupport;
-
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -29,6 +27,8 @@ import org.dom4j.io.DOMReader;
 import org.dom4j.io.DocumentResult;
 import org.dom4j.io.DocumentSource;
 import org.w3c.dom.Node;
+
+import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
  * Abstract base class for endpoints that handle the message payload as dom4j elements. Offers the message payload as a
@@ -56,6 +56,7 @@ public abstract class AbstractDom4jPayloadEndpoint extends TransformerObjectSupp
         this.alwaysTransform = alwaysTransform;
     }
 
+    @Override
     public final Source invoke(Source request) throws Exception {
         Element requestElement = null;
         if (request != null) {

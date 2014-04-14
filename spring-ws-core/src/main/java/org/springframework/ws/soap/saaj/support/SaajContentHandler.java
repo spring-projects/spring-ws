@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,13 @@ import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * SAX <code>ContentHandler</code> that transforms callback calls to the creation of SAAJ <code>Node</code>s and
@@ -65,6 +65,7 @@ public class SaajContentHandler implements ContentHandler {
         this.element = element;
     }
 
+    @Override
     public void characters(char ch[], int start, int length) throws SAXException {
         try {
             String text = new String(ch, start, length);
@@ -75,6 +76,7 @@ public class SaajContentHandler implements ContentHandler {
         }
     }
 
+    @Override
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
         try {
             String childPrefix = getPrefix(qName);
@@ -120,35 +122,44 @@ public class SaajContentHandler implements ContentHandler {
         }
     }
 
+    @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         Assert.isTrue(localName.equals(element.getElementName().getLocalName()), "Invalid element on stack");
         Assert.isTrue(uri.equals(element.getElementName().getURI()), "Invalid element on stack");
         element = element.getParentElement();
     }
 
+    @Override
     public void startPrefixMapping(String prefix, String uri) throws SAXException {
         namespaces.put(prefix, uri);
     }
 
+    @Override
     public void endPrefixMapping(String prefix) throws SAXException {
         namespaces.remove(prefix);
     }
 
+    @Override
     public void setDocumentLocator(Locator locator) {
     }
 
+    @Override
     public void startDocument() throws SAXException {
     }
 
+    @Override
     public void endDocument() throws SAXException {
     }
 
+    @Override
     public void ignorableWhitespace(char ch[], int start, int length) throws SAXException {
     }
 
+    @Override
     public void processingInstruction(String target, String data) throws SAXException {
     }
 
+    @Override
     public void skippedEntity(String name) throws SAXException {
     }
 

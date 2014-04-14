@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ public abstract class AbstractPayloadSourceMethodProcessor extends AbstractPaylo
 
     // MethodArgumentResolver
 
+    @Override
     public final Object resolveArgument(MessageContext messageContext, MethodParameter parameter) throws Exception {
         Source requestPayload = getRequestPayload(messageContext);
         return requestPayload != null ? resolveRequestPayloadArgument(parameter, requestPayload) : null;
@@ -58,6 +59,7 @@ public abstract class AbstractPayloadSourceMethodProcessor extends AbstractPaylo
 
     // MethodReturnValueHandler
 
+    @Override
     public final void handleReturnValue(MessageContext messageContext, MethodParameter returnType, Object returnValue)
             throws Exception {
         if (returnValue != null) {

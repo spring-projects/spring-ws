@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,14 +26,17 @@ import org.springframework.oxm.XmlMappingException;
 
 public class DummyMarshaller implements Marshaller, Unmarshaller {
 
+    @Override
     public void marshal(Object graph, Result result) throws XmlMappingException, IOException {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public boolean supports(Class clazz) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public Object unmarshal(Source source) throws XmlMappingException, IOException {
         throw new UnsupportedOperationException();
     }

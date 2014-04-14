@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.UUID;
 
+import org.jivesoftware.smack.XMPPConnection;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.ws.transport.xmpp.support.XmppTransportUtils;
-
-import org.jivesoftware.smack.XMPPConnection;
 
 /**
  * {@link WebServiceMessageSender} implementation that uses XMPP {@link org.jivesoftware.smack.packet.Message}s.
@@ -75,10 +75,12 @@ public class XmppMessageSender implements WebServiceMessageSender, InitializingB
         this.messageEncoding = messageEncoding;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(connection, "'connection' is required");
     }
 
+    @Override
     public WebServiceConnection createConnection(URI uri) throws IOException {
         String to = XmppTransportUtils.getTo(uri);
         String thread = createThread();
@@ -88,6 +90,7 @@ public class XmppMessageSender implements WebServiceMessageSender, InitializingB
         return connection;
     }
 
+    @Override
     public boolean supports(URI uri) {
         return uri.getScheme().equals(XmppTransportConstants.XMPP_URI_SCHEME);
     }

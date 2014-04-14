@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,7 @@ public class JaasCertificateValidationCallbackHandler extends AbstractJaasValida
 
     private class JaasCertificateValidator implements CertificateValidationCallback.CertificateValidator {
 
+        @Override
         public boolean validate(X509Certificate certificate)
                 throws CertificateValidationCallback.CertificateValidationException {
             Subject subject = new Subject();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,10 @@ package org.springframework.ws.test.support.matcher;
 
 import java.io.IOException;
 
+import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
+
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapMessage;
-
-import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
 
 /**
  * Abstract base class for SOAP-specific {@link WebServiceMessageMatcher} implementations.
@@ -34,6 +34,7 @@ import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
  */
 public abstract class AbstractSoapMessageMatcher implements WebServiceMessageMatcher {
 
+    @Override
     public final void match(WebServiceMessage message) throws IOException, AssertionError {
         assertTrue("Message is not a SOAP message", message instanceof SoapMessage);
         match((SoapMessage) message);

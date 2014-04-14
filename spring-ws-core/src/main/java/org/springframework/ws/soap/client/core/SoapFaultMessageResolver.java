@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import org.springframework.ws.soap.client.SoapFaultClientException;
  */
 public class SoapFaultMessageResolver implements FaultMessageResolver {
 
+    @Override
     public void resolveFault(WebServiceMessage message) throws IOException {
         SoapMessage soapMessage = (SoapMessage) message;
         throw new SoapFaultClientException(soapMessage);

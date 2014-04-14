@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,6 +48,7 @@ import org.springframework.ws.context.MessageContext;
 @SuppressWarnings("Since15")
 public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayloadEndpoint implements MessageEndpoint {
 
+    @Override
     public final void invoke(MessageContext messageContext) throws Exception {
         XMLStreamReader streamReader = getStreamReader(messageContext.getRequest().getPayloadSource());
         XMLStreamWriter streamWriter = new ResponseCreatingStreamWriter(messageContext);
@@ -137,15 +138,18 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
             this.messageContext = messageContext;
         }
 
+        @Override
         public NamespaceContext getNamespaceContext() {
             return streamWriter.getNamespaceContext();
         }
 
+        @Override
         public void setNamespaceContext(NamespaceContext context) throws XMLStreamException {
             createStreamWriter();
             streamWriter.setNamespaceContext(context);
         }
 
+        @Override
         public void close() throws XMLStreamException {
             if (streamWriter != null) {
                 streamWriter.close();
@@ -166,147 +170,176 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
 
         }
 
+        @Override
         public void flush() throws XMLStreamException {
             if (streamWriter != null) {
                 streamWriter.flush();
             }
         }
 
+        @Override
         public String getPrefix(String uri) throws XMLStreamException {
             createStreamWriter();
             return streamWriter.getPrefix(uri);
         }
 
+        @Override
         public Object getProperty(String name) throws IllegalArgumentException {
             return streamWriter.getProperty(name);
         }
 
+        @Override
         public void setDefaultNamespace(String uri) throws XMLStreamException {
             createStreamWriter();
             streamWriter.setDefaultNamespace(uri);
         }
 
+        @Override
         public void setPrefix(String prefix, String uri) throws XMLStreamException {
             createStreamWriter();
             streamWriter.setPrefix(prefix, uri);
         }
 
+        @Override
         public void writeAttribute(String localName, String value) throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeAttribute(localName, value);
         }
 
+        @Override
         public void writeAttribute(String namespaceURI, String localName, String value) throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeAttribute(namespaceURI, localName, value);
         }
 
+        @Override
         public void writeAttribute(String prefix, String namespaceURI, String localName, String value)
                 throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeAttribute(prefix, namespaceURI, localName, value);
         }
 
+        @Override
         public void writeCData(String data) throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeCData(data);
         }
 
+        @Override
         public void writeCharacters(String text) throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeCharacters(text);
         }
 
+        @Override
         public void writeCharacters(char[] text, int start, int len) throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeCharacters(text, start, len);
         }
 
+        @Override
         public void writeComment(String data) throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeComment(data);
         }
 
+        @Override
         public void writeDTD(String dtd) throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeDTD(dtd);
         }
 
+        @Override
         public void writeDefaultNamespace(String namespaceURI) throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeDefaultNamespace(namespaceURI);
         }
 
+        @Override
         public void writeEmptyElement(String localName) throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeEmptyElement(localName);
         }
 
+        @Override
         public void writeEmptyElement(String namespaceURI, String localName) throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeEmptyElement(namespaceURI, localName);
         }
 
+        @Override
         public void writeEmptyElement(String prefix, String localName, String namespaceURI) throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeEmptyElement(prefix, localName, namespaceURI);
         }
 
+        @Override
         public void writeEndDocument() throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeEndDocument();
         }
 
+        @Override
         public void writeEndElement() throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeEndElement();
         }
 
+        @Override
         public void writeEntityRef(String name) throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeEntityRef(name);
         }
 
+        @Override
         public void writeNamespace(String prefix, String namespaceURI) throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeNamespace(prefix, namespaceURI);
         }
 
+        @Override
         public void writeProcessingInstruction(String target) throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeProcessingInstruction(target);
         }
 
+        @Override
         public void writeProcessingInstruction(String target, String data) throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeProcessingInstruction(target, data);
         }
 
+        @Override
         public void writeStartDocument() throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeStartDocument();
         }
 
+        @Override
         public void writeStartDocument(String version) throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeStartDocument(version);
         }
 
+        @Override
         public void writeStartDocument(String encoding, String version) throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeStartDocument(encoding, version);
         }
 
+        @Override
         public void writeStartElement(String localName) throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeStartElement(localName);
         }
 
+        @Override
         public void writeStartElement(String namespaceURI, String localName) throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeStartElement(namespaceURI, localName);
         }
 
+        @Override
         public void writeStartElement(String prefix, String localName, String namespaceURI) throws XMLStreamException {
             createStreamWriter();
             streamWriter.writeStartElement(prefix, localName, namespaceURI);

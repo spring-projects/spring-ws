@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,6 +20,9 @@ import java.util.Iterator;
 import java.util.Locale;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
@@ -32,9 +35,6 @@ import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.server.SoapEndpointInterceptor;
 import org.springframework.ws.soap.soap11.Soap11Body;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Interceptor base class for interceptors that handle WS-Security. Can be used on the server side, registered in a
@@ -113,6 +113,7 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
      * @throws Exception in case of errors
      * @see #validateMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)
      */
+    @Override
     public final boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
         if (validateRequest) {
             Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
@@ -145,6 +146,7 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
      * @throws Exception in case of errors
      * @see #secureMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)
      */
+    @Override
     public final boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
         boolean result = true;
         try {
@@ -171,15 +173,18 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
     }
 
     /** Returns <code>true</code>, i.e. fault responses are not secured. */
+    @Override
     public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
         return true;
     }
 
 
+    @Override
     public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
         cleanUp();
     }
 
+    @Override
     public boolean understands(SoapHeaderElement headerElement) {
         return WS_SECURITY_NAME.equals(headerElement.getName());
     }
@@ -197,6 +202,7 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
      * @throws Exception in case of errors
      * @see #secureMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)
      */
+    @Override
     public final boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
         if (secureRequest) {
             Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
@@ -225,6 +231,7 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
      * @throws Exception in case of errors
      * @see #validateMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)
      */
+    @Override
     public final boolean handleResponse(MessageContext messageContext) throws WebServiceClientException {
         if (validateResponse) {
             Assert.isTrue(messageContext.hasResponse(), "MessageContext contains no response");
@@ -249,6 +256,7 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
     }
 
     /** Returns <code>true</code>, i.e. fault responses are not validated. */
+    @Override
     public boolean handleFault(MessageContext messageContext) throws WebServiceClientException {
         return true;
     }

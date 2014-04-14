@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -243,30 +243,37 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
             this.unmarshaller = createUnmarshaller(clazz);
         }
 
+        @Override
         public void domSource(Node node) throws JAXBException {
             result = unmarshaller.unmarshal(node);
         }
 
+        @Override
         public void saxSource(XMLReader reader, InputSource inputSource) throws JAXBException {
             result = unmarshaller.unmarshal(inputSource);
         }
 
+        @Override
         public void staxSource(XMLEventReader eventReader) throws JAXBException {
             result = unmarshaller.unmarshal(eventReader);
         }
 
+        @Override
         public void staxSource(XMLStreamReader streamReader) throws JAXBException {
             result = unmarshaller.unmarshal(streamReader);
         }
 
+        @Override
         public void streamSource(InputStream inputStream) throws IOException, JAXBException {
             result = unmarshaller.unmarshal(inputStream);
         }
 
+        @Override
         public void streamSource(Reader reader) throws IOException, JAXBException {
             result = unmarshaller.unmarshal(reader);
         }
 
+        @Override
         public void source(String systemId) throws Exception {
             result = unmarshaller.unmarshal(new URL(systemId));
         }
@@ -285,30 +292,37 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
             this.declaredType = declaredType;
         }
 
+        @Override
         public void domSource(Node node) throws JAXBException {
             result = unmarshaller.unmarshal(node, declaredType);
         }
 
+        @Override
         public void saxSource(XMLReader reader, InputSource inputSource) throws JAXBException {
             result = unmarshaller.unmarshal(new SAXSource(reader, inputSource), declaredType);
         }
 
+        @Override
         public void staxSource(XMLEventReader eventReader) throws JAXBException {
             result = unmarshaller.unmarshal(eventReader, declaredType);
         }
 
+        @Override
         public void staxSource(XMLStreamReader streamReader) throws JAXBException {
             result = unmarshaller.unmarshal(streamReader, declaredType);
         }
 
+        @Override
         public void streamSource(InputStream inputStream) throws IOException, JAXBException {
             result = unmarshaller.unmarshal(new StreamSource(inputStream), declaredType);
         }
 
+        @Override
         public void streamSource(Reader reader) throws IOException, JAXBException {
             result = unmarshaller.unmarshal(new StreamSource(reader), declaredType);
         }
 
+        @Override
         public void source(String systemId) throws Exception {
             result = unmarshaller.unmarshal(new StreamSource(systemId), declaredType);
         }
@@ -325,30 +339,37 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
             this.jaxbElement = jaxbElement;
         }
 
+        @Override
         public void domResult(Node node) throws JAXBException {
             marshaller.marshal(jaxbElement, node);
         }
 
+        @Override
         public void saxResult(ContentHandler contentHandler, LexicalHandler lexicalHandler) throws JAXBException {
             marshaller.marshal(jaxbElement, contentHandler);
         }
 
+        @Override
         public void staxResult(XMLEventWriter eventWriter) throws JAXBException {
             marshaller.marshal(jaxbElement, eventWriter);
         }
 
+        @Override
         public void staxResult(XMLStreamWriter streamWriter) throws JAXBException {
             marshaller.marshal(jaxbElement, streamWriter);
         }
 
+        @Override
         public void streamResult(OutputStream outputStream) throws JAXBException {
             marshaller.marshal(jaxbElement, outputStream);
         }
 
+        @Override
         public void streamResult(Writer writer) throws JAXBException {
             marshaller.marshal(jaxbElement, writer);
         }
 
+        @Override
         public void result(String systemId) throws Exception {
             marshaller.marshal(jaxbElement, new StreamResult(systemId));
         }
@@ -371,10 +392,12 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
             this.name = introspector.getElementName(jaxbElement);
         }
 
+        @Override
         public QName getName() {
             return name;
         }
 
+        @Override
         public void writeTo(XMLStreamWriter streamWriter) throws XMLStreamException {
             try {
                 marshaller.marshal(jaxbElement, streamWriter);

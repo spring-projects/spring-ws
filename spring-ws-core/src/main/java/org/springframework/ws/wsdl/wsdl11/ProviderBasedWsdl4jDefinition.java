@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -220,6 +220,7 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
         this.targetNamespace = targetNamespace;
     }
 
+    @Override
     public void afterPropertiesSet() throws WSDLException {
         Assert.notNull(getTargetNamespace(), "'targetNamespace' is required");
         WSDLFactory wsdlFactory = WSDLFactory.newInstance();

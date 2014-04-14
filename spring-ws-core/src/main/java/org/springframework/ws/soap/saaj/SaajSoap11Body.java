@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,11 +42,13 @@ class SaajSoap11Body extends SaajSoapBody implements Soap11Body {
         this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
     }
 
+    @Override
     public Soap11Fault getFault() {
 	    SOAPFault fault = getSaajBody().getFault();
         return fault != null ? new SaajSoap11Fault(fault) : null;
     }
 
+    @Override
     public Soap11Fault addFault(QName faultCode, String faultString, Locale faultStringLocale) {
         Assert.notNull(faultCode, "No faultCode given");
         Assert.hasLength(faultString, "faultString cannot be empty");
@@ -73,18 +75,22 @@ class SaajSoap11Body extends SaajSoapBody implements Soap11Body {
         }
     }
 
+    @Override
     public Soap11Fault addClientOrSenderFault(String faultString, Locale locale) {
         return addFault(SoapVersion.SOAP_11.getClientOrSenderFaultName(), faultString, locale);
     }
 
+    @Override
     public Soap11Fault addMustUnderstandFault(String faultString, Locale locale) {
         return addFault(SoapVersion.SOAP_11.getMustUnderstandFaultName(), faultString, locale);
     }
 
+    @Override
     public Soap11Fault addServerOrReceiverFault(String faultString, Locale locale) {
         return addFault(SoapVersion.SOAP_11.getServerOrReceiverFaultName(), faultString, locale);
     }
 
+    @Override
     public Soap11Fault addVersionMismatchFault(String faultString, Locale locale) {
         return addFault(SoapVersion.SOAP_11.getVersionMismatchFaultName(), faultString, locale);
     }

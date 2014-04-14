@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ public abstract class AbstractMethodEndpointAdapter extends TransformerObjectSup
      * @param endpoint endpoint object to check
      * @return whether or not this adapter can adapt the given endpoint
      */
+    @Override
     public final boolean supports(Object endpoint) {
         return endpoint instanceof MethodEndpoint && supportsInternal((MethodEndpoint) endpoint);
     }
@@ -49,6 +50,7 @@ public abstract class AbstractMethodEndpointAdapter extends TransformerObjectSup
      *                       <code>true</code>
      * @throws Exception in case of errors
      */
+    @Override
     public final void invoke(MessageContext messageContext, Object endpoint) throws Exception {
         invokeInternal(messageContext, (MethodEndpoint) endpoint);
     }

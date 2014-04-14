@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,11 +30,6 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
-import org.springframework.core.NestedRuntimeException;
-import org.springframework.xml.namespace.QNameUtils;
-import org.springframework.xml.transform.TransformerObjectSupport;
-import org.springframework.xml.transform.TraxUtils;
-
 import nu.xom.Attribute;
 import nu.xom.Builder;
 import nu.xom.Document;
@@ -49,6 +44,11 @@ import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
+
+import org.springframework.core.NestedRuntimeException;
+import org.springframework.xml.namespace.QNameUtils;
+import org.springframework.xml.transform.TransformerObjectSupport;
+import org.springframework.xml.transform.TraxUtils;
 
 /**
  * Abstract base class for endpoints that handle the message payload as XOM elements. Offers the message payload as a
@@ -66,6 +66,7 @@ import org.xml.sax.XMLReader;
 @SuppressWarnings("Since15")
 public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSupport implements PayloadEndpoint {
 
+    @Override
     public final Source invoke(Source request) throws Exception {
         Element requestElement = null;
         if (request != null) {
@@ -120,6 +121,7 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 
         private Element element;
 
+        @Override
         public void domSource(Node node) {
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 element = DOMConverter.convert((org.w3c.dom.Element) node);
@@ -133,6 +135,7 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
             }
         }
 
+        @Override
         public void saxSource(XMLReader reader, InputSource inputSource) throws IOException, SAXException {
             try {
                 Builder builder = new Builder(reader);
@@ -157,15 +160,18 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
             }
         }
 
+        @Override
         public void staxSource(XMLEventReader eventReader) throws XMLStreamException {
             throw new IllegalArgumentException("XMLEventReader not supported");
         }
 
+        @Override
         public void staxSource(XMLStreamReader streamReader) throws XMLStreamException {
             Document document = StaxStreamConverter.convert(streamReader);
             element = document.getRootElement();
         }
 
+        @Override
         public void streamSource(InputStream inputStream) throws IOException {
             try {
                 Builder builder = new Builder();
@@ -177,6 +183,7 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
             }
         }
 
+        @Override
         public void streamSource(Reader reader) throws IOException {
             try {
                 Builder builder = new Builder();
@@ -188,6 +195,7 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
             }
         }
 
+        @Override
         public void source(String systemId) throws Exception {
             try {
                 Builder builder = new Builder();

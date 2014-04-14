@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2012 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,12 @@ import java.io.IOException;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
+import com.sun.xml.wss.impl.callback.PasswordCallback;
+import com.sun.xml.wss.impl.callback.UsernameCallback;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
-
-import com.sun.xml.wss.impl.callback.PasswordCallback;
-import com.sun.xml.wss.impl.callback.UsernameCallback;
 
 /**
  * Simple callback handler that supplies a username and password to a username token at runtime.
@@ -67,6 +67,7 @@ public class SimpleUsernamePasswordCallbackHandler extends AbstractCallbackHandl
         this.username = username;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         Assert.hasLength(username, "username must be set");
         Assert.hasLength(password, "password must be set");

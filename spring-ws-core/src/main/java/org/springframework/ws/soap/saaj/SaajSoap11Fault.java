@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,10 +34,12 @@ class SaajSoap11Fault extends SaajSoapFault implements Soap11Fault {
         super(fault);
     }
 
+    @Override
     public String getFaultActorOrRole() {
 	    return getSaajFault().getFaultActor();
     }
 
+    @Override
     public void setFaultActorOrRole(String faultActor) {
         try {
 	        getSaajFault().setFaultActor(faultActor);
@@ -47,10 +49,12 @@ class SaajSoap11Fault extends SaajSoapFault implements Soap11Fault {
         }
     }
 
+    @Override
     public String getFaultStringOrReason() {
 	    return getSaajFault().getFaultString();
     }
 
+    @Override
     public Locale getFaultStringLocale() {
 	    return getSaajFault().getFaultStringLocale();
     }

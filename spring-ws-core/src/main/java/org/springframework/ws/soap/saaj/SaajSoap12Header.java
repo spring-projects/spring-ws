@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@ class SaajSoap12Header extends SaajSoapHeader implements Soap12Header {
         super(header);
     }
 
+    @Override
     public SoapHeaderElement addNotUnderstoodHeaderElement(QName headerName) {
         try {
 	        SOAPHeaderElement headerElement =
@@ -54,6 +55,7 @@ class SaajSoap12Header extends SaajSoapHeader implements Soap12Header {
         }
     }
 
+    @Override
     public SoapHeaderElement addUpgradeHeaderElement(String[] supportedSoapUris) {
         try {
 	        SOAPHeaderElement headerElement =
@@ -65,6 +67,7 @@ class SaajSoap12Header extends SaajSoapHeader implements Soap12Header {
         }
     }
 
+    @Override
     public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String[] roles, boolean isUltimateDestination)
             throws SoapHeaderException {
         List<SOAPHeaderElement> result = new ArrayList<SOAPHeaderElement>();

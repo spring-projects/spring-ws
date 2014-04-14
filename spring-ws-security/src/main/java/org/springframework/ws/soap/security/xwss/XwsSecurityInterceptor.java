@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package org.springframework.ws.soap.security.xwss;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Hashtable;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
@@ -100,6 +99,7 @@ public class XwsSecurityInterceptor extends AbstractWsSecurityInterceptor implem
         this.policyConfiguration = policyConfiguration;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(policyConfiguration, "policyConfiguration is required");
         Assert.isTrue(policyConfiguration.exists(), "policyConfiguration [" + policyConfiguration + "] does not exist");

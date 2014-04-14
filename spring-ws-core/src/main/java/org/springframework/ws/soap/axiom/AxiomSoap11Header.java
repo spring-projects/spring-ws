@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,14 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.springframework.util.ObjectUtils;
-import org.springframework.ws.soap.SoapHeaderElement;
-import org.springframework.ws.soap.soap11.Soap11Header;
-
 import org.apache.axiom.soap.RolePlayer;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axiom.soap.SOAPHeaderBlock;
+
+import org.springframework.util.ObjectUtils;
+import org.springframework.ws.soap.SoapHeaderElement;
+import org.springframework.ws.soap.soap11.Soap11Header;
 
 /**
  * Axiom-specific version of <code>org.springframework.ws.soap.Soap11Header</code>.
@@ -41,6 +41,7 @@ class AxiomSoap11Header extends AxiomSoapHeader implements Soap11Header {
         super(axiomHeader, axiomFactory);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(final String[] actors) {
         RolePlayer rolePlayer = null;

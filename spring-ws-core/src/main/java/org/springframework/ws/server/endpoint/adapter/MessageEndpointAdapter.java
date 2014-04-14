@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,10 +33,12 @@ import org.springframework.ws.soap.server.SoapMessageDispatcher;
  */
 public class MessageEndpointAdapter implements EndpointAdapter {
 
+    @Override
     public boolean supports(Object endpoint) {
         return endpoint instanceof MessageEndpoint;
     }
 
+    @Override
     public void invoke(MessageContext messageContext, Object endpoint) throws Exception {
         ((MessageEndpoint) endpoint).invoke(messageContext);
     }

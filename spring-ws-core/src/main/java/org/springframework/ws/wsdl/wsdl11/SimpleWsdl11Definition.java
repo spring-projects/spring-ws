@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2007 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,11 +61,13 @@ public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBea
         this.wsdlResource = wsdlResource;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(this.wsdlResource, "wsdl is required");
         Assert.isTrue(this.wsdlResource.exists(), "wsdl '" + this.wsdlResource + "' does not exist");
     }
 
+    @Override
     public Source getSource() {
         try {
             XMLReader xmlReader = XMLReaderFactory.createXMLReader();

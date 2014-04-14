@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,9 @@ package org.springframework.ws.transport.support;
 
 import java.net.URISyntaxException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.FaultAwareWebServiceMessage;
@@ -33,9 +36,6 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
 import org.springframework.ws.transport.context.DefaultTransportContext;
 import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Convenience base class for server-side transport objects. Contains a {@link WebServiceMessageFactory}, and has
@@ -62,6 +62,7 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
         this.messageFactory = messageFactory;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(messageFactory, "messageFactory is required");
     }

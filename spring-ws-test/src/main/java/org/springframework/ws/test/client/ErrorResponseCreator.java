@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ class ErrorResponseCreator implements ResponseCreator {
         this.errorMessage = errorMessage;
     }
 
+    @Override
     public WebServiceMessage createResponse(URI uri,
                                             WebServiceMessage request,
                                             WebServiceMessageFactory factory) throws IOException {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ package org.springframework.ws.server.endpoint;
 import javax.xml.transform.Source;
 import javax.xml.transform.sax.SAXResult;
 
-import org.springframework.xml.transform.TransformerObjectSupport;
-
 import org.xml.sax.ContentHandler;
+
+import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
  * Abstract base class for endpoints that handle the message payload with a SAX <code>ContentHandler</code>. Allows
@@ -47,6 +47,7 @@ public abstract class AbstractSaxPayloadEndpoint extends TransformerObjectSuppor
      * @see #createContentHandler()
      * @see #getResponse(org.xml.sax.ContentHandler)
      */
+    @Override
     public final Source invoke(Source request) throws Exception {
         ContentHandler contentHandler = null;
         if (request != null) {

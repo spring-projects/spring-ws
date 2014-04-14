@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,23 +42,28 @@ class AxiomAttachment implements Attachment {
         this.dataHandler = dataHandler;
     }
 
+    @Override
     public String getContentId() {
         return contentId;
     }
 
+    @Override
     public String getContentType() {
         return dataHandler.getContentType();
     }
 
+    @Override
     public InputStream getInputStream() throws IOException {
         return dataHandler.getInputStream();
     }
 
+    @Override
     public long getSize() {
         // Axiom does not support getting the size of attachments.
         return -1;
     }
 
+    @Override
     public DataHandler getDataHandler() {
         return dataHandler;
     }

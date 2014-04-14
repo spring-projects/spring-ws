@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,13 @@ import java.util.Iterator;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 
-import org.springframework.ws.soap.SoapFaultDetail;
-import org.springframework.ws.soap.SoapFaultDetailElement;
-
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPFaultDetail;
+
+import org.springframework.ws.soap.SoapFaultDetail;
+import org.springframework.ws.soap.SoapFaultDetailElement;
 
 /**
  * Axiom-specific version of <code>org.springframework.ws.soap.SoapFaultDetail</code>.
@@ -40,6 +40,7 @@ class AxiomSoapFaultDetail extends AxiomSoapElement implements SoapFaultDetail {
         super(axiomFaultDetail, axiomFactory);
     }
 
+    @Override
     public SoapFaultDetailElement addFaultDetailElement(QName name) {
         try {
             OMElement element = getAxiomFactory().createOMElement(name, getAxiomFaultDetail());
@@ -51,10 +52,12 @@ class AxiomSoapFaultDetail extends AxiomSoapElement implements SoapFaultDetail {
 
     }
 
+    @Override
     public Iterator<SoapFaultDetailElement> getDetailEntries() {
         return new AxiomSoapFaultDetailElementIterator(getAxiomFaultDetail().getChildElements());
     }
 
+    @Override
     public Result getResult() {
         return new AxiomResult(getAxiomFaultDetail(), getAxiomFactory());
     }
@@ -71,10 +74,12 @@ class AxiomSoapFaultDetail extends AxiomSoapElement implements SoapFaultDetail {
             this.axiomIterator = axiomIterator;
         }
 
+        @Override
         public boolean hasNext() {
             return axiomIterator.hasNext();
         }
 
+        @Override
         public SoapFaultDetailElement next() {
             try {
                 OMElement axiomElement = axiomIterator.next();
@@ -86,6 +91,7 @@ class AxiomSoapFaultDetail extends AxiomSoapElement implements SoapFaultDetail {
 
         }
 
+        @Override
         public void remove() {
             axiomIterator.remove();
         }

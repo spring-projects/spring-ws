@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,12 +16,12 @@
 
 package org.springframework.ws.server.endpoint.interceptor;
 
-import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.server.EndpointInterceptor;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Element;
+
+import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.server.EndpointInterceptor;
 
 /**
  * Default implementation of the <code>EndpointInterceptor</code> interface, for simplified implementation of
@@ -45,6 +45,7 @@ public class EndpointInterceptorAdapter implements EndpointInterceptor {
      *
      * @return <code>true</code>
      */
+    @Override
     public boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
         return true;
     }
@@ -54,6 +55,7 @@ public class EndpointInterceptorAdapter implements EndpointInterceptor {
      *
      * @return <code>true</code>
      */
+    @Override
     public boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
         return true;
     }
@@ -63,6 +65,7 @@ public class EndpointInterceptorAdapter implements EndpointInterceptor {
      *
      * @return <code>true</code>
      */
+    @Override
     public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
         return true;
     }
@@ -70,6 +73,7 @@ public class EndpointInterceptorAdapter implements EndpointInterceptor {
     /**
      * Does nothing by default.
      */
+    @Override
     public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) throws Exception {
     }
 }

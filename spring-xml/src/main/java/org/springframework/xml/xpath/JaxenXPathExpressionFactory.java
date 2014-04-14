@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,6 +83,7 @@ abstract class JaxenXPathExpressionFactory {
             this.xpath = xpath;
         }
 
+        @Override
         public Node evaluateAsNode(Node node) {
             try {
                 return (Node) xpath.selectSingleNode(node);
@@ -92,6 +93,7 @@ abstract class JaxenXPathExpressionFactory {
             }
         }
 
+        @Override
         public boolean evaluateAsBoolean(Node node) {
             try {
                 return xpath.booleanValueOf(node);
@@ -101,6 +103,7 @@ abstract class JaxenXPathExpressionFactory {
             }
         }
 
+        @Override
         public double evaluateAsNumber(Node node) {
             try {
                 return xpath.numberValueOf(node).doubleValue();
@@ -110,6 +113,7 @@ abstract class JaxenXPathExpressionFactory {
             }
         }
 
+        @Override
         public String evaluateAsString(Node node) {
             try {
                 return xpath.stringValueOf(node);
@@ -119,6 +123,7 @@ abstract class JaxenXPathExpressionFactory {
             }
         }
 
+        @Override
         @SuppressWarnings("unchecked")
         public List<Node> evaluateAsNodeList(Node node) {
             try {
@@ -129,6 +134,7 @@ abstract class JaxenXPathExpressionFactory {
             }
         }
 
+        @Override
         public <T> T evaluateAsObject(Node context, NodeMapper<T> nodeMapper) throws XPathException {
             try {
                 Node result = (Node) xpath.selectSingleNode(context);
@@ -149,6 +155,7 @@ abstract class JaxenXPathExpressionFactory {
             }
         }
 
+        @Override
         public <T> List<T> evaluate(Node context, NodeMapper<T> nodeMapper) throws XPathException {
             try {
                 List<?> nodes = xpath.selectNodes(context);

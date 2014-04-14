@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -56,6 +56,7 @@ public class DelegatingSmartEndpointInterceptor implements SmartEndpointIntercep
      * <p/>
      * This implementation delegates to {@link #shouldIntercept(WebServiceMessage, Object)}.
      */
+    @Override
     public boolean shouldIntercept(MessageContext messageContext, Object endpoint) {
         WebServiceMessage request = messageContext.getRequest();
         return request != null && shouldIntercept(request, endpoint);
@@ -74,18 +75,22 @@ public class DelegatingSmartEndpointInterceptor implements SmartEndpointIntercep
         return true;
     }
 
+    @Override
     public boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
         return getDelegate().handleRequest(messageContext, endpoint);
     }
 
+    @Override
     public boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
         return getDelegate().handleResponse(messageContext, endpoint);
     }
 
+    @Override
     public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
         return getDelegate().handleFault(messageContext, endpoint);
     }
 
+    @Override
     public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) throws Exception {
         getDelegate().afterCompletion(messageContext, endpoint, ex);
     }

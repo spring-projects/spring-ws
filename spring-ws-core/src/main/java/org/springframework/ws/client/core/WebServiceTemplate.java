@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,6 +25,9 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.oxm.Marshaller;
@@ -55,9 +58,6 @@ import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
 import org.springframework.ws.transport.http.HttpUrlConnectionMessageSender;
 import org.springframework.ws.transport.support.TransportUtils;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * <strong>The central class for client-side Web services.</strong> It provides a message-driven approach to sending and
@@ -368,18 +368,22 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     // Marshalling methods
     //
 
+    @Override
     public Object marshalSendAndReceive(final Object requestPayload) {
         return marshalSendAndReceive(requestPayload, null);
     }
 
+    @Override
     public Object marshalSendAndReceive(String uri, final Object requestPayload) {
         return marshalSendAndReceive(uri, requestPayload, null);
     }
 
+    @Override
     public Object marshalSendAndReceive(final Object requestPayload, final WebServiceMessageCallback requestCallback) {
         return marshalSendAndReceive(getDefaultUri(), requestPayload, requestCallback);
     }
 
+    @Override
     public Object marshalSendAndReceive(String uri,
                                         final Object requestPayload,
                                         final WebServiceMessageCallback requestCallback) {
@@ -415,20 +419,24 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     // Result-handling methods
     //
 
+    @Override
     public boolean sendSourceAndReceiveToResult(Source requestPayload, Result responseResult) {
         return sendSourceAndReceiveToResult(requestPayload, null, responseResult);
     }
 
+    @Override
     public boolean sendSourceAndReceiveToResult(String uri, Source requestPayload, Result responseResult) {
         return sendSourceAndReceiveToResult(uri, requestPayload, null, responseResult);
     }
 
+    @Override
     public boolean sendSourceAndReceiveToResult(Source requestPayload,
                                                 WebServiceMessageCallback requestCallback,
                                                 final Result responseResult) {
         return sendSourceAndReceiveToResult(getDefaultUri(), requestPayload, requestCallback, responseResult);
     }
 
+    @Override
     public boolean sendSourceAndReceiveToResult(String uri,
                                                 Source requestPayload,
                                                 WebServiceMessageCallback requestCallback,
@@ -456,22 +464,26 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     // Source-handling methods
     //
 
+    @Override
     public <T> T sendSourceAndReceive(final Source requestPayload, final SourceExtractor<T> responseExtractor) {
         return sendSourceAndReceive(requestPayload, null, responseExtractor);
     }
 
+    @Override
     public <T> T sendSourceAndReceive(String uri,
                                        final Source requestPayload,
                                        final SourceExtractor<T> responseExtractor) {
         return sendSourceAndReceive(uri, requestPayload, null, responseExtractor);
     }
 
+    @Override
     public <T> T sendSourceAndReceive(final Source requestPayload,
                                        final WebServiceMessageCallback requestCallback,
                                        final SourceExtractor<T> responseExtractor) {
         return sendSourceAndReceive(getDefaultUri(), requestPayload, requestCallback, responseExtractor);
     }
 
+    @Override
     public <T> T sendSourceAndReceive(String uri,
                                        final Source requestPayload,
                                        final WebServiceMessageCallback requestCallback,
@@ -505,11 +517,13 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     // WebServiceMessage-handling methods
     //
 
+    @Override
     public boolean sendAndReceive(WebServiceMessageCallback requestCallback,
                                   WebServiceMessageCallback responseCallback) {
         return sendAndReceive(getDefaultUri(), requestCallback, responseCallback);
     }
 
+    @Override
     public boolean sendAndReceive(String uri,
                                   WebServiceMessageCallback requestCallback,
                                   WebServiceMessageCallback responseCallback) {
@@ -519,11 +533,13 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
         return result != null && result;
     }
 
+    @Override
     public <T> T sendAndReceive(WebServiceMessageCallback requestCallback,
                                  WebServiceMessageExtractor<T> responseExtractor) {
         return sendAndReceive(getDefaultUri(), requestCallback, responseExtractor);
     }
 
+    @Override
     public <T> T sendAndReceive(String uriString,
                                  WebServiceMessageCallback requestCallback,
                                  WebServiceMessageExtractor<T> responseExtractor) {
@@ -824,6 +840,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
             this.callback = callback;
         }
 
+        @Override
         public Boolean extractData(WebServiceMessage message) throws IOException, TransformerException {
             callback.doWithMessage(message);
             return Boolean.TRUE;
@@ -839,6 +856,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
             this.sourceExtractor = sourceExtractor;
         }
 
+        @Override
         public T extractData(WebServiceMessage message) throws IOException, TransformerException {
             return sourceExtractor.extractData(message.getPayloadSource());
         }

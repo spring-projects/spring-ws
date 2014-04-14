@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,13 +26,13 @@ import javax.wsdl.extensions.ExtensibilityElement;
 import javax.wsdl.extensions.schema.Schema;
 import javax.xml.namespace.QName;
 
-import org.springframework.util.Assert;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import org.springframework.util.Assert;
 
 /**
  * Default implementation of the {@link MessagesProvider}.
@@ -46,6 +46,7 @@ public class DefaultMessagesProvider implements MessagesProvider {
 
     private static final Log logger = LogFactory.getLog(DefaultMessagesProvider.class);
 
+    @Override
     public void addMessages(Definition definition) throws WSDLException {
         Types types = definition.getTypes();
         Assert.notNull(types, "No types element present in definition");

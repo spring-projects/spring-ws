@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ class AxiomSoapFaultDetailElement extends AxiomSoapElement implements SoapFaultD
         super(axiomElement, soapFactory);
     }
 
+    @Override
     public Result getResult() {
         try {
             return new AxiomResult(getAxiomElement(), getAxiomFactory());
@@ -46,6 +47,7 @@ class AxiomSoapFaultDetailElement extends AxiomSoapElement implements SoapFaultD
 
     }
 
+    @Override
     public void addText(String text) {
         try {
             getAxiomElement().setText(text);

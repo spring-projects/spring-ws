@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2012 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -74,22 +74,27 @@ class AxiomHandler implements ContentHandler, LexicalHandler {
 		}
 	}
 
+	@Override
 	public void startDocument() throws SAXException {
 		removeAllNamespaceMappings();
 		newNamespaceMapping();
 	}
 
+	@Override
 	public void endDocument() throws SAXException {
 		removeAllNamespaceMappings();
 	}
 
+	@Override
 	public void startPrefixMapping(String prefix, String uri) throws SAXException {
 		currentNamespaceMapping().put(prefix, uri);
 	}
 
+	@Override
 	public void endPrefixMapping(String prefix) throws SAXException {
 	}
 
+	@Override
 	public void startElement(String uri, String localName, String qName,
 			Attributes attributes) throws SAXException {
 		OMContainer parent = getParent();
@@ -134,18 +139,21 @@ class AxiomHandler implements ContentHandler, LexicalHandler {
 				(XMLConstants.XMLNS_ATTRIBUTE.equals(prefix) && localPart.length() != 0);
 	}
 
+	@Override
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
 		elements.remove(elements.size() - 1);
 		removeNamespaceMapping();
 	}
 
+	@Override
 	public void characters(char ch[], int start, int length) throws SAXException {
 		String data = new String(ch, start, length);
 		OMContainer parent = getParent();
 		factory.createOMText(parent, data, charactersType);
 	}
 
+	@Override
 	public void ignorableWhitespace(char ch[], int start, int length)
 			throws SAXException {
 		charactersType = XMLStreamConstants.SPACE;
@@ -153,31 +161,37 @@ class AxiomHandler implements ContentHandler, LexicalHandler {
 		charactersType = XMLStreamConstants.CHARACTERS;
 	}
 
+	@Override
 	public void processingInstruction(String target, String data) throws SAXException {
 		OMContainer parent = getParent();
 		factory.createOMProcessingInstruction(parent, target, data);
 	}
 
+	@Override
 	public void comment(char ch[], int start, int length) throws SAXException {
 		String content = new String(ch, start, length);
 		OMContainer parent = getParent();
 		factory.createOMComment(parent, content);
 	}
 
+	@Override
 	public void startCDATA() throws SAXException {
 		charactersType = XMLStreamConstants.CDATA;
 	}
 
+	@Override
 	public void endCDATA() throws SAXException {
 		charactersType = XMLStreamConstants.CHARACTERS;
 	}
 
+	@Override
 	public void startEntity(String name) throws SAXException {
 		if (!isPredefinedEntityReference(name)) {
 			charactersType = XMLStreamConstants.ENTITY_REFERENCE;
 		}
 	}
 
+	@Override
 	public void endEntity(String name) throws SAXException {
 		charactersType = XMLStreamConstants.CHARACTERS;
 	}
@@ -192,16 +206,20 @@ class AxiomHandler implements ContentHandler, LexicalHandler {
     * Unsupported
     */
 
+	@Override
 	public void setDocumentLocator(Locator locator) {
 	}
 
+	@Override
 	public void skippedEntity(String name) throws SAXException {
 	}
 
+	@Override
 	public void startDTD(String name, String publicId, String systemId)
 			throws SAXException {
 	}
 
+	@Override
 	public void endDTD() throws SAXException {
 	}
 

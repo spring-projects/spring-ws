@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2012 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,11 +20,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
 
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.Assert;
-import org.springframework.ws.transport.WebServiceConnection;
-
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
@@ -37,6 +32,11 @@ import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.PostMethod;
+
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.Assert;
+import org.springframework.ws.transport.WebServiceConnection;
 
 /**
  * <code>WebServiceMessageSender</code> implementation that uses <a href="http://jakarta.apache.org/commons/httpclient">Jakarta
@@ -210,6 +210,7 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
         this.authScope = authScope;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         if (getCredentials() != null) {
             getHttpClient().getState().setCredentials(getAuthScope(), getCredentials());
@@ -217,6 +218,7 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
         }
     }
 
+    @Override
     public void destroy() throws Exception {
         HttpConnectionManager connectionManager = getHttpClient().getHttpConnectionManager();
         if (connectionManager instanceof MultiThreadedHttpConnectionManager) {
@@ -224,6 +226,7 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
         }
     }
 
+    @Override
     public WebServiceConnection createConnection(URI uri) throws IOException {
         PostMethod postMethod = new PostMethod(uri.toString());
         if (isAcceptGzipEncoding()) {

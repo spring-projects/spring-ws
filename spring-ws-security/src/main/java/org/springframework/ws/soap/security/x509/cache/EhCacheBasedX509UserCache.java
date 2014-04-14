@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,16 +18,16 @@ package org.springframework.ws.soap.security.x509.cache;
 
 import java.security.cert.X509Certificate;
 
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.dao.DataRetrievalFailureException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.util.Assert;
-
 import net.sf.ehcache.CacheException;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.dao.DataRetrievalFailureException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.Assert;
 
 
 /**
@@ -49,10 +49,12 @@ public class EhCacheBasedX509UserCache implements X509UserCache, InitializingBea
 
     //~ Methods ========================================================================================================
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(cache, "cache is mandatory");
     }
 
+    @Override
     public UserDetails getUserFromCache(X509Certificate userCert) {
         Element element = null;
 
@@ -79,6 +81,7 @@ public class EhCacheBasedX509UserCache implements X509UserCache, InitializingBea
         }
     }
 
+    @Override
     public void putUserInCache(X509Certificate userCert, UserDetails user) {
         Element element = new Element(userCert, user);
 
@@ -89,6 +92,7 @@ public class EhCacheBasedX509UserCache implements X509UserCache, InitializingBea
         cache.put(element);
     }
 
+    @Override
     public void removeUserFromCache(X509Certificate userCert) {
         if (logger.isDebugEnabled()) {
             logger.debug("Cache remove: " + userCert.getSubjectDN());

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,22 +31,27 @@ class AxiomSoapHeaderElement extends AxiomSoapElement implements SoapHeaderEleme
         super(axiomHeaderBlock, axiomFactory);
     }
 
+    @Override
     public String getActorOrRole() {
         return getAxiomHeaderBlock().getRole();
     }
 
+    @Override
     public void setActorOrRole(String role) {
         getAxiomHeaderBlock().setRole(role);
     }
 
+    @Override
     public boolean getMustUnderstand() {
         return getAxiomHeaderBlock().getMustUnderstand();
     }
 
+    @Override
     public void setMustUnderstand(boolean mustUnderstand) {
         getAxiomHeaderBlock().setMustUnderstand(mustUnderstand);
     }
 
+    @Override
     public Result getResult() {
         try {
             return new AxiomResult(getAxiomHeaderBlock(), getAxiomFactory());
@@ -57,10 +62,12 @@ class AxiomSoapHeaderElement extends AxiomSoapElement implements SoapHeaderEleme
 
     }
 
+    @Override
     public String getText() {
         return getAxiomHeaderBlock().getText();
     }
 
+    @Override
     public void setText(String content) {
         getAxiomHeaderBlock().setText(content);
     }

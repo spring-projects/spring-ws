@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,6 @@
 
 package org.springframework.ws.server.endpoint.interceptor;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.ws.MockWebServiceMessage;
-import org.springframework.ws.MockWebServiceMessageFactory;
-import org.springframework.ws.context.DefaultMessageContext;
-import org.springframework.ws.context.MessageContext;
-
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
@@ -32,6 +26,12 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.ws.MockWebServiceMessage;
+import org.springframework.ws.MockWebServiceMessageFactory;
+import org.springframework.ws.context.DefaultMessageContext;
+import org.springframework.ws.context.MessageContext;
 
 public class PayloadLoggingInterceptorTest {
 
@@ -110,10 +110,12 @@ public class PayloadLoggingInterceptorTest {
             count++;
         }
 
+        @Override
         public boolean requiresLayout() {
             return false;
         }
 
+        @Override
         public void close() {
         }
     }

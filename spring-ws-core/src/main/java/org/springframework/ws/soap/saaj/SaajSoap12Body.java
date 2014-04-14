@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,27 +39,33 @@ class SaajSoap12Body extends SaajSoapBody implements Soap12Body {
         super(body);
     }
 
+    @Override
     public Soap12Fault getFault() {
 	    SOAPFault fault = getSaajBody().getFault();
         return fault != null ? new SaajSoap12Fault(fault) : null;
     }
 
+    @Override
     public Soap12Fault addClientOrSenderFault(String faultString, Locale locale) {
         return addFault(SoapVersion.SOAP_12.getClientOrSenderFaultName(), faultString, locale);
     }
 
+    @Override
     public Soap12Fault addMustUnderstandFault(String faultString, Locale locale) {
         return addFault(SoapVersion.SOAP_12.getMustUnderstandFaultName(), faultString, locale);
     }
 
+    @Override
     public Soap12Fault addServerOrReceiverFault(String faultString, Locale locale) {
         return addFault(SoapVersion.SOAP_12.getServerOrReceiverFaultName(), faultString, locale);
     }
 
+    @Override
     public Soap12Fault addVersionMismatchFault(String faultString, Locale locale) {
         return addFault(SoapVersion.SOAP_12.getVersionMismatchFaultName(), faultString, locale);
     }
 
+    @Override
     public Soap12Fault addDataEncodingUnknownFault(QName[] subcodes, String reason, Locale locale) {
         QName name = new QName(SoapVersion.SOAP_12.getEnvelopeNamespaceUri(), "DataEncodingUnknown");
         Soap12Fault fault = addFault(name, reason, locale);

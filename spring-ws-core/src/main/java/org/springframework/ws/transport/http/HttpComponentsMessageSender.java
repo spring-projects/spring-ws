@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2013 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -216,12 +216,14 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
         this.authScope = authScope;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         if (credentials != null && getHttpClient() instanceof DefaultHttpClient) {
             ((DefaultHttpClient) getHttpClient()).getCredentialsProvider().setCredentials(authScope, credentials);
         }
     }
 
+    @Override
     public WebServiceConnection createConnection(URI uri) throws IOException {
         HttpPost httpPost = new HttpPost(uri);
         if (isAcceptGzipEncoding()) {
@@ -243,6 +245,7 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
         return null;
     }
 
+    @Override
     public void destroy() throws Exception {
         getHttpClient().getConnectionManager().shutdown();
     }
@@ -254,6 +257,7 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
      */
     public static class RemoveSoapHeadersInterceptor implements HttpRequestInterceptor {
 
+        @Override
         public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
             if (request instanceof HttpEntityEnclosingRequest) {
                 if (request.containsHeader(HTTP.TRANSFER_ENCODING)) {

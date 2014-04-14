@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,12 @@ import java.util.Properties;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
+import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
+import com.sun.xml.wss.impl.callback.TimestampValidationCallback;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
-
-import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
-import com.sun.xml.wss.impl.callback.TimestampValidationCallback;
 
 /**
  * Simple callback handler that validates passwords agains a in-memory <code>Properties</code> object. Password
@@ -58,6 +58,7 @@ public class SimplePasswordValidationCallbackHandler extends AbstractCallbackHan
         this.users = users;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(users, "users is required");
     }
@@ -88,6 +89,7 @@ public class SimplePasswordValidationCallbackHandler extends AbstractCallbackHan
 
     private class SimplePlainTextPasswordValidator implements PasswordValidationCallback.PasswordValidator {
 
+        @Override
         public boolean validate(PasswordValidationCallback.Request request)
                 throws PasswordValidationCallback.PasswordValidationException {
             PasswordValidationCallback.PlainTextPasswordRequest plainTextPasswordRequest =

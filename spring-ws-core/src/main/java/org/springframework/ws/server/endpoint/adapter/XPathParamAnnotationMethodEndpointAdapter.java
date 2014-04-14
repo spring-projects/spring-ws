@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,17 +28,17 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.annotation.XPathParam;
 import org.springframework.xml.namespace.SimpleNamespaceContext;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * Adapter that supports endpoint methods that use XPath expressions. Supports methods with the following signature:
@@ -74,6 +74,7 @@ public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEnd
         this.namespaces = namespaces;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         xpathFactory = XPathFactory.newInstance();
     }

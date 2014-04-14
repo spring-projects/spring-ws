@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,6 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Result;
 
-import org.springframework.util.xml.StaxUtils;
-
 import org.apache.axiom.om.OMDataSource;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
@@ -33,6 +31,8 @@ import org.apache.axiom.om.ds.ByteArrayDataSource;
 import org.apache.axiom.om.util.StAXUtils;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
+
+import org.springframework.util.xml.StaxUtils;
 
 /**
  * Non-caching payload in Axiom.
@@ -82,18 +82,22 @@ class NonCachingPayload extends AbstractPayload {
             }
         }
 
+        @Override
         public void writeStartDocument() throws XMLStreamException {
             // ignored
         }
 
+        @Override
         public void writeStartDocument(String version) throws XMLStreamException {
             // ignored
         }
 
+        @Override
         public void writeStartDocument(String encoding, String version) throws XMLStreamException {
             this.encoding = encoding;
         }
 
+        @Override
         public void writeStartElement(String localName) throws XMLStreamException {
             if (name == null) {
                 name = new QName(localName);
@@ -102,6 +106,7 @@ class NonCachingPayload extends AbstractPayload {
             delegate.writeStartElement(localName);
         }
 
+        @Override
         public void writeStartElement(String namespaceURI, String localName) throws XMLStreamException {
             if (name == null) {
                 name = new QName(namespaceURI, localName);
@@ -110,6 +115,7 @@ class NonCachingPayload extends AbstractPayload {
             delegate.writeStartElement(namespaceURI, localName);
         }
 
+        @Override
         public void writeStartElement(String prefix, String localName, String namespaceURI) throws XMLStreamException {
             if (name == null) {
                 name = new QName(namespaceURI, localName, prefix);
@@ -118,6 +124,7 @@ class NonCachingPayload extends AbstractPayload {
             delegate.writeStartElement(prefix, localName, namespaceURI);
         }
 
+        @Override
         public void writeEndElement() throws XMLStreamException {
             elementDepth--;
             delegate.writeEndElement();
@@ -140,6 +147,7 @@ class NonCachingPayload extends AbstractPayload {
             }
         }
 
+        @Override
         public void writeEmptyElement(String localName) throws XMLStreamException {
             if (name == null) {
                 name = new QName(localName);
@@ -148,6 +156,7 @@ class NonCachingPayload extends AbstractPayload {
             addPayload();
         }
 
+        @Override
         public void writeEmptyElement(String namespaceURI, String localName) throws XMLStreamException {
             if (name == null) {
                 name = new QName(namespaceURI, localName);
@@ -156,6 +165,7 @@ class NonCachingPayload extends AbstractPayload {
             addPayload();
         }
 
+        @Override
         public void writeEmptyElement(String prefix, String localName, String namespaceURI) throws XMLStreamException {
             if (name == null) {
                 name = new QName(namespaceURI, localName, prefix);
@@ -164,6 +174,7 @@ class NonCachingPayload extends AbstractPayload {
             addPayload();
         }
 
+        @Override
         public void writeEndDocument() throws XMLStreamException {
             elementDepth = 0;
             delegate.writeEndDocument();
@@ -172,88 +183,109 @@ class NonCachingPayload extends AbstractPayload {
 
         // Delegation
 
+        @Override
         public void close() throws XMLStreamException {
             addPayload();
             delegate.close();
         }
 
+        @Override
         public void flush() throws XMLStreamException {
             delegate.flush();
         }
 
+        @Override
         public NamespaceContext getNamespaceContext() {
             return delegate.getNamespaceContext();
         }
 
+        @Override
         public String getPrefix(String uri) throws XMLStreamException {
             return delegate.getPrefix(uri);
         }
 
+        @Override
         public Object getProperty(String name) throws IllegalArgumentException {
             return delegate.getProperty(name);
         }
 
+        @Override
         public void setDefaultNamespace(String uri) throws XMLStreamException {
             delegate.setDefaultNamespace(uri);
         }
 
+        @Override
         public void setNamespaceContext(NamespaceContext context) throws XMLStreamException {
             delegate.setNamespaceContext(context);
         }
 
+        @Override
         public void setPrefix(String prefix, String uri) throws XMLStreamException {
             delegate.setPrefix(prefix, uri);
         }
 
+        @Override
         public void writeAttribute(String localName, String value) throws XMLStreamException {
             delegate.writeAttribute(localName, value);
         }
 
+        @Override
         public void writeAttribute(String namespaceURI, String localName, String value) throws XMLStreamException {
             delegate.writeAttribute(namespaceURI, localName, value);
         }
 
+        @Override
         public void writeAttribute(String prefix, String namespaceURI, String localName, String value)
                 throws XMLStreamException {
             delegate.writeAttribute(prefix, namespaceURI, localName, value);
         }
 
+        @Override
         public void writeCData(String data) throws XMLStreamException {
             delegate.writeCData(data);
         }
 
+        @Override
         public void writeCharacters(char[] text, int start, int len) throws XMLStreamException {
             delegate.writeCharacters(text, start, len);
         }
 
+        @Override
         public void writeCharacters(String text) throws XMLStreamException {
             delegate.writeCharacters(text);
         }
 
+        @Override
         public void writeComment(String data) throws XMLStreamException {
             delegate.writeComment(data);
         }
 
+        @Override
         public void writeDefaultNamespace(String namespaceURI) throws XMLStreamException {
             delegate.writeDefaultNamespace(namespaceURI);
         }
 
+        @Override
         public void writeDTD(String dtd) throws XMLStreamException {
             delegate.writeDTD(dtd);
         }
 
+        @Override
         public void writeEntityRef(String name) throws XMLStreamException {
             delegate.writeEntityRef(name);
         }
 
+        @Override
         public void writeNamespace(String prefix, String namespaceURI) throws XMLStreamException {
             delegate.writeNamespace(prefix, namespaceURI);
         }
 
+        @Override
         public void writeProcessingInstruction(String target) throws XMLStreamException {
             delegate.writeProcessingInstruction(target);
         }
 
+        @Override
         public void writeProcessingInstruction(String target, String data) throws XMLStreamException {
             delegate.writeProcessingInstruction(target, data);
         }

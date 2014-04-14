@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,10 +42,12 @@ class SaajSoapFaultDetail extends SaajSoapElement<SOAPFaultElement> implements S
         super(faultElement);
     }
 
+    @Override
     public Result getResult() {
 	    return new DOMResult(getSaajDetail());
     }
 
+    @Override
     public SoapFaultDetailElement addFaultDetailElement(QName name) {
         try {
 	        DetailEntry detailEntry = getSaajDetail().addDetailEntry(name);
@@ -56,6 +58,7 @@ class SaajSoapFaultDetail extends SaajSoapElement<SOAPFaultElement> implements S
         }
     }
 
+    @Override
     public Iterator<SoapFaultDetailElement> getDetailEntries() {
 	    Iterator<DetailEntry> iterator = getSaajDetail().getDetailEntries();
         return new SaajSoapFaultDetailElementIterator(iterator);
@@ -74,15 +77,18 @@ class SaajSoapFaultDetail extends SaajSoapElement<SOAPFaultElement> implements S
             this.iterator = iterator;
         }
 
+        @Override
         public boolean hasNext() {
             return iterator.hasNext();
         }
 
+        @Override
         public SoapFaultDetailElement next() {
             DetailEntry saajDetailEntry = iterator.next();
             return new SaajSoapFaultDetailElement(saajDetailEntry);
         }
 
+        @Override
         public void remove() {
             iterator.remove();
         }

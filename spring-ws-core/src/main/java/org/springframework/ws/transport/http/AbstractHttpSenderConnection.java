@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,10 +40,12 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
     /** Buffer used for reading the response, when the content length is invalid. */
     private byte[] responseBuffer;
 
+    @Override
     public final boolean hasError() throws IOException {
         return getResponseCode() / 100 != 2;
     }
 
+    @Override
     public final String getErrorMessage() throws IOException {
         StringBuilder builder = new StringBuilder();
         String responseMessage = getResponseMessage();
@@ -115,6 +117,7 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
      * Faults
      */
 
+    @Override
     public final boolean hasFault() throws IOException {
         return HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR == getResponseCode() && isXmlResponse();
     }
@@ -129,6 +132,7 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
         return false;
     }
 
+    @Override
     public final void setFault(boolean fault) {
     }
 

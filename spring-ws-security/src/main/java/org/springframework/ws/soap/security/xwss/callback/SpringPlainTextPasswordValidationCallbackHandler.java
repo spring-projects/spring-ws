@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
@@ -65,6 +65,7 @@ public class SpringPlainTextPasswordValidationCallbackHandler extends AbstractCa
         this.ignoreFailure = ignoreFailure;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(authenticationManager, "authenticationManager is required");
     }
@@ -94,6 +95,7 @@ public class SpringPlainTextPasswordValidationCallbackHandler extends AbstractCa
 
     private class SpringSecurityPlainTextPasswordValidator implements PasswordValidationCallback.PasswordValidator {
 
+        @Override
         public boolean validate(PasswordValidationCallback.Request request)
                 throws PasswordValidationCallback.PasswordValidationException {
             PasswordValidationCallback.PlainTextPasswordRequest plainTextRequest =

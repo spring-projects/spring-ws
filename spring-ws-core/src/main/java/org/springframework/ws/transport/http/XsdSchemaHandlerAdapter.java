@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2012 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,14 +26,14 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.w3c.dom.Document;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
 import org.springframework.xml.xsd.XsdSchema;
-
-import org.w3c.dom.Document;
 
 /**
  * Adapter to use the {@link XsdSchema} interface with the generic <code>DispatcherServlet</code>.
@@ -81,11 +81,13 @@ public class XsdSchemaHandlerAdapter extends LocationTransformerObjectSupport
         this.transformSchemaLocations = transformSchemaLocations;
     }
 
+    @Override
     public long getLastModified(HttpServletRequest request, Object handler) {
         Source schemaSource = ((XsdSchema) handler).getSource();
         return LastModifiedHelper.getLastModified(schemaSource);
     }
 
+    @Override
     public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         if (HttpTransportConstants.METHOD_GET.equals(request.getMethod())) {
@@ -110,10 +112,12 @@ public class XsdSchemaHandlerAdapter extends LocationTransformerObjectSupport
         return null;
     }
 
+    @Override
     public boolean supports(Object handler) {
         return handler instanceof XsdSchema;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         schemaLocationXPathExpression =
                 XPathExpressionFactory.createXPathExpression(schemaLocationExpression, expressionNamespaces);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,14 +41,17 @@ class SaajAttachment implements Attachment {
         this.saajAttachment = saajAttachment;
     }
 
+    @Override
     public String getContentId() {
         return saajAttachment.getContentId();
     }
 
+    @Override
     public String getContentType() {
         return saajAttachment.getContentType();
     }
 
+    @Override
     public InputStream getInputStream() throws IOException {
         try {
             return saajAttachment.getDataHandler().getInputStream();
@@ -58,6 +61,7 @@ class SaajAttachment implements Attachment {
         }
     }
 
+    @Override
     public long getSize() {
         try {
             return saajAttachment.getSize();
@@ -67,6 +71,7 @@ class SaajAttachment implements Attachment {
         }
     }
 
+    @Override
     public DataHandler getDataHandler() {
         try {
             return saajAttachment.getDataHandler();

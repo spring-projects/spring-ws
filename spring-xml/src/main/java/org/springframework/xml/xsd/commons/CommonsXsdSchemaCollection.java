@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2012 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -119,10 +119,12 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
         this.uriResolver = uriResolver;
     }
 
+    @Override
     public void setResourceLoader(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
     }
 
+    @Override
     public void afterPropertiesSet() throws IOException {
         Assert.notEmpty(xsdResources, "'xsds' must not be empty");
 
@@ -153,6 +155,7 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 
     }
 
+    @Override
     public XsdSchema[] getXsdSchemas() {
         XsdSchema[] result = new XsdSchema[xmlSchemas.size()];
         for (int i = 0; i < xmlSchemas.size(); i++) {
@@ -162,6 +165,7 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
         return result;
     }
 
+    @Override
     public XmlValidator createValidator() {
 	    try {
 		    Resource[] resources = new Resource[xmlSchemas.size()];

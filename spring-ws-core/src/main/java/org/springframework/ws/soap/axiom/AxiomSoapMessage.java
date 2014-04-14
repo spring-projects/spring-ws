@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2012 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -172,11 +172,13 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
         this.outputFormat = outputFormat;
     }
 
+    @Override
     public void setStreamingPayload(StreamingPayload payload) {
         AxiomSoapBody soapBody = (AxiomSoapBody) getSoapBody();
         soapBody.setStreamingPayload(payload);
     }
 
+    @Override
     public SoapEnvelope getEnvelope() {
         if (envelope == null) {
             try {
@@ -190,19 +192,23 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
         return envelope;
     }
 
+    @Override
     public String getSoapAction() {
         return soapAction;
     }
 
+    @Override
     public void setSoapAction(String soapAction) {
         soapAction = SoapUtils.escapeAction(soapAction);
         this.soapAction = soapAction;
     }
 
+    @Override
     public Document getDocument() {
         return AxiomUtils.toDocument(axiomMessage.getSOAPEnvelope());
     }
 
+    @Override
     public void setDocument(Document document) {
         // save the Soap Action
         String soapAction = getSoapAction();
@@ -216,6 +222,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
         setSoapAction(soapAction);
     }
 
+    @Override
     public boolean isXopPackage() {
         try {
             return MTOMConstants.MTOM_TYPE.equals(attachments.getAttachmentSpecType());
@@ -229,10 +236,12 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
         }
     }
 
+    @Override
     public boolean convertToXopPackage() {
         return false;
     }
 
+    @Override
     public Attachment getAttachment(String contentId) {
         Assert.hasLength(contentId, "contentId must not be empty");
         if (contentId.startsWith("<") && contentId.endsWith(">")) {
@@ -242,10 +251,12 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
         return dataHandler != null ? new AxiomAttachment(contentId, dataHandler) : null;
     }
 
+    @Override
     public Iterator<Attachment> getAttachments() {
         return new AxiomAttachmentIterator();
     }
 
+    @Override
     public Attachment addAttachment(String contentId, DataHandler dataHandler) {
         Assert.hasLength(contentId, "contentId must not be empty");
         Assert.notNull(dataHandler, "dataHandler must not be null");
@@ -253,6 +264,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
         return new AxiomAttachment(contentId, dataHandler);
     }
 
+    @Override
     public void writeTo(OutputStream outputStream) throws IOException {
         try {
 
@@ -380,16 +392,19 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
             iterator = attachments.getContentIDSet().iterator();
         }
 
+        @Override
         public boolean hasNext() {
             return iterator.hasNext();
         }
 
+        @Override
         public Attachment next() {
             String contentId = iterator.next();
             DataHandler dataHandler = attachments.getDataHandler(contentId);
             return new AxiomAttachment(contentId, dataHandler);
         }
 
+        @Override
         public void remove() {
             iterator.remove();
         }

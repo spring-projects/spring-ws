@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2013 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,6 +52,7 @@ class AxiomSoapElement implements SoapElement {
         this.axiomFactory = axiomFactory;
     }
 
+    @Override
     public final QName getName() {
         try {
             return axiomElement.getQName();
@@ -61,6 +62,7 @@ class AxiomSoapElement implements SoapElement {
         }
     }
 
+    @Override
     public final Source getSource() {
         try {
             return StaxUtils.createCustomStaxSource(axiomElement.getXMLStreamReader());
@@ -70,6 +72,7 @@ class AxiomSoapElement implements SoapElement {
         }
     }
 
+    @Override
     public final void addAttribute(QName name, String value) {
         try {
             String namespaceUri = name.getNamespaceURI();
@@ -87,6 +90,7 @@ class AxiomSoapElement implements SoapElement {
         }
     }
 
+    @Override
     public void removeAttribute(QName name) {
         try {
             OMAttribute attribute = getAxiomElement().getAttribute(name);
@@ -99,6 +103,7 @@ class AxiomSoapElement implements SoapElement {
         }
     }
 
+    @Override
     public final String getAttributeValue(QName name) {
         try {
             return getAxiomElement().getAttributeValue(name);
@@ -108,6 +113,7 @@ class AxiomSoapElement implements SoapElement {
         }
     }
 
+    @Override
     public final Iterator<QName> getAllAttributes() {
         try {
             List<QName> results = new ArrayList<QName>();
@@ -123,6 +129,7 @@ class AxiomSoapElement implements SoapElement {
         }
     }
 
+    @Override
     public void addNamespaceDeclaration(String prefix, String namespaceUri) {
         try {
             if (StringUtils.hasLength(prefix)) {

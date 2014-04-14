@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,15 +45,15 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.search.HeaderTerm;
 import javax.mail.search.SearchTerm;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractSenderConnection;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.mail.support.MailTransportUtils;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Implementation of {@link WebServiceConnection} that is used for client-side Mail access. Exposes a {@link Message}
@@ -137,6 +137,7 @@ public class MailSenderConnection extends AbstractSenderConnection {
     /*
      * URI
      */
+    @Override
     public URI getUri() throws URISyntaxException {
         return MailTransportUtils.toUri(to, subject);
     }
@@ -292,10 +293,12 @@ public class MailSenderConnection extends AbstractSenderConnection {
         }
     }
 
+    @Override
     public boolean hasError() throws IOException {
         return false;
     }
 
+    @Override
     public String getErrorMessage() throws IOException {
         return null;
     }
@@ -317,18 +320,22 @@ public class MailSenderConnection extends AbstractSenderConnection {
             this.contentType = contentType;
         }
 
+        @Override
         public InputStream getInputStream() throws IOException {
             return new ByteArrayInputStream(data);
         }
 
+        @Override
         public OutputStream getOutputStream() throws IOException {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public String getContentType() {
             return contentType;
         }
 
+        @Override
         public String getName() {
             return "ByteArrayDataSource";
         }

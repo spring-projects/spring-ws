@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,6 +70,7 @@ public class MockValidationCallbackHandler extends AbstractCallbackHandler {
 
     private class MockCertificateValidator implements CertificateValidationCallback.CertificateValidator {
 
+        @Override
         public boolean validate(X509Certificate certificate)
                 throws CertificateValidationCallback.CertificateValidationException {
             return isValid;
@@ -78,6 +79,7 @@ public class MockValidationCallbackHandler extends AbstractCallbackHandler {
 
     private class MockPasswordValidator implements PasswordValidationCallback.PasswordValidator {
 
+        @Override
         public boolean validate(PasswordValidationCallback.Request request)
                 throws PasswordValidationCallback.PasswordValidationException {
             return isValid;

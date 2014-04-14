@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,9 @@ package org.springframework.ws.soap.security.x509;
 
 import java.security.cert.X509Certificate;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
@@ -31,9 +34,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.x509.cache.NullX509UserCache;
 import org.springframework.ws.soap.security.x509.cache.X509UserCache;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 
 /**
@@ -56,6 +56,7 @@ public class X509AuthenticationProvider implements AuthenticationProvider, Initi
 
     //~ Methods ========================================================================================================
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(userCache, "An x509UserCache must be set");
         Assert.notNull(x509AuthoritiesPopulator, "An X509AuthoritiesPopulator must be set");
@@ -76,6 +77,7 @@ public class X509AuthenticationProvider implements AuthenticationProvider, Initi
      * @throws AuthenticationException if the {@link X509AuthoritiesPopulator} rejects the certficate.
      * @throws BadCredentialsException if no certificate was presented in the authentication request.
      */
+    @Override
     public Authentication authenticate(Authentication authentication)
         throws AuthenticationException {
         if (!supports(authentication.getClass())) {
@@ -110,6 +112,7 @@ public class X509AuthenticationProvider implements AuthenticationProvider, Initi
         return result;
     }
 
+    @Override
     public void setMessageSource(MessageSource messageSource) {
         this.messages = new MessageSourceAccessor(messageSource);
     }
@@ -122,6 +125,7 @@ public class X509AuthenticationProvider implements AuthenticationProvider, Initi
         this.userCache = cache;
     }
 
+    @Override
     public boolean supports(Class authentication) {
         return X509AuthenticationToken.class.isAssignableFrom(authentication);
     }

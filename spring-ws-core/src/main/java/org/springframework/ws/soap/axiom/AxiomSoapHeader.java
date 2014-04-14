@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,17 +20,17 @@ import java.util.Iterator;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 
-import org.springframework.ws.soap.SoapHeader;
-import org.springframework.ws.soap.SoapHeaderElement;
-import org.springframework.ws.soap.SoapHeaderException;
-import org.springframework.xml.namespace.QNameUtils;
-
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axiom.soap.SOAPHeaderBlock;
+
+import org.springframework.ws.soap.SoapHeader;
+import org.springframework.ws.soap.SoapHeaderElement;
+import org.springframework.ws.soap.SoapHeaderException;
+import org.springframework.xml.namespace.QNameUtils;
 
 /**
  * Axiom-specific version of <code>org.springframework.ws.soap.SoapHeader</code>.
@@ -44,10 +44,12 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
         super(axiomHeader, axiomFactory);
     }
 
+    @Override
     public Result getResult() {
         return new AxiomResult(getAxiomHeader(), getAxiomFactory());
     }
 
+    @Override
     public SoapHeaderElement addHeaderElement(QName name) {
         try {
             OMNamespace namespace =
@@ -60,6 +62,7 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
         }
     }
 
+    @Override
     public void removeHeaderElement(QName name) throws SoapHeaderException {
         try {
             OMElement element = getAxiomHeader().getFirstChildWithName(name);
@@ -72,6 +75,7 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public Iterator<SoapHeaderElement> examineMustUnderstandHeaderElements(String role) {
         try {
@@ -82,6 +86,7 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public Iterator<SoapHeaderElement> examineAllHeaderElements() {
         try {
@@ -92,6 +97,7 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public Iterator<SoapHeaderElement> examineHeaderElements(QName name) throws SoapHeaderException {
         try {
@@ -114,10 +120,12 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
             this.axiomIterator = axiomIterator;
         }
 
+        @Override
         public boolean hasNext() {
             return axiomIterator.hasNext();
         }
 
+        @Override
         public SoapHeaderElement next() {
             try {
                 SOAPHeaderBlock axiomHeaderBlock = axiomIterator.next();
@@ -128,6 +136,7 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
             }
         }
 
+        @Override
         public void remove() {
             axiomIterator.remove();
         }

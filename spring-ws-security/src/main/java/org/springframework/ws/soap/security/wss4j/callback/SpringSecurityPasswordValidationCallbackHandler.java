@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2012 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,6 +19,9 @@ package org.springframework.ws.soap.security.wss4j.callback;
 import java.io.IOException;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
+import org.apache.ws.security.WSPasswordCallback;
+import org.apache.ws.security.WSUsernameTokenPrincipal;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,9 +34,6 @@ import org.springframework.security.core.userdetails.cache.NullUserCache;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 import org.springframework.ws.soap.security.support.SpringSecurityUtils;
-
-import org.apache.ws.security.WSPasswordCallback;
-import org.apache.ws.security.WSUsernameTokenPrincipal;
 
 /**
  * Callback handler that validates a plain text or digest password using an Spring Security {@code UserDetailsService}.
@@ -61,6 +61,7 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
         this.userDetailsService = userDetailsService;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(userDetailsService, "userDetailsService is required");
     }
