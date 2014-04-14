@@ -173,15 +173,13 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         }
         else if (SoapVersion.SOAP_12 == getVersion()) {
             // force save of Content Type header
-            if (saajMessage.saveRequired()) {
-                try {
-                    saajMessage.saveChanges();
-                }
-                catch (SOAPException ex) {
-                    throw new SaajSoapMessageException("Could not save message", ex);
-                }
-            }
-            String[] contentTypes = mimeHeaders.getHeader(TransportConstants.HEADER_CONTENT_TYPE);
+	        try {
+	            saajMessage.saveChanges();
+	        }
+	        catch (SOAPException ex) {
+	            throw new SaajSoapMessageException("Could not save message", ex);
+	        }
+	        String[] contentTypes = mimeHeaders.getHeader(TransportConstants.HEADER_CONTENT_TYPE);
             String contentType = !ObjectUtils.isEmpty(contentTypes) ? contentTypes[0] : getVersion().getContentType();
             contentType = SoapUtils.setActionInContentType(contentType, soapAction);
             mimeHeaders.setHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
@@ -251,9 +249,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         }
         try {
 	        SOAPMessage message = getSaajMessage();
-	        if (message.saveRequired()) {
-	            message.saveChanges();
-	        }
+            message.saveChanges();
 	        if (outputStream instanceof TransportOutputStream) {
 	            TransportOutputStream transportOutputStream = (TransportOutputStream) outputStream;
 	            // some SAAJ implementations (Axis 1) do not have a Content-Type header by default
@@ -269,9 +265,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 	                else {
 	                    headers.addHeader(TransportConstants.HEADER_CONTENT_TYPE, SoapVersion.SOAP_12.getContentType());
 	                }
-	                if (message.saveRequired()) {
-	                    message.saveChanges();
-	                }
+                    message.saveChanges();
 	            }
 	            for (Iterator<?> iterator = headers.getAllHeaders(); iterator.hasNext();) {
 	                MimeHeader mimeHeader = (MimeHeader) iterator.next();
@@ -287,39 +281,23 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         }
     }
 
-    private int getSaajVersion() {
-        try {
-            return SaajUtils.getSaajVersion(saajMessage);
-        }
-        catch (SOAPException ex) {
-            throw new SaajSoapEnvelopeException("Could not access envelope: " + ex.getMessage(), ex);
-        }
-    }
-
-    @Override
+	@Override
     public boolean isXopPackage() {
-        if (getSaajVersion() >= SaajUtils.SAAJ_13) {
-            SOAPPart saajPart = saajMessage.getSOAPPart();
-            String[] contentTypes = saajPart.getMimeHeader(TransportConstants.HEADER_CONTENT_TYPE);
-            for (String contentType : contentTypes) {
-                if (contentType.contains(CONTENT_TYPE_XOP)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+	    SOAPPart saajPart = saajMessage.getSOAPPart();
+	    String[] contentTypes = saajPart.getMimeHeader(TransportConstants.HEADER_CONTENT_TYPE);
+	    for (String contentType : contentTypes) {
+	        if (contentType.contains(CONTENT_TYPE_XOP)) {
+	            return true;
+	        }
+	    }
+	    return false;
     }
 
     @Override
     public boolean convertToXopPackage() {
-        if (getSaajVersion() >= SaajUtils.SAAJ_13) {
-            convertMessageToXop();
-            convertPartToXop();
-            return true;
-        }
-        else {
-            return false;
-        }
+	    convertMessageToXop();
+	    convertPartToXop();
+	    return true;
     }
 
     private void convertMessageToXop() {
