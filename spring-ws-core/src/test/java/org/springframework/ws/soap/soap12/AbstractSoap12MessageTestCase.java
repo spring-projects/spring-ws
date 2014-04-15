@@ -78,6 +78,7 @@ public abstract class AbstractSoap12MessageTestCase extends AbstractSoapMessageT
 		        contentType.contains(SoapVersion.SOAP_12.getContentType()));
         assertNull(TransportConstants.HEADER_SOAP_ACTION + " header must not be found",
                 tos.getHeaders().get(TransportConstants.HEADER_SOAP_ACTION));
+        assertTrue("Invalid Content-Type set", contentType.contains(soapAction));
         String resultAccept = tos.getHeaders().get("Accept");
         assertNotNull("Invalid accept header", resultAccept);
     }
