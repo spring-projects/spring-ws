@@ -70,10 +70,11 @@ public abstract class AbstractSoap12MessageTestCase extends AbstractSoapMessageT
                 "<Envelope xmlns='http://www.w3.org/2003/05/soap-envelope'><Body><payload xmlns='http://www.springframework.org' /></Body></Envelope>",
                 result);
         String contentType = tos.getHeaders().get(TransportConstants.HEADER_CONTENT_TYPE);
-        assertTrue("Invalid Content-Type set", contentType.indexOf(SoapVersion.SOAP_12.getContentType()) != -1);
+        assertTrue("Invalid Content-Type set",
+		        contentType.contains(SoapVersion.SOAP_12.getContentType()));
         assertNull(TransportConstants.HEADER_SOAP_ACTION + " header must not be found",
                 tos.getHeaders().get(TransportConstants.HEADER_SOAP_ACTION));
-        assertTrue("Invalid Content-Type set", contentType.indexOf(soapAction) != -1);
+        assertTrue("Invalid Content-Type set: " + contentType, contentType.contains(soapAction));
         String resultAccept = tos.getHeaders().get("Accept");
         assertNotNull("Invalid accept header", resultAccept);
     }
@@ -87,9 +88,9 @@ public abstract class AbstractSoap12MessageTestCase extends AbstractSoapMessageT
         soapMessage.writeTo(tos);
         String contentType = tos.getHeaders().get("Content-Type");
         assertTrue("Content-Type for attachment message does not contains multipart/related",
-                contentType.indexOf("multipart/related") != -1);
+		        contentType.contains("multipart/related"));
         assertTrue("Content-Type for attachment message does not contains type=\"application/soap+xml\"",
-                contentType.indexOf("type=\"application/soap+xml\"") != -1);
+		        contentType.contains("type=\"application/soap+xml\""));
     }
 
     @Override
