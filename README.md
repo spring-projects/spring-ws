@@ -39,7 +39,7 @@ For Maven users:
     <dependency>
         <groupId>org.springframework.ws</groupId>
         <artifactId>spring-ws-core</artifactId>
-        <version>2.1.5.BUILD-SNAPSHOT</version>
+        <version>2.2.0.BUILD-SNAPSHOT</version>
     </dependency>
 
 ## Building from Source

@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping
- * @since 2.1.5
+ * @since 2.2
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

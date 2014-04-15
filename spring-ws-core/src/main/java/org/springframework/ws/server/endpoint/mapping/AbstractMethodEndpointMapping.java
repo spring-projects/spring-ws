@@ -201,7 +201,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
      *
      * @param method the method
      * @return a list of registration keys
-     * @since 2.1.5
+     * @since 2.2
      */
     protected List<T> getLookupKeysForMethod(Method method) {
 	    T key = getLookupKeyForMethod(method);
