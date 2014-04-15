@@ -89,7 +89,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 
     private static final Log logger = LogFactory.getLog(AxiomSoapMessageFactory.class);
 
-    private final XMLInputFactory inputFactory = createXmlInputFactory();
+    private XMLInputFactory inputFactory;
 
     private boolean payloadCaching = true;
 
@@ -103,6 +103,10 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
     private SOAPFactory soapFactory = OMAbstractFactory.getSOAP11Factory();
 
     private boolean langAttributeOnSoap11FaultString = true;
+
+	private boolean replacingEntityReferences = false;
+
+	private boolean supportingExternalEntities = false;
 
 
     /**
@@ -177,7 +181,24 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
         this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
     }
 
-    @Override
+	/**
+	 * Sets whether internal entity references should be replaced with their replacement
+	 * text and report them as characters.
+	 * @see XMLInputFactory#IS_REPLACING_ENTITY_REFERENCES
+	 */
+	public void setReplacingEntityReferences(boolean replacingEntityReferences) {
+		this.replacingEntityReferences = replacingEntityReferences;
+	}
+
+	/**
+	 * Sets whether external parsed entities should be resolved.
+	 * @see XMLInputFactory#IS_SUPPORTING_EXTERNAL_ENTITIES
+	 */
+	public void setSupportingExternalEntities(boolean supportingExternalEntities) {
+		this.supportingExternalEntities = supportingExternalEntities;
+	}
+
+	@Override
     public void afterPropertiesSet() throws Exception {
         if (logger.isInfoEnabled()) {
             logger.info(payloadCaching ? "Enabled payload caching" : "Disabled payload caching");
@@ -186,6 +207,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
             String tempDir = System.getProperty("java.io.tmpdir");
             setAttachmentCacheDir(new File(tempDir));
         }
+		inputFactory = createXmlInputFactory();
     }
 
     @Override
@@ -197,6 +219,9 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
     public AxiomSoapMessage createWebServiceMessage(InputStream inputStream) throws IOException {
         Assert.isInstanceOf(TransportInputStream.class, inputStream,
                 "AxiomSoapMessageFactory requires a TransportInputStream");
+	    if (inputFactory == null) {
+		    inputFactory = createXmlInputFactory();
+	    }
         TransportInputStream transportInputStream = (TransportInputStream) inputStream;
         String contentType = getHeaderValue(transportInputStream, TransportConstants.HEADER_CONTENT_TYPE);
         if (!StringUtils.hasLength(contentType)) {
@@ -329,11 +354,18 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
      * <p/>
      * Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
      * so this method will only be called once.
+     * <p/>
+     * By default this method creates a standard {@link XMLInputFactory} and configures it
+     * based on the {@link #setReplacingEntityReferences(boolean) replacingEntityReferences}
+     * and {@link #setSupportingExternalEntities(boolean) supportingExternalEntities} properties.
      *
      * @return the created factory
      */
     protected XMLInputFactory createXmlInputFactory() {
-        return XMLInputFactory.newInstance();
+	    XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+	    inputFactory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, replacingEntityReferences);
+	    inputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, supportingExternalEntities);
+	    return inputFactory;
     }
 
 
