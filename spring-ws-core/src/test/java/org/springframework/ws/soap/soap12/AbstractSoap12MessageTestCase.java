@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.stream.StreamSource;
@@ -79,7 +80,7 @@ public abstract class AbstractSoap12MessageTestCase extends AbstractSoapMessageT
                 tos.getHeaders().get(TransportConstants.HEADER_SOAP_ACTION));
 	    String l = "";
 	    if (soapMessage instanceof SaajSoapMessage) {
-		    MessageFactory messageFactory = MessageFactory.newInstance("SOAP_1_2_PROTOCOL");
+		    MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 		    l = messageFactory.getClass().getName();
 	    }
         assertTrue("Invalid Content-Type set: " + contentType + " " + l, contentType.contains(soapAction));
