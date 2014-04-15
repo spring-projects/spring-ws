@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
-        "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
-<chapter id="client">
+<chapter xml:id="client"
+         xmlns="http://docbook.org/ns/docbook" version="5.0"
+         xmlns:xl="http://www.w3.org/1999/xlink"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="
+             http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
+             http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
     <title>Using Spring Web Services on the Client</title>
     <section>
         <title>Introduction</title>
@@ -23,7 +27,7 @@
     </section>
     <section>
         <title>Using the client-side API</title>
-        <section id="client-web-service-template">
+        <section xml:id="client-web-service-template">
             <title><classname>WebServiceTemplate</classname></title>
             <para>
                 The <classname>WebServiceTemplate</classname> is the core class for client-side Web service
@@ -32,7 +36,7 @@
                 <classname>Result</classname>. Additionally, it can marshal objects to XML before sending
                 them across a transport, and unmarshal any response XML into an object again.
             </para>
-            <section id="client-transports">
+            <section xml:id="client-transports">
                 <title>URIs and Transports</title>
                 <para>
                     The <classname>WebServiceTemplate</classname> class uses an URI as the message destination.
@@ -52,7 +56,7 @@
                         <classname>HttpUrlConnectionMessageSender</classname>, which uses the facilities provided
                         by Java itself. The alternative is the <classname>HttpComponentsMessageSender</classname>,
                         which uses the
-                        <ulink url="http://hc.apache.org/httpcomponents-client-ga">Apache HttpComponents HttpClient</ulink>.
+                        <link xl:href="http://hc.apache.org/httpcomponents-client-ga">Apache HttpComponents HttpClient</link>.
                         Use the latter if you need more advanced and easy-to-use functionality (such as authentication,
                         HTTP connection pooling, and so forth).
                     </para>
@@ -325,7 +329,7 @@ public class WebServiceClient {
                 to XML to a <interfacename>Marshaller</interfacename>, and the conversion of the response
                 XML to an object to an <interfacename>Unmarshaller</interfacename>. (For more information
                 about marshalling and unmarshaller, refer to
-                <ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/oxm.html">the Spring documentation</ulink>.)
+                <link xl:href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/oxm.html">the Spring documentation</link>.)
                 By using the
                 marshallers, your application code can focus on the business object that is being sent or
                 received and not be concerned with the details of how it is represented as XML. In order to
@@ -523,9 +527,9 @@ public void marshalWithSoapActionHeader(final Source s) {
             </para>
             <programlistingco>
                 <areaspec>
-                    <area id="client.test.client.gateway" coords="3"/>
-                    <area id="client.test.client.request" coords="6"/>
-                    <area id="client.test.client.response" coords="10"/>
+                    <area xml:id="client.test.client.gateway" coords="3"/>
+                    <area xml:id="client.test.client.request" coords="6"/>
+                    <area xml:id="client.test.client.response" coords="10"/>
                 </areaspec>
                 <programlisting><![CDATA[import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 
@@ -572,23 +576,23 @@ public class CustomerClient extends WebServiceGatewaySupport {
             </para>
             <programlistingco>
                 <areaspec>
-                    <areaset id="client.test.test.imports" coords="">
-                        <area id="client.test.test.imports.server" coords="13"/>
-                        <area id="client.test.test.imports.requestMatchers" coords="14"/>
-                        <area id="client.test.test.imports.responseCreators" coords="15"/>
+                    <areaset xml:id="client.test.test.imports">
+                        <area xml:id="client.test.test.imports.server" coords="13"/>
+                        <area xml:id="client.test.test.imports.requestMatchers" coords="14"/>
+                        <area xml:id="client.test.test.imports.responseCreators" coords="15"/>
                     </areaset>
-                    <areaset id="client.test.test.spring" coords="">
-                        <area id="client.test.test.spring.runwith" coords="17"/>
-                        <area id="client.test.test.spring.configuration" coords="18"/>
+                    <areaset xml:id="client.test.test.spring">
+                        <area xml:id="client.test.test.spring.runwith" coords="17"/>
+                        <area xml:id="client.test.test.spring.configuration" coords="18"/>
                     </areaset>
-                    <area id="client.test.test.client" coords="22"/>
-                    <area id="client.test.test.mockserver" coords="24"/>
-                    <area id="client.test.test.expectAndRespond" coords="42"/>
-                    <areaset id="client.test.test.client.invoke" coords="">
-                        <area id="client.test.test.client.invoke.actual" coords="44"/>
-                        <area id="client.test.test.client.invoke.assert" coords="45"/>
+                    <area xml:id="client.test.test.client" coords="22"/>
+                    <area xml:id="client.test.test.mockserver" coords="24"/>
+                    <area xml:id="client.test.test.expectAndRespond" coords="42"/>
+                    <areaset xml:id="client.test.test.client.invoke">
+                        <area xml:id="client.test.test.client.invoke.actual" coords="44"/>
+                        <area xml:id="client.test.test.client.invoke.assert" coords="45"/>
                     </areaset>
-                    <area id="client.test.test.client.verify" coords="47"/>
+                    <area xml:id="client.test.test.client.verify" coords="47"/>
                 </areaspec>
                 <programlisting><![CDATA[import javax.xml.transform.Source;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -711,7 +715,7 @@ public class CustomerClientIntegrationTest {
                 </calloutlist>
             </programlistingco>
         </section>
-        <section id="client-test-request-matcher">
+        <section xml:id="client-test-request-matcher">
             <title><interfacename>RequestMatcher</interfacename> and <classname>RequestMatchers</classname></title>
             <para>
                 To verify whether the request message meets certain expectations, the
@@ -789,7 +793,7 @@ public class CustomerClientIntegrationTest {
                 refer to the class level Javadoc.
             </para>
         </section>
-        <section id="client-test-response-creator">
+        <section xml:id="client-test-response-creator">
             <title><interfacename>ResponseCreator</interfacename> and <classname>ResponseCreators</classname></title>
             <para>
                 When the request message has been verified and meets the defined expectations, the

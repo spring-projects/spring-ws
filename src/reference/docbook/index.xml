@@ -1,26 +1,39 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
-        "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
-<book xmlns:xi="http://www.w3.org/2001/XInclude">
-
-    <bookinfo>
-        <title>Spring Web Services</title>
-        <subtitle>Reference Documentation</subtitle>
+<?xml version="1.0" encoding="UTF-8"?>
+<book xml:id="spring-framework-reference"
+    xmlns="http://docbook.org/ns/docbook" version="5.0"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd">
+    <info>
+        <title>Spring Web Services Reference Documentation</title>
+        <productname>Spring Web Services</productname>
         <releaseinfo>${version}</releaseinfo>
 
         <authorgroup>
             <author>
-                <firstname>Arjen</firstname>
-                <surname>Poutsma</surname>
+                <personname>
+                    <firstname>Arjen</firstname>
+                    <surname>Poutsma</surname>
+                </personname>
             </author>
             <author>
-                <firstname>Rick</firstname>
-                <surname>Evans</surname>
+                <personname>
+                    <firstname>Rick</firstname>
+                    <surname>Evans</surname>
+                </personname>
             </author>
             <author>
-                <firstname>Tareq</firstname>
-                <surname>Abed Rabbo</surname>
+                <personname>
+                    <firstname>Tareq</firstname>
+                    <surname>Abed Rabbo</surname>
+                </personname>
             </author>
         </authorgroup>
+
+        <copyright>
+            <year>2005-2014</year>
+        </copyright>
 
         <legalnotice>
             <para>
@@ -30,7 +43,7 @@
                 distributed in print or electronically.
             </para>
         </legalnotice>
-    </bookinfo>
+    </info>
 
     <toc/>
 
@@ -69,7 +82,7 @@
         <xi:include href="client.xml"/>
         <xi:include href="security.xml"/>
     </part>
-    <part id="resources">
+    <part xml:id="resources">
         <title>Other Resources</title>
         <partintro>
             <para>

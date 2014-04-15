@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
-                 "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
-<chapter id="tutorial">
+<chapter xml:id="tutorial"
+    xmlns="http://docbook.org/ns/docbook" version="5.0"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
+        http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
     <title>Writing Contract-First Web Services</title>
     <section>
         <title>Introduction</title>
@@ -48,7 +52,7 @@
             <para>
                 A holiday consists of a start date and an end date. We have also decided to
                 use the standard
-                <ulink url="http://www.cl.cam.ac.uk/~mgk25/iso-time.html">ISO 8601</ulink>
+                <link xl:href="http://www.cl.cam.ac.uk/~mgk25/iso-time.html">ISO 8601</link>
                 date format for the dates, because that will save a lot of parsing hassle.
                 We have also added a namespace to the element, to make sure our elements
                 can used within other XML documents.
@@ -100,7 +104,7 @@
             </para>
         </section>
     </section>
-    <section id="tutorial.xsd">
+    <section xml:id="tutorial.xsd">
         <title>Data Contract</title>
         <para>
             Now that we have seen some examples of the XML data that we will use,
@@ -110,9 +114,9 @@
         </para>
         <itemizedlist>
             <listitem><para>DTDs</para></listitem>
-            <listitem><para><ulink url="http://www.w3.org/XML/Schema">XML Schema (XSD)</ulink></para></listitem>
-            <listitem><para><ulink url="http://www.relaxng.org/">RELAX NG</ulink></para></listitem>
-            <listitem><para><ulink url="http://www.schematron.com/">Schematron</ulink></para></listitem>
+            <listitem><para><link xl:href="http://www.w3.org/XML/Schema">XML Schema (XSD)</link></para></listitem>
+            <listitem><para><link xl:href="http://www.relaxng.org/">RELAX NG</link></para></listitem>
+            <listitem><para><link xl:href="http://www.schematron.com/">Schematron</link></para></listitem>
         </itemizedlist>
         <para>
             DTDs have limited namespace support, so they are not suitable for Web
@@ -226,14 +230,14 @@
         </para>
         <programlistingco>
             <areaspec>
-                <area id="tutorial.xsd.all" coords="8"/>
-                <areaset id="tutorial.xsd.dates" coords="">
-                    <area id="tutorial.xsd.dates.1" coords="16"/>
-                    <area id="tutorial.xsd.dates.2" coords="17"/>
+                <area xml:id="tutorial.xsd.all" coords="8"/>
+                <areaset xml:id="tutorial.xsd.dates">
+                    <area xml:id="tutorial.xsd.dates.1" coords="16"/>
+                    <area xml:id="tutorial.xsd.dates.2" coords="17"/>
                 </areaset>
-                <areaset id="tutorial.xsd.strings" coords="">
-                    <area id="tutorial.xsd.strings.1" coords="23"/>
-                    <area id="tutorial.xsd.strings.2" coords="24"/>
+                <areaset xml:id="tutorial.xsd.strings">
+                    <area xml:id="tutorial.xsd.strings.1" coords="23"/>
+                    <area xml:id="tutorial.xsd.strings.2" coords="24"/>
                 </areaset>
             </areaspec>
             <programlisting><![CDATA[<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
@@ -287,10 +291,10 @@
             We store this file as <filename>hr.xsd</filename>.
         </para>
     </section>
-    <section id="tutorial-service-contract">
+    <section xml:id="tutorial-service-contract">
         <title>Service contract</title>
         <para>
-            A service contract is generally expressed as a <ulink url="http://www.w3.org/TR/wsdl">WSDL</ulink> file.
+            A service contract is generally expressed as a <link xl:href="http://www.w3.org/TR/wsdl">WSDL</link> file.
             Note that in Spring-WS, <emphasis>writing the WSDL by hand is not required</emphasis>. Based on the XSD and
             some conventions, Spring-WS can create the WSDL for you, as explained in the section entitled
             <xref linkend="tutorial.implementing.endpoint"/>.
@@ -345,27 +349,27 @@
         </para>
         <programlistingco>
             <areaspec>
-                <area id="tutorial.wsdl.import" coords="9"/>
-                <areaset id="tutorial.wsdl.message" coords="">
-                    <area id="tutorial.wsdl.message.def" coords="13"/>
-                    <area id="tutorial.wsdl.message.ref" coords="18"/>
+                <area xml:id="tutorial.wsdl.import" coords="9"/>
+                <areaset xml:id="tutorial.wsdl.message">
+                    <area xml:id="tutorial.wsdl.message.def" coords="13"/>
+                    <area xml:id="tutorial.wsdl.message.ref" coords="18"/>
                 </areaset>
-                <area id="tutorial.wsdl.message.part" coords="14"/>
-                <areaset id="tutorial.wsdl.portType" coords="">
-                    <area id="tutorial.wsdl.portType.def" coords="16"/>
-                    <area id="tutorial.wsdl.portType.ref" coords="21"/>
+                <area xml:id="tutorial.wsdl.message.part" coords="14"/>
+                <areaset xml:id="tutorial.wsdl.portType">
+                    <area xml:id="tutorial.wsdl.portType.def" coords="16"/>
+                    <area xml:id="tutorial.wsdl.portType.ref" coords="21"/>
                 </areaset>
-                <areaset id="tutorial.wsdl.binding" coords="">
-                    <area id="tutorial.wsdl.binding.def" coords="21"/>
-                    <area id="tutorial.wsdl.binding.ref" coords="32"/>
+                <areaset xml:id="tutorial.wsdl.binding">
+                    <area xml:id="tutorial.wsdl.binding.def" coords="21"/>
+                    <area xml:id="tutorial.wsdl.binding.ref" coords="32"/>
                 </areaset>
-                <areaset id="tutorial.wsdl.doclit" coords="">
-                    <area id="tutorial.wsdl.doclit.doc" coords="22"/>
-                    <area id="tutorial.wsdl.doclit.lit" coords="27"/>
+                <areaset xml:id="tutorial.wsdl.doclit">
+                    <area xml:id="tutorial.wsdl.doclit.doc" coords="22"/>
+                    <area xml:id="tutorial.wsdl.doclit.lit" coords="27"/>
                 </areaset>
-                <area id="tutorial.wsdl.transport" coords="23"/>
-                <area id="tutorial.wsdl.soapAction" coords="25"/>
-                <area id="tutorial.wsdl.address" coords="33"/>
+                <area xml:id="tutorial.wsdl.transport" coords="23"/>
+                <area xml:id="tutorial.wsdl.soapAction" coords="25"/>
+                <area xml:id="tutorial.wsdl.address" coords="33"/>
             </areaspec>
             <programlisting><![CDATA[
 <wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
@@ -461,10 +465,10 @@
             This is the final WSDL. We will describe how to implement the resulting schema and WSDL in the next section.
         </para>
     </section>
-    <section id="tutorial-creating-project">
+    <section xml:id="tutorial-creating-project">
         <title>Creating the project</title>
         <para>
-            In this section, we will be using <ulink url="http://maven.apache.org/">Maven3</ulink> to create the
+            In this section, we will be using <link xl:href="http://maven.apache.org/">Maven3</link> to create the
             initial project structure for us. Doing so is not required, but greatly reduces the amount of code we
             have to write to setup our HolidayService.
         </para>
@@ -526,7 +530,7 @@
             <filename>'WEB-INF/'</filename> folder.
         </para>
     </section>
-    <section id="tutorial.implementing.endpoint">
+    <section xml:id="tutorial.implementing.endpoint">
         <title>Implementing the Endpoint</title>
         <para>
            In Spring-WS, you will implement <emphasis>Endpoints</emphasis> to handle incoming XML messages.
@@ -539,17 +543,17 @@
         <section>
             <title>Handling the XML Message</title>
             <para>
-                In this sample application, we are going to use <ulink url="http://www.jdom.org">JDom 2</ulink> to handle
+                In this sample application, we are going to use <link xl:href="http://www.jdom.org">JDom 2</link> to handle
                 the XML message.
-                We are also using <ulink url="http://www.w3schools.com/xpath/">XPath</ulink>, because it allows us to
+                We are also using <link xl:href="http://www.w3schools.com/xpath/">XPath</link>, because it allows us to
                 select particular parts of the XML JDOM tree, without requiring strict schema conformance.
             </para>
             <programlistingco>
                 <areaspec>
-                    <area id="tutorial.endpoint.atEndpoint" coords="21"/>
-                    <area id="tutorial.endpoint.constr" coords="35"/>
-                    <area id="tutorial.endpoint.payloadRoot" coords="48"/>
-                    <area id="tutorial.endpoint.method" coords="49"/>
+                    <area xml:id="tutorial.endpoint.atEndpoint" coords="21"/>
+                    <area xml:id="tutorial.endpoint.constr" coords="35"/>
+                    <area xml:id="tutorial.endpoint.payloadRoot" coords="48"/>
+                    <area xml:id="tutorial.endpoint.method" coords="49"/>
                 </areaspec>
                 <programlisting><![CDATA[package com.mycompany.hr.ws;
 
@@ -720,7 +724,7 @@ public class HolidayEndpoint {
                 We also instruct Spring-WS to use annotation-driven endpoints, with the
                 <literal>&lt;sws:annotation-driven&gt;</literal> element.
             </para>
-            <programlisting id="tutorial.example.sws-conf-file"><![CDATA[<beans xmlns="http://www.springframework.org/schema/beans"
+            <programlisting xml:id="tutorial.example.sws-conf-file"><![CDATA[<beans xmlns="http://www.springframework.org/schema/beans"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:context="http://www.springframework.org/schema/context"
   xmlns:sws="http://www.springframework.org/schema/web-services"
@@ -780,7 +784,7 @@ public interface HumanResourceService {
                 </para>
                 <programlistingco>
                     <areaspec>
-                      <area id="tutorial.stubimpl.atService" coords="7"/>
+                      <area xml:id="tutorial.stubimpl.atService" coords="7"/>
                     </areaspec>
                     <programlisting><![CDATA[package com.mycompany.hr.service;
 
@@ -807,7 +811,7 @@ public class StubHumanResourceService implements HumanResourceService {
             </programlistingco>
         </section>
     </section>
-    <section id="tutorial-publishing-wsdl">
+    <section xml:id="tutorial-publishing-wsdl">
         <title>Publishing the WSDL</title>
         <para>
             Finally, we need to publish the WSDL. As stated in <xref linkend="tutorial-service-contract"/>, we don't
@@ -816,11 +820,11 @@ public class StubHumanResourceService implements HumanResourceService {
         </para>
         <programlistingco>
             <areaspec>
-                <area id="tutorial.wsdl.gen.bean" coords="1"/>
-                <area id="tutorial.wsdl.gen.schema" coords="5"/>
-                <area id="tutorial.wsdl.gen.portType" coords="2"/>
-                <area id="tutorial.wsdl.gen.locationUri" coords="3"/>
-                <area id="tutorial.wsdl.gen.tns" coords="4"/>
+                <area xml:id="tutorial.wsdl.gen.bean" coords="1"/>
+                <area xml:id="tutorial.wsdl.gen.schema" coords="5"/>
+                <area xml:id="tutorial.wsdl.gen.portType" coords="2"/>
+                <area xml:id="tutorial.wsdl.gen.locationUri" coords="3"/>
+                <area xml:id="tutorial.wsdl.gen.tns" coords="4"/>
             </areaspec>
             <programlisting><![CDATA[<sws:dynamic-wsdl id="holiday"
     portTypeName="HumanResource"
@@ -879,9 +883,9 @@ public class StubHumanResourceService implements HumanResourceService {
         <para>
             You can create a WAR file using <command>mvn install</command>.
             If you deploy the application (to Tomcat, Jetty, etc.), and point your browser at
-            <ulink url="http://localhost:8080/holidayService/holiday.wsdl">this location</ulink>, you will
+            <link xl:href="http://localhost:8080/holidayService/holiday.wsdl">this location</link>, you will
             see the generated WSDL. This WSDL is ready to be used by clients, such as
-            <ulink url="http://www.soapui.org/">soapUI</ulink>, or other SOAP frameworks.
+            <link xl:href="http://www.soapui.org/">soapUI</link>, or other SOAP frameworks.
         </para>
     </section>
     <para>

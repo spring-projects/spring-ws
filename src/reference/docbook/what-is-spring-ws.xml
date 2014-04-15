@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
-                 "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd"> 
-<chapter id="what-is-spring-ws">
+<chapter xml:id="what-is-spring-ws"
+         xmlns="http://docbook.org/ns/docbook" version="5.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd">
     <title>What is Spring Web Services?</title>
     <section>
         <title>Introduction</title>
@@ -37,9 +38,8 @@
         <formalpara>
             <title>Flexible XML Marshalling</title>
             <para>
-                The Object/XML Mapping module in the Spring Web Services distribution supports JAXB 1 and 2, Castor, 
-                XMLBeans, JiBX, and XStream. And because it is a separate module, you can use it in non-Web services code 
-                as well.
+                Spring Web Services builds on the Object/XML Mapping module in the Spring Framework, which supports JAXB 1 and 2, Castor,
+                XMLBeans, JiBX, and XStream.
             </para>
         </formalpara>
         <formalpara>
@@ -60,12 +60,6 @@
             <para>
                 The WS-Security implementation of Spring Web Services provides integration with Spring Security.
                 This means you can use your existing Spring Security configuration for your SOAP service as well.
-            </para>
-        </formalpara>
-        <formalpara>
-            <title>Built by Maven</title>
-            <para>
-                This assists you in effectively reusing the Spring Web Services artifacts in your own Maven-based projects.
             </para>
         </formalpara>
         <formalpara>
@@ -122,13 +116,9 @@
         </itemizedlist>
         <para>
             The following figure illustrates the Spring-WS modules and the dependencies between them. Arrows indicate 
-            dependencies, i.e. Spring-WS Core depends on Spring-XML and the OXM module found in Spring 3.
+            dependencies, i.e. Spring-WS Core depends on Spring-XML and the OXM module found in Spring 3 and higher.
             <mediaobject>
-                    <imageobject role="fo">
-                        <imagedata fileref="src/docbkx/resources/images/spring-deps.png"
-                                   format="PNG" align="center"/>
-                    </imageobject>
-                    <imageobject role="html">
+                    <imageobject>
                         <imagedata fileref="images/spring-deps.png"
                                    format="PNG" align="center"/>
                     </imageobject>

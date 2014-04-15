@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
-        "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
-<chapter id="common">
+<chapter xml:id="common"
+         xmlns="http://docbook.org/ns/docbook" version="5.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="
+             http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd">
     <title>Shared components</title>
     <para>
         In this chapter, we will explore the components which are shared between client- and server-side
         Spring-WS development. These interfaces and classes represent the building blocks of Spring-WS, so
         it is important to understand what they do, even if you do not use them directly.
     </para>
-    <section id="web-service-messages">
+    <section xml:id="web-service-messages">
         <title>Web service messages</title>
-        <section id="web-service-message">
+        <section xml:id="web-service-message">
             <title><interfacename>WebServiceMessage</interfacename></title>
             <para>
                 One of the core interfaces of Spring Web Services is the <interfacename>WebServiceMessage</interfacename>.
@@ -71,7 +73,7 @@
                 output stream.
             </para>
         </section>
-        <section id="soap-message">
+        <section xml:id="soap-message">
             <title><interfacename>SoapMessage</interfacename></title>
             <para>
                 The <interfacename>SoapMessage</interfacename> is a subclass of
@@ -86,7 +88,7 @@
                 <interfacename>SoapMessage</interfacename>.
             </para>
         </section>
-        <section id="message-factories">
+        <section xml:id="message-factories">
             <title>Message Factories</title>
             <para>
                 Concrete message implementations are created by a <interfacename>WebServiceMessageFactory</interfacename>.
@@ -192,7 +194,7 @@
                     <interfacename>StreamingPayload</interfacename>.
                 </para>
             </section>
-            <section id="soap_11_or_12">
+            <section xml:id="soap_11_or_12">
                 <title><acronym>SOAP</acronym> 1.1 or 1.2</title>
                 <para>
                     Both the <classname>SaajSoapMessageFactory</classname> and the
@@ -238,7 +240,7 @@
                 </caution>
             </section>
         </section>
-        <section id="message-context">
+        <section xml:id="message-context">
         	<title><interfacename>MessageContext</interfacename></title>
         	<para>
         		Typically, messages come in pairs: a request and a response. A request is created on the client-side,
@@ -257,7 +259,7 @@
        		</para>
         </section>
     </section>
-    <section id="transport-context">
+    <section xml:id="transport-context">
         <title><interfacename>TransportContext</interfacename></title>
         <para>
             One of the key properties of the SOAP protocol is that it tries to be transport-agnostic. This is why, for
@@ -279,7 +281,7 @@ HttpServletConnection connection = (HttpServletConnection )context.getConnection
 HttpServletRequest request = connection.getHttpServletRequest();
 String ipAddress = request.getRemoteAddr();]]></programlisting>
     </section>
-    <section id="xpath">
+    <section xml:id="xpath">
         <title>Handling XML With XPath</title>
         <para>
             One of the best ways to handle XML is to use XPath.
@@ -302,7 +304,7 @@ String ipAddress = request.getRemoteAddr();]]></programlisting>
             Spring Web Services has two ways to use XPath within your application: the faster
             <interfacename>XPathExpression</interfacename> or the more flexible <classname>XPathTemplate</classname>.
         </para>
-        <section id="xpath-expression">
+        <section xml:id="xpath-expression">
             <title><interfacename>XPathExpression</interfacename></title>
             <para>
                 The <interfacename>XPathExpression</interfacename> is an abstraction over a compiled XPath expression,
@@ -371,7 +373,7 @@ public class MyXPathClass  {
               return new Contact(nameElement.getTextContent(), phoneElement.getTextContent());
            }
         });
-      ]]><lineannotation>// do something with list of <classname>Contact</classname> objects</lineannotation><![CDATA[
+      ]]><lineannotation>// do something with list of Contact objects</lineannotation><![CDATA[
    }
 }]]></programlisting>
             <para>
@@ -380,7 +382,7 @@ public class MyXPathClass  {
                 which we use later on.
             </para>
         </section>
-        <section id="xpath-template">
+        <section xml:id="xpath-template">
             <title><classname>XPathTemplate</classname></title>
             <para>
                 The <interfacename>XPathExpression</interfacename> only allows you to evaluate a single, pre-compiled
@@ -402,7 +404,7 @@ public class MyXPathClass {
 }]]></programlisting>
         </section>
     </section>
-    <section id="logging">
+    <section xml:id="logging">
         <title>Message Logging and Tracing</title>
         <para>
             When developing or debugging a Web service, it can be quite useful to look at the content of a (SOAP)

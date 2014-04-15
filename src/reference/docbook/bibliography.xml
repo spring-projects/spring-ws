@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE bibliography PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
-                 "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
-<bibliography>
+<bibliography
+    xmlns="http://docbook.org/ns/docbook" version="5.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd">
     <title>Bibliography</title>
-    <biblioentry id="waldo-94">
+    <biblioentry xml:id="waldo-94">
         <authorgroup>
             <author>
-                <firstname>Jim</firstname>
-                <surname>Waldo</surname>
+                <personname>
+                    <firstname>Jim</firstname>
+                    <surname>Waldo</surname>
+                </personname>
             </author>
             <author>
-                <firstname>Ann</firstname>
-                <surname>Wollrath</surname>
+                <personname>
+                    <firstname>Ann</firstname>
+                    <surname>Wollrath</surname>
+                </personname>
             </author>
             <author>
-                <firstname>Sam</firstname>
-                <surname>Kendall</surname>
+                <personname>
+                    <firstname>Sam</firstname>
+                    <surname>Kendall</surname>
+                </personname>
             </author>
         </authorgroup>
         <title>A Note on Distributed Computing</title>
@@ -24,15 +32,19 @@
         </publisher>
         <date>1994</date>
     </biblioentry>
-    <biblioentry id="alpine">
+    <biblioentry xml:id="alpine">
         <authorgroup>
             <author>
-                <firstname>Steve</firstname>
-                <surname>Loughran</surname>
+                <personname>
+                    <firstname>Steve</firstname>
+                    <surname>Loughran</surname>
+                </personname>
             </author>
             <author>
-                <firstname>Edmund</firstname>
-                <surname>Smith</surname>
+                <personname>
+                    <firstname>Edmund</firstname>
+                    <surname>Smith</surname>
+                </personname>
             </author>
         </authorgroup>
         <title>Rethinking the Java SOAP Stack</title>
@@ -42,16 +54,20 @@
             <holder>IEEE Telephone Laboratories, Inc.</holder>
         </copyright>
     </biblioentry>
-    <biblioentry id="effective-enterprise-java">
+    <biblioentry xml:id="effective-enterprise-java">
         <authorgroup>
             <author>
-                <firstname>Ted</firstname>
-                <surname>Neward</surname>
+                <personname>
+                    <firstname>Ted</firstname>
+                    <surname>Neward</surname>
+                </personname>
             </author>
         </authorgroup>
         <editor>
-            <firstname>Scott</firstname>
-            <surname>Meyers</surname>
+            <personname>
+                <firstname>Scott</firstname>
+                <surname>Meyers</surname>
+            </personname>
         </editor>
         <title>Effective Enterprise Java</title>
         <publisher>
@@ -59,16 +75,20 @@
         </publisher>
         <date>2004</date>
     </biblioentry>
-    <biblioentry id="effective-xml">
+    <biblioentry xml:id="effective-xml">
         <authorgroup>
             <author>
-                <firstname>Elliotte Rusty</firstname>
-                <surname>Harold</surname>
+                <personname>
+                    <firstname>Elliotte Rusty</firstname>
+                    <surname>Harold</surname>
+                </personname>
             </author>
         </authorgroup>
         <editor>
-            <firstname>Scott</firstname>
-            <surname>Meyers</surname>
+            <personname>
+                <firstname>Scott</firstname>
+                <surname>Meyers</surname>
+            </personname>
         </editor>
         <title>Effective XML</title>
         <publisher>

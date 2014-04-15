@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
-                 "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
-<chapter id="why-contract-first">
+<chapter xml:id="why-contract-first"
+         xmlns="http://docbook.org/ns/docbook" version="5.0"
+         xmlns:xl="http://www.w3.org/1999/xlink"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="
+             http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
+             http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
     <title>Why Contract First?</title>
     <section>
         <title>Introduction</title>
@@ -17,8 +21,8 @@
                 WSDL stands for Web Services Description Language. A WSDL file is an XML document that describes a Web 
                 service. It specifies the location of the service and the operations (or methods) the service exposes.
                 For more information about WSDL, refer to the 
-                <ulink url="http://www.w3.org/TR/wsdl">WSDL specification</ulink>, or read the 
-                <ulink url="http://www.w3schools.com/wsdl/">WSDL tutorial</ulink>
+                <link xl:href="http://www.w3.org/TR/wsdl">WSDL specification</link>, or read the
+                <link xl:href="http://www.w3schools.com/wsdl/">WSDL tutorial</link>
             </para>
         </sidebar>
         <para> 
@@ -29,7 +33,7 @@
         <title>Object/XML Impedance Mismatch</title>
         <para>
             Similar to the field of ORM, where we have an 
-            <ulink url="http://en.wikipedia.org/wiki/Object-Relational_impedance_mismatch">Object/Relational impedance mismatch</ulink>, 
+            <link xl:href="http://en.wikipedia.org/wiki/Object-Relational_impedance_mismatch">Object/Relational impedance mismatch</link>,
             there is a similar problem when converting Java objects to XML.
             At first glance, the O/X mapping problem appears simple: create an XML element for each Java object, 
             converting all Java properties and fields to sub-elements or attributes. However, things are not as  
@@ -153,8 +157,8 @@ public class Passenger {
                 This solves the recursiveness problem, but introduces new ones. For one, you cannot use an XML validator
                 to validate this structure. Another issue is that the standard way to use these references in SOAP 
                 (RPC/encoded) has been deprecated in favor of document/literal (see WS-I
-                <ulink url="http://www.ws-i.org/Profiles/BasicProfile-1.1.html#SOAP_encodingStyle_Attribute">Basic
-                Profile</ulink>).
+                <link xl:href="http://www.ws-i.org/Profiles/BasicProfile-1.1.html#SOAP_encodingStyle_Attribute">Basic
+                Profile</link>).
             </para>
         </section>
         <para>

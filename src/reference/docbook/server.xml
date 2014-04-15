@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
-        "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
-<chapter id="server">
+<chapter xml:id="server"
+         xmlns="http://docbook.org/ns/docbook" version="5.0"
+         xmlns:xl="http://www.w3.org/1999/xlink"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="
+             http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
+             http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
     <title>Creating a Web service with Spring-WS</title>
-    <section id="ws-introduction">
+    <section xml:id="ws-introduction">
         <title>Introduction</title>
         <para>
             Spring-WS's server-side support is designed around a
@@ -38,10 +42,7 @@
             The processing and dispatching flow of the <classname>MessageDispatcher</classname> is illustrated in the
             following sequence diagram.
             <mediaobject>
-                <imageobject role="fo">
-                    <imagedata fileref="src/docbkx/resources/images/sequence.png" format="PNG" align="center"/>
-                </imageobject>
-                <imageobject role="html">
+                <imageobject>
                     <imagedata fileref="images/sequence.png" format="PNG" align="center"/>
                 </imageobject>
                 <caption>
@@ -106,7 +107,7 @@
             Spring Web Services supports multiple transport protocols. The most common is the HTTP transport, for which
             a custom servlet is supplied, but it is also possible to send messages over JMS, and even email.
         </para>
-        <section id="message-dispatcher-servlet">
+        <section xml:id="message-dispatcher-servlet">
             <title><classname>MessageDispatcherServlet</classname></title>
             <para>
                 The <classname>MessageDispatcherServlet</classname> is a standard <interfacename>Servlet</interfacename>
@@ -182,7 +183,7 @@
                 Javadoc of <classname>AbstractMessageDispatcherServletInitializer</classname> and
                 <classname>AbstractAnnotationConfigMessageDispatcherServletInitializer</classname>.
             </para>
-            <section id="server-automatic-wsdl-exposure">
+            <section xml:id="server-automatic-wsdl-exposure">
                 <title>Automatic WSDL exposure</title>
                 <para>
                     The <classname>MessageDispatcherServlet</classname> will automatically detect any
@@ -506,7 +507,7 @@ public DefaultWsdl11Definition orders() {
         	<title>Embedded HTTP Server transport</title>
         	<para>
         		Spring Web Services provides a transport based on Sun's JRE 1.6 
-        		<ulink url="http://java.sun.com/javase/6/docs/jre/api/net/httpserver/spec/index.html">HTTP server</ulink>.
+        		<link xl:href="http://java.sun.com/javase/6/docs/jre/api/net/httpserver/spec/index.html">HTTP server</link>.
         		The embedded HTTP Server is a standalone server that is simple to configure. It lends itself to a lighter 
         		alternative to conventional servlet containers.
         	</para>
@@ -571,14 +572,14 @@ public DefaultWsdl11Definition orders() {
         	</para>
         	<para>
                 For more information on the <classname>SimpleHttpServerFactoryBean</classname>, refer to the
-                <ulink url="http://static.springframework.org/spring/docs/2.5.x/api/org/springframework/remoting/support/SimpleHttpServerFactoryBean.html">Javadoc</ulink>.
+                <link xl:href="http://static.springframework.org/spring/docs/2.5.x/api/org/springframework/remoting/support/SimpleHttpServerFactoryBean.html">Javadoc</link>.
         	</para>
         </section>
         <section>
             <title>XMPP transport</title>
             <para>
                 Finally, Spring Web Services 2.0 introduced support for XMPP, otherwise known as Jabber. The support
-                is based on the <ulink url="http://www.igniterealtime.org/projects/smack/index.jsp">Smack</ulink>
+                is based on the <link xl:href="http://www.igniterealtime.org/projects/smack/index.jsp">Smack</link>
                 library.
             </para>
             <para>
@@ -619,7 +620,7 @@ public DefaultWsdl11Definition orders() {
             </para>
         </section>
     </section>
-    <section id="server-endpoints">
+    <section xml:id="server-endpoints">
         <title>Endpoints</title>
         <para>
             Endpoints are the central concept in Spring-WS's server-side support. Endpoints provide access to the
@@ -639,13 +640,13 @@ public DefaultWsdl11Definition orders() {
             Consider the following sample endpoint:
             <programlistingco>
                 <areaspec>
-                    <area coords="10" id="server-endpoint-atEndpoint"/>
-                    <area coords="15" id="server-endpoint-constructor"/>
-                    <area coords="21" id="server-endpoint-order"/>
-                    <area coords="28" id="server-endpoint-getOrder"/>
-                    <areaset coords="" id="server-endpoint-payloadRoot">
-                        <area coords="20" id="server-endpoint-payloadRoot-1"/>
-                        <area coords="26" id="server-endpoint-payloadRoot-2"/>
+                    <area coords="10" xml:id="server-endpoint-atEndpoint"/>
+                    <area coords="15" xml:id="server-endpoint-constructor"/>
+                    <area coords="21" xml:id="server-endpoint-order"/>
+                    <area coords="28" xml:id="server-endpoint-getOrder"/>
+                    <areaset xml:id="server-endpoint-payloadRoot">
+                        <area coords="20" xml:id="server-endpoint-payloadRoot-1"/>
+                        <area coords="26" xml:id="server-endpoint-payloadRoot-2"/>
                     </areaset>
                 </areaspec>
             <programlisting><![CDATA[package samples;
@@ -804,14 +805,14 @@ public class MyConfiguration extends WsConfigurerAdapter {
                 bean definition is created per container. Being a singleton implies that more than one thread
                 can use it at the same time, so the endpoint has to be thread safe. If you want to use a different
                 scope, such as prototype, refer to the
-                <ulink url="http://static.springframework.org/spring/docs/2.5.x/reference/beans.html#beans-factory-scopes">Spring Reference documentation</ulink>.
+                <link xl:href="http://static.springframework.org/spring/docs/2.5.x/reference/beans.html#beans-factory-scopes">Spring Reference documentation</link>.
             </para>
             <para>
                 Note that all abstract base classes provided in Spring-WS are thread safe, unless otherwise indicated
                 in the class-level Javadoc.
             </para>
         </note>
-        <section id="server-atEndpoint-methods">
+        <section xml:id="server-atEndpoint-methods">
             <title><interfacename>@Endpoint</interfacename> handling methods</title>
             <para>
                 In order for an endpoint to actually handle incoming XML messages, it needs to have one or more handling
@@ -876,31 +877,31 @@ public void order(@RequestPayload Element orderElement) {
                                         (<interfacename>DOMSource</interfacename>, <interfacename>SAXSource</interfacename>,
                                         <interfacename>StreamSource</interfacename>, and <interfacename>StAXSource</interfacename>)
                                     </entry>
-                                    <entry align="center">&check;</entry>
+                                    <entry align="center">Yes</entry>
                                     <entry>Enabled by default.</entry>
                                 </row>
                                 <row>
                                     <entry align="center">W3C DOM</entry>
                                     <entry><interfacename>org.w3c.dom.Element</interfacename></entry>
-                                    <entry align="center">&check;</entry>
+                                    <entry align="center">Yes</entry>
                                     <entry>Enabled by default</entry>
                                 </row>
                                 <row>
                                     <entry align="center">dom4j</entry>
                                     <entry><interfacename>org.dom4j.Element</interfacename></entry>
-                                    <entry align="center">&check;</entry>
+                                    <entry align="center">Yes</entry>
                                     <entry>Enabled when dom4j is on the classpath.</entry>
                                 </row>
                                 <row>
                                     <entry align="center">JDOM</entry>
                                     <entry><classname>org.jdom.Element</classname></entry>
-                                    <entry align="center">&check;</entry>
+                                    <entry align="center">Yes</entry>
                                     <entry>Enabled when JDOM is on the classpath.</entry>
                                 </row>
                                 <row>
                                     <entry align="center">XOM</entry>
                                     <entry><classname>nu.xom.Element</classname></entry>
-                                    <entry align="center">&check;</entry>
+                                    <entry align="center">Yes</entry>
                                     <entry>Enabled when XOM is on the classpath.</entry>
                                 </row>
                                 <row>
@@ -909,7 +910,7 @@ public void order(@RequestPayload Element orderElement) {
                                         <interfacename>javax.xml.stream.XMLStreamReader</interfacename> and
                                         <interfacename>javax.xml.stream.XMLEventReader</interfacename>
                                     </entry>
-                                    <entry align="center">&check;</entry>
+                                    <entry align="center">Yes</entry>
                                     <entry>Enabled when StAX is on the classpath.</entry>
                                 </row>
                                 <row>
@@ -919,16 +920,16 @@ public void order(@RequestPayload Element orderElement) {
                                         <interfacename>org.w3c.Node</interfacename>,
                                         <interfacename>org.w3c.dom.NodeList</interfacename>, or
                                         type that can be converted from a <classname>String</classname> by a Spring 3
-                                        <ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/validation.html#core-convert">conversion service</ulink>,
+                                        <link xl:href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/validation.html#core-convert">conversion service</link>,
                                         and that is annotated with <interfacename>@XPathParam</interfacename>.
                                    </entry>
-                                    <entry align="center">&cross;</entry>
+                                    <entry align="center">No</entry>
                                     <entry>Enabled by default, see <xref linkend="server-xpath-param" />.</entry>
                                 </row>
                                 <row>
                                     <entry align="center">Message context</entry>
                                     <entry><interfacename>org.springframework.ws.context.MessageContext</interfacename></entry>
-                                    <entry align="center">&cross;</entry>
+                                    <entry align="center">No</entry>
                                     <entry>Enabled by default.</entry>
                                 </row>
                                 <row>
@@ -942,7 +943,7 @@ public void order(@RequestPayload Element orderElement) {
                                         when used in combination with the <interfacename>@SoapHeader</interfacename>
                                         annotation.
                                    </entry>
-                                    <entry align="center">&cross;</entry>
+                                    <entry align="center">No</entry>
                                     <entry>Enabled by default.</entry>
                                 </row>
                                 <row>
@@ -952,16 +953,16 @@ public void order(@RequestPayload Element orderElement) {
                                         <interfacename>javax.xml.bind.annotation.XmlRootElement</interfacename>,
                                         and <classname>javax.xml.bind.JAXBElement</classname>.
                                    </entry>
-                                    <entry align="center">&check;</entry>
+                                    <entry align="center">Yes</entry>
                                     <entry>Enabled when JAXB2 is on the classpath.</entry>
                                 </row>
                                 <row>
                                     <entry align="center">OXM</entry>
                                     <entry>
                                         Any type supported by a Spring OXM
-                                        <ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/oxm.html#d0e26164"><interfacename>Unmarshaller</interfacename></ulink>.
+                                        <link xl:href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/oxm.html#d0e26164"><interfacename>Unmarshaller</interfacename></link>.
                                    </entry>
-                                    <entry align="center">&check;</entry>
+                                    <entry align="center">Yes</entry>
                                     <entry>
                                         Enabled when the <literal>unmarshaller</literal> attribute of
                                         <literal>&lt;sws:annotation-driven/&gt;</literal> is specified.
@@ -1002,7 +1003,7 @@ public void order(@RequestPayload Element orderElement) {
                     Refer to the class-level Javadoc of <classname>DefaultMethodEndpointAdapter</classname> and
                     <interfacename>MethodArgumentResolver</interfacename> to see how.
                 </para>
-                <section id="server-xpath-param">
+                <section xml:id="server-xpath-param">
                     <title><interfacename>@XPathParam</interfacename></title>
                     <para>
                         One parameter type needs some extra explanation: <interfacename>@XPathParam</interfacename>.
@@ -1011,7 +1012,7 @@ public void order(@RequestPayload Element orderElement) {
                         evaluation of the expression.
                         Here is an example:
                     </para>
-                    <programlisting id="server-payload-root-annotation">package samples;
+                    <programlisting xml:id="server-payload-root-annotation">package samples;
 
 import javax.xml.transform.Source;
 
@@ -1057,7 +1058,7 @@ public class AnnotationOrderEndpoint {
                         </itemizedlist>
                         In addition to this list, you can use any type that can be converted from a
                         <classname>String</classname> by a Spring 3
-                        <ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/validation.html#core-convert">conversion service</ulink>.
+                        <link xl:href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/validation.html#core-convert">conversion service</link>.
                     </para>
                 </section>
 
@@ -1097,7 +1098,7 @@ public class AnnotationOrderEndpoint {
                                     <entry>
                                         <literal>void</literal>
                                     </entry>
-                                    <entry align="center">&cross;</entry>
+                                    <entry align="center">No</entry>
                                     <entry>Enabled by default.</entry>
                                 </row>
                                 <row>
@@ -1107,31 +1108,31 @@ public class AnnotationOrderEndpoint {
                                         (<interfacename>DOMSource</interfacename>, <interfacename>SAXSource</interfacename>,
                                         <interfacename>StreamSource</interfacename>, and <interfacename>StAXSource</interfacename>)
                                     </entry>
-                                    <entry align="center">&check;</entry>
+                                    <entry align="center">Yes</entry>
                                     <entry>Enabled by default.</entry>
                                 </row>
                                 <row>
                                     <entry align="center">W3C DOM</entry>
                                     <entry><interfacename>org.w3c.dom.Element</interfacename></entry>
-                                    <entry align="center">&check;</entry>
+                                    <entry align="center">Yes</entry>
                                     <entry>Enabled by default</entry>
                                 </row>
                                 <row>
                                     <entry align="center">dom4j</entry>
                                     <entry><interfacename>org.dom4j.Element</interfacename></entry>
-                                    <entry align="center">&check;</entry>
+                                    <entry align="center">Yes</entry>
                                     <entry>Enabled when dom4j is on the classpath.</entry>
                                 </row>
                                 <row>
                                     <entry align="center">JDOM</entry>
                                     <entry><classname>org.jdom.Element</classname></entry>
-                                    <entry align="center">&check;</entry>
+                                    <entry align="center">Yes</entry>
                                     <entry>Enabled when JDOM is on the classpath.</entry>
                                 </row>
                                 <row>
                                     <entry align="center">XOM</entry>
                                     <entry><classname>nu.xom.Element</classname></entry>
-                                    <entry align="center">&check;</entry>
+                                    <entry align="center">Yes</entry>
                                     <entry>Enabled when XOM is on the classpath.</entry>
                                 </row>
                                 <row>
@@ -1141,16 +1142,16 @@ public class AnnotationOrderEndpoint {
                                         <interfacename>javax.xml.bind.annotation.XmlRootElement</interfacename>,
                                         and <classname>javax.xml.bind.JAXBElement</classname>.
                                    </entry>
-                                    <entry align="center">&check;</entry>
+                                    <entry align="center">Yes</entry>
                                     <entry>Enabled when JAXB2 is on the classpath.</entry>
                                 </row>
                                 <row>
                                     <entry align="center">OXM</entry>
                                     <entry>
                                         Any type supported by a Spring OXM
-                                        <ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/oxm.html#d0e26096"><interfacename>Marshaller</interfacename></ulink>.
+                                        <link xl:href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/oxm.html#d0e26096"><interfacename>Marshaller</interfacename></link>.
                                    </entry>
-                                    <entry align="center">&check;</entry>
+                                    <entry align="center">Yes</entry>
                                     <entry>
                                         Enabled when the <literal>marshaller</literal> attribute of
                                         <literal>&lt;sws:annotation-driven/&gt;</literal> is specified.
@@ -1170,7 +1171,7 @@ public class AnnotationOrderEndpoint {
             </section>
         </section>
     </section>
-    <section id="server-endpoint-mapping">
+    <section xml:id="server-endpoint-mapping">
         <title>Endpoint mappings</title>
         <para>
             The endpoint mapping is responsible for mapping incoming messages to appropriate endpoints.
@@ -1231,7 +1232,7 @@ public class AnnotationOrderEndpoint {
             Whenever a message comes in which has this <literal>SOAPAction</literal> header, the
             method will be invoked.
         </para>
-        <section id="server-ws-addressing">
+        <section xml:id="server-ws-addressing">
             <title>WS-Addressing</title>
             <para>
                 WS-Addressing specifies a transport-neutral routing mechanism.
@@ -1240,7 +1241,7 @@ public class AnnotationOrderEndpoint {
                 Additionally, WS-Addressing allows you to define a return address (for normal messages and for faults),
                 and a unique message identifier which can be used for correlation
                 <footnote>
-                    <para>For more information on WS-Addressing, see <ulink url="http://en.wikipedia.org/wiki/WS-Addressing"/>.</para>
+                    <para>For more information on WS-Addressing, see <link xl:href="http://en.wikipedia.org/wiki/WS-Addressing"/>.</para>
                 </footnote>.
                 Here is an example of a WS-Addressing message:
                 <programlisting><![CDATA[<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://www.w3.org/2003/05/soap-envelope"
@@ -1336,7 +1337,7 @@ public class AnnotationOrderEndpoint {
                 </para>
             </section>
         </section>
-        <section id="server-endpoint-interceptor">
+        <section xml:id="server-endpoint-interceptor">
             <title>Intercepting requests - the <interfacename>EndpointInterceptor</interfacename> interface</title>
             <para>
                 The endpoint mapping mechanism has the notion of endpoint interceptors. These can be extremely useful
@@ -1502,7 +1503,7 @@ public class MyWsConfiguration extends WsConfigurerAdapter {
             </section>
         </section>
     </section>
-    <section id="server-endpoint-exception-resolver">
+    <section xml:id="server-endpoint-exception-resolver">
         <title>Handling Exceptions</title>
         <para>
             Spring-WS provides <classname>EndpointExceptionResolvers</classname> to ease the pain of unexpected
@@ -1696,11 +1697,11 @@ public class MyBusinessException extends Exception {
             </para>
             <programlistingco>
                 <areaspec>
-                    <area id="server.test.endpoint.annotation" coords="5"/>
-                    <areaset id="server.test.endpoint.method" coords="">
-                        <area id="server.test.endpoint.method.responsePayload" coords="8"/>
-                        <area id="server.test.endpoint.method.method" coords="9"/>
-                        <area id="server.test.endpoint.method.requestPayload" coords="10"/>
+                    <area xml:id="server.test.endpoint.annotation" coords="5"/>
+                    <areaset xml:id="server.test.endpoint.method">
+                        <area xml:id="server.test.endpoint.method.responsePayload" coords="8"/>
+                        <area xml:id="server.test.endpoint.method.method" coords="9"/>
+                        <area xml:id="server.test.endpoint.method.requestPayload" coords="10"/>
                     </areaset>
                 </areaspec>
                 <programlisting><![CDATA[import org.springframework.ws.server.endpoint.annotation.Endpoint;
@@ -1744,20 +1745,20 @@ public class CustomerEndpoint {
             </para>
             <programlistingco>
                 <areaspec>
-                    <areaset id="server.test.test.imports" coords="">
-                        <area id="server.test.test.imports.client" coords="12"/>
-                        <area id="server.test.test.imports.requestCreators" coords="13"/>
-                        <area id="client.test.test.imports.responseMatchers" coords="14"/>
+                    <areaset xml:id="server.test.test.imports">
+                        <area xml:id="server.test.test.imports.client" coords="12"/>
+                        <area xml:id="server.test.test.imports.requestCreators" coords="13"/>
+                        <area xml:id="client.test.test.imports.responseMatchers" coords="14"/>
                     </areaset>
-                    <areaset id="server.test.test.spring" coords="">
-                        <area id="server.test.test.spring.runWith" coords="16"/>
-                        <area id="server.test.test.spring.configuration" coords="17"/>
+                    <areaset xml:id="server.test.test.spring">
+                        <area xml:id="server.test.test.spring.runWith" coords="16"/>
+                        <area xml:id="server.test.test.spring.configuration" coords="17"/>
                     </areaset>
-                    <area id="server.test.test.applicationContext" coords="21"/>
-                    <area id="server.test.test.mockClient" coords="27"/>
-                    <areaset id="server.test.test.sendAndExpect" coords="">
-                        <area id="server.test.test.send" coords="41"/>
-                        <area id="server.test.test.expect" coords="42"/>
+                    <area xml:id="server.test.test.applicationContext" coords="21"/>
+                    <area xml:id="server.test.test.mockClient" coords="27"/>
+                    <areaset xml:id="server.test.test.sendAndExpect">
+                        <area xml:id="server.test.test.send" coords="41"/>
+                        <area xml:id="server.test.test.expect" coords="42"/>
                     </areaset>
                 </areaspec>
                 <programlisting><![CDATA[import javax.xml.transform.Source;
@@ -1861,7 +1862,7 @@ public class CustomerEndpointIntegrationTest {
                 </calloutlist>
             </programlistingco>
         </section>
-        <section id="server-test-request-creator">
+        <section xml:id="server-test-request-creator">
             <title><interfacename>RequestCreator</interfacename> and <classname>RequestCreators</classname></title>
             <para>
                 Initially, the <classname>MockWebServiceClient</classname> will need to create a request message for the
@@ -1884,7 +1885,7 @@ public class CustomerEndpointIntegrationTest {
                 You will typically statically import <classname>RequestCreators</classname>.
             </para>
         </section>
-        <section id="server-test-response-matcher">
+        <section xml:id="server-test-response-matcher">
             <title><interfacename>ResponseMatcher</interfacename> and <classname>ResponseMatchers</classname></title>
             <para>
                 When the request message has been processed by the endpoint, and a response has been received,

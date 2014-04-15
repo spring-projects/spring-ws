@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
-        "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
-<chapter id="security">
+<chapter xml:id="security"
+         xmlns="http://docbook.org/ns/docbook" version="5.0"
+         xmlns:xl="http://www.w3.org/1999/xlink"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="
+             http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
+             http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
     <title>Securing your Web services with Spring-WS</title>
 
-    <section id="security-introduction">
+    <section xml:id="security-introduction">
         <title>Introduction</title>
         <para>
             This chapter explains how to add WS-Security aspects to your Web services. We will focus on the
@@ -50,7 +54,7 @@
             </para>
         </note>
     </section>
-    <section id="security-xws-security-interceptor">
+    <section xml:id="security-xws-security-interceptor">
         <title>
             <classname>XwsSecurityInterceptor</classname>
         </title>
@@ -58,7 +62,7 @@
             The <classname>XwsSecurityInterceptor</classname> is an <classname>EndpointInterceptor</classname>
             (see <xref linkend="server-endpoint-interceptor"/>) that is based on SUN's XML and Web Services Security
             package (XWSS). This WS-Security implementation is part of the Java Web Services Developer Pack
-            (<ulink url="http://java.sun.com/webservices/"><citetitle>Java WSDP</citetitle></ulink>).
+            (<link xl:href="http://java.sun.com/webservices/"><citetitle>Java WSDP</citetitle></link>).
         </para>
         <para>
             Like any other endpoint interceptor, it is defined in the endpoint mapping (see
@@ -77,9 +81,9 @@
             to operate. This XML file tells the interceptor what security aspects to require from incoming SOAP
             messages, and what aspects to add to outgoing messages. The basic format of the policy file will be
             explained in the following sections, but you can find a more in-depth tutorial
-            <ulink url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp564887">
+            <link xl:href="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp564887">
                 <citetitle>here</citetitle>
-            </ulink>.
+            </link>.
             You can set the policy with the <property>policyConfiguration</property> property, which
             requires a Spring resource. The policy file can contain multiple elements, e.g. require a
             username token on incoming messages, and sign all outgoing messages. It contains a
@@ -117,7 +121,7 @@
             uses two callback handlers which are defined further on in the file.
         </para>
 
-        <section id="keystore">
+        <section xml:id="keystore">
             <title>Keystores</title>
             <para>
                 For most cryptographic operations, you will use the standard
@@ -169,9 +173,9 @@
                     the
                     <command>keytool</command>
                     command, but you can find a reference
-                    <ulink url="http://java.sun.com/j2se/1.5.0/docs/tooldocs/windows/keytool.html">
+                    <link xl:href="http://java.sun.com/j2se/1.5.0/docs/tooldocs/windows/keytool.html">
                         <citetitle>here</citetitle>
-                    </ulink>
+                    </link>
                     ,
                     or by giving the command
                     <prompt>keytool -help</prompt>
@@ -198,7 +202,7 @@
                     </para>
                 </caution>
             </section>
-            <section id="security-key-store-callback-handler">
+            <section xml:id="security-key-store-callback-handler">
                 <title>KeyStoreCallbackHandler</title>
                 <para>
                     To use the keystores within a
@@ -363,10 +367,9 @@
                     <literal>passwordDigestRequired</literal>
                     attribute set to<literal>false</literal>.
                     You can find a reference of possible child elements
-                    <ulink
-                            url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp567459">
+                    <link xl:href="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp567459">
                         <citetitle>here</citetitle>
-                    </ulink>
+                    </link>
                     .
                 </para>
                 <programlisting><![CDATA[
@@ -386,7 +389,7 @@
                     to the registered handlers. Within Spring-WS, there are three classes which handle this particular
                     callback.
                 </para>
-                <section id="security-simple-password-validation-callback-handler">
+                <section xml:id="security-simple-password-validation-callback-handler">
                     <title>SimplePasswordValidationCallbackHandler</title>
                     <para>
                         The simplest password validation handler is the
@@ -414,12 +417,12 @@
                     <title>SpringPlainTextPasswordValidationCallbackHandler</title>
                     <para>
                         The <classname>SpringPlainTextPasswordValidationCallbackHandler</classname> uses
-                        <ulink url="http://www.springframework.org/security"><citetitle>Spring Security</citetitle></ulink>
+                        <link xl:href="http://www.springframework.org/security"><citetitle>Spring Security</citetitle></link>
                         to authenticate users. It is beyond the scope of this document to describe Spring Security,
                         but suffice it to say that it is a full-fledged security framework.
-                        You can read more about it in the <ulink url="http://www.springframework.org/security">
+                        You can read more about it in the <link xl:href="http://www.springframework.org/security">
                             <citetitle>Spring Security reference documentation</citetitle>
-                        </ulink>.
+                        </link>.
                     </para>
                     <para>
                         The <classname>SpringPlainTextPasswordValidationCallbackHandler</classname> requires
@@ -454,17 +457,16 @@
                         The
                         <classname>JaasPlainTextPasswordValidationCallbackHandler</classname>
                         is based on the standard
-                        <ulink url="http://java.sun.com/products/jaas/">
+                        <link xl:href="http://java.sun.com/products/jaas/">
                             <citetitle>Java Authentication and Authorization
                                 Service
                             </citetitle>
-                        </ulink>
+                        </link>
                         . It is beyond the scope of this document to provide a full
                         introduction into JAAS, but there is a
-                        <ulink
-                                url="http://www.javaworld.com/javaworld/jw-09-2002/jw-0913-jaas.html">
+                        <link xl:href="http://www.javaworld.com/javaworld/jw-09-2002/jw-0913-jaas.html">
                             <citetitle>good tutorial</citetitle>
-                        </ulink>
+                        </link>
                         available.
                     </para>
                     <para>
@@ -538,10 +540,9 @@
                     <literal>nonceRequired</literal>
                     should be set to<literal>true</literal>:
                     You can find a reference of possible child elements
-                    <ulink
-                            url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp567459">
+                    <link xl:href="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp567459">
                         <citetitle>here</citetitle>
-                    </ulink>
+                    </link>
                     .
                 </para>
                 <programlisting><![CDATA[
@@ -596,7 +597,7 @@
                 </section>
             </section>
 
-            <section id="security-certificate-authentication">
+            <section xml:id="security-certificate-authentication">
                 <title>Certificate Authentication</title>
                 <para>
                     A more secure way of authentication uses X509 certificates. In this scenerario, the SOAP message
@@ -612,9 +613,9 @@
                     further carry other elements, which will be covered in<xref
                         linkend="security-verifying-signatures"/>.
                     You can find a reference of possible child elements
-                    <ulink url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565769">
+                    <link xl:href="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565769">
                         <citetitle>here</citetitle>
-                    </ulink>
+                    </link>
                     .
                 </para>
                 <programlisting><![CDATA[
@@ -761,9 +762,9 @@
                     <para>
                         In this case, we are using a custom user details service to obtain authentication details based on
                         the certificate. Refer to the
-                        <ulink url="http://www.springframework.org/security">
+                        <link xl:href="http://www.springframework.org/security">
                             <citetitle>Spring Security reference documentation</citetitle>
-                        </ulink>
+                        </link>
                         for more information about authentication against X509 certificates.
                     </para>
                 </section>
@@ -816,7 +817,7 @@
                 and the signer's private key. There are two main tasks related to signatures in WS-Security: verifying
                 signatures and signing messages.
             </para>
-            <section id="security-verifying-signatures">
+            <section xml:id="security-verifying-signatures">
                 <title>Verifying Signatures</title>
                 <para>
                     Just like<link
@@ -839,10 +840,9 @@
                     part which was expected to be signed, and various other subelements. You can also define the private key
                     alias to use, whether to use a symmetric instead of a private key, and many other properties. You can
                     find a reference of possible child elements
-                    <ulink
-                            url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565769">
+                    <link xl:href="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565769">
                         <citetitle>here</citetitle>
-                    </ulink>
+                    </link>
                     .
                 </para>
                 <programlisting><![CDATA[
@@ -909,10 +909,9 @@
                     part which was expected to be signed, and various other subelements. You can also define the private key
                     alias to use, whether to use a symmetric instead of a private key, and many other properties. You can
                     find a reference of possible child elements
-                    <ulink
-                            url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565497">
+                    <link xl:href="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565497">
                         <citetitle>here</citetitle>
-                    </ulink>
+                    </link>
                     .
                 </para>
                 <programlisting><![CDATA[
@@ -980,9 +979,9 @@
                     <literal>SymmetricKey</literal>
                     to indicate that a shared secret instead of the regular
                     private key should be used to decrypt the message. You can read a description of the other elements
-                    <ulink url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565951">
+                    <link xl:href="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565951">
                         <citetitle>here</citetitle>
-                    </ulink>
+                    </link>
                     .
                 </para>
                 <programlisting><![CDATA[
@@ -1043,10 +1042,9 @@
                     to indicate that a
                     shared secret instead of the regular public key should be used to encrypt the message. You can read a
                     description of the other elements
-                    <ulink
-                            url="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565951">
+                    <link xl:href="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565951">
                         <citetitle>here</citetitle>
-                    </ulink>
+                    </link>
                     .
                 </para>
                 <programlisting><![CDATA[
@@ -1088,7 +1086,7 @@
                 </section>
             </section>
         </section>
-        <section id="security-xws-exception-handling">
+        <section xml:id="security-xws-exception-handling">
             <title>Security Exception Handling</title>
             <para>
                 When an securement or validation action fails, the <classname>XwsSecurityInterceptor</classname>
@@ -1119,14 +1117,14 @@
             </note>
         </section>
     </section>
-    <section id="security-wss4j-security-interceptor">
+    <section xml:id="security-wss4j-security-interceptor">
         <title>
             <classname>Wss4jSecurityInterceptor</classname>
         </title>
         <para>
             The <classname>Wss4jSecurityInterceptor</classname> is an <classname>EndpointInterceptor</classname>
-            (see<xref linkend="server-endpoint-interceptor"/>) that is based on
-            <ulink url="http://ws.apache.org/wss4j/">Apache's WSS4J</ulink>.
+            (see <xref linkend="server-endpoint-interceptor"/>) that is based on
+            <link xl:href="http://ws.apache.org/wss4j/">Apache's WSS4J</link>.
         </para>
         <para>
             WSS4J implements the following standards:
@@ -1554,7 +1552,7 @@
 					]]></programlisting>
             </section>
         </section>
-        <section id="security-wss4j-digital-signatures">
+        <section xml:id="security-wss4j-digital-signatures">
             <title>Digital Signatures</title>
             <para>
                 This section describes the various signature options available in the
