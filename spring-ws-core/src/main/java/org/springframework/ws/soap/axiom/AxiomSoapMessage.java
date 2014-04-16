@@ -82,7 +82,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
     private OMOutputFormat outputFormat;
 
     /**
-     * Create a new, empty <code>AxiomSoapMessage</code>.
+     * Create a new, empty {@code AxiomSoapMessage}.
      *
      * @param soapFactory the AXIOM SOAPFactory
      */
@@ -91,7 +91,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
     }
 
     /**
-     * Create a new, empty <code>AxiomSoapMessage</code>.
+     * Create a new, empty {@code AxiomSoapMessage}.
      *
      * @param soapFactory the AXIOM SOAPFactory
      */
@@ -107,7 +107,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
     }
 
     /**
-     * Create a new <code>AxiomSoapMessage</code> based on the given AXIOM <code>SOAPMessage</code>.
+     * Create a new {@code AxiomSoapMessage} based on the given AXIOM {@code SOAPMessage}.
      *
      * @param soapMessage    the AXIOM SOAPMessage
      * @param soapAction     the value of the SOAP Action header
@@ -121,7 +121,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
     }
 
     /**
-     * Create a new <code>AxiomSoapMessage</code> based on the given AXIOM <code>SOAPMessage</code> and attachments.
+     * Create a new {@code AxiomSoapMessage} based on the given AXIOM {@code SOAPMessage} and attachments.
      *
      * @param soapMessage    the AXIOM SOAPMessage
      * @param attachments    the attachments
@@ -146,15 +146,15 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
         this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
     }
 
-    /** Return the AXIOM <code>SOAPMessage</code> that this <code>AxiomSoapMessage</code> is based on. */
+    /** Return the AXIOM {@code SOAPMessage} that this {@code AxiomSoapMessage} is based on. */
     public final SOAPMessage getAxiomMessage() {
         return axiomMessage;
     }
 
     /**
-     * Sets the AXIOM <code>SOAPMessage</code> that this <code>AxiomSoapMessage</code> is based on.
-     * <p/>
-     * Calling this method also clears the SOAP Action property.
+     * Sets the AXIOM {@code SOAPMessage} that this {@code AxiomSoapMessage} is based on.
+     *
+     * <p>Calling this method also clears the SOAP Action property.
      */
     public final void setAxiomMessage(SOAPMessage axiomMessage) {
         Assert.notNull(axiomMessage, "'axiomMessage' must not be null");

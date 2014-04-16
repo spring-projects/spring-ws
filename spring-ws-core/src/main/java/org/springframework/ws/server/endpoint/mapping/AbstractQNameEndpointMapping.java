@@ -22,7 +22,7 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.xml.namespace.QNameUtils;
 
 /**
- * Abstract base class for <code>EndpointMapping</code>s that resolve qualified names as registration keys.
+ * Abstract base class for {@code EndpointMapping}s that resolve qualified names as registration keys.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

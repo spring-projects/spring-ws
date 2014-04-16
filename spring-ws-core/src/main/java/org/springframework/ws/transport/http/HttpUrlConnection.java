@@ -44,9 +44,9 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
     private final HttpURLConnection connection;
 
     /**
-     * Creates a new instance of the <code>HttpUrlConnection</code> with the given <code>HttpURLConnection</code>.
+     * Creates a new instance of the {@code HttpUrlConnection} with the given {@code HttpURLConnection}.
      *
-     * @param connection the <code>HttpURLConnection</code>
+     * @param connection the {@code HttpURLConnection}
      */
     protected HttpUrlConnection(HttpURLConnection connection) {
         Assert.notNull(connection, "connection must not be null");

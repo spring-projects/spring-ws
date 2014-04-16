@@ -29,14 +29,14 @@ import org.springframework.ws.transport.context.TransportContextHolder;
  * Implementation of the {@code EndpointMapping} interface to map from the full request URI or request URI path to
  * endpoint beans. Supports both mapping to bean instances and mapping to bean names: the latter is required for
  * prototype handlers.
- * <p/>
- * When the {@link #setUsePath(boolean) usePath} property is enabled, the mapping will be based on the URI path rather
+ *
+ * <p>When the {@link #setUsePath(boolean) usePath} property is enabled, the mapping will be based on the URI path rather
  * than the full URI.
- * <p/>
- * The {@code endpointMap} property is suitable for populating the endpoint map with bean references, e.g. via the map
+ *
+ * <p>The {@code endpointMap} property is suitable for populating the endpoint map with bean references, e.g. via the map
  * element in XML bean definitions.
- * <p/>
- * Mappings to bean names can be set via the {@code mappings} property, in a form accepted by the {@code
+ *
+ * <p>Mappings to bean names can be set via the {@code mappings} property, in a form accepted by the {@code
  * java.util.Properties} class, like as follows:
  * <pre>
  * http://example.com:8080/services/bookFlight=bookFlightEndpoint
@@ -47,8 +47,8 @@ import org.springframework.ws.transport.context.TransportContextHolder;
  * /services/bookFlight=bookFlightEndpoint
  * </pre>
  * The syntax is [URI|PATH]=ENDPOINT_BEAN_NAME.
- * <p/>
- * This endpoint mapping does not read from the request message, and therefore is more suitable for message factories
+ *
+ * <p>This endpoint mapping does not read from the request message, and therefore is more suitable for message factories
  * which directly read from the transport request (such as the {@link AxiomSoapMessageFactory} with the {@code
  * payloadCaching} disabled). However, this endpoint mapping obviously is transport specific.
  *

@@ -21,7 +21,7 @@ import javax.wsdl.WSDLException;
 import org.springframework.ws.wsdl.WsdlDefinitionException;
 
 /**
- * Subclass of <code>WsdlDefinitionException</code> that wraps <code>WSDLException</code>s.
+ * Subclass of {@code WsdlDefinitionException} that wraps {@code WSDLException}s.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

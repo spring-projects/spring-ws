@@ -41,11 +41,11 @@ import org.springframework.xml.transform.ResourceSource;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
- * Interceptor that transforms the payload of <code>WebServiceMessage</code>s using XSLT stylesheet. Allows for seperate
+ * Interceptor that transforms the payload of {@code WebServiceMessage}s using XSLT stylesheet. Allows for seperate
  * stylesheets for request and response. This interceptor is especially useful when supporting with multiple version of
  * a Web service: you can transform the older message format to the new format.
- * <p/>
- * The stylesheets to use can be set using the <code>requestXslt</code> and <code>responseXslt</code> properties. Both
+ *
+ * <p>The stylesheets to use can be set using the {@code requestXslt} and {@code responseXslt} properties. Both
  * of these are optional: if not set, the message is simply not transformed. Setting one of the two is required,
  * though.
  *
@@ -79,10 +79,10 @@ public class PayloadTransformingInterceptor extends TransformerObjectSupport
 
     /**
      * Transforms the request message in the given message context using a provided stylesheet. Transformation only
-     * occurs if the <code>requestXslt</code> has been set.
+     * occurs if the {@code requestXslt} has been set.
      *
      * @param messageContext the message context
-     * @return always returns <code>true</code>
+     * @return always returns {@code true}
      * @see #setRequestXslt(org.springframework.core.io.Resource)
      */
     @Override
@@ -98,10 +98,10 @@ public class PayloadTransformingInterceptor extends TransformerObjectSupport
 
     /**
      * Transforms the response message in the given message context using a stylesheet. Transformation only occurs if
-     * the <code>responseXslt</code> has been set.
+     * the {@code responseXslt} has been set.
      *
      * @param messageContext the message context
-     * @return always returns <code>true</code>
+     * @return always returns {@code true}
      * @see #setResponseXslt(org.springframework.core.io.Resource)
      */
     @Override

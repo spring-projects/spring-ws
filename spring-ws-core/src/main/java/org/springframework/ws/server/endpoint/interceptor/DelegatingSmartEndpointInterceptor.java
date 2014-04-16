@@ -53,8 +53,8 @@ public class DelegatingSmartEndpointInterceptor implements SmartEndpointIntercep
 
     /**
      * {@inheritDoc}
-     * <p/>
-     * This implementation delegates to {@link #shouldIntercept(WebServiceMessage, Object)}.
+     *
+     * <p>This implementation delegates to {@link #shouldIntercept(WebServiceMessage, Object)}.
      */
     @Override
     public boolean shouldIntercept(MessageContext messageContext, Object endpoint) {
@@ -64,8 +64,8 @@ public class DelegatingSmartEndpointInterceptor implements SmartEndpointIntercep
 
     /**
      * Indicates whether this interceptor should intercept the given request message.
-     * <p/>
-     * This implementation always returns {@code true}.
+     *
+     * <p>This implementation always returns {@code true}.
      *
      * @param request  the request message
      * @param endpoint chosen endpoint to invoke

@@ -58,12 +58,12 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
         this.contentType = contentType;
     }
 
-    /** Set whether or not the XML parser should be XML namespace aware. Default is <code>true</code>. */
+    /** Set whether or not the XML parser should be XML namespace aware. Default is {@code true}. */
     public void setNamespaceAware(boolean namespaceAware) {
         documentBuilderFactory.setNamespaceAware(namespaceAware);
     }
 
-    /** Set if the XML parser should validate the document. Default is <code>false</code>. */
+    /** Set if the XML parser should validate the document. Default is {@code false}. */
     public void setValidating(boolean validating) {
         documentBuilderFactory.setValidating(validating);
     }

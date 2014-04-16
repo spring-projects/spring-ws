@@ -40,18 +40,18 @@ public abstract class AbstractHttpWebServiceMessageSender implements WebServiceM
     private boolean acceptGzipEncoding = true;
 
     /**
-     * Return whether to accept GZIP encoding, that is, whether to send the HTTP <code>Accept-Encoding</code> header
-     * with <code>gzip</code> as value.
+     * Return whether to accept GZIP encoding, that is, whether to send the HTTP {@code Accept-Encoding} header
+     * with {@code gzip} as value.
      */
     public boolean isAcceptGzipEncoding() {
         return acceptGzipEncoding;
     }
 
     /**
-     * Set whether to accept GZIP encoding, that is, whether to send the HTTP <code>Accept-Encoding</code> header with
-     * <code>gzip</code> as value.
-     * <p/>
-     * Default is <code>true</code>. Turn this flag off if you do not want GZIP response compression even if enabled on
+     * Set whether to accept GZIP encoding, that is, whether to send the HTTP {@code Accept-Encoding} header with
+     * {@code gzip} as value.
+     *
+     * <p>Default is {@code true}. Turn this flag off if you do not want GZIP response compression even if enabled on
      * the HTTP server.
      */
     public void setAcceptGzipEncoding(boolean acceptGzipEncoding) {

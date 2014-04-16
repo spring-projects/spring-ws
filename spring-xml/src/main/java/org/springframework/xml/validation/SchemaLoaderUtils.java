@@ -41,8 +41,8 @@ public abstract class SchemaLoaderUtils {
      * Load schema from the given resource.
      *
      * @param resource       the resource to load from
-     * @param schemaLanguage the language of the schema. Can be <code>XMLConstants.W3C_XML_SCHEMA_NS_URI</code> or
-     *                       <code>XMLConstants.RELAXNG_NS_URI</code>.
+     * @param schemaLanguage the language of the schema. Can be {@code XMLConstants.W3C_XML_SCHEMA_NS_URI} or
+     *                       {@code XMLConstants.RELAXNG_NS_URI}.
      * @throws IOException  if loading failed
      * @throws SAXException if loading failed
      * @see javax.xml.XMLConstants#W3C_XML_SCHEMA_NS_URI
@@ -56,8 +56,8 @@ public abstract class SchemaLoaderUtils {
      * Load schema from the given resource.
      *
      * @param resources      the resources to load from
-     * @param schemaLanguage the language of the schema. Can be <code>XMLConstants.W3C_XML_SCHEMA_NS_URI</code> or
-     *                       <code>XMLConstants.RELAXNG_NS_URI</code>.
+     * @param schemaLanguage the language of the schema. Can be {@code XMLConstants.W3C_XML_SCHEMA_NS_URI} or
+     *                       {@code XMLConstants.RELAXNG_NS_URI}.
      * @throws IOException  if loading failed
      * @throws SAXException if loading failed
      * @see javax.xml.XMLConstants#W3C_XML_SCHEMA_NS_URI
@@ -78,7 +78,7 @@ public abstract class SchemaLoaderUtils {
         return schemaFactory.newSchema(schemaSources);
     }
 
-    /** Retrieves the URL from the given resource as System ID. Returns <code>null</code> if it cannot be opened. */
+    /** Retrieves the URL from the given resource as System ID. Returns {@code null} if it cannot be opened. */
     public static String getSystemId(Resource resource) {
         try {
             return resource.getURL().toString();

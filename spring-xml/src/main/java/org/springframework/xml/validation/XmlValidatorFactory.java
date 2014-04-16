@@ -28,9 +28,9 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Factory for {@link XmlValidator} objects, being aware of JAXP 1.3 {@link Validator}s, and JAXP 1.0 parsing
- * capababilities. Mainly for internal use within the framework.
- * <p/>
- * The goal of this class is to avoid runtime dependencies on JAXP 1.3 by using the best validation implementation that
+ * capabilities. Mainly for internal use within the framework.
+ *
+ * <p>The goal of this class is to avoid runtime dependencies on JAXP 1.3 by using the best validation implementation that
  * is available. Prefers JAXP 1.3 {@link XmlValidator} implementations to a custom, SAX-based implementation.
  *
  * @author Arjen Poutsma
@@ -49,7 +49,7 @@ public abstract class XmlValidatorFactory {
 
     /**
      * Create a {@link XmlValidator} with the given schema resource and schema language type. The schema language must
-     * be one of the <code>SCHEMA_XXX</code> constants.
+     * be one of the {@code SCHEMA_XXX} constants.
      *
      * @param schemaResource a resource that locates the schema to validate against
      * @param schemaLanguage the language of the schema
@@ -57,7 +57,7 @@ public abstract class XmlValidatorFactory {
      * @throws IOException              if the schema resource cannot be read
      * @throws IllegalArgumentException if the schema language is not supported
      * @throws IllegalStateException    if JAXP 1.0 cannot be located
-     * @throws XmlValidationException   if a <code>XmlValidator</code> cannot be created
+     * @throws XmlValidationException   if a {@code XmlValidator} cannot be created
      * @see #SCHEMA_RELAX_NG
      * @see #SCHEMA_W3C_XML
      */
@@ -67,7 +67,7 @@ public abstract class XmlValidatorFactory {
 
     /**
      * Create a {@link XmlValidator} with the given schema resources and schema language type. The schema language must
-     * be one of the <code>SCHEMA_XXX</code> constants.
+     * be one of the {@code SCHEMA_XXX} constants.
      *
      * @param schemaResources an array of resource that locate the schemas to validate against
      * @param schemaLanguage  the language of the schemas
@@ -75,7 +75,7 @@ public abstract class XmlValidatorFactory {
      * @throws IOException              if the schema resource cannot be read
      * @throws IllegalArgumentException if the schema language is not supported
      * @throws IllegalStateException    if JAXP 1.0 cannot be located
-     * @throws XmlValidationException   if a <code>XmlValidator</code> cannot be created
+     * @throws XmlValidationException   if a {@code XmlValidator} cannot be created
      * @see #SCHEMA_RELAX_NG
      * @see #SCHEMA_W3C_XML
      */

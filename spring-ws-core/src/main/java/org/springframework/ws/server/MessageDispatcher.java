@@ -49,8 +49,8 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
 
 /**
  * Central dispatcher for use within Spring-WS, dispatching Web service messages to registered endpoints.
- * <p/>
- * This dispatcher is quite similar to Spring MVCs {@link DispatcherServlet}. Just like its counterpart, this dispatcher
+ *
+ * <p>This dispatcher is quite similar to Spring MVCs {@link DispatcherServlet}. Just like its counterpart, this dispatcher
  * is very flexible. This class is SOAP agnostic; in typical SOAP Web Services, the {@link SoapMessageDispatcher}
  * subclass is used.
  * <ul>
@@ -113,37 +113,37 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
     /** List of EndpointMappings used in this dispatcher. */
     private List<EndpointMapping> endpointMappings;
 
-    /** Initializes a new instance of the <code>MessageDispatcher</code>. */
+    /** Initializes a new instance of the {@code MessageDispatcher}. */
     public MessageDispatcher() {
         defaultStrategiesHelper = new DefaultStrategiesHelper(getClass());
     }
 
-    /** Returns the <code>EndpointAdapter</code>s to use by this <code>MessageDispatcher</code>. */
+    /** Returns the {@code EndpointAdapter}s to use by this {@code MessageDispatcher}. */
     public List<EndpointAdapter> getEndpointAdapters() {
         return endpointAdapters;
     }
 
-    /** Sets the <code>EndpointAdapter</code>s to use by this <code>MessageDispatcher</code>. */
+    /** Sets the {@code EndpointAdapter}s to use by this {@code MessageDispatcher}. */
     public void setEndpointAdapters(List<EndpointAdapter> endpointAdapters) {
         this.endpointAdapters = endpointAdapters;
     }
 
-    /** Returns the <code>EndpointExceptionResolver</code>s to use by this <code>MessageDispatcher</code>. */
+    /** Returns the {@code EndpointExceptionResolver}s to use by this {@code MessageDispatcher}. */
     public List<EndpointExceptionResolver> getEndpointExceptionResolvers() {
         return endpointExceptionResolvers;
     }
 
-    /** Sets the <code>EndpointExceptionResolver</code>s to use by this <code>MessageDispatcher</code>. */
+    /** Sets the {@code EndpointExceptionResolver}s to use by this {@code MessageDispatcher}. */
     public void setEndpointExceptionResolvers(List<EndpointExceptionResolver> endpointExceptionResolvers) {
         this.endpointExceptionResolvers = endpointExceptionResolvers;
     }
 
-    /** Returns the <code>EndpointMapping</code>s to use by this <code>MessageDispatcher</code>. */
+    /** Returns the {@code EndpointMapping}s to use by this {@code MessageDispatcher}. */
     public List<EndpointMapping> getEndpointMappings() {
         return endpointMappings;
     }
 
-    /** Sets the <code>EndpointMapping</code>s to use by this <code>MessageDispatcher</code>. */
+    /** Sets the {@code EndpointMapping}s to use by this {@code MessageDispatcher}. */
     public void setEndpointMappings(List<EndpointMapping> endpointMappings) {
         this.endpointMappings = endpointMappings;
     }
@@ -265,7 +265,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
     /**
      * Returns the endpoint for this request. All endpoint mappings are tried, in order.
      *
-     * @return the <code>EndpointInvocationChain</code>, or <code>null</code> if no endpoint could be found.
+     * @return the {@code EndpointInvocationChain}, or {@code null} if no endpoint could be found.
      */
     protected EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception {
         for (EndpointMapping endpointMapping : getEndpointMappings()) {
@@ -285,7 +285,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
     }
 
     /**
-     * Returns the <code>EndpointAdapter</code> for the given endpoint.
+     * Returns the {@code EndpointAdapter} for the given endpoint.
      *
      * @param endpoint the endpoint to find an adapter for
      * @return the adapter
@@ -305,21 +305,21 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 
     /**
      * Callback for pre-processing of given invocation chain and message context. Gets called before invocation of
-     * <code>handleRequest</code> on the interceptors.
-     * <p/>
-     * Default implementation does nothing, and returns <code>true</code>.
+     * {@code handleRequest} on the interceptors.
      *
-     * @param mappedEndpoint the mapped <code>EndpointInvocationChain</code>
+     * <p>Default implementation does nothing, and returns {@code true}.
+     *
+     * @param mappedEndpoint the mapped {@code EndpointInvocationChain}
      * @param messageContext the message context
-     * @return <code>true</code> if processing should continue; <code>false</code> otherwise
+     * @return {@code true} if processing should continue; {@code false} otherwise
      */
     protected boolean handleRequest(EndpointInvocationChain mappedEndpoint, MessageContext messageContext) {
         return true;
     }
 
     /**
-     * Determine an error <code>SOAPMessage</code> response via the registered <code>EndpointExceptionResolvers</code>.
-     * Most likely, the response contains a <code>SOAPFault</code>. If no suitable resolver was found, the exception is
+     * Determine an error {@code SOAPMessage} response via the registered {@code EndpointExceptionResolvers}.
+     * Most likely, the response contains a {@code SOAPFault}. If no suitable resolver was found, the exception is
      * rethrown.
      *
      * @param messageContext current SOAPMessage request
@@ -345,8 +345,8 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 
     /**
      * Trigger handleResponse or handleFault on the mapped EndpointInterceptors. Will just invoke said method on all
-     * interceptors whose handleRequest invocation returned <code>true</code>, in addition to the last interceptor who
-     * returned <code>false</code>.
+     * interceptors whose handleRequest invocation returned {@code true}, in addition to the last interceptor who
+     * returned {@code false}.
      *
      * @param mappedEndpoint   the mapped EndpointInvocationChain
      * @param interceptorIndex index of last interceptor that was called
@@ -381,11 +381,11 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
      * Trigger afterCompletion callbacks on the mapped EndpointInterceptors.
      * Will just invoke afterCompletion for all interceptors whose handleRequest invocation
      * has successfully completed and returned true, in addition to the last interceptor who
-     * returned <code>false</code>.
+     * returned {@code false}.
      * 
      * @param mappedEndpoint   the mapped EndpointInvocationChain
      * @param interceptorIndex index of last interceptor that successfully completed
-     * @param ex Exception thrown on handler execution, or <code>null</code> if none
+     * @param ex Exception thrown on handler execution, or {@code null} if none
      * @see EndpointInterceptor#afterCompletion
      */
     private void triggerAfterCompletion(EndpointInvocationChain mappedEndpoint,
@@ -412,8 +412,8 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 
 
     /**
-     * Initialize the <code>EndpointAdapters</code> used by this class. If no adapter beans are explicitly set by using
-     * the <code>endpointAdapters</code> property, we use the default strategies.
+     * Initialize the {@code EndpointAdapters} used by this class. If no adapter beans are explicitly set by using
+     * the {@code endpointAdapters} property, we use the default strategies.
      *
      * @see #setEndpointAdapters(java.util.List)
      */
@@ -436,8 +436,8 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
     }
 
     /**
-     * Initialize the <code>EndpointExceptionResolver</code> used by this class. If no resolver beans are explicitly set
-     * by using the <code>endpointExceptionResolvers</code> property, we use the default strategies.
+     * Initialize the {@code EndpointExceptionResolver} used by this class. If no resolver beans are explicitly set
+     * by using the {@code endpointExceptionResolvers} property, we use the default strategies.
      *
      * @see #setEndpointExceptionResolvers(java.util.List)
      */
@@ -460,8 +460,8 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
     }
 
     /**
-     * Initialize the <code>EndpointMappings</code> used by this class. If no mapping beans are explictely set by using
-     * the <code>endpointMappings</code> property, we use the default strategies.
+     * Initialize the {@code EndpointMappings} used by this class. If no mapping beans are explictely set by using
+     * the {@code endpointMappings} property, we use the default strategies.
      *
      * @see #setEndpointMappings(java.util.List)
      */

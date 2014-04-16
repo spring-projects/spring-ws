@@ -53,8 +53,8 @@ public class MarshallingPayloadMethodProcessor extends AbstractPayloadMethodProc
      * Creates a new {@code MarshallingPayloadMethodProcessor} with the given marshaller. If the given {@link
      * Marshaller} also implements the {@link Unmarshaller} interface, it is used for both marshalling and
      * unmarshalling. Otherwise, an exception is thrown.
-     * <p/>
-     * Note that all {@link Marshaller} implementations in Spring also implement the {@link Unmarshaller} interface, so
+     *
+     * <p>Note that all {@link Marshaller} implementations in Spring also implement the {@link Unmarshaller} interface, so
      * that you can safely use this constructor.
      *
      * @param marshaller object used as marshaller and unmarshaller

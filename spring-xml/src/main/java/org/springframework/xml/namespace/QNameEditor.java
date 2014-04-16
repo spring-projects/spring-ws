@@ -22,9 +22,9 @@ import javax.xml.namespace.QName;
 import org.springframework.util.StringUtils;
 
 /**
- * PropertyEditor for <code>javax.xml.namespace.QName</code>, to populate a property of type QName from a String value.
- * <p/>
- * Expects the syntax
+ * PropertyEditor for {@code javax.xml.namespace.QName}, to populate a property of type QName from a String value.
+ *
+ * <p>Expects the syntax
  * <pre>
  * localPart
  * </pre>
@@ -36,7 +36,7 @@ import org.springframework.util.StringUtils;
  * <pre>
  * {namespace}prefix:localPart
  * </pre>
- * This resembles the <code>toString()</code> representation of <code>QName</code> itself, but allows for prefixes to be
+ * This resembles the {@code toString()} representation of {@code QName} itself, but allows for prefixes to be
  * specified as well.
  *
  * @author Arjen Poutsma

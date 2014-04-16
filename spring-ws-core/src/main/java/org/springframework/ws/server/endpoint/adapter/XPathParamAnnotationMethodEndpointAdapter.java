@@ -50,9 +50,9 @@ import org.springframework.xml.namespace.SimpleNamespaceContext;
  * Source handleMyMessage(@XPathParam("/root/child/text")String param1, @XPathParam("/root/child/number")double
  * param2);
  * </pre>
- * I.e. methods that return either <code>void</code> or a {@link Source}, and have parameters annotated with {@link
+ * I.e. methods that return either {@code void} or a {@link Source}, and have parameters annotated with {@link
  * XPathParam} that specify the XPath expression that should be bound to that parameter. The parameter can be of the
- * following types: <ul> <li><code>boolean</code>, or {@link Boolean}</li> <li><code>double</code>, or {@link
+ * following types: <ul> <li>{@code boolean}, or {@link Boolean}</li> <li>{@code double}, or {@link
  * Double}</li> <li>{@link String}</li> <li>{@link Node}</li> <li>{@link NodeList}</li> </ul>
  *
  * @author Arjen Poutsma
@@ -79,7 +79,7 @@ public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEnd
         xpathFactory = XPathFactory.newInstance();
     }
 
-    /** Supports methods with @XPathParam parameters, and return either <code>Source</code> or nothing. */
+    /** Supports methods with @XPathParam parameters, and return either {@code Source} or nothing. */
     @Override
     protected boolean supportsInternal(MethodEndpoint methodEndpoint) {
         Method method = methodEndpoint.getMethod();

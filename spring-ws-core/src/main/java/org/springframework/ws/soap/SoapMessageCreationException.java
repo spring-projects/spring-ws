@@ -24,12 +24,12 @@ package org.springframework.ws.soap;
  */
 public class SoapMessageCreationException extends SoapMessageException {
 
-    /** Constructor for <code>SoapMessageCreationException</code>. */
+    /** Constructor for {@code SoapMessageCreationException}. */
     public SoapMessageCreationException(String msg) {
         super(msg);
     }
 
-    /** Constructor for <code>SoapMessageCreationException</code>. */
+    /** Constructor for {@code SoapMessageCreationException}. */
     public SoapMessageCreationException(String msg, Throwable ex) {
         super(msg, ex);
     }

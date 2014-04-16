@@ -25,8 +25,8 @@ import org.springframework.ws.soap.SoapMessage;
 
 /**
  * Abstract base class for SOAP-specific {@link WebServiceMessageMatcher} implementations.
- * <p/>
- * Asserts that the message given to {@link #match(WebServiceMessage)} is a {@link SoapMessage}, and invokes {@link
+ *
+ * <p>Asserts that the message given to {@link #match(WebServiceMessage)} is a {@link SoapMessage}, and invokes {@link
  * #match(SoapMessage)} with it if so.
  *
  * @author Arjen Poutsma

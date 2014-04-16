@@ -23,7 +23,7 @@ import java.util.Iterator;
 import org.springframework.util.Assert;
 
 /**
- * A <code>TransportInputStream</code> is an input stream with MIME input headers. It is used to construct {@link
+ * A {@code TransportInputStream} is an input stream with MIME input headers. It is used to construct {@link
  * org.springframework.ws.WebServiceMessage WebServiceMessages} from a transport.
  *
  * @author Arjen Poutsma
@@ -105,13 +105,13 @@ public abstract class TransportInputStream extends InputStream {
     protected abstract InputStream createInputStream() throws IOException;
 
     /**
-     * Returns an iteration over all the header names this stream contains. Returns an empty <code>Iterator</code> if
+     * Returns an iteration over all the header names this stream contains. Returns an empty {@code Iterator} if
      * there are no headers.
      */
     public abstract Iterator<String> getHeaderNames() throws IOException;
 
     /**
-     * Returns an iteration over all the string values of the specified header. Returns an empty <code>Iterator</code>
+     * Returns an iteration over all the string values of the specified header. Returns an empty {@code Iterator}
      * if there are no headers of the specified name.
      */
     public abstract Iterator<String> getHeaders(String name) throws IOException;

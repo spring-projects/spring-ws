@@ -96,7 +96,7 @@ public abstract class JmsTransportUtils {
     }
 
     /**
-     * Converts the given JMS destination into a <code>jms</code> URI.
+     * Converts the given JMS destination into a {@code jms} URI.
      *
      * @param destination the destination
      * @return a jms URI

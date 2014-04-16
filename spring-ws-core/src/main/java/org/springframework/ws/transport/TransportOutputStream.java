@@ -22,7 +22,7 @@ import java.io.OutputStream;
 import org.springframework.util.Assert;
 
 /**
- * A <code>TransportOutputStream</code> is an output stream with MIME input headers. It is used to write {@link
+ * A {@code TransportOutputStream} is an output stream with MIME input headers. It is used to write {@link
  * org.springframework.ws.WebServiceMessage WebServiceMessages} to a transport.
  *
  * @author Arjen Poutsma

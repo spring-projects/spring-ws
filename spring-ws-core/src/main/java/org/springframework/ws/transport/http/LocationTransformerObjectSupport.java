@@ -74,16 +74,16 @@ public abstract class LocationTransformerObjectSupport extends TransformerObject
      * Transform the given location string to reflect the given request. If the given location is a full url, the
      * scheme, server name, and port are changed. If it is a relative url, the scheme, server name, and port are
      * prepended. Can be overridden in subclasses to change this behavior.
-     * <p/>
-     * For instance, if the location attribute defined in the WSDL is {@code http://localhost:8080/context/services/myService},
+     *
+     * <p>For instance, if the location attribute defined in the WSDL is {@code http://localhost:8080/context/services/myService},
      * and the request URI for the WSDL is {@code http://example.com:80/context/myService.wsdl}, the location
      * will be changed to {@code http://example.com:80/context/services/myService}.
-     * <p/>
-     * If the location attribute defined in the WSDL is {@code /services/myService}, and the request URI for the
+     *
+     * <p>If the location attribute defined in the WSDL is {@code /services/myService}, and the request URI for the
      * WSDL is {@code http://example.com:8080/context/myService.wsdl}, the location will be changed to
      * {@code http://example.com:8080/context/services/myService}.
-     * <p/>
-     * This method is only called when the {@code transformLocations} property is true.
+     *
+     * <p>This method is only called when the {@code transformLocations} property is true.
      */
     protected String transformLocation(String location, HttpServletRequest request) {
         StringBuilder url = new StringBuilder(request.getScheme());

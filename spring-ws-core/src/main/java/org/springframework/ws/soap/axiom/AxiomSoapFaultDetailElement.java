@@ -25,7 +25,7 @@ import org.apache.axiom.soap.SOAPFactory;
 import org.springframework.ws.soap.SoapFaultDetailElement;
 
 /**
- * Axiom-specific version of <code>org.springframework.ws.soap.SoapFaultDetailElement</code>.
+ * Axiom-specific version of {@code org.springframework.ws.soap.SoapFaultDetailElement}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

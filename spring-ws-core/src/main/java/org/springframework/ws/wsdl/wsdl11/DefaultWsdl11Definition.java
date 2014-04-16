@@ -34,8 +34,8 @@ import org.springframework.xml.xsd.XsdSchemaCollection;
  * conventions in one or more inlined XSD schemas. Delegates to {@link InliningXsdSchemaTypesProvider}, {@link
  * DefaultMessagesProvider}, {@link SuffixBasedPortTypesProvider}, {@link SoapProvider} underneath; effectively
  * equivalent to using a {@link ProviderBasedWsdl4jDefinition} with all these providers.
- * <p/>
- * Example configuration:
+ *
+ * <p>Example configuration:
  * <pre>
  * &lt;bean id=&quot;airline&quot; class=&quot;org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition&quot;&gt;
  *   &lt;property name=&quot;schema&quot;&gt;
@@ -76,8 +76,8 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 
     /**
      * Sets the target namespace used for this definition.
-     * <p/>
-     * Defaults to the target namespace of the defined schema.
+     *
+     * <p>Defaults to the target namespace of the defined schema.
      */
     public void setTargetNamespace(String targetNamespace) {
         delegate.setTargetNamespace(targetNamespace);
@@ -124,8 +124,8 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 
     /**
      * Indicates whether a SOAP 1.1 binding should be created.
-     * <p/>
-     * Defaults to <code>true</code>.
+     *
+     * <p>Defaults to {@code true}.
      */
     public void setCreateSoap11Binding(boolean createSoap11Binding) {
         soapProvider.setCreateSoap11Binding(createSoap11Binding);
@@ -133,8 +133,8 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 
     /**
      * Indicates whether a SOAP 1.2 binding should be created.
-     * <p/>
-     * Defaults to <code>false</code>.
+     *
+     * <p>Defaults to {@code false}.
      */
     public void setCreateSoap12Binding(boolean createSoap12Binding) {
         soapProvider.setCreateSoap12Binding(createSoap12Binding);
@@ -162,8 +162,8 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 
     /**
      * Sets the service name.
-     * <p/>
-     * Defaults to the port type name, with the suffix {@code Service} appended to it.
+     *
+     * <p>Defaults to the port type name, with the suffix {@code Service} appended to it.
      */
     public void setServiceName(String serviceName) {
         soapProvider.setServiceName(serviceName);

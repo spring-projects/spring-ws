@@ -22,9 +22,9 @@ import javax.security.auth.callback.Callback;
 import org.apache.ws.security.WSUsernameTokenPrincipal;
 
 /**
- * Underlying security services instantiate and pass a <code>UsernameTokenPrincipalCallback</code> to the
- * <code>handle</code> method of a <code>CallbackHandler</code> to pass a security
- * <code>WSUsernameTokenPrincipal</code>.
+ * Underlying security services instantiate and pass a {@code UsernameTokenPrincipalCallback} to the
+ * {@code handle} method of a {@code CallbackHandler} to pass a security
+ * {@code WSUsernameTokenPrincipal}.
  *
  * @author Arjen Poutsma
  * @see WSUsernameTokenPrincipal
@@ -36,12 +36,12 @@ public class UsernameTokenPrincipalCallback implements Callback, Serializable {
 
     private final WSUsernameTokenPrincipal principal;
 
-    /** Construct a <code>UsernameTokenPrincipalCallback</code>. */
+    /** Construct a {@code UsernameTokenPrincipalCallback}. */
     public UsernameTokenPrincipalCallback(WSUsernameTokenPrincipal principal) {
         this.principal = principal;
     }
 
-    /** Get the retrieved <code>Principal</code>. */
+    /** Get the retrieved {@code Principal}. */
     public WSUsernameTokenPrincipal getPrincipal() {
         return principal;
     }

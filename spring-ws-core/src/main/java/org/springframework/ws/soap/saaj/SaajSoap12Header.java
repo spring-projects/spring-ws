@@ -32,7 +32,7 @@ import org.springframework.ws.soap.SoapHeaderException;
 import org.springframework.ws.soap.soap12.Soap12Header;
 
 /**
- * SAAJ-specific implementation of the <code>Soap12Header</code> interface. Wraps a {@link javax.xml.soap.SOAPHeader}.
+ * SAAJ-specific implementation of the {@code Soap12Header} interface. Wraps a {@link javax.xml.soap.SOAPHeader}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

@@ -26,8 +26,8 @@ import org.springframework.ws.soap.SoapMessage;
 
 /**
  * {@link WebServiceMessageCallback} implementation that sets the SOAP Action header on the message.
- * <p/>
- * A usage example with {@link org.springframework.ws.client.core.WebServiceTemplate}:
+ *
+ * <p>A usage example with {@link org.springframework.ws.client.core.WebServiceTemplate}:
  * <pre>
  * WebServiceTemplate template = new WebServiceTemplate(messageFactory);
  * Result result = new DOMResult();
@@ -44,7 +44,7 @@ public class SoapActionCallback implements WebServiceMessageCallback {
 
     private final String soapAction;
 
-    /** Create a new <code>SoapActionCallback</code> with the given string SOAPAction. */
+    /** Create a new {@code SoapActionCallback} with the given string SOAPAction. */
     public SoapActionCallback(String soapAction) {
         if (!StringUtils.hasText(soapAction)) {
             soapAction = "\"\"";

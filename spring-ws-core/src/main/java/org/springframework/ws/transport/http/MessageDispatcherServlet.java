@@ -41,19 +41,19 @@ import org.springframework.xml.xsd.XsdSchema;
 
 /**
  * Servlet for simplified dispatching of Web service messages.
- * <p/>
- * This servlet is a convenient alternative to the standard Spring-MVC {@link DispatcherServlet} with separate {@link
+ *
+ * <p>This servlet is a convenient alternative to the standard Spring-MVC {@link DispatcherServlet} with separate {@link
  * WebServiceMessageReceiverHandlerAdapter}, {@link MessageDispatcher}, and {@link WsdlDefinitionHandlerAdapter}
  * instances.
- * <p/>
- * This servlet automatically detects {@link EndpointAdapter EndpointAdapters}, {@link EndpointMapping
+ *
+ * <p>This servlet automatically detects {@link EndpointAdapter EndpointAdapters}, {@link EndpointMapping
  * EndpointMappings}, and {@link EndpointExceptionResolver EndpointExceptionResolvers} <i>by type</i>.
- * <p/>
- * This servlet also automatically detects any {@link WsdlDefinition} defined in its application context. This WSDL is
- * exposed under the bean name: for example, a <code>WsdlDefinition</code> bean named '<code>echo</code>' will be
- * exposed as <code>echo.wsdl</code> in this servlet's context: <code>http://localhost:8080/spring-ws/echo.wsdl</code>.
- * When the <code>transformWsdlLocations</code> init-param is set to <code>true</code> in this servlet's configuration
- * in <code>web.xml</code>, all <code>location</code> attributes in the WSDL definitions will reflect the URL of the
+ *
+ * <p>This servlet also automatically detects any {@link WsdlDefinition} defined in its application context. This WSDL is
+ * exposed under the bean name: for example, a {@code WsdlDefinition} bean named '{@code echo}' will be
+ * exposed as {@code echo.wsdl} in this servlet's context: {@code http://localhost:8080/spring-ws/echo.wsdl}.
+ * When the {@code transformWsdlLocations} init-param is set to {@code true} in this servlet's configuration
+ * in {@code web.xml}, all {@code location} attributes in the WSDL definitions will reflect the URL of the
  * incoming request.
  *
  * @author Arjen Poutsma
@@ -214,7 +214,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 
     /**
      * Sets whether relative address locations in the WSDL are to be transformed using the request URI of the incoming
-     * {@link HttpServletRequest}. Defaults to <code>false</code>.
+     * {@link HttpServletRequest}. Defaults to {@code false}.
      */
     public void setTransformWsdlLocations(boolean transformWsdlLocations) {
         this.transformWsdlLocations = transformWsdlLocations;
@@ -230,7 +230,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 
     /**
      * Sets whether relative address locations in the XSD are to be transformed using the request URI of the incoming
-     * {@link HttpServletRequest}. Defaults to <code>false</code>.
+     * {@link HttpServletRequest}. Defaults to {@code false}.
      */
     public void setTransformSchemaLocations(boolean transformSchemaLocations) {
         this.transformSchemaLocations = transformSchemaLocations;
@@ -319,14 +319,14 @@ public class MessageDispatcherServlet extends FrameworkServlet {
     }
 
     /**
-     * Determines the {@link WsdlDefinition} for a given request, or <code>null</code> if none is found.
-     * <p/>
-     * Default implementation checks whether the request method is <code>GET</code>, whether the request uri ends with
-     * <code>".wsdl"</code>, and if there is a <code>WsdlDefinition</code> with the same name as the filename in the
+     * Determines the {@link WsdlDefinition} for a given request, or {@code null} if none is found.
+     *
+     * <p>Default implementation checks whether the request method is {@code GET}, whether the request uri ends with
+     * {@code ".wsdl"}, and if there is a {@code WsdlDefinition} with the same name as the filename in the
      * request uri.
      *
-     * @param request the <code>HttpServletRequest</code>
-     * @return a definition, or <code>null</code>
+     * @param request the {@code HttpServletRequest}
+     * @return a definition, or {@code null}
      */
     protected WsdlDefinition getWsdlDefinition(HttpServletRequest request) {
         if (HttpTransportConstants.METHOD_GET.equals(request.getMethod()) &&
@@ -340,14 +340,14 @@ public class MessageDispatcherServlet extends FrameworkServlet {
     }
 
     /**
-     * Determines the {@link XsdSchema} for a given request, or <code>null</code> if none is found.
-     * <p/>
-     * Default implementation checks whether the request method is <code>GET</code>, whether the request uri ends with
-     * <code>".xsd"</code>, and if there is a <code>XsdSchema</code> with the same name as the filename in the request
+     * Determines the {@link XsdSchema} for a given request, or {@code null} if none is found.
+     *
+     * <p>Default implementation checks whether the request method is {@code GET}, whether the request uri ends with
+     * {@code ".xsd"}, and if there is a {@code XsdSchema} with the same name as the filename in the request
      * uri.
      *
-     * @param request the <code>HttpServletRequest</code>
-     * @return a schema, or <code>null</code>
+     * @param request the {@code HttpServletRequest}
+     * @return a schema, or {@code null}
      */
     protected XsdSchema getXsdSchema(HttpServletRequest request) {
         if (HttpTransportConstants.METHOD_GET.equals(request.getMethod()) &&

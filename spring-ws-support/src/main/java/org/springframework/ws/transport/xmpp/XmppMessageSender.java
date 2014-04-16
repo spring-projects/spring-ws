@@ -31,8 +31,8 @@ import org.springframework.ws.transport.xmpp.support.XmppTransportUtils;
 /**
  * {@link WebServiceMessageSender} implementation that uses XMPP {@link org.jivesoftware.smack.packet.Message}s.
  * Requires a {@link #setConnection(org.jivesoftware.smack.XMPPConnection) connection}to be set.
- * <p/>
- * This message sender supports URI's of the following format: <blockquote> <tt><b>xmpp:</b></tt><i>to</i> </blockquote>
+ *
+ * <p>This message sender supports URI's of the following format: <blockquote> <tt><b>xmpp:</b></tt><i>to</i> </blockquote>
  * The <i>to</i> represents a Jabber ID.
  *
  * @author Gildas Cuisinier
@@ -69,7 +69,7 @@ public class XmppMessageSender implements WebServiceMessageSender, InitializingB
 
     /**
      * Sets the encoding used to read from {@link org.jivesoftware.smack.packet.Message} object. Defaults to
-     * <code>UTF-8</code>.
+     * {@code UTF-8}.
      */
     public void setMessageEncoding(String messageEncoding) {
         this.messageEncoding = messageEncoding;

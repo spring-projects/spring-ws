@@ -25,24 +25,24 @@ import java.util.Properties;
 import org.springframework.beans.BeansException;
 
 /**
- * Implementation of the <code>EndpointMapping</code> interface to map from WS-Addressing <code>Action</code> Message
+ * Implementation of the {@code EndpointMapping} interface to map from WS-Addressing {@code Action} Message
  * Addressing Property to endpoint beans. Supports both mapping to bean instances and mapping to bean names.
- * <p/>
- * The <code>endpointMap</code> property is suitable for populating the endpoint map with bean references, e.g. via the
+ *
+ * <p>The {@code endpointMap} property is suitable for populating the endpoint map with bean references, e.g. via the
  * map element in XML bean definitions.
- * <p/>
- * Mappings to bean names can be set via the <code>mappings</code> property, in a form accepted by the
- * <code>java.util.Properties</code> class, like as follows:
+ *
+ * <p>Mappings to bean names can be set via the {@code mappings} property, in a form accepted by the
+ * {@code java.util.Properties} class, like as follows:
  * <pre>
  * http://www.springframework.org/spring-ws/samples/airline/BookFlight=bookFlightEndpoint
  * http://www.springframework.org/spring-ws/samples/airline/GetFlights=getFlightsEndpoint
  * </pre>
  * The syntax is WS_ADDRESSING_ACTION=ENDPOINT_BEAN_NAME.
- * <p/>
- * If set, the {@link #setAddress(URI) address} property should be equal to the {@link
+ *
+ * <p>If set, the {@link #setAddress(URI) address} property should be equal to the {@link
  * org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo() destination} property of the
  * incominging message. As such, it can be used to create multiple Endpoint References, by defining multiple
- * <code>SimpleActionEndpointMapping</code> bean definitions with different <code>address</code> property values.
+ * {@code SimpleActionEndpointMapping} bean definitions with different {@code address} property values.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getAction()

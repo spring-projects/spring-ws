@@ -48,20 +48,20 @@ public class HttpServletConnection extends AbstractReceiverConnection
     private boolean statusCodeSet = false;
 
     /**
-     * Constructs a new servlet connection with the given <code>HttpServletRequest</code> and
-     * <code>HttpServletResponse</code>.
+     * Constructs a new servlet connection with the given {@code HttpServletRequest} and
+     * {@code HttpServletResponse}.
      */
     protected HttpServletConnection(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         this.httpServletRequest = httpServletRequest;
         this.httpServletResponse = httpServletResponse;
     }
 
-    /** Returns the <code>HttpServletRequest</code> for this connection. */
+    /** Returns the {@code HttpServletRequest} for this connection. */
     public HttpServletRequest getHttpServletRequest() {
         return httpServletRequest;
     }
 
-    /** Returns the <code>HttpServletResponse</code> for this connection. */
+    /** Returns the {@code HttpServletResponse} for this connection. */
     public HttpServletResponse getHttpServletResponse() {
         return httpServletResponse;
     }

@@ -45,8 +45,8 @@ import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
 
 /**
- * Collection of generic utility methods to work with Axiom. Includes conversion from <code>OMNamespace</code>s to
- * <code>QName</code>s.
+ * Collection of generic utility methods to work with Axiom. Includes conversion from {@code OMNamespace}s to
+ * {@code QName}s.
  *
  * @author Arjen Poutsma
  * @author Tareq Abed Rabbo
@@ -58,14 +58,14 @@ import org.w3c.dom.ls.LSSerializer;
 public abstract class AxiomUtils {
 
     /**
-     * Converts a <code>javax.xml.namespace.QName</code> to a <code>org.apache.axiom.om.OMNamespace</code>. A
-     * <code>OMElement</code> is used to resolve the namespace, or to declare a new one.
+     * Converts a {@code javax.xml.namespace.QName} to a {@code org.apache.axiom.om.OMNamespace}. A
+     * {@code OMElement} is used to resolve the namespace, or to declare a new one.
      *
-     * @param qName          the <code>QName</code> to convert
+     * @param qName          the {@code QName} to convert
      * @param resolveElement the element used to resolve the Q
      * @return the converted SAAJ Name
      * @throws OMException              if conversion is unsuccessful
-     * @throws IllegalArgumentException if <code>qName</code> is not fully qualified
+     * @throws IllegalArgumentException if {@code qName} is not fully qualified
      */
     public static OMNamespace toNamespace(QName qName, OMElement resolveElement) throws OMException {
         String prefix = QNameUtils.getPrefix(qName);
@@ -82,7 +82,7 @@ public abstract class AxiomUtils {
     }
 
     /**
-     * Converts the given locale to a <code>xml:lang</code> string, as used in Axiom Faults.
+     * Converts the given locale to a {@code xml:lang} string, as used in Axiom Faults.
      *
      * @param locale the locale
      * @return the language string
@@ -92,7 +92,7 @@ public abstract class AxiomUtils {
     }
 
     /**
-     * Converts the given locale to a <code>xml:lang</code> string, as used in Axiom Faults.
+     * Converts the given locale to a {@code xml:lang} string, as used in Axiom Faults.
      *
      * @param language the language string
      * @return the locale

@@ -26,11 +26,11 @@ import javax.security.auth.login.LoginException;
 import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
 
 /**
- * Provides basic support for integrating with JAAS and certificates. Requires the <code>loginContextName</code> to be
- * set.Requires a <code>LoginContext</code> which handles <code>X500Principal</code>s.
- * <p/>
- * This class only handles <code>CertificateValidationCallback</code>s, and throws an
- * <code>UnsupportedCallbackException</code> for others.
+ * Provides basic support for integrating with JAAS and certificates. Requires the {@code loginContextName} to be
+ * set.Requires a {@code LoginContext} which handles {@code X500Principal}s.
+ *
+ * <p>This class only handles {@code CertificateValidationCallback}s, and throws an
+ * {@code UnsupportedCallbackException} for others.
  *
  * @author Arjen Poutsma
  * @see javax.security.auth.x500.X500Principal
@@ -40,7 +40,7 @@ import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
 public class JaasCertificateValidationCallbackHandler extends AbstractJaasValidationCallbackHandler {
 
     /**
-     * Handles  <code>CertificateValidationCallback</code>s, and throws an <code>UnsupportedCallbackException</code> for
+     * Handles  {@code CertificateValidationCallback}s, and throws an {@code UnsupportedCallbackException} for
      * others
      *
      * @throws UnsupportedCallbackException when the callback is not supported

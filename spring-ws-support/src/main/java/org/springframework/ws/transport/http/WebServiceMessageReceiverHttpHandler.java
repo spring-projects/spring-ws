@@ -26,8 +26,8 @@ import org.springframework.ws.transport.support.SimpleWebServiceMessageReceiverO
 /**
  * {@link HttpHandler} that can be used to handle incoming {@link HttpExchange} service requests. Designed for Sun's JRE
  * 1.6 HTTP server.
- * <p/>
- * Requires a {@link org.springframework.ws.WebServiceMessageFactory} which is used to convert the incoming {@link
+ *
+ * <p>Requires a {@link org.springframework.ws.WebServiceMessageFactory} which is used to convert the incoming {@link
  * HttpExchange} into a {@link org.springframework.ws.WebServiceMessage}, and passes that to the {@link
  * org.springframework.ws.transport.WebServiceMessageReceiver} {@link #setMessageReceiver(org.springframework.ws.transport.WebServiceMessageReceiver)
  * registered}.
@@ -41,7 +41,7 @@ public class WebServiceMessageReceiverHttpHandler extends SimpleWebServiceMessag
 
     private boolean chunkedEncoding = false;
 
-    /** Enables chunked encoding on response bodies. Defaults to <code>false</code>. */
+    /** Enables chunked encoding on response bodies. Defaults to {@code false}. */
     public void setChunkedEncoding(boolean chunkedEncoding) {
         this.chunkedEncoding = chunkedEncoding;
     }

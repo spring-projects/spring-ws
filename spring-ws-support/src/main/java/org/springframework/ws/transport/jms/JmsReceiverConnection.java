@@ -40,10 +40,10 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
 /**
  * Implementation of {@link WebServiceConnection} that is used for server-side JMS access. Exposes a {@link
  * BytesMessage} or {@link TextMessage} request and response message.
- * <p/>
- * The response message type is equal to the request message type, i.e. if a <code>BytesMessage</code> is received as
- * request, a <code>BytesMessage</code> is created as response, and if a <code>TextMessage</code> is received, a
- * <code>TextMessage</code> response is created.
+ *
+ * <p>The response message type is equal to the request message type, i.e. if a {@code BytesMessage} is received as
+ * request, a {@code BytesMessage} is created as response, and if a {@code TextMessage} is received, a
+ * {@code TextMessage} response is created.
  *
  * @author Arjen Poutsma
  * @since 1.5.0

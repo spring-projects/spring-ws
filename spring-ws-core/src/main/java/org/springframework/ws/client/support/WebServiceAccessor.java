@@ -28,10 +28,10 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
- * Base class for <code>WebServiceTemplate</code> and other WS-accessing helpers. Defines common properties like the
+ * Base class for {@code WebServiceTemplate} and other WS-accessing helpers. Defines common properties like the
  * {@link WebServiceMessageFactory} and {@link WebServiceMessageSender}.
- * <p/>
- * Not intended to be used directly. See {@link org.springframework.ws.client.core.WebServiceTemplate}.
+ *
+ * <p>Not intended to be used directly. See {@link org.springframework.ws.client.core.WebServiceTemplate}.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.client.core.WebServiceTemplate
@@ -60,8 +60,8 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
 
     /**
      * Sets the single message sender used for sending messages.
-     * <p/>
-     * This message sender will be used to resolve an URI to a {@link WebServiceConnection}.
+     *
+     * <p>This message sender will be used to resolve an URI to a {@link WebServiceConnection}.
      *
      * @see #createConnection(URI)
      */
@@ -72,8 +72,8 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
 
     /**
      * Sets the message senders used for sending messages.
-     * <p/>
-     * These message senders will be used to resolve an URI to a {@link WebServiceConnection}.
+     *
+     * <p>These message senders will be used to resolve an URI to a {@link WebServiceConnection}.
      *
      * @see #createConnection(URI)
      */
@@ -90,8 +90,8 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
 
     /**
      * Creates a connection to the given URI, or throws an exception when it cannot be resolved.
-     * <p/>
-     * Default implementation iterates over all configured {@link WebServiceMessageSender} objects, and calls {@link
+     *
+     * <p>Default implementation iterates over all configured {@link WebServiceMessageSender} objects, and calls {@link
      * WebServiceMessageSender#supports(URI)} for each of them. If the sender supports the parameter URI, it creates a
      * connection using {@link WebServiceMessageSender#createConnection(URI)} .
      *

@@ -23,8 +23,8 @@ import org.w3c.dom.Document;
 
 /**
  * Represents an abstraction for SOAP messages, providing access to a SOAP Envelope. The contents of the SOAP body can
- * be retrieved by <code>getPayloadSource()</code> and <code>getPayloadResult()</code> on
- * <code>WebServiceMessage</code>, the super-interface of this interface.
+ * be retrieved by {@code getPayloadSource()} and {@code getPayloadResult()} on
+ * {@code WebServiceMessage}, the super-interface of this interface.
  *
  * @author Arjen Poutsma
  * @see #getPayloadSource()
@@ -34,11 +34,11 @@ import org.w3c.dom.Document;
  */
 public interface SoapMessage extends MimeMessage, FaultAwareWebServiceMessage {
 
-    /** Returns the <code>SoapEnvelope</code> associated with this <code>SoapMessage</code>. */
+    /** Returns the {@code SoapEnvelope} associated with this {@code SoapMessage}. */
     SoapEnvelope getEnvelope() throws SoapEnvelopeException;
 
     /**
-     * Get the SOAP Action for this message, or <code>null</code> if not present.
+     * Get the SOAP Action for this message, or {@code null} if not present.
      *
      * @return the SOAP Action.
      */
@@ -52,16 +52,16 @@ public interface SoapMessage extends MimeMessage, FaultAwareWebServiceMessage {
     void setSoapAction(String soapAction);
 
     /**
-     * Returns the <code>SoapBody</code> associated with this <code>SoapMessage</code>. This is a convenience method for
-     * <code>getEnvelope().getBody()</code>.
+     * Returns the {@code SoapBody} associated with this {@code SoapMessage}. This is a convenience method for
+     * {@code getEnvelope().getBody()}.
      *
      * @see SoapEnvelope#getBody()
      */
     SoapBody getSoapBody() throws SoapBodyException;
 
     /**
-     * Returns the <code>SoapHeader</code> associated with this <code>SoapMessage</code>. This is a convenience method
-     * for <code>getEnvelope().getHeader()</code>.
+     * Returns the {@code SoapHeader} associated with this {@code SoapMessage}. This is a convenience method
+     * for {@code getEnvelope().getHeader()}.
      *
      * @see SoapEnvelope#getHeader()
      */

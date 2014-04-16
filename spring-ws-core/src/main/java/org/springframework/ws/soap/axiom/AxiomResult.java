@@ -25,7 +25,7 @@ import org.xml.sax.ext.LexicalHandler;
 
 /**
  * Specific TrAX {@link javax.xml.transform.Result} that adds the resulting AXIOM OMElement to a specified parent
- * element when <code>endDocument</code> is called.
+ * element when {@code endDocument} is called.
  *
  * @author Arjen Poutsma
  * @see AxiomHandler
@@ -40,7 +40,7 @@ class AxiomResult extends SAXResult {
     }
 
     /**
-     * Throws a <code>UnsupportedOperationException</code>.
+     * Throws a {@code UnsupportedOperationException}.
      *
      * @throws UnsupportedOperationException always
      */
@@ -50,7 +50,7 @@ class AxiomResult extends SAXResult {
     }
 
     /**
-     * Throws a <code>UnsupportedOperationException</code>.
+     * Throws a {@code UnsupportedOperationException}.
      *
      * @throws UnsupportedOperationException always
      */

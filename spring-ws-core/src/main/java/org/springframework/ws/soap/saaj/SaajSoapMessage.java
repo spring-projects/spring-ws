@@ -73,7 +73,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
     private final boolean langAttributeOnSoap11FaultString;
 
     /**
-     * Create a new <code>SaajSoapMessage</code> based on the given SAAJ <code>SOAPMessage</code>.
+     * Create a new {@code SaajSoapMessage} based on the given SAAJ {@code SOAPMessage}.
      *
      * @param soapMessage the SAAJ SOAPMessage
      */
@@ -82,7 +82,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
     }
 
     /**
-     * Create a new <code>SaajSoapMessage</code> based on the given SAAJ <code>SOAPMessage</code>.
+     * Create a new {@code SaajSoapMessage} based on the given SAAJ {@code SOAPMessage}.
      *
      * @param soapMessage the SAAJ SOAPMessage
      * @param messageFactory the SAAJ message factory
@@ -92,7 +92,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
     }
 
     /**
-     * Create a new <code>SaajSoapMessage</code> based on the given SAAJ <code>SOAPMessage</code>.
+     * Create a new {@code SaajSoapMessage} based on the given SAAJ {@code SOAPMessage}.
      *
      * @param soapMessage the SAAJ SOAPMessage
      * @param langAttributeOnSoap11FaultString
@@ -103,7 +103,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
     }
 
     /**
-     * Create a new <code>SaajSoapMessage</code> based on the given SAAJ <code>SOAPMessage</code>.
+     * Create a new {@code SaajSoapMessage} based on the given SAAJ {@code SOAPMessage}.
      *
      * @param soapMessage the SAAJ SOAPMessage
      * @param langAttributeOnSoap11FaultString
@@ -121,12 +121,12 @@ public class SaajSoapMessage extends AbstractSoapMessage {
         this.messageFactory = messageFactory;
     }
 
-    /** Return the SAAJ <code>SOAPMessage</code> that this <code>SaajSoapMessage</code> is based on. */
+    /** Return the SAAJ {@code SOAPMessage} that this {@code SaajSoapMessage} is based on. */
     public SOAPMessage getSaajMessage() {
         return saajMessage;
     }
 
-    /** Sets the SAAJ <code>SOAPMessage</code> that this <code>SaajSoapMessage</code> is based on. */
+    /** Sets the SAAJ {@code SOAPMessage} that this {@code SaajSoapMessage} is based on. */
     public void setSaajMessage(SOAPMessage soapMessage) {
         Assert.notNull(soapMessage, "soapMessage must not be null");
         saajMessage = soapMessage;

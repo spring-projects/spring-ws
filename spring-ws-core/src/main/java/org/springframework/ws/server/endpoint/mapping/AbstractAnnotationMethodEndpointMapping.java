@@ -26,8 +26,8 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
 /**
  * Abstract base for {@link org.springframework.ws.server.EndpointMapping} implementations that map classes tagged with
  * an annotation. By default the annotation is {@link Endpoint}, but this can be overriden in subclasses.
- * <p/>
- * The methods of each bean carrying @Endpoint will be registered using {@link #registerMethods(String)}.
+ *
+ * <p>The methods of each bean carrying @Endpoint will be registered using {@link #registerMethods(String)}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -38,12 +38,12 @@ public abstract class AbstractAnnotationMethodEndpointMapping<T> extends Abstrac
 
     /**
      * Set whether to detect endpoint beans in ancestor ApplicationContexts.
-     * <p/>
-     * Default is "false": Only endpoint beans in the current ApplicationContext will be detected, i.e. only in the
+     *
+     * <p>Default is "false": Only endpoint beans in the current ApplicationContext will be detected, i.e. only in the
      * context that this EndpointMapping itself is defined in (typically the current MessageDispatcherServlet's
      * context).
-     * <p/>
-     * Switch this flag on to detect endpoint beans in ancestor contexts (typically the Spring root
+     *
+     * <p>Switch this flag on to detect endpoint beans in ancestor contexts (typically the Spring root
      * WebApplicationContext) as well.
      */
     public void setDetectEndpointsInAncestorContexts(boolean detectEndpointsInAncestorContexts) {

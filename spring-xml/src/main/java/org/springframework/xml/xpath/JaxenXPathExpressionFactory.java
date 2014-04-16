@@ -28,7 +28,7 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
 
 /**
- * Jaxen-specific factory for creating <code>XPathExpression</code>s.
+ * Jaxen-specific factory for creating {@code XPathExpression}s.
  *
  * @author Arjen Poutsma
  * @see #createXPathExpression(String)
@@ -37,10 +37,10 @@ import org.w3c.dom.Node;
 abstract class JaxenXPathExpressionFactory {
 
     /**
-     * Creates a Jaxen <code>XPathExpression</code> from the given string expression.
+     * Creates a Jaxen {@code XPathExpression} from the given string expression.
      *
      * @param expression the XPath expression
-     * @return the compiled <code>XPathExpression</code>
+     * @return the compiled {@code XPathExpression}
      * @throws XPathParseException when the given expression cannot be parsed
      */
     static XPathExpression createXPathExpression(String expression) {
@@ -55,11 +55,11 @@ abstract class JaxenXPathExpressionFactory {
     }
 
     /**
-     * Creates a Jaxen <code>XPathExpression</code> from the given string expression and prefixes.
+     * Creates a Jaxen {@code XPathExpression} from the given string expression and prefixes.
      *
      * @param expression the XPath expression
      * @param namespaces the namespaces
-     * @return the compiled <code>XPathExpression</code>
+     * @return the compiled {@code XPathExpression}
      * @throws XPathParseException when the given expression cannot be parsed
      */
     public static XPathExpression createXPathExpression(String expression, Map<String, String> namespaces) {
@@ -74,7 +74,7 @@ abstract class JaxenXPathExpressionFactory {
         }
     }
 
-    /** Jaxen implementation of the <code>XPathExpression</code> interface. */
+    /** Jaxen implementation of the {@code XPathExpression} interface. */
     private static class JaxenXpathExpression implements XPathExpression {
 
         private XPath xpath;

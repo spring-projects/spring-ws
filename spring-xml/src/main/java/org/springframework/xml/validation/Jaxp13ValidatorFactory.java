@@ -29,7 +29,7 @@ import org.xml.sax.SAXParseException;
 import org.springframework.core.io.Resource;
 
 /**
- * Internal class that uses JAXP 1.0 features to create <code>XmlValidator</code> instances.
+ * Internal class that uses JAXP 1.0 features to create {@code XmlValidator} instances.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -76,7 +76,7 @@ abstract class Jaxp13ValidatorFactory {
         }
     }
 
-    /** <code>ErrorHandler</code> implementation that stores errors and fatal errors in a list. */
+    /** {@code ErrorHandler} implementation that stores errors and fatal errors in a list. */
     private static class DefaultValidationErrorHandler implements ValidationErrorHandler {
 
         private List<SAXParseException> errors = new ArrayList<SAXParseException>();

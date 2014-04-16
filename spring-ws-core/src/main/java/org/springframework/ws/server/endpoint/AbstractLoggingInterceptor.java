@@ -33,9 +33,9 @@ import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
- * Abstract base class for <code>EndpointInterceptor</code> instances that log a part of a
- * <code>WebServiceMessage</code>. By default, both request and response messages are logged, but this behaviour can be
- * changed using the <code>logRequest</code> and <code>logResponse</code> properties.
+ * Abstract base class for {@code EndpointInterceptor} instances that log a part of a
+ * {@code WebServiceMessage}. By default, both request and response messages are logged, but this behaviour can be
+ * changed using the {@code logRequest} and {@code logResponse} properties.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -43,8 +43,8 @@ import org.springframework.xml.transform.TransformerObjectSupport;
 public abstract class AbstractLoggingInterceptor extends TransformerObjectSupport implements EndpointInterceptor {
 
     /**
-     * The default <code>Log</code> instance used to write trace messages. This instance is mapped to the implementing
-     * <code>Class</code>.
+     * The default {@code Log} instance used to write trace messages. This instance is mapped to the implementing
+     * {@code Class}.
      */
     protected transient Log logger = LogFactory.getLog(getClass());
 
@@ -52,12 +52,12 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
 
     private boolean logResponse = true;
 
-    /** Indicates whether the request should be logged. Default is <code>true</code>. */
+    /** Indicates whether the request should be logged. Default is {@code true}. */
     public final void setLogRequest(boolean logRequest) {
         this.logRequest = logRequest;
     }
 
-    /** Indicates whether the response should be logged. Default is <code>true</code>. */
+    /** Indicates whether the response should be logged. Default is {@code true}. */
     public final void setLogResponse(boolean logResponse) {
         this.logResponse = logResponse;
     }
@@ -65,8 +65,8 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
     /**
      * Set the name of the logger to use. The name will be passed to the underlying logger implementation through
      * Commons Logging, getting interpreted as log category according to the logger's configuration.
-     * <p/>
-     * This can be specified to not log into the category of a class but rather into a specific named category.
+     *
+     * <p>This can be specified to not log into the category of a class but rather into a specific named category.
      *
      * @see org.apache.commons.logging.LogFactory#getLog(String)
      * @see org.apache.log4j.Logger#getLogger(String)
@@ -77,11 +77,11 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
     }
 
     /**
-     * Logs the request message payload. Logging only occurs if <code>logRequest</code> is set to <code>true</code>,
+     * Logs the request message payload. Logging only occurs if {@code logRequest} is set to {@code true},
      * which is the default.
      *
      * @param messageContext the message context
-     * @return <code>true</code>
+     * @return {@code true}
      * @throws TransformerException when the payload cannot be transformed to a string
      */
     @Override
@@ -93,11 +93,11 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
     }
 
     /**
-     * Logs the response message payload. Logging only occurs if <code>logResponse</code> is set to <code>true</code>,
+     * Logs the response message payload. Logging only occurs if {@code logResponse} is set to {@code true},
      * which is the default.
      *
      * @param messageContext the message context
-     * @return <code>true</code>
+     * @return {@code true}
      * @throws TransformerException when the payload cannot be transformed to a string
      */
     @Override
@@ -121,8 +121,8 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
 
     /**
      * Determine whether the {@link #logger} field is enabled.
-     * <p/>
-     * Default is <code>true</code> when the "debug" level is enabled. Subclasses can override this to change the level
+     *
+     * <p>Default is {@code true} when the "debug" level is enabled. Subclasses can override this to change the level
      * under which logging occurs.
      */
     protected boolean isLogEnabled() {
@@ -138,8 +138,8 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
 
     /**
      * Logs the given {@link Source source} to the {@link #logger}, using the message as a prefix.
-     * <p/>
-     * By default, this message creates a string representation of the given source, and delegates to {@link
+     *
+     * <p>By default, this message creates a string representation of the given source, and delegates to {@link
      * #logMessage(String)}.
      *
      * @param logMessage the log message
@@ -158,8 +158,8 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
 
     /**
      * Logs the given string message.
-     * <p/>
-     * By default, this method uses a "debug" level of logging. Subclasses can override this method to change the level
+     *
+     * <p>By default, this method uses a "debug" level of logging. Subclasses can override this method to change the level
      * of logging used by the logger.
      *
      * @param message the message
@@ -169,7 +169,7 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
     }
 
     /**
-     * Abstract template method that returns the <code>Source</code> for the given <code>WebServiceMessage</code>.
+     * Abstract template method that returns the {@code Source} for the given {@code WebServiceMessage}.
      *
      * @param message the message
      * @return the source of the message

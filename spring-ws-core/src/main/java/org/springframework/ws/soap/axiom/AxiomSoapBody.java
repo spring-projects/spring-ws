@@ -30,7 +30,7 @@ import org.springframework.ws.soap.axiom.support.AxiomUtils;
 import org.springframework.ws.stream.StreamingPayload;
 
 /**
- * Axiom-specific version of <code>org.springframework.ws.soap.Soap11Body</code>.
+ * Axiom-specific version of {@code org.springframework.ws.soap.Soap11Body}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

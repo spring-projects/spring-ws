@@ -31,15 +31,15 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
  * Convenient super class for application classes that need Web service access.
- * <p/>
- * Requires a {@link WebServiceMessageFactory} or a {@link WebServiceTemplate} instance to be set. It will create its
- * own <code>WebServiceTemplate</code> if <code>WebServiceMessageFactory</code> is passed in.
- * <p/>
- * In addition to the message factory property, this gateway offers {@link Marshaller} and {@link Unmarshaller}
+ *
+ * <p>Requires a {@link WebServiceMessageFactory} or a {@link WebServiceTemplate} instance to be set. It will create its
+ * own {@code WebServiceTemplate} if {@code WebServiceMessageFactory} is passed in.
+ *
+ * <p>In addition to the message factory property, this gateway offers {@link Marshaller} and {@link Unmarshaller}
  * properties. Setting these is required when the {@link WebServiceTemplate#marshalSendAndReceive(Object) marshalling
  * methods} of the template are to be used.
- * <p/>
- * Note that when {@link #setWebServiceTemplate(WebServiceTemplate) injecting a <code>WebServiceTemplate</code>}
+ *
+ * <p>Note that when {@link #setWebServiceTemplate(WebServiceTemplate) injecting a {@code WebServiceTemplate}}
  * directly, the convenience setters ({@link #setMarshaller(Marshaller)}, {@link #setUnmarshaller(Unmarshaller)}, {@link
  * #setMessageSender(WebServiceMessageSender)}, {@link #setMessageSenders(WebServiceMessageSender[])}, and {@link
  * #setDefaultUri(String)}) should not be used on this class, but on the template directly.
@@ -58,15 +58,15 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
     private WebServiceTemplate webServiceTemplate;
 
     /**
-     * Creates a new instance of the <code>WebServiceGatewaySupport</code> class, with a default
-     * <code>WebServiceTemplate</code>.
+     * Creates a new instance of the {@code WebServiceGatewaySupport} class, with a default
+     * {@code WebServiceTemplate}.
      */
     protected WebServiceGatewaySupport() {
         webServiceTemplate = new WebServiceTemplate();
     }
 
     /**
-     * Creates a new <code>WebServiceGatewaySupport</code> instance based on the given message factory.
+     * Creates a new {@code WebServiceGatewaySupport} instance based on the given message factory.
      *
      * @param messageFactory the message factory to use
      */
@@ -74,12 +74,12 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
         webServiceTemplate = new WebServiceTemplate(messageFactory);
     }
 
-    /** Returns the <code>WebServiceMessageFactory</code> used by the gateway. */
+    /** Returns the {@code WebServiceMessageFactory} used by the gateway. */
     public final WebServiceMessageFactory getMessageFactory() {
         return webServiceTemplate.getMessageFactory();
     }
 
-    /** Set the <code>WebServiceMessageFactory</code> to be used by the gateway. */
+    /** Set the {@code WebServiceMessageFactory} to be used by the gateway. */
     public final void setMessageFactory(WebServiceMessageFactory messageFactory) {
         webServiceTemplate.setMessageFactory(messageFactory);
     }
@@ -104,30 +104,30 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
         webServiceTemplate.setDestinationProvider(destinationProvider);
     }
 
-    /** Sets a single <code>WebServiceMessageSender</code> to be used by the gateway. */
+    /** Sets a single {@code WebServiceMessageSender} to be used by the gateway. */
     public final void setMessageSender(WebServiceMessageSender messageSender) {
         webServiceTemplate.setMessageSender(messageSender);
     }
 
-    /** Returns the <code>WebServiceMessageSender</code>s used by the gateway. */
+    /** Returns the {@code WebServiceMessageSender}s used by the gateway. */
     public final WebServiceMessageSender[] getMessageSenders() {
         return webServiceTemplate.getMessageSenders();
     }
 
-    /** Sets multiple <code>WebServiceMessageSender</code> to be used by the gateway. */
+    /** Sets multiple {@code WebServiceMessageSender} to be used by the gateway. */
     public final void setMessageSenders(WebServiceMessageSender[] messageSenders) {
         webServiceTemplate.setMessageSenders(messageSenders);
     }
 
-    /** Returns the <code>WebServiceTemplate</code> for the gateway. */
+    /** Returns the {@code WebServiceTemplate} for the gateway. */
     public final WebServiceTemplate getWebServiceTemplate() {
         return webServiceTemplate;
     }
 
     /**
-     * Sets the <code>WebServiceTemplate</code> to be used by the gateway.
-     * <p/>
-     * When using this property, the convenience setters ({@link #setMarshaller(Marshaller)}, {@link
+     * Sets the {@code WebServiceTemplate} to be used by the gateway.
+     *
+     * <p>When using this property, the convenience setters ({@link #setMarshaller(Marshaller)}, {@link
      * #setUnmarshaller(Unmarshaller)}, {@link #setMessageSender(WebServiceMessageSender)}, {@link
      * #setMessageSenders(WebServiceMessageSender[])}, and {@link #setDefaultUri(String)}) should not be set on this
      * class, but on the template directly.
@@ -137,14 +137,14 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
         this.webServiceTemplate = webServiceTemplate;
     }
 
-    /** Returns the <code>Marshaller</code> used by the gateway. */
+    /** Returns the {@code Marshaller} used by the gateway. */
     public final Marshaller getMarshaller() {
         return webServiceTemplate.getMarshaller();
     }
 
     /**
-     * Sets the <code>Marshaller</code> used by the gateway. Setting this property is only required if the marshalling
-     * functionality of <code>WebServiceTemplate</code> is to be used.
+     * Sets the {@code Marshaller} used by the gateway. Setting this property is only required if the marshalling
+     * functionality of {@code WebServiceTemplate} is to be used.
      *
      * @see WebServiceTemplate#marshalSendAndReceive
      */
@@ -152,14 +152,14 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
         webServiceTemplate.setMarshaller(marshaller);
     }
 
-    /** Returns the <code>Unmarshaller</code> used by the gateway. */
+    /** Returns the {@code Unmarshaller} used by the gateway. */
     public final Unmarshaller getUnmarshaller() {
         return webServiceTemplate.getUnmarshaller();
     }
 
     /**
-     * Sets the <code>Unmarshaller</code> used by the gateway. Setting this property is only required if the marshalling
-     * functionality of <code>WebServiceTemplate</code> is to be used.
+     * Sets the {@code Unmarshaller} used by the gateway. Setting this property is only required if the marshalling
+     * functionality of {@code WebServiceTemplate} is to be used.
      *
      * @see WebServiceTemplate#marshalSendAndReceive
      */
@@ -167,12 +167,12 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
         webServiceTemplate.setUnmarshaller(unmarshaller);
     }
 
-    /** Returns the <code>ClientInterceptors</code> used by the template. */
+    /** Returns the {@code ClientInterceptors} used by the template. */
     public final ClientInterceptor[] getInterceptors() {
         return webServiceTemplate.getInterceptors();
     }
 
-    /** Sets the <code>ClientInterceptors</code> used by the gateway. */
+    /** Sets the {@code ClientInterceptors} used by the gateway. */
     public final void setInterceptors(ClientInterceptor[] interceptors) {
         webServiceTemplate.setInterceptors(interceptors);
     }

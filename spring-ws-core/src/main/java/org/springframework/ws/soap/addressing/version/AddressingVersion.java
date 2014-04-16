@@ -49,17 +49,17 @@ public interface AddressingVersion {
     void addAddressingHeaders(SoapMessage message, MessageAddressingProperties map);
 
     /**
-     * Given a <code>SoapHeaderElement</code>, return whether or not this version understands it.
+     * Given a {@code SoapHeaderElement}, return whether or not this version understands it.
      *
      * @param headerElement the header
-     * @return <code>true</code> if understood, <code>false</code> otherwise
+     * @return {@code true} if understood, {@code false} otherwise
      */
     boolean understands(SoapHeaderElement headerElement);
 
     /**
      * Indicates whether the given {@link MessageAddressingProperties} has all required properties.
      *
-     * @return <code>true</code> if the to and action properties have been set, and - if a reply or fault endpoint has
+     * @return {@code true} if the to and action properties have been set, and - if a reply or fault endpoint has
      *         been set - also checks for the message id
      */
     boolean hasRequiredProperties(MessageAddressingProperties map);

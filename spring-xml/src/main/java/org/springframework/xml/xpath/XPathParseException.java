@@ -25,7 +25,7 @@ package org.springframework.xml.xpath;
 public class XPathParseException extends XPathException {
 
     /**
-     * Constructs a new instance of the <code>XPathParseException</code> with the specific detail message.
+     * Constructs a new instance of the {@code XPathParseException} with the specific detail message.
      *
      * @param message the detail message
      */
@@ -34,7 +34,7 @@ public class XPathParseException extends XPathException {
     }
 
     /**
-     * Constructs a new instance of the <code>XPathParseException</code> with the specific detail message and
+     * Constructs a new instance of the {@code XPathParseException} with the specific detail message and
      * exception.
      *
      * @param message   the detail message

@@ -96,7 +96,7 @@ public abstract class AbstractValidatingMarshallingPayloadEndpoint extends Abstr
      * @param messageContext the message context
      * @param requestObject  the object unmarshalled from the {@link MessageContext#getRequest() request}
      * @param errors         validation errors holder
-     * @return <code>true</code> to continue and call {@link #invokeInternal(Object)}; <code>false</code> otherwise
+     * @return {@code true} to continue and call {@link #invokeInternal(Object)}; {@code false} otherwise
      */
     protected abstract boolean onValidationErrors(MessageContext messageContext, Object requestObject, Errors errors);
 }

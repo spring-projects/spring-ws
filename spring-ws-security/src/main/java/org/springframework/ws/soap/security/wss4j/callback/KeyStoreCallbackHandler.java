@@ -29,7 +29,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.ws.soap.security.support.KeyStoreUtils;
 
 /**
- * Callback handler that uses Java Security <code>KeyStore</code>s to handle cryptographic callbacks. Allows for
+ * Callback handler that uses Java Security {@code KeyStore}s to handle cryptographic callbacks. Allows for
  * specific key stores to be set for various cryptographic operations.
  *
  * @author Tareq Abed Rabbo

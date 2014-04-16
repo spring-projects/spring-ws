@@ -27,7 +27,7 @@ import org.springframework.ws.transport.TransportException;
 public class WebServiceTransportException extends WebServiceIOException {
 
     /**
-     * Create a new instance of the <code>WebServiceTransportException</code> class.
+     * Create a new instance of the {@code WebServiceTransportException} class.
      *
      * @param msg the detail message
      */
@@ -36,7 +36,7 @@ public class WebServiceTransportException extends WebServiceIOException {
     }
 
     /**
-     * Create a new instance of the <code>WebServiceTransportException</code> class.
+     * Create a new instance of the {@code WebServiceTransportException} class.
      *
      * @param msg the detail message
      * @param ex  the root {@link TransportException}

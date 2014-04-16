@@ -21,11 +21,11 @@ import org.springframework.util.ClassUtils;
 /**
  * Helper class used to find the current version of JAXP. We cannot depend on the Java version, since JAXP can be
  * upgraded independently of the Java version.
- * <p/>
- * Only distinguishes between JAXP 1.0, 1.1, 1.3, and 1.4, since JAXP 1.2 was a maintenance release with no new
+ *
+ * <p>Only distinguishes between JAXP 1.0, 1.1, 1.3, and 1.4, since JAXP 1.2 was a maintenance release with no new
  * classes.
- * <p>
- * Note that Spring-WS requires JDK 1.5 as of Spring-WS 2.0, and therefore has at least JAXP 1.3 available.
+ *
+ * <p>Note that Spring-WS requires JDK 1.5 as of Spring-WS 2.0, and therefore has at least JAXP 1.3 available.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -69,7 +69,7 @@ public abstract class JaxpVersion {
     }
 
     /**
-     * Gets the JAXP version. This means we can do things like if <code>(getJaxpVersion() < JAXP_13)</code>.
+     * Gets the JAXP version. This means we can do things like if {@code (getJaxpVersion() < JAXP_13)}.
      *
      * @return a code comparable to the JAXP_XX codes in this class
      * @see #JAXP_10
@@ -84,7 +84,7 @@ public abstract class JaxpVersion {
     /**
      * Convenience method to determine if the current JAXP version is at least 1.4 (packaged with JDK 1.6).
      *
-     * @return <code>true</code> if the current JAXP version is at least JAXP 1.4
+     * @return {@code true} if the current JAXP version is at least JAXP 1.4
      * @see #getJaxpVersion()
      * @see #JAXP_14
      */

@@ -37,7 +37,7 @@ import org.springframework.ws.transport.TransportOutputStream;
 import org.springframework.xml.namespace.QNameUtils;
 
 /**
- * Implementation of the <code>PoxMessage</code> interface that is based on a DOM Document.
+ * Implementation of the {@code PoxMessage} interface that is based on a DOM Document.
  *
  * @author Arjen Poutsma
  * @see Document
@@ -52,7 +52,7 @@ public class DomPoxMessage implements PoxMessage {
     private final Transformer transformer;
 
     /**
-     * Constructs a new instance of the <code>DomPoxMessage</code> with the given document.
+     * Constructs a new instance of the {@code DomPoxMessage} with the given document.
      *
      * @param document the document to base the message on
      */

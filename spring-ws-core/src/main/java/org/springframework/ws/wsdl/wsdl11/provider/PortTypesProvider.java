@@ -21,8 +21,8 @@ import javax.wsdl.WSDLException;
 
 /**
  * Strategy for adding {@link javax.wsdl.PortType}s to a {@link javax.wsdl.Definition}.
- * <p/>
- * Used by {@link org.springframework.ws.wsdl.wsdl11.ProviderBasedWsdl4jDefinition}.
+ *
+ * <p>Used by {@link org.springframework.ws.wsdl.wsdl11.ProviderBasedWsdl4jDefinition}.
  *
  * @author Arjen Poutsma
  * @since 1.5.0

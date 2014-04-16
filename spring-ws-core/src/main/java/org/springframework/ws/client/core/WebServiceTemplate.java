@@ -62,33 +62,33 @@ import org.springframework.ws.transport.support.TransportUtils;
 /**
  * <strong>The central class for client-side Web services.</strong> It provides a message-driven approach to sending and
  * receiving {@link WebServiceMessage} instances.
- * <p/>
- * Code using this class need only implement callback interfaces, provide {@link Source} objects to read data from, or
+ *
+ * <p>Code using this class need only implement callback interfaces, provide {@link Source} objects to read data from, or
  * use the pluggable {@link Marshaller} support. For invoking the {@link #marshalSendAndReceive marshalling methods},
  * the {@link #setMarshaller(Marshaller) marshaller} and {@link #setUnmarshaller(Unmarshaller) unmarshaller} properties
  * must be set.
- * <p/>
- * This template uses a {@link SoapFaultMessageResolver} to handle fault response messages. Another {@link
+ *
+ * <p>This template uses a {@link SoapFaultMessageResolver} to handle fault response messages. Another {@link
  * FaultMessageResolver} can be defined with with {@link #setFaultMessageResolver(FaultMessageResolver)
- * faultMessageResolver} property. If this property is set to <code>null</code>, no fault resolving is performed.
- * <p/>
- * This template uses the following algorithm for sending and receiving. <ol> <li>Call {@link #createConnection(URI)
+ * faultMessageResolver} property. If this property is set to {@code null}, no fault resolving is performed.
+ *
+ * <p>This template uses the following algorithm for sending and receiving. <ol> <li>Call {@link #createConnection(URI)
  * createConnection()}.</li> <li>Call {@link WebServiceMessageFactory#createWebServiceMessage()
  * createWebServiceMessage()} on the registered message factory to create a request message.</li> <li>Invoke {@link
  * WebServiceMessageCallback#doWithMessage(WebServiceMessage) doWithMessage()} on the request callback, if any. This
- * step stores content in the request message, based on <code>Source</code>, marshalling, etc.</li> <li>Invoke {@link
+ * step stores content in the request message, based on {@code Source}, marshalling, etc.</li> <li>Invoke {@link
  * ClientInterceptor#handleRequest(MessageContext) handleRequest()} on the registered {@link
  * #setInterceptors(ClientInterceptor[]) interceptors}. Interceptors are executed in order. If any of the interceptors
  * creates a response message in the message context, skip to step 7.</li> <li>Call {@link
  * WebServiceConnection#send(WebServiceMessage) send()} on the connection.</li> <li>Call {@link
  * #hasError(WebServiceConnection,WebServiceMessage) hasError()} to check if the connection has an error. For an HTTP
- * transport, a status code other than <code>2xx</code> indicates an error. However, since a status code of 500 can also
+ * transport, a status code other than {@code 2xx} indicates an error. However, since a status code of 500 can also
  * indicate a SOAP fault, the template verifies whether the error is not a fault.</li> <ul> <li>If the connection has an
  * error, call the {@link #handleError handleError()} method, which by default throws a {@link
  * WebServiceTransportException}.</li> <li>If the connection has no error, continue with the next step.</li> </ul>
  * <li>Invoke {@link WebServiceConnection#receive(WebServiceMessageFactory) receive} on the connection to read the
- * response message, if any.</li> <ul> <li>If no response was received, return <code>null</code> or
- * <code>false</code></li> <li>Call {@link #hasFault(WebServiceConnection,WebServiceMessage) hasFault()} to determine
+ * response message, if any.</li> <ul> <li>If no response was received, return {@code null} or
+ * {@code false}</li> <li>Call {@link #hasFault(WebServiceConnection,WebServiceMessage) hasFault()} to determine
  * whether the response has a fault. If it has, call {@link ClientInterceptor#handleFault(MessageContext)} and the
  * {@link #handleFault handleFault()} method.</li> <li>Otherwise, invoke {@link ClientInterceptor#handleResponse(MessageContext)}
  * and {@link WebServiceMessageExtractor#extractData(WebServiceMessage) extractData()} on the response extractor, or
@@ -125,13 +125,13 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
     private DestinationProvider destinationProvider;
 
-    /** Creates a new <code>WebServiceTemplate</code> using default settings. */
+    /** Creates a new {@code WebServiceTemplate} using default settings. */
     public WebServiceTemplate() {
         initDefaultStrategies();
     }
 
     /**
-     * Creates a new <code>WebServiceTemplate</code> based on the given message factory.
+     * Creates a new {@code WebServiceTemplate} based on the given message factory.
      *
      * @param messageFactory the message factory to use
      */
@@ -141,15 +141,15 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     }
 
     /**
-     * Creates a new <code>WebServiceTemplate</code> with the given marshaller. If the given {@link
+     * Creates a new {@code WebServiceTemplate} with the given marshaller. If the given {@link
      * Marshaller} also implements the {@link Unmarshaller} interface, it is used for both marshalling and
      * unmarshalling. Otherwise, an exception is thrown.
-     * <p/>
-     * Note that all {@link Marshaller} implementations in Spring also implement the {@link Unmarshaller} interface,
+     *
+     * <p>Note that all {@link Marshaller} implementations in Spring also implement the {@link Unmarshaller} interface,
      * so that you can safely use this constructor.
      *
      * @param marshaller object used as marshaller and unmarshaller
-     * @throws IllegalArgumentException when <code>marshaller</code> does not implement the {@link Unmarshaller}
+     * @throws IllegalArgumentException when {@code marshaller} does not implement the {@link Unmarshaller}
      *                                  interface
      * @since 2.0.3
      */
@@ -168,7 +168,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     }
 
     /**
-     * Creates a new <code>MarshallingMethodEndpointAdapter</code> with the given marshaller and unmarshaller.
+     * Creates a new {@code MarshallingMethodEndpointAdapter} with the given marshaller and unmarshaller.
      *
      * @param marshaller   the marshaller to use
      * @param unmarshaller the unmarshaller to use
@@ -195,8 +195,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
     /**
      * Set the default URI to be used on operations that do not have a URI parameter.
-     * <p/>
-     * Typically, either this property is set, or {@link #setDestinationProvider(DestinationProvider)}, but not both.
+     *
+     * <p>Typically, either this property is set, or {@link #setDestinationProvider(DestinationProvider)}, but not both.
      *
      * @see #marshalSendAndReceive(Object)
      * @see #marshalSendAndReceive(Object,WebServiceMessageCallback)
@@ -222,8 +222,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
     /**
      * Set the destination provider URI to be used on operations that do not have a URI parameter.
-     * <p/>
-     * Typically, either this property is set, or {@link #setDefaultUri(String)}, but not both.
+     *
+     * <p>Typically, either this property is set, or {@link #setDefaultUri(String)}, but not both.
      *
      * @see #marshalSendAndReceive(Object)
      * @see #marshalSendAndReceive(Object,WebServiceMessageCallback)
@@ -264,7 +264,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
     /**
      * Sets the fault resolver for this template. Default is the
-     * {@link org.springframework.ws.soap.client.core.SoapFaultMessageResolver, SoapFaultMessageResolver}, but may be
+     * {@link org.springframework.ws.soap.client.core.SoapFaultMessageResolver SoapFaultMessageResolver}, but may be
      * set to {@code null} to disable fault handling.
      */
     public void setFaultMessageResolver(FaultMessageResolver faultMessageResolver) {
@@ -273,12 +273,12 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
     /**
      * Indicates whether the {@linkplain WebServiceConnection#hasError() connection} should be checked for error
-     * indicators (<code>true</code>), or whether these should be ignored (<code>false</code>). The default is
-     * <code>true</code>.
-     * <p/>
-     * When using an HTTP transport, this property defines whether to check the HTTP response status code is in the 2xx
+     * indicators ({@code true}), or whether these should be ignored ({@code false}). The default is
+     * {@code true}.
+     *
+     * <p>When using an HTTP transport, this property defines whether to check the HTTP response status code is in the 2xx
      * Successful range. Both the SOAP specification and the WS-I Basic Profile define that a Web service must return a
-     * "200 OK" or "202 Accepted" HTTP status code for a normal response. Setting this property to <code>false</code>
+     * "200 OK" or "202 Accepted" HTTP status code for a normal response. Setting this property to {@code false}
      * allows this template to deal with non-conforming services.
      *
      * @see #hasError(WebServiceConnection, WebServiceMessage)
@@ -292,13 +292,13 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
     /**
      * Indicates whether the {@linkplain FaultAwareWebServiceConnection#hasFault() connection} should be checked for
-     * fault indicators (<code>true</code>), or whether we should rely on the {@link
-     * FaultAwareWebServiceMessage#hasFault() message} only (<code>false</code>). The default is <code>true</code>.
-     * <p/>
-     * When using an HTTP transport, this property defines whether to check the HTTP response status code for fault
+     * fault indicators ({@code true}), or whether we should rely on the {@link
+     * FaultAwareWebServiceMessage#hasFault() message} only ({@code false}). The default is {@code true}.
+     *
+     * <p>When using an HTTP transport, this property defines whether to check the HTTP response status code for fault
      * indicators. Both the SOAP specification and the WS-I Basic Profile define that a Web service must return a "500
      * Internal Server Error" HTTP status code if the response envelope is a Fault. Setting this property to
-     * <code>false</code> allows this template to deal with non-conforming services.
+     * {@code false} allows this template to deal with non-conforming services.
      *
      * @see #hasFault(WebServiceConnection,WebServiceMessage)
      * @see <a href="http://www.w3.org/TR/2000/NOTE-SOAP-20000508/#_Toc478383529">SOAP 1.1 specification</a>
@@ -312,7 +312,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     /**
      * Returns the client interceptors to apply to all web service invocations made by this template.
      *
-     * @return array of endpoint interceptors, or <code>null</code> if none
+     * @return array of endpoint interceptors, or {@code null} if none
      */
     public ClientInterceptor[] getInterceptors() {
         return interceptors;
@@ -321,7 +321,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     /**
      * Sets the client interceptors to apply to all web service invocations made by this template.
      *
-     * @param interceptors array of endpoint interceptors, or <code>null</code> if none
+     * @param interceptors array of endpoint interceptors, or {@code null} if none
      */
     public final void setInterceptors(ClientInterceptor[] interceptors) {
         this.interceptors = interceptors;
@@ -575,7 +575,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      * @param connection        the connection to use
      * @param requestCallback   the requestCallback to be used for manipulating the request message
      * @param responseExtractor object that will extract results
-     * @return an arbitrary result object, as returned by the <code>WebServiceMessageExtractor</code>
+     * @return an arbitrary result object, as returned by the {@code WebServiceMessageExtractor}
      * @throws WebServiceClientException if there is a problem sending or receiving the message
      * @throws IOException               in case of I/O errors
      */
@@ -656,13 +656,13 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
     /**
      * Determines whether the given connection or message context has an error.
-     * <p/>
-     * This implementation checks the {@link WebServiceConnection#hasError() connection} first. If it indicates an
+     *
+     * <p>This implementation checks the {@link WebServiceConnection#hasError() connection} first. If it indicates an
      * error, it makes sure that it is not a {@link FaultAwareWebServiceConnection#hasFault() fault}.
      *
      * @param connection the connection (possibly a {@link FaultAwareWebServiceConnection}
      * @param request    the response message (possibly a {@link FaultAwareWebServiceMessage}
-     * @return <code>true</code> if the connection has an error; <code>false</code> otherwise
+     * @return {@code true} if the connection has an error; {@code false} otherwise
      * @throws IOException in case of I/O errors
      */
     protected boolean hasError(WebServiceConnection connection, WebServiceMessage request) throws IOException {
@@ -722,14 +722,14 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
     /**
      * Determines whether the given connection or message has a fault.
-     * <p/>
-     * This implementation checks the {@link FaultAwareWebServiceConnection#hasFault() connection} if the {@link
+     *
+     * <p>This implementation checks the {@link FaultAwareWebServiceConnection#hasFault() connection} if the {@link
      * #setCheckConnectionForFault(boolean) checkConnectionForFault} property is true, and defaults to the {@link
      * FaultAwareWebServiceMessage#hasFault() message} otherwise.
      *
      * @param connection the connection (possibly a {@link FaultAwareWebServiceConnection}
      * @param response   the response message (possibly a {@link FaultAwareWebServiceMessage}
-     * @return <code>true</code> if either the connection or the message has a fault; <code>false</code> otherwise
+     * @return {@code true} if either the connection or the message has a fault; {@code false} otherwise
      * @throws IOException in case of I/O errors
      */
     protected boolean hasFault(WebServiceConnection connection, WebServiceMessage response) throws IOException {
@@ -750,8 +750,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
     /**
      * Trigger handleResponse on the defined ClientInterceptors. Will just invoke said method on all interceptors whose
-     * handleRequest invocation returned <code>true</code>, in addition to the last interceptor who returned
-     * <code>false</code>.
+     * handleRequest invocation returned {@code true}, in addition to the last interceptor who returned
+     * {@code false}.
      *
      * @param interceptorIndex index of last interceptor that was called
      * @param messageContext   the message context, whose request and response are filled
@@ -770,8 +770,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
     /**
      * Trigger handleFault on the defined ClientInterceptors. Will just invoke said method on all interceptors whose
-     * handleRequest invocation returned <code>true</code>, in addition to the last interceptor who returned
-     * <code>false</code>.
+     * handleRequest invocation returned {@code true}, in addition to the last interceptor who returned
+     * {@code false}.
      *
      * @param interceptorIndex index of last interceptor that was called
      * @param messageContext   the message context, whose request and response are filled
@@ -792,10 +792,10 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 * Trigger afterCompletion callbacks on the mapped ClientInterceptors. Will just
 	 * invoke afterCompletion for all interceptors whose handleRequest invocation has
 	 * successfully completed and returned true, in addition to the last interceptor who
-	 * returned <code>false</code>.
+	 * returned {@code false}.
 	 * @param mappedEndpoint the mapped EndpointInvocationChain
 	 * @param interceptorIndex index of last interceptor that successfully completed
-	 * @param ex Exception thrown on handler execution, or <code>null</code> if none
+	 * @param ex Exception thrown on handler execution, or {@code null} if none
 	 * @see ClientInterceptor#afterCompletion
 	 */
 	private void triggerAfterCompletion(int interceptorIndex,

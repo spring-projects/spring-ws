@@ -56,22 +56,22 @@ import org.springframework.ws.transport.TransportInputStream;
 /**
  * Axiom-specific implementation of the {@link org.springframework.ws.WebServiceMessageFactory WebServiceMessageFactory}
  * interface. Creates {@link org.springframework.ws.soap.axiom.AxiomSoapMessage AxiomSoapMessages}.
- * <p/>
- * To increase reading performance on the the SOAP request created by this message factory, you can set the {@link
- * #setPayloadCaching(boolean) payloadCaching} property to <code>false</code> (default is <code>true</code>). This this
+ *
+ * <p>To increase reading performance on the the SOAP request created by this message factory, you can set the {@link
+ * #setPayloadCaching(boolean) payloadCaching} property to {@code false} (default is {@code true}). This this
  * will read the contents of the body directly from the stream. However, <strong>when this setting is enabled, the
  * payload can only be read once</strong>. This means that any endpoint mappings or interceptors which are based on the
  * message payload (such as the {@link PayloadRootQNameEndpointMapping}, the {@link PayloadValidatingInterceptor}, or
  * the {@link PayloadLoggingInterceptor}) cannot be used. Instead, use an endpoint mapping that does not consume the
  * payload (i.e. the {@link SoapActionEndpointMapping}).
- * <p/>
- * Additionally, this message factory can cache large attachments to disk by setting the {@link
- * #setAttachmentCaching(boolean) attachmentCaching} property to <code>true</code> (default is <code>false</code>).
+ *
+ * <p>Additionally, this message factory can cache large attachments to disk by setting the {@link
+ * #setAttachmentCaching(boolean) attachmentCaching} property to {@code true} (default is {@code false}).
  * Optionally, the location where attachments are stored can be defined via the {@link #setAttachmentCacheDir(File)
  * attachmentCacheDir} property (defaults to the system temp file path).
- * <p/>
- * Mostly derived from <code>org.apache.axis2.transport.http.HTTPTransportUtils</code> and
- * <code>org.apache.axis2.transport.TransportUtils</code>, which we cannot use since they are not part of the Axiom
+ *
+ * <p>Mostly derived from {@code org.apache.axis2.transport.http.HTTPTransportUtils} and
+ * {@code org.apache.axis2.transport.TransportUtils}, which we cannot use since they are not part of the Axiom
  * distribution.
  *
  * @author Arjen Poutsma
@@ -110,9 +110,9 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 
 
     /**
-     * Indicates whether the SOAP Body payload should be cached or not. Default is <code>true</code>.
-     * <p/>
-     * Setting this to <code>false</code> will increase performance, but also result in the fact that the message
+     * Indicates whether the SOAP Body payload should be cached or not. Default is {@code true}.
+     *
+     * <p>Setting this to {@code false} will increase performance, but also result in the fact that the message
      * payload can only be read once.
      */
     public void setPayloadCaching(boolean payloadCaching) {
@@ -120,9 +120,9 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
     }
 
     /**
-     * Indicates whether SOAP attachments should be cached or not. Default is <code>false</code>.
-     * <p/>
-     * Setting this to <code>true</code> will cause Axiom to store larger attachments on disk, rather than in memory.
+     * Indicates whether SOAP attachments should be cached or not. Default is {@code false}.
+     *
+     * <p>Setting this to {@code true} will cause Axiom to store larger attachments on disk, rather than in memory.
      * This decreases memory consumption, but decreases performance.
      */
     public void setAttachmentCaching(boolean attachmentCaching) {
@@ -131,10 +131,10 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 
     /**
      * Sets the directory where SOAP attachments will be stored. Only used when {@link #setAttachmentCaching(boolean)
-     * attachmentCaching} is set to <code>true</code>.
-     * <p/>
-     * The parameter should be an existing, writable directory. This property defaults to the temporary directory of the
-     * operating system (i.e. the value of the <code>java.io.tmpdir</code> system property).
+     * attachmentCaching} is set to {@code true}.
+     *
+     * <p>The parameter should be an existing, writable directory. This property defaults to the temporary directory of the
+     * operating system (i.e. the value of the {@code java.io.tmpdir} system property).
      */
     public void setAttachmentCacheDir(File attachmentCacheDir) {
         Assert.notNull(attachmentCacheDir, "'attachmentCacheDir' must not be null");
@@ -146,9 +146,9 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
     /**
      * Sets the threshold for attachments caching, in bytes. Attachments larger than this threshold will be cached in
      * the {@link #setAttachmentCacheDir(File) attachment cache directory}. Only used when {@link
-     * #setAttachmentCaching(boolean) attachmentCaching} is set to <code>true</code>.
-     * <p/>
-     * Defaults to 4096 bytes (i.e. 4 kilobytes).
+     * #setAttachmentCaching(boolean) attachmentCaching} is set to {@code true}.
+     *
+     * <p>Defaults to 4096 bytes (i.e. 4 kilobytes).
      */
     public void setAttachmentCacheThreshold(int attachmentCacheThreshold) {
         Assert.isTrue(attachmentCacheThreshold > 0, "'attachmentCacheThreshold' must be larger than 0");
@@ -171,8 +171,8 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 
     /**
      * Defines whether a {@code xml:lang} attribute should be set on SOAP 1.1 {@code <faultstring>} elements.
-     * <p/>
-     * The default is {@code true}, to comply with WS-I, but this flag can be set to {@code false} to the older W3C SOAP
+     *
+     * <p>The default is {@code true}, to comply with WS-I, but this flag can be set to {@code false} to the older W3C SOAP
      * 1.1 specification.
      *
      * @see <a href="http://www.ws-i.org/Profiles/BasicProfile-1.1.html#SOAP_Fault_Language">WS-I Basic Profile 1.1</a>
@@ -351,11 +351,11 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 
     /**
      * Create a {@code XMLInputFactory} that this resolver will use to create {@link XMLStreamReader} objects.
-     * <p/>
-     * Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
+     *
+     * <p>Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
      * so this method will only be called once.
-     * <p/>
-     * By default this method creates a standard {@link XMLInputFactory} and configures it
+     *
+     * <p>By default this method creates a standard {@link XMLInputFactory} and configures it
      * based on the {@link #setReplacingEntityReferences(boolean) replacingEntityReferences}
      * and {@link #setSupportingExternalEntities(boolean) supportingExternalEntities} properties.
      *

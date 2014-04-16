@@ -32,7 +32,7 @@ public interface SoapEndpointInterceptor extends EndpointInterceptor {
      * Given a {@link SoapHeaderElement}, return whether or not this {@link SoapEndpointInterceptor} understands it.
      *
      * @param header the header
-     * @return <code>true</code> if understood, <code>false</code> otherwise
+     * @return {@code true} if understood, {@code false} otherwise
      */
     boolean understands(SoapHeaderElement header);
 

@@ -19,9 +19,9 @@ package org.springframework.ws.soap;
 import javax.xml.namespace.QName;
 
 /**
- * Represents the <code>Fault</code> element in the body of a SOAP message.
- * <p/>
- * A fault consists of a {@link #getFaultCode() fault code}, {@link #getFaultActorOrRole fault string/reason}, and
+ * Represents the {@code Fault} element in the body of a SOAP message.
+ *
+ * <p>A fault consists of a {@link #getFaultCode() fault code}, {@link #getFaultActorOrRole fault string/reason}, and
  * {@link #getFaultActorOrRole() role}.
  *
  * @author Arjen Poutsma
@@ -45,14 +45,14 @@ public interface SoapFault extends SoapElement {
     void setFaultActorOrRole(String faultActor);
 
     /**
-     * Returns the optional detail element for this <code>SoapFault</code>.
+     * Returns the optional detail element for this {@code SoapFault}.
      *
      * @return a fault detail
      */
     SoapFaultDetail getFaultDetail();
 
     /**
-     * Creates an optional <code>SoapFaultDetail</code> object and assigns it to this fault.
+     * Creates an optional {@code SoapFaultDetail} object and assigns it to this fault.
      *
      * @return the created detail
      */

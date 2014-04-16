@@ -39,8 +39,8 @@ public abstract class NamespaceUtils {
     /**
      * Creates a {@code NamespaceContext} for the specified method, based on {@link Namespaces @Namespaces} and {@link
      * Namespace @Namespace} annotations.
-     * <p/>
-     * This method will search for {@link Namespaces @Namespaces} and {@link Namespace @Namespace} annotation in the
+     *
+     * <p>This method will search for {@link Namespaces @Namespaces} and {@link Namespace @Namespace} annotation in the
      * given method, its class, and its package, in reverse order. That is: package-level annotations are overridden by
      * class-level annotations, which again are overridden by method-level annotations.
      *

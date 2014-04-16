@@ -93,8 +93,8 @@ public class StroapMessageFactory implements SoapMessageFactory {
     /**
      * Create a {@code XMLInputFactory} that this message factory will use to create {@link
      * javax.xml.stream.XMLEventReader} objects.
-     * <p/>
-     * Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
+     *
+     * <p>Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
      * so this method will only be called once.
      *
      * @return the created factory
@@ -106,8 +106,8 @@ public class StroapMessageFactory implements SoapMessageFactory {
     /**
      * Create a {@code XMLOutputFactory} that this message factory will use to create {@link
      * javax.xml.stream.XMLEventWriter} objects.
-     * <p/>
-     * Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
+     *
+     * <p>Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
      * so this method will only be called once.
      *
      * @return the created factory
@@ -121,8 +121,8 @@ public class StroapMessageFactory implements SoapMessageFactory {
     /**
      * Create a {@code XMLEventFactory} that this message factory will use to create {@link
      * javax.xml.stream.events.XMLEvent} objects.
-     * <p/>
-     * Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
+     *
+     * <p>Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
      * so this method will only be called once.
      *
      * @return the created factory
@@ -133,8 +133,8 @@ public class StroapMessageFactory implements SoapMessageFactory {
 
     /**
      * Create a {@code DocumentBuilderFactory} that this message factory will use to create {@link org.w3c.dom.Document} objects.
-     * <p/>
-     * Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
+     *
+     * <p>Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
      * so this method will only be called once.
      *
      * @return the created factory

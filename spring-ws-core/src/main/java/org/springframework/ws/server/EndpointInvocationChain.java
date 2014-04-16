@@ -30,7 +30,7 @@ public class EndpointInvocationChain {
     private EndpointInterceptor[] interceptors;
 
     /**
-     * Create new <code>EndpointInvocationChain</code>.
+     * Create new {@code EndpointInvocationChain}.
      *
      * @param endpoint the endpoint object to invoke
      */
@@ -39,7 +39,7 @@ public class EndpointInvocationChain {
     }
 
     /**
-     * Create new <code>EndpointInvocationChain</code>.
+     * Create new {@code EndpointInvocationChain}.
      *
      * @param endpoint     the endpoint object to invoke
      * @param interceptors the array of interceptors to apply

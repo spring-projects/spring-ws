@@ -23,8 +23,8 @@ import org.springframework.ws.WebServiceMessageFactory;
 
 /**
  * Sub-interface of {@link WebServiceMessageFactory} which contains SOAP-specific properties and methods.
- * <p/>
- * The <code>soapVersion</code> property can be used to indicate the SOAP version of the factory. By default, the
+ *
+ * <p>The {@code soapVersion} property can be used to indicate the SOAP version of the factory. By default, the
  * version is {@link SoapVersion#SOAP_11}.
  *
  * @author Arjen Poutsma
@@ -42,7 +42,7 @@ public interface SoapMessageFactory extends WebServiceMessageFactory {
     void setSoapVersion(SoapVersion version);
 
     /**
-     * Creates a new, empty <code>SoapMessage</code>.
+     * Creates a new, empty {@code SoapMessage}.
      *
      * @return the empty message
      */
@@ -51,8 +51,8 @@ public interface SoapMessageFactory extends WebServiceMessageFactory {
 
     /**
      * Reads a {@link SoapMessage} from the given input stream.
-     * <p/>
-     * If the given stream is an instance of {@link org.springframework.ws.transport.TransportInputStream
+     *
+     * <p>If the given stream is an instance of {@link org.springframework.ws.transport.TransportInputStream
      * TransportInputStream}, the headers will be read from the request.
      *
      * @param inputStream the input stream to read the message from

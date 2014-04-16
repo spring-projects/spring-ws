@@ -39,10 +39,10 @@ import org.springframework.util.Assert;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * <code>WebServiceMessageSender</code> implementation that uses <a href="http://jakarta.apache.org/commons/httpclient">Jakarta
+ * {@code WebServiceMessageSender} implementation that uses <a href="http://jakarta.apache.org/commons/httpclient">Jakarta
  * Commons HttpClient</a> to execute POST requests.
- * <p/>
- * Allows to use a preconfigured HttpClient instance, potentially with authentication, HTTP connection pooling, etc.
+ *
+ * <p>Allows to use a preconfigured HttpClient instance, potentially with authentication, HTTP connection pooling, etc.
  * Authentication can also be set by injecting a {@link Credentials} instance (such as the {@link
  * UsernamePasswordCredentials}).
  *
@@ -68,7 +68,7 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
     private AuthScope authScope;
 
     /**
-     * Create a new instance of the <code>CommonsHttpMessageSender</code> with a default {@link HttpClient} that uses a
+     * Create a new instance of the {@code CommonsHttpMessageSender} with a default {@link HttpClient} that uses a
      * default {@link MultiThreadedHttpConnectionManager}.
      */
     public CommonsHttpMessageSender() {
@@ -78,7 +78,7 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
     }
 
     /**
-     * Create a new instance of the <code>CommonsHttpMessageSender</code> with the given  {@link HttpClient} instance.
+     * Create a new instance of the {@code CommonsHttpMessageSender} with the given  {@link HttpClient} instance.
      *
      * @param httpClient the HttpClient instance to use for this sender
      */
@@ -87,12 +87,12 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
         this.httpClient = httpClient;
     }
 
-    /** Returns the <code>HttpClient</code> used by this message sender. */
+    /** Returns the {@code HttpClient} used by this message sender. */
     public HttpClient getHttpClient() {
         return httpClient;
     }
 
-    /** Set the <code>HttpClient</code> used by this message sender. */
+    /** Set the {@code HttpClient} used by this message sender. */
     public void setHttpClient(HttpClient httpClient) {
         this.httpClient = httpClient;
     }
@@ -191,18 +191,18 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
     }
 
     /**
-     * Returns the authentication scope to be used. Only used when the <code>credentials</code> property has been set.
-     * <p/>
-     * By default, the {@link AuthScope#ANY} is returned.
+     * Returns the authentication scope to be used. Only used when the {@code credentials} property has been set.
+     *
+     * <p>By default, the {@link AuthScope#ANY} is returned.
      */
     public AuthScope getAuthScope() {
         return authScope != null ? authScope : AuthScope.ANY;
     }
 
     /**
-     * Sets the authentication scope to be used. Only used when the <code>credentials</code> property has been set.
-     * <p/>
-     * By default, the {@link AuthScope#ANY} is used.
+     * Sets the authentication scope to be used. Only used when the {@code credentials} property has been set.
+     *
+     * <p>By default, the {@link AuthScope#ANY} is used.
      *
      * @see #setCredentials(Credentials)
      */

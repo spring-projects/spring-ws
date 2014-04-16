@@ -33,8 +33,8 @@ import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
 /**
  * Implementation of the {@link EndpointMapping} interface that uses the {@link PayloadRoot} annotation to map methods
  * to request payload root elements.
- * <p/>
- * Endpoints typically have the following form:
+ *
+ * <p>Endpoints typically have the following form:
  * <pre>
  * &#64;Endpoint
  * public class MyEndpoint{

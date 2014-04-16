@@ -26,8 +26,8 @@ import org.springframework.util.ReflectionUtils;
 
 /**
  * Represents a bean method that will be invoked as part of an incoming Web service message.
- * <p/>
- * Consists of a {@link Method}, and a bean {@link Object}.
+ *
+ * <p>Consists of a {@link Method}, and a bean {@link Object}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

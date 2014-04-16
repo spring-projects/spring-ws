@@ -233,7 +233,7 @@ public interface SoapVersion {
     /** Returns the qualified name for a SOAP body. */
     QName getBodyName();
 
-    /** Returns the <code>Content-Type</code> MIME header for a SOAP message. */
+    /** Returns the {@code Content-Type} MIME header for a SOAP message. */
     String getContentType();
 
     /** Returns the qualified name for a SOAP envelope. */
@@ -248,7 +248,7 @@ public interface SoapVersion {
     /** Returns the qualified name for a SOAP header. */
     QName getHeaderName();
 
-    /** Returns the qualified name of the SOAP <code>MustUnderstand</code> attribute. */
+    /** Returns the qualified name of the SOAP {@code MustUnderstand} attribute. */
     QName getMustUnderstandAttributeName();
 
     /**
@@ -260,16 +260,16 @@ public interface SoapVersion {
     /** Returns the URI indicating that a header element should never be directly processed. */
     String getNoneActorOrRoleUri();
 
-    /** Returns the qualified name of the <code>MustUnderstand</code> SOAP Fault value. */
+    /** Returns the qualified name of the {@code MustUnderstand} SOAP Fault value. */
     QName getMustUnderstandFaultName();
 
     /** Returns the qualified name of the Receiver/Server SOAP Fault value. */
     QName getServerOrReceiverFaultName();
 
-    /** Returns the qualified name of the <code>VersionMismatch</code> SOAP Fault value. */
+    /** Returns the qualified name of the {@code VersionMismatch} SOAP Fault value. */
     QName getVersionMismatchFaultName();
 
-    /** Returns the qualified name of the SOAP <code>actor</code>/<code>role</code> attribute. */
+    /** Returns the qualified name of the SOAP {@code actor}/{@code role} attribute. */
     QName getActorOrRoleName();
 
     /** Returns the qualified name of the Sender/Client SOAP Fault value. */

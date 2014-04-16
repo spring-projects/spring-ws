@@ -48,8 +48,8 @@ import org.springframework.xml.transform.TraxUtils;
 
 /**
  * Implementation of {@link XPathOperations} that uses JAXP 1.3. JAXP 1.3 is part of Java SE since 1.5.
- * <p/>
- * Namespaces can be set using the {@code namespaces} property.
+ *
+ * <p>Namespaces can be set using the {@code namespaces} property.
  *
  * @author Arjen Poutsma
  * @see #setNamespaces(java.util.Map)

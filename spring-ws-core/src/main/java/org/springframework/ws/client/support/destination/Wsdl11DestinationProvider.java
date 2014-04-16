@@ -37,8 +37,8 @@ import org.springframework.xml.xpath.XPathExpressionFactory;
 
 /**
  * Implementation of the {@link DestinationProvider} that resolves a destination URI from a WSDL file.
- * <p/>
- * The extraction relies on an XPath expression to locate the URI. By default, the {@link
+ *
+ * <p>The extraction relies on an XPath expression to locate the URI. By default, the {@link
  * #DEFAULT_WSDL_LOCATION_EXPRESSION} will be used, but this expression can be overridden by setting the {@link
  * #setLocationExpression(String) locationExpression} property.
  *
@@ -48,7 +48,7 @@ import org.springframework.xml.xpath.XPathExpressionFactory;
  */
 public class Wsdl11DestinationProvider extends AbstractCachingDestinationProvider {
 
-    /** Default XPath expression used for extracting all <code>location</code> attributes from the WSDL definition. */
+    /** Default XPath expression used for extracting all {@code location} attributes from the WSDL definition. */
     public static final String DEFAULT_WSDL_LOCATION_EXPRESSION =
             "/wsdl:definitions/wsdl:service/wsdl:port/soap:address/@location";
 
@@ -69,7 +69,7 @@ public class Wsdl11DestinationProvider extends AbstractCachingDestinationProvide
                 .createXPathExpression(DEFAULT_WSDL_LOCATION_EXPRESSION, expressionNamespaces);
     }
 
-    /** Sets a WSDL location from which the service destination <code>URI</code> will be resolved. */
+    /** Sets a WSDL location from which the service destination {@code URI} will be resolved. */
     public void setWsdl(Resource wsdlResource) {
         Assert.notNull(wsdlResource, "'wsdl' must not be null");
         Assert.isTrue(wsdlResource.exists(), wsdlResource + " does not exist");
@@ -77,15 +77,15 @@ public class Wsdl11DestinationProvider extends AbstractCachingDestinationProvide
     }
 
     /**
-     * Sets the XPath expression to use when extracting the service location <code>URI</code> from a WSDL.
-     * <p/>
-     * The expression can use the following bound prefixes: <blockquote> <table> <tr><th>Prefix</th><th>Namespace</th></tr>
-     * <tr><td><code>wsdl</code></td><td><code>http://schemas.xmlsoap.org/wsdl/</code></td></tr>
-     * <tr><td><code>soap</code></td><td><code>http://schemas.xmlsoap.org/wsdl/soap/</code></td></tr>
-     * <tr><td><code>soap12</code></td><td><code>http://schemas.xmlsoap.org/wsdl/soap12/</code></td></tr>
+     * Sets the XPath expression to use when extracting the service location {@code URI} from a WSDL.
+     *
+     * <p>The expression can use the following bound prefixes: <blockquote> <table> <tr><th>Prefix</th><th>Namespace</th></tr>
+     * <tr><td>{@code wsdl}</td><td>{@code http://schemas.xmlsoap.org/wsdl/}</td></tr>
+     * <tr><td>{@code soap}</td><td>{@code http://schemas.xmlsoap.org/wsdl/soap/}</td></tr>
+     * <tr><td>{@code soap12}</td><td>{@code http://schemas.xmlsoap.org/wsdl/soap12/}</td></tr>
      * </table></blockquote>
-     * <p/>
-     * Defaults to {@link #DEFAULT_WSDL_LOCATION_EXPRESSION}.
+     *
+     * <p>Defaults to {@link #DEFAULT_WSDL_LOCATION_EXPRESSION}.
      */
     public void setLocationExpression(String expression) {
         Assert.hasText(expression, "'expression' must not be empty");

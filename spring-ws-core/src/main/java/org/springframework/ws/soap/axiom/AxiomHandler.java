@@ -40,8 +40,8 @@ import org.springframework.xml.namespace.QNameUtils;
 
 /**
  * Specific SAX {@link ContentHandler} and {@link LexicalHandler} that adds the resulting
- * AXIOM OMElement to a specified parent element when <code>endDocument</code> is called.
- * Used for returing <code>SAXResult</code>s from Axiom elements.
+ * AXIOM OMElement to a specified parent element when {@code endDocument} is called.
+ * Used for returing {@code SAXResult}s from Axiom elements.
  * @author Arjen Poutsma
  * @since 1.0.0
  */

@@ -27,7 +27,7 @@ import org.springframework.xml.XmlException;
 public class XPathException extends XmlException {
 
     /**
-     * Constructs a new instance of the <code>XPathException</code> with the specific detail message.
+     * Constructs a new instance of the {@code XPathException} with the specific detail message.
      *
      * @param message the detail message
      */
@@ -36,7 +36,7 @@ public class XPathException extends XmlException {
     }
 
     /**
-     * Constructs a new instance of the <code>XPathException</code> with the specific detail message and exception.
+     * Constructs a new instance of the {@code XPathException} with the specific detail message and exception.
      *
      * @param message   the detail message
      * @param throwable the wrapped exception

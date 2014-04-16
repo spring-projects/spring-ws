@@ -43,10 +43,10 @@ abstract class Jaxp13XPathExpressionFactory {
     private static XPathFactory xpathFactory = XPathFactory.newInstance();
 
     /**
-     * Creates a JAXP 1.3 <code>XPathExpression</code> from the given string expression.
+     * Creates a JAXP 1.3 {@code XPathExpression} from the given string expression.
      *
      * @param expression the XPath expression
-     * @return the compiled <code>XPathExpression</code>
+     * @return the compiled {@code XPathExpression}
      * @throws XPathParseException when the given expression cannot be parsed
      */
     static XPathExpression createXPathExpression(String expression) {
@@ -62,11 +62,11 @@ abstract class Jaxp13XPathExpressionFactory {
     }
 
     /**
-     * Creates a JAXP 1.3 <code>XPathExpression</code> from the given string expression and namespaces.
+     * Creates a JAXP 1.3 {@code XPathExpression} from the given string expression and namespaces.
      *
      * @param expression the XPath expression
      * @param namespaces the namespaces
-     * @return the compiled <code>XPathExpression</code>
+     * @return the compiled {@code XPathExpression}
      * @throws XPathParseException when the given expression cannot be parsed
      */
     public static XPathExpression createXPathExpression(String expression, Map<String, String> namespaces) {
@@ -89,7 +89,7 @@ abstract class Jaxp13XPathExpressionFactory {
     }
     
 
-    /** JAXP 1.3 implementation of the <code>XPathExpression</code> interface. */
+    /** JAXP 1.3 implementation of the {@code XPathExpression} interface. */
     private static class Jaxp13XPathExpression implements XPathExpression {
 
         private final javax.xml.xpath.XPathExpression xpathExpression;

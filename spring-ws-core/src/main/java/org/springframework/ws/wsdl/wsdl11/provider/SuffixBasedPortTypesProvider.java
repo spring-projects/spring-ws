@@ -119,12 +119,12 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
 
     /**
      * Indicates whether the given name name should be included as {@link javax.wsdl.Input} message in the definition.
-     * <p/>
-     * This implementation checks whether the message name ends with the {@link #setRequestSuffix(String)
+     *
+     * <p>This implementation checks whether the message name ends with the {@link #setRequestSuffix(String)
      * requestSuffix}.
      *
      * @param message the message
-     * @return <code>true</code> if to be included as input; <code>false</code> otherwise
+     * @return {@code true} if to be included as input; {@code false} otherwise
      */
     @Override
     protected boolean isInputMessage(Message message) {
@@ -134,12 +134,12 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
 
     /**
      * Indicates whether the given name name should be included as {@link javax.wsdl.Output} message in the definition.
-     * <p/>
-     * This implementation checks whether the message name ends with the {@link #setResponseSuffix(String)
+     *
+     * <p>This implementation checks whether the message name ends with the {@link #setResponseSuffix(String)
      * responseSuffix}.
      *
      * @param message the message
-     * @return <code>true</code> if to be included as output; <code>false</code> otherwise
+     * @return {@code true} if to be included as output; {@code false} otherwise
      */
     @Override
     protected boolean isOutputMessage(Message message) {
@@ -149,11 +149,11 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
 
     /**
      * Indicates whether the given name name should be included as {@link javax.wsdl.Fault} message in the definition.
-     * <p/>
-     * This implementation checks whether the message name ends with the {@link #setFaultSuffix(String) faultSuffix}.
+     *
+     * <p>This implementation checks whether the message name ends with the {@link #setFaultSuffix(String) faultSuffix}.
      *
      * @param message the message
-     * @return <code>true</code> if to be included as fault; <code>false</code> otherwise
+     * @return {@code true} if to be included as fault; {@code false} otherwise
      */
     @Override
     protected boolean isFaultMessage(Message message) {

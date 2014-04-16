@@ -24,7 +24,7 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 
 /**
- * Default implementation of the <code>EndpointInterceptor</code> interface, for simplified implementation of
+ * Default implementation of the {@code EndpointInterceptor} interface, for simplified implementation of
  * pre-only/post-only interceptors.
  *
  * @author Arjen Poutsma
@@ -35,15 +35,15 @@ public class EndpointInterceptorAdapter implements EndpointInterceptor {
     /** Logger available to subclasses */
     protected final Log logger = LogFactory.getLog(getClass());
 
-    /** Returns <code>false</code>. */
+    /** Returns {@code false}. */
     public boolean understands(Element header) {
         return false;
     }
 
     /**
-     * Returns <code>true</code>.
+     * Returns {@code true}.
      *
-     * @return <code>true</code>
+     * @return {@code true}
      */
     @Override
     public boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
@@ -51,9 +51,9 @@ public class EndpointInterceptorAdapter implements EndpointInterceptor {
     }
 
     /**
-     * Returns <code>true</code>.
+     * Returns {@code true}.
      *
-     * @return <code>true</code>
+     * @return {@code true}
      */
     @Override
     public boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
@@ -61,9 +61,9 @@ public class EndpointInterceptorAdapter implements EndpointInterceptor {
     }
 
     /**
-     * Returns <code>true</code>.
+     * Returns {@code true}.
      *
-     * @return <code>true</code>
+     * @return {@code true}
      */
     @Override
     public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {

@@ -32,7 +32,7 @@ public class WebServiceValidationException extends WebServiceClientException {
     private SAXParseException[] validationErrors;
 
     /**
-     * Create a new instance of the <code>WebServiceValidationException</code> class.
+     * Create a new instance of the {@code WebServiceValidationException} class.
      */
     public WebServiceValidationException(SAXParseException[] validationErrors) {
         super(createMessage(validationErrors));

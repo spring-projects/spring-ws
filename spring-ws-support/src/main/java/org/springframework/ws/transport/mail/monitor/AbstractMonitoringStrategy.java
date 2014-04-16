@@ -44,7 +44,7 @@ public abstract class AbstractMonitoringStrategy implements MonitoringStrategy {
 
     /**
      * Sets whether messages should be marked as {@link javax.mail.Flags.Flag#DELETED DELETED} after they have been
-     * read. Default is <code>true</code>.
+     * read. Default is {@code true}.
      */
     public void setDeleteMessages(boolean deleteMessages) {
         this.deleteMessages = deleteMessages;
@@ -59,7 +59,7 @@ public abstract class AbstractMonitoringStrategy implements MonitoringStrategy {
      * Monitors the given folder, and returns any new messages when they arrive. This implementation calls {@link
      * #waitForNewMessages(Folder)}, then searches for new messages using {@link #searchForNewMessages(Folder)}, fetches
      * the messages using {@link #fetchMessages(Folder, Message[])}, and finally {@link #setDeleteMessages(boolean)
-     * deletes} the messages, if {@link #setDeleteMessages(boolean) deleteMessages} is <code>true</code>.
+     * deletes} the messages, if {@link #setDeleteMessages(boolean) deleteMessages} is {@code true}.
      *
      * @param folder the folder to monitor
      * @return the new messages
@@ -152,7 +152,7 @@ public abstract class AbstractMonitoringStrategy implements MonitoringStrategy {
 
     /**
      * Deletes the given messages from the given folder. Only invoked when {@link #setDeleteMessages(boolean)} is
-     * <code>true</code>.
+     * {@code true}.
      *
      * @param folder   the folder to delete messages from
      * @param messages the messages to delete

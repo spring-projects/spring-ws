@@ -46,31 +46,31 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.ws.soap.security.support.KeyStoreUtils;
 
 /**
- * Callback handler that uses Java Security <code>KeyStore</code>s to handle cryptographic callbacks. Allows for
+ * Callback handler that uses Java Security {@code KeyStore}s to handle cryptographic callbacks. Allows for
  * specific key stores to be set for various cryptographic operations.
- * <p/>
- * This handler requires one or more key stores to be set. You can configure them in your application context by using a
- * <code>KeyStoreFactoryBean</code>. The exact stores to be set depends on the cryptographic operations that are to be
+ *
+ * <p>This handler requires one or more key stores to be set. You can configure them in your application context by using a
+ * {@code KeyStoreFactoryBean}. The exact stores to be set depends on the cryptographic operations that are to be
  * performed by this handler. The table underneath show the key store to be used for each operation: <table border="1">
  * <tr> <td><strong>Cryptographic operation</strong></td> <td><strong>Key store used</strong></td> </tr> <tr>
- * <td>Certificate validation</td> <td>first <code>keyStore</code>, then <code>trustStore</code></td> </tr> <tr>
- * <td>Decryption based on private key</td> <td><code>keyStore</code></td> </tr> <tr> <td>Decryption based on symmetric
- * key</td> <td><code>symmetricStore</code></td> </tr> <tr> <td>Encryption based on certificate</td>
- * <td><code>trustStore</code></td> </tr> <tr> <td>Encryption based on symmetric key</td>
- * <td><code>symmetricStore</code></td> </tr> <tr> <td>Signing</td> <td><code>keyStore</code></td> </tr> <tr>
- * <td>Signature verification</td> <td><code>trustStore</code></td> </tr> </table>
- * <p/>
- * <h3>Default key stores</h3> If the <code>symmetricStore</code> is not set, it will default to the
- * <code>keyStore</code>. If the key or trust store is not set, this handler will use the standard Java mechanism to
+ * <td>Certificate validation</td> <td>first {@code keyStore}, then {@code trustStore}</td> </tr> <tr>
+ * <td>Decryption based on private key</td> <td>{@code keyStore}</td> </tr> <tr> <td>Decryption based on symmetric
+ * key</td> <td>{@code symmetricStore}</td> </tr> <tr> <td>Encryption based on certificate</td>
+ * <td>{@code trustStore}</td> </tr> <tr> <td>Encryption based on symmetric key</td>
+ * <td>{@code symmetricStore}</td> </tr> <tr> <td>Signing</td> <td>{@code keyStore}</td> </tr> <tr>
+ * <td>Signature verification</td> <td>{@code trustStore}</td> </tr> </table>
+ *
+ * <p><h3>Default key stores</h3> If the {@code symmetricStore} is not set, it will default to the
+ * {@code keyStore}. If the key or trust store is not set, this handler will use the standard Java mechanism to
  * load or create it. See {@link #loadDefaultKeyStore()} and {@link #loadDefaultTrustStore()}.
- * <p/>
- * <h3>Examples</h3> For instance, if you want to use the <code>KeyStoreCallbackHandler</code> to validate incoming
+ *
+ * <p><h3>Examples</h3> For instance, if you want to use the {@code KeyStoreCallbackHandler} to validate incoming
  * certificates or signatures, you would use a trust store, like so:
  * <pre>
  * &lt;bean id="keyStoreHandler" class="org.springframework.ws.soap.security.xwss.callback.KeyStoreCallbackHandler"&gt;
  *     &lt;property name="trustStore" ref="trustStore"/&gt;
  * &lt;/bean&gt;
- * <p/>
+ *
  * &lt;bean id="trustStore" class="org.springframework.ws.soap.security.support.KeyStoreFactoryBean"&gt;
  *     &lt;property name="location" value="classpath:truststore.jks"/&gt;
  *     &lt;property name="password" value="changeit"/&gt;
@@ -83,16 +83,16 @@ import org.springframework.ws.soap.security.support.KeyStoreUtils;
  *     &lt;property name="keyStore" ref="keyStore"/&gt;
  *     &lt;property name="privateKeyPassword" value="changeit"/&gt;
  * &lt;/bean&gt;
- * <p/>
+ *
  * &lt;bean id="keyStore" class="org.springframework.ws.soap.security.support.KeyStoreFactoryBean"&gt;
  *     &lt;property name="location" value="classpath:keystore.jks"/&gt;
  *     &lt;property name="password" value="changeit"/&gt;
  * &lt;/bean&gt;
  * </pre>
- * <p/>
- * <h3>Handled callbacks</h3> This class handles <code>CertificateValidationCallback</code>s,
- * <code>DecryptionKeyCallback</code>s, <code>EncryptionKeyCallback</code>s, <code>SignatureKeyCallback</code>s, and
- * <code>SignatureVerificationKeyCallback</code>s. It throws an <code>UnsupportedCallbackException</code> for others.
+ *
+ * <h3>Handled callbacks</h3> This class handles {@code CertificateValidationCallback}s,
+ * {@code DecryptionKeyCallback}s, {@code EncryptionKeyCallback}s, {@code SignatureKeyCallback}s, and
+ * {@code SignatureVerificationKeyCallback}s. It throws an {@code UnsupportedCallbackException} for others.
  *
  * @author Arjen Poutsma
  * @see KeyStore
@@ -196,7 +196,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 
     /**
      * Sets the key store used for encryption and decryption using symmetric keys. If this property is not set, it
-     * defaults to the <code>keyStore</code> property.
+     * defaults to the {@code keyStore} property.
      *
      * @see org.springframework.ws.soap.security.support.KeyStoreFactoryBean
      * @see #setKeyStore(java.security.KeyStore)

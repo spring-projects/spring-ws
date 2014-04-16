@@ -20,8 +20,8 @@ import java.util.Locale;
 import javax.xml.namespace.QName;
 
 /**
- * Defines properties for a SOAP Fault. Used by the <code>SoapFaultDefinitionEditor</code> and the
- * <code>SoapFaultMappingExceptionResolver</code>.
+ * Defines properties for a SOAP Fault. Used by the {@code SoapFaultDefinitionEditor} and the
+ * {@code SoapFaultMappingExceptionResolver}.
  *
  * @author Arjen Poutsma
  * @see SoapFaultDefinitionEditor
@@ -31,28 +31,28 @@ import javax.xml.namespace.QName;
 public class SoapFaultDefinition {
 
     /**
-     * Constant <code>QName</code> used to indicate that a <code>Client</code> fault must be created.
+     * Constant {@code QName} used to indicate that a {@code Client} fault must be created.
      *
      * @see org.springframework.ws.soap.SoapBody#addClientOrSenderFault(String,java.util.Locale)
      */
     public static final QName CLIENT = new QName("CLIENT");
 
     /**
-     * Constant <code>QName</code> used to indicate that a <code>Receiver</code> fault must be created.
+     * Constant {@code QName} used to indicate that a {@code Receiver} fault must be created.
      *
      * @see org.springframework.ws.soap.SoapBody#addServerOrReceiverFault(String,java.util.Locale)
      */
     public static final QName RECEIVER = new QName("RECEIVER");
 
     /**
-     * Constant <code>QName</code> used to indicate that a <code>Sender</code> fault must be created.
+     * Constant {@code QName} used to indicate that a {@code Sender} fault must be created.
      *
      * @see org.springframework.ws.soap.SoapBody#addServerOrReceiverFault(String,java.util.Locale)
      */
     public static final QName SENDER = new QName("SENDER");
 
     /**
-     * Constant <code>QName</code> used to indicate that a <code>Server</code>  fault must be created.
+     * Constant {@code QName} used to indicate that a {@code Server}  fault must be created.
      *
      * @see org.springframework.ws.soap.SoapBody#addClientOrSenderFault(String,java.util.Locale)
      */

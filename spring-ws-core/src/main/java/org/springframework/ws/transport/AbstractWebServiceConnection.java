@@ -49,10 +49,10 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
     }
 
     /**
-     * Called before the given message has been written to the <code>TransportOutputStream</code>. Called from {@link
+     * Called before the given message has been written to the {@code TransportOutputStream}. Called from {@link
      * #send(WebServiceMessage)}.
-     * <p/>
-     * Default implementation does nothing.
+     *
+     * <p>Default implementation does nothing.
      *
      * @param message the message
      * @throws IOException when an I/O exception occurs
@@ -61,7 +61,7 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
     }
 
     /**
-     * Returns a <code>TransportOutputStream</code> for the given message. Called from {@link
+     * Returns a {@code TransportOutputStream} for the given message. Called from {@link
      * #send(WebServiceMessage)}.
      *
      * @return the output stream
@@ -70,10 +70,10 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
     protected abstract TransportOutputStream createTransportOutputStream() throws IOException;
 
     /**
-     * Called after the given message has been written to the <code>TransportOutputStream</code>. Called from {@link
+     * Called after the given message has been written to the {@code TransportOutputStream}. Called from {@link
      * #send(WebServiceMessage)}.
-     * <p/>
-     * Default implementation does nothing.
+     *
+     * <p>Default implementation does nothing.
      *
      * @param message the message
      * @throws IOException when an I/O exception occurs
@@ -95,10 +95,10 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
     }
 
     /**
-     * Called before a message has been read from the <code>TransportInputStream</code>. Called from {@link
+     * Called before a message has been read from the {@code TransportInputStream}. Called from {@link
      * #receive(WebServiceMessageFactory)}.
-     * <p/>
-     * Default implementation does nothing.
+     *
+     * <p>Default implementation does nothing.
      *
      * @throws IOException when an I/O exception occurs
      */
@@ -106,18 +106,18 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
     }
 
     /**
-     * Returns a <code>TransportInputStream</code>. Called from {@link #receive(WebServiceMessageFactory)}.
+     * Returns a {@code TransportInputStream}. Called from {@link #receive(WebServiceMessageFactory)}.
      *
-     * @return the input stream, or <code>null</code> if no response can be read
+     * @return the input stream, or {@code null} if no response can be read
      * @throws IOException when an I/O exception occurs
      */
     protected abstract TransportInputStream createTransportInputStream() throws IOException;
 
     /**
-     * Called when the given message has been read from the <code>TransportInputStream</code>. Called from {@link
+     * Called when the given message has been read from the {@code TransportInputStream}. Called from {@link
      * #receive(WebServiceMessageFactory)}.
-     * <p/>
-     * Default implementation does nothing.
+     *
+     * <p>Default implementation does nothing.
      *
      * @param message the message
      * @throws IOException when an I/O exception occurs

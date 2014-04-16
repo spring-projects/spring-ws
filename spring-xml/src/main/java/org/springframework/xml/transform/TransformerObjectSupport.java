@@ -27,9 +27,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Convenient base class for objects that use a <code>Transformer</code>. Subclasses can call {@link
+ * Convenient base class for objects that use a {@code Transformer}. Subclasses can call {@link
  * #createTransformer()} or {@link #transform(Source, Result)}. This should be done per thread (i.e. per incoming
- * request), because <code>Transformer</code> instances are not thread-safe.
+ * request), because {@code Transformer} instances are not thread-safe.
  *
  * @author Arjen Poutsma
  * @see Transformer
@@ -67,14 +67,14 @@ public abstract class TransformerObjectSupport {
     }
 
     /**
-     * Returns the <code>TransformerFactory</code>.
+     * Returns the {@code TransformerFactory}.
      */
     protected TransformerFactory getTransformerFactory() {
         return transformerHelper.getTransformerFactory();
     }
 
     /**
-     * Creates a new <code>Transformer</code>. Must be called per request, as transformers are not thread-safe.
+     * Creates a new {@code Transformer}. Must be called per request, as transformers are not thread-safe.
      *
      * @return the created transformer
      * @throws TransformerConfigurationException

@@ -69,12 +69,12 @@ public class TransformerHelper {
 
     /**
      * Instantiate a new TransformerFactory.
-     * <p/>
-     * The default implementation simply calls {@link TransformerFactory#newInstance()}. If a {@link
+     *
+     * <p>The default implementation simply calls {@link TransformerFactory#newInstance()}. If a {@link
      * #setTransformerFactoryClass transformerFactoryClass} has been specified explicitly, the default constructor of
      * the specified class will be called instead.
-     * <p/>
-     * Can be overridden in subclasses.
+     *
+     * <p>Can be overridden in subclasses.
      *
      * @param transformerFactoryClass the specified factory class (if any)
      * @return the new TransactionFactory instance

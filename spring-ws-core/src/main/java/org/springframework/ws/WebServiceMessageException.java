@@ -24,12 +24,12 @@ package org.springframework.ws;
  */
 public abstract class WebServiceMessageException extends WebServiceException {
 
-    /** Constructor for <code>WebServiceMessageException</code>. */
+    /** Constructor for {@code WebServiceMessageException}. */
     public WebServiceMessageException(String msg) {
         super(msg);
     }
 
-    /** Constructor for <code>WebServiceMessageException</code>. */
+    /** Constructor for {@code WebServiceMessageException}. */
     public WebServiceMessageException(String msg, Throwable ex) {
         super(msg, ex);
     }

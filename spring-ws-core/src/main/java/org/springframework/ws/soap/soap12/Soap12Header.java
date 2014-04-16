@@ -24,7 +24,7 @@ import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapHeaderException;
 
 /**
- * Subinterface of <code>SoapHeader</code> that exposes SOAP 1.2 functionality.
+ * Subinterface of {@code SoapHeader} that exposes SOAP 1.2 functionality.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -32,27 +32,27 @@ import org.springframework.ws.soap.SoapHeaderException;
 public interface Soap12Header extends SoapHeader {
 
     /**
-     * Adds a new NotUnderstood <code>SoapHeaderElement</code> this header.
+     * Adds a new NotUnderstood {@code SoapHeaderElement} this header.
      *
      * @param headerName the qualified name of the header that was not understood
-     * @return the created <code>SoapHeaderElement</code>
+     * @return the created {@code SoapHeaderElement}
      * @throws org.springframework.ws.soap.SoapHeaderException
      *          if the header cannot be created
      */
     SoapHeaderElement addNotUnderstoodHeaderElement(QName headerName);
 
     /**
-     * Adds a new Upgrade <code>SoapHeaderElement</code> this header.
+     * Adds a new Upgrade {@code SoapHeaderElement} this header.
      *
      * @param supportedSoapUris an array of the URIs of SOAP versions supported
-     * @return the created <code>SoapHeaderElement</code>
+     * @return the created {@code SoapHeaderElement}
      * @throws org.springframework.ws.soap.SoapHeaderException
      *          if the header cannot be created
      */
     SoapHeaderElement addUpgradeHeaderElement(java.lang.String[] supportedSoapUris);
 
     /**
-     * Returns an <code>Iterator</code> over all the {@link SoapHeaderElement header elements} that should be processed
+     * Returns an {@code Iterator} over all the {@link SoapHeaderElement header elements} that should be processed
      * for the given roles. Headers target to the "next" role will always be included, and those targeted to "none" will
      * never be included.
      *

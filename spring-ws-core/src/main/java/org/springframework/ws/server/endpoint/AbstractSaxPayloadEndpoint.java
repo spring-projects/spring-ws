@@ -24,11 +24,11 @@ import org.xml.sax.ContentHandler;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
- * Abstract base class for endpoints that handle the message payload with a SAX <code>ContentHandler</code>. Allows
- * subclasses to create a response by returning a <code>Source</code>.
- * <p/>
- * Implementations of this class should create a new handler for each call of <code>createContentHandler</code>, because
- * of thread safety. The handlers is later passed on to <code>createResponse</code>, so it can be used for holding
+ * Abstract base class for endpoints that handle the message payload with a SAX {@code ContentHandler}. Allows
+ * subclasses to create a response by returning a {@code Source}.
+ *
+ * <p>Implementations of this class should create a new handler for each call of {@code createContentHandler}, because
+ * of thread safety. The handlers is later passed on to {@code createResponse}, so it can be used for holding
  * request-specific state.
  *
  * @author Arjen Poutsma
@@ -41,7 +41,7 @@ import org.springframework.xml.transform.TransformerObjectSupport;
 public abstract class AbstractSaxPayloadEndpoint extends TransformerObjectSupport implements PayloadEndpoint {
 
     /**
-     * Invokes the provided <code>ContentHandler</code> on the given request. After parsing has been done, the provided
+     * Invokes the provided {@code ContentHandler} on the given request. After parsing has been done, the provided
      * response is returned.
      *
      * @see #createContentHandler()
@@ -59,10 +59,10 @@ public abstract class AbstractSaxPayloadEndpoint extends TransformerObjectSuppor
     }
 
     /**
-     * Returns the SAX <code>ContentHandler</code> used to parse the incoming request payload. A new instance should be
+     * Returns the SAX {@code ContentHandler} used to parse the incoming request payload. A new instance should be
      * created for each call, because of thread-safety. The content handler can be used to hold request-specific state.
-     * <p/>
-     * If an incoming message does not contain a payload, this method will not be invoked.
+     *
+     * <p>If an incoming message does not contain a payload, this method will not be invoked.
      *
      * @return a SAX content handler to be used for parsing
      */
@@ -70,10 +70,10 @@ public abstract class AbstractSaxPayloadEndpoint extends TransformerObjectSuppor
 
     /**
      * Returns the response to be given, if any. This method is called after the request payload has been parsed using
-     * the SAX <code>ContentHandler</code>. The passed <code>ContentHandler</code> is created by {@link
+     * the SAX {@code ContentHandler}. The passed {@code ContentHandler} is created by {@link
      * #createContentHandler()}: it can be used to hold request-specific state.
-     * <p/>
-     * If an incoming message does not contain a payload, this method will be invoked with <code>null</code> as content
+     *
+     * <p>If an incoming message does not contain a payload, this method will be invoked with {@code null} as content
      * handler.
      *
      * @param contentHandler the content handler used to parse the request

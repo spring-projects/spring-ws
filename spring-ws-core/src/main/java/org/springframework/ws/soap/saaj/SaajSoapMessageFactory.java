@@ -48,8 +48,8 @@ import org.springframework.ws.transport.TransportInputStream;
  * SAAJ-specific implementation of the {@link org.springframework.ws.WebServiceMessageFactory WebServiceMessageFactory}.
  * Wraps a SAAJ {@link MessageFactory}. This factory will use SAAJ 1.3 when found, or fall back to SAAJ 1.2 or even
  * 1.1.
- * <p/>
- * A SAAJ {@link MessageFactory} can be injected to the {@link #SaajSoapMessageFactory(javax.xml.soap.MessageFactory)
+ *
+ * <p>A SAAJ {@link MessageFactory} can be injected to the {@link #SaajSoapMessageFactory(javax.xml.soap.MessageFactory)
  * constructor}, or by the {@link #setMessageFactory(javax.xml.soap.MessageFactory)} property. When a SAAJ message
  * factory is injected, the {@link #setSoapVersion(org.springframework.ws.soap.SoapVersion)} property is ignored.
  *
@@ -78,12 +78,12 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
         this.messageFactory = messageFactory;
     }
 
-    /** Returns the SAAJ <code>MessageFactory</code> used. */
+    /** Returns the SAAJ {@code MessageFactory} used. */
     public MessageFactory getMessageFactory() {
         return messageFactory;
     }
 
-    /** Sets the SAAJ <code>MessageFactory</code>. */
+    /** Sets the SAAJ {@code MessageFactory}. */
     public void setMessageFactory(MessageFactory messageFactory) {
         this.messageFactory = messageFactory;
     }
@@ -98,8 +98,8 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 
     /**
      * Defines whether a {@code xml:lang} attribute should be set on SOAP 1.1 {@code <faultstring>} elements.
-     * <p/>
-     * The default is {@code true}, to comply with WS-I, but this flag can be set to {@code false} to the older W3C SOAP
+     *
+     * <p>The default is {@code true}, to comply with WS-I, but this flag can be set to {@code false} to the older W3C SOAP
      * 1.1 specification.
      *
      * @see <a href="http://www.ws-i.org/Profiles/BasicProfile-1.1.html#SOAP_Fault_Language">WS-I Basic Profile 1.1</a>

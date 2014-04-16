@@ -31,8 +31,8 @@ import org.springframework.xml.transform.ResourceSource;
 
 /**
  * The default {@link Wsdl11Definition} implementation.
- * <p/>
- * Allows a WSDL to be set by the {@link #setWsdl wsdl} property, or directly in the {@link
+ *
+ * <p>Allows a WSDL to be set by the {@link #setWsdl wsdl} property, or directly in the {@link
  * #SimpleWsdl11Definition(Resource) constructor}.
  *
  * @author Arjen Poutsma
@@ -44,8 +44,8 @@ public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBea
 
     /**
      * Create a new instance of the {@link SimpleWsdl11Definition} class.
-     * <p/>
-     * A subsequent call to the {@link #setWsdl(Resource)} method is required.
+     *
+     * <p>A subsequent call to the {@link #setWsdl(Resource)} method is required.
      */
     public SimpleWsdl11Definition() {
     }
@@ -53,8 +53,8 @@ public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBea
     /**
      * Create a new instance of the  {@link SimpleWsdl11Definition} class with the specified resource.
      *
-     * @param wsdlResource the WSDL resource; must not be <code>null</code>
-     * @throws IllegalArgumentException if the supplied <code>wsdlResource</code> is <code>null</code>
+     * @param wsdlResource the WSDL resource; must not be {@code null}
+     * @throws IllegalArgumentException if the supplied {@code wsdlResource} is {@code null}
      */
     public SimpleWsdl11Definition(Resource wsdlResource) {
         Assert.notNull(wsdlResource, "wsdlResource must not be null");

@@ -24,7 +24,7 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 
 /**
- * Default implementation of <code>MessageContext</code>.
+ * Default implementation of {@code MessageContext}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -37,13 +37,13 @@ public class DefaultMessageContext extends AbstractMessageContext {
 
     private WebServiceMessage response;
 
-    /** Construct a new, empty instance of the <code>DefaultMessageContext</code> with the given message factory. */
+    /** Construct a new, empty instance of the {@code DefaultMessageContext} with the given message factory. */
     public DefaultMessageContext(WebServiceMessageFactory messageFactory) {
         this(messageFactory.createWebServiceMessage(), messageFactory);
     }
 
     /**
-     * Construct a new instance of the <code>DefaultMessageContext</code> with the given request message and message
+     * Construct a new instance of the {@code DefaultMessageContext} with the given request message and message
      * factory.
      */
     public DefaultMessageContext(WebServiceMessage request, WebServiceMessageFactory messageFactory) {

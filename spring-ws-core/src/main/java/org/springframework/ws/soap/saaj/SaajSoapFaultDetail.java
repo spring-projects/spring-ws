@@ -30,7 +30,7 @@ import org.springframework.ws.soap.SoapFaultDetail;
 import org.springframework.ws.soap.SoapFaultDetailElement;
 
 /**
- * SAAJ-specific implementation of the <code>SoapFaultDetail</code> interface. Wraps a {@link
+ * SAAJ-specific implementation of the {@code SoapFaultDetail} interface. Wraps a {@link
  * javax.xml.soap.SOAPFaultElement}.
  *
  * @author Arjen Poutsma

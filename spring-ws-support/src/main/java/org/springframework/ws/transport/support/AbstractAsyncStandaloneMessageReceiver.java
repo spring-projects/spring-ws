@@ -40,8 +40,8 @@ public abstract class AbstractAsyncStandaloneMessageReceiver extends AbstractSta
     /**
      * Set the Spring {@link TaskExecutor} to use for running the listener threads. Default is {@link
      * SimpleAsyncTaskExecutor}, starting up a number of new threads.
-     * <p/>
-     * Specify an alternative task executor for integration with an existing thread pool, such as the {@link
+     *
+     * <p>Specify an alternative task executor for integration with an existing thread pool, such as the {@link
      * org.springframework.scheduling.commonj.WorkManagerTaskExecutor} to integrate with WebSphere or WebLogic.
      */
     public void setTaskExecutor(TaskExecutor taskExecutor) {
@@ -63,8 +63,8 @@ public abstract class AbstractAsyncStandaloneMessageReceiver extends AbstractSta
 
     /**
      * Create a default TaskExecutor. Called if no explicit TaskExecutor has been specified.
-     * <p/>
-     * The default implementation builds a {@link org.springframework.core.task.SimpleAsyncTaskExecutor} with the
+     *
+     * <p>The default implementation builds a {@link org.springframework.core.task.SimpleAsyncTaskExecutor} with the
      * specified bean name (or the class name, if no bean name specified) as thread name prefix.
      *
      * @see org.springframework.core.task.SimpleAsyncTaskExecutor#SimpleAsyncTaskExecutor(String)

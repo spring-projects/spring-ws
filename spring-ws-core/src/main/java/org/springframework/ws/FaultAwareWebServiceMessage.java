@@ -29,7 +29,7 @@ public interface FaultAwareWebServiceMessage extends WebServiceMessage {
     /**
      * Does this message have a fault?
      *
-     * @return <code>true</code> if the message has a fault.
+     * @return {@code true} if the message has a fault.
      * @see #getFaultReason()
      */
     boolean hasFault();
@@ -37,7 +37,7 @@ public interface FaultAwareWebServiceMessage extends WebServiceMessage {
     /**
      * Returns the fault reason message.
      *
-     * @return the fault reason message, if any; returns <code>null</code> when no fault is present.
+     * @return the fault reason message, if any; returns {@code null} when no fault is present.
      * @see #hasFault()
      */
     String getFaultReason();

@@ -33,8 +33,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.xml.sax.AbstractXmlReader;
 
 /**
- * SAX <code>XMLReader</code> that reads from a SAAJ <code>Node</code>. Consumes <code>XMLEvents</code> from an
- * <code>XMLEventReader</code>, and calls the corresponding methods on the SAX callback interfaces.
+ * SAX {@code XMLReader} that reads from a SAAJ {@code Node}. Consumes {@code XMLEvents} from an
+ * {@code XMLEventReader}, and calls the corresponding methods on the SAX callback interfaces.
  *
  * @author Arjen Poutsma
  * @see javax.xml.soap.Node
@@ -54,9 +54,9 @@ public class SaajXmlReader extends AbstractXmlReader {
     private boolean namespacePrefixesFeature = false;
 
     /**
-     * Constructs a new instance of the <code>SaajXmlReader</code> that reads from the given <code>Node</code>.
+     * Constructs a new instance of the {@code SaajXmlReader} that reads from the given {@code Node}.
      *
-     * @param startNode the SAAJ <code>Node</code> to read from
+     * @param startNode the SAAJ {@code Node} to read from
      */
     public SaajXmlReader(Node startNode) {
         this.startNode = startNode;
@@ -90,11 +90,11 @@ public class SaajXmlReader extends AbstractXmlReader {
 
     /**
      * Parses the StAX XML reader passed at construction-time.
-     * <p/>
-     * <strong>Note</strong> that the given <code>InputSource</code> is not read, but ignored.
+     *
+     * <p><strong>Note</strong> that the given {@code InputSource} is not read, but ignored.
      *
      * @param ignored is ignored
-     * @throws org.xml.sax.SAXException A SAX exception, possibly wrapping a <code>XMLStreamException</code>
+     * @throws org.xml.sax.SAXException A SAX exception, possibly wrapping a {@code XMLStreamException}
      */
     @Override
     public final void parse(InputSource ignored) throws SAXException {
@@ -103,11 +103,11 @@ public class SaajXmlReader extends AbstractXmlReader {
 
     /**
      * Parses the StAX XML reader passed at construction-time.
-     * <p/>
-     * <strong>Note</strong> that the given system identifier is not read, but ignored.
+     *
+     * <p><strong>Note</strong> that the given system identifier is not read, but ignored.
      *
      * @param ignored is ignored
-     * @throws SAXException A SAX exception, possibly wrapping a <code>XMLStreamException</code>
+     * @throws SAXException A SAX exception, possibly wrapping a {@code XMLStreamException}
      */
     @Override
     public final void parse(String ignored) throws SAXException {

@@ -23,8 +23,8 @@ import org.xml.sax.SAXParseException;
 
 /**
  * Simple processor that validates a given {@link Source}. Can be created via the {@link XmlValidatorFactory}.
- * <p/>
- * Instances of this class are designed to be thread safe.
+ *
+ * <p>Instances of this class are designed to be thread safe.
  *
  * @author Arjen Poutsma
  * @see XmlValidatorFactory#createValidator(org.springframework.core.io.Resource, String)
@@ -37,9 +37,9 @@ public interface XmlValidator {
      * be empty if no validation errors are found.
      *
      * @param source the input document
-     * @return an array of <code>SAXParseException</code>s
-     * @throws IOException            if the <code>source</code> cannot be read
-     * @throws XmlValidationException if the <code>source</code> cannot be validated
+     * @return an array of {@code SAXParseException}s
+     * @throws IOException            if the {@code source} cannot be read
+     * @throws XmlValidationException if the {@code source} cannot be validated
      */
     SAXParseException[] validate(Source source) throws IOException;
 
@@ -49,9 +49,9 @@ public interface XmlValidator {
      *
      * @param source the input document
      * @param errorHandler the error handler to use. May be {@code null}, in which case a default will be used.
-     * @return an array of <code>SAXParseException</code>s
-     * @throws IOException            if the <code>source</code> cannot be read
-     * @throws XmlValidationException if the <code>source</code> cannot be validated
+     * @return an array of {@code SAXParseException}s
+     * @throws IOException            if the {@code source} cannot be read
+     * @throws XmlValidationException if the {@code source} cannot be validated
      */
     SAXParseException[] validate(Source source, ValidationErrorHandler errorHandler) throws IOException;
 

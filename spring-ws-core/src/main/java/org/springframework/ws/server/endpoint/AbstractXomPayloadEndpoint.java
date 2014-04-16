@@ -52,9 +52,9 @@ import org.springframework.xml.transform.TraxUtils;
 
 /**
  * Abstract base class for endpoints that handle the message payload as XOM elements. Offers the message payload as a
- * XOM <code>Element</code>, and allows subclasses to create a response by returning an <code>Element</code>.
- * <p/>
- * An <code>AbstractXomPayloadEndpoint</code> only accept one payload element. Multiple payload elements are not in
+ * XOM {@code Element}, and allows subclasses to create a response by returning an {@code Element}.
+ *
+ * <p>An {@code AbstractXomPayloadEndpoint} only accept one payload element. Multiple payload elements are not in
  * accordance with WS-I.
  *
  * @author Arjen Poutsma
@@ -97,8 +97,8 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 
     /**
      * Creates a {@link Serializer} to be used for writing the response to.
-     * <p/>
-     * Default implementation uses the UTF-8 encoding and does not set any options, but this may be changed in
+     *
+     * <p>Default implementation uses the UTF-8 encoding and does not set any options, but this may be changed in
      * subclasses.
      *
      * @param outputStream the output stream to serialize to
@@ -109,11 +109,11 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
     }
 
     /**
-     * Template method. Subclasses must implement this. Offers the request payload as a XOM <code>Element</code>, and
-     * allows subclasses to return a response <code>Element</code>.
+     * Template method. Subclasses must implement this. Offers the request payload as a XOM {@code Element}, and
+     * allows subclasses to return a response {@code Element}.
      *
      * @param requestElement the contents of the SOAP message as XOM element
-     * @return the response element. Can be <code>null</code> to specify no response.
+     * @return the response element. Can be {@code null} to specify no response.
      */
     protected abstract Element invokeInternal(Element requestElement) throws Exception;
 

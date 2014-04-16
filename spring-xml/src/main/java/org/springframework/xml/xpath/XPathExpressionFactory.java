@@ -25,10 +25,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Factory for compiled <code>XPathExpression</code>s, being aware of JAXP 1.3+ XPath functionality, and Jaxen. Mainly
+ * Factory for compiled {@code XPathExpression}s, being aware of JAXP 1.3+ XPath functionality, and Jaxen. Mainly
  * for internal use of the framework.
- * <p/>
- * The goal of this class is to avoid runtime dependencies a specific XPath engine, simply using the best XPath
+ *
+ * <p>The goal of this class is to avoid runtime dependencies a specific XPath engine, simply using the best XPath
  * implementation that is available. Prefers JAXP 1.3+ XPath implementations to Jaxen.
  *
  * @author Arjen Poutsma

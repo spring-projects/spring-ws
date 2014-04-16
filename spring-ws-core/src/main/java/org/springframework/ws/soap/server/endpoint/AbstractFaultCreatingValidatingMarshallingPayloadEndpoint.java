@@ -37,8 +37,8 @@ import org.springframework.xml.namespace.QNameUtils;
  * Extension of the {@link AbstractValidatingMarshallingPayloadEndpoint} which validates the request payload with {@link
  * Validator}(s), and creates a SOAP Fault whenever the request message cannot be validated. The desired validators can
  * be set using properties, and <strong>must</strong> {@link Validator#supports(Class) support} the request object.
- * <p/>
- * The contents of the SOAP Fault can be specified by setting the {@link #setAddValidationErrorDetail(boolean)
+ *
+ * <p>The contents of the SOAP Fault can be specified by setting the {@link #setAddValidationErrorDetail(boolean)
  * addValidationErrorDetail}, {@link #setFaultStringOrReason(String) faultStringOrReason}, or  {@link
  * #setDetailElementName(QName) detailElementName} properties.
  *
@@ -76,7 +76,7 @@ public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint
     /**
      * Returns whether a SOAP Fault detail element should be created when a validation error occurs. This detail element
      * will contain the exact validation errors. It is only added when the underlying message is a
-     * <code>SoapMessage</code>. Defaults to <code>true</code>.
+     * {@code SoapMessage}. Defaults to {@code true}.
      *
      * @see org.springframework.ws.soap.SoapFault#addFaultDetail()
      */
@@ -87,7 +87,7 @@ public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint
     /**
      * Indicates whether a SOAP Fault detail element should be created when a validation error occurs. This detail
      * element will contain the exact validation errors. It is only added when the underlying message is a
-     * <code>SoapMessage</code>. Defaults to <code>true</code>.
+     * {@code SoapMessage}. Defaults to {@code true}.
      *
      * @see org.springframework.ws.soap.SoapFault#addFaultDetail()
      */
@@ -102,7 +102,7 @@ public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint
 
     /**
      * Sets the fault detail element name when validation errors occur on the request. Defaults to
-     * <code>DEFAULT_DETAIL_ELEMENT_NAME</code>.
+     * {@code DEFAULT_DETAIL_ELEMENT_NAME}.
      *
      * @see #DEFAULT_DETAIL_ELEMENT_NAME
      */
@@ -110,15 +110,15 @@ public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint
         this.detailElementName = detailElementName;
     }
 
-    /** Sets the SOAP <code>faultstring</code> or <code>Reason</code> used when validation errors occur on the request. */
+    /** Sets the SOAP {@code faultstring} or {@code Reason} used when validation errors occur on the request. */
     public String getFaultStringOrReason() {
         return faultStringOrReason;
     }
 
     /**
-     * Sets the SOAP <code>faultstring</code> or <code>Reason</code> used when validation errors occur on the request.
-     * It is only added when the underlying message is a <code>SoapMessage</code>. Defaults to
-     * <code>DEFAULT_FAULTSTRING_OR_REASON</code>.
+     * Sets the SOAP {@code faultstring} or {@code Reason} used when validation errors occur on the request.
+     * It is only added when the underlying message is a {@code SoapMessage}. Defaults to
+     * {@code DEFAULT_FAULTSTRING_OR_REASON}.
      *
      * @see #DEFAULT_FAULTSTRING_OR_REASON
      */
@@ -133,7 +133,7 @@ public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint
 
     /**
      * Sets the locale for SOAP fault reason and validation messages.  It is only added when the underlying message is a
-     * <code>SoapMessage</code>. Defaults to English.
+     * {@code SoapMessage}. Defaults to English.
      *
      * @see java.util.Locale#ENGLISH
      */
@@ -147,13 +147,13 @@ public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint
     }
 
     /**
-     * This implementation logs all errors, returns <code>false</code>, and creates a {@link
+     * This implementation logs all errors, returns {@code false}, and creates a {@link
      * SoapBody#addClientOrSenderFault(String,Locale) client or sender} {@link SoapFault}, adding a {@link
-     * SoapFaultDetail} with all errors if the <code>addValidationErrorDetail</code> property is <code>true</code>.
+     * SoapFaultDetail} with all errors if the {@code addValidationErrorDetail} property is {@code true}.
      *
      * @param messageContext the message context
      * @param errors         the validation errors
-     * @return <code>true</code> to continue processing the request, <code>false</code> (the default) otherwise
+     * @return {@code true} to continue processing the request, {@code false} (the default) otherwise
      * @see Errors#getAllErrors()
      */
     @Override

@@ -39,10 +39,10 @@ import org.springframework.ws.support.MarshallingUtils;
  * MyMarshalledType handleMyMessage(MyUnmarshalledType request);
  * </pre>
  * I.e. methods that take a single parameter that {@link Unmarshaller#supports(Class) is supported} by the {@link
- * Unmarshaller}, and return either <code>void</code> or a type {@link Marshaller#supports(Class) supported} by the
+ * Unmarshaller}, and return either {@code void} or a type {@link Marshaller#supports(Class) supported} by the
  * {@link Marshaller}. The method can have any name, as long as it is mapped by an {@link EndpointMapping}.
- * <p/>
- * This endpoint needs a <code>Marshaller</code> and <code>Unmarshaller</code>, both of which can be set using
+ *
+ * <p>This endpoint needs a {@code Marshaller} and {@code Unmarshaller}, both of which can be set using
  * properties.
  *
  * @author Arjen Poutsma
@@ -61,7 +61,7 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
     private Unmarshaller unmarshaller;
 
     /**
-     * Creates a new <code>MarshallingMethodEndpointAdapter</code>. The {@link Marshaller} and {@link Unmarshaller} must
+     * Creates a new {@code MarshallingMethodEndpointAdapter}. The {@link Marshaller} and {@link Unmarshaller} must
      * be injected using properties.
      *
      * @see #setMarshaller(org.springframework.oxm.Marshaller)
@@ -71,15 +71,15 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
     }
 
     /**
-     * Creates a new <code>MarshallingMethodEndpointAdapter</code> with the given marshaller. If the given {@link
+     * Creates a new {@code MarshallingMethodEndpointAdapter} with the given marshaller. If the given {@link
      * Marshaller} also implements the {@link Unmarshaller} interface, it is used for both marshalling and
      * unmarshalling. Otherwise, an exception is thrown.
-     * <p/>
-     * Note that all {@link Marshaller} implementations in Spring also implement the {@link Unmarshaller} interface,
+     *
+     * <p>Note that all {@link Marshaller} implementations in Spring also implement the {@link Unmarshaller} interface,
      * so that you can safely use this constructor.
      *
      * @param marshaller object used as marshaller and unmarshaller
-     * @throws IllegalArgumentException when <code>marshaller</code> does not implement the {@link Unmarshaller}
+     * @throws IllegalArgumentException when {@code marshaller} does not implement the {@link Unmarshaller}
      *                                  interface
      */
     public MarshallingMethodEndpointAdapter(Marshaller marshaller) {
@@ -96,7 +96,7 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
     }
 
     /**
-     * Creates a new <code>MarshallingMethodEndpointAdapter</code> with the given marshaller and unmarshaller.
+     * Creates a new {@code MarshallingMethodEndpointAdapter} with the given marshaller and unmarshaller.
      *
      * @param marshaller   the marshaller to use
      * @param unmarshaller the unmarshaller to use
@@ -161,7 +161,7 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
     }
 
     /**
-     * Supports a method with a single, unmarshallable parameter, and that return <code>void</code> or a marshallable
+     * Supports a method with a single, unmarshallable parameter, and that return {@code void} or a marshallable
      * type.
      *
      * @see Marshaller#supports(Class)

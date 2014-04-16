@@ -24,8 +24,8 @@ import org.springframework.ws.WebServiceMessageFactory;
 
 /**
  * Abstract base class for the {@link ResponseCreator} interface.
- * <p/>
- * Creates a response using the given {@link WebServiceMessageFactory}, and passes it on to {@link #doWithResponse(URI,
+ *
+ * <p>Creates a response using the given {@link WebServiceMessageFactory}, and passes it on to {@link #doWithResponse(URI,
  * WebServiceMessage, WebServiceMessage)}.
  *
  * @author Arjen Poutsma

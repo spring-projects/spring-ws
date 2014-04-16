@@ -32,13 +32,13 @@ import org.springframework.ws.wsdl.wsdl11.provider.TypesProvider;
 /**
  * Implementation of the {@link Wsdl11Definition} that uses a provider-based mechanism to populate a WSDL4J {@link
  * Definition}.
- * <p/>
- * All providers are optional, indicating that a particular part of the WSDL will not be created. Providers can be set
+ *
+ * <p>All providers are optional, indicating that a particular part of the WSDL will not be created. Providers can be set
  * via various properties. The providers are {@link #afterPropertiesSet() invoked} in the following order: <ol>
  * <li>{@link ImportsProvider}</li> <li>{@link TypesProvider}</li> <li>{@link MessagesProvider}</li> <li>{@link
  * PortTypesProvider}</li> <li>{@link BindingsProvider}</li> <li>{@link ServicesProvider}</li> </ol>
- * <p/>
- * This definition requires the target namespace to be set via {@link #setTargetNamespace(String)}
+ *
+ * <p>This definition requires the target namespace to be set via {@link #setTargetNamespace(String)}
  *
  * @author Arjen Poutsma
  * @see #setImportsProvider(ImportsProvider)
@@ -70,10 +70,10 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 
     /**
      * Returns the {@link ImportsProvider} for this definition.
-     * <p/>
-     * Default is <code>null</code>, indicating that no <code>&lt;import&gt;</code> will be created
      *
-     * @return the import provider; or <code>null</code>
+     * <p>Default is {@code null}, indicating that no {@code &lt;import&gt;} will be created
+     *
+     * @return the import provider; or {@code null}
      */
     public ImportsProvider getImportsProvider() {
         return importsProvider;
@@ -81,8 +81,8 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 
     /**
      * Sets the {@link ImportsProvider} for this definition.
-     * <p/>
-     * Default is <code>null</code>, indicating that no <code>&lt;import&gt;</code> will be created
+     *
+     * <p>Default is {@code null}, indicating that no {@code &lt;import&gt;} will be created
      *
      * @param importsProvider the import provider
      */
@@ -92,10 +92,10 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 
     /**
      * Returns the {@link TypesProvider} for this definition.
-     * <p/>
-     * Defaults to <code>null</code>, indicating that no <code>&lt;types&gt;</code> will be created
      *
-     * @return the types provider; or <code>null</code>
+     * <p>Defaults to {@code null}, indicating that no {@code &lt;types&gt;} will be created
+     *
+     * @return the types provider; or {@code null}
      */
     public TypesProvider getTypesProvider() {
         return typesProvider;
@@ -103,10 +103,10 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 
     /**
      * Sets the {@link TypesProvider} for this definition.
-     * <p/>
-     * Defaults to <code>null</code>, indicating that no <code>&lt;types&gt;</code> will be created
      *
-     * @param typesProvider the types provider; or <code>null</code>
+     * <p>Defaults to {@code null}, indicating that no {@code &lt;types&gt;} will be created
+     *
+     * @param typesProvider the types provider; or {@code null}
      */
     public void setTypesProvider(TypesProvider typesProvider) {
         this.typesProvider = typesProvider;
@@ -114,10 +114,10 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 
     /**
      * Returns the {@link MessagesProvider} for this definition.
-     * <p/>
-     * Defaults to <code>null</code>, indicating that no <code>&lt;message&gt;</code> will be created
      *
-     * @return the messages provider; or <code>null</code>
+     * <p>Defaults to {@code null}, indicating that no {@code &lt;message&gt;} will be created
+     *
+     * @return the messages provider; or {@code null}
      */
     public MessagesProvider getMessagesProvider() {
         return messagesProvider;
@@ -125,10 +125,10 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 
     /**
      * Sets the {@link MessagesProvider} for this definition.
-     * <p/>
-     * Defaults to <code>null</code>, indicating that no <code>&lt;message&gt;</code> will be created
      *
-     * @param messagesProvider the messages provider; or <code>null</code>
+     * <p>Defaults to {@code null}, indicating that no {@code &lt;message&gt;} will be created
+     *
+     * @param messagesProvider the messages provider; or {@code null}
      */
     public void setMessagesProvider(MessagesProvider messagesProvider) {
         this.messagesProvider = messagesProvider;
@@ -136,10 +136,10 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 
     /**
      * Returns the {@link PortTypesProvider} for this definition.
-     * <p/>
-     * Defaults to <code>null</code>, indicating that no <code>&lt;portType&gt;</code> will be created
      *
-     * @return the port types provider; or <code>null</code>
+     * <p>Defaults to {@code null}, indicating that no {@code &lt;portType&gt;} will be created
+     *
+     * @return the port types provider; or {@code null}
      */
     public PortTypesProvider getPortTypesProvider() {
         return portTypesProvider;
@@ -147,10 +147,10 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 
     /**
      * Sets the {@link PortTypesProvider} for this definition.
-     * <p/>
-     * Defaults to <code>null</code>, indicating that no <code>&lt;portType&gt;</code> will be created
      *
-     * @param portTypesProvider the port types provider; or <code>null</code>
+     * <p>Defaults to {@code null}, indicating that no {@code &lt;portType&gt;} will be created
+     *
+     * @param portTypesProvider the port types provider; or {@code null}
      */
     public void setPortTypesProvider(PortTypesProvider portTypesProvider) {
         this.portTypesProvider = portTypesProvider;
@@ -158,10 +158,10 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 
     /**
      * Returns the {@link BindingsProvider} for this definition.
-     * <p/>
-     * Defaults to <code>null</code>, indicating that no <code>&lt;binding&gt;</code> will be created
      *
-     * @return the binding provider; or <code>null</code>
+     * <p>Defaults to {@code null}, indicating that no {@code &lt;binding&gt;} will be created
+     *
+     * @return the binding provider; or {@code null}
      */
     public BindingsProvider getBindingsProvider() {
         return bindingsProvider;
@@ -169,10 +169,10 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 
     /**
      * Sets the {@link BindingsProvider} for this definition.
-     * <p/>
-     * Defaults to <code>null</code>, indicating that no <code>&lt;binding&gt;</code> will be created
      *
-     * @param bindingsProvider the bindings provider; or <code>null</code>
+     * <p>Defaults to {@code null}, indicating that no {@code &lt;binding&gt;} will be created
+     *
+     * @param bindingsProvider the bindings provider; or {@code null}
      */
     public void setBindingsProvider(BindingsProvider bindingsProvider) {
         this.bindingsProvider = bindingsProvider;
@@ -180,10 +180,10 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 
     /**
      * Returns the {@link ServicesProvider} for this definition.
-     * <p/>
-     * Defaults to <code>null</code>, indicating that no <code>&lt;service&gt;</code> will be created
      *
-     * @return the services provider; or <code>null</code>
+     * <p>Defaults to {@code null}, indicating that no {@code &lt;service&gt;} will be created
+     *
+     * @return the services provider; or {@code null}
      */
     public ServicesProvider getServicesProvider() {
         return servicesProvider;
@@ -191,10 +191,10 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 
     /**
      * Sets the {@link ServicesProvider} for this definition.
-     * <p/>
-     * Defaults to <code>null</code>, indicating that no <code>&lt;service&gt;</code> will be created
      *
-     * @param servicesProvider the services provider; or <code>null</code>
+     * <p>Defaults to {@code null}, indicating that no {@code &lt;service&gt;} will be created
+     *
+     * @param servicesProvider the services provider; or {@code null}
      */
     public void setServicesProvider(ServicesProvider servicesProvider) {
         this.servicesProvider = servicesProvider;

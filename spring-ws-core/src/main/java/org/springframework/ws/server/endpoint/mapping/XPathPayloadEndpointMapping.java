@@ -33,18 +33,18 @@ import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
 
 /**
- * Implementation of the <code>EndpointMapping</code> interface that maps to endpoint using an XPath expression.
+ * Implementation of the {@code EndpointMapping} interface that maps to endpoint using an XPath expression.
  * Supports both mapping to bean instances and mapping to bean names: the latter is required for prototype endpoints.
- * <p/>
- * The XPath expression can be set using the <code>expression</code> property. Setting this property is required. There
- * is also an optional <code>namespaces</code> property, which defines to set namespace bindings that are used in the
+ *
+ * <p>The XPath expression can be set using the {@code expression} property. Setting this property is required. There
+ * is also an optional {@code namespaces} property, which defines to set namespace bindings that are used in the
  * expression.
- * <p/>
- * The <code>endpointMap</code> property is suitable for populating the endpoint map with bean references, e.g. via the
+ *
+ * <p>The {@code endpointMap} property is suitable for populating the endpoint map with bean references, e.g. via the
  * map element in XML bean definitions.
- * <p/>
- * Mappings to bean names can be set via the <code>mappings</code> property, in a form accepted by the
- * <code>java.util.Properties</code> class, like as follows:
+ *
+ * <p>Mappings to bean names can be set via the {@code mappings} property, in a form accepted by the
+ * {@code java.util.Properties} class, like as follows:
  * <pre>
  * BookFlight=bookFlightEndpoint
  * GetFlights=getFlightsEndpoint

@@ -30,8 +30,8 @@ import org.springframework.util.StringUtils;
 public abstract class AbstractMessageContext implements MessageContext {
 
     /**
-     * Keys are <code>Strings</code>, values are <code>Objects</code>. Lazily initialized by
-     * <code>getProperties()</code>.
+     * Keys are {@code Strings}, values are {@code Objects}. Lazily initialized by
+     * {@code getProperties()}.
      */
     private Map<String, Object> properties;
 

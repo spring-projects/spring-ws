@@ -24,8 +24,8 @@ import org.springframework.ws.WebServiceMessage;
 /**
  * Defines the methods for classes capable of sending and receiving {@link WebServiceMessage} instances across a
  * transport.
- * <p/>
- * The <code>WebServiceMessageSender</code> is basically a factory for {@link WebServiceConnection} objects.
+ *
+ * <p>The {@code WebServiceMessageSender} is basically a factory for {@link WebServiceConnection} objects.
  *
  * @author Arjen Poutsma
  * @see WebServiceConnection
@@ -46,7 +46,7 @@ public interface WebServiceMessageSender {
      * Does this {@link WebServiceMessageSender} support the supplied URI?
      *
      * @param uri the URI to be checked
-     * @return <code>true</code> if this <code>WebServiceMessageSender</code> supports the supplied URI
+     * @return {@code true} if this {@code WebServiceMessageSender} supports the supplied URI
      */
     boolean supports(URI uri);
 

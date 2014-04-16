@@ -38,7 +38,7 @@ public abstract class XmppTransportUtils {
     }
 
     /**
-     * Converts the given XMPP destination into a <code>xmpp</code> URI.
+     * Converts the given XMPP destination into a {@code xmpp} URI.
      */
     public static URI toUri(Message requestMessage) throws URISyntaxException {
         return new URI(XmppTransportConstants.XMPP_URI_SCHEME, requestMessage.getTo(), null);

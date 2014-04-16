@@ -145,8 +145,8 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
     /**
      * Create a {@code XMLInputFactory} that this resolver will use to create {@link XMLStreamReader} and {@link
      * XMLEventReader} objects.
-     * <p/>
-     * Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
+     *
+     * <p>Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
      * so this method will only be called once.
      *
      * @return the created factory

@@ -28,10 +28,10 @@ import org.springframework.ws.transport.support.SimpleWebServiceMessageReceiverO
 /**
  * Convenience base class for JMS server-side transport objects. Contains a {@link WebServiceMessageReceiver}, and has
  * methods for handling incoming JMS {@link BytesMessage} and {@link TextMessage} requests. Also contains a
- * <code>textMessageEncoding</code> property, which determines the encoding used to read from and write to
- * <code>TextMessages</code>. This property defaults to <code>UTF-8</code>.
- * <p/>
- * Used by {@link WebServiceMessageListener}.
+ * {@code textMessageEncoding} property, which determines the encoding used to read from and write to
+ * {@code TextMessages}. This property defaults to {@code UTF-8}.
+ *
+ * <p>Used by {@link WebServiceMessageListener}.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
@@ -45,7 +45,7 @@ public class JmsMessageReceiver extends SimpleWebServiceMessageReceiverObjectSup
 
     private MessagePostProcessor postProcessor;
 
-    /** Sets the encoding used to read from and write to {@link TextMessage} messages. Defaults to <code>UTF-8</code>. */
+    /** Sets the encoding used to read from and write to {@link TextMessage} messages. Defaults to {@code UTF-8}. */
     public void setTextMessageEncoding(String textMessageEncoding) {
         this.textMessageEncoding = textMessageEncoding;
     }

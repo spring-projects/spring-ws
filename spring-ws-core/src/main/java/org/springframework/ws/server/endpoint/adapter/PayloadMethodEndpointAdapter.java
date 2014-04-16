@@ -34,10 +34,10 @@ import org.springframework.ws.soap.server.SoapMessageDispatcher;
  * <pre>
  * Source handleMyMessage(Source request);
  * </pre>
- * I.e. methods that take a single {@link Source} parameter, and return either <code>void</code> or a {@link Source}.
+ * I.e. methods that take a single {@link Source} parameter, and return either {@code void} or a {@link Source}.
  * The method can have any name, as long as it is mapped by an {@link org.springframework.ws.server.EndpointMapping}.
- * <p/>
- * This adapter is registered by default by the {@link MessageDispatcher} and {@link SoapMessageDispatcher}.
+ *
+ * <p>This adapter is registered by default by the {@link MessageDispatcher} and {@link SoapMessageDispatcher}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

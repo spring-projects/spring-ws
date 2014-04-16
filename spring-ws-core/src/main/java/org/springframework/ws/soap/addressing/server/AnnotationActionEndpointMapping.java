@@ -35,8 +35,8 @@ import org.springframework.ws.soap.addressing.server.annotation.Address;
 /**
  * Implementation of the {@link org.springframework.ws.server.EndpointMapping} interface that uses the
  * {@link Action @Action} annotation to map methods to a WS-Addressing {@code Action} header.
- * <p/>
- * Endpoints typically have the following form:
+ *
+ * <p>Endpoints typically have the following form:
  * <pre>
  * &#64;Endpoint
  * &#64;Address("mailto:joe@fabrikam123.example")
@@ -47,8 +47,8 @@ import org.springframework.ws.soap.addressing.server.annotation.Address;
  *    }
  * }
  * </pre>
- * <p/>
- * If set, the {@link Address @Address} annotation on the endpoint class should be equal to the {@link
+ *
+ * <p>If set, the {@link Address @Address} annotation on the endpoint class should be equal to the {@link
  * org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo() destination} property of the
  * incoming message.
  *
@@ -86,11 +86,11 @@ public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpoin
     /**
      * Returns the address property of the given {@link MethodEndpoint}, by looking for the {@link Address} annotation.
      * The value of this property should match the {@link org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo()
-     * destination} of incoming messages. Returns <code>null</code> if the anotation is not present, thus ignoring the
+     * destination} of incoming messages. Returns {@code null} if the anotation is not present, thus ignoring the
      * destination property.
      *
      * @param endpoint the method endpoint to return the address for
-     * @return the endpoint address; or <code>null</code> to ignore the destination property
+     * @return the endpoint address; or {@code null} to ignore the destination property
      */
     @Override
     protected URI getEndpointAddress(Object endpoint) {

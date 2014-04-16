@@ -26,12 +26,12 @@ import org.springframework.ws.WebServiceMessageException;
  */
 public abstract class SoapMessageException extends WebServiceMessageException {
 
-    /** Constructor for <code>SoapMessageException</code>. */
+    /** Constructor for {@code SoapMessageException}. */
     public SoapMessageException(String msg) {
         super(msg);
     }
 
-    /** Constructor for <code>SoapMessageException</code>. */
+    /** Constructor for {@code SoapMessageException}. */
     public SoapMessageException(String msg, Throwable ex) {
         super(msg, ex);
     }

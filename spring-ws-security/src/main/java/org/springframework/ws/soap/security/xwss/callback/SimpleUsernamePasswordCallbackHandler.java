@@ -29,9 +29,9 @@ import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
 /**
  * Simple callback handler that supplies a username and password to a username token at runtime.
- * <p/>
- * This class handles <code>UsernameCallback</code>s and <code>PasswordCallback</code>s, and throws an
- * <code>UnsupportedCallbackException</code> for others
+ *
+ * <p>This class handles {@code UsernameCallback}s and {@code PasswordCallback}s, and throws an
+ * {@code UnsupportedCallbackException} for others
  *
  * @author Arjen Poutsma
  * @see #setUsername(String)

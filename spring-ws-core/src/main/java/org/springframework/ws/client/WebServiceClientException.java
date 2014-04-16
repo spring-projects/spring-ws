@@ -27,7 +27,7 @@ import org.springframework.ws.WebServiceException;
 public abstract class WebServiceClientException extends WebServiceException {
 
     /**
-     * Create a new instance of the <code>WebServiceClientException</code> class.
+     * Create a new instance of the {@code WebServiceClientException} class.
      *
      * @param msg the detail message
      */
@@ -36,7 +36,7 @@ public abstract class WebServiceClientException extends WebServiceException {
     }
 
     /**
-     * Create a new instance of the <code>WebServiceClientException</code> class.
+     * Create a new instance of the {@code WebServiceClientException} class.
      *
      * @param msg the detail message
      * @param ex  the root {@link Throwable exception}

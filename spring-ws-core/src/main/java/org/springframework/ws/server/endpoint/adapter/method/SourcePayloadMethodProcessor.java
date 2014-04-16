@@ -118,8 +118,8 @@ public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodPro
     /**
      * Create a {@code XMLInputFactory} that this resolver will use to create {@link javax.xml.stream.XMLStreamReader}
      * and {@link javax.xml.stream.XMLEventReader} objects.
-     * <p/>
-     * Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
+     *
+     * <p>Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
      * so this method will only be called once.
      *
      * @return the created factory

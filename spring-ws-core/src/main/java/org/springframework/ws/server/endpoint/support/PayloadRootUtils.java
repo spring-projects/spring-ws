@@ -53,8 +53,8 @@ public abstract class PayloadRootUtils {
      * Returns the root qualified name of the given source, transforming it if necessary.
      *
      * @param source             the source to get the root element from
-     * @param transformerFactory a transformer factory, necessary if the given source is not a <code>DOMSource</code>
-     * @return the root element, or <code>null</code> if <code>source</code> is <code>null</code>
+     * @param transformerFactory a transformer factory, necessary if the given source is not a {@code DOMSource}
+     * @return the root element, or {@code null} if {@code source} is {@code null}
      */
     public static QName getPayloadRootQName(Source source, TransformerFactory transformerFactory)
             throws TransformerException {

@@ -35,9 +35,9 @@ public abstract class TransportUtils {
 
     /**
      * Close the given {@link WebServiceConnection} and ignore any thrown exception. This is useful for typical
-     * <code>finally</code> blocks.
+     * {@code finally} blocks.
      *
-     * @param connection the web service connection to close (may be <code>null</code>)
+     * @param connection the web service connection to close (may be {@code null})
      */
     public static void closeConnection(WebServiceConnection connection) {
         if (connection != null) {

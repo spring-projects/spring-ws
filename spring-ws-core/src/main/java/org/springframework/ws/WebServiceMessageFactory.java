@@ -20,10 +20,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * The <code>WebServiceMessageFactory</code> serves as a factory for {@link org.springframework.ws.WebServiceMessage
+ * The {@code WebServiceMessageFactory} serves as a factory for {@link org.springframework.ws.WebServiceMessage
  * WebServiceMessages}.
- * <p/>
- * <p>Allows the creation of empty messages, or messages based on <code>InputStream</code>s.
+ *
+ * <p>Allows the creation of empty messages, or messages based on {@code InputStream}s.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.WebServiceMessage
@@ -32,7 +32,7 @@ import java.io.InputStream;
 public interface WebServiceMessageFactory {
 
     /**
-     * Creates a new, empty <code>WebServiceMessage</code>.
+     * Creates a new, empty {@code WebServiceMessage}.
      *
      * @return the empty message
      */
@@ -40,8 +40,8 @@ public interface WebServiceMessageFactory {
 
     /**
      * Reads a {@link WebServiceMessage} from the given input stream.
-     * <p/>
-     * If the given stream is an instance of {@link org.springframework.ws.transport.TransportInputStream
+     *
+     * <p>If the given stream is an instance of {@link org.springframework.ws.transport.TransportInputStream
      * TransportInputStream}, the headers will be read from the request.
      *
      * @param inputStream the input stream to read the message from

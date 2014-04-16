@@ -32,10 +32,10 @@ import org.springframework.xml.namespace.QNameUtils;
 import org.xml.sax.SAXParseException;
 
 /**
- * Subclass of <code>AbstractValidatingInterceptor</code> that creates a SOAP Fault whenever the request message cannot
- * be validated. The contents of the SOAP Fault can be specified by setting the <code>addValidationErrorDetail</code>,
- * <code>faultStringOrReason</code>, or  <code>detailElementName</code> properties. Further customizing can be
- * accomplished by overriding <code>handleRequestValidationErrors</code>.
+ * Subclass of {@code AbstractValidatingInterceptor} that creates a SOAP Fault whenever the request message cannot
+ * be validated. The contents of the SOAP Fault can be specified by setting the {@code addValidationErrorDetail},
+ * {@code faultStringOrReason}, or  {@code detailElementName} properties. Further customizing can be
+ * accomplished by overriding {@code handleRequestValidationErrors}.
  *
  * @author Arjen Poutsma
  * @see #setAddValidationErrorDetail(boolean)
@@ -74,7 +74,7 @@ public abstract class AbstractFaultCreatingValidatingInterceptor extends Abstrac
     /**
      * Returns whether a SOAP Fault detail element should be created when a validation error occurs. This detail element
      * will contain the exact validation errors. It is only added when the underlying message is a
-     * <code>SoapMessage</code>. Defaults to <code>true</code>.
+     * {@code SoapMessage}. Defaults to {@code true}.
      *
      * @see org.springframework.ws.soap.SoapFault#addFaultDetail()
      */
@@ -85,7 +85,7 @@ public abstract class AbstractFaultCreatingValidatingInterceptor extends Abstrac
     /**
      * Indicates whether a SOAP Fault detail element should be created when a validation error occurs. This detail
      * element will contain the exact validation errors. It is only added when the underlying message is a
-     * <code>SoapMessage</code>. Defaults to <code>true</code>.
+     * {@code SoapMessage}. Defaults to {@code true}.
      *
      * @see org.springframework.ws.soap.SoapFault#addFaultDetail()
      */
@@ -100,7 +100,7 @@ public abstract class AbstractFaultCreatingValidatingInterceptor extends Abstrac
 
     /**
      * Sets the fault detail element name when validation errors occur on the request. Defaults to
-     * <code>DEFAULT_DETAIL_ELEMENT_NAME</code>.
+     * {@code DEFAULT_DETAIL_ELEMENT_NAME}.
      *
      * @see #DEFAULT_DETAIL_ELEMENT_NAME
      */
@@ -108,15 +108,15 @@ public abstract class AbstractFaultCreatingValidatingInterceptor extends Abstrac
         this.detailElementName = detailElementName;
     }
 
-    /** Sets the SOAP <code>faultstring</code> or <code>Reason</code> used when validation errors occur on the request. */
+    /** Sets the SOAP {@code faultstring} or {@code Reason} used when validation errors occur on the request. */
     public String getFaultStringOrReason() {
         return faultStringOrReason;
     }
 
     /**
-     * Sets the SOAP <code>faultstring</code> or <code>Reason</code> used when validation errors occur on the request.
-     * It is only added when the underlying message is a <code>SoapMessage</code>. Defaults to
-     * <code>DEFAULT_FAULTSTRING_OR_REASON</code>.
+     * Sets the SOAP {@code faultstring} or {@code Reason} used when validation errors occur on the request.
+     * It is only added when the underlying message is a {@code SoapMessage}. Defaults to
+     * {@code DEFAULT_FAULTSTRING_OR_REASON}.
      *
      * @see #DEFAULT_FAULTSTRING_OR_REASON
      */
@@ -131,7 +131,7 @@ public abstract class AbstractFaultCreatingValidatingInterceptor extends Abstrac
 
     /**
      * Sets the SOAP fault reason locale used when validation errors occur on the request.  It is only added when the
-     * underlying message is a <code>SoapMessage</code>. Defaults to English.
+     * underlying message is a {@code SoapMessage}. Defaults to English.
      *
      * @see java.util.Locale#ENGLISH
      */
@@ -141,13 +141,13 @@ public abstract class AbstractFaultCreatingValidatingInterceptor extends Abstrac
 
     /**
      * Template method that is called when the request message contains validation errors. This implementation logs all
-     * errors, returns <code>false</code>, and creates a {@link SoapBody#addClientOrSenderFault(String,Locale) client or
+     * errors, returns {@code false}, and creates a {@link SoapBody#addClientOrSenderFault(String,Locale) client or
      * sender} {@link SoapFault}, adding a {@link SoapFaultDetail} with all errors if the
-     * <code>addValidationErrorDetail</code> property is <code>true</code>.
+     * {@code addValidationErrorDetail} property is {@code true}.
      *
      * @param messageContext the message context
      * @param errors         the validation errors
-     * @return <code>true</code> to continue processing the request, <code>false</code> (the default) otherwise
+     * @return {@code true} to continue processing the request, {@code false} (the default) otherwise
      */
     @Override
     protected boolean handleRequestValidationErrors(MessageContext messageContext, SAXParseException[] errors)

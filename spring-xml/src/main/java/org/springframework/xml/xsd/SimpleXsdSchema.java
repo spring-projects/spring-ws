@@ -38,8 +38,8 @@ import org.springframework.xml.validation.XmlValidatorFactory;
 
 /**
  * The default {@link XsdSchema} implementation.
- * <p/>
- * Allows a XSD to be set by the {@link #setXsd(Resource)}, or directly in the {@link #SimpleXsdSchema(Resource)
+ *
+ * <p>Allows a XSD to be set by the {@link #setXsd(Resource)}, or directly in the {@link #SimpleXsdSchema(Resource)
  * constructor}.
  *
  * @author Mark LaFond
@@ -64,8 +64,8 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
 
     /**
      * Create a new instance of the {@link SimpleXsdSchema} class.
-     * <p/>
-     * A subsequent call to the {@link #setXsd(Resource)} method is required.
+     *
+     * <p>A subsequent call to the {@link #setXsd(Resource)} method is required.
      */
     public SimpleXsdSchema() {
     }
@@ -73,8 +73,8 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
     /**
      * Create a new instance of the  {@link SimpleXsdSchema} class with the specified resource.
      *
-     * @param xsdResource the XSD resource; must not be <code>null</code>
-     * @throws IllegalArgumentException if the supplied <code>xsdResource</code> is <code>null</code>
+     * @param xsdResource the XSD resource; must not be {@code null}
+     * @throws IllegalArgumentException if the supplied {@code xsdResource} is {@code null}
      */
     public SimpleXsdSchema(Resource xsdResource) {
         Assert.notNull(xsdResource, "xsdResource must not be null");

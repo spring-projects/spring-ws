@@ -24,7 +24,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.springframework.util.Assert;
 
 /**
- * Convenient subclass of <code>StreamSource</code> that reads from a <code>StringReader</code>. The string to be read
+ * Convenient subclass of {@code StreamSource} that reads from a {@code StringReader}. The string to be read
  * can be set via the constructor.
  *
  * @author Arjen Poutsma
@@ -35,7 +35,7 @@ public class StringSource extends StreamSource {
     private final String content;
 
     /**
-     * Initializes a new instance of the <code>StringSource</code> with the given string content.
+     * Initializes a new instance of the {@code StringSource} with the given string content.
      *
      * @param content the content
      */

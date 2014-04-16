@@ -36,10 +36,10 @@ import org.springframework.xml.xpath.XPathExpressionFactory;
 import org.springframework.xml.xsd.XsdSchema;
 
 /**
- * Adapter to use the {@link XsdSchema} interface with the generic <code>DispatcherServlet</code>.
- * <p/>
- * Reads the source from the mapped {@link XsdSchema} implementation, and writes that as the result to the
- * <code>HttpServletResponse</code>. Allows for post-processing the schema in subclasses.
+ * Adapter to use the {@link XsdSchema} interface with the generic {@code DispatcherServlet}.
+ *
+ * <p>Reads the source from the mapped {@link XsdSchema} implementation, and writes that as the result to the
+ * {@code HttpServletResponse}. Allows for post-processing the schema in subclasses.
  *
  * @author Arjen Poutsma
  * @see XsdSchema
@@ -66,8 +66,8 @@ public class XsdSchemaHandlerAdapter extends LocationTransformerObjectSupport
 
     /**
      * Sets the XPath expression used for extracting the {@code schemaLocation} attributes from the WSDL 1.1 definition.
-     * <p/>
-     * Defaults to {@code DEFAULT_SCHEMA_LOCATION_EXPRESSION}.
+     *
+     * <p>Defaults to {@code DEFAULT_SCHEMA_LOCATION_EXPRESSION}.
      */
     public void setSchemaLocationExpression(String schemaLocationExpression) {
         this.schemaLocationExpression = schemaLocationExpression;
@@ -126,8 +126,8 @@ public class XsdSchemaHandlerAdapter extends LocationTransformerObjectSupport
     /**
      * Returns the {@link Source} of the given schema. Allows for post-processing and transformation of the schema in
      * sub-classes.
-     * <p/>
-     * Default implementation simply returns {@link XsdSchema#getSource()}.
+     *
+     * <p>Default implementation simply returns {@link XsdSchema#getSource()}.
      *
      * @param schema the schema
      * @return the source of the given schema
@@ -141,8 +141,8 @@ public class XsdSchemaHandlerAdapter extends LocationTransformerObjectSupport
      * Transforms all {@code schemaLocation} attributes to reflect the server name given {@code HttpServletRequest}.
      * Determines the suitable attributes by evaluating the defined XPath expression, and delegates to {@code
      * transformLocation} to do the transformation for all attributes that match.
-     * <p/>
-     * This method is only called when the {@code transformSchemaLocations} property is true.
+     *
+     * <p>This method is only called when the {@code transformSchemaLocations} property is true.
      *
      * @see #setSchemaLocationExpression(String)
      * @see #transformLocation(String, javax.servlet.http.HttpServletRequest)

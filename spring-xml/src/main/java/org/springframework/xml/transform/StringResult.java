@@ -20,8 +20,8 @@ import java.io.StringWriter;
 import javax.xml.transform.stream.StreamResult;
 
 /**
- * Convenient subclass of <code>StreamResult</code> that writes to a <code>StringWriter</code>. The resulting string can
- * be retrieved via <code>toString()</code>.
+ * Convenient subclass of {@code StreamResult} that writes to a {@code StringWriter}. The resulting string can
+ * be retrieved via {@code toString()}.
  *
  * @author Arjen Poutsma
  * @see #toString()

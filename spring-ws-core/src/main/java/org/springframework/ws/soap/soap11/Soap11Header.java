@@ -23,7 +23,7 @@ import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapHeaderException;
 
 /**
- * Subinterface of <code>SoapHeader</code> that exposes SOAP 1.1 functionality.
+ * Subinterface of {@code SoapHeader} that exposes SOAP 1.1 functionality.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -31,7 +31,7 @@ import org.springframework.ws.soap.SoapHeaderException;
 public interface Soap11Header extends SoapHeader {
 
     /**
-     * Returns an <code>Iterator</code> over all the {@link SoapHeaderElement header elements} that should be processed
+     * Returns an {@code Iterator} over all the {@link SoapHeaderElement header elements} that should be processed
      * for the given actors. Headers target to the "next" actor or role will always be included.
      *
      * @param actors an array of actors to search for

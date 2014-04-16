@@ -31,37 +31,37 @@ public abstract class AbstractSoapMessage extends AbstractMimeMessage implements
 
     private SoapVersion version;
 
-    /** Returns <code>getEnvelope().getBody()</code>. */
+    /** Returns {@code getEnvelope().getBody()}. */
     @Override
     public final SoapBody getSoapBody() {
         return getEnvelope().getBody();
     }
 
-    /** Returns <code>getEnvelope().getHeader()</code>. */
+    /** Returns {@code getEnvelope().getHeader()}. */
     @Override
     public final SoapHeader getSoapHeader() {
         return getEnvelope().getHeader();
     }
 
-    /** Returns <code>getSoapBody().getPayloadSource()</code>. */
+    /** Returns {@code getSoapBody().getPayloadSource()}. */
     @Override
     public final Source getPayloadSource() {
         return getSoapBody().getPayloadSource();
     }
 
-    /** Returns <code>getSoapBody().getPayloadResult()</code>. */
+    /** Returns {@code getSoapBody().getPayloadResult()}. */
     @Override
     public final Result getPayloadResult() {
         return getSoapBody().getPayloadResult();
     }
 
-    /** Returns <code>getSoapBody().hasFault()</code>. */
+    /** Returns {@code getSoapBody().hasFault()}. */
     @Override
     public final boolean hasFault() {
         return getSoapBody().hasFault();
     }
 
-    /** Returns <code>getSoapBody().getFault().getFaultStringOrReason()</code>. */
+    /** Returns {@code getSoapBody().getFault().getFaultStringOrReason()}. */
     @Override
     public final String getFaultReason() {
         if (hasFault()) {

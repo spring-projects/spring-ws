@@ -27,7 +27,7 @@ import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapVersion;
 
 /**
- * SAAJ-specific implementation of the <code>SoapEnvelope</code> interface. Wraps a {@link
+ * SAAJ-specific implementation of the {@code SoapEnvelope} interface. Wraps a {@link
  * javax.xml.soap.SOAPEnvelope}.
  *
  * @author Arjen Poutsma

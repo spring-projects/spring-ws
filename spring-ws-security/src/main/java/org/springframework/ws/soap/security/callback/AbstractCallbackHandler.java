@@ -25,7 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Abstract implementation of a <code>CallbackHandler</code>.
+ * Abstract implementation of a {@code CallbackHandler}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -39,7 +39,7 @@ public abstract class AbstractCallbackHandler implements CallbackHandler {
     }
 
     /**
-     * Iterates over the given callbacks, and calls <code>handleInternal</code> for each of them.
+     * Iterates over the given callbacks, and calls {@code handleInternal} for each of them.
      *
      * @param callbacks the callbacks
      * @see #handleInternal(javax.security.auth.callback.Callback)

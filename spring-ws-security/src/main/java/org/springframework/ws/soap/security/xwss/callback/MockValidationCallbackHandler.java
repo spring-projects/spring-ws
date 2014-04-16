@@ -28,12 +28,12 @@ import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
 /**
  * Mock implementation of of callback handler that accepts all password and certificate validation callbacks.
- * <p/>
- * If the <code>valid</code> property is set to <code>true</code> (the default), this handler simply accepts and
+ *
+ * <p>If the {@code valid} property is set to {@code true} (the default), this handler simply accepts and
  * validates every password or certificate validation callback that is passed to it.
- * <p/>
- * This class handles <code>CertificateValidationCallback</code>s and <code>PasswordValidationCallback</code>s, and
- * throws an <code>UnsupportedCallbackException</code> for others
+ *
+ * <p>This class handles {@code CertificateValidationCallback}s and {@code PasswordValidationCallback}s, and
+ * throws an {@code UnsupportedCallbackException} for others
  *
  * @author Arjen Poutsma
  * @since 1.0.0

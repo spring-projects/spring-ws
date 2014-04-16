@@ -29,19 +29,19 @@ import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
 
 /**
  * Simple subclass of {@link AbstractMethodEndpointMapping} that maps from the local name of the request payload to
- * methods. Endpoint beans are registered using the <code>endpoints</code> property; the endpoint methods that start
- * with <code>methodPrefix</code> and end with <code>methodSuffix</code> will be registered.
- * <p/>
- * Endpoints typically have the following form:
+ * methods. Endpoint beans are registered using the {@code endpoints} property; the endpoint methods that start
+ * with {@code methodPrefix} and end with {@code methodSuffix} will be registered.
+ *
+ * <p>Endpoints typically have the following form:
  * <pre>
  * public class MyEndpoint{
- * <p/>
+ *
  *    public Source handleMyMessage(Source source) {
  *       ...
  *    }
  * }
  * </pre>
- * This method will handle any message that has the <code>MyMessage</code> as a payload root local name.
+ * This method will handle any message that has the {@code MyMessage} as a payload root local name.
  *
  * @author Arjen Poutsma
  * @see #setEndpoints(Object[])
@@ -68,8 +68,8 @@ public class SimpleMethodEndpointMapping extends AbstractMethodEndpointMapping<S
     }
 
     /**
-     * Sets the endpoints. The endpoint methods that start with <code>methodPrefix</code> and end with
-     * <code>methodSuffix</code> will be registered.
+     * Sets the endpoints. The endpoint methods that start with {@code methodPrefix} and end with
+     * {@code methodSuffix} will be registered.
      */
     public void setEndpoints(Object[] endpoints) {
         this.endpoints = endpoints;
@@ -82,7 +82,7 @@ public class SimpleMethodEndpointMapping extends AbstractMethodEndpointMapping<S
 
     /**
      * Sets the method prefix. All methods with names starting with this string will be registered. Default is
-     * "<code>handle</code>".
+     * "{@code handle}".
      *
      * @see #DEFAULT_METHOD_PREFIX
      */

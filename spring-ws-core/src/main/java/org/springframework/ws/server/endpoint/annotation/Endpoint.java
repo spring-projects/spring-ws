@@ -28,8 +28,8 @@ import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationM
 
 /**
  * Indicates that an annotated class is an "Endpoint" (e.g. a web service endpoint).
- * <p/>
- * This annotation serves as a specialization of {@link Component @Component}, allowing for implementation classes to be
+ *
+ * <p>This annotation serves as a specialization of {@link Component @Component}, allowing for implementation classes to be
  * autodetected through classpath scanning. Instances of this class are typically picked up by an {@link
  * AbstractAnnotationMethodEndpointMapping} implementation, such as {@link SoapActionAnnotationMethodEndpointMapping}.
  *

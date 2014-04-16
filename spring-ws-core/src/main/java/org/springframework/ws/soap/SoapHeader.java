@@ -33,8 +33,8 @@ public interface SoapHeader extends SoapElement {
 
     /**
      * Returns a {@code Result} that represents the contents of the header.
-     * <p/>
-     * The result can be used for marshalling.
+     *
+     * <p>The result can be used for marshalling.
      *
      * @return the {@code Result} of this element
      */
@@ -51,8 +51,8 @@ public interface SoapHeader extends SoapElement {
 
     /**
      * Removes the {@code SoapHeaderElement} with the specified qualified name from this header.
-     * <p/>
-     * This method will only remove the first child element with the specified name. If no element is found with the
+     *
+     * <p>This method will only remove the first child element with the specified name. If no element is found with the
      * specified name, this method has no effect.
      *
      * @param name the qualified name of the header element to be removed

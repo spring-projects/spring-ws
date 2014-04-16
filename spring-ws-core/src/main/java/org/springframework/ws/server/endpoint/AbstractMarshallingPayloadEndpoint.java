@@ -31,7 +31,7 @@ import org.springframework.ws.support.MarshallingUtils;
 
 /**
  * Endpoint that unmarshals the request payload, and marshals the response object. This endpoint needs a
- * <code>Marshaller</code> and <code>Unmarshaller</code>, both of which can be set using properties. An abstract
+ * {@code Marshaller} and {@code Unmarshaller}, both of which can be set using properties. An abstract
  * template method is invoked using the request object as a parameter, and allows for a response object to be returned.
  *
  * @author Arjen Poutsma
@@ -54,7 +54,7 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
     private Unmarshaller unmarshaller;
 
     /**
-     * Creates a new <code>AbstractMarshallingPayloadEndpoint</code>. The {@link Marshaller} and {@link Unmarshaller}
+     * Creates a new {@code AbstractMarshallingPayloadEndpoint}. The {@link Marshaller} and {@link Unmarshaller}
      * must be injected using properties.
      *
      * @see #setMarshaller(org.springframework.oxm.Marshaller)
@@ -64,15 +64,15 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
     }
 
     /**
-     * Creates a new <code>AbstractMarshallingPayloadEndpoint</code> with the given marshaller. The given {@link
+     * Creates a new {@code AbstractMarshallingPayloadEndpoint} with the given marshaller. The given {@link
      * Marshaller} should also implements the {@link Unmarshaller}, since it is used for both marshalling and
      * unmarshalling. If it is not, an exception is thrown.
-     * <p/>
-     * Note that all {@link Marshaller} implementations in Spring-WS also implement the {@link Unmarshaller} interface,
+     *
+     * <p>Note that all {@link Marshaller} implementations in Spring-WS also implement the {@link Unmarshaller} interface,
      * so that you can safely use this constructor.
      *
      * @param marshaller object used as marshaller and unmarshaller
-     * @throws IllegalArgumentException when <code>marshaller</code> does not implement the {@link Unmarshaller}
+     * @throws IllegalArgumentException when {@code marshaller} does not implement the {@link Unmarshaller}
      *                                  interface
      * @see #AbstractMarshallingPayloadEndpoint(Marshaller,Unmarshaller)
      */
@@ -90,7 +90,7 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
     }
 
     /**
-     * Creates a new <code>AbstractMarshallingPayloadEndpoint</code> with the given marshaller and unmarshaller.
+     * Creates a new {@code AbstractMarshallingPayloadEndpoint} with the given marshaller and unmarshaller.
      *
      * @param marshaller   the marshaller to use
      * @param unmarshaller the unmarshaller to use
@@ -154,12 +154,12 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
     /**
      * Callback for post-processing in terms of unmarshalling. Called on each message request, after standard
      * unmarshalling.
-     * <p/>
-     * Default implementation returns <code>true</code>.
+     *
+     * <p>Default implementation returns {@code true}.
      *
      * @param messageContext the message context
      * @param requestObject  the object unmarshalled from the {@link MessageContext#getRequest() request}
-     * @return <code>true</code> to continue and call {@link #invokeInternal(Object)}; <code>false</code> otherwise
+     * @return {@code true} to continue and call {@link #invokeInternal(Object)}; {@code false} otherwise
      */
     protected boolean onUnmarshalRequest(MessageContext messageContext, Object requestObject) throws Exception {
         return true;
@@ -177,8 +177,8 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
     /**
      * Callback for post-processing in terms of marshalling. Called on each message request, after standard marshalling
      * of the response. Only invoked when {@link #invokeInternal(Object)} returns an object.
-     * <p/>
-     * Default implementation is empty.
+     *
+     * <p>Default implementation is empty.
      *
      * @param messageContext the message context
      * @param requestObject  the object unmarshalled from the {@link MessageContext#getRequest() request}
@@ -189,8 +189,8 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
 
     /**
      * Template method that gets called after the marshaller and unmarshaller have been set.
-     * <p/>
-     * The default implementation does nothing.
+     *
+     * <p>The default implementation does nothing.
      *
      * @deprecated as of Spring Web Services 1.5: {@link #afterPropertiesSet()} is no longer final, so this can safely
      *             be overridden in subclasses
@@ -201,12 +201,12 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
 
     /**
      * Template method that subclasses must implement to process a request.
-     * <p/>
-     * The unmarshalled request object is passed as a parameter, and the returned object is marshalled to a response. If
-     * no response is required, return <code>null</code>.
+     *
+     * <p>The unmarshalled request object is passed as a parameter, and the returned object is marshalled to a response. If
+     * no response is required, return {@code null}.
      *
      * @param requestObject the unmarshalled message payload as an object
-     * @return the object to be marshalled as response, or <code>null</code> if a response is not required
+     * @return the object to be marshalled as response, or {@code null} if a response is not required
      */
     protected abstract Object invokeInternal(Object requestObject) throws Exception;
 }

@@ -24,7 +24,7 @@ import org.springframework.util.Assert;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 
 /**
- * Abstract base class for WS-Addressing <code>Action</code>-mapped {@link org.springframework.ws.server.EndpointMapping}
+ * Abstract base class for WS-Addressing {@code Action}-mapped {@link org.springframework.ws.server.EndpointMapping}
  * implementations that map to {@link MethodEndpoint}s. Provides infrastructure for mapping endpoint methods to
  * actions.
  *
@@ -59,8 +59,8 @@ public abstract class AbstractActionMethodEndpointMapping extends AbstractAction
 
     /**
      * Return the class or interface to use for method reflection.
-     * <p/>
-     * Default implementation delegates to {@link AopUtils#getTargetClass(Object)}.
+     *
+     * <p>Default implementation delegates to {@link AopUtils#getTargetClass(Object)}.
      *
      * @param endpoint the bean instance (might be an AOP proxy)
      * @return the bean class to expose

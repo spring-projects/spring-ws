@@ -37,8 +37,8 @@ import org.springframework.ws.soap.security.support.SpringSecurityUtils;
 
 /**
  * Callback handler that validates a plain text or digest password using an Spring Security {@code UserDetailsService}.
- * <p/>
- * An Spring Security {@link UserDetailsService} is used to load {@link UserDetails} from. The digest of the
+ *
+ * <p>An Spring Security {@link UserDetailsService} is used to load {@link UserDetails} from. The digest of the
  * password contained in this details object is then compared with the digest in the message.
  *
  * @author Arjen Poutsma

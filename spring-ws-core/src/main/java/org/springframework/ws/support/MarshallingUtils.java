@@ -42,9 +42,9 @@ public abstract class MarshallingUtils {
 
     /**
      * Unmarshals the payload of the given message using the provided {@link Unmarshaller}.
-     * <p/>
-     * If the request message has no payload (i.e. {@link WebServiceMessage#getPayloadSource()} returns
-     * <code>null</code>), this method will return <code>null</code>.
+     *
+     * <p>If the request message has no payload (i.e. {@link WebServiceMessage#getPayloadSource()} returns
+     * {@code null}), this method will return {@code null}.
      *
      * @param unmarshaller the unmarshaller
      * @param message      the message of which the payload is to be unmarshalled

@@ -19,7 +19,7 @@ package org.springframework.ws.pox.dom;
 import org.springframework.ws.pox.PoxMessageException;
 
 /**
- * Specific subclass of <code>PoxMessageException</code> for DOM Plain Old XML messages.
+ * Specific subclass of {@code PoxMessageException} for DOM Plain Old XML messages.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

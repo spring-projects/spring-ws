@@ -23,7 +23,7 @@ import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapFaultException;
 
 /**
- * Subinterface of <code>SoapBody</code> that exposes SOAP 1.2 functionality. Necessary because SOAP 1.1 differs from
+ * Subinterface of {@code SoapBody} that exposes SOAP 1.2 functionality. Necessary because SOAP 1.1 differs from
  * SOAP 1.2 with respect to SOAP Faults.
  *
  * @author Arjen Poutsma
@@ -32,14 +32,14 @@ import org.springframework.ws.soap.SoapFaultException;
 public interface Soap12Body extends SoapBody {
 
     /**
-     * Adds a <code>DataEncodingUnknown</code> fault to the body.
-     * <p/>
-     * Adding a fault removes the current content of the body.
+     * Adds a {@code DataEncodingUnknown} fault to the body.
+     *
+     * <p>Adding a fault removes the current content of the body.
      *
      * @param subcodes the optional fully qualified fault subcodes
      * @param reason   the fault reason
      * @param locale   the language of the fault reason
-     * @return the created <code>SoapFault</code>
+     * @return the created {@code SoapFault}
      */
     Soap12Fault addDataEncodingUnknownFault(QName[] subcodes, String reason, Locale locale) throws SoapFaultException;
     

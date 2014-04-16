@@ -32,8 +32,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
- * SAX <code>ContentHandler</code> that transforms callback calls to the creation of SAAJ <code>Node</code>s and
- * <code>SOAPElement</code>s.
+ * SAX {@code ContentHandler} that transforms callback calls to the creation of SAAJ {@code Node}s and
+ * {@code SOAPElement}s.
  *
  * @author Arjen Poutsma
  * @see javax.xml.soap.Node
@@ -49,8 +49,8 @@ public class SaajContentHandler implements ContentHandler {
     private Map<String, String> namespaces = new LinkedHashMap<String, String>();
 
     /**
-     * Constructs a new instance of the <code>SaajContentHandler</code> that creates children of the given
-     * <code>SOAPElement</code>.
+     * Constructs a new instance of the {@code SaajContentHandler} that creates children of the given
+     * {@code SOAPElement}.
      *
      * @param element the element to write to
      */

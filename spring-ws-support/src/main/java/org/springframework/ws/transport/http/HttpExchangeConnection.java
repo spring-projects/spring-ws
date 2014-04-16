@@ -53,13 +53,13 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
 
     private boolean chunkedEncoding;
 
-    /** Constructs a new exchange connection with the given <code>HttpExchange</code>. */
+    /** Constructs a new exchange connection with the given {@code HttpExchange}. */
     protected HttpExchangeConnection(HttpExchange httpExchange) {
         Assert.notNull(httpExchange, "'httpExchange' must not be null");
         this.httpExchange = httpExchange;
     }
 
-    /** Returns the <code>HttpExchange</code> for this connection. */
+    /** Returns the {@code HttpExchange} for this connection. */
     public HttpExchange getHttpExchange() {
         return httpExchange;
     }

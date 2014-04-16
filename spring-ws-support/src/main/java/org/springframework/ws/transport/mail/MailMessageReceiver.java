@@ -42,8 +42,8 @@ import org.springframework.ws.transport.support.AbstractAsyncStandaloneMessageRe
  * transport} URI, {@link #setStoreUri(String) store} URI, and {@link #setMonitoringStrategy(MonitoringStrategy)
  * monitoringStrategy} to be set, in addition to the {@link #setMessageFactory(WebServiceMessageFactory) messageFactory}
  * and {@link #setMessageReceiver(WebServiceMessageReceiver) messageReceiver} required by the base class.
- * <p/>
- * The {@link MonitoringStrategy} is used to detect new incoming email request. If the <code>monitoringStrategy</code>
+ *
+ * <p>The {@link MonitoringStrategy} is used to detect new incoming email request. If the {@code monitoringStrategy}
  * is not explicitly set, this receiver will use the {@link Pop3PollingMonitoringStrategy} for POP3 servers, and the
  * {@link PollingMonitoringStrategy} for IMAP servers.
  *
@@ -73,24 +73,24 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
 
     /**
      * Set JavaMail properties for the {@link Session}.
-     * <p/>
-     * A new {@link Session} will be created with those properties. Use either this method or {@link #setSession}, but
+     *
+     * <p>A new {@link Session} will be created with those properties. Use either this method or {@link #setSession}, but
      * not both.
-     * <p/>
-     * Non-default properties in this instance will override given JavaMail properties.
+     *
+     * <p>Non-default properties in this instance will override given JavaMail properties.
      */
     public void setJavaMailProperties(Properties javaMailProperties) {
         session = Session.getInstance(javaMailProperties, null);
     }
 
     /**
-     * Set the JavaMail <code>Session</code>, possibly pulled from JNDI.
-     * <p/>
-     * Default is a new <code>Session</code> without defaults, that is completely configured via this instance's
+     * Set the JavaMail {@code Session}, possibly pulled from JNDI.
+     *
+     * <p>Default is a new {@code Session} without defaults, that is completely configured via this instance's
      * properties.
-     * <p/>
-     * If using a pre-configured <code>Session</code>, non-default properties in this instance will override the
-     * settings in the <code>Session</code>.
+     *
+     * <p>If using a pre-configured {@code Session}, non-default properties in this instance will override the
+     * settings in the {@code Session}.
      *
      * @see #setJavaMailProperties
      */
@@ -101,9 +101,9 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
 
     /**
      * Sets the JavaMail Store URI to be used for retrieving request messages. Typically takes the form of
-     * <code>[imap|pop3]://user:password@host:port/INBOX</code>. Setting this property is required.
-     * <p/>
-     * For example, <code>imap://john:secret@imap.example.com/INBOX</code>
+     * {@code [imap|pop3]://user:password@host:port/INBOX}. Setting this property is required.
+     *
+     * <p>For example, {@code imap://john:secret@imap.example.com/INBOX}
      *
      * @see Session#getStore(URLName)
      */
@@ -113,9 +113,9 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
 
     /**
      * Sets the JavaMail Transport URI to be used for sending response messages. Typically takes the form of
-     * <code>smtp://user:password@host:port</code>. Setting this property is required.
-     * <p/>
-     * For example, <code>smtp://john:secret@smtp.example.com</code>
+     * {@code smtp://user:password@host:port}. Setting this property is required.
+     *
+     * <p>For example, {@code smtp://john:secret@smtp.example.com}
      *
      * @see Session#getTransport(URLName)
      */

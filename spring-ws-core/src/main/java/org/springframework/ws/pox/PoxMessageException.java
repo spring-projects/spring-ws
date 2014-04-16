@@ -19,7 +19,7 @@ package org.springframework.ws.pox;
 import org.springframework.ws.WebServiceMessageException;
 
 /**
- * Specific subclass of <code>WebServiceMessageException</code> for Plain Old XML messages.
+ * Specific subclass of {@code WebServiceMessageException} for Plain Old XML messages.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

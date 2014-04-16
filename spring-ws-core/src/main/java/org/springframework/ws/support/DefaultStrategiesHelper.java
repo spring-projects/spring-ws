@@ -50,8 +50,8 @@ import org.springframework.web.context.WebApplicationContext;
 /**
  * Helper class for for loading default implementations of an interface. Encapsulates a properties object, which
  * contains strategy interface names as keys, and comma-separated class names as values.
- * <p/>
- * Simulates the {@link BeanFactory normal lifecycle} for beans, by calling {@link
+ *
+ * <p>Simulates the {@link BeanFactory normal lifecycle} for beans, by calling {@link
  * BeanFactoryAware#setBeanFactory(BeanFactory)}, {@link ApplicationContextAware#setApplicationContext(ApplicationContext)},
  * etc.
  *
@@ -63,13 +63,13 @@ public class DefaultStrategiesHelper {
     /** Keys are strategy interface names, values are implementation class names. */
     private Properties defaultStrategies;
 
-    /** Initializes a new instance of the <code>DefaultStrategiesHelper</code> based on the given set of properties. */
+    /** Initializes a new instance of the {@code DefaultStrategiesHelper} based on the given set of properties. */
     public DefaultStrategiesHelper(Properties defaultStrategies) {
         Assert.notNull(defaultStrategies, "defaultStrategies must not be null");
         this.defaultStrategies = defaultStrategies;
     }
 
-    /** Initializes a new instance of the <code>DefaultStrategiesHelper</code> based on the given resource. */
+    /** Initializes a new instance of the {@code DefaultStrategiesHelper} based on the given resource. */
     public DefaultStrategiesHelper(Resource resource) throws IllegalStateException {
         try {
             defaultStrategies = PropertiesLoaderUtils.loadProperties(resource);
@@ -80,9 +80,9 @@ public class DefaultStrategiesHelper {
     }
 
     /**
-     * Initializes a new instance of the <code>DefaultStrategiesHelper</code> based on the given type.
-     * <p/>
-     * This constructor will attempt to load a 'typeName'.properties file in the same package as the given type.
+     * Initializes a new instance of the {@code DefaultStrategiesHelper} based on the given type.
+     *
+     * <p>This constructor will attempt to load a 'typeName'.properties file in the same package as the given type.
      */
     public DefaultStrategiesHelper(Class<?> type) {
         this(new ClassPathResource(ClassUtils.getShortName(type) + ".properties", type));
@@ -90,7 +90,7 @@ public class DefaultStrategiesHelper {
 
     /**
      * Create a list of strategy objects for the given strategy interface. Strategies are retrieved from the
-     * <code>Properties</code> object given at construction-time.
+     * {@code Properties} object given at construction-time.
      *
      * @param strategyInterface the strategy interface
      * @return a list of corresponding strategy objects
@@ -102,12 +102,12 @@ public class DefaultStrategiesHelper {
 
     /**
      * Create a list of strategy objects for the given strategy interface. Strategies are retrieved from the
-     * <code>Properties</code> object given at construction-time. It instantiates the strategy objects and satisfies
-     * <code>ApplicationContextAware</code> with the supplied context if necessary.
+     * {@code Properties} object given at construction-time. It instantiates the strategy objects and satisfies
+     * {@code ApplicationContextAware} with the supplied context if necessary.
      *
      * @param strategyInterface  the strategy interface
      * @param applicationContext used to satisfy strategies that are application context aware, may be
-     *                           <code>null</code>
+     *                           {@code null}
      * @return a list of corresponding strategy objects
      * @throws BeansException if initialization failed
      */
@@ -205,12 +205,12 @@ public class DefaultStrategiesHelper {
 
     /**
      * Return the default strategy object for the given strategy interface.
-     * <p/>
-     * Delegates to {@link #getDefaultStrategies(Class,ApplicationContext)}, expecting a single object in the list.
+     *
+     * <p>Delegates to {@link #getDefaultStrategies(Class,ApplicationContext)}, expecting a single object in the list.
      *
      * @param strategyInterface  the strategy interface
      * @param applicationContext used to satisfy strategies that are application context aware, may be
-     *                           <code>null</code>
+     *                           {@code null}
      * @return the corresponding strategy object
      * @throws BeansException if initialization failed
      */

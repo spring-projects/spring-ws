@@ -21,14 +21,14 @@ import javax.xml.transform.Source;
 import org.springframework.ws.WebServiceMessage;
 
 /**
- * Client-side interceptor that validates the contents of <code>WebServiceMessage</code>s using a schema. Allows for
+ * Client-side interceptor that validates the contents of {@code WebServiceMessage}s using a schema. Allows for
  * both W3C XML and RELAX NG schemas.
- * <p/>
- * When the payload is invalid, this interceptor stops processing of the interceptor chain.
- * <p/>
- * The schema to validate against is set with the <code>schema</code> property or <code>schemas</code> property. By
+ *
+ * <p>When the payload is invalid, this interceptor stops processing of the interceptor chain.
+ *
+ * <p>The schema to validate against is set with the {@code schema} property or {@code schemas} property. By
  * default, only the request message is validated, but this behaviour can be changed using the
- * <code>validateRequest</code> and <code>validateResponse</code> properties. Responses that contains faults are not
+ * {@code validateRequest} and {@code validateResponse} properties. Responses that contains faults are not
  * validated.
  *
  * @author Stefan Schmidt
@@ -45,7 +45,7 @@ public class PayloadValidatingInterceptor extends AbstractValidatingInterceptor 
      * Returns the part of the request message that is to be validated. Default
      *
      * @param request the request message
-     * @return the part of the message that is to validated, or <code>null</code> not to validate anything
+     * @return the part of the message that is to validated, or {@code null} not to validate anything
      */
     @Override
     protected Source getValidationRequestSource(WebServiceMessage request) {
@@ -56,7 +56,7 @@ public class PayloadValidatingInterceptor extends AbstractValidatingInterceptor 
      * Returns the part of the response message that is to be validated.
      *
      * @param response the response message
-     * @return the part of the message that is to validated, or <code>null</code> not to validate anything
+     * @return the part of the message that is to validated, or {@code null} not to validate anything
      */
     @Override
     protected Source getValidationResponseSource(WebServiceMessage response) {

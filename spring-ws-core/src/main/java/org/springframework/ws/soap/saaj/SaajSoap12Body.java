@@ -28,7 +28,7 @@ import org.springframework.ws.soap.soap12.Soap12Body;
 import org.springframework.ws.soap.soap12.Soap12Fault;
 
 /**
- * SAAJ-specific implementation of the <code>Soap12Body</code> interface. Wraps a {@link javax.xml.soap.SOAPBody}.
+ * SAAJ-specific implementation of the {@code Soap12Body} interface. Wraps a {@link javax.xml.soap.SOAPBody}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

@@ -40,8 +40,8 @@ import org.springframework.xml.transform.TransformerHelper;
 
 /**
  * Implementation of {@link MethodArgumentResolver} that supports the {@link XPathParam @XPathParam} annotation.
- * <p/>
- * This resolver supports parameters annotated with {@link XPathParam @XPathParam} that specifies the XPath expression
+ *
+ * <p>This resolver supports parameters annotated with {@link XPathParam @XPathParam} that specifies the XPath expression
  * that should be bound to that parameter. The parameter can either a "natively supported" XPath type ({@link Boolean
  * boolean}, {@link Double double}, {@link String}, {@link Node}, or {@link NodeList}), or a type that is {@linkplain
  * ConversionService#canConvert(Class, Class) supported} by the {@link ConversionService}.
@@ -59,8 +59,8 @@ public class XPathParamMethodArgumentResolver implements MethodArgumentResolver 
 
     /**
      * Sets the conversion service to use.
-     * <p/>
-     * Defaults to the {@linkplain ConversionServiceFactory#createDefaultConversionService() default conversion
+     *
+     * <p>Defaults to the {@linkplain ConversionServiceFactory#createDefaultConversionService() default conversion
      * service}.
      */
     public void setConversionService(ConversionService conversionService) {
@@ -144,8 +144,8 @@ public class XPathParamMethodArgumentResolver implements MethodArgumentResolver 
 
     /**
      * Create a {@code XPathFactory} that this resolver will use to create {@link XPath} objects.
-     * <p/>
-     * Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
+     *
+     * <p>Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
      * so this method will only be called once.
      *
      * @return the created factory

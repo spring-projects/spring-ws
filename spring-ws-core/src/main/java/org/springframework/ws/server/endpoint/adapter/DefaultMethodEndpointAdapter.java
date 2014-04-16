@@ -302,8 +302,8 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 
     /**
      * Returns the argument array for the given method endpoint.
-     * <p/>
-     * This implementation iterates over the set {@linkplain #setMethodArgumentResolvers(List) argument resolvers} to
+     *
+     * <p>This implementation iterates over the set {@linkplain #setMethodArgumentResolvers(List) argument resolvers} to
      * resolve each argument.
      *
      * @param messageContext the current message context
@@ -328,8 +328,8 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 
     /**
      * Handle the return value for the given method endpoint.
-     * <p/>
-     * This implementation iterates over the set {@linkplain #setMethodReturnValueHandlers(java.util.List)}  return value
+     *
+     * <p>This implementation iterates over the set {@linkplain #setMethodReturnValueHandlers(java.util.List)}  return value
      * handlers} to resolve the return value.
      *
      * @param messageContext the current message context

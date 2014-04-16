@@ -27,7 +27,7 @@ import javax.xml.transform.TransformerException;
 public class WebServiceTransformerException extends WebServiceClientException {
 
     /**
-     * Create a new instance of the <code>WebServiceTransformerException</code> class.
+     * Create a new instance of the {@code WebServiceTransformerException} class.
      *
      * @param msg the detail message
      */
@@ -36,7 +36,7 @@ public class WebServiceTransformerException extends WebServiceClientException {
     }
 
     /**
-     * Create a new instance of the <code>WebServiceTransformerException</code> class.
+     * Create a new instance of the {@code WebServiceTransformerException} class.
      *
      * @param msg the detail message
      * @param ex  the root {@link Throwable exception}

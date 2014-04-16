@@ -33,7 +33,7 @@ import org.springframework.ws.soap.SoapHeaderException;
 import org.springframework.xml.namespace.QNameUtils;
 
 /**
- * Axiom-specific version of <code>org.springframework.ws.soap.SoapHeader</code>.
+ * Axiom-specific version of {@code org.springframework.ws.soap.SoapHeader}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

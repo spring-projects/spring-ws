@@ -23,8 +23,8 @@ import org.w3c.dom.Node;
 /**
  * Defines the contract for a precompiled XPath expression. Concrete instances can be obtained through the {@link
  * XPathExpressionFactory}.
- * <p/>
- * Implementations of this interface are precompiled, and thus faster, but less flexible, than the XPath expressions
+ *
+ * <p>Implementations of this interface are precompiled, and thus faster, but less flexible, than the XPath expressions
  * used by {@link XPathOperations} implementations.
  *
  * @author Arjen Poutsma
@@ -33,10 +33,10 @@ import org.w3c.dom.Node;
 public interface XPathExpression {
 
     /**
-     * Evaluates the given expression as a <code>boolean</code>. Returns the boolean evaluation of the expression, or
-     * <code>false</code> if it is invalid.
-     * <p/>
-     * The return value is determined per the {@code boolean()} function defined in the XPath specification.
+     * Evaluates the given expression as a {@code boolean}. Returns the boolean evaluation of the expression, or
+     * {@code false} if it is invalid.
+     *
+     * <p>The return value is determined per the {@code boolean()} function defined in the XPath specification.
      * This means that an expression that selects zero nodes will return {@code false}, while an expression that
      * selects one or more nodes will return {@code true}.
      * An expression that returns a string returns {@code false} for empty strings and {@code true} for all other
@@ -51,7 +51,7 @@ public interface XPathExpression {
     boolean evaluateAsBoolean(Node node) throws XPathException;
 
     /**
-     * Evaluates the given expression as a {@link Node}. Returns the evaluation of the expression, or <code>null</code>
+     * Evaluates the given expression as a {@link Node}. Returns the evaluation of the expression, or {@code null}
      * if it is invalid.
      *
      * @param node the starting point
@@ -66,17 +66,17 @@ public interface XPathExpression {
      * no result could be found.
      *
      * @param node the starting point
-     * @return a list of <code>Node</code>s that are selected by the expression
+     * @return a list of {@code Node}s that are selected by the expression
      * @throws XPathException in case of XPath errors
      * @see <a href="http://www.w3.org/TR/xpath#node-sets">XPath specification</a>
      */
     List<Node> evaluateAsNodeList(Node node) throws XPathException;
 
     /**
-     * Evaluates the given expression as a number (<code>double</code>). Returns the numeric evaluation of the
+     * Evaluates the given expression as a number ({@code double}). Returns the numeric evaluation of the
      * expression, or {@link Double#NaN} if it is invalid.
-     * <p/>
-     * The return value is determined per the {@code number()} function as defined in the XPath specification.
+     *
+     * <p>The return value is determined per the {@code number()} function as defined in the XPath specification.
      * This means that if the expression selects multiple nodes, it will return the number value of the first node.
      *
      * @param node the starting point
@@ -87,9 +87,9 @@ public interface XPathExpression {
     double evaluateAsNumber(Node node) throws XPathException;
 
     /**
-     * Evaluates the given expression as a String. Returns <code>null</code> if no result could be found.
-     * <p/>
-     * The return value is determined per the {@code string()} function as defined in the XPath specification.
+     * Evaluates the given expression as a String. Returns {@code null} if no result could be found.
+     *
+     * <p>The return value is determined per the {@code string()} function as defined in the XPath specification.
      * This means that if the expression selects multiple nodes, it will return the string value of the first node.
      *
      * @param node the starting point

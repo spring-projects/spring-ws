@@ -32,7 +32,7 @@ public abstract class WsSecurityFaultException extends WsSecurityException {
 
     private String faultActor;
 
-    /** Construct a new <code>WsSecurityFaultException</code> with the given fault code, string, and actor. */
+    /** Construct a new {@code WsSecurityFaultException} with the given fault code, string, and actor. */
     public WsSecurityFaultException(QName faultCode, String faultString, String faultActor) {
         super(faultString);
         this.faultCode = faultCode;

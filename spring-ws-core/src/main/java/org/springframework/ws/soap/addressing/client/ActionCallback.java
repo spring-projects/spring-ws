@@ -35,10 +35,10 @@ import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
 
 /**
- * {@link WebServiceMessageCallback} implementation that sets the WS-Addressing <code>Action</code> header on the
+ * {@link WebServiceMessageCallback} implementation that sets the WS-Addressing {@code Action} header on the
  * message.
- * <p/>
- * A usage example with {@link org.springframework.ws.client.core.WebServiceTemplate}:
+ *
+ * <p>A usage example with {@link org.springframework.ws.client.core.WebServiceTemplate}:
  * <pre>
  * WebServiceTemplate template = new WebServiceTemplate(messageFactory);
  * Result result = new DOMResult();
@@ -68,12 +68,12 @@ public class ActionCallback implements WebServiceMessageCallback {
     private EndpointReference faultTo;
 
     /**
-     * Create a new <code>ActionCallback</code> with the given <code>Action</code>.
-     * <p/>
-     * The <code>To</code> header of the outgoing message will reflect the {@link org.springframework.ws.transport.WebServiceConnection#getUri()
+     * Create a new {@code ActionCallback} with the given {@code Action}.
+     *
+     * <p>The {@code To} header of the outgoing message will reflect the {@link org.springframework.ws.transport.WebServiceConnection#getUri()
      * connection URI}.
-     * <p/>
-     * The {@link AddressingVersion} is set to {@link Addressing10}.
+     *
+     * <p>The {@link AddressingVersion} is set to {@link Addressing10}.
      *
      * @param action the value of the action property to set
      */
@@ -82,12 +82,12 @@ public class ActionCallback implements WebServiceMessageCallback {
     }
 
     /**
-     * Create a new <code>ActionCallback</code> with the given <code>Action</code>.
-     * <p/>
-     * The <code>To</code> header of the outgoing message will reflect the {@link org.springframework.ws.transport.WebServiceConnection#getUri()
+     * Create a new {@code ActionCallback} with the given {@code Action}.
+     *
+     * <p>The {@code To} header of the outgoing message will reflect the {@link org.springframework.ws.transport.WebServiceConnection#getUri()
      * connection URI}.
-     * <p/>
-     * The {@link AddressingVersion} is set to {@link Addressing10}.
+     *
+     * <p>The {@link AddressingVersion} is set to {@link Addressing10}.
      *
      * @param action the value of the action property to set
      */
@@ -96,9 +96,9 @@ public class ActionCallback implements WebServiceMessageCallback {
     }
 
     /**
-     * Create a new <code>ActionCallback</code> with the given version and <code>Action</code>.
-     * <p/>
-     * The <code>To</code> header of the outgoing message will reflect the {@link org.springframework.ws.transport.WebServiceConnection#getUri()
+     * Create a new {@code ActionCallback} with the given version and {@code Action}.
+     *
+     * <p>The {@code To} header of the outgoing message will reflect the {@link org.springframework.ws.transport.WebServiceConnection#getUri()
      * connection URI}.
      *
      * @param action  the value of the action property to set
@@ -109,8 +109,8 @@ public class ActionCallback implements WebServiceMessageCallback {
     }
 
     /**
-     * Create a new <code>ActionCallback</code> with the given version, <code>Action</code>, and optional
-     * <code>To</code>.
+     * Create a new {@code ActionCallback} with the given version, {@code Action}, and optional
+     * {@code To}.
      *
      * @param action  the value of the action property
      * @param version the WS-Addressing version to use
@@ -135,8 +135,8 @@ public class ActionCallback implements WebServiceMessageCallback {
 
     /**
      * Returns the message id strategy used for creating WS-Addressing MessageIds.
-     * <p/>
-     * By default, the {@link UuidMessageIdStrategy} is used.
+     *
+     * <p>By default, the {@link UuidMessageIdStrategy} is used.
      */
     public MessageIdStrategy getMessageIdStrategy() {
         return messageIdStrategy;
@@ -144,8 +144,8 @@ public class ActionCallback implements WebServiceMessageCallback {
 
     /**
      * Sets the message id strategy used for creating WS-Addressing MessageIds.
-     * <p/>
-     * By default, the {@link UuidMessageIdStrategy} is used.
+     *
+     * <p>By default, the {@link UuidMessageIdStrategy} is used.
      */
     public void setMessageIdStrategy(MessageIdStrategy messageIdStrategy) {
         Assert.notNull(messageIdStrategy, "'messageIdStrategy' must not be null");
@@ -211,9 +211,9 @@ public class ActionCallback implements WebServiceMessageCallback {
 
 
     /**
-     * Returns the <code>Destination</code> for outgoing messages.
-     * <p/>
-     * Defaults to the {@link org.springframework.ws.transport.WebServiceConnection#getUri() connection URI} if no
+     * Returns the {@code Destination} for outgoing messages.
+     *
+     * <p>Defaults to the {@link org.springframework.ws.transport.WebServiceConnection#getUri() connection URI} if no
      * destination was set.
      */
     protected URI getTo() {

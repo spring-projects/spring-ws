@@ -20,8 +20,8 @@ import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.EndpointInvocationChain;
 
 /**
- * SOAP-specific subclass of the <code>EndpointInvocationChain</code>. Adds associated actors (SOAP 1.1) or roles (SOAP
- * 1.2). Used by the <code>SoapMessageDispatcher</code> to determine the MustUnderstand headers for particular
+ * SOAP-specific subclass of the {@code EndpointInvocationChain}. Adds associated actors (SOAP 1.1) or roles (SOAP
+ * 1.2). Used by the {@code SoapMessageDispatcher} to determine the MustUnderstand headers for particular
  * endpoint.
  *
  * @author Arjen Poutsma
@@ -36,7 +36,7 @@ public class SoapEndpointInvocationChain extends EndpointInvocationChain {
     private boolean isUltimateReceiver = true;
 
     /**
-     * Create new <code>SoapEndpointInvocationChain</code>.
+     * Create new {@code SoapEndpointInvocationChain}.
      *
      * @param endpoint the endpoint object to invoke
      */
@@ -45,7 +45,7 @@ public class SoapEndpointInvocationChain extends EndpointInvocationChain {
     }
 
     /**
-     * Create new <code>SoapEndpointInvocationChain</code>.
+     * Create new {@code SoapEndpointInvocationChain}.
      *
      * @param endpoint     the endpoint object to invoke
      * @param interceptors the array of interceptors to apply
@@ -55,7 +55,7 @@ public class SoapEndpointInvocationChain extends EndpointInvocationChain {
     }
 
     /**
-     * Create new <code>EndpointInvocationChain</code>.
+     * Create new {@code EndpointInvocationChain}.
      *
      * @param endpoint           the endpoint object to invoke
      * @param interceptors       the array of interceptors to apply
@@ -81,7 +81,7 @@ public class SoapEndpointInvocationChain extends EndpointInvocationChain {
         return actorsOrRoles;
     }
 
-    /** Indicates whether this chain fulfills the SOAP 1.2 Ultimate Receiver role. Default is <code>true</code>. */
+    /** Indicates whether this chain fulfills the SOAP 1.2 Ultimate Receiver role. Default is {@code true}. */
     public boolean isUltimateReceiver() {
         return isUltimateReceiver;
     }

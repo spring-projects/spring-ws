@@ -29,8 +29,8 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
  * Subclass of {@link MarshallingMethodEndpointAdapter} that supports {@link GenericMarshaller} and {@link
  * GenericUnmarshaller}. More specifically, this adapter is aware of the {@link Method#getGenericParameterTypes()} and
  * {@link Method#getGenericReturnType()}.
- * <p/>
- * Prefer to use this adapter rather than the plain {@link MarshallingMethodEndpointAdapter} in combination with Java 5
+ *
+ * <p>Prefer to use this adapter rather than the plain {@link MarshallingMethodEndpointAdapter} in combination with Java 5
  * marshallers, such as the {@link Jaxb2Marshaller}.
  *
  * @author Arjen Poutsma
@@ -43,7 +43,7 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
 public class GenericMarshallingMethodEndpointAdapter extends MarshallingMethodEndpointAdapter {
 
     /**
-     * Creates a new <code>GenericMarshallingMethodEndpointAdapter</code>. The {@link Marshaller} and {@link
+     * Creates a new {@code GenericMarshallingMethodEndpointAdapter}. The {@link Marshaller} and {@link
      * Unmarshaller} must be injected using properties.
      *
      * @see #setMarshaller(org.springframework.oxm.Marshaller)
@@ -53,15 +53,15 @@ public class GenericMarshallingMethodEndpointAdapter extends MarshallingMethodEn
     }
 
     /**
-     * Creates a new <code>GenericMarshallingMethodEndpointAdapter</code> with the given marshaller. If the given {@link
+     * Creates a new {@code GenericMarshallingMethodEndpointAdapter} with the given marshaller. If the given {@link
      * Marshaller} also implements the {@link Unmarshaller} interface, it is used for both marshalling and
      * unmarshalling. Otherwise, an exception is thrown.
-     * <p/>
-     * Note that all {@link Marshaller} implementations in Spring-WS also implement the {@link Unmarshaller} interface,
+     *
+     * <p>Note that all {@link Marshaller} implementations in Spring-WS also implement the {@link Unmarshaller} interface,
      * so that you can safely use this constructor.
      *
      * @param marshaller object used as marshaller and unmarshaller
-     * @throws IllegalArgumentException when <code>marshaller</code> does not implement the {@link Unmarshaller}
+     * @throws IllegalArgumentException when {@code marshaller} does not implement the {@link Unmarshaller}
      *                                  interface
      */
     public GenericMarshallingMethodEndpointAdapter(Marshaller marshaller) {
@@ -69,7 +69,7 @@ public class GenericMarshallingMethodEndpointAdapter extends MarshallingMethodEn
     }
 
     /**
-     * Creates a new <code>GenericMarshallingMethodEndpointAdapter</code> with the given marshaller and unmarshaller.
+     * Creates a new {@code GenericMarshallingMethodEndpointAdapter} with the given marshaller and unmarshaller.
      *
      * @param marshaller   the marshaller to use
      * @param unmarshaller the unmarshaller to use

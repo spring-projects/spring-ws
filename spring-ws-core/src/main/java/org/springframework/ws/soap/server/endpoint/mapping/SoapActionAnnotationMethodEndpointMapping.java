@@ -33,8 +33,8 @@ import org.springframework.ws.soap.server.endpoint.annotation.SoapAction;
 /**
  * Implementation of the {@link org.springframework.ws.server.EndpointMapping} interface that uses the {@link
  * SoapAction} annotation to map methods to the request SOAPAction header.
- * <p/>
- * Endpoints typically have the following form:
+ *
+ * <p>Endpoints typically have the following form:
  * <pre>
  * &#64;Endpoint
  * public class MyEndpoint{
@@ -73,7 +73,7 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
     }
 
     /**
-     * Creates a new <code>SoapEndpointInvocationChain</code> based on the given endpoint, and the set interceptors, and
+     * Creates a new {@code SoapEndpointInvocationChain} based on the given endpoint, and the set interceptors, and
      * actors/roles.
      *
      * @param endpoint     the endpoint

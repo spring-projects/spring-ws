@@ -26,8 +26,8 @@ import org.springframework.util.StringUtils;
 
 /**
  * Spring factory bean for an array of {@link KeyManager}s.
- * <p/>
- * Uses the {@link KeyManagerFactory} to create the {@code KeyManager}s.
+ *
+ * <p>Uses the {@link KeyManagerFactory} to create the {@code KeyManager}s.
  *
  * @author Stephen More
  * @author Arjen Poutsma

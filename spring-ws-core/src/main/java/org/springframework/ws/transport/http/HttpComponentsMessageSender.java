@@ -47,8 +47,8 @@ import org.springframework.ws.transport.WebServiceConnection;
 /**
  * {@code WebServiceMessageSender} implementation that uses <a href="http://hc.apache.org/httpcomponents-client">Apache
  * HttpClient</a> to execute POST requests.
- * <p/>
- * Allows to use a pre-configured HttpClient instance, potentially with authentication, HTTP connection pooling, etc.
+ *
+ * <p>Allows to use a pre-configured HttpClient instance, potentially with authentication, HTTP connection pooling, etc.
  * Authentication can also be set by injecting a {@link Credentials} instance (such as the {@link
  * UsernamePasswordCredentials}).
  *
@@ -111,7 +111,7 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
     }
 
     /**
-     * Returns the <code>HttpClient</code> used by this message sender.
+     * Returns the {@code HttpClient} used by this message sender.
      */
     public HttpClient getHttpClient() {
         return httpClient;
@@ -172,14 +172,14 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
     /**
      * Sets the maximum number of connections per host for the underlying HttpClient. The maximum number of connections
      * per host can be set in a form accepted by the {@code java.util.Properties} class, like as follows:
-     * <p/>
+     *
      * <pre>
      * https://www.example.com=1
      * http://www.example.com:8080=7
      * http://www.springframework.org=10
      * </pre>
-     * <p/>
-     * The host can be specified as a URI (with scheme and port).
+     *
+     * <p>The host can be specified as a URI (with scheme and port).
      *
      * @param maxConnectionsPerHost a properties object specifying the maximum number of connection
      * @see PoolingClientConnectionManager#setMaxPerRoute(HttpRoute, int)
@@ -206,9 +206,9 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
     }
 
     /**
-     * Sets the authentication scope to be used. Only used when the <code>credentials</code> property has been set.
-     * <p/>
-     * By default, the {@link AuthScope#ANY} is used.
+     * Sets the authentication scope to be used. Only used when the {@code credentials} property has been set.
+     *
+     * <p>By default, the {@link AuthScope#ANY} is used.
      *
      * @see #setCredentials(Credentials)
      */

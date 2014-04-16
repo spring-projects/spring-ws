@@ -29,11 +29,11 @@ import org.springframework.ws.transport.support.WebServiceMessageReceiverObjectS
 /**
  * Adapter to use the {@link WebServiceMessageReceiver} interface with the generic {@link
  * org.springframework.web.servlet.DispatcherServlet}. Requires a {@link org.springframework.ws.WebServiceMessageFactory}
- * which is used to convert the incoming <code>HttpServletRequest</code> into a <code>WebServiceMessage</code>, and
- * passes that context to the mapped <code>WebServiceMessageReceiver</code>. If a response is created, that is sent via
- * the <code>HttpServletResponse</code>.
- * <p/>
- * Note that the <code>MessageDispatcher</code> implements the <code>WebServiceMessageReceiver</code> interface,
+ * which is used to convert the incoming {@code HttpServletRequest} into a {@code WebServiceMessage}, and
+ * passes that context to the mapped {@code WebServiceMessageReceiver}. If a response is created, that is sent via
+ * the {@code HttpServletResponse}.
+ *
+ * <p>Note that the {@code MessageDispatcher} implements the {@code WebServiceMessageReceiver} interface,
  * enabling this adapter to function as a gateway to further message handling logic.
  *
  * @author Arjen Poutsma
@@ -78,8 +78,8 @@ public class WebServiceMessageReceiverHandlerAdapter extends WebServiceMessageRe
     /**
      * Template method that is invoked when the request method is not {@code POST}. Called from {@link
      * #handle(HttpServletRequest, HttpServletResponse, Object)}.
-     * <p/>
-     * Default implementation set the response status to 405: Method Not Allowed. Can be overridden in subclasses.
+     *
+     * <p>Default implementation set the response status to 405: Method Not Allowed. Can be overridden in subclasses.
      *
      * @param httpServletRequest  current HTTP request
      * @param httpServletResponse current HTTP response
@@ -94,8 +94,8 @@ public class WebServiceMessageReceiverHandlerAdapter extends WebServiceMessageRe
     /**
      * Template method that is invoked when parsing the request results in a {@link InvalidXmlException}. Called from
      * {@link #handle(HttpServletRequest, HttpServletResponse, Object)}.
-     * <p/>
-     * Default implementation set the response status to 400: Bad Request. Can be overridden in subclasses.
+     *
+     * <p>Default implementation set the response status to 400: Bad Request. Can be overridden in subclasses.
      *
      * @param httpServletRequest  current HTTP request
      * @param httpServletResponse current HTTP response

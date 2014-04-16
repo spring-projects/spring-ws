@@ -57,8 +57,8 @@ public class CommonsXsdSchema implements XsdSchema {
     /**
      * Create a new instance of the  {@code CommonsXsdSchema} class with the specified {@link XmlSchema} reference.
      *
-     * @param schema the Commons <code>XmlSchema</code> object; must not be <code>null</code>
-     * @throws IllegalArgumentException if the supplied <code>schema</code> is <code>null</code>
+     * @param schema the Commons {@code XmlSchema} object; must not be {@code null}
+     * @throws IllegalArgumentException if the supplied {@code schema} is {@code null}
      */
     protected CommonsXsdSchema(XmlSchema schema) {
         this(schema, null);
@@ -68,9 +68,9 @@ public class CommonsXsdSchema implements XsdSchema {
      * Create a new instance of the  {@code CommonsXsdSchema} class with the specified {@link XmlSchema} and {@link
      * XmlSchemaCollection} reference.
      *
-     * @param schema     the Commons <code>XmlSchema</code> object; must not be <code>null</code>
-     * @param collection the Commons <code>XmlSchemaCollection</code> object; can be <code>null</code>
-     * @throws IllegalArgumentException if the supplied <code>schema</code> is <code>null</code>
+     * @param schema     the Commons {@code XmlSchema} object; must not be {@code null}
+     * @param collection the Commons {@code XmlSchemaCollection} object; can be {@code null}
+     * @throws IllegalArgumentException if the supplied {@code schema} is {@code null}
      */
     protected CommonsXsdSchema(XmlSchema schema, XmlSchemaCollection collection) {
         Assert.notNull(schema, "'schema' must not be null");
@@ -128,7 +128,7 @@ public class CommonsXsdSchema implements XsdSchema {
 	    }
     }
 
-	    /** Returns the wrapped Commons <code>XmlSchema</code> object. */
+	    /** Returns the wrapped Commons {@code XmlSchema} object. */
     public XmlSchema getSchema() {
         return schema;
     }

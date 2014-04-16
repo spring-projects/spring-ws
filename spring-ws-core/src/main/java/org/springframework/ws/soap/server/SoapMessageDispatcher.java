@@ -56,27 +56,27 @@ public class SoapMessageDispatcher extends MessageDispatcher {
     private Locale mustUnderstandFaultStringLocale = Locale.ENGLISH;
 
     /**
-     * Sets the message used for <code>MustUnderstand</code> fault. Default to {@link
+     * Sets the message used for {@code MustUnderstand} fault. Default to {@link
      * #DEFAULT_MUST_UNDERSTAND_FAULT_STRING}.
      */
     public void setMustUnderstandFaultString(String mustUnderstandFaultString) {
         this.mustUnderstandFaultString = mustUnderstandFaultString;
     }
 
-    /** Sets the locale of the message used for <code>MustUnderstand</code> fault. Default to {@link Locale#ENGLISH}. */
+    /** Sets the locale of the message used for {@code MustUnderstand} fault. Default to {@link Locale#ENGLISH}. */
     public void setMustUnderstandFaultStringLocale(Locale mustUnderstandFaultStringLocale) {
         this.mustUnderstandFaultStringLocale = mustUnderstandFaultStringLocale;
     }
 
     /**
      * Process the headers targeted at the actor or role fullfilled by the endpoint. Also processed the
-     * <code>MustUnderstand</code> headers in the incoming SOAP request message. Iterates over all SOAP headers which
+     * {@code MustUnderstand} headers in the incoming SOAP request message. Iterates over all SOAP headers which
      * should be understood for this role, and determines whether these are supported. Generates a SOAP MustUnderstand
      * fault if a header is not understood.
      *
      * @param mappedEndpoint the mapped EndpointInvocationChain
      * @param messageContext the message context
-     * @return <code>true</code> if all necessary headers are understood; <code>false</code> otherwise
+     * @return {@code true} if all necessary headers are understood; {@code false} otherwise
      * @see SoapEndpointInvocationChain#getActorsOrRoles()
      * @see org.springframework.ws.soap.SoapHeader#examineMustUnderstandHeaderElements(String)
      */
@@ -134,9 +134,9 @@ public class SoapMessageDispatcher extends MessageDispatcher {
     }
 
     /**
-     * Handles the request for a single SOAP actor/role. Iterates over all <code>MustUnderstand</code> headers for a
+     * Handles the request for a single SOAP actor/role. Iterates over all {@code MustUnderstand} headers for a
      * specific SOAP 1.1 actor or SOAP 1.2 role, and determines whether these are understood by any of the registered
-     * <code>SoapEndpointInterceptor</code>. If they are, returns <code>true</code>. If they are not, a SOAP fault is
+     * {@code SoapEndpointInterceptor}. If they are, returns {@code true}. If they are not, a SOAP fault is
      * created, and false is returned.
      *
      * @see SoapEndpointInterceptor#understands(org.springframework.ws.soap.SoapHeaderElement)

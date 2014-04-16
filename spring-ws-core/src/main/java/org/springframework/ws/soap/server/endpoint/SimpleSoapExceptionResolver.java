@@ -29,8 +29,8 @@ import org.springframework.ws.soap.SoapMessage;
 /**
  * Simple, SOAP-specific {@link org.springframework.ws.server.EndpointExceptionResolver EndpointExceptionResolver}
  * implementation that stores the exception's message as the fault string.
- * <p/>
- * The fault code is always set to a Server (in SOAP 1.1) or Receiver (SOAP 1.2).
+ *
+ * <p>The fault code is always set to a Server (in SOAP 1.1) or Receiver (SOAP 1.2).
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -41,8 +41,8 @@ public class SimpleSoapExceptionResolver extends AbstractEndpointExceptionResolv
 
     /**
      * Returns the locale for the faultstring or reason of the SOAP Fault.
-     * <p/>
-     * Defaults to {@link Locale#ENGLISH}.
+     *
+     * <p>Defaults to {@link Locale#ENGLISH}.
      */
     public Locale getLocale() {
         return locale;
@@ -50,8 +50,8 @@ public class SimpleSoapExceptionResolver extends AbstractEndpointExceptionResolv
 
     /**
      * Sets the locale for the faultstring or reason of the SOAP Fault.
-     * <p/>
-     * Defaults to {@link Locale#ENGLISH}.
+     *
+     * <p>Defaults to {@link Locale#ENGLISH}.
      */
     public void setLocale(Locale locale) {
         Assert.notNull(locale, "locale must not be null");
@@ -75,7 +75,7 @@ public class SimpleSoapExceptionResolver extends AbstractEndpointExceptionResolv
      * {@link #resolveExceptionInternal(MessageContext,Object,Exception)}.
      *
      * @param messageContext current message context
-     * @param endpoint       the executed endpoint, or <code>null</code> if none chosen at the time of the exception
+     * @param endpoint       the executed endpoint, or {@code null} if none chosen at the time of the exception
      * @param ex             the exception that got thrown during endpoint execution
      * @param fault          the SOAP fault to be customized.
      */

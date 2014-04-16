@@ -35,13 +35,13 @@ public abstract class KeyStoreUtils {
 
     /**
      * Loads the key store indicated by system properties. This method tries to load a key store by consulting the
-     * following system properties:<code>javax.net.ssl.keyStore</code>, <code>javax.net.ssl.keyStorePassword</code>, and
-     * <code>javax.net.ssl.keyStoreType</code>.
-     * <p/>
-     * If these properties specify a file with an appropriate password, the factory uses this file for the key store. If
+     * following system properties:{@code javax.net.ssl.keyStore}, {@code javax.net.ssl.keyStorePassword}, and
+     * {@code javax.net.ssl.keyStoreType}.
+     *
+     * <p>If these properties specify a file with an appropriate password, the factory uses this file for the key store. If
      * that file does not exist, then a default, empty keystore is created.
-     * <p/>
-     * This behavior corresponds to the standard J2SDK behavior for SSL key stores.
+     *
+     * <p>This behavior corresponds to the standard J2SDK behavior for SSL key stores.
      *
      * @see <a href="http://java.sun.com/j2se/1.4.2/docs/guide/security/jsse/JSSERefGuide.html#X509KeyManager">The
      *      standard J2SDK SSL key store mechanism</a>
@@ -73,17 +73,17 @@ public abstract class KeyStoreUtils {
 
     /**
      * Loads a default trust store. This method uses the following algorithm: <ol> <li> If the system property
-     * <code>javax.net.ssl.trustStore</code> is defined, its value is loaded. If the
-     * <code>javax.net.ssl.trustStorePassword</code> system property is also defined, its value is used as a password.
-     * If the <code>javax.net.ssl.trustStoreType</code> system property is defined, its value is used as a key store
+     * {@code javax.net.ssl.trustStore} is defined, its value is loaded. If the
+     * {@code javax.net.ssl.trustStorePassword} system property is also defined, its value is used as a password.
+     * If the {@code javax.net.ssl.trustStoreType} system property is defined, its value is used as a key store
      * type.
-     * <p/>
-     * If <code>javax.net.ssl.trustStore</code> is defined but the specified file does not exist, then a default, empty
-     * trust store is created. </li> <li> If the <code>javax.net.ssl.trustStore</code> system property was not
-     * specified, but if the file <code>$JAVA_HOME/lib/security/jssecacerts</code> exists, that file is used. </li>
-     * Otherwise, <li>If the file <code>$JAVA_HOME/lib/security/cacerts</code> exists, that file is used. </ol>
-     * <p/>
-     * This behavior corresponds to the standard J2SDK behavior for SSL trust stores.
+     *
+     * <p>If {@code javax.net.ssl.trustStore} is defined but the specified file does not exist, then a default, empty
+     * trust store is created. </li> <li> If the {@code javax.net.ssl.trustStore} system property was not
+     * specified, but if the file {@code $JAVA_HOME/lib/security/jssecacerts} exists, that file is used. </li>
+     * Otherwise, <li>If the file {@code $JAVA_HOME/lib/security/cacerts} exists, that file is used. </ol>
+     *
+     * <p>This behavior corresponds to the standard J2SDK behavior for SSL trust stores.
      *
      * @see <a href="http://java.sun.com/j2se/1.4.2/docs/guide/security/jsse/JSSERefGuide.html#X509TrustManager">The
      *      standard J2SDK SSL trust store mechanism</a>

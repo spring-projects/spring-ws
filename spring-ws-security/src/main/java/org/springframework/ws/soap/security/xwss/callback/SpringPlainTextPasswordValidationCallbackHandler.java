@@ -33,15 +33,15 @@ import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 
 /**
- * Callback handler that validates a certificate uses an Spring Security <code>AuthenticationManager</code>. Logic based
- * on Spring Security's <code>BasicProcessingFilter</code>.
- * <p/>
- * This handler requires an Spring Security <code>AuthenticationManager</code> to operate. It can be set using the
- * <code>authenticationManager</code> property. An Spring Security <code>UsernamePasswordAuthenticationToken</code> is
+ * Callback handler that validates a certificate uses an Spring Security {@code AuthenticationManager}. Logic based
+ * on Spring Security's {@code BasicProcessingFilter}.
+ *
+ * <p>This handler requires an Spring Security {@code AuthenticationManager} to operate. It can be set using the
+ * {@code authenticationManager} property. An Spring Security {@code UsernamePasswordAuthenticationToken} is
  * created with the username as principal and password as credentials.
- * <p/>
- * This class only handles <code>PasswordValidationCallback</code>s that contain a
- * <code>PlainTextPasswordRequest</code>, and throws an <code>UnsupportedCallbackException</code> for others.
+ *
+ * <p>This class only handles {@code PasswordValidationCallback}s that contain a
+ * {@code PlainTextPasswordRequest}, and throws an {@code UnsupportedCallbackException} for others.
  *
  * @author Arjen Poutsma
  * @see org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -71,8 +71,8 @@ public class SpringPlainTextPasswordValidationCallbackHandler extends AbstractCa
     }
 
     /**
-     * Handles <code>PasswordValidationCallback</code>s that contain a <code>PlainTextPasswordRequest</code>, and throws
-     * an <code>UnsupportedCallbackException</code> for others.
+     * Handles {@code PasswordValidationCallback}s that contain a {@code PlainTextPasswordRequest}, and throws
+     * an {@code UnsupportedCallbackException} for others.
      *
      * @throws javax.security.auth.callback.UnsupportedCallbackException
      *          when the callback is not supported

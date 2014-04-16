@@ -58,8 +58,8 @@ public class XmppConnectionFactoryBean implements FactoryBean<XMPPConnection>, I
 
     /**
      * Sets the the server port to connect to.
-     * <p/>
-     * Defaults to {@code 5222}.
+     *
+     * <p>Defaults to {@code 5222}.
      */
     public void setPort(int port) {
         Assert.isTrue(port > 0, "'port' must be larger than 0");

@@ -30,7 +30,7 @@ import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
 /**
  * Default callback handler that handles cryptographic callback. This handler determines the exact callback passed, and
- * calls a template method for it. By default, all template methods throw an <code>UnsupportedCallbackException</code>,
+ * calls a template method for it. By default, all template methods throw an {@code UnsupportedCallbackException},
  * so you only need to override those you need.
  *
  * @author Arjen Poutsma
@@ -66,8 +66,8 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     //
 
     /**
-     * Template method that handles <code>CertificateValidationCallback</code>s. Called from
-     * <code>handleInternal()</code>. Default implementation throws an <code>UnsupportedCallbackException</code>.
+     * Template method that handles {@code CertificateValidationCallback}s. Called from
+     * {@code handleInternal()}. Default implementation throws an {@code UnsupportedCallbackException}.
      */
     protected void handleCertificateValidationCallback(CertificateValidationCallback callback)
             throws IOException, UnsupportedCallbackException {
@@ -79,7 +79,7 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     //
 
     /**
-     * Method that handles <code>DecryptionKeyCallback</code>s. Called from <code>handleInternal()</code>. Default
+     * Method that handles {@code DecryptionKeyCallback}s. Called from {@code handleInternal()}. Default
      * implementation delegates to specific handling methods.
      *
      * @see #handlePrivateKeyRequest(com.sun.xml.wss.impl.callback.DecryptionKeyCallback,
@@ -101,8 +101,8 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     }
 
     /**
-     * Method that handles <code>DecryptionKeyCallback</code>s with <code>PrivateKeyRequest</code> . Called from
-     * <code>handleDecryptionKeyCallback()</code>. Default implementation delegates to specific handling methods.
+     * Method that handles {@code DecryptionKeyCallback}s with {@code PrivateKeyRequest} . Called from
+     * {@code handleDecryptionKeyCallback()}. Default implementation delegates to specific handling methods.
      *
      * @see #handlePublicKeyBasedPrivKeyCertRequest(com.sun.xml.wss.impl.callback.SignatureKeyCallback,
      *      com.sun.xml.wss.impl.callback.SignatureKeyCallback.PublicKeyBasedPrivKeyCertRequest)
@@ -135,9 +135,9 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     }
 
     /**
-     * Template method that handles <code>DecryptionKeyCallback</code>s with <code>PublicKeyBasedPrivKeyRequest</code>s.
-     * Called from <code>handlePrivateKeyRequest()</code>. Default implementation throws an
-     * <code>UnsupportedCallbackException</code>.
+     * Template method that handles {@code DecryptionKeyCallback}s with {@code PublicKeyBasedPrivKeyRequest}s.
+     * Called from {@code handlePrivateKeyRequest()}. Default implementation throws an
+     * {@code UnsupportedCallbackException}.
      */
     protected void handlePublicKeyBasedPrivKeyRequest(DecryptionKeyCallback callback,
                                                       DecryptionKeyCallback.PublicKeyBasedPrivKeyRequest request)
@@ -146,9 +146,9 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     }
 
     /**
-     * Template method that handles <code>DecryptionKeyCallback</code>s with <code>X509CertificateBasedRequest</code>s.
-     * Called from <code>handlePrivateKeyRequest()</code>. Default implementation throws an
-     * <code>UnsupportedCallbackException</code>.
+     * Template method that handles {@code DecryptionKeyCallback}s with {@code X509CertificateBasedRequest}s.
+     * Called from {@code handlePrivateKeyRequest()}. Default implementation throws an
+     * {@code UnsupportedCallbackException}.
      */
     protected void handleX509CertificateBasedRequest(DecryptionKeyCallback callback,
                                                      DecryptionKeyCallback.X509CertificateBasedRequest request)
@@ -157,9 +157,9 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     }
 
     /**
-     * Template method that handles <code>DecryptionKeyCallback</code>s with <code>X509IssuerSerialBasedRequest</code>s.
-     * Called from <code>handlePrivateKeyRequest()</code>. Default implementation throws an
-     * <code>UnsupportedCallbackException</code>.
+     * Template method that handles {@code DecryptionKeyCallback}s with {@code X509IssuerSerialBasedRequest}s.
+     * Called from {@code handlePrivateKeyRequest()}. Default implementation throws an
+     * {@code UnsupportedCallbackException}.
      */
     protected void handleX509IssuerSerialBasedRequest(DecryptionKeyCallback callback,
                                                       DecryptionKeyCallback.X509IssuerSerialBasedRequest request)
@@ -168,9 +168,9 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     }
 
     /**
-     * Template method that handles <code>DecryptionKeyCallback</code>s with <code>X509SubjectKeyIdentifierBasedRequest</code>s.
-     * Called from <code>handlePrivateKeyRequest()</code>. Default implementation throws an
-     * <code>UnsupportedCallbackException</code>.
+     * Template method that handles {@code DecryptionKeyCallback}s with {@code X509SubjectKeyIdentifierBasedRequest}s.
+     * Called from {@code handlePrivateKeyRequest()}. Default implementation throws an
+     * {@code UnsupportedCallbackException}.
      */
     protected void handleX509SubjectKeyIdentifierBasedRequest(DecryptionKeyCallback callback,
                                                               DecryptionKeyCallback.X509SubjectKeyIdentifierBasedRequest request)
@@ -179,8 +179,8 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     }
 
     /**
-     * Method that handles <code>DecryptionKeyCallback</code>s with <code>SymmetricKeyRequest</code> . Called from
-     * <code>handleDecryptionKeyCallback()</code>. Default implementation delegates to specific handling methods.
+     * Method that handles {@code DecryptionKeyCallback}s with {@code SymmetricKeyRequest} . Called from
+     * {@code handleDecryptionKeyCallback()}. Default implementation delegates to specific handling methods.
      *
      * @see #handleAliasSymmetricKeyRequest(com.sun.xml.wss.impl.callback.DecryptionKeyCallback,
      *      com.sun.xml.wss.impl.callback.DecryptionKeyCallback.AliasSymmetricKeyRequest)
@@ -199,9 +199,9 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     }
 
     /**
-     * Template method that handles <code>DecryptionKeyCallback</code>s with <code>AliasSymmetricKeyRequest</code>s.
-     * Called from <code>handleSymmetricKeyRequest()</code>. Default implementation throws an
-     * <code>UnsupportedCallbackException</code>.
+     * Template method that handles {@code DecryptionKeyCallback}s with {@code AliasSymmetricKeyRequest}s.
+     * Called from {@code handleSymmetricKeyRequest()}. Default implementation throws an
+     * {@code UnsupportedCallbackException}.
      */
     protected void handleAliasSymmetricKeyRequest(DecryptionKeyCallback callback,
                                                   DecryptionKeyCallback.AliasSymmetricKeyRequest request)
@@ -214,7 +214,7 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     //
 
     /**
-     * Method that handles <code>EncryptionKeyCallback</code>s. Called from <code>handleInternal()</code>. Default
+     * Method that handles {@code EncryptionKeyCallback}s. Called from {@code handleInternal()}. Default
      * implementation delegates to specific handling methods.
      *
      * @see #handleSymmetricKeyRequest(com.sun.xml.wss.impl.callback.EncryptionKeyCallback,
@@ -238,8 +238,8 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     }
 
     /**
-     * Method that handles <code>EncryptionKeyCallback</code>s with <code>SymmetricKeyRequest</code> . Called from
-     * <code>handleEncryptionKeyCallback()</code>. Default implementation delegates to specific handling methods.
+     * Method that handles {@code EncryptionKeyCallback}s with {@code SymmetricKeyRequest} . Called from
+     * {@code handleEncryptionKeyCallback()}. Default implementation delegates to specific handling methods.
      *
      * @see #handleAliasSymmetricKeyRequest(com.sun.xml.wss.impl.callback.EncryptionKeyCallback,
      *      com.sun.xml.wss.impl.callback.EncryptionKeyCallback.AliasSymmetricKeyRequest)
@@ -253,9 +253,9 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     }
 
     /**
-     * Template method that handles <code>EncryptionKeyCallback</code>s with <code>AliasSymmetricKeyRequest</code>s.
-     * Called from <code>handleSymmetricKeyRequest()</code>. Default implementation throws an
-     * <code>UnsupportedCallbackException</code>.
+     * Template method that handles {@code EncryptionKeyCallback}s with {@code AliasSymmetricKeyRequest}s.
+     * Called from {@code handleSymmetricKeyRequest()}. Default implementation throws an
+     * {@code UnsupportedCallbackException}.
      */
     protected void handleAliasSymmetricKeyRequest(EncryptionKeyCallback callback,
                                                   EncryptionKeyCallback.AliasSymmetricKeyRequest request)
@@ -264,8 +264,8 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     }
 
     /**
-     * Method that handles <code>EncryptionKeyCallback</code>s with <code>X509CertificateRequest</code> . Called from
-     * <code>handleEncryptionKeyCallback()</code>. Default implementation delegates to specific handling methods.
+     * Method that handles {@code EncryptionKeyCallback}s with {@code X509CertificateRequest} . Called from
+     * {@code handleEncryptionKeyCallback()}. Default implementation delegates to specific handling methods.
      *
      * @see #handleAliasX509CertificateRequest(com.sun.xml.wss.impl.callback.EncryptionKeyCallback,
      *      com.sun.xml.wss.impl.callback.EncryptionKeyCallback.AliasX509CertificateRequest)
@@ -293,9 +293,9 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     }
 
     /**
-     * Template method that handles <code>EncryptionKeyCallback</code>s with <code>AliasX509CertificateRequest</code>s.
-     * Called from <code>handleX509CertificateRequest()</code>. Default implementation throws an
-     * <code>UnsupportedCallbackException</code>.
+     * Template method that handles {@code EncryptionKeyCallback}s with {@code AliasX509CertificateRequest}s.
+     * Called from {@code handleX509CertificateRequest()}. Default implementation throws an
+     * {@code UnsupportedCallbackException}.
      */
     protected void handleAliasX509CertificateRequest(EncryptionKeyCallback callback,
                                                      EncryptionKeyCallback.AliasX509CertificateRequest request)
@@ -304,9 +304,9 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     }
 
     /**
-     * Template method that handles <code>EncryptionKeyCallback</code>s with <code>DefaultX509CertificateRequest</code>s.
-     * Called from <code>handleX509CertificateRequest()</code>. Default implementation throws an
-     * <code>UnsupportedCallbackException</code>.
+     * Template method that handles {@code EncryptionKeyCallback}s with {@code DefaultX509CertificateRequest}s.
+     * Called from {@code handleX509CertificateRequest()}. Default implementation throws an
+     * {@code UnsupportedCallbackException}.
      */
     protected void handleDefaultX509CertificateRequest(EncryptionKeyCallback callback,
                                                        EncryptionKeyCallback.DefaultX509CertificateRequest request)
@@ -315,9 +315,9 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     }
 
     /**
-     * Template method that handles <code>EncryptionKeyCallback</code>s with <code>PublicKeyBasedRequest</code>s. Called
-     * from <code>handleX509CertificateRequest()</code>. Default implementation throws an
-     * <code>UnsupportedCallbackException</code>.
+     * Template method that handles {@code EncryptionKeyCallback}s with {@code PublicKeyBasedRequest}s. Called
+     * from {@code handleX509CertificateRequest()}. Default implementation throws an
+     * {@code UnsupportedCallbackException}.
      */
     protected void handlePublicKeyBasedRequest(EncryptionKeyCallback callback,
                                                EncryptionKeyCallback.PublicKeyBasedRequest request)
@@ -330,7 +330,7 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     //
 
     /**
-     * Method that handles <code>SignatureKeyCallback</code>s. Called from <code>handleInternal()</code>. Default
+     * Method that handles {@code SignatureKeyCallback}s. Called from {@code handleInternal()}. Default
      * implementation delegates to specific handling methods.
      *
      * @see #handlePrivKeyCertRequest(com.sun.xml.wss.impl.callback.SignatureKeyCallback,
@@ -347,8 +347,8 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     }
 
     /**
-     * Method that handles <code>SignatureKeyCallback</code>s with <code>PrivKeyCertRequest</code>s. Called from
-     * <code>handleSignatureKeyCallback()</code>. Default implementation delegates to specific handling methods.
+     * Method that handles {@code SignatureKeyCallback}s with {@code PrivKeyCertRequest}s. Called from
+     * {@code handleSignatureKeyCallback()}. Default implementation delegates to specific handling methods.
      *
      * @see #handleDefaultPrivKeyCertRequest(com.sun.xml.wss.impl.callback.SignatureKeyCallback,
      *      com.sun.xml.wss.impl.callback.SignatureKeyCallback.DefaultPrivKeyCertRequest)
@@ -375,9 +375,9 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     }
 
     /**
-     * Template method that handles <code>SignatureKeyCallback</code>s with <code>DefaultPrivKeyCertRequest</code>s.
-     * Called from <code>handlePrivKeyCertRequest()</code>. Default implementation throws an
-     * <code>UnsupportedCallbackException</code>.
+     * Template method that handles {@code SignatureKeyCallback}s with {@code DefaultPrivKeyCertRequest}s.
+     * Called from {@code handlePrivKeyCertRequest()}. Default implementation throws an
+     * {@code UnsupportedCallbackException}.
      */
     protected void handleDefaultPrivKeyCertRequest(SignatureKeyCallback callback,
                                                    SignatureKeyCallback.DefaultPrivKeyCertRequest request)
@@ -386,9 +386,9 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     }
 
     /**
-     * Template method that handles <code>SignatureKeyCallback</code>s with <code>AliasPrivKeyCertRequest</code>s.
-     * Called from <code>handlePrivKeyCertRequest()</code>. Default implementation throws an
-     * <code>UnsupportedCallbackException</code>.
+     * Template method that handles {@code SignatureKeyCallback}s with {@code AliasPrivKeyCertRequest}s.
+     * Called from {@code handlePrivKeyCertRequest()}. Default implementation throws an
+     * {@code UnsupportedCallbackException}.
      */
     protected void handleAliasPrivKeyCertRequest(SignatureKeyCallback callback,
                                                  SignatureKeyCallback.AliasPrivKeyCertRequest request)
@@ -397,9 +397,9 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     }
 
     /**
-     * Template method that handles <code>SignatureKeyCallback</code>s with <code>PublicKeyBasedPrivKeyCertRequest</code>s.
-     * Called from <code>handlePrivKeyCertRequest()</code>. Default implementation throws an
-     * <code>UnsupportedCallbackException</code>.
+     * Template method that handles {@code SignatureKeyCallback}s with {@code PublicKeyBasedPrivKeyCertRequest}s.
+     * Called from {@code handlePrivKeyCertRequest()}. Default implementation throws an
+     * {@code UnsupportedCallbackException}.
      */
     protected void handlePublicKeyBasedPrivKeyCertRequest(SignatureKeyCallback callback,
                                                           SignatureKeyCallback.PublicKeyBasedPrivKeyCertRequest request)
@@ -412,7 +412,7 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     //
 
     /**
-     * Method that handles <code>SignatureVerificationKeyCallback</code>s. Called from <code>handleInternal()</code>.
+     * Method that handles {@code SignatureVerificationKeyCallback}s. Called from {@code handleInternal()}.
      * Default implementation delegates to specific handling methods.
      *
      * @see #handleX509CertificateRequest(com.sun.xml.wss.impl.callback.SignatureVerificationKeyCallback,
@@ -430,8 +430,8 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     }
 
     /**
-     * Method that handles <code>SignatureVerificationKeyCallback</code>s with <code>X509CertificateRequest</code>s.
-     * Called from <code>handleSignatureVerificationKeyCallback()</code>. Default implementation delegates to specific
+     * Method that handles {@code SignatureVerificationKeyCallback}s with {@code X509CertificateRequest}s.
+     * Called from {@code handleSignatureVerificationKeyCallback()}. Default implementation delegates to specific
      * handling methods.
      *
      * @see #handlePublicKeyBasedRequest(com.sun.xml.wss.impl.callback.SignatureVerificationKeyCallback,
@@ -461,9 +461,9 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     }
 
     /**
-     * Template method that handles <code>SignatureKeyCallback</code>s with <code>PublicKeyBasedPrivKeyCertRequest</code>s.
-     * Called from <code>handlePrivKeyCertRequest()</code>. Default implementation throws an
-     * <code>UnsupportedCallbackException</code>.
+     * Template method that handles {@code SignatureKeyCallback}s with {@code PublicKeyBasedPrivKeyCertRequest}s.
+     * Called from {@code handlePrivKeyCertRequest()}. Default implementation throws an
+     * {@code UnsupportedCallbackException}.
      */
     protected void handleX509SubjectKeyIdentifierBasedRequest(SignatureVerificationKeyCallback callback,
                                                               SignatureVerificationKeyCallback.X509SubjectKeyIdentifierBasedRequest request)
@@ -472,9 +472,9 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     }
 
     /**
-     * Template method that handles <code>SignatureKeyCallback</code>s with <code>X509IssuerSerialBasedRequest</code>s.
-     * Called from <code>handlePrivKeyCertRequest()</code>. Default implementation throws an
-     * <code>UnsupportedCallbackException</code>.
+     * Template method that handles {@code SignatureKeyCallback}s with {@code X509IssuerSerialBasedRequest}s.
+     * Called from {@code handlePrivKeyCertRequest()}. Default implementation throws an
+     * {@code UnsupportedCallbackException}.
      */
     protected void handleX509IssuerSerialBasedRequest(SignatureVerificationKeyCallback callback,
                                                       SignatureVerificationKeyCallback.X509IssuerSerialBasedRequest request)
@@ -483,9 +483,9 @@ public class CryptographyCallbackHandler extends AbstractCallbackHandler {
     }
 
     /**
-     * Template method that handles <code>SignatureKeyCallback</code>s with <code>PublicKeyBasedRequest</code>s. Called
-     * from <code>handlePrivKeyCertRequest()</code>. Default implementation throws an
-     * <code>UnsupportedCallbackException</code>.
+     * Template method that handles {@code SignatureKeyCallback}s with {@code PublicKeyBasedRequest}s. Called
+     * from {@code handlePrivKeyCertRequest()}. Default implementation throws an
+     * {@code UnsupportedCallbackException}.
      */
     protected void handlePublicKeyBasedRequest(SignatureVerificationKeyCallback callback,
                                                SignatureVerificationKeyCallback.PublicKeyBasedRequest request)

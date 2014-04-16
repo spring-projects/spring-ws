@@ -31,11 +31,11 @@ import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
 /**
- * Simple callback handler that validates passwords agains a in-memory <code>Properties</code> object. Password
+ * Simple callback handler that validates passwords agains a in-memory {@code Properties} object. Password
  * validation is done on a case-sensitive basis.
- * <p/>
- * This class only handles <code>PasswordValidationCallback</code>s, and throws an
- * <code>UnsupportedCallbackException</code> for others
+ *
+ * <p>This class only handles {@code PasswordValidationCallback}s, and throws an
+ * {@code UnsupportedCallbackException} for others
  *
  * @author Arjen Poutsma
  * @see #setUsers(java.util.Properties)

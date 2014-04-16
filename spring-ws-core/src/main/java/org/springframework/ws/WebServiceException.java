@@ -27,7 +27,7 @@ import org.springframework.core.NestedRuntimeException;
 public abstract class WebServiceException extends NestedRuntimeException {
 
     /**
-     * Create a new instance of the <code>WebServiceException</code> class.
+     * Create a new instance of the {@code WebServiceException} class.
      *
      * @param msg the detail message
      */
@@ -36,7 +36,7 @@ public abstract class WebServiceException extends NestedRuntimeException {
     }
 
     /**
-     * Create a new instance of the <code>WebServiceException</code> class.
+     * Create a new instance of the {@code WebServiceException} class.
      *
      * @param msg the detail message
      * @param ex  the root {@link Throwable exception}

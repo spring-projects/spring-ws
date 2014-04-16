@@ -22,8 +22,8 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
 /**
- * Represents a chain of <code>CallbackHandler</code>s. For each callback, each of the handlers is called in term. If a
- * handler throws a <code>UnsupportedCallbackException</code>, the next handler is tried.
+ * Represents a chain of {@code CallbackHandler}s. For each callback, each of the handlers is called in term. If a
+ * handler throws a {@code UnsupportedCallbackException}, the next handler is tried.
  *
  * @author Arjen Poutsma
  * @since 1.5.0

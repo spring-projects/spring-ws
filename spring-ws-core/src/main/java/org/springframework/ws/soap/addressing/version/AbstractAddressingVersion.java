@@ -337,57 +337,57 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
      * Message addressing properties
      */
 
-    /** Returns the qualified name of the <code>To</code> addressing header. */
+    /** Returns the qualified name of the {@code To} addressing header. */
     protected QName getToName() {
         return QNameUtils.createQName(getNamespaceUri(), "To", getNamespacePrefix());
     }
 
-    /** Returns the qualified name of the <code>From</code> addressing header. */
+    /** Returns the qualified name of the {@code From} addressing header. */
     protected QName getFromName() {
         return QNameUtils.createQName(getNamespaceUri(), "From", getNamespacePrefix());
     }
 
-    /** Returns the qualified name of the <code>ReplyTo</code> addressing header. */
+    /** Returns the qualified name of the {@code ReplyTo} addressing header. */
     protected QName getReplyToName() {
         return QNameUtils.createQName(getNamespaceUri(), "ReplyTo", getNamespacePrefix());
     }
 
-    /** Returns the qualified name of the <code>FaultTo</code> addressing header. */
+    /** Returns the qualified name of the {@code FaultTo} addressing header. */
     protected QName getFaultToName() {
         return QNameUtils.createQName(getNamespaceUri(), "FaultTo", getNamespacePrefix());
     }
 
-    /** Returns the qualified name of the <code>Action</code> addressing header. */
+    /** Returns the qualified name of the {@code Action} addressing header. */
     protected QName getActionName() {
         return QNameUtils.createQName(getNamespaceUri(), "Action", getNamespacePrefix());
     }
 
-    /** Returns the qualified name of the <code>MessageID</code> addressing header. */
+    /** Returns the qualified name of the {@code MessageID} addressing header. */
     protected QName getMessageIdName() {
         return QNameUtils.createQName(getNamespaceUri(), "MessageID", getNamespacePrefix());
     }
 
-    /** Returns the qualified name of the <code>RelatesTo</code> addressing header. */
+    /** Returns the qualified name of the {@code RelatesTo} addressing header. */
     protected QName getRelatesToName() {
         return QNameUtils.createQName(getNamespaceUri(), "RelatesTo", getNamespacePrefix());
     }
 
-    /** Returns the qualified name of the <code>RelatesTo</code> addressing header. */
+    /** Returns the qualified name of the {@code RelatesTo} addressing header. */
     protected QName getRelationshipTypeName() {
         return new QName("RelationshipType");
     }
 
     /**
-     * Returns the qualified name of the <code>ReferenceProperties</code> in the endpoint reference. Returns
-     * <code>null</code> when reference properties are not supported by this version of the spec.
+     * Returns the qualified name of the {@code ReferenceProperties} in the endpoint reference. Returns
+     * {@code null} when reference properties are not supported by this version of the spec.
      */
     protected QName getReferencePropertiesName() {
         return QNameUtils.createQName(getNamespaceUri(), "ReferenceProperties", getNamespacePrefix());
     }
 
     /**
-     * Returns the qualified name of the <code>ReferenceParameters</code> in the endpoint reference. Returns
-     * <code>null</code> when reference parameters are not supported by this version of the spec.
+     * Returns the qualified name of the {@code ReferenceParameters} in the endpoint reference. Returns
+     * {@code null} when reference parameters are not supported by this version of the spec.
      */
     protected QName getReferenceParametersName() {
         return QNameUtils.createQName(getNamespaceUri(), "ReferenceParameters", getNamespacePrefix());
@@ -397,7 +397,7 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
      * Endpoint Reference
      */
 
-    /** The qualified name of the <code>Address</code> in <code>EndpointReference</code>. */
+    /** The qualified name of the {@code Address} in {@code EndpointReference}. */
     protected QName getAddressName() {
         return QNameUtils.createQName(getNamespaceUri(), "Address", getNamespacePrefix());
     }
@@ -415,7 +415,7 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
     /** Returns the anonymous URI. */
     protected abstract URI getAnonymous();
 
-    /** Returns the none URI, or <code>null</code> if the spec does not define it. */
+    /** Returns the none URI, or {@code null} if the spec does not define it. */
     protected abstract URI getNone();
 
     /*

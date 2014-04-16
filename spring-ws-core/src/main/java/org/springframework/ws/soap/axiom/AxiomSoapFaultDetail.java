@@ -29,7 +29,7 @@ import org.springframework.ws.soap.SoapFaultDetail;
 import org.springframework.ws.soap.SoapFaultDetailElement;
 
 /**
- * Axiom-specific version of <code>org.springframework.ws.soap.SoapFaultDetail</code>.
+ * Axiom-specific version of {@code org.springframework.ws.soap.SoapFaultDetail}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

@@ -30,9 +30,9 @@ import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
 /**
  * Provides basic support for integrating with JAAS and plain text passwords.
- * <p/>
- * This class only handles <code>PasswordValidationCallback</code>s that contain a
- * <code>PlainTextPasswordRequest</code>, and throws an <code>UnsupportedCallbackException</code> for others.
+ *
+ * <p>This class only handles {@code PasswordValidationCallback}s that contain a
+ * {@code PlainTextPasswordRequest}, and throws an {@code UnsupportedCallbackException} for others.
  *
  * @author Arjen Poutsma
  * @see #getLoginContextName()
@@ -41,8 +41,8 @@ import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 public class JaasPlainTextPasswordValidationCallbackHandler extends AbstractJaasValidationCallbackHandler {
 
     /**
-     * Handles <code>PasswordValidationCallback</code>s that contain a <code>PlainTextPasswordRequest</code>, and throws
-     * an <code>UnsupportedCallbackException</code> for others.
+     * Handles {@code PasswordValidationCallback}s that contain a {@code PlainTextPasswordRequest}, and throws
+     * an {@code UnsupportedCallbackException} for others.
      *
      * @throws UnsupportedCallbackException when the callback is not supported
      */

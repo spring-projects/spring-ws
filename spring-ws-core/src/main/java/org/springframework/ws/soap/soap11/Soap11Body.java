@@ -23,7 +23,7 @@ import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapFaultException;
 
 /**
- * Subinterface of <code>SoapBody</code> that exposes SOAP 1.1 functionality. Necessary because SOAP 1.1 differs from
+ * Subinterface of {@code SoapBody} that exposes SOAP 1.1 functionality. Necessary because SOAP 1.1 differs from
  * SOAP 1.2 with respect to SOAP Faults.
  *
  * @author Arjen Poutsma
@@ -38,7 +38,7 @@ public interface Soap11Body extends SoapBody {
      *
      * @param faultCode         the fully qualified fault faultCode
      * @param faultString       the faultString
-     * @param faultStringLocale the faultString locale. May be <code>null</code>
+     * @param faultStringLocale the faultString locale. May be {@code null}
      * @return the added <faultCode>Soap11Fault</faultCode>
      * @throws IllegalArgumentException if the fault faultCode is not fully qualified
      */

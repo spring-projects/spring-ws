@@ -33,19 +33,19 @@ public interface Attachment {
     /**
      * Returns the content identifier of the attachment.
      *
-     * @return the content id, or <code>null</code> if empty or not defined
+     * @return the content id, or {@code null} if empty or not defined
      */
     String getContentId();
 
     /**
      * Returns the content type of the attachment.
      *
-     * @return the content type, or <code>null</code> if empty or not defined
+     * @return the content type, or {@code null} if empty or not defined
      */
     String getContentType();
 
     /**
-     * Return an <code>InputStream</code> to read the contents of the attachment from. The user is responsible for
+     * Return an {@code InputStream} to read the contents of the attachment from. The user is responsible for
      * closing the stream.
      *
      * @return the contents of the file as stream, or an empty stream if empty
@@ -54,9 +54,9 @@ public interface Attachment {
     InputStream getInputStream() throws IOException;
 
     /**
-     * Returns the size of the attachment in bytes. Returns <code>-1</code> if the size cannot be determined.
+     * Returns the size of the attachment in bytes. Returns {@code -1} if the size cannot be determined.
      *
-     * @return the size of the attachment, <code>0</code> if empty, or <code>-1</code> if the size cannot be determined
+     * @return the size of the attachment, {@code 0} if empty, or {@code -1} if the size cannot be determined
      */
     long getSize();
 

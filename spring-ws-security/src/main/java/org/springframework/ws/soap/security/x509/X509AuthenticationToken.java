@@ -24,7 +24,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 
 /**
- * <code>Authentication</code> implementation for X.509 client-certificate authentication.
+ * {@code Authentication} implementation for X.509 client-certificate authentication.
  * <p>Migrated from Spring Security 2 since it has been removed in Spring Security 3.</p>
  *
  * @author Luke Taylor
@@ -40,7 +40,7 @@ public class X509AuthenticationToken extends AbstractAuthenticationToken {
 
     /**
      * Used for an authentication request.  The {@link org.springframework.security.core.Authentication#isAuthenticated()} will return
-     * <code>false</code>.
+     * {@code false}.
      *
      * @param credentials the certificate
      */
@@ -51,10 +51,10 @@ public class X509AuthenticationToken extends AbstractAuthenticationToken {
 
     /**
      * Used for an authentication response object. The {@link org.springframework.security.core.Authentication#isAuthenticated()}
-     * will return <code>true</code>.
+     * will return {@code true}.
      *
      * @param principal the principal, which is generally a
-     *        <code>UserDetails</code>
+     *        {@code UserDetails}
      * @param credentials the certificate
      * @param authorities the authorities
      */

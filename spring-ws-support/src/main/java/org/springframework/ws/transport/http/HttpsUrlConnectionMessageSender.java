@@ -81,8 +81,8 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
 
     /**
      * Specifies the key managers to use for this message sender.
-     * <p/>
-     * Setting either this property or {@link #setTrustManagers(TrustManager[]) trustManagers}  is required.
+     *
+     * <p>Setting either this property or {@link #setTrustManagers(TrustManager[]) trustManagers}  is required.
      *
      * @see SSLContext#init(KeyManager[], TrustManager[], SecureRandom)
      */
@@ -92,8 +92,8 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
 
     /**
      * Specifies the trust managers to use for this message sender.
-     * <p/>
-     * Setting either this property or {@link #setKeyManagers(KeyManager[]) keyManagers}  is required.
+     *
+     * <p>Setting either this property or {@link #setKeyManagers(KeyManager[]) keyManagers}  is required.
      *
      * @see SSLContext#init(KeyManager[], TrustManager[], SecureRandom)
      */

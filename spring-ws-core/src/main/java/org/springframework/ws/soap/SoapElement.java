@@ -37,10 +37,10 @@ public interface SoapElement {
     QName getName();
 
     /**
-     * Returns the <code>Source</code> of this element. This includes the element itself, i.e.
-     * <code>SoapEnvelope.getSource()</code> will include the <code>Envelope</code> tag.
+     * Returns the {@code Source} of this element. This includes the element itself, i.e.
+     * {@code SoapEnvelope.getSource()} will include the {@code Envelope} tag.
      *
-     * @return the <code>Source</code> of this element
+     * @return the {@code Source} of this element
      */
     Source getSource();
 
@@ -63,12 +63,12 @@ public interface SoapElement {
      * Returns the value of the attribute with the specified qualified name.
      *
      * @param name the qualified name
-     * @return the value, or <code>null</code> if there is no such attribute
+     * @return the value, or {@code null} if there is no such attribute
      */
     String getAttributeValue(QName name);
 
     /**
-     * Returns an <code>Iterator</code> over all of the attributes in element as {@link QName qualified names}.
+     * Returns an {@code Iterator} over all of the attributes in element as {@link QName qualified names}.
      *
      * @return an iterator over all the attribute names
      */

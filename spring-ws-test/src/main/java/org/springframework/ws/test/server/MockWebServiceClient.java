@@ -37,8 +37,8 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
  * <strong>Main entry point for server-side Web service testing</strong>. Typically used to test a {@link
  * org.springframework.ws.server.MessageDispatcher MessageDispatcher} (including its endpoints, mappings, etc) by
  * creating request messages, and setting up expectations about response messages.
- * <p/>
- * The typical usage of this class is:
+ *
+ * <p>The typical usage of this class is:
  * <ol>
  * <li>Create a {@code MockWebServiceClient} instance by using {@link #createClient(ApplicationContext)} or
  * {@link #createClient(WebServiceMessageReceiver, WebServiceMessageFactory)}</li>
@@ -50,8 +50,8 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
  * </ol>
  * Note that because of the 'fluent' API offered by this class (and related classes), you can typically use the Code
  * Completion features (i.e. ctrl-space) in your IDE to set up the mocks.
- * <p/>
- * For example:
+ *
+ * <p>For example:
  * <blockquote><pre>
  * import org.junit.*;
  * import org.springframework.beans.factory.annotation.Autowired;

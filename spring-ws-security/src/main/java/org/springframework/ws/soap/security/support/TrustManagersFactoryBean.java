@@ -26,8 +26,8 @@ import org.springframework.util.StringUtils;
 
 /**
  * Spring factory bean for an array of {@link TrustManager}s.
- * <p/>
- * Uses the {@link TrustManagerFactory} to create the {@code TrustManager}s.
+ *
+ * <p>Uses the {@link TrustManagerFactory} to create the {@code TrustManager}s.
  *
  * @author Arjen Poutsma
  * @see TrustManager

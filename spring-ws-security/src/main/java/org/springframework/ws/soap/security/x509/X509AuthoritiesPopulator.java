@@ -23,7 +23,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 
 /**
- * Populates the <code>UserDetails</code> associated with the X.509
+ * Populates the {@code UserDetails} associated with the X.509
  * certificate presented by a client.
  * <p>
  * Although the certificate will already have been validated by the web container,
@@ -40,7 +40,7 @@ public interface X509AuthoritiesPopulator {
 
     /**
      * Obtains the granted authorities for the specified user.<p>May throw any
-     * <code>AuthenticationException</code> or return <code>null</code> if the authorities are unavailable.</p>
+     * {@code AuthenticationException} or return {@code null} if the authorities are unavailable.</p>
      *
      * @param userCertificate the X.509 certificate supplied
      *

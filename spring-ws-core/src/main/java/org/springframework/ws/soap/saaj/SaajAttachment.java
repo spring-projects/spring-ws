@@ -26,7 +26,7 @@ import org.springframework.util.Assert;
 import org.springframework.ws.mime.Attachment;
 
 /**
- * SAAJ-specific implementation of the <code>Attachment</code> interface. Wraps a {@link
+ * SAAJ-specific implementation of the {@code Attachment} interface. Wraps a {@link
  * javax.xml.soap.AttachmentPart}.
  *
  * @author Arjen Poutsma

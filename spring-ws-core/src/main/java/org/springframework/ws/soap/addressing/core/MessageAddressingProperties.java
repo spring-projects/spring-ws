@@ -25,8 +25,8 @@ import org.w3c.dom.Node;
 
 /**
  * Represents a set of Message Addressing Properties, as defined in the WS-Addressing specification.
- * <p/>
- * In earlier versions of the spec, these properties were called Message Information Headers.
+ *
+ * <p>In earlier versions of the spec, these properties were called Message Information Headers.
  *
  * @author Arjen Poutsma
  * @see <a href="http://www.w3.org/TR/ws-addr-core/#msgaddrprops">Message Addressing Properties</a>

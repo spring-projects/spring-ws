@@ -79,13 +79,13 @@ public abstract class AbstractSenderConnection extends AbstractWebServiceConnect
     protected abstract OutputStream getRequestOutputStream() throws IOException;
 
     /**
-     * Returns an iteration over all the header names this request contains. Returns an empty <code>Iterator</code> if
+     * Returns an iteration over all the header names this request contains. Returns an empty {@code Iterator} if
      * there are no headers.
      */
     protected abstract Iterator<String> getResponseHeaderNames() throws IOException;
 
     /**
-     * Returns an iteration over all the string values of the specified header. Returns an empty <code>Iterator</code>
+     * Returns an iteration over all the string values of the specified header. Returns an empty {@code Iterator}
      * if there are no headers of the specified name.
      */
     protected abstract Iterator<String> getResponseHeaders(String name) throws IOException;
@@ -93,7 +93,7 @@ public abstract class AbstractSenderConnection extends AbstractWebServiceConnect
     /** Returns the input stream to read the response from. */
     protected abstract InputStream getResponseInputStream() throws IOException;
 
-    /** Implementation of <code>TransportInputStream</code> for receiving-side connections. */
+    /** Implementation of {@code TransportInputStream} for receiving-side connections. */
     class RequestTransportOutputStream extends TransportOutputStream {
 
         @Override

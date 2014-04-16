@@ -22,7 +22,7 @@ import javax.mail.MessagingException;
 
 /**
  * Defines the contract for objects that monitor a given folder for new messages. Allows for multiple implementation
- * strategies, including polling, or event-driven techniques such as IMAP's <code>IDLE</code> command.
+ * strategies, including polling, or event-driven techniques such as IMAP's {@code IDLE} command.
  *
  * @author Arjen Poutsma
  */

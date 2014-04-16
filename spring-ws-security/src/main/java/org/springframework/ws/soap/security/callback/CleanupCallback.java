@@ -20,8 +20,8 @@ import java.io.Serializable;
 import javax.security.auth.callback.Callback;
 
 /**
- * Underlying security services instantiate and pass a <code>CleanupCallback</code> to the <code>handle</code> method of
- * a <code>CallbackHandler</code> to clean up security state.
+ * Underlying security services instantiate and pass a {@code CleanupCallback} to the {@code handle} method of
+ * a {@code CallbackHandler} to clean up security state.
  *
  * @author Arjen Poutsma
  * @since 1.0.4

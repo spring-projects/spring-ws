@@ -52,7 +52,7 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
     /**
      * Returns the the endpoint interceptors to apply to all endpoints mapped by this endpoint mapping.
      *
-     * @return array of endpoint interceptors, or <code>null</code> if none
+     * @return array of endpoint interceptors, or {@code null} if none
      */
     public EndpointInterceptor[] getInterceptors() {
         return interceptors;
@@ -61,7 +61,7 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
     /**
      * Sets the endpoint interceptors to apply to all endpoints mapped by this endpoint mapping.
      *
-     * @param interceptors array of endpoint interceptors, or <code>null</code> if none
+     * @param interceptors array of endpoint interceptors, or {@code null} if none
      */
     public final void setInterceptors(EndpointInterceptor[] interceptors) {
         this.interceptors = interceptors;
@@ -74,8 +74,8 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 
     /**
      * Specify the order value for this mapping.
-     * <p/>
-     * Default value is {@link Integer#MAX_VALUE}, meaning that it's non-ordered.
+     *
+     * <p>Default value is {@link Integer#MAX_VALUE}, meaning that it's non-ordered.
      *
      * @see org.springframework.core.Ordered#getOrder()
      */
@@ -149,8 +149,8 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
     }
 
     /**
-     * Creates a new <code>EndpointInvocationChain</code> based on the given message context, endpoint, and
-     * interceptors. Default implementation creates a simple <code>EndpointInvocationChain</code> based on the set
+     * Creates a new {@code EndpointInvocationChain} based on the given message context, endpoint, and
+     * interceptors. Default implementation creates a simple {@code EndpointInvocationChain} based on the set
      * interceptors.
      *
      * @param endpoint     the endpoint
@@ -176,8 +176,8 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
     /**
      * Sets the default endpoint for this endpoint mapping. This endpoint will be returned if no specific mapping was
      * found.
-     * <p/>
-     * Default is <code>null</code>, indicating no default endpoint.
+     *
+     * <p>Default is {@code null}, indicating no default endpoint.
      *
      * @param defaultEndpoint the default endpoint, or null if none
      */
@@ -190,7 +190,7 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
      * context.
      *
      * @param endpointName the endpoint name
-     * @return the resolved endpoint, or <code>null</code> if the name could not be resolved
+     * @return the resolved endpoint, or {@code null} if the name could not be resolved
      */
     protected Object resolveStringEndpoint(String endpointName) {
         if (getApplicationContext().containsBean(endpointName)) {
@@ -202,12 +202,12 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
     }
 
     /**
-     * Lookup an endpoint for the given request, returning <code>null</code> if no specific one is found. This template
-     * method is called by getEndpoint, a <code>null</code> return value will lead to the default handler, if one is
+     * Lookup an endpoint for the given request, returning {@code null} if no specific one is found. This template
+     * method is called by getEndpoint, a {@code null} return value will lead to the default handler, if one is
      * set.
-     * <p/>
-     * The returned endpoint can be a string, in which case it is resolved as a bean name. Also, it can take the form
-     * <code>beanName#method</code>, in which case the method is resolved.
+     *
+     * <p>The returned endpoint can be a string, in which case it is resolved as a bean name. Also, it can take the form
+     * {@code beanName#method}, in which case the method is resolved.
      *
      * @return the looked up endpoint instance, or null
      * @throws Exception if there is an error

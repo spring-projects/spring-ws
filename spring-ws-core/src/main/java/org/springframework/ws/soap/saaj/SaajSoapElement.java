@@ -27,7 +27,7 @@ import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapElement;
 
 /**
- * SAAJ-specific implementation of the <code>SoapElement</code> interface. Wraps a {@link javax.xml.soap.SOAPElement}.
+ * SAAJ-specific implementation of the {@code SoapElement} interface. Wraps a {@link javax.xml.soap.SOAPElement}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

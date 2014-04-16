@@ -58,25 +58,25 @@ import org.springframework.ws.soap.security.wss4j.callback.UsernameTokenPrincipa
 /**
  * A WS-Security endpoint interceptor based on Apache's WSS4J. This interceptor supports messages created by the {@link
  * org.springframework.ws.soap.axiom.AxiomSoapMessageFactory} and the {@link org.springframework.ws.soap.saaj.SaajSoapMessageFactory}.
- * <p/>
- * The validation and securement actions executed by this interceptor are configured via <code>validationActions</code>
- * and <code>securementActions</code> properties, respectively. Actions should be passed as a space-separated strings.
- * <p/>
- * Valid <strong>validation</strong> actions are:
- * <p/>
- * <blockquote><table> <tr><th>Validation action</th><th>Description</th></tr> <tr><td><code>UsernameToken</code></td><td>Validates
- * username token</td></tr> <tr><td><code>Timestamp</code></td><td>Validates the timestamp</td></tr>
- * <tr><td><code>Encrypt</code></td><td>Decrypts the message</td></tr> <tr><td><code>Signature</code></td><td>Validates
- * the signature</td></tr> <tr><td><code>NoSecurity</code></td><td>No action performed</td></tr> </table></blockquote>
- * <p/>
+ *
+ * <p>The validation and securement actions executed by this interceptor are configured via {@code validationActions}
+ * and {@code securementActions} properties, respectively. Actions should be passed as a space-separated strings.
+ *
+ * <p>Valid <strong>validation</strong> actions are:
+ *
+ * <blockquote><table> <tr><th>Validation action</th><th>Description</th></tr> <tr><td>{@code UsernameToken}</td><td>Validates
+ * username token</td></tr> <tr><td>{@code Timestamp}</td><td>Validates the timestamp</td></tr>
+ * <tr><td>{@code Encrypt}</td><td>Decrypts the message</td></tr> <tr><td>{@code Signature}</td><td>Validates
+ * the signature</td></tr> <tr><td>{@code NoSecurity}</td><td>No action performed</td></tr> </table></blockquote>
+ * <p>
  * <strong>Securement</strong> actions are: <blockquote><table> <tr><th>Securement action</th><th>Description</th></tr>
- * <tr><td><code>UsernameToken</td></code><td>Adds a username token</td></tr> <tr><td><code>UsernameTokenSignature</td></code><td>Adds
- * a username token and a signature username token secret key</td></tr> <tr><td><code>Timestamp</td></code><td>Adds a
- * timestamp</td></tr> <tr><td><code>Encrypt</td></code><td>Encrypts the response</td></tr>
- * <tr><td><code>Signature</td></code><td>Signs the response</td></tr> <tr><td><code>NoSecurity</td></code><td>No action
+ * <tr><td>{@code UsernameToken</td>}<td>Adds a username token</td></tr> <tr><td>{@code UsernameTokenSignature</td>}<td>Adds
+ * a username token and a signature username token secret key</td></tr> <tr><td>{@code Timestamp</td>}<td>Adds a
+ * timestamp</td></tr> <tr><td>{@code Encrypt</td>}<td>Encrypts the response</td></tr>
+ * <tr><td>{@code Signature</td>}<td>Signs the response</td></tr> <tr><td>{@code NoSecurity</td>}<td>No action
  * performed</td></tr> </table></blockquote>
- * <p/>
- * The order of the actions that the client performed to secure the messages is significant and is enforced by the
+ *
+ * <p>The order of the actions that the client performed to secure the messages is significant and is enforced by the
  * interceptor.
  *
  * @author Tareq Abed Rabbo
@@ -144,11 +144,11 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
     }
 
     /**
-     * The actor name of the <code>wsse:Security</code> header.
-     * <p/>
-     * If this parameter is omitted, the actor name is not set.
-     * <p/>
-     * The value of the actor or role has to match the receiver's setting or may contain standard values.
+     * The actor name of the {@code wsse:Security} header.
+     *
+     * <p>If this parameter is omitted, the actor name is not set.
+     *
+     * <p>The value of the actor or role has to match the receiver's setting or may contain standard values.
      */
     public void setSecurementActor(String securementActor) {
         handler.setOption(WSHandlerConstants.ACTOR, securementActor);
@@ -165,10 +165,10 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     /**
      * Defines which key identifier type to use. The WS-Security specifications recommends to use the identifier type
-     * <code>IssuerSerial</code>. For possible encryption key identifier types refer to {@link
-     * org.apache.ws.security.handler.WSHandlerConstants#keyIdentifier}. For encryption <code>IssuerSerial</code>,
-     * <code>X509KeyIdentifier</code>,  <code>DirectReference</code>, <code>Thumbprint</code>,
-     * <code>SKIKeyIdentifier</code>, and <code>EmbeddedKeyName</code> are valid only.
+     * {@code IssuerSerial}. For possible encryption key identifier types refer to {@link
+     * org.apache.ws.security.handler.WSHandlerConstants#keyIdentifier}. For encryption {@code IssuerSerial},
+     * {@code X509KeyIdentifier},  {@code DirectReference}, {@code Thumbprint},
+     * {@code SKIKeyIdentifier}, and {@code EmbeddedKeyName} are valid only.
      */
     public void setSecurementEncryptionKeyIdentifier(String securementEncryptionKeyIdentifier) {
         handler.setOption(WSHandlerConstants.ENC_KEY_ID, securementEncryptionKeyIdentifier);
@@ -184,34 +184,34 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     /**
      * Property to define which parts of the request shall be encrypted.
-     * <p/>
-     * The value of this property is a list of semi-colon separated element names that identify the elements to encrypt.
+     *
+     * <p>The value of this property is a list of semi-colon separated element names that identify the elements to encrypt.
      * An encryption mode specifier and a namespace identification, each inside a pair of curly brackets, may precede
      * each element name.
-     * <p/>
-     * The encryption mode specifier is either <code>{Content}</code> or <code>{Element}</code>. Please refer to the W3C
+     *
+     * <p>The encryption mode specifier is either {@code{Content}} or {@code{Element}}. Please refer to the W3C
      * XML Encryption specification about the differences between Element and Content encryption. The encryption mode
-     * defaults to <code>Content</code> if it is omitted. Example of a list:
+     * defaults to {@code Content} if it is omitted. Example of a list:
      * <pre>
      * &lt;property name="securementEncryptionParts"
      *   value="{Content}{http://example.org/paymentv2}CreditCard;
      *             {Element}{}UserName" />
      * </pre>
-     * The the first entry of the list identifies the element <code>CreditCard</code> in the namespace
-     * <code>http://example.org/paymentv2</code>, and will encrypt its content. Be aware that the element name, the
+     * The the first entry of the list identifies the element {@code CreditCard} in the namespace
+     * {@code http://example.org/paymentv2}, and will encrypt its content. Be aware that the element name, the
      * namespace identifier, and the encryption modifier are case sensitive.
-     * <p/>
-     * The encryption modifier and the namespace identifier can be omitted. In this case the encryption mode defaults to
-     * <code>Content</code> and the namespace is set to the SOAP namespace.
-     * <p/>
-     * An empty encryption mode defaults to <code>Content</code>, an empty namespace identifier defaults to the SOAP
-     * namespace. The second line of the example defines <code>Element</code> as encryption mode for an
-     * <code>UserName</code> element in the SOAP namespace.
-     * <p/>
-     * To specify an element without a namespace use the string <code>Null</code> as the namespace name (this is a case
+     *
+     * <p>The encryption modifier and the namespace identifier can be omitted. In this case the encryption mode defaults to
+     * {@code Content} and the namespace is set to the SOAP namespace.
+     *
+     * <p>An empty encryption mode defaults to {@code Content}, an empty namespace identifier defaults to the SOAP
+     * namespace. The second line of the example defines {@code Element} as encryption mode for an
+     * {@code UserName} element in the SOAP namespace.
+     *
+     * <p>To specify an element without a namespace use the string {@code Null} as the namespace name (this is a case
      * sensitive string)
-     * <p/>
-     * If no list is specified, the handler encrypts the SOAP Body in <code>Content</code> mode by default.
+     *
+     * <p>If no list is specified, the handler encrypts the SOAP Body in {@code Content} mode by default.
      */
     public void setSecurementEncryptionParts(String securementEncryptionParts) {
         handler.setOption(WSHandlerConstants.ENCRYPTION_PARTS, securementEncryptionParts);
@@ -229,21 +229,20 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     /**
      * The user's name for encryption.
-     * <p/>
-     * The encryption functions uses the public key of this user's certificate to encrypt the generated symmetric key.
-     * <p/>
-     * If this parameter is not set, then the encryption function falls back to the {@link
+     *
+     * <p>The encryption functions uses the public key of this user's certificate to encrypt the generated symmetric key.
+     *
+     * <p>If this parameter is not set, then the encryption function falls back to the {@link
      * org.apache.ws.security.handler.WSHandlerConstants#USER} parameter to get the certificate.
-     * <p/>
-     * If <b>only</b> encryption of the SOAP body data is requested, it is recommended to use this parameter to define
+     *
+     * <p>If <b>only</b> encryption of the SOAP body data is requested, it is recommended to use this parameter to define
      * the username. The application can then use the standard user and password functions (see example at {@link
      * org.apache.ws.security.handler.WSHandlerConstants#USER} to enable HTTP authentication functions.
-     * <p/>
-     * Encryption only does not authenticate a user / sender, therefore it does not need a password.
-     * <p/>
-     * Placing the username of the encryption certificate in the configuration file is not a security risk, because the
+     *
+     * <p>Encryption only does not authenticate a user / sender, therefore it does not need a password.
+     *
+     * <p>Placing the username of the encryption certificate in the configuration file is not a security risk, because the
      * public key of that certificate is used only.
-     * <p/>
      */
     public void setSecurementEncryptionUser(String securementEncryptionUser) {
         handler.setOption(WSHandlerConstants.ENCRYPTION_USER, securementEncryptionUser);
@@ -255,10 +254,10 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     /**
      * Specific parameter for UsernameToken action to define the encoding of the passowrd.
-     * <p/>
-     * The parameter can be set to either {@link WSConstants#PW_DIGEST} or to {@link WSConstants#PW_TEXT}.
-     * <p/>
-     * The default setting is PW_DIGEST.
+     *
+     * <p>The parameter can be set to either {@link WSConstants#PW_DIGEST} or to {@link WSConstants#PW_TEXT}.
+     *
+     * <p>The default setting is PW_DIGEST.
      */
     public void setSecurementPasswordType(String securementUsernameTokenPasswordType) {
         handler.setOption(WSHandlerConstants.PASSWORD_TYPE, securementUsernameTokenPasswordType);
@@ -286,9 +285,9 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     /**
      * Defines which key identifier type to use. The WS-Security specifications recommends to use the identifier type
-     * <code>IssuerSerial</code>. For possible signature key identifier types refer to {@link
-     * org.apache.ws.security.handler.WSHandlerConstants#keyIdentifier}. For signature <code>IssuerSerial</code> and
-     * <code>DirectReference</code> are valid only.
+     * {@code IssuerSerial}. For possible signature key identifier types refer to {@link
+     * org.apache.ws.security.handler.WSHandlerConstants#keyIdentifier}. For signature {@code IssuerSerial} and
+     * {@code DirectReference} are valid only.
      */
     public void setSecurementSignatureKeyIdentifier(String securementSignatureKeyIdentifier) {
         handler.setOption(WSHandlerConstants.SIG_KEY_ID, securementSignatureKeyIdentifier);
@@ -296,26 +295,26 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     /**
      * Property to define which parts of the request shall be signed.
-     * <p/>
-     * Refer to {@link #setSecurementEncryptionParts(String)} for a detailed description of the format of the value
+     *
+     * <p>Refer to {@link #setSecurementEncryptionParts(String)} for a detailed description of the format of the value
      * string.
-     * <p/>
-     * If this property is not specified the handler signs the SOAP Body by default.
-     * <p/>
-     * The WS Security specifications define several formats to transfer the signature tokens (certificates) or
-     * references to these tokens. Thus, the plain element name <code>Token</code> signs the token and takes care of the
+     *
+     * <p>If this property is not specified the handler signs the SOAP Body by default.
+     *
+     * <p>The WS Security specifications define several formats to transfer the signature tokens (certificates) or
+     * references to these tokens. Thus, the plain element name {@code Token} signs the token and takes care of the
      * different formats.
-     * <p/>
-     * To sign the SOAP body <b>and</b> the signature token the value of this parameter must contain:
+     *
+     * <p>To sign the SOAP body <b>and</b> the signature token the value of this parameter must contain:
      * <pre>
      * &lt;property name="securementSignatureParts"
      *   value="{}{http://schemas.xmlsoap.org/soap/envelope/}Body; Token" />
      * </pre>
-     * To specify an element without a namespace use the string <code>Null</code> as the namespace name (this is a case
+     * To specify an element without a namespace use the string {@code Null} as the namespace name (this is a case
      * sensitive string)
-     * <p/>
-     * If there is no other element in the request with a local name of <code>Body</code> then the SOAP namespace
-     * identifier can be empty (<code>{}</code>).
+     *
+     * <p>If there is no other element in the request with a local name of {@code Body} then the SOAP namespace
+     * identifier can be empty ({@code{}}).
      */
     public void setSecurementSignatureParts(String securementSignatureParts) {
         handler.setOption(WSHandlerConstants.SIGNATURE_PARTS, securementSignatureParts);
@@ -323,13 +322,13 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     /**
      * The user's name for signature.
-     * <p/>
-     * This name is used as the alias name in the keystore to get user's
+     *
+     * <p>This name is used as the alias name in the keystore to get user's
      * certificate and private key to perform signing.
-     * <p/>
-     * If this parameter is not set, then the signature
+     *
+     * <p>If this parameter is not set, then the signature
      * function falls back to the alias specified by {@link #setSecurementUsername(String)}.
-     * <p/>
+     *
      */
     public void setSecurementSignatureUser(String securementSignatureUser) {
         handler.setOption(WSHandlerConstants.SIGNATURE_USER, securementSignatureUser);
@@ -424,22 +423,22 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
     }
 
     /**
-     * Enables the <code>mustUnderstand</code> attribute on WS-Security headers on outgoing messages. Default is
-     * <code>true</code>.
+     * Enables the {@code mustUnderstand} attribute on WS-Security headers on outgoing messages. Default is
+     * {@code true}.
      */
     public void setSecurementMustUnderstand(boolean securementMustUnderstand) {
         handler.setOption(WSHandlerConstants.MUST_UNDERSTAND, securementMustUnderstand);
     }
 
     /**
-     * Sets the additional elements in <code>UsernameToken</code>s.
-     * <p/>
-     * The value of this parameter is a list of element names that are added to the UsernameToken. The names of the list
+     * Sets the additional elements in {@code UsernameToken}s.
+     *
+     * <p>The value of this parameter is a list of element names that are added to the UsernameToken. The names of the list
      * a separated by spaces.
-     * <p/>
-     * The list may contain the names <code>Nonce</code> and <code>Created</code> only (case sensitive). Use this option
-     * if the password type is <code>passwordText</code> and the handler shall add the <code>Nonce</code> and/or
-     * <code>Created</code> elements.
+     *
+     * <p>The list may contain the names {@code Nonce} and {@code Created} only (case sensitive). Use this option
+     * if the password type is {@code passwordText} and the handler shall add the {@code Nonce} and/or
+     * {@code Created} elements.
      */
     public void setSecurementUsernameTokenElements(String securementUsernameTokenElements) {
         handler.setOption(WSHandlerConstants.ADD_UT_ELEMENTS, securementUsernameTokenElements);

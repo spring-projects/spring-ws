@@ -46,8 +46,8 @@ public abstract class AbstractMethodEndpointAdapter extends TransformerObjectSup
      *
      * @param messageContext the current message context
      * @param endpoint       the endpoint to use. This object must have previously been passed to the
-     *                       <code>supportsInternal</code> method of this interface, which must have returned
-     *                       <code>true</code>
+     *                       {@code supportsInternal} method of this interface, which must have returned
+     *                       {@code true}
      * @throws Exception in case of errors
      */
     @Override

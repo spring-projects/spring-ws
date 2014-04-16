@@ -38,7 +38,7 @@ import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.transform.StringSource;
 
 /**
- * Mock implementation of the <code>WebServiceMessage</code> interface.
+ * Mock implementation of the {@code WebServiceMessage} interface.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

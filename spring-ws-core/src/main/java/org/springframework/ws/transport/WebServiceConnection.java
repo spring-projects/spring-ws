@@ -26,8 +26,8 @@ import org.springframework.ws.WebServiceMessageFactory;
 /**
  * Represents a point-to-point connection that a client can use for sending {@link WebServiceMessage} objects directly
  * to a remote party.
- * <p/>
- * A <code>WebServiceConnection</code> can be obtained using a {@link WebServiceMessageSender}.
+ *
+ * <p>A {@code WebServiceConnection} can be obtained using a {@link WebServiceMessageSender}.
  *
  * @author Arjen Poutsma
  * @see WebServiceMessageSender#createConnection(URI)
@@ -45,10 +45,10 @@ public interface WebServiceConnection {
 
     /**
      * Receives a message using the given {@link WebServiceMessageFactory}. This method blocks until it receives, or
-     * returns <code>null</code> when no message is received.
+     * returns {@code null} when no message is received.
      *
      * @param messageFactory the message factory used for reading messages
-     * @return the read message, or <code>null</code> if no message received
+     * @return the read message, or {@code null} if no message received
      * @throws IOException in case of I/O errors
      */
     WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException;
@@ -60,22 +60,22 @@ public interface WebServiceConnection {
      * Indicates whether this connection has an error. Typically, error detection is done by inspecting connection error
      * codes, etc.
      *
-     * @return <code>true</code> if this connection has an error; <code>false</code> otherwise.
+     * @return {@code true} if this connection has an error; {@code false} otherwise.
      */
     boolean hasError() throws IOException;
 
     /**
      * Returns the error message.
      *
-     * @return the connection error message, if any; returns <code>null</code> when no error is present
+     * @return the connection error message, if any; returns {@code null} when no error is present
      * @see #hasError()
      */
     String getErrorMessage() throws IOException;
 
     /**
      * Closes this connection.
-     * <p/>
-     * Once a connection has been closed, it is not available for further use. A new connection needs to be created.
+     *
+     * <p>Once a connection has been closed, it is not available for further use. A new connection needs to be created.
      *
      * @throws IOException if an I/O error occurs when closing this connection
      */

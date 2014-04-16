@@ -37,7 +37,7 @@ import org.springframework.ws.soap.soap11.Soap11Fault;
 import org.springframework.xml.namespace.QNameUtils;
 
 /**
- * Axiom-specific version of <code>org.springframework.ws.soap.Soap11Body</code>.
+ * Axiom-specific version of {@code org.springframework.ws.soap.Soap11Body}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

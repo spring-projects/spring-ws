@@ -63,7 +63,7 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
     /**
      * Creates a single {@link PortType}, and calls {@link #populatePortType(Definition, PortType)} with it.
      *
-     * @param definition the WSDL4J <code>Definition</code>
+     * @param definition the WSDL4J {@code Definition}
      * @throws WSDLException in case of errors
      */
     @Override
@@ -78,10 +78,10 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 
     /**
      * Called after the {@link PortType} has been created.
-     * <p/>
-     * Default implementation sets the name of the port type to the defined value.
      *
-     * @param portType the WSDL4J <code>PortType</code>
+     * <p>Default implementation sets the name of the port type to the defined value.
+     *
+     * @param portType the WSDL4J {@code PortType}
      * @throws WSDLException in case of errors
      * @see #setPortTypeName(String)
      */
@@ -141,10 +141,10 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 
     /**
      * Template method that returns the name of the operation coupled to the given {@link Message}. Subclasses can
-     * return <code>null</code> to indicate that a message should not be coupled to an operation.
+     * return {@code null} to indicate that a message should not be coupled to an operation.
      *
-     * @param message the WSDL4J <code>Message</code>
-     * @return the operation name; or <code>null</code>
+     * @param message the WSDL4J {@code Message}
+     * @return the operation name; or {@code null}
      */
     protected abstract String getOperationName(Message message);
 
@@ -152,18 +152,18 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
      * Indicates whether the given name name should be included as {@link Input} message in the definition.
      *
      * @param message the message
-     * @return <code>true</code> if to be included as input; <code>false</code> otherwise
+     * @return {@code true} if to be included as input; {@code false} otherwise
      */
     protected abstract boolean isInputMessage(Message message);
 
     /**
      * Called after the {@link javax.wsdl.Input} has been created, but it's added to the operation. Subclasses can
      * override this method to define the input name.
-     * <p/>
-     * Default implementation sets the input name to the message name.
      *
-     * @param definition the WSDL4J <code>Definition</code>
-     * @param input      the WSDL4J <code>Input</code>
+     * <p>Default implementation sets the input name to the message name.
+     *
+     * @param definition the WSDL4J {@code Definition}
+     * @param input      the WSDL4J {@code Input}
      */
     protected void populateInput(Definition definition, Input input) {
         input.setName(input.getMessage().getQName().getLocalPart());
@@ -173,18 +173,18 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
      * Indicates whether the given name name should be included as {@link Output} message in the definition.
      *
      * @param message the message
-     * @return <code>true</code> if to be included as output; <code>false</code> otherwise
+     * @return {@code true} if to be included as output; {@code false} otherwise
      */
     protected abstract boolean isOutputMessage(Message message);
 
     /**
      * Called after the {@link javax.wsdl.Output} has been created, but it's added to the operation. Subclasses can
      * override this method to define the output name.
-     * <p/>
-     * Default implementation sets the output name to the message name.
      *
-     * @param definition the WSDL4J <code>Definition</code>
-     * @param output     the WSDL4J <code>Output</code>
+     * <p>Default implementation sets the output name to the message name.
+     *
+     * @param definition the WSDL4J {@code Definition}
+     * @param output     the WSDL4J {@code Output}
      */
     protected void populateOutput(Definition definition, Output output) {
         output.setName(output.getMessage().getQName().getLocalPart());
@@ -194,18 +194,18 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
      * Indicates whether the given name name should be included as {@link Fault} message in the definition.
      *
      * @param message the message
-     * @return <code>true</code> if to be included as fault; <code>false</code> otherwise
+     * @return {@code true} if to be included as fault; {@code false} otherwise
      */
     protected abstract boolean isFaultMessage(Message message);
 
     /**
      * Called after the {@link javax.wsdl.Fault} has been created, but it's added to the operation. Subclasses can
      * override this method to define the fault name.
-     * <p/>
-     * Default implementation sets the fault name to the message name.
      *
-     * @param definition the WSDL4J <code>Definition</code>
-     * @param fault      the WSDL4J <code>Fault</code>
+     * <p>Default implementation sets the fault name to the message name.
+     *
+     * @param definition the WSDL4J {@code Definition}
+     * @param fault      the WSDL4J {@code Fault}
      */
     protected void populateFault(Definition definition, Fault fault) {
         fault.setName(fault.getMessage().getQName().getLocalPart());
@@ -213,11 +213,11 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 
     /**
      * Returns the {@link OperationType} for the given operation.
-     * <p/>
-     * Default implementation returns {@link OperationType#REQUEST_RESPONSE} if both input and output are set; {@link
+     *
+     * <p>Default implementation returns {@link OperationType#REQUEST_RESPONSE} if both input and output are set; {@link
      * OperationType#ONE_WAY} if only input is set, or {@link OperationType#NOTIFICATION} if only output is set.
      *
-     * @param operation the WSDL4J <code>Operation</code>
+     * @param operation the WSDL4J {@code Operation}
      * @return the operation type for the operation
      */
     protected OperationType getOperationType(Operation operation) {

@@ -52,12 +52,12 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
 
     private WebServiceMessageFactory messageFactory;
 
-    /** Returns the <code>WebServiceMessageFactory</code>. */
+    /** Returns the {@code WebServiceMessageFactory}. */
     public WebServiceMessageFactory getMessageFactory() {
         return messageFactory;
     }
 
-    /** Sets the <code>WebServiceMessageFactory</code>. */
+    /** Sets the {@code WebServiceMessageFactory}. */
     public void setMessageFactory(WebServiceMessageFactory messageFactory) {
         this.messageFactory = messageFactory;
     }
@@ -71,8 +71,8 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
      * Handles an incoming connection by {@link WebServiceConnection#receive(WebServiceMessageFactory) receving} a
      * message from it, passing it to the {@link WebServiceMessageReceiver#receive(MessageContext) receiver}, and {@link
      * WebServiceConnection#send(WebServiceMessage) sending} the response (if any).
-     * <p/>
-     * Stores the given connection in the {@link TransportContext}.
+     *
+     * <p>Stores the given connection in the {@link TransportContext}.
      *
      * @param connection the incoming connection
      * @param receiver   the handler of the message, typically a {@link org.springframework.ws.server.MessageDispatcher}
@@ -109,8 +109,8 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
 
 	/**
 	 * Template method for handling {@code NoEndpointFoundException}s.
-	 * <p/>
-	 * Default implementation calls
+	 *
+	 * <p>Default implementation calls
 	 * {@link EndpointAwareWebServiceConnection#endpointNotFound()} on the given
 	 * connection, if possible.
 	 *

@@ -42,11 +42,11 @@ public @interface SoapFault {
 
     /**
      * The custom fault code, to be used if {@link #faultCode()} is set to {@link FaultCode#CUSTOM}.
-     * <p/>
-     * The format used is that of {@link QName#toString()}, i.e. "{" + Namespace URI + "}" + local part, where the
+     *
+     * <p>The format used is that of {@link QName#toString()}, i.e. "{" + Namespace URI + "}" + local part, where the
      * namespace is optional.
-     * <p/>
-     * Note that custom Fault Codes are only supported on SOAP 1.1.
+     *
+     * <p>Note that custom Fault Codes are only supported on SOAP 1.1.
      */
     String customFaultCode() default "";
 

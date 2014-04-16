@@ -35,7 +35,7 @@ import org.springframework.ws.context.MessageContext;
 
 /**
  * Abstract base class for endpoints that handle the message payload with streaming StAX. Allows subclasses to read the
- * request with a <code>XMLStreamReader</code>, and to create a response using a <code>XMLStreamWriter</code>.
+ * request with a {@code XMLStreamReader}, and to create a response using a {@code XMLStreamWriter}.
  *
  * @author Arjen Poutsma
  * @see #invokeInternal(javax.xml.stream.XMLStreamReader,javax.xml.stream.XMLStreamWriter)
@@ -114,8 +114,8 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
     }
 
     /**
-     * Template method. Subclasses must implement this. Offers the request payload as a <code>XMLStreamReader</code>,
-     * and a <code>XMLStreamWriter</code> to write the response payload to.
+     * Template method. Subclasses must implement this. Offers the request payload as a {@code XMLStreamReader},
+     * and a {@code XMLStreamWriter} to write the response payload to.
      *
      * @param streamReader the reader to read the payload from
      * @param streamWriter the writer to write the payload to
@@ -123,8 +123,8 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
     protected abstract void invokeInternal(XMLStreamReader streamReader, XMLStreamWriter streamWriter) throws Exception;
 
     /**
-     * Implementation of the <code>XMLStreamWriter</code> interface that creates a response
-     * <code>WebServiceMessage</code> as soon as any method is called, thus lazily creating the response.
+     * Implementation of the {@code XMLStreamWriter} interface that creates a response
+     * {@code WebServiceMessage} as soon as any method is called, thus lazily creating the response.
      */
     private class ResponseCreatingStreamWriter implements XMLStreamWriter {
 

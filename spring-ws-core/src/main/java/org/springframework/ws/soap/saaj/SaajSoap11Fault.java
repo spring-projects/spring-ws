@@ -23,7 +23,7 @@ import javax.xml.soap.SOAPFault;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 
 /**
- * SAAJ-specific implementation of the <code>Soap11Fault</code> interface. Wraps a {@link javax.xml.soap.SOAPFault}.
+ * SAAJ-specific implementation of the {@code Soap11Fault} interface. Wraps a {@link javax.xml.soap.SOAPFault}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

@@ -22,8 +22,8 @@ import javax.mail.MessagingException;
 /**
  * Implementation of the {@link MonitoringStrategy} interface that uses a simple polling mechanism. Defines a {@link
  * #setPollingInterval(long) polling interval} property which defines the interval in between message polls.
- * <p/>
- * <b>Note</b> that this implementation is not suitable for use with POP3 servers. Use the {@link
+ *
+ * <p><b>Note</b> that this implementation is not suitable for use with POP3 servers. Use the {@link
  * Pop3PollingMonitoringStrategy} instead.
  *
  * @author Arjen Poutsma

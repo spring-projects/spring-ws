@@ -32,20 +32,20 @@ public interface FaultAwareWebServiceConnection extends WebServiceConnection {
 
     /**
      * Indicates whether this connection received a fault.
-     * <p/>
-     * Typically implemented by looking at an HTTP status code.
      *
-     * @return <code>true</code> if this connection received a fault; <code>false</code> otherwise.
+     * <p>Typically implemented by looking at an HTTP status code.
+     *
+     * @return {@code true} if this connection received a fault; {@code false} otherwise.
      * @throws IOException in case of I/O errors
      */
     boolean hasFault() throws IOException;
 
     /**
      * Sets whether this connection will send a fault.
-     * <p/>
-     * Typically implemented by setting an HTTP status code.
      *
-     * @param fault <code>true</code> if this will send a fault; <code>false</code> otherwise.
+     * <p>Typically implemented by setting an HTTP status code.
+     *
+     * @param fault {@code true} if this will send a fault; {@code false} otherwise.
      * @throws IOException in case of I/O errors
      */
     void setFault(boolean fault) throws IOException;

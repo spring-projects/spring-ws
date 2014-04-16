@@ -57,7 +57,7 @@ public abstract class AbstractMimeMessage implements MimeMessage {
     }
 
     /**
-     * Activation framework <code>DataSource</code> that wraps a Spring <code>InputStreamSource</code>.
+     * Activation framework {@code DataSource} that wraps a Spring {@code InputStreamSource}.
      *
      * @author Arjen Poutsma
      * @since 1.0.0

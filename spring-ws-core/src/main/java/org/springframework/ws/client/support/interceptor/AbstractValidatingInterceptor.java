@@ -40,9 +40,9 @@ import org.springframework.xml.xsd.XsdSchemaCollection;
  * Abstract base class for {@link ClientInterceptor} implementations that validate part of the message using a schema.
  * The exact message part is determined by the {@link #getValidationRequestSource(WebServiceMessage)} and {@link
  * #getValidationResponseSource(WebServiceMessage)} template methods.
- * <p/>
- * By default, only the request message is validated, but this behaviour can be changed using the
- * <code>validateRequest</code> and <code>validateResponse</code> properties.
+ *
+ * <p>By default, only the request message is validated, but this behaviour can be changed using the
+ * {@code validateRequest} and {@code validateResponse} properties.
  *
  * @author Arjen Poutsma
  * @see #getValidationRequestSource(WebServiceMessage)
@@ -67,7 +67,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
     }
 
     /**
-     * Sets the schema language. Default is the W3C XML Schema: <code>http://www.w3.org/2001/XMLSchema"</code>.
+     * Sets the schema language. Default is the W3C XML Schema: {@code http://www.w3.org/2001/XMLSchema"}.
      *
      * @see XmlValidatorFactory#SCHEMA_W3C_XML
      * @see XmlValidatorFactory#SCHEMA_RELAX_NG
@@ -128,12 +128,12 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
         this.validator = schemaCollection.createValidator();
     }
 
-    /** Indicates whether the request should be validated against the schema. Default is <code>true</code>. */
+    /** Indicates whether the request should be validated against the schema. Default is {@code true}. */
     public void setValidateRequest(boolean validateRequest) {
         this.validateRequest = validateRequest;
     }
 
-    /** Indicates whether the response should be validated against the schema. Default is <code>false</code>. */
+    /** Indicates whether the response should be validated against the schema. Default is {@code false}. */
     public void setValidateResponse(boolean validateResponse) {
         this.validateResponse = validateResponse;
     }
@@ -155,12 +155,12 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 
     /**
      * Validates the request message in the given message context. Validation only occurs if {@link
-     * #setValidateRequest(boolean) validateRequest} is set to <code>true</code>, which is the default.
-     * <p/>
-     * Returns <code>true</code> if the request is valid, or <code>false</code> if it isn't.
+     * #setValidateRequest(boolean) validateRequest} is set to {@code true}, which is the default.
+     *
+     * <p>Returns {@code true} if the request is valid, or {@code false} if it isn't.
      *
      * @param messageContext the message context
-     * @return <code>true</code> if the message is valid; <code>false</code> otherwise
+     * @return {@code true} if the message is valid; {@code false} otherwise
      * @see #setValidateRequest(boolean)
      */
     @Override
@@ -188,13 +188,13 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 
     /**
      * Template method that is called when the request message contains validation errors.
-     * <p/>
-     * Default implementation logs all errors, and throws a {@link WebServiceValidationException}. Subclasses can
+     *
+     * <p>Default implementation logs all errors, and throws a {@link WebServiceValidationException}. Subclasses can
      * override this method to customize this behavior.
      *
      * @param messageContext the message context
      * @param errors         the validation errors
-     * @return <code>true</code> to continue processing the request, <code>false</code> otherwise
+     * @return {@code true} to continue processing the request, {@code false} otherwise
      */
     protected boolean handleRequestValidationErrors(MessageContext messageContext, SAXParseException[] errors) {
         for (SAXParseException error : errors) {
@@ -205,13 +205,13 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 
     /**
      * Validates the response message in the given message context. Validation only occurs if {@link
-     * #setValidateResponse(boolean) validateResponse} is set to <code>true</code>, which is <strong>not</strong> the
+     * #setValidateResponse(boolean) validateResponse} is set to {@code true}, which is <strong>not</strong> the
      * default.
-     * <p/>
-     * Returns <code>true</code> if the request is valid, or <code>false</code> if it isn't.
+     *
+     * <p>Returns {@code true} if the request is valid, or {@code false} if it isn't.
      *
      * @param messageContext the message context.
-     * @return <code>true</code> if the response is valid; <code>false</code> otherwise
+     * @return {@code true} if the response is valid; {@code false} otherwise
      * @see #setValidateResponse(boolean)
      */
     @Override
@@ -239,13 +239,13 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 
     /**
      * Template method that is called when the response message contains validation errors.
-     * <p/>
-     * Default implementation logs all errors, and returns <code>false</code>, i.e. do not cot continue to process the
+     *
+     * <p>Default implementation logs all errors, and returns {@code false}, i.e. do not cot continue to process the
      * respone interceptor chain.
      *
      * @param messageContext the message context
      * @param errors         the validation errors
-     * @return <code>true</code> to continue the reponse interceptor chain, <code>false</code> (the default) otherwise
+     * @return {@code true} to continue the reponse interceptor chain, {@code false} (the default) otherwise
      */
     protected boolean handleResponseValidationErrors(MessageContext messageContext, SAXParseException[] errors)
             throws WebServiceValidationException {
@@ -271,7 +271,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
      * Abstract template method that returns the part of the request message that is to be validated.
      *
      * @param request the request message
-     * @return the part of the message that is to validated, or <code>null</code> not to validate anything
+     * @return the part of the message that is to validated, or {@code null} not to validate anything
      */
     protected abstract Source getValidationRequestSource(WebServiceMessage request);
 
@@ -279,7 +279,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
      * Abstract template method that returns the part of the response message that is to be validated.
      *
      * @param response the response message
-     * @return the part of the message that is to validated, or <code>null</code> not to validate anything
+     * @return the part of the message that is to validated, or {@code null} not to validate anything
      */
     protected abstract Source getValidationResponseSource(WebServiceMessage response);
 }

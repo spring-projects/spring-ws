@@ -23,7 +23,7 @@ import javax.xml.namespace.QName;
 import org.springframework.ws.soap.SoapFault;
 
 /**
- * Subinterface of <code>SoapFault</code> that exposes SOAP 1.2 functionality. Necessary because SOAP 1.1 differs from
+ * Subinterface of {@code SoapFault} that exposes SOAP 1.2 functionality. Necessary because SOAP 1.1 differs from
  * SOAP 1.2 with respect to SOAP Faults.
  *
  * @author Arjen Poutsma
@@ -34,7 +34,7 @@ public interface Soap12Fault extends SoapFault {
     /**
      * Returns an iteration over the fault subcodes. The subcodes are returned in order: from top to bottom.
      *
-     * @return an Iterator that contains <code>QNames</code> representing the fault subcodes
+     * @return an Iterator that contains {@code QNames} representing the fault subcodes
      */
     Iterator<QName> getFaultSubcodes();
 

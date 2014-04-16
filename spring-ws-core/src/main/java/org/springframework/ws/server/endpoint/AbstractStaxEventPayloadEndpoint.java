@@ -38,7 +38,7 @@ import org.springframework.ws.context.MessageContext;
 
 /**
  * Abstract base class for endpoints that handle the message payload with event-based StAX. Allows subclasses to read
- * the request with a <code>XMLEventReader</code>, and to create a response using a <code>XMLEventWriter</code>.
+ * the request with a {@code XMLEventReader}, and to create a response using a {@code XMLEventWriter}.
  *
  * @author Arjen Poutsma
  * @see #invokeInternal(javax.xml.stream.XMLEventReader,javax.xml.stream.util.XMLEventConsumer,
@@ -62,17 +62,17 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
     }
 
     /**
-     * Create a <code>XMLEventFactory</code> that this endpoint will use to create <code>XMLEvent</code>s. Can be
+     * Create a {@code XMLEventFactory} that this endpoint will use to create {@code XMLEvent}s. Can be
      * overridden in subclasses, adding further initialization of the factory. The resulting
-     * <code>XMLEventFactory</code> is cached, so this method will only be called once.
+     * {@code XMLEventFactory} is cached, so this method will only be called once.
      *
-     * @return the created <code>XMLEventFactory</code>
+     * @return the created {@code XMLEventFactory}
      */
     protected XMLEventFactory createXmlEventFactory() {
         return XMLEventFactory.newInstance();
     }
 
-    /** Returns an <code>XMLEventFactory</code> to read XML from. */
+    /** Returns an {@code XMLEventFactory} to read XML from. */
     private XMLEventFactory getEventFactory() {
         if (eventFactory == null) {
             eventFactory = createXmlEventFactory();
@@ -137,20 +137,20 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
     }
 
     /**
-     * Template method. Subclasses must implement this. Offers the request payload as a <code>XMLEventReader</code>, and
-     * a <code>XMLEventWriter</code> to write the response payload to.
+     * Template method. Subclasses must implement this. Offers the request payload as a {@code XMLEventReader}, and
+     * a {@code XMLEventWriter} to write the response payload to.
      *
      * @param eventReader  the reader to read the payload events from
      * @param eventWriter  the writer to write payload events to
-     * @param eventFactory an <code>XMLEventFactory</code> that can be used to create events
+     * @param eventFactory an {@code XMLEventFactory} that can be used to create events
      */
     protected abstract void invokeInternal(XMLEventReader eventReader,
                                            XMLEventConsumer eventWriter,
                                            XMLEventFactory eventFactory) throws Exception;
 
     /**
-     * Implementation of the <code>XMLEventWriter</code> interface that creates a response
-     * <code>WebServiceMessage</code> as soon as any method is called, thus lazily creating the response.
+     * Implementation of the {@code XMLEventWriter} interface that creates a response
+     * {@code WebServiceMessage} as soon as any method is called, thus lazily creating the response.
      */
     private class ResponseCreatingEventWriter implements XMLEventWriter {
 

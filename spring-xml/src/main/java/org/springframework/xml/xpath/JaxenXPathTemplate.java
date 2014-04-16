@@ -31,8 +31,8 @@ import org.w3c.dom.Node;
 
 /**
  * Implementation of {@link XPathOperations} that uses Jaxen.
- * <p/>
- * Namespaces can be set using the <code>namespaces</code> property.
+ *
+ * <p>Namespaces can be set using the {@code namespaces} property.
  *
  * @author Arjen Poutsma
  * @see <a href="http://www.jaxen.org/">Jaxen</a>

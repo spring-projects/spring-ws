@@ -24,7 +24,7 @@ import javax.xml.transform.dom.DOMResult;
 import org.springframework.ws.soap.SoapFaultDetailElement;
 
 /**
- * SAAJ-specific implementation of the <code>SoapFaultDetailElement</code> interface. Wraps a {@link
+ * SAAJ-specific implementation of the {@code SoapFaultDetailElement} interface. Wraps a {@link
  * javax.xml.soap.DetailEntry}.
  *
  * @author Arjen Poutsma

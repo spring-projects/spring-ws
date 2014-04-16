@@ -104,7 +104,7 @@ configure(subprojects) { subproject ->
 		options.author = true
 		options.header = project.name
 		options.links(project.ext.javadocLinks)
-//		options.addStringOption('Xdoclint:none', '-quiet')
+		options.addStringOption('Xdoclint:none', '-quiet')
 
 		// suppress warnings due to cross-module @see and @link references;
 		// note that global 'api' task does display all warnings.
@@ -276,14 +276,22 @@ configure(rootProject) {
 		group = 'Documentation'
 		description = 'Generates aggregated Javadoc API documentation.'
 		title = "${rootProject.description} ${version} API"
+
+        dependsOn {
+            subprojects.collect {
+                it.tasks.getByName("jar")
+            }
+        }
+
 		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
 		options.author = true
 		options.header = rootProject.description
 		options.overview = 'src/api/overview.html'
+        options.stylesheetFile = file("src/api/stylesheet.css")
 		options.splitIndex = true
-		options.links(
-			'http://docs.jboss.org/jbossas/javadoc/4.0.5/connector'
-		)
+        options.links(project.ext.javadocLinks)
+        options.addStringOption('Xdoclint:none', '-quiet')
+
 		source subprojects.collect { project ->
 			project.sourceSets.main.allJava
 		}

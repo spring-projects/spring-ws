@@ -50,9 +50,9 @@ public abstract class AbstractSoapFaultDefinitionExceptionResolver extends Abstr
     /**
      * Template method that returns the {@link SoapFaultDefinition} for the given exception.
      *
-     * @param endpoint the executed endpoint, or <code>null</code>  if none chosen at the time of the exception
+     * @param endpoint the executed endpoint, or {@code null}  if none chosen at the time of the exception
      * @param ex       the exception to be handled
-     * @return the definition mapped to the exception, or <code>null</code> if none is found.
+     * @return the definition mapped to the exception, or {@code null} if none is found.
      */
     protected abstract SoapFaultDefinition getFaultDefinition(Object endpoint, Exception ex);
 
@@ -109,11 +109,11 @@ public abstract class AbstractSoapFaultDefinitionExceptionResolver extends Abstr
 
     /**
      * Customize the {@link SoapFault} created by this resolver. Called for each created fault
-     * <p/>
-     * The default implementation is empty. Can be overridden in subclasses to customize the properties of the fault,
+     *
+     * <p>The default implementation is empty. Can be overridden in subclasses to customize the properties of the fault,
      * such as adding details, etc.
      *
-     * @param endpoint the executed endpoint, or <code>null</code>  if none chosen at the time of the exception
+     * @param endpoint the executed endpoint, or {@code null}  if none chosen at the time of the exception
      * @param ex       the exception to be handled
      * @param fault    the created fault
      */

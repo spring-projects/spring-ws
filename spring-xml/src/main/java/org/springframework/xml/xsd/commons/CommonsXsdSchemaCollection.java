@@ -49,8 +49,8 @@ import org.springframework.xml.xsd.XsdSchemaCollection;
 
 /**
  * Implementation of the {@link XsdSchemaCollection} that uses Apache WS-Commons XML Schema.
- * <p/>
- * Setting the {@link #setInline(boolean) inline} flag to <code>true</code> will result in all referenced schemas
+ *
+ * <p>Setting the {@link #setInline(boolean) inline} flag to {@code true} will result in all referenced schemas
  * (included and imported) being merged into the referred schema. When including the schemas into a WSDL, this greatly
  * simplifies the deployment of the schemas.
  *
@@ -75,15 +75,15 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
     private ResourceLoader resourceLoader;
 
     /**
-     * Constructs a new, empty instance of the <code>CommonsXsdSchemaCollection</code>.
-     * <p/>
-     * A subsequent call to the {@link #setXsds(Resource[])} is required.
+     * Constructs a new, empty instance of the {@code CommonsXsdSchemaCollection}.
+     *
+     * <p>A subsequent call to the {@link #setXsds(Resource[])} is required.
      */
     public CommonsXsdSchemaCollection() {
     }
 
     /**
-     * Constructs a new instance of the <code>CommonsXsdSchemaCollection</code> based on the given resources.
+     * Constructs a new instance of the {@code CommonsXsdSchemaCollection} based on the given resources.
      *
      * @param resources the schema resources to load
      */
@@ -102,8 +102,8 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 
     /**
      * Defines whether included schemas should be inlined into the including schema.
-     * <p/>
-     * Defaults to <code>false</code>.
+     *
+     * <p>Defaults to {@code false}.
      */
     public void setInline(boolean inline) {
         this.inline = inline;
@@ -111,8 +111,8 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 
     /**
      * Sets the WS-Commons uri resolver to use when resolving (relative) schemas.
-     * <p/>
-     * Default is an internal subclass of {@link DefaultURIResolver} which correctly handles schemas on the classpath.
+     *
+     * <p>Default is an internal subclass of {@link DefaultURIResolver} which correctly handles schemas on the classpath.
      */
     public void setUriResolver(URIResolver uriResolver) {
         Assert.notNull(uriResolver, "'uriResolver' must not be null");

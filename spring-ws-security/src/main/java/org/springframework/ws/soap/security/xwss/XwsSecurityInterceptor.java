@@ -44,17 +44,17 @@ import org.springframework.ws.soap.security.xwss.callback.XwssCallbackHandlerCha
 /**
  * WS-Security endpoint interceptor  that is based on Sun's XML and Web Services Security package (XWSS). This
  * WS-Security implementation is part of the Java Web Services Developer Pack (Java WSDP).
- * <p/>
- * This interceptor needs a <code>CallbackHandler</code> to operate. This handler is used to retrieve certificates,
+ *
+ * <p>This interceptor needs a {@code CallbackHandler} to operate. This handler is used to retrieve certificates,
  * private keys, validate user credentials, etc. Refer to the XWSS Javadoc to learn more about the specific
- * <code>Callback</code>s fired by XWSS. You can also set multiple handlers, each of which will be used in turn.
- * <p/>
- * Additionally, you must define a XWSS policy file by setting <code>policyConfiguration</code> property. The format of
+ * {@code Callback}s fired by XWSS. You can also set multiple handlers, each of which will be used in turn.
+ *
+ * <p>Additionally, you must define a XWSS policy file by setting {@code policyConfiguration} property. The format of
  * the policy file is documented in the <a href="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp529900">Java
  * Web Services Tutorial</a>.
- * <p/>
- * <b>Note</b> that this interceptor depends on SAAJ, and thus requires <code>SaajSoapMessage</code>s to operate. This
- * means that you must use a <code>SaajSoapMessageFactory</code> to create the SOAP messages.
+ *
+ * <p><b>Note</b> that this interceptor depends on SAAJ, and thus requires {@code SaajSoapMessage}s to operate. This
+ * means that you must use a {@code SaajSoapMessageFactory} to create the SOAP messages.
  *
  * @author Arjen Poutsma
  * @see #setCallbackHandler(javax.security.auth.callback.CallbackHandler)
@@ -73,7 +73,7 @@ public class XwsSecurityInterceptor extends AbstractWsSecurityInterceptor implem
     private Resource policyConfiguration;
 
     /**
-     * Sets the handler to resolve XWSS callbacks. Setting either this propery, or <code>callbackHandlers</code>, is
+     * Sets the handler to resolve XWSS callbacks. Setting either this propery, or {@code callbackHandlers}, is
      * required.
      *
      * @see com.sun.xml.wss.impl.callback.XWSSCallback
@@ -84,7 +84,7 @@ public class XwsSecurityInterceptor extends AbstractWsSecurityInterceptor implem
     }
 
     /**
-     * Sets the handlers to resolve XWSS callbacks. Setting either this propery, or <code>callbackHandlers</code>, is
+     * Sets the handlers to resolve XWSS callbacks. Setting either this propery, or {@code callbackHandlers}, is
      * required.
      *
      * @see com.sun.xml.wss.impl.callback.XWSSCallback
@@ -125,7 +125,7 @@ public class XwsSecurityInterceptor extends AbstractWsSecurityInterceptor implem
      *
      * @param soapMessage the message to be secured
      * @throws XwsSecuritySecurementException in case of errors
-     * @throws IllegalArgumentException       when soapMessage is not a <code>SaajSoapMessage</code>
+     * @throws IllegalArgumentException       when soapMessage is not a {@code SaajSoapMessage}
      */
     @Override
     protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
@@ -151,7 +151,7 @@ public class XwsSecurityInterceptor extends AbstractWsSecurityInterceptor implem
      *
      * @param soapMessage the message to be validated
      * @throws XwsSecurityValidationException in case of errors
-     * @throws IllegalArgumentException       when soapMessage is not a <code>SaajSoapMessage</code>
+     * @throws IllegalArgumentException       when soapMessage is not a {@code SaajSoapMessage}
      */
     @Override
     protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)

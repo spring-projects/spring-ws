@@ -29,7 +29,7 @@ import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.soap11.Soap11Header;
 
 /**
- * SAAJ-specific implementation of the <code>Soap11Header</code> interface. Wraps a {@link javax.xml.soap.SOAPHeader}.
+ * SAAJ-specific implementation of the {@code Soap11Header} interface. Wraps a {@link javax.xml.soap.SOAPHeader}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

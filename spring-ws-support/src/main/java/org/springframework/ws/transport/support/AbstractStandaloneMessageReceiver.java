@@ -54,8 +54,8 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
 
     /**
      * Set whether to automatically start the receiver after initialization.
-     * <p/>
-     * Default is <code>true</code>; set this to <code>false</code> to allow for manual startup.
+     *
+     * <p>Default is {@code true}; set this to {@code false} to allow for manual startup.
      */
     public void setAutoStartup(boolean autoStartup) {
         this.autoStartup = autoStartup;

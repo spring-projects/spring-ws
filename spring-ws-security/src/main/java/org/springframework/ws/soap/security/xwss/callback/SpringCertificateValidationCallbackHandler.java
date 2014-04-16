@@ -34,14 +34,16 @@ import org.springframework.ws.soap.security.callback.CleanupCallback;
 import org.springframework.ws.soap.security.x509.X509AuthenticationToken;
 
 /**
- * Callback handler that validates a certificate using an Spring Security <code>AuthenticationManager</code>. Logic
- * based on Spring Security's <code>X509ProcessingFilter</code>. <p/> Spring Security
- * <code>X509AuthenticationToken</code> is created with the certificate as the credentials. <p/> The configured
- * authentication manager is expected to supply a provider which can handle this token (usually an instance of
- * <code>X509AuthenticationProvider</code>).</p>
- * <p/>
- * This class only handles <code>CertificateValidationCallback</code>s, and throws an
- * <code>UnsupportedCallbackException</code> for others.
+ * Callback handler that validates a certificate using an Spring Security {@code AuthenticationManager}. Logic
+ * based on Spring Security's {@code X509ProcessingFilter}.
+ *
+ * <p>Spring Security {@code X509AuthenticationToken} is created with the certificate as the credentials.
+ *
+ * <p>The configured authentication manager is expected to supply a provider which can handle this token (usually an instance of
+ * {@code X509AuthenticationProvider}).</p>
+ *
+ * <p>This class only handles {@code CertificateValidationCallback}s, and throws an
+ * {@code UnsupportedCallbackException} for others.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.soap.security.x509.X509AuthenticationToken
@@ -70,7 +72,7 @@ public class SpringCertificateValidationCallbackHandler extends AbstractCallback
     }
 
     /**
-     * Handles  <code>CertificateValidationCallback</code>s, and throws an <code>UnsupportedCallbackException</code> for
+     * Handles  {@code CertificateValidationCallback}s, and throws an {@code UnsupportedCallbackException} for
      * others
      *
      * @throws javax.security.auth.callback.UnsupportedCallbackException

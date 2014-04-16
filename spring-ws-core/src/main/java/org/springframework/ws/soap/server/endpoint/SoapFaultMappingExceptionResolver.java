@@ -24,7 +24,7 @@ import org.springframework.util.CollectionUtils;
 
 /**
  * Exception resolver that allows for mapping exception class names to SOAP Faults. The mappings are set using the
- * <code>exceptionMappings</code> property, the format of which is documented in {@link SoapFaultDefinitionEditor}.
+ * {@code exceptionMappings} property, the format of which is documented in {@link SoapFaultDefinitionEditor}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -36,11 +36,11 @@ public class SoapFaultMappingExceptionResolver extends AbstractSoapFaultDefiniti
     /**
      * Set the mappings between exception class names and SOAP Faults. The exception class name can be a substring, with
      * no wildcard support at present.
-     * <p/>
-     * The values of the given properties object should use the format described in
-     * <code>SoapFaultDefinitionEditor</code>.
-     * <p/>
-     * Follows the same matching algorithm as <code>SimpleMappingExceptionResolver</code>.
+     *
+     * <p>The values of the given properties object should use the format described in
+     * {@code SoapFaultDefinitionEditor}.
+     *
+     * <p>Follows the same matching algorithm as {@code SimpleMappingExceptionResolver}.
      *
      * @param mappings exception patterns (can also be fully qualified class names) as keys, fault definition texts as
      *                 values
@@ -76,10 +76,10 @@ public class SoapFaultMappingExceptionResolver extends AbstractSoapFaultDefiniti
     }
 
     /**
-     * Return the depth to the superclass matching. <code>0</code> means ex matches exactly. Returns <code>-1</code> if
+     * Return the depth to the superclass matching. {@code 0} means ex matches exactly. Returns {@code -1} if
      * there's no match. Otherwise, returns depth. Lowest depth wins.
-     * <p/>
-     * Follows the same algorithm as RollbackRuleAttribute, and SimpleMappingExceptionResolver
+     *
+     * <p>Follows the same algorithm as RollbackRuleAttribute, and SimpleMappingExceptionResolver
      */
     protected int getDepth(String exceptionMapping, Exception ex) {
         return getDepth(exceptionMapping, ex.getClass(), 0);

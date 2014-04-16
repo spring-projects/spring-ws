@@ -93,8 +93,8 @@ public abstract class SaajUtils {
     }
 
 	/**
-     * Returns the SAAJ version as a String. The returned string will be "<code>SAAJ 1.3</code>", "<code>SAAJ
-     * 1.2</code>", or "<code>SAAJ 1.1</code>".
+     * Returns the SAAJ version as a String. The returned string will be "{@code SAAJ 1.3}", "{@code SAAJ
+     * 1.2}", or "{@code SAAJ 1.1}".
      *
      * @return a string representation of the SAAJ version
      * @see #getSaajVersion()
@@ -121,11 +121,11 @@ public abstract class SaajUtils {
     /**
      * Converts a {@link QName} to a {@link Name}. A {@link SOAPElement} is required to resolve namespaces.
      *
-     * @param qName          the <code>QName</code> to convert
-     * @param resolveElement a <code>SOAPElement</code> used to resolve namespaces to prefixes
+     * @param qName          the {@code QName} to convert
+     * @param resolveElement a {@code SOAPElement} used to resolve namespaces to prefixes
      * @return the converted SAAJ Name
      * @throws SOAPException            if conversion is unsuccessful
-     * @throws IllegalArgumentException if <code>qName</code> is not fully qualified
+     * @throws IllegalArgumentException if {@code qName} is not fully qualified
      */
     public static Name toName(QName qName, SOAPElement resolveElement) throws SOAPException {
         String qNamePrefix = QNameUtils.getPrefix(qName);
@@ -155,10 +155,10 @@ public abstract class SaajUtils {
     }
 
     /**
-     * Converts a <code>javax.xml.soap.Name</code> to a <code>javax.xml.namespace.QName</code>.
+     * Converts a {@code javax.xml.soap.Name} to a {@code javax.xml.namespace.QName}.
      *
-     * @param name the <code>Name</code> to convert
-     * @return the converted <code>QName</code>
+     * @param name the {@code Name} to convert
+     * @return the converted {@code QName}
      */
     public static QName toQName(Name name) {
         if (StringUtils.hasLength(name.getURI()) && StringUtils.hasLength(name.getPrefix())) {
@@ -173,7 +173,7 @@ public abstract class SaajUtils {
     }
 
     /**
-     * Loads a SAAJ <code>SOAPMessage</code> from the given resource with a given message factory.
+     * Loads a SAAJ {@code SOAPMessage} from the given resource with a given message factory.
      *
      * @param resource       the resource to read from
      * @param messageFactory SAAJ message factory used to construct the message
@@ -196,10 +196,10 @@ public abstract class SaajUtils {
     }
 
     /**
-     * Returns the SAAJ <code>SOAPEnvelope</code> for the given element.
+     * Returns the SAAJ {@code SOAPEnvelope} for the given element.
      *
      * @param element the element to return the envelope from
-     * @return the envelope, or <code>null</code> if not found
+     * @return the envelope, or {@code null} if not found
      */
     public static SOAPEnvelope getEnvelope(SOAPElement element) {
         Assert.notNull(element, "Element should not be null");

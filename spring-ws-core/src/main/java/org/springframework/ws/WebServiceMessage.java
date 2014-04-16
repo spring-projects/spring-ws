@@ -23,7 +23,7 @@ import javax.xml.transform.Source;
 
 /**
  * Represents a protocol-agnostic XML message.
- * <p/>
+ *
  * <p>Contains methods that provide access to the payload of the message.
  *
  * @author Arjen Poutsma
@@ -34,8 +34,10 @@ import javax.xml.transform.Source;
 public interface WebServiceMessage {
 
     /**
-     * Returns the contents of the message as a {@link Source}. <p> Depending on the implementation, this can be
-     * retrieved multiple times, or just a single time.
+     * Returns the contents of the message as a {@link Source}.
+     *
+     * <p>Depending on the implementation, this can be retrieved multiple times, or just
+     * a single time.
      *
      * @return the message contents
      */
@@ -43,10 +45,10 @@ public interface WebServiceMessage {
 
     /**
      * Returns the contents of the message as a {@link Result}.
-     * <p/>
-     * Calling this method removes the current payload.
-     * <p/>
-     * Implementations that are read-only will throw an {@link UnsupportedOperationException}.
+     *
+     * <p>Calling this method removes the current payload.
+     *
+     * <p>Implementations that are read-only will throw an {@link UnsupportedOperationException}.
      *
      * @return the message contents
      * @throws UnsupportedOperationException if the message is read-only

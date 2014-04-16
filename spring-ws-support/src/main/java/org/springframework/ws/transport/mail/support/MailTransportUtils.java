@@ -79,10 +79,10 @@ public abstract class MailTransportUtils {
     }
 
     /**
-     * Close the given JavaMail Service and ignore any thrown exception. This is useful for typical <code>finally</code>
+     * Close the given JavaMail Service and ignore any thrown exception. This is useful for typical {@code finally}
      * blocks in manual JavaMail code.
      *
-     * @param service the JavaMail Service to close (may be <code>null</code>)
+     * @param service the JavaMail Service to close (may be {@code null})
      * @see Transport
      * @see Store
      */
@@ -98,10 +98,10 @@ public abstract class MailTransportUtils {
     }
 
     /**
-     * Close the given JavaMail Folder and ignore any thrown exception. This is useful for typical <code>finally</code>
+     * Close the given JavaMail Folder and ignore any thrown exception. This is useful for typical {@code finally}
      * blocks in manual JavaMail code.
      *
-     * @param folder the JavaMail Folder to close (may be <code>null</code>)
+     * @param folder the JavaMail Folder to close (may be {@code null})
      */
 
     public static void closeFolder(Folder folder) {
@@ -109,10 +109,10 @@ public abstract class MailTransportUtils {
     }
 
     /**
-     * Close the given JavaMail Folder and ignore any thrown exception. This is useful for typical <code>finally</code>
+     * Close the given JavaMail Folder and ignore any thrown exception. This is useful for typical {@code finally}
      * blocks in manual JavaMail code.
      *
-     * @param folder  the JavaMail Folder to close (may be <code>null</code>)
+     * @param folder  the JavaMail Folder to close (may be {@code null})
      * @param expunge whether all deleted messages should be expunged from the folder
      */
     public static void closeFolder(Folder folder, boolean expunge) {
@@ -169,10 +169,10 @@ public abstract class MailTransportUtils {
     }
 
     /**
-     * Converts the given internet address into a <code>mailto</code> URI.
+     * Converts the given internet address into a {@code mailto} URI.
      *
      * @param to      the To: address
-     * @param subject the subject, may be <code>null</code>
+     * @param subject the subject, may be {@code null}
      * @return a mailto URI
      */
     public static URI toUri(InternetAddress to, String subject) throws URISyntaxException {

@@ -32,8 +32,8 @@ import org.springframework.xml.transform.TransformerHelper;
 /**
  * Implementation of the {@link org.springframework.ws.server.EndpointMapping EndpointMapping} interface that uses the
  * JAXB2 {@link XmlRootElement} annotation to map methods to request payload root elements.
- * <p/>
- * Endpoints typically have the following form:
+ *
+ * <p>Endpoints typically have the following form:
  * <pre>
  * &#64;Endpoint
  * public class MyEndpoint{

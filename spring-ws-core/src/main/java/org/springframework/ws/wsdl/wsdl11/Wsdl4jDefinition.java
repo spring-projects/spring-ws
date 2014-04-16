@@ -30,7 +30,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.ws.wsdl.WsdlDefinitionException;
 
 /**
- * Implementation of the <code>Wsdl11Definition</code> based on WSDL4J. A {@link javax.wsdl.Definition} can be given as
+ * Implementation of the {@code Wsdl11Definition} based on WSDL4J. A {@link javax.wsdl.Definition} can be given as
  * as constructor argument, or set using a property.
  *
  * @author Arjen Poutsma
@@ -49,7 +49,7 @@ public class Wsdl4jDefinition implements Wsdl11Definition {
     private final Object monitor = new Object();
 
     /**
-     * Constructs a new, empty <code>Wsdl4jDefinition</code>.
+     * Constructs a new, empty {@code Wsdl4jDefinition}.
      *
      * @see #setDefinition(javax.wsdl.Definition)
      */
@@ -57,7 +57,7 @@ public class Wsdl4jDefinition implements Wsdl11Definition {
     }
 
     /**
-     * Constructs a new <code>Wsdl4jDefinition</code> based on the given <code>Definition</code>.
+     * Constructs a new {@code Wsdl4jDefinition} based on the given {@code Definition}.
      *
      * @param definition the WSDL4J definition
      */
@@ -65,14 +65,14 @@ public class Wsdl4jDefinition implements Wsdl11Definition {
         setDefinition(definition);
     }
 
-    /** Returns the WSDL4J <code>Definition</code>. */
+    /** Returns the WSDL4J {@code Definition}. */
     public Definition getDefinition() {
         synchronized (monitor) {
             return definition;
         }
     }
 
-    /** Set the WSDL4J <code>Definition</code>. */
+    /** Set the WSDL4J {@code Definition}. */
     public void setDefinition(Definition definition) {
         synchronized (monitor) {
             this.definition = definition;

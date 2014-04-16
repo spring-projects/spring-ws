@@ -25,20 +25,20 @@ import org.springframework.util.StringUtils;
 import org.springframework.xml.namespace.QNameEditor;
 
 /**
- * PropertyEditor for <code>SoapFaultDefinition</code> objects. Takes strings of form
+ * PropertyEditor for {@code SoapFaultDefinition} objects. Takes strings of form
  * <pre>
  * faultCode,faultString,locale
  * </pre>
- * where <code>faultCode</code> is the string representation of a <code>QName</code>, <code>faultStringOrReason</code>
- * is the optional fault string, and <code>locale</code> is the optional string representations for the
- * <code>faultStringOrReason</code>language. By default, the language is set to English, and the fault string set to the
+ * where {@code faultCode} is the string representation of a {@code QName}, {@code faultStringOrReason}
+ * is the optional fault string, and {@code locale} is the optional string representations for the
+ * {@code faultStringOrReason}language. By default, the language is set to English, and the fault string set to the
  * exception message.
- * <p/>
- * Instead of supplying a custom fault code, you can use the constants <code>SERVER</code> or <code>RECEIVER</code>
- * indicate a <code>Server</code>/<code>Receiver</code> fault, or <code>CLIENT</code> or <code>SENDER</code>
- * to<code>Client</code>/<code>Sender</code> fault respectively.
- * <p/>
- * For example:
+ *
+ * <p>Instead of supplying a custom fault code, you can use the constants {@code SERVER} or {@code RECEIVER}
+ * indicate a {@code Server}/{@code Receiver} fault, or {@code CLIENT} or {@code SENDER}
+ * to{@code Client}/{@code Sender} fault respectively.
+ *
+ * <p>For example:
  * <pre>
  * RECEIVER,Server error
  * </pre>

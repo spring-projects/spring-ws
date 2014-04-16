@@ -24,8 +24,8 @@ import java.lang.annotation.Target;
 
 /**
  * Indicates that a method parameter should be bound to an XPath expression. The annotation value signifies the XPath
- * expression to use. The parameter can be of the following types: <ul> <li><code>boolean</code>, or {@link
- * Boolean}</li> <li><code>double</code>, or {@link Double}</li> <li>{@link String}</li> <li>{@link
+ * expression to use. The parameter can be of the following types: <ul> <li>{@code boolean}, or {@link
+ * Boolean}</li> <li>{@code double}, or {@link Double}</li> <li>{@link String}</li> <li>{@link
  * org.w3c.dom.Node}</li> <li>{@link org.w3c.dom.NodeList}</li> </ul>
  *
  * @author Arjen Poutsma

@@ -43,12 +43,12 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
 /**
  * {@link WebServiceMessageSender} implementation that uses JMS {@link Message}s. Requires a JMS {@link
  * ConnectionFactory} to operate.
- * <p/>
- * This message sender supports URI's of the following format: <blockquote> <tt><b>jms:</b></tt><i>destination</i>[<tt><b>?</b></tt><i>param-name</i><tt><b>=</b></tt><i>param-value</i>][<tt><b>&amp;</b></tt><i>param-name</i><tt><b>=</b></tt><i>param-value</i>]*
+ *
+ * <p>This message sender supports URI's of the following format: <blockquote> <tt><b>jms:</b></tt><i>destination</i>[<tt><b>?</b></tt><i>param-name</i><tt><b>=</b></tt><i>param-value</i>][<tt><b>&amp;</b></tt><i>param-name</i><tt><b>=</b></tt><i>param-value</i>]*
  * </blockquote> where the characters <tt><b>:</b></tt>, <tt><b>?</b></tt>, and <tt><b>&amp;</b></tt> stand for
  * themselves. The <i>destination</i> represents the name of the {@link Queue} or {@link Topic} that will be resolved by
  * the {@link #getDestinationResolver() destination resolver}. Valid <i>param-name</i> include:
- * <p/>
+ *
  * <blockquote>
  *     <table>
  *         <tr><th><i>param-name</i></th><th><i>Description</i></th></tr>
@@ -78,15 +78,15 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  *         </tr>
  *     </table>
  * </blockquote>
- * <p/>
- * If the <tt>replyToName</tt> is not set, a {@link Session#createTemporaryQueue() temporary queue} is used.
- * <p/>
- * This class uses {@link BytesMessage} messages by default, but can be configured to send {@link TextMessage} messages
- * instead. <b>Note</b> that <code>BytesMessages</code> are preferred, since <code>TextMessages</code> do not support
+ *
+ * <p>If the <tt>replyToName</tt> is not set, a {@link Session#createTemporaryQueue() temporary queue} is used.
+ *
+ * <p>This class uses {@link BytesMessage} messages by default, but can be configured to send {@link TextMessage} messages
+ * instead. <b>Note</b> that {@code BytesMessages} are preferred, since {@code TextMessages} do not support
  * attachments and character encodings reliably.
- * <p/>
- * Some examples of JMS URIs are:
- * <p/>
+ *
+ * <p>Some examples of JMS URIs are:
+ *
  * <blockquote> <tt>jms:SomeQueue</tt><br> <tt>jms:SomeTopic?priority=3&deliveryMode=NON_PERSISTENT</tt><br>
  * <tt>jms:RequestQueue?replyToName=ResponseQueueName</tt><br> <tt>jms:Queue?messageType=TEXT_MESSAGE</blockquote>
  *
@@ -109,9 +109,9 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
     private MessagePostProcessor postProcessor;
 
     /**
-     * Create a new <code>JmsMessageSender</code>
-     * <p/>
-     * <b>Note</b>: The ConnectionFactory has to be set before using the instance. This constructor can be used to
+     * Create a new {@code JmsMessageSender}
+     *
+     * <p><b>Note</b>: The ConnectionFactory has to be set before using the instance. This constructor can be used to
      * prepare a JmsTemplate via a BeanFactory, typically setting the ConnectionFactory via {@link
      * #setConnectionFactory(ConnectionFactory)}.
      *
@@ -121,7 +121,7 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
     }
 
     /**
-     * Create a new <code>JmsMessageSender</code>, given a ConnectionFactory.
+     * Create a new {@code JmsMessageSender}, given a ConnectionFactory.
      *
      * @param connectionFactory the ConnectionFactory to obtain Connections from
      */
@@ -138,7 +138,7 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
         this.receiveTimeout = receiveTimeout;
     }
 
-    /** Sets the encoding used to read from {@link TextMessage} messages. Defaults to <code>UTF-8</code>. */
+    /** Sets the encoding used to read from {@link TextMessage} messages. Defaults to {@code UTF-8}. */
     public void setTextMessageEncoding(String textMessageEncoding) {
         this.textMessageEncoding = textMessageEncoding;
     }

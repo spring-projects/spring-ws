@@ -23,8 +23,8 @@ import org.w3c.dom.Node;
  * An interface used by {@link XPathOperations} implementations for processing {@link Node} objects on a per-node basis.
  * Implementations of this interface perform the actual work of processing nodes, but don't need to worry about
  * exception handling.
- * <p/>
- * Consider using a {@link NodeMapper} instead if you need to map exactly result object per node, assembling them in a
+ *
+ * <p>Consider using a {@link NodeMapper} instead if you need to map exactly result object per node, assembling them in a
  * List.
  *
  * @author Arjen Poutsma

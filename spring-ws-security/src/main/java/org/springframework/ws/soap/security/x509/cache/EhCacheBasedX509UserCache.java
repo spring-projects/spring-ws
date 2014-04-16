@@ -31,7 +31,7 @@ import org.springframework.util.Assert;
 
 
 /**
- * Caches <code>User</code> objects using a Spring IoC defined <a
+ * Caches {@code User} objects using a Spring IoC defined <a
  * href="http://ehcache.sourceforge.net">EHCACHE</a>.
  * <p>Migrated from Spring Security 2 since it has been removed in Spring Security 3.</p>
  *

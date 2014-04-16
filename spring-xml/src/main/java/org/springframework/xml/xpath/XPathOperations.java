@@ -24,8 +24,8 @@ import org.w3c.dom.Node;
 /**
  * Interface that specifies a basic set of XPath operations, implemented by various XPathTemplates. Contains numerous
  * evaluation methods,
- * <p/>
- * The templates that implement this interface do not use precompiled XPath expressions. Consider using the {@link
+ *
+ * <p>The templates that implement this interface do not use precompiled XPath expressions. Consider using the {@link
  * XPathExpressionFactory} or the {@link XPathExpressionFactoryBean} for optimal performance, but less flexibility.
  *
  * @author Arjen Poutsma
@@ -36,10 +36,10 @@ import org.w3c.dom.Node;
 public interface XPathOperations {
 
     /**
-     * Evaluates the given expression as a <code>boolean</code>. Returns the boolean evaluation of the expression, or
-     * <code>false</code> if it is invalid.
-     * <p/>
-     * The return value is determined per the {@code boolean()} function defined in the XPath specification.
+     * Evaluates the given expression as a {@code boolean}. Returns the boolean evaluation of the expression, or
+     * {@code false} if it is invalid.
+     *
+     * <p>The return value is determined per the {@code boolean()} function defined in the XPath specification.
      * This means that an expression that selects zero nodes will return {@code false}, while an expression that
      * selects one or more nodes will return {@code true}.
      * An expression that returns a string returns {@code false} for empty strings and {@code true} for all other
@@ -55,7 +55,7 @@ public interface XPathOperations {
     boolean evaluateAsBoolean(String expression, Source context) throws XPathException;
 
     /**
-     * Evaluates the given expression as a {@link Node}. Returns the evaluation of the expression, or <code>null</code>
+     * Evaluates the given expression as a {@link Node}. Returns the evaluation of the expression, or {@code null}
      * if it is invalid.
      *
      * @param expression the XPath expression
@@ -79,10 +79,10 @@ public interface XPathOperations {
     List<Node> evaluateAsNodeList(String expression, Source context) throws XPathException;
 
     /**
-     * Evaluates the given expression as a <code>double</code>. Returns the evaluation of the expression, or {@link
+     * Evaluates the given expression as a {@code double}. Returns the evaluation of the expression, or {@link
      * Double#NaN} if it is invalid.
-     * <p/>
-     * The return value is determined per the {@code number()} function as defined in the XPath specification.
+     *
+     * <p>The return value is determined per the {@code number()} function as defined in the XPath specification.
      * This means that if the expression selects multiple nodes, it will return the number value of the first node.
      * 
      * @param expression the XPath expression
@@ -95,9 +95,9 @@ public interface XPathOperations {
 
     /**
      * Evaluates the given expression as a {@link String}. Returns the evaluation of the expression, or
-     * <code>null</code> if it is invalid.
-     * <p/>
-     * The return value is determined per the {@code string()} function as defined in the XPath specification.
+     * {@code null} if it is invalid.
+     *
+     * <p>The return value is determined per the {@code string()} function as defined in the XPath specification.
      * This means that if the expression selects multiple nodes, it will return the string value of the first node.
      *
      * @param expression the XPath expression

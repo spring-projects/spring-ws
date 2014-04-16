@@ -37,7 +37,7 @@ import org.springframework.ws.soap.soap12.Soap12Header;
 import org.springframework.xml.namespace.QNameUtils;
 
 /**
- * Axiom-specific version of <code>org.springframework.ws.soap.Soap12Header</code>.
+ * Axiom-specific version of {@code org.springframework.ws.soap.Soap12Header}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

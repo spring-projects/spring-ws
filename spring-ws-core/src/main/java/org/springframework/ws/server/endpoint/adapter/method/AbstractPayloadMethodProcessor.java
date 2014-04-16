@@ -42,8 +42,8 @@ public abstract class AbstractPayloadMethodProcessor extends TransformerObjectSu
 
     /**
      * {@inheritDoc}
-     * <p/>
-     * This implementation gets checks if the given parameter is annotated with {@link RequestPayload}, and invokes
+     *
+     * <p>This implementation gets checks if the given parameter is annotated with {@link RequestPayload}, and invokes
      * {@link #supportsRequestPayloadParameter(org.springframework.core.MethodParameter)} afterwards.
      */
     @Override
@@ -70,8 +70,8 @@ public abstract class AbstractPayloadMethodProcessor extends TransformerObjectSu
     
     /**
      * {@inheritDoc}
-     * <p/>
-     * This implementation gets checks if the method of the given return type is annotated with {@link ResponsePayload},
+     *
+     * <p>This implementation gets checks if the method of the given return type is annotated with {@link ResponsePayload},
      * and invokes {@link #supportsResponsePayloadReturnType(org.springframework.core.MethodParameter)} afterwards.
      */
     @Override

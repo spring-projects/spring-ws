@@ -21,7 +21,7 @@ import java.net.URI;
 import org.springframework.ws.soap.SoapMessage;
 
 /**
- * Strategy interface that encapsulates the creation and validation of WS-Addressing <code>MessageID</code>s.
+ * Strategy interface that encapsulates the creation and validation of WS-Addressing {@code MessageID}s.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
@@ -29,15 +29,15 @@ import org.springframework.ws.soap.SoapMessage;
 public interface MessageIdStrategy {
 
     /**
-     * Indicates whether the given <code>MessageID</code> value is a duplicate or not
+     * Indicates whether the given {@code MessageID} value is a duplicate or not
      *
      * @param messageId the message id
-     * @return <code>true</code> if a duplicate; <code>false</code> otherwise
+     * @return {@code true} if a duplicate; {@code false} otherwise
      */
     boolean isDuplicate(URI messageId);
 
     /**
-     * Returns a new WS-Addressing <code>MessageID</code> for the given {@link SoapMessage}.
+     * Returns a new WS-Addressing {@code MessageID} for the given {@link SoapMessage}.
      *
      * @param message the message to create an id for
      * @return the new message id

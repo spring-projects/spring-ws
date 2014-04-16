@@ -17,8 +17,8 @@
 package org.springframework.ws.transport.context;
 
 /**
- * Simple holder class that associates a <code>TransportContext</code> instance with the current thread. The
- * <code>TransportContext</code> will be inherited by any child threads spawned by the current thread.
+ * Simple holder class that associates a {@code TransportContext} instance with the current thread. The
+ * {@code TransportContext} will be inherited by any child threads spawned by the current thread.
  *
  * @author Arjen Poutsma
  * @see TransportContext
@@ -29,18 +29,18 @@ public abstract class TransportContextHolder {
     private static final ThreadLocal<TransportContext> transportContextHolder = new TransportThreadLocal();
 
     /**
-     * Associate the given <code>TransportContext</code> with the current thread.
+     * Associate the given {@code TransportContext} with the current thread.
      *
-     * @param transportContext the current transport context, or <code>null</code> to reset the thread-bound context
+     * @param transportContext the current transport context, or {@code null} to reset the thread-bound context
      */
     public static void setTransportContext(TransportContext transportContext) {
         transportContextHolder.set(transportContext);
     }
 
     /**
-     * Return the <code>TransportContext</code> associated with the current thread, if any.
+     * Return the {@code TransportContext} associated with the current thread, if any.
      *
-     * @return the current transport context, or <code>null</code> if none
+     * @return the current transport context, or {@code null} if none
      */
     public static TransportContext getTransportContext() {
         return transportContextHolder.get();

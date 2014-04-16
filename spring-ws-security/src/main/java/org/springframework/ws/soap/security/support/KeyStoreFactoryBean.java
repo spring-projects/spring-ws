@@ -31,8 +31,8 @@ import org.springframework.util.StringUtils;
 
 /**
  * Spring factory bean for a {@link KeyStore}.
- * <p/>
- * To load an existing key store, you must set the <code>location</code> property. If this property is not set, a new,
+ *
+ * <p>To load an existing key store, you must set the {@code location} property. If this property is not set, a new,
  * empty key store is created, which is most likely not what you want.
  *
  * @author Arjen Poutsma
@@ -79,7 +79,7 @@ public class KeyStoreFactoryBean implements FactoryBean<KeyStore>, InitializingB
     }
 
     /**
-     * Sets the type of the <code>KeyStore</code> to use. If this is not set, the default is used.
+     * Sets the type of the {@code KeyStore} to use. If this is not set, the default is used.
      *
      * @see KeyStore#getDefaultType()
      */

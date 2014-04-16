@@ -27,9 +27,9 @@ import javax.xml.transform.Source;
 public interface WsdlDefinition {
 
     /**
-     * Returns the <code>Source</code> of the definition.
+     * Returns the {@code Source} of the definition.
      *
-     * @return the <code>Source</code> of this WSDL definition
+     * @return the {@code Source} of this WSDL definition
      */
     Source getSource();
 

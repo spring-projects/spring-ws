@@ -28,7 +28,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
 /**
- * Simple callback handler that validates passwords against a in-memory <code>Properties</code> object. Password
+ * Simple callback handler that validates passwords against a in-memory {@code Properties} object. Password
  * validation is done on a case-sensitive basis.
  *
  * @author Tareq Abed Rabbo

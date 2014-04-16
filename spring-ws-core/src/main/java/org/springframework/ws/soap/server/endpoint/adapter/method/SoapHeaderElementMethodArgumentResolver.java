@@ -40,8 +40,8 @@ import org.springframework.xml.namespace.QNameUtils;
  * <pre>
  * {@code
  * public void soapHeaderElement(@SoapHeader("{http://springframework.org/ws}header") SoapHeaderElement element)
- * <p/>
- * public void soapHeaderElementList(@SoapHeader("{http://springframework.org/ws}header") List<SoapHeaderElement>
+ *
+ * <p>public void soapHeaderElementList(@SoapHeader("{http://springframework.org/ws}header") List<SoapHeaderElement>
  * elements)
  * </pre>
  *

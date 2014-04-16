@@ -27,11 +27,11 @@ import org.springframework.util.Assert;
 import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 
 /**
- * Abstract base class for WS-Addressing <code>Action</code>-mapped {@link org.springframework.ws.server.EndpointMapping}
+ * Abstract base class for WS-Addressing {@code Action}-mapped {@link org.springframework.ws.server.EndpointMapping}
  * implementations. Provides infrastructure for mapping endpoints to actions.
- * <p/>
- * By default, this mapping creates a <code>Action</code> for reply messages based on the request message, plus the
- * extra {@link #setOutputActionSuffix(String) suffix}, and a   * By default, this mapping creates a <code>Action</code>
+ *
+ * <p>By default, this mapping creates a {@code Action} for reply messages based on the request message, plus the
+ * extra {@link #setOutputActionSuffix(String) suffix}, and a   * By default, this mapping creates a {@code Action}
  * for reply messages based on the request message, plus the extra {@link #setOutputActionSuffix(String) suffix}.
  *
  * @author Arjen Poutsma
@@ -40,10 +40,10 @@ import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 public abstract class AbstractActionEndpointMapping extends AbstractAddressingEndpointMapping
         implements ApplicationContextAware {
 
-    /** The defaults suffix to add to the request <code>Action</code> for reply messages. */
+    /** The defaults suffix to add to the request {@code Action} for reply messages. */
     public static final String DEFAULT_OUTPUT_ACTION_SUFFIX = "Response";
 
-    /** The defaults suffix to add to response <code>Action</code> for reply messages. */
+    /** The defaults suffix to add to response {@code Action} for reply messages. */
     public static final String DEFAULT_FAULT_ACTION_SUFFIX = "Fault";
 
     // keys are action URIs, values are endpoints
@@ -55,13 +55,13 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 
     private ApplicationContext applicationContext;
 
-    /** Returns the suffix to add to request <code>Action</code>s for reply messages. */
+    /** Returns the suffix to add to request {@code Action}s for reply messages. */
     public String getOutputActionSuffix() {
         return outputActionSuffix;
     }
 
     /**
-     * Sets the suffix to add to request <code>Action</code>s for reply messages.
+     * Sets the suffix to add to request {@code Action}s for reply messages.
      *
      * @see #DEFAULT_OUTPUT_ACTION_SUFFIX
      */
@@ -70,13 +70,13 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
         this.outputActionSuffix = outputActionSuffix;
     }
 
-    /** Returns the suffix to add to request <code>Action</code>s for reply fault messages. */
+    /** Returns the suffix to add to request {@code Action}s for reply fault messages. */
     public String getFaultActionSuffix() {
         return faultActionSuffix;
     }
 
     /**
-     * Sets the suffix to add to request <code>Action</code>s for reply fault messages.
+     * Sets the suffix to add to request {@code Action}s for reply fault messages.
      *
      * @see #DEFAULT_FAULT_ACTION_SUFFIX
      */
@@ -108,11 +108,11 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 
     /**
      * Returns the address property of the given endpoint. The value of this property should match the {@link
-     * MessageAddressingProperties#getTo() destination} of incoming messages. May return <code>null</code>  to ignore
+     * MessageAddressingProperties#getTo() destination} of incoming messages. May return {@code null}  to ignore
      * the destination.
      *
      * @param endpoint the endpoint to return the address for
-     * @return the endpoint address; or <code>null</code> to ignore the destination property
+     * @return the endpoint address; or {@code null} to ignore the destination property
      */
     protected abstract URI getEndpointAddress(Object endpoint);
 
@@ -120,7 +120,7 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
      * Looks up an endpoint instance for the given action. All keys are tried in order.
      *
      * @param action the action URI
-     * @return the associated endpoint instance, or <code>null</code> if not found
+     * @return the associated endpoint instance, or {@code null} if not found
      */
     protected Object lookupEndpoint(URI action) {
         return endpointMap.get(action);

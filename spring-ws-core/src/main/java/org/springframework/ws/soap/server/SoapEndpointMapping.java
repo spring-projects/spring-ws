@@ -19,12 +19,12 @@ package org.springframework.ws.soap.server;
 import org.springframework.ws.server.EndpointMapping;
 
 /**
- * SOAP-specific sub-interface of the <code>EndpointMapping</code>.  Adds associated actors (SOAP 1.1) or roles (SOAP
- * 1.2). Used by the <code>SoapMessageDispatcher</code> to determine the MustUnderstand headers for particular
+ * SOAP-specific sub-interface of the {@code EndpointMapping}.  Adds associated actors (SOAP 1.1) or roles (SOAP
+ * 1.2). Used by the {@code SoapMessageDispatcher} to determine the MustUnderstand headers for particular
  * endpoint.
- * <p/>
- * The main purpose for this interface is to add consitency between all SOAP-specific <code>EndpointMappings</code>. The
- * <code>SoapMessageDispatcher</code> does not require all endpoint mappings to implement this interface.
+ *
+ * <p>The main purpose for this interface is to add consitency between all SOAP-specific {@code EndpointMappings}. The
+ * {@code SoapMessageDispatcher} does not require all endpoint mappings to implement this interface.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

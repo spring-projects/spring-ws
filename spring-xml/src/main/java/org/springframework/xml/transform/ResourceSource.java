@@ -34,7 +34,7 @@ import org.xml.sax.XMLReader;
 public class ResourceSource extends SAXSource {
 
     /**
-     * Initializes a new instance of the <code>ResourceSource</code> with the given resource.
+     * Initializes a new instance of the {@code ResourceSource} with the given resource.
      *
      * @param content the content
      */
@@ -43,7 +43,7 @@ public class ResourceSource extends SAXSource {
     }
 
     /**
-     * Initializes a new instance of the <code>ResourceSource</code> with the given {@link XMLReader} and resource.
+     * Initializes a new instance of the {@code ResourceSource} with the given {@link XMLReader} and resource.
      *
      * @param content the content
      */

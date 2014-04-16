@@ -25,8 +25,8 @@ import org.springframework.ws.test.support.MockStrategiesHelper;
 /**
  * <strong>Main entry point for client-side Web service testing</strong>. Typically used to test a {@link
  * WebServiceTemplate}, set up expectations on request messages, and create response messages.
- * <p/>
- * The typical usage of this class is:
+ *
+ * <p>The typical usage of this class is:
  * <ol>
  * <li>Create a {@code MockWebServiceServer} instance by calling {@link #createServer(WebServiceTemplate)},
  * {@link #createServer(WebServiceGatewaySupport)}, or {@link #createServer(ApplicationContext)}.
@@ -40,8 +40,8 @@ import org.springframework.ws.test.support.MockStrategiesHelper;
  * <li>Call {@link #verify()}.</ol>
  * Note that because of the 'fluent' API offered by this class (and related classes), you can typically use the Code
  * Completion features (i.e. ctrl-space) in your IDE to set up the mocks.
- * <p/>
- * For example:
+ *
+ * <p>For example:
  * <blockquote><pre>
  * import org.junit.*;
  * import org.springframework.beans.factory.annotation.Autowired;
@@ -127,8 +127,8 @@ public class MockWebServiceServer {
 
     /**
      * Creates a {@code MockWebServiceServer} instance based on the given {@link ApplicationContext}.
-     * <p/>
-     * This factory method will try and find a configured {@link WebServiceTemplate} in the given application context.
+     *
+     * <p>This factory method will try and find a configured {@link WebServiceTemplate} in the given application context.
      * If no template can be found, it will try and find a {@link WebServiceGatewaySupport}, and use its configured
      * template. If neither can be found, an exception is thrown.
      *

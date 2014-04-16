@@ -38,8 +38,8 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
 
 /**
  * Abstract base class for {@link MethodEndpoint} mappings.
- * <p/>
- * Subclasses typically implement {@link org.springframework.beans.factory.config.BeanPostProcessor} to look for beans
+ *
+ * <p>Subclasses typically implement {@link org.springframework.beans.factory.config.BeanPostProcessor} to look for beans
  * that qualify as endpoint. The methods of this bean are then registered under a specific key with {@link
  * #registerEndpoint(Object, MethodEndpoint)}.
  *
@@ -54,7 +54,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
      * Lookup an endpoint for the given message. The extraction of the endpoint key is delegated to the concrete
      * subclass.
      *
-     * @return the looked up endpoint, or <code>null</code>
+     * @return the looked up endpoint, or {@code null}
      * @see #getLookupKeyForMessage(MessageContext)
      */
     @Override
@@ -80,7 +80,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
      * Looks up an endpoint instance for the given keys. All keys are tried in order.
      *
      * @param key key the beans are mapped to
-     * @return the associated endpoint instance, or <code>null</code> if not found
+     * @return the associated endpoint instance, or {@code null} if not found
      */
     protected MethodEndpoint lookupEndpoint(T key) {
         return endpointMap.get(key);
@@ -184,11 +184,11 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
     }
 
     /**
-     * Returns the the endpoint key for the given method. Returns <code>null</code> if the method is not to be
+     * Returns the the endpoint key for the given method. Returns {@code null} if the method is not to be
      * registered, which is the default.
      *
      * @param method the method
-     * @return a registration key, or <code>null</code> if the method is not to be registered
+     * @return a registration key, or {@code null} if the method is not to be registered
      * @see #getLookupKeysForMethod(Method)
      */
     protected T getLookupKeyForMethod(Method method) {
@@ -210,8 +210,8 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 
     /**
      * Return the class or interface to use for method reflection.
-     * <p/>
-     * Default implementation delegates to {@link AopUtils#getTargetClass(Object)}.
+     *
+     * <p>Default implementation delegates to {@link AopUtils#getTargetClass(Object)}.
      *
      * @param endpoint the bean instance (might be an AOP proxy)
      * @return the bean class to expose

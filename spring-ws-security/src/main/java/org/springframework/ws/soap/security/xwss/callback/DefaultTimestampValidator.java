@@ -25,7 +25,7 @@ import java.util.GregorianCalendar;
 import com.sun.xml.wss.impl.callback.TimestampValidationCallback;
 
 /**
- * A default implementation of a <code>TimestampValidationCallback.TimestampValidator</code>. Based on a version found
+ * A default implementation of a {@code TimestampValidationCallback.TimestampValidator}. Based on a version found
  * in the JWSDP samples.
  *
  * @author Arjen Poutsma

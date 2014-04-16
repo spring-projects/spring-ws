@@ -37,8 +37,8 @@ public abstract class SaxUtils {
     private static final Log logger = LogFactory.getLog(SaxUtils.class);
 
     /**
-     * Creates a SAX <code>InputSource</code> from the given resource. Sets the system identifier to the resource's
-     * <code>URL</code>, if available.
+     * Creates a SAX {@code InputSource} from the given resource. Sets the system identifier to the resource's
+     * {@code URL}, if available.
      *
      * @param resource the resource
      * @return the input source created from the resource
@@ -52,7 +52,7 @@ public abstract class SaxUtils {
         return inputSource;
     }
 
-    /** Retrieves the URL from the given resource as System ID. Returns <code>null</code> if it cannot be opened. */
+    /** Retrieves the URL from the given resource as System ID. Returns {@code null} if it cannot be opened. */
     public static String getSystemId(Resource resource) {
         try {
             return new URI(resource.getURL().toExternalForm()).toString();

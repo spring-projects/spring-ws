@@ -38,14 +38,14 @@ import org.springframework.ws.soap.security.callback.CleanupCallback;
 import org.springframework.ws.soap.security.support.SpringSecurityUtils;
 
 /**
- * Callback handler that validates a password digest using an Spring Security <code>UserDetailsService</code>. Logic
- * based on Spring Security's <code>DigestProcessingFilter</code>.
- * <p/>
- * An Spring Security <code>UserDetailService</code> is used to load <code>UserDetails</code> from. The digest of the
+ * Callback handler that validates a password digest using an Spring Security {@code UserDetailsService}. Logic
+ * based on Spring Security's {@code DigestProcessingFilter}.
+ *
+ * <p>An Spring Security {@code UserDetailService} is used to load {@code UserDetails} from. The digest of the
  * password contained in this details object is then compared with the digest in the message.
- * <p/>
- * This class only handles <code>PasswordValidationCallback</code>s that contain a <code>DigestPasswordRequest</code>,
- * and throws an <code>UnsupportedCallbackException</code> for others.
+ *
+ * <p>This class only handles {@code PasswordValidationCallback}s that contain a {@code DigestPasswordRequest},
+ * and throws an {@code UnsupportedCallbackException} for others.
  *
  * @author Arjen Poutsma
  * @see org.springframework.security.core.userdetails.UserDetailsService
@@ -75,8 +75,8 @@ public class SpringDigestPasswordValidationCallbackHandler extends AbstractCallb
     }
 
     /**
-     * Handles <code>PasswordValidationCallback</code>s that contain a <code>DigestPasswordRequest</code>, and throws an
-     * <code>UnsupportedCallbackException</code> for others
+     * Handles {@code PasswordValidationCallback}s that contain a {@code DigestPasswordRequest}, and throws an
+     * {@code UnsupportedCallbackException} for others
      *
      * @throws javax.security.auth.callback.UnsupportedCallbackException
      *          when the callback is not supported

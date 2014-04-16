@@ -30,7 +30,7 @@ import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.soap11.Soap11Header;
 
 /**
- * Axiom-specific version of <code>org.springframework.ws.soap.Soap11Header</code>.
+ * Axiom-specific version of {@code org.springframework.ws.soap.Soap11Header}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

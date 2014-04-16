@@ -47,15 +47,15 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * SoapEndpointMapping} properties, this mapping has a {@link #setVersions(org.springframework.ws.soap.addressing.version.AddressingVersion[])
  * versions} property, which defines the WS-Addressing specifications supported. By default, these are {@link
  * org.springframework.ws.soap.addressing.version.Addressing200408} and {@link org.springframework.ws.soap.addressing.version.Addressing10}.
- * <p/>
- * The {@link #setMessageIdStrategy(MessageIdStrategy) messageIdStrategy} property defines the strategy to use for
- * creating reply <code>MessageIDs</code>. By default, this is the {@link UuidMessageIdStrategy}.
- * <p/>
- * The {@link #setMessageSenders(WebServiceMessageSender[]) messageSenders} are used to send out-of-band reply messages.
+ *
+ * <p>The {@link #setMessageIdStrategy(MessageIdStrategy) messageIdStrategy} property defines the strategy to use for
+ * creating reply {@code MessageIDs}. By default, this is the {@link UuidMessageIdStrategy}.
+ *
+ * <p>The {@link #setMessageSenders(WebServiceMessageSender[]) messageSenders} are used to send out-of-band reply messages.
  * If a request messages defines a non-anonymous reply address, these senders will be used to send the message.
- * <p/>
- * This mapping (and all subclasses) uses an implicit WS-Addressing {@link EndpointInterceptor}, which is added in every
- * {@link EndpointInvocationChain} produced. As such, this mapping does not have the standard <code>interceptors</code>
+ *
+ * <p>This mapping (and all subclasses) uses an implicit WS-Addressing {@link EndpointInterceptor}, which is added in every
+ * {@link EndpointInvocationChain} produced. As such, this mapping does not have the standard {@code interceptors}
  * property, but rather a {@link #setPreInterceptors(EndpointInterceptor[]) preInterceptors} and {@link
  * #setPostInterceptors(EndpointInterceptor[]) postInterceptors} property, which are added before and after the implicit
  * WS-Addressing interceptor, respectively.
@@ -122,8 +122,8 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 
     /**
      * Specify the order value for this mapping.
-     * <p/>
-     * Default value is {@link Integer#MAX_VALUE}, meaning that it's non-ordered.
+     *
+     * <p>Default value is {@link Integer#MAX_VALUE}, meaning that it's non-ordered.
      *
      * @see org.springframework.core.Ordered#getOrder()
      */
@@ -133,7 +133,7 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 
 	/**
 	 * Set additional interceptors to be applied before the implicit WS-Addressing interceptor, e.g.
-	 * <code>XwsSecurityInterceptor</code>.
+	 * {@code XwsSecurityInterceptor}.
      */
     public final void setPreInterceptors(EndpointInterceptor[] preInterceptors) {
         Assert.notNull(preInterceptors, "'preInterceptors' must not be null");
@@ -142,7 +142,7 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 
     /**
      * Set additional interceptors to be applied after the implicit WS-Addressing interceptor, e.g.
-     * <code>PayloadLoggingInterceptor</code>.
+     * {@code PayloadLoggingInterceptor}.
      */
     public final void setPostInterceptors(EndpointInterceptor[] postInterceptors) {
         Assert.notNull(postInterceptors, "'postInterceptors' must not be null");
@@ -151,8 +151,8 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 
     /**
      * Sets the message id strategy used for creating WS-Addressing MessageIds.
-     * <p/>
-     * By default, the {@link UuidMessageIdStrategy} is used.
+     *
+     * <p>By default, the {@link UuidMessageIdStrategy} is used.
      */
     public final void setMessageIdStrategy(MessageIdStrategy messageIdStrategy) {
         Assert.notNull(messageIdStrategy, "'messageIdStrategy' must not be null");
@@ -201,8 +201,8 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 
 	/**
 	 * Sets the WS-Addressing versions to be supported by this mapping.
-	 * <p/>
-	 * By default, this array is set to support {@link org.springframework.ws.soap.addressing.version.Addressing200408
+	 *
+	 * <p>By default, this array is set to support {@link org.springframework.ws.soap.addressing.version.Addressing200408
      * the August 2004} and the {@link org.springframework.ws.soap.addressing.version.Addressing10 May 2006} versions of
      * the specification.
      */
@@ -300,11 +300,11 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	}
 
 	/**
-	 * Lookup an endpoint for the given  {@link MessageAddressingProperties}, returning <code>null</code> if no specific
+	 * Lookup an endpoint for the given  {@link MessageAddressingProperties}, returning {@code null} if no specific
 	 * one is found. This template method is called by {@link #getEndpoint(MessageContext)}.
 	 *
      * @param map the message addressing properties
-     * @return the endpoint, or <code>null</code>
+     * @return the endpoint, or {@code null}
      */
     protected abstract Object getEndpointInternal(MessageAddressingProperties map);
 

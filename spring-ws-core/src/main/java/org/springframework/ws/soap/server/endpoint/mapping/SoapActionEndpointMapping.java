@@ -28,24 +28,24 @@ import org.springframework.ws.soap.server.SoapEndpointInvocationChain;
 import org.springframework.ws.soap.server.SoapEndpointMapping;
 
 /**
- * Implementation of the <code>EndpointMapping</code> interface to map from <code>SOAPAction</code> headers to endpoint
+ * Implementation of the {@code EndpointMapping} interface to map from {@code SOAPAction} headers to endpoint
  * beans. Supports both mapping to bean instances and mapping to bean names: the latter is required for prototype
  * handlers.
- * <p/>
- * The <code>endpointMap</code> property is suitable for populating the endpoint map with bean references, e.g. via the
+ *
+ * <p>The {@code endpointMap} property is suitable for populating the endpoint map with bean references, e.g. via the
  * map element in XML bean definitions.
- * <p/>
- * Mappings to bean names can be set via the <code>mappings</code> property, in a form accepted by the
- * <code>java.util.Properties</code> class, like as follows:
+ *
+ * <p>Mappings to bean names can be set via the {@code mappings} property, in a form accepted by the
+ * {@code java.util.Properties} class, like as follows:
  * <pre>
  * http://www.springframework.org/spring-ws/samples/airline/BookFlight=bookFlightEndpoint
  * http://www.springframework.org/spring-ws/samples/airline/GetFlights=getFlightsEndpoint
  * </pre>
  * The syntax is SOAP_ACTION=ENDPOINT_BEAN_NAME.
- * <p/>
- * This endpoint mapping does not read from the request message, and therefore is more suitable for message factories
+ *
+ * <p>This endpoint mapping does not read from the request message, and therefore is more suitable for message factories
  * which directly read from the transport request (such as the {@link AxiomSoapMessageFactory} with the
- * <code>payloadCaching</code> disabled).
+ * {@code payloadCaching} disabled).
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -76,7 +76,7 @@ public class SoapActionEndpointMapping extends AbstractMapBasedEndpointMapping i
     }
 
     /**
-     * Creates a new <code>SoapEndpointInvocationChain</code> based on the given endpoint, and the set interceptors, and
+     * Creates a new {@code SoapEndpointInvocationChain} based on the given endpoint, and the set interceptors, and
      * actors/roles.
      *
      * @param endpoint     the endpoint

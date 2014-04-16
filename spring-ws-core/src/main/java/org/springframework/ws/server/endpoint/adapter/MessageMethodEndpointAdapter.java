@@ -28,10 +28,10 @@ import org.springframework.ws.soap.server.SoapMessageDispatcher;
  * <pre>
  * void handleMyMessage(MessageContext request);
  * </pre>
- * I.e. methods that take a single {@link MessageContext} parameter, and return <code>void</code>. The method can have
+ * I.e. methods that take a single {@link MessageContext} parameter, and return {@code void}. The method can have
  * any name, as long as it is mapped by an {@link org.springframework.ws.server.EndpointMapping}.
- * <p/>
- * This adapter is registered by default by the {@link MessageDispatcher} and {@link SoapMessageDispatcher}.
+ *
+ * <p>This adapter is registered by default by the {@link MessageDispatcher} and {@link SoapMessageDispatcher}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

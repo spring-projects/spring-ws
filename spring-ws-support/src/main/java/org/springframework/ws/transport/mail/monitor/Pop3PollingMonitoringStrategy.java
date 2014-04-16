@@ -28,8 +28,8 @@ import org.springframework.ws.transport.mail.support.MailTransportUtils;
  * servers. Since POP3 does not have a native mechanism to determine which messages are "new", this implementation
  * simply retrieves all messages in the {@link Folder}, and delete them afterwards. All messages in the POP3 mailbox are
  * therefore, by definition, new.
- * <p/>
- * Setting the {@link #setDeleteMessages(boolean) deleteMessages} property is therefore ignored: messages are always
+ *
+ * <p>Setting the {@link #setDeleteMessages(boolean) deleteMessages} property is therefore ignored: messages are always
  * deleted.
  *
  * @author Arjen Poutsma

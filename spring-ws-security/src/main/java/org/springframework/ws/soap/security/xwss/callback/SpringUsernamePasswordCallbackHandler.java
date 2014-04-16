@@ -30,9 +30,9 @@ import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 /**
  * Callback handler that adds username/password information to a mesage using an Spring Security {@link
  * org.springframework.security.core.context.SecurityContext}.
- * <p/>
- * This class handles <code>UsernameCallback</code>s and <code>PasswordCallback</code>s, and throws an
- * <code>UnsupportedCallbackException</code> for others
+ *
+ * <p>This class handles {@code UsernameCallback}s and {@code PasswordCallback}s, and throws an
+ * {@code UnsupportedCallbackException} for others
  *
  * @author Arjen Poutsma
  * @since 1.5.0

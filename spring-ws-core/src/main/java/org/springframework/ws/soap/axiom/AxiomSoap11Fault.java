@@ -27,7 +27,7 @@ import org.springframework.ws.soap.axiom.support.AxiomUtils;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 
 /**
- * Axiom-specific version of <code>org.springframework.ws.soap.Soap11Fault</code>.
+ * Axiom-specific version of {@code org.springframework.ws.soap.Soap11Fault}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
