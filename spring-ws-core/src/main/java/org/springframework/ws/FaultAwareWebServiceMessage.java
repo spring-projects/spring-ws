@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 
 package org.springframework.ws;
+
+import javax.xml.namespace.QName;
 
 /**
  * Sub-interface of {@link WebServiceMessage} that can contain special Fault messages. Fault messages (such as {@link
@@ -33,6 +35,12 @@ public interface FaultAwareWebServiceMessage extends WebServiceMessage {
      * @see #getFaultReason()
      */
     boolean hasFault();
+
+	/**
+	 * Returns the fault code, if any.
+	 */
+	QName getFaultCode();
+
 
     /**
      * Returns the fault reason message.

@@ -25,6 +25,8 @@ import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import javax.xml.namespace.QName;
+import javax.xml.soap.SOAPConstants;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -174,4 +176,18 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
         }
     }
 
+	@Override
+	public void setFaultCode(QName faultCode) throws IOException {
+		if (faultCode != null) {
+			if (SOAPConstants.SOAP_SENDER_FAULT.equals(faultCode)) {
+				responseStatusCode = HttpTransportConstants.STATUS_BAD_REQUEST;
+			}
+			else {
+				responseStatusCode = HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR;
+			}
+		}
+		else {
+			responseStatusCode = HttpTransportConstants.STATUS_OK;
+		}
+	}
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2012 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,6 +20,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import static org.easymock.EasyMock.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.ws.FaultAwareWebServiceMessage;
@@ -27,13 +32,8 @@ import org.springframework.ws.InvalidXmlException;
 import org.springframework.ws.NoEndpointFoundException;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
 
 public class WebServiceMessageReceiverHandlerAdapterTest {
 
@@ -72,6 +72,7 @@ public class WebServiceMessageReceiverHandlerAdapterTest {
         replayMockControls();
         WebServiceMessageReceiver endpoint = new WebServiceMessageReceiver() {
 
+            @Override
             public void receive(MessageContext messageContext) throws Exception {
             }
         };
@@ -92,6 +93,7 @@ public class WebServiceMessageReceiverHandlerAdapterTest {
         replayMockControls();
         WebServiceMessageReceiver endpoint = new WebServiceMessageReceiver() {
 
+            @Override
             public void receive(MessageContext messageContext) throws Exception {
             }
         };
@@ -112,12 +114,13 @@ public class WebServiceMessageReceiverHandlerAdapterTest {
         httpRequest.setCharacterEncoding("UTF-8");
         expect(factoryMock.createWebServiceMessage(isA(InputStream.class))).andReturn(requestMock);
         expect(factoryMock.createWebServiceMessage()).andReturn(responseMock);
-        expect(responseMock.hasFault()).andReturn(false);
+        expect(responseMock.getFaultCode()).andReturn(null);
         responseMock.writeTo(isA(OutputStream.class));
 
         replayMockControls();
         WebServiceMessageReceiver endpoint = new WebServiceMessageReceiver() {
 
+            @Override
             public void receive(MessageContext messageContext) throws Exception {
                 messageContext.getResponse();
             }
@@ -137,12 +140,13 @@ public class WebServiceMessageReceiverHandlerAdapterTest {
         httpRequest.setCharacterEncoding("UTF-8");
         expect(factoryMock.createWebServiceMessage(isA(InputStream.class))).andReturn(requestMock);
         expect(factoryMock.createWebServiceMessage()).andReturn(responseMock);
-        expect(responseMock.hasFault()).andReturn(true);
+        expect(responseMock.getFaultCode()).andReturn(SoapVersion.SOAP_11.getServerOrReceiverFaultName());
         responseMock.writeTo(isA(OutputStream.class));
 
         replayMockControls();
         WebServiceMessageReceiver endpoint = new WebServiceMessageReceiver() {
 
+            @Override
             public void receive(MessageContext messageContext) throws Exception {
                 messageContext.getResponse();
             }
@@ -167,6 +171,7 @@ public class WebServiceMessageReceiverHandlerAdapterTest {
 
         WebServiceMessageReceiver endpoint = new WebServiceMessageReceiver() {
 
+            @Override
             public void receive(MessageContext messageContext) throws Exception {
                 throw new NoEndpointFoundException(messageContext.getRequest());
             }
@@ -191,6 +196,7 @@ public class WebServiceMessageReceiverHandlerAdapterTest {
 
         WebServiceMessageReceiver endpoint = new WebServiceMessageReceiver() {
 
+            @Override
             public void receive(MessageContext messageContext) throws Exception {
             }
         };

@@ -24,6 +24,8 @@ import java.net.URISyntaxException;
 import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.namespace.QName;
+import javax.xml.soap.SOAPConstants;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractReceiverConnection;
@@ -163,4 +165,22 @@ public class HttpServletConnection extends AbstractReceiverConnection
         }
         statusCodeSet = true;
     }
+
+	@Override
+	public void setFaultCode(QName faultCode) throws IOException {
+		if (faultCode != null) {
+			if (SOAPConstants.SOAP_SENDER_FAULT.equals(faultCode)) {
+				getHttpServletResponse()
+						.setStatus(HttpTransportConstants.STATUS_BAD_REQUEST);
+			}
+			else {
+				getHttpServletResponse()
+						.setStatus(HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR);
+			}
+		}
+		else {
+			getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_OK);
+		}
+		statusCodeSet = true;
+	}
 }

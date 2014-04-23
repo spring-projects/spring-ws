@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.zip.GZIPInputStream;
+import javax.xml.namespace.QName;
 
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
@@ -119,15 +120,34 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 
     @Override
     public final boolean hasFault() throws IOException {
-        return HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR == getResponseCode() && isXmlResponse();
+	    // SOAP 1.1 specifies a 500 status code for faults
+	    // SOAP 1.2 specifies a 400 status code for sender faults, and 500 for all other faults
+	    switch (getResponseCode()) {
+		    case HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR:
+			    return isSoap11Response() || isSoap12Response();
+		    case HttpTransportConstants.STATUS_BAD_REQUEST:
+			    return isSoap12Response();
+		    default:
+			    return false;
+	    }
     }
 
-    /** Determine whether the response is a XML message. */
-    private boolean isXmlResponse() throws IOException {
+    /** Determine whether the response is a SOAP 1.1 message. */
+    private boolean isSoap11Response() throws IOException {
         Iterator<String> iterator = getResponseHeaders(HttpTransportConstants.HEADER_CONTENT_TYPE);
         if (iterator.hasNext()) {
             String contentType = iterator.next().toLowerCase();
-            return contentType.contains("xml");
+            return contentType.contains("text/xml");
+        }
+        return false;
+    }
+
+    /** Determine whether the response is a SOAP 1.1 message. */
+    private boolean isSoap12Response() throws IOException {
+        Iterator<String> iterator = getResponseHeaders(HttpTransportConstants.HEADER_CONTENT_TYPE);
+        if (iterator.hasNext()) {
+            String contentType = iterator.next().toLowerCase();
+            return contentType.contains("application/soap+xml");
         }
         return false;
     }
@@ -136,4 +156,7 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
     public final void setFault(boolean fault) {
     }
 
+	@Override
+	public final void setFaultCode(QName faultCode) throws IOException {
+	}
 }

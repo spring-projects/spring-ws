@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,11 @@ import java.net.URI;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.ws.MockWebServiceMessage;
@@ -36,12 +41,6 @@ import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 
 public class WebServiceTemplateTest {
 
@@ -60,10 +59,12 @@ public class WebServiceTemplateTest {
         expect(connectionMock.getUri()).andReturn(expectedUri).anyTimes();
         template.setMessageSender(new WebServiceMessageSender() {
 
+            @Override
             public WebServiceConnection createConnection(URI uri) throws IOException {
                 return connectionMock;
             }
 
+            @Override
             public boolean supports(URI uri) {
                 assertEquals("Invalid uri", expectedUri, uri);
                 return true;
@@ -339,10 +340,12 @@ public class WebServiceTemplateTest {
         final URI customUri = new URI("http://www.springframework.org/spring-ws/custom");
         template.setMessageSender(new WebServiceMessageSender() {
 
+            @Override
             public WebServiceConnection createConnection(URI uri) throws IOException {
                 return connectionMock;
             }
 
+            @Override
             public boolean supports(URI uri) {
                 assertEquals("Invalid uri", customUri, uri);
                 return true;
@@ -472,10 +475,12 @@ public class WebServiceTemplateTest {
 
         template.setMessageSender(new WebServiceMessageSender() {
 
+            @Override
             public WebServiceConnection createConnection(URI uri) throws IOException {
                 return connectionMock;
             }
 
+            @Override
             public boolean supports(URI uri) {
                 assertEquals("Invalid uri", providerUri, uri);
                 return true;

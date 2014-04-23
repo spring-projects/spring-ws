@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap;
 
+import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
@@ -61,7 +62,17 @@ public abstract class AbstractSoapMessage extends AbstractMimeMessage implements
         return getSoapBody().hasFault();
     }
 
-    /** Returns {@code getSoapBody().getFault().getFaultStringOrReason()}. */
+	/** Returns {@code getSoapBody().getFault().getFaultCode()}. */
+	@Override
+	public final QName getFaultCode() {
+		if (hasFault()) {
+			return getSoapBody().getFault().getFaultCode();
+		} else {
+			return null;
+		}
+	}
+
+	/** Returns {@code getSoapBody().getFault().getFaultStringOrReason()}. */
     @Override
     public final String getFaultReason() {
         if (hasFault()) {

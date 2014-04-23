@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package org.springframework.ws.transport.http;
 
+import java.io.IOException;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPConstants;
@@ -23,18 +24,19 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
+
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 
 public class HttpServletConnectionTest {
 
@@ -69,7 +71,7 @@ public class HttpServletConnectionTest {
     }
 
     @Test
-    public void testReceive() throws Exception {
+    public void receive() throws Exception {
         byte[] bytes = SOAP_CONTENT.getBytes("UTF-8");
         httpServletRequest.addHeader("Content-Type", "text/xml");
         httpServletRequest.addHeader("Content-Length", Integer.toString(bytes.length));
@@ -84,13 +86,13 @@ public class HttpServletConnectionTest {
         SOAPMessage saajMessage = message.getSaajMessage();
         String[] headerValues = saajMessage.getMimeHeaders().getHeader(HEADER_NAME);
         Assert.assertNotNull("Response has no header", headerValues);
-        Assert.assertEquals("Response has invalid header", 1, headerValues.length);
-        Assert.assertEquals("Response has invalid header values", HEADER_VALUE, headerValues[0]);
+        assertEquals("Response has invalid header", 1, headerValues.length);
+        assertEquals("Response has invalid header values", HEADER_VALUE, headerValues[0]);
     }
 
     @Test
-    public void testSend() throws Exception {
-        SaajSoapMessage message = (SaajSoapMessage) messageFactory.createWebServiceMessage();
+    public void send() throws Exception {
+        SaajSoapMessage message = messageFactory.createWebServiceMessage();
         SOAPMessage saajMessage = message.getSaajMessage();
         MimeHeaders mimeHeaders = saajMessage.getMimeHeaders();
         mimeHeaders.addHeader(HEADER_NAME, HEADER_VALUE);
@@ -99,8 +101,24 @@ public class HttpServletConnectionTest {
 
         connection.send(message);
 
-        Assert.assertEquals("Invalid header", HEADER_VALUE, httpServletResponse.getHeader(HEADER_NAME));
+        assertEquals("Invalid header", HEADER_VALUE,
+		        httpServletResponse.getHeader(HEADER_NAME));
         assertXMLEqual("Invalid content", SOAP_CONTENT, httpServletResponse.getContentAsString());
     }
+
+	@Test
+	public void faultCodes() throws IOException {
+		connection.setFaultCode(SoapVersion.SOAP_11.getClientOrSenderFaultName());
+		assertEquals(500, httpServletResponse.getStatus());
+
+		connection.setFaultCode(SoapVersion.SOAP_11.getServerOrReceiverFaultName());
+		assertEquals(500, httpServletResponse.getStatus());
+
+		connection.setFaultCode(SoapVersion.SOAP_12.getClientOrSenderFaultName());
+		assertEquals(400, httpServletResponse.getStatus());
+
+		connection.setFaultCode(SoapVersion.SOAP_12.getServerOrReceiverFaultName());
+		assertEquals(500, httpServletResponse.getStatus());
+	}
 
 }

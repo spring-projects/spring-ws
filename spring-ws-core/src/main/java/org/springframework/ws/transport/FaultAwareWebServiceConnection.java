@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package org.springframework.ws.transport;
 
 import java.io.IOException;
+import javax.xml.namespace.QName;
 
 import org.springframework.ws.soap.SoapFault;
 
@@ -47,6 +48,18 @@ public interface FaultAwareWebServiceConnection extends WebServiceConnection {
      *
      * @param fault {@code true} if this will send a fault; {@code false} otherwise.
      * @throws IOException in case of I/O errors
+     * @deprecated In favor of {@link #setFaultCode(QName)}
      */
+    @Deprecated
     void setFault(boolean fault) throws IOException;
+
+    /**
+     * Sets a specific fault code.
+     *
+     * <p>Typically implemented by setting an HTTP status code.
+     *
+     * @param faultCode the fault code to be set on the connection, or {@code null} for no fault.
+     * @throws IOException in case of I/O errors
+     */
+    void setFaultCode(QName faultCode) throws IOException;
 }

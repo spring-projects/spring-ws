@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
+import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -49,9 +50,11 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
 
     private boolean fault = false;
 
+	private QName faultCode;
+
     private String faultReason;
 
-    public MockWebServiceMessage() {
+	public MockWebServiceMessage() {
     }
 
     public MockWebServiceMessage(Source source) throws TransformerException {
@@ -126,7 +129,16 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
         this.fault = fault;
     }
 
-    @Override
+	@Override
+	public QName getFaultCode() {
+		return faultCode;
+	}
+
+	public void setFaultCode(QName faultCode) {
+		this.faultCode = faultCode;
+	}
+
+	@Override
     public String getFaultReason() {
         return faultReason;
     }

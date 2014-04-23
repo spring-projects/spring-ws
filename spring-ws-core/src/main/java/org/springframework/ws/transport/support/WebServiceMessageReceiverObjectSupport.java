@@ -93,7 +93,7 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
                         connection instanceof FaultAwareWebServiceConnection) {
                     FaultAwareWebServiceMessage faultResponse = (FaultAwareWebServiceMessage) response;
                     FaultAwareWebServiceConnection faultConnection = (FaultAwareWebServiceConnection) connection;
-                    faultConnection.setFault(faultResponse.hasFault());
+                    faultConnection.setFaultCode(faultResponse.getFaultCode());
                 }
                 connection.send(messageContext.getResponse());
             }

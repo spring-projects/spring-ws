@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,9 @@ public interface HttpTransportConstants extends TransportConstants {
 
     /** The "204 No Content" status code. */
     int STATUS_NO_CONTENT = 204;
+
+    /** The "400 Bad Request" status code. */
+    int STATUS_BAD_REQUEST = 400;
 
     /** The "404 Not Found" status code. */
     int STATUS_NOT_FOUND = 404;
