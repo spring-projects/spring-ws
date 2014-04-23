@@ -21,8 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 
@@ -37,8 +35,7 @@ import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
  * @author Arjen Poutsma
  * @since 1.5.0
  */
-public abstract class AbstractActionEndpointMapping extends AbstractAddressingEndpointMapping
-        implements ApplicationContextAware {
+public abstract class AbstractActionEndpointMapping extends AbstractAddressingEndpointMapping {
 
     /** The defaults suffix to add to the request {@code Action} for reply messages. */
     public static final String DEFAULT_OUTPUT_ACTION_SUFFIX = "Response";
@@ -53,7 +50,6 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 
     private String faultActionSuffix = DEFAULT_OUTPUT_ACTION_SUFFIX;
 
-    private ApplicationContext applicationContext;
 
     /** Returns the suffix to add to request {@code Action}s for reply messages. */
     public String getOutputActionSuffix() {
@@ -83,11 +79,6 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
     public void setFaultActionSuffix(String faultActionSuffix) {
         Assert.hasText(faultActionSuffix, "'faultActionSuffix' must not be empty");
         this.faultActionSuffix = faultActionSuffix;
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
     }
 
     @Override
@@ -143,8 +134,8 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 
         if (endpoint instanceof String) {
             String endpointName = (String) endpoint;
-            if (applicationContext.isSingleton(endpointName)) {
-                resolvedEndpoint = applicationContext.getBean(endpointName);
+            if (getApplicationContext().isSingleton(endpointName)) {
+                resolvedEndpoint = getApplicationContext().getBean(endpointName);
             }
         }
         Object mappedEndpoint = this.endpointMap.get(action);

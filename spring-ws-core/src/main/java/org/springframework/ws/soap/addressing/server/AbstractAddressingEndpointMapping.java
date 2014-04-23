@@ -17,17 +17,25 @@
 package org.springframework.ws.soap.addressing.server;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import javax.xml.transform.TransformerException;
 
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.Ordered;
 import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.EndpointInvocationChain;
 import org.springframework.ws.server.EndpointMapping;
+import org.springframework.ws.server.SmartEndpointInterceptor;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
@@ -64,7 +72,7 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * @since 1.5.0
  */
 public abstract class AbstractAddressingEndpointMapping extends TransformerObjectSupport
-        implements SoapEndpointMapping, InitializingBean, Ordered {
+        implements SoapEndpointMapping, ApplicationContextAware, InitializingBean, Ordered {
 
     private String[] actorsOrRoles;
 
@@ -79,6 +87,11 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
     private EndpointInterceptor[] preInterceptors = new EndpointInterceptor[0];
 
     private EndpointInterceptor[] postInterceptors = new EndpointInterceptor[0];
+
+	private SmartEndpointInterceptor[] smartInterceptors =
+			new SmartEndpointInterceptor[0];
+
+	private ApplicationContext applicationContext;
 
     private int order = Integer.MAX_VALUE;  // default: same as non-Ordered
 
@@ -115,7 +128,17 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
         this.isUltimateReceiver = ultimateReceiver;
     }
 
-    @Override
+	public ApplicationContext getApplicationContext() {
+		return applicationContext;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext)
+			throws BeansException {
+		this.applicationContext = applicationContext;
+	}
+
+	@Override
     public final int getOrder() {
         return order;
     }
@@ -210,12 +233,21 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
         this.versions = versions;
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        if (logger.isInfoEnabled()) {
-            logger.info("Supporting " + Arrays.asList(versions));
-        }
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		if (logger.isInfoEnabled()) {
+			logger.info("Supporting " + Arrays.asList(versions));
+		}
+		if (getApplicationContext() != null) {
+			Map<String, SmartEndpointInterceptor> smartInterceptors = BeanFactoryUtils
+					.beansOfTypeIncludingAncestors(getApplicationContext(),
+							SmartEndpointInterceptor.class, true, false);
+			if (!smartInterceptors.isEmpty()) {
+				this.smartInterceptors = smartInterceptors.values()
+						.toArray(new SmartEndpointInterceptor[smartInterceptors.size()]);
+			}
+		}
+	}
 
     @Override
     public final EndpointInvocationChain getEndpoint(MessageContext messageContext) throws TransformerException {
@@ -253,15 +285,17 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	    WebServiceMessageSender[] messageSenders = getMessageSenders(endpoint);
 	    MessageIdStrategy messageIdStrategy = getMessageIdStrategy(endpoint);
 
-	    EndpointInterceptor[] interceptors =
-			    new EndpointInterceptor[preInterceptors.length + postInterceptors.length +
-					    1];
-	    System.arraycopy(preInterceptors, 0, interceptors, 0, preInterceptors.length);
-        AddressingEndpointInterceptor interceptor = new AddressingEndpointInterceptor(version, messageIdStrategy,
-                messageSenders, responseAction, faultAction);
-        interceptors[preInterceptors.length] = interceptor;
-        System.arraycopy(postInterceptors, 0, interceptors, preInterceptors.length + 1, postInterceptors.length);
-        return new SoapEndpointInvocationChain(endpoint, interceptors, actorsOrRoles, isUltimateReceiver);
+	    List<EndpointInterceptor> interceptors = new ArrayList<EndpointInterceptor>(preInterceptors.length + postInterceptors.length + smartInterceptors.length + 1);
+	    AddressingEndpointInterceptor addressingInterceptor = new AddressingEndpointInterceptor(version, messageIdStrategy,
+             messageSenders, responseAction, faultAction);
+
+	    interceptors.addAll(Arrays.asList(preInterceptors));
+	    interceptors.add(addressingInterceptor);
+	    interceptors.addAll(Arrays.asList(postInterceptors));
+	    interceptors.addAll(Arrays.asList(smartInterceptors));
+
+	    return new SoapEndpointInvocationChain(endpoint,
+			    interceptors.toArray(new EndpointInterceptor[interceptors.size()]), actorsOrRoles, isUltimateReceiver);
     }
 
     private boolean supports(AddressingVersion version, SoapMessage request) {

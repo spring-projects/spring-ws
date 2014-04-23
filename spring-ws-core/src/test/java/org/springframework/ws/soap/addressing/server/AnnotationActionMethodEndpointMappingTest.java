@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,23 +23,23 @@ import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPException;
 
+import org.custommonkey.xmlunit.XMLUnit;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInvocationChain;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.interceptor.DelegatingSmartEndpointInterceptor;
+import org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor;
 import org.springframework.ws.soap.addressing.server.annotation.Action;
 import org.springframework.ws.soap.addressing.server.annotation.Address;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
-
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.assertNotNull;
 
 public class AnnotationActionMethodEndpointMappingTest {
 
@@ -55,31 +55,23 @@ public class AnnotationActionMethodEndpointMappingTest {
         XMLUnit.setIgnoreWhitespace(true);
         applicationContext = new StaticApplicationContext();
         applicationContext.registerSingleton("mapping", AnnotationActionEndpointMapping.class);
+	    applicationContext.registerSingleton("interceptor", MyInterceptor.class);
+	    applicationContext.registerSingleton("endpoint", MyEndpoint.class);
+	    applicationContext.refresh();
         mapping = (AnnotationActionEndpointMapping) applicationContext.getBean("mapping");
     }
 
     @Test
-    public void testNoAddress() throws Exception {
-        applicationContext.registerSingleton("endpoint", Endpoint1.class);
-        applicationContext.refresh();
+    public void mapping() throws Exception {
         MessageContext messageContext = createMessageContext();
 
         EndpointInvocationChain chain = mapping.getEndpoint(messageContext);
-        Assert.assertNotNull("MethodEndpoint not registered", chain);
-        MethodEndpoint expected = new MethodEndpoint(applicationContext.getBean("endpoint"), "doIt", new Class[0]);
-        Assert.assertEquals("Invalid endpoint registered", expected, chain.getEndpoint());
-    }
-
-    @Test
-    public void testAddress() throws Exception {
-        applicationContext.registerSingleton("endpoint", Endpoint2.class);
-        applicationContext.refresh();
-        MessageContext messageContext = createMessageContext();
-
-        EndpointInvocationChain chain = mapping.getEndpoint(messageContext);
-        Assert.assertNotNull("MethodEndpoint not registered", chain);
-        MethodEndpoint expected = new MethodEndpoint(applicationContext.getBean("endpoint"), "doIt", new Class[0]);
-        Assert.assertEquals("Invalid endpoint registered", expected, chain.getEndpoint());
+        assertNotNull("MethodEndpoint not registered", chain);
+        MethodEndpoint expected = new MethodEndpoint(applicationContext.getBean("endpoint"), "doIt");
+        assertEquals("Invalid endpoint registered", expected, chain.getEndpoint());
+	    assertEquals("No smart interceptors registered", 2, chain.getInterceptors().length);
+	    assertTrue(chain.getInterceptors()[0] instanceof AddressingEndpointInterceptor);
+	    assertTrue(chain.getInterceptors()[1] instanceof MyInterceptor);
     }
 
     private MessageContext createMessageContext() throws SOAPException, IOException {
@@ -97,21 +89,19 @@ public class AnnotationActionMethodEndpointMappingTest {
     }
 
     @Endpoint
-    private static class Endpoint1 {
-
-        @Action("http://fabrikam123.example/mail/Delete")
-        public void doIt() {
-
-        }
-    }
-
-    @Endpoint
     @Address("mailto:joe@fabrikam123.example")
-    private static class Endpoint2 {
+    private static class MyEndpoint {
 
         @Action("http://fabrikam123.example/mail/Delete")
         public void doIt() {
 
         }
     }
+
+	private static class MyInterceptor extends DelegatingSmartEndpointInterceptor {
+
+		public MyInterceptor() {
+			super(new PayloadLoggingInterceptor());
+		}
+	}
 }
