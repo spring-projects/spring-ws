@@ -106,13 +106,13 @@ public class HttpServletConnection extends AbstractReceiverConnection
     @Override
     @SuppressWarnings("unchecked")
     protected Iterator<String> getRequestHeaderNames() throws IOException {
-        return new EnumerationIterator(getHttpServletRequest().getHeaderNames());
+	    return new EnumerationIterator<String>(getHttpServletRequest().getHeaderNames());
     }
 
     @Override
     @SuppressWarnings("unchecked")
     protected Iterator<String> getRequestHeaders(String name) throws IOException {
-        return new EnumerationIterator(getHttpServletRequest().getHeaders(name));
+        return new EnumerationIterator<String>(getHttpServletRequest().getHeaders(name));
     }
 
     @Override
@@ -156,6 +156,7 @@ public class HttpServletConnection extends AbstractReceiverConnection
     }
 
     @Override
+    @Deprecated
     public void setFault(boolean fault) throws IOException {
         if (fault) {
             getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR);

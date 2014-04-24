@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,17 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.After;
+import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
+import org.mortbay.jetty.Server;
+import org.mortbay.jetty.servlet.Context;
+import org.mortbay.jetty.servlet.ServletHolder;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.WebServiceMessage;
@@ -47,18 +58,6 @@ import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.support.FreePortScanner;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.Context;
-import org.mortbay.jetty.servlet.ServletHolder;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase {
 
@@ -241,6 +240,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase {
         return request;
     }
 
+	@SuppressWarnings("serial")
     private class MyServlet extends HttpServlet {
 
         private int responseStatus = HttpServletResponse.SC_OK;

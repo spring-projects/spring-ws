@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 
 package org.springframework.ws.client.support.interceptor;
 
-import org.springframework.ws.client.WebServiceClientException;
-
 import org.xml.sax.SAXParseException;
+
+import org.springframework.ws.client.WebServiceClientException;
 
 /**
  * Exception thrown whenever a validation error occurs on the client-side.
@@ -27,6 +27,7 @@ import org.xml.sax.SAXParseException;
  * @author Arjen Poutsma
  * @since 1.5.4
  */
+@SuppressWarnings("serial")
 public class WebServiceValidationException extends WebServiceClientException {
 
     private SAXParseException[] validationErrors;

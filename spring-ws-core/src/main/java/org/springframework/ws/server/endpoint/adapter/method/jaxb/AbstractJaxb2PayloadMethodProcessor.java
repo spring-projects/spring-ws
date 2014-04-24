@@ -70,7 +70,7 @@ import org.springframework.xml.transform.TraxUtils;
  */
 public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloadMethodProcessor {
 
-    private final ConcurrentMap<Class, JAXBContext> jaxbContexts = new ConcurrentHashMap<Class, JAXBContext>();
+    private final ConcurrentMap<Class<?>, JAXBContext> jaxbContexts = new ConcurrentHashMap<Class<?>, JAXBContext>();
 
 	@Override
 	public final void handleReturnValue(MessageContext messageContext,

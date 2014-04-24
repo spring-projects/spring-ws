@@ -33,6 +33,7 @@ import org.w3c.dom.NodeList;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.ConversionServiceFactory;
+import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.annotation.XPathParam;
 import org.springframework.ws.server.endpoint.support.NamespaceUtils;
@@ -55,7 +56,7 @@ public class XPathParamMethodArgumentResolver implements MethodArgumentResolver 
 
     private TransformerHelper transformerHelper = new TransformerHelper();
 
-    private ConversionService conversionService = ConversionServiceFactory.createDefaultConversionService();
+    private ConversionService conversionService = new DefaultConversionService();
 
     /**
      * Sets the conversion service to use.

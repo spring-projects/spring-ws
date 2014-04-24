@@ -1,10 +1,11 @@
-/* Copyright 2004, 2005, 2006 Acegi Technology Pty Limited
+/*
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,11 +16,11 @@
 
 package org.springframework.ws.soap.security.support;
 
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.authentication.LockedException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.CredentialsExpiredException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * Generic utility methods for Spring Security
@@ -37,6 +38,7 @@ public abstract class SpringSecurityUtils {
      * @throws DisabledException if the account is disabled
      * @throws LockedException if the account is locked
      */
+    @SuppressWarnings("deprecation")
     public static void checkUserValidity(UserDetails user)
             throws AccountExpiredException, CredentialsExpiredException, DisabledException, LockedException {
         if (!user.isAccountNonLocked()) {

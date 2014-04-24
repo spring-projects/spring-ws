@@ -30,7 +30,6 @@ import org.apache.axiom.soap.SOAPHeaderBlock;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapHeaderException;
-import org.springframework.xml.namespace.QNameUtils;
 
 /**
  * Axiom-specific version of {@code org.springframework.ws.soap.SoapHeader}.
@@ -52,8 +51,9 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
     @Override
     public SoapHeaderElement addHeaderElement(QName name) {
         try {
-            OMNamespace namespace =
-                    getAxiomFactory().createOMNamespace(name.getNamespaceURI(), QNameUtils.getPrefix(name));
+	        OMNamespace namespace =
+                    getAxiomFactory().createOMNamespace(name.getNamespaceURI(),
+		                    name.getPrefix());
             SOAPHeaderBlock axiomHeaderBlock = getAxiomHeader().addHeaderBlock(name.getLocalPart(), namespace);
             return new AxiomSoapHeaderElement(axiomHeaderBlock, getAxiomFactory());
         }

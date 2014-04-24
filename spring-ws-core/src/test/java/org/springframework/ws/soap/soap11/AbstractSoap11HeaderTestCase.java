@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +19,14 @@ package org.springframework.ws.soap.soap11;
 import java.util.Iterator;
 import javax.xml.namespace.QName;
 
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.junit.Assert.*;
+import org.junit.Test;
+
 import org.springframework.ws.soap.AbstractSoapHeaderTestCase;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.xml.transform.StringResult;
-
-import org.junit.Test;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.junit.Assert.*;
 
 public abstract class AbstractSoap11HeaderTestCase extends AbstractSoapHeaderTestCase {
 
@@ -66,9 +65,9 @@ public abstract class AbstractSoap11HeaderTestCase extends AbstractSoapHeaderTes
         Iterator<SoapHeaderElement> iterator = ((Soap11Header) soapHeader).examineHeaderElementsToProcess(new String[]{"role1"});
         assertNotNull("header element iterator is null", iterator);
         assertTrue("header element iterator has no elements", iterator.hasNext());
-        checkHeaderElement((SoapHeaderElement) iterator.next());
+        checkHeaderElement(iterator.next());
         assertTrue("header element iterator has no elements", iterator.hasNext());
-        checkHeaderElement((SoapHeaderElement) iterator.next());
+        checkHeaderElement(iterator.next());
         assertFalse("header element iterator has too many elements", iterator.hasNext());
     }
 
@@ -86,9 +85,9 @@ public abstract class AbstractSoap11HeaderTestCase extends AbstractSoapHeaderTes
         Iterator<SoapHeaderElement> iterator = ((Soap11Header) soapHeader).examineHeaderElementsToProcess(new String[0]);
         assertNotNull("header element iterator is null", iterator);
         assertTrue("header element iterator has no elements", iterator.hasNext());
-        checkHeaderElement((SoapHeaderElement) iterator.next());
+        checkHeaderElement(iterator.next());
         assertTrue("header element iterator has no elements", iterator.hasNext());
-        checkHeaderElement((SoapHeaderElement) iterator.next());
+        checkHeaderElement(iterator.next());
         assertFalse("header element iterator has too many elements", iterator.hasNext());
     }
 

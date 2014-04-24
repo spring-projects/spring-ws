@@ -59,6 +59,7 @@ class SaajSoapFaultDetail extends SaajSoapElement<SOAPFaultElement> implements S
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Iterator<SoapFaultDetailElement> getDetailEntries() {
 	    Iterator<DetailEntry> iterator = getSaajDetail().getDetailEntries();
         return new SaajSoapFaultDetailElementIterator(iterator);

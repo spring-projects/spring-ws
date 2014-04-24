@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,6 +27,14 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.LocatorImpl;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.ws.MockWebServiceMessage;
@@ -46,15 +54,6 @@ import org.springframework.ws.transport.MockTransportInputStream;
 import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.xml.validation.ValidationErrorHandler;
 import org.springframework.xml.xsd.SimpleXsdSchema;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.helpers.LocatorImpl;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 
 public class PayloadValidatingInterceptorTest {
 
@@ -143,7 +142,7 @@ public class PayloadValidatingInterceptorTest {
         interceptor.setFaultStringOrReasonLocale(locale);
         interceptor.setAddValidationErrorDetail(false);
 
-        SoapMessage invalidMessage = (SoapMessage) soap11Factory.createWebServiceMessage();
+        SoapMessage invalidMessage = soap11Factory.createWebServiceMessage();
         InputStream inputStream = getClass().getResourceAsStream(INVALID_MESSAGE);
         transformer.transform(new StreamSource(inputStream), invalidMessage.getPayloadResult());
         context = new DefaultMessageContext(invalidMessage, soap11Factory);

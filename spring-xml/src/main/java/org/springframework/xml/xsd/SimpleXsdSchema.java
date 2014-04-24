@@ -31,7 +31,6 @@ import org.xml.sax.SAXException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
-import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
@@ -52,9 +51,9 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
 
     private static final String SCHEMA_NAMESPACE = "http://www.w3.org/2001/XMLSchema";
 
-    private static final QName SCHEMA_NAME = QNameUtils.createQName(SCHEMA_NAMESPACE, "schema", "xsd");
+    private static final QName SCHEMA_NAME = new QName(SCHEMA_NAMESPACE, "schema", "xsd");
 
-    private Resource xsdResource;
+	private Resource xsdResource;
 
     private Element schemaElement;
 

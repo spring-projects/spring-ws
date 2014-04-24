@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,13 @@
 
 package org.springframework.ws.soap.axiom;
 
+import org.apache.axiom.om.impl.llom.OMSourcedElementImpl;
+import static org.junit.Assert.*;
+
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.soap11.AbstractSoap11MessageTestCase;
-
-import org.apache.axiom.om.impl.llom.OMSourcedElementImpl;
-
-import static org.junit.Assert.*;
 
 public class AxiomSoap11NonCachingMessageTest extends AbstractSoap11MessageTestCase {
 
@@ -33,7 +32,7 @@ public class AxiomSoap11NonCachingMessageTest extends AbstractSoap11MessageTestC
         messageFactory.setPayloadCaching(false);
         messageFactory.setSoapVersion(SoapVersion.SOAP_11);
 
-        return (SoapMessage) messageFactory.createWebServiceMessage();
+        return messageFactory.createWebServiceMessage();
     }
 
     @Override

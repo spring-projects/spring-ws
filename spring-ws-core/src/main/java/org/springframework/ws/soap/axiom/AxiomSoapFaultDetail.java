@@ -53,6 +53,7 @@ class AxiomSoapFaultDetail extends AxiomSoapElement implements SoapFaultDetail {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Iterator<SoapFaultDetailElement> getDetailEntries() {
         return new AxiomSoapFaultDetailElementIterator(getAxiomFaultDetail().getChildElements());
     }

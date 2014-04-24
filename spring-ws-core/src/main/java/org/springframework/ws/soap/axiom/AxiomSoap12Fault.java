@@ -36,7 +36,6 @@ import org.apache.axiom.soap.SOAPProcessingException;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.axiom.support.AxiomUtils;
 import org.springframework.ws.soap.soap12.Soap12Fault;
-import org.springframework.xml.namespace.QNameUtils;
 
 /** Axiom-specific version of {@code org.springframework.ws.soap.Soap12Fault}. */
 class AxiomSoap12Fault extends AxiomSoapFault implements Soap12Fault {
@@ -85,7 +84,7 @@ class AxiomSoap12Fault extends AxiomSoapFault implements Soap12Fault {
     }
 
     private void setValueText(QName code, SOAPFaultValue faultValue) {
-        String prefix = QNameUtils.getPrefix(code);
+	    String prefix = code.getPrefix();
         if (StringUtils.hasLength(code.getNamespaceURI()) && StringUtils.hasLength(prefix)) {
             OMNamespace namespace = getAxiomFault().findNamespaceURI(prefix);
             if (namespace == null) {
@@ -97,7 +96,8 @@ class AxiomSoap12Fault extends AxiomSoapFault implements Soap12Fault {
             if (namespace == null) {
                 throw new IllegalArgumentException("Could not resolve namespace of code [" + code + "]");
             }
-            code = QNameUtils.createQName(code.getNamespaceURI(), code.getLocalPart(), namespace.getPrefix());
+	        code = new QName(code.getNamespaceURI(), code.getLocalPart(),
+			        namespace.getPrefix());
         }
         faultValue.setText(prefix + ":" + code.getLocalPart());
     }

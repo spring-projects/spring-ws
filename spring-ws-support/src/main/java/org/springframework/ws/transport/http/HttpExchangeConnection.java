@@ -167,6 +167,7 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
     }
 
     @Override
+    @Deprecated
     public void setFault(boolean fault) throws IOException {
         if (fault) {
             responseStatusCode = HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR;

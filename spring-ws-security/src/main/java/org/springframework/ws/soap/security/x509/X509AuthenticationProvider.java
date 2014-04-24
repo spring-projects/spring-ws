@@ -126,7 +126,7 @@ public class X509AuthenticationProvider implements AuthenticationProvider, Initi
     }
 
     @Override
-    public boolean supports(Class authentication) {
+    public boolean supports(Class<?> authentication) {
         return X509AuthenticationToken.class.isAssignableFrom(authentication);
     }
 }

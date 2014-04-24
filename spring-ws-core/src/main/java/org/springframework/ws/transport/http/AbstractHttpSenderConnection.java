@@ -153,6 +153,7 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
     }
 
     @Override
+    @Deprecated
     public final void setFault(boolean fault) {
     }
 

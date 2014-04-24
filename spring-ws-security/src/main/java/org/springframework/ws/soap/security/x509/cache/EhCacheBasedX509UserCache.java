@@ -77,7 +77,7 @@ public class EhCacheBasedX509UserCache implements X509UserCache, InitializingBea
         if (element == null) {
             return null;
         } else {
-            return (UserDetails) element.getValue();
+            return (UserDetails) element.getObjectValue();
         }
     }
 

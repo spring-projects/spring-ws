@@ -50,6 +50,7 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Iterator<QName> getFaultSubcodes() {
 	    return getSaajFault().getFaultSubcodes();
     }

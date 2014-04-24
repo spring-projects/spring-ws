@@ -34,7 +34,6 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapHeaderException;
 import org.springframework.ws.soap.soap12.Soap12Header;
-import org.springframework.xml.namespace.QNameUtils;
 
 /**
  * Axiom-specific version of {@code org.springframework.ws.soap.Soap12Header}.
@@ -53,8 +52,9 @@ class AxiomSoap12Header extends AxiomSoapHeader implements Soap12Header {
         try {
             SOAPHeaderBlock notUnderstood =
                     getAxiomHeader().addHeaderBlock("NotUnderstood", getAxiomHeader().getNamespace());
-            OMNamespace headerNamespace =
-                    notUnderstood.declareNamespace(headerName.getNamespaceURI(), QNameUtils.getPrefix(headerName));
+	        OMNamespace headerNamespace =
+                    notUnderstood.declareNamespace(headerName.getNamespaceURI(),
+		                    headerName.getPrefix());
             notUnderstood.addAttribute("qname", headerNamespace.getPrefix() + ":" + headerName.getLocalPart(), null);
             return new AxiomSoapHeaderElement(notUnderstood, getAxiomFactory());
         }

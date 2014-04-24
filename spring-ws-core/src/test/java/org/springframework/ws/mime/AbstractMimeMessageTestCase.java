@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +19,14 @@ package org.springframework.ws.mime;
 import java.io.IOException;
 import java.util.Iterator;
 
+import static org.junit.Assert.*;
+import org.junit.Test;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.AbstractWebServiceMessageTestCase;
 import org.springframework.ws.WebServiceMessage;
-
-import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public abstract class AbstractMimeMessageTestCase extends AbstractWebServiceMessageTestCase {
 
@@ -76,7 +75,7 @@ public abstract class AbstractMimeMessageTestCase extends AbstractWebServiceMess
         Iterator<Attachment> iterator = mimeMessage.getAttachments();
         assertNotNull("Attachment iterator is null", iterator);
         assertTrue("Attachment iterator has no elements", iterator.hasNext());
-        Attachment attachment = (Attachment) iterator.next();
+        Attachment attachment = iterator.next();
         testAttachment(attachment);
         assertFalse("Attachment iterator has too many elements", iterator.hasNext());
     }

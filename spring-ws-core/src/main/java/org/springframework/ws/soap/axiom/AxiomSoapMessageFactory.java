@@ -44,11 +44,11 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor;
-import org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping;
+import org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping;
 import org.springframework.ws.soap.SoapMessageFactory;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor;
-import org.springframework.ws.soap.server.endpoint.mapping.SoapActionEndpointMapping;
+import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping;
 import org.springframework.ws.soap.support.SoapUtils;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportInputStream;
@@ -61,9 +61,9 @@ import org.springframework.ws.transport.TransportInputStream;
  * #setPayloadCaching(boolean) payloadCaching} property to {@code false} (default is {@code true}). This this
  * will read the contents of the body directly from the stream. However, <strong>when this setting is enabled, the
  * payload can only be read once</strong>. This means that any endpoint mappings or interceptors which are based on the
- * message payload (such as the {@link PayloadRootQNameEndpointMapping}, the {@link PayloadValidatingInterceptor}, or
+ * message payload (such as the {@link PayloadRootAnnotationMethodEndpointMapping}, the {@link PayloadValidatingInterceptor}, or
  * the {@link PayloadLoggingInterceptor}) cannot be used. Instead, use an endpoint mapping that does not consume the
- * payload (i.e. the {@link SoapActionEndpointMapping}).
+ * payload (i.e. the {@link SoapActionAnnotationMethodEndpointMapping}).
  *
  * <p>Additionally, this message factory can cache large attachments to disk by setting the {@link
  * #setAttachmentCaching(boolean) attachmentCaching} property to {@code true} (default is {@code false}).

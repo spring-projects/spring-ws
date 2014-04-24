@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2012 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,10 +26,6 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLInputFactory;
 
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-import org.springframework.xml.namespace.QNameUtils;
-
 import org.apache.axiom.om.OMContainer;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
@@ -43,6 +39,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
+
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * Collection of generic utility methods to work with Axiom. Includes conversion from {@code OMNamespace}s to
@@ -68,7 +67,7 @@ public abstract class AxiomUtils {
      * @throws IllegalArgumentException if {@code qName} is not fully qualified
      */
     public static OMNamespace toNamespace(QName qName, OMElement resolveElement) throws OMException {
-        String prefix = QNameUtils.getPrefix(qName);
+	    String prefix = qName.getPrefix();
         if (StringUtils.hasLength(qName.getNamespaceURI()) && StringUtils.hasLength(prefix)) {
             return resolveElement.declareNamespace(qName.getNamespaceURI(), prefix);
         }

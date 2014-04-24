@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,9 +91,8 @@ public abstract class AbstractSoapFaultDefinitionExceptionResolver extends Abstr
             }
             else if (soapBody instanceof Soap12Body) {
                 Soap12Body soap12Body = (Soap12Body) soapBody;
-                Soap12Fault soap12Fault =
-                        (Soap12Fault) soap12Body.addServerOrReceiverFault(faultStringOrReason, definition
-                                .getLocale());
+                Soap12Fault soap12Fault = soap12Body.addServerOrReceiverFault(faultStringOrReason, definition
+                        .getLocale());
                 soap12Fault.addFaultSubcode(definition.getFaultCode());
                 fault = soap12Fault;
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,12 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.ws.MockWebServiceMessage;
@@ -35,13 +41,6 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.transform.ResourceSource;
 import org.springframework.xml.transform.StringResult;
-
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 
 public class PayloadTransformingInterceptorTest {
 
@@ -150,7 +149,7 @@ public class PayloadTransformingInterceptorTest {
         interceptor.setRequestXslt(xslt);
         interceptor.afterPropertiesSet();
         DomPoxMessageFactory factory = new DomPoxMessageFactory();
-        DomPoxMessage message = (DomPoxMessage) factory.createWebServiceMessage();
+        DomPoxMessage message = factory.createWebServiceMessage();
         transformer.transform(new ResourceSource(input), message.getPayloadResult());
         MessageContext context = new DefaultMessageContext(message, factory);
 

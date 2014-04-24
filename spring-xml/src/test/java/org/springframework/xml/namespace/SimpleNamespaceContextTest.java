@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,10 +91,10 @@ public class SimpleNamespaceContextTest {
         Iterator<String> iterator = context.getPrefixes("namespace");
         Assert.assertNotNull("getPrefixes returns null", iterator);
         Assert.assertTrue("iterator is empty", iterator.hasNext());
-        String result = (String) iterator.next();
+        String result = iterator.next();
         Assert.assertTrue("Invalid prefix", result.equals("prefix1") || result.equals("prefix2"));
         Assert.assertTrue("iterator is empty", iterator.hasNext());
-        result = (String) iterator.next();
+        result = iterator.next();
         Assert.assertTrue("Invalid prefix", result.equals("prefix1") || result.equals("prefix2"));
         Assert.assertFalse("iterator contains more than two values", iterator.hasNext());
     }
@@ -103,7 +103,7 @@ public class SimpleNamespaceContextTest {
         Iterator<String> iterator = context.getPrefixes(namespaceUri);
         Assert.assertNotNull("getPrefixes returns null", iterator);
         Assert.assertTrue("iterator is empty", iterator.hasNext());
-        String result = (String) iterator.next();
+        String result = iterator.next();
         Assert.assertEquals("Invalid prefix", prefix, result);
         Assert.assertFalse("iterator contains multiple values", iterator.hasNext());
     }
@@ -113,7 +113,7 @@ public class SimpleNamespaceContextTest {
         Iterator<String> iterator = context.getBoundPrefixes();
         Assert.assertNotNull("getPrefixes returns null", iterator);
         Assert.assertTrue("iterator is empty", iterator.hasNext());
-        String result = (String) iterator.next();
+        String result = iterator.next();
         Assert.assertEquals("Invalid prefix", "prefix", result);
         Assert.assertFalse("iterator contains multiple values", iterator.hasNext());
     }
@@ -171,10 +171,10 @@ public class SimpleNamespaceContextTest {
         Iterator<String> iterator = context.getPrefixes(defaultNamespace);
         Assert.assertNotNull("getPrefixes returns null", iterator);
         Assert.assertTrue("iterator is empty", iterator.hasNext());
-        String result = (String) iterator.next();
+        String result = iterator.next();
         Assert.assertTrue("Invalid prefix", result.equals(XMLConstants.DEFAULT_NS_PREFIX) || result.equals("prefix"));
         Assert.assertTrue("iterator is empty", iterator.hasNext());
-        result = (String) iterator.next();
+        result = iterator.next();
         Assert.assertTrue("Invalid prefix", result.equals(XMLConstants.DEFAULT_NS_PREFIX) || result.equals("prefix"));
         Assert.assertFalse("iterator contains more than two values", iterator.hasNext());
     }

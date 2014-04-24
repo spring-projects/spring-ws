@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,10 @@ import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPMessage;
 
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
@@ -33,10 +37,6 @@ import org.springframework.ws.soap.server.endpoint.annotation.FaultCode;
 import org.springframework.ws.soap.server.endpoint.annotation.SoapFault;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 import org.springframework.ws.soap.soap12.Soap12Fault;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 public class SoapFaultAnnotationExceptionResolverTest {
 
@@ -197,15 +197,18 @@ public class SoapFaultAnnotationExceptionResolverTest {
     }
 
     @SoapFault(faultCode = FaultCode.CLIENT, faultStringOrReason = "Client error")
+    @SuppressWarnings("serial")
     public class MyClientException extends Exception {
 
     }
 
+	@SuppressWarnings("serial")
     public class MySubClientException extends MyClientException {
 
     }
 
     @SoapFault(faultCode = FaultCode.CLIENT)
+    @SuppressWarnings("serial")
     public class NoStringOrReasonException extends Exception {
 
         public NoStringOrReasonException(String message) {
@@ -214,26 +217,31 @@ public class SoapFaultAnnotationExceptionResolverTest {
     }
 
     @SoapFault(faultCode = FaultCode.SENDER, faultStringOrReason = "Sender error")
+    @SuppressWarnings("serial")
     public class MySenderException extends Exception {
 
     }
 
     @SoapFault(faultCode = FaultCode.SERVER, faultStringOrReason = "Server error")
+    @SuppressWarnings("serial")
     public class MyServerException extends Exception {
 
     }
 
     @SoapFault(faultCode = FaultCode.RECEIVER, faultStringOrReason = "Receiver error")
+    @SuppressWarnings("serial")
     public class MyReceiverException extends Exception {
 
     }
 
     @SoapFault(faultCode = FaultCode.CUSTOM, customFaultCode = "{http://springframework.org/spring-ws}Fault",
             faultStringOrReason = "MyCustomException thrown", locale = "nl")
+    @SuppressWarnings("serial")
     public class MyCustomException extends Exception {
 
     }
 
+	@SuppressWarnings("serial")
     public class NonAnnotatedException extends Exception {
 
     }

@@ -42,6 +42,7 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
+@SuppressWarnings("unchecked")
 public class WebServiceTemplateTest {
 
     private WebServiceTemplate template;

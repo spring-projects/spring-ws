@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap.security.xwss.callback.jaas;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -35,7 +36,7 @@ public class PlainTextLoginModule implements LoginModule {
 
     private boolean success;
 
-    private List principals = new ArrayList();
+    private List<Principal> principals = new ArrayList<Principal>();
 
     @Override
     public boolean abort() {

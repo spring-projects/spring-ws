@@ -264,6 +264,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTestCase {
     }
 
     /** Servlet that returns and error message for a given status code. */
+    @SuppressWarnings("serial")
     private static class ErrorServlet extends HttpServlet {
 
         private int sc;
@@ -279,11 +280,10 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTestCase {
     }
 
 	/** Abstract SOAP Servlet */
+	@SuppressWarnings("serial")
     private abstract static class AbstractSoapServlet extends HttpServlet {
 
         protected MessageFactory messageFactory = null;
-
-        private final int sc = -1;
 
         @Override
         public void init(ServletConfig servletConfig) throws ServletException {
@@ -358,6 +358,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTestCase {
         protected abstract SOAPMessage onMessage(SOAPMessage message) throws SOAPException;
     }
 
+	@SuppressWarnings("serial")
     private static class EchoSoapServlet extends AbstractSoapServlet {
 
         @Override
@@ -366,6 +367,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTestCase {
         }
     }
 
+	@SuppressWarnings("serial")
     private static class NoResponseSoapServlet extends AbstractSoapServlet {
 
         @Override
@@ -374,6 +376,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTestCase {
         }
     }
 
+	@SuppressWarnings("serial")
     private static class SoapReceiverFaultServlet extends AbstractSoapServlet {
 
         @Override
@@ -385,6 +388,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTestCase {
         }
     }
 
+	@SuppressWarnings("serial")
     private static class SoapSenderFaultServlet extends AbstractSoapServlet {
 
         @Override
@@ -396,6 +400,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTestCase {
         }
     }
 
+	@SuppressWarnings("serial")
     private static class AttachmentsServlet extends AbstractSoapServlet {
 
         @Override

@@ -34,7 +34,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.axiom.support.AxiomUtils;
 import org.springframework.ws.soap.soap11.Soap11Body;
 import org.springframework.ws.soap.soap11.Soap11Fault;
-import org.springframework.xml.namespace.QNameUtils;
 
 /**
  * Axiom-specific version of {@code org.springframework.ws.soap.Soap11Body}.
@@ -108,7 +107,7 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
     }
 
     private void setValueText(QName code, SOAPFault fault, SOAPFaultCode faultCode) {
-        String prefix = QNameUtils.getPrefix(code);
+	    String prefix = code.getPrefix();
         if (StringUtils.hasLength(code.getNamespaceURI()) && StringUtils.hasLength(prefix)) {
             OMNamespace namespace = fault.findNamespaceURI(prefix);
             if (namespace == null) {
@@ -120,7 +119,8 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
             if (namespace == null) {
                 namespace = fault.declareNamespace(code.getNamespaceURI(), "");
             }
-            code = QNameUtils.createQName(code.getNamespaceURI(), code.getLocalPart(), namespace.getPrefix());
+	        code = new QName(code.getNamespaceURI(), code.getLocalPart(),
+			        namespace.getPrefix());
         }
         faultCode.setText(code);
     }
@@ -131,8 +131,8 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
             AxiomUtils.removeContents(getAxiomBody());
             SOAPFault fault = getAxiomFactory().createSOAPFault(getAxiomBody());
             SOAPFaultCode faultCode = getAxiomFactory().createSOAPFaultCode(fault);
-            faultCode.setText(QNameUtils.createQName(fault.getNamespace().getNamespaceURI(), localName,
-                    fault.getNamespace().getPrefix()));
+	        faultCode.setText(new QName(fault.getNamespace().getNamespaceURI(), localName,
+			        fault.getNamespace().getPrefix()));
             SOAPFaultReason faultReason = getAxiomFactory().createSOAPFaultReason(fault);
             if (locale != null) {
                 addLangAttribute(locale, faultReason);

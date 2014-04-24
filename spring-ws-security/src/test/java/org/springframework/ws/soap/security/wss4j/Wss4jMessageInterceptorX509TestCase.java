@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,14 @@
 
 package org.springframework.ws.soap.security.wss4j;
 
+import org.apache.ws.security.components.crypto.Merlin;
+import org.junit.Test;
+import org.w3c.dom.Document;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j.support.CryptoFactoryBean;
-
-import org.apache.ws.security.components.crypto.Crypto;
-import org.apache.ws.security.components.crypto.Merlin;
-import org.junit.Test;
-import org.w3c.dom.Document;
 
 public abstract class Wss4jMessageInterceptorX509TestCase extends Wss4jTestCase {
 
@@ -42,9 +41,9 @@ public abstract class Wss4jMessageInterceptorX509TestCase extends Wss4jTestCase 
         cryptoFactoryBean.setKeyStoreLocation(new ClassPathResource("private.jks"));
 
         cryptoFactoryBean.afterPropertiesSet();
-        interceptor.setSecurementSignatureCrypto((Crypto) cryptoFactoryBean
+        interceptor.setSecurementSignatureCrypto(cryptoFactoryBean
                 .getObject());
-        interceptor.setValidationSignatureCrypto((Crypto) cryptoFactoryBean
+        interceptor.setValidationSignatureCrypto(cryptoFactoryBean
                 .getObject());
         interceptor.afterPropertiesSet();
 

@@ -41,6 +41,7 @@ class SaajSoap11Header extends SaajSoapHeader implements Soap11Header {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String[] actors) {
         List<SOAPHeaderElement> result = new ArrayList<SOAPHeaderElement>();
 	    Iterator<SOAPHeaderElement> iterator = getSaajHeader().examineAllHeaderElements();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,10 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.ws.MockWebServiceMessage;
@@ -37,10 +41,6 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 import org.springframework.xml.xsd.SimpleXsdSchema;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 public class PayloadValidatingInterceptorTest {
 
@@ -81,7 +81,7 @@ public class PayloadValidatingInterceptorTest {
 
     @Test
     public void testHandleInvalidRequest() throws Exception {
-        SoapMessage invalidMessage = (SoapMessage) soap11Factory.createWebServiceMessage();
+        SoapMessage invalidMessage = soap11Factory.createWebServiceMessage();
         InputStream inputStream = getClass().getResourceAsStream(INVALID_MESSAGE);
         transformer.transform(new StreamSource(inputStream), invalidMessage.getPayloadResult());
         context = new DefaultMessageContext(invalidMessage, soap11Factory);

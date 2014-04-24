@@ -23,7 +23,6 @@ import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.addressing.core.EndpointReference;
 import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
-import org.springframework.xml.namespace.QNameUtils;
 
 /**
  * Implements WS-Addressing 1.0 (May 2006). This version of the specification is used by Microsoft's Windows
@@ -88,7 +87,8 @@ public class Addressing10 extends AbstractAddressingVersion {
 
     @Override
     protected final QName getMessageAddressingHeaderRequiredFaultSubcode() {
-        return QNameUtils.createQName(NAMESPACE_URI, "MessageAddressingHeaderRequired", getNamespacePrefix());
+	    return new QName(NAMESPACE_URI, "MessageAddressingHeaderRequired",
+			    getNamespacePrefix());
     }
 
     @Override
@@ -98,7 +98,7 @@ public class Addressing10 extends AbstractAddressingVersion {
 
     @Override
     protected QName getInvalidAddressingHeaderFaultSubcode() {
-        return QNameUtils.createQName(NAMESPACE_URI, "InvalidAddressingHeader", getNamespacePrefix());
+	    return new QName(NAMESPACE_URI, "InvalidAddressingHeader", getNamespacePrefix());
     }
 
     @Override

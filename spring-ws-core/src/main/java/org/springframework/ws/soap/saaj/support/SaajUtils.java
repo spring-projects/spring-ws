@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.transport.TransportConstants;
-import org.springframework.xml.namespace.QNameUtils;
 
 /**
  * Collection of generic utility methods to work with SAAJ. Includes conversion from SAAJ {@link Name} objects to {@link
@@ -128,7 +127,7 @@ public abstract class SaajUtils {
      * @throws IllegalArgumentException if {@code qName} is not fully qualified
      */
     public static Name toName(QName qName, SOAPElement resolveElement) throws SOAPException {
-        String qNamePrefix = QNameUtils.getPrefix(qName);
+	    String qNamePrefix = qName.getPrefix();
         SOAPEnvelope envelope = getEnvelope(resolveElement);
         if (StringUtils.hasLength(qName.getNamespaceURI()) && StringUtils.hasLength(qNamePrefix)) {
             return envelope.createName(qName.getLocalPart(), qNamePrefix, qName.getNamespaceURI());
@@ -162,7 +161,7 @@ public abstract class SaajUtils {
      */
     public static QName toQName(Name name) {
         if (StringUtils.hasLength(name.getURI()) && StringUtils.hasLength(name.getPrefix())) {
-            return QNameUtils.createQName(name.getURI(), name.getLocalName(), name.getPrefix());
+	        return new QName(name.getURI(), name.getLocalName(), name.getPrefix());
         }
         else if (StringUtils.hasLength(name.getURI())) {
             return new QName(name.getURI(), name.getLocalName());
@@ -217,7 +216,7 @@ public abstract class SaajUtils {
 	 * Returns the first child element of the given body.
 	 */
 	public static SOAPElement getFirstBodyElement(SOAPBody body) {
-		for (Iterator iterator = body.getChildElements(); iterator.hasNext(); ) {
+		for (Iterator<?> iterator = body.getChildElements(); iterator.hasNext(); ) {
 			Object child = iterator.next();
 			if (child instanceof SOAPElement) {
 				return (SOAPElement) child;

@@ -208,6 +208,7 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
         }
     }
 
+	@SuppressWarnings("serial")
     private static class XomParsingException extends NestedRuntimeException {
 
         private XomParsingException(ParsingException ex) {

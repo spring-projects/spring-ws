@@ -25,16 +25,14 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.server.endpoint.AbstractValidatingMarshallingPayloadEndpoint;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapFaultDetail;
 import org.springframework.ws.soap.SoapFaultDetailElement;
 import org.springframework.ws.soap.SoapMessage;
-import org.springframework.xml.namespace.QNameUtils;
 
 /**
- * Extension of the {@link AbstractValidatingMarshallingPayloadEndpoint} which validates the request payload with {@link
+ * Extension of the {@link org.springframework.ws.server.endpoint.AbstractValidatingMarshallingPayloadEndpoint} which validates the request payload with {@link
  * Validator}(s), and creates a SOAP Fault whenever the request message cannot be validated. The desired validators can
  * be set using properties, and <strong>must</strong> {@link Validator#supports(Class) support} the request object.
  *
@@ -44,9 +42,11 @@ import org.springframework.xml.namespace.QNameUtils;
  *
  * @author Arjen Poutsma
  * @since 1.0.2
+ * @deprecated as of Spring Web Services 2.0, in favor of annotated endpoints
  */
+@Deprecated
 public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint
-        extends AbstractValidatingMarshallingPayloadEndpoint implements MessageSourceAware {
+        extends org.springframework.ws.server.endpoint.AbstractValidatingMarshallingPayloadEndpoint implements MessageSourceAware {
 
     /**
      * Default SOAP Fault Detail name used when a global validation error occur on the request.
@@ -54,9 +54,10 @@ public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint
      * @see #setDetailElementName(javax.xml.namespace.QName)
      */
     public static final QName DEFAULT_DETAIL_ELEMENT_NAME =
-            QNameUtils.createQName("http://springframework.org/spring-ws", "ValidationError", "spring-ws");
+		    new QName("http://springframework.org/spring-ws", "ValidationError",
+				    "spring-ws");
 
-    /**
+	/**
      * Default SOAP Fault string used when a validation errors occur on the request.
      *
      * @see #setFaultStringOrReason(String)

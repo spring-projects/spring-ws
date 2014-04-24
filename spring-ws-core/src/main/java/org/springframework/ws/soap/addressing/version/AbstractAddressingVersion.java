@@ -302,7 +302,8 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
         }
         else if (message.getSoapBody() instanceof Soap12Body) {
             Soap12Body soapBody = (Soap12Body) message.getSoapBody();
-            Soap12Fault soapFault = (Soap12Fault) soapBody.addClientOrSenderFault(reason, Locale.ENGLISH);
+            Soap12Fault soapFault =
+		            soapBody.addClientOrSenderFault(reason, Locale.ENGLISH);
             soapFault.addFaultSubcode(subcode);
             return soapFault;
         }
@@ -339,37 +340,37 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 
     /** Returns the qualified name of the {@code To} addressing header. */
     protected QName getToName() {
-        return QNameUtils.createQName(getNamespaceUri(), "To", getNamespacePrefix());
+	    return new QName(getNamespaceUri(), "To", getNamespacePrefix());
     }
 
     /** Returns the qualified name of the {@code From} addressing header. */
     protected QName getFromName() {
-        return QNameUtils.createQName(getNamespaceUri(), "From", getNamespacePrefix());
+	    return new QName(getNamespaceUri(), "From", getNamespacePrefix());
     }
 
     /** Returns the qualified name of the {@code ReplyTo} addressing header. */
     protected QName getReplyToName() {
-        return QNameUtils.createQName(getNamespaceUri(), "ReplyTo", getNamespacePrefix());
+	    return new QName(getNamespaceUri(), "ReplyTo", getNamespacePrefix());
     }
 
     /** Returns the qualified name of the {@code FaultTo} addressing header. */
     protected QName getFaultToName() {
-        return QNameUtils.createQName(getNamespaceUri(), "FaultTo", getNamespacePrefix());
+	    return new QName(getNamespaceUri(), "FaultTo", getNamespacePrefix());
     }
 
     /** Returns the qualified name of the {@code Action} addressing header. */
     protected QName getActionName() {
-        return QNameUtils.createQName(getNamespaceUri(), "Action", getNamespacePrefix());
+	    return new QName(getNamespaceUri(), "Action", getNamespacePrefix());
     }
 
     /** Returns the qualified name of the {@code MessageID} addressing header. */
     protected QName getMessageIdName() {
-        return QNameUtils.createQName(getNamespaceUri(), "MessageID", getNamespacePrefix());
+	    return new QName(getNamespaceUri(), "MessageID", getNamespacePrefix());
     }
 
     /** Returns the qualified name of the {@code RelatesTo} addressing header. */
     protected QName getRelatesToName() {
-        return QNameUtils.createQName(getNamespaceUri(), "RelatesTo", getNamespacePrefix());
+	    return new QName(getNamespaceUri(), "RelatesTo", getNamespacePrefix());
     }
 
     /** Returns the qualified name of the {@code RelatesTo} addressing header. */
@@ -382,7 +383,7 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
      * {@code null} when reference properties are not supported by this version of the spec.
      */
     protected QName getReferencePropertiesName() {
-        return QNameUtils.createQName(getNamespaceUri(), "ReferenceProperties", getNamespacePrefix());
+	    return new QName(getNamespaceUri(), "ReferenceProperties", getNamespacePrefix());
     }
 
     /**
@@ -390,7 +391,7 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
      * {@code null} when reference parameters are not supported by this version of the spec.
      */
     protected QName getReferenceParametersName() {
-        return QNameUtils.createQName(getNamespaceUri(), "ReferenceParameters", getNamespacePrefix());
+	    return new QName(getNamespaceUri(), "ReferenceParameters", getNamespacePrefix());
     }
 
     /*
@@ -399,7 +400,7 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 
     /** The qualified name of the {@code Address} in {@code EndpointReference}. */
     protected QName getAddressName() {
-        return QNameUtils.createQName(getNamespaceUri(), "Address", getNamespacePrefix());
+	    return new QName(getNamespaceUri(), "Address", getNamespacePrefix());
     }
 
     /** Returns the default To URI. */

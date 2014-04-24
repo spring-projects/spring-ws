@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.stream.StreamSource;
 
+import junit.framework.Assert;
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.junit.Assert.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamSource;
@@ -32,13 +38,6 @@ import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.transport.MockTransportOutputStream;
 import org.springframework.xml.transform.StringSource;
-
-import junit.framework.Assert;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.junit.Assert.*;
 
 public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageTestCase {
 
@@ -67,11 +66,11 @@ public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageT
         assertXMLEqual(
                 "<Envelope xmlns='http://schemas.xmlsoap.org/soap/envelope/'><Body><payload xmlns='http://www.springframework.org' /></Body></Envelope>",
                 result);
-        String contentType = (String) tos.getHeaders().get("Content-Type");
+        String contentType = tos.getHeaders().get("Content-Type");
         assertTrue("Invalid Content-Type set", contentType.indexOf(SoapVersion.SOAP_11.getContentType()) != -1);
-        String resultSoapAction = (String) tos.getHeaders().get("SOAPAction");
+        String resultSoapAction = tos.getHeaders().get("SOAPAction");
         assertEquals("Invalid soap action", "\"" + soapAction + "\"", resultSoapAction);
-        String resultAccept = (String) tos.getHeaders().get("Accept");
+        String resultAccept = tos.getHeaders().get("Accept");
         assertNotNull("Invalid accept header", resultAccept);
     }
 
@@ -82,7 +81,7 @@ public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageT
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         MockTransportOutputStream tos = new MockTransportOutputStream(bos);
         soapMessage.writeTo(tos);
-        String contentType = (String) tos.getHeaders().get("Content-Type");
+        String contentType = tos.getHeaders().get("Content-Type");
         assertTrue("Content-Type for attachment message does not contains multipart/related",
                 contentType.indexOf("multipart/related") != -1);
         assertTrue("Content-Type for attachment message does not contains type=\"text/xml\"",

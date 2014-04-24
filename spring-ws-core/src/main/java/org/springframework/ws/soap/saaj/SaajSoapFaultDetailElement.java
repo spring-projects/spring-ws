@@ -52,7 +52,7 @@ class SaajSoapFaultDetailElement extends SaajSoapElement<DetailEntry> implements
     }
 
     protected DetailEntry getSaajDetailEntry() {
-        return (DetailEntry) getSaajElement();
+        return getSaajElement();
     }
 
 }

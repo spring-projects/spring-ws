@@ -99,6 +99,7 @@ public class DomPoxWebServiceTemplateIntegrationTest {
     }
 
 	/** Servlet that returns and error message for a given status code. */
+	@SuppressWarnings("serial")
     private static class ErrorServlet extends HttpServlet {
 
         private int sc;
@@ -114,6 +115,7 @@ public class DomPoxWebServiceTemplateIntegrationTest {
     }
 
     /** Simple POX Servlet. */
+    @SuppressWarnings("serial")
     private static class PoxServlet extends HttpServlet {
 
         private DocumentBuilderFactory documentBuilderFactory;

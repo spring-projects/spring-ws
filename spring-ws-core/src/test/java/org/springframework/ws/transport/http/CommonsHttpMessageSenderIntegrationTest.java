@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,21 +27,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.soap.MessageFactory;
 
-import org.springframework.context.support.StaticApplicationContext;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.ws.MockWebServiceMessage;
-import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.soap.saaj.SaajSoapMessage;
-import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
-import org.springframework.ws.transport.WebServiceConnection;
-import org.springframework.ws.transport.support.FreePortScanner;
-
-import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.URIException;
 import org.junit.Test;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
+
+import org.springframework.context.support.StaticApplicationContext;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
+import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
+import org.springframework.ws.transport.WebServiceConnection;
+import org.springframework.ws.transport.support.FreePortScanner;
 
 public class CommonsHttpMessageSenderIntegrationTest extends AbstractHttpWebServiceMessageSenderIntegrationTestCase {
 
@@ -101,6 +98,7 @@ public class CommonsHttpMessageSenderIntegrationTest extends AbstractHttpWebServ
 
     }
 
+	@SuppressWarnings("serial")
     private class EchoServlet extends HttpServlet {
 
         @Override

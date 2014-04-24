@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ public class AxiomSoap11NonCachingBodyTest extends AbstractSoap11BodyTestCase {
         messageFactory.setPayloadCaching(false);
         messageFactory.setSoapVersion(SoapVersion.SOAP_11);
 
-        AxiomSoapMessage axiomSoapMessage = (AxiomSoapMessage) messageFactory.createWebServiceMessage();
+        AxiomSoapMessage axiomSoapMessage = messageFactory.createWebServiceMessage();
         return axiomSoapMessage.getSoapBody();
     }
 
