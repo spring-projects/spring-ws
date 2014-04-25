@@ -22,7 +22,6 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j.callback.SimplePasswordValidationCallbackHandler;
-
 import org.apache.ws.security.WSConstants;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -49,9 +48,15 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
 
     @Test
     public void testValidateUsernameTokenDigest() throws Exception {
+    	Wss4jSecurityInterceptor clientInterceptor = new Wss4jSecurityInterceptor();
+    	clientInterceptor.setSecurementActions("UsernameToken");
+    	clientInterceptor.setSecurementUsername("Bert");
+    	clientInterceptor.setSecurementPassword("Ernie");
+    	clientInterceptor.setSecurementPasswordType(WSConstants.PW_DIGEST);
         Wss4jSecurityInterceptor interceptor = prepareInterceptor("UsernameToken", true, true);
         SoapMessage message = loadSoap11Message("usernameTokenDigest-soap.xml");
         MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
+        clientInterceptor.handleRequest(messageContext);
         interceptor.validateMessage(message, messageContext);
         assertValidateUsernameToken(message);
     }
