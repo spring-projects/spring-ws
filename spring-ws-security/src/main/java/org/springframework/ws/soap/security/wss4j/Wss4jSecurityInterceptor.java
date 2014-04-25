@@ -564,6 +564,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         
         requestData.setWssConfig(wssConfig);
 
+	    messageContext.setProperty(WSHandlerConstants.TTL_TIMESTAMP, Integer.toString(securementTimeToLive));
+
         return requestData;
     }
 

@@ -70,9 +70,18 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCa
 
     @Test
     public void testValidateUsernameTokenDigest() throws Exception {
-        EndpointInterceptor interceptor = prepareInterceptor("UsernameToken", true, true);
-        SoapMessage message = loadSoap11Message("usernameTokenDigest-soap.xml");
+	    Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
+	    interceptor.setSecurementActions("UsernameToken");
+	    interceptor.setSecurementUsername("Bert");
+	    interceptor.setSecurementPassword("Ernie");
+	    interceptor.setSecurementPasswordType(WSConstants.PW_DIGEST);
+
+
+	    SoapMessage message = loadSoap11Message("empty-soap.xml");
         MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
+	    interceptor.handleRequest(messageContext);
+
+        interceptor = prepareInterceptor("UsernameToken", true, true);
         interceptor.handleRequest(messageContext, null);
         assertValidateUsernameToken(message);
 
@@ -91,7 +100,7 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCa
         assertNotNull("No Authentication created", SecurityContextHolder.getContext().getAuthentication());
     }
 
-    protected EndpointInterceptor prepareInterceptor(String actions, boolean validating, boolean digest)
+    protected Wss4jSecurityInterceptor prepareInterceptor(String actions, boolean validating, boolean digest)
             throws Exception {
         Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
         if (validating) {

@@ -49,9 +49,17 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
 
     @Test
     public void testValidateUsernameTokenDigest() throws Exception {
-        Wss4jSecurityInterceptor interceptor = prepareInterceptor("UsernameToken", true, true);
-        SoapMessage message = loadSoap11Message("usernameTokenDigest-soap.xml");
+	    Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
+	    interceptor.setSecurementActions("UsernameToken");
+	    interceptor.setSecurementUsername("Bert");
+	    interceptor.setSecurementPassword("Ernie");
+	    interceptor.setSecurementPasswordType(WSConstants.PW_DIGEST);
+
+	    SoapMessage message = loadSoap11Message("empty-soap.xml");
         MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
+	    interceptor.handleRequest(messageContext);
+
+	    interceptor = prepareInterceptor("UsernameToken", true, true);
         interceptor.validateMessage(message, messageContext);
         assertValidateUsernameToken(message);
     }
