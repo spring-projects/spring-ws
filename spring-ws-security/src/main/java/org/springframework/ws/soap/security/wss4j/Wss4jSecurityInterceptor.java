@@ -21,6 +21,7 @@ import java.security.Principal;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
@@ -36,12 +37,12 @@ import org.apache.ws.security.handler.RequestData;
 import org.apache.ws.security.handler.WSHandlerConstants;
 import org.apache.ws.security.handler.WSHandlerResult;
 import org.apache.ws.security.message.token.Timestamp;
+import org.apache.ws.security.saml.SAMLIssuer;
 import org.apache.ws.security.util.WSSecurityUtil;
 import org.apache.ws.security.validate.Credential;
 import org.apache.ws.security.validate.SignatureTrustValidator;
 import org.apache.ws.security.validate.TimestampValidator;
 import org.w3c.dom.Document;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -87,6 +88,8 @@ import org.springframework.ws.soap.security.wss4j.callback.UsernameTokenPrincipa
 public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor implements InitializingBean {
 
     public static final String SECUREMENT_USER_PROPERTY_NAME = "Wss4jSecurityInterceptor.securementUser";
+    
+    public static final String SPRING_SAML_ISSUER_PROP = "springSamlIssuerProp";
 
     private int securementAction;
 
@@ -131,6 +134,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
     private boolean bspCompliant;
 
     private boolean securementUseDerivedKey;
+    
+    private SAMLIssuer samlIssuer;
 
     public void setSecurementActions(String securementActions) {
         this.securementActions = securementActions;
@@ -477,6 +482,11 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
     public void setSamlProperties(String location) {
         handler.setOption(WSHandlerConstants.SAML_PROP_FILE, location);
     }
+    
+//    public void setSamlIssuer(SAMLIssuer issuer) {
+//    	handler.setOption(WSHandlerConstants.SAML_PROP_REF_ID, SPRING_SAML_ISSUER_PROP);
+//    	this.samlIssuer = issuer;
+//    }
 
 	/**
 	 * Sets the time in seconds in the future within which the Created time of an
@@ -557,6 +567,10 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         else {
             requestData.setUsername(securementUsername);
         }
+        
+        messageContext.setProperty(SPRING_SAML_ISSUER_PROP, samlIssuer);
+        
+        messageContext.setProperty(WSHandlerConstants.TTL_TIMESTAMP, Integer.toString(securementTimeToLive));
 
         requestData.setTimeToLive(securementTimeToLive);
 

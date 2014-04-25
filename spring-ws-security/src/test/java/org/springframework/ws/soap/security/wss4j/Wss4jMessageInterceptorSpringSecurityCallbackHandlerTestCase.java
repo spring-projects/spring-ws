@@ -16,8 +16,17 @@
 
 package org.springframework.ws.soap.security.wss4j;
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.util.Properties;
 
+import org.apache.ws.security.WSConstants;
+import org.junit.After;
+import org.junit.Test;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -26,14 +35,6 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j.callback.SpringSecurityPasswordValidationCallbackHandler;
-
-import org.apache.ws.security.WSConstants;
-import org.junit.After;
-import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCase extends Wss4jTestCase {
 
@@ -70,9 +71,15 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCa
 
     @Test
     public void testValidateUsernameTokenDigest() throws Exception {
+    	Wss4jSecurityInterceptor clientInterceptor = new Wss4jSecurityInterceptor();
+    	clientInterceptor.setSecurementActions("UsernameToken");
+    	clientInterceptor.setSecurementUsername("Bert");
+    	clientInterceptor.setSecurementPassword("Ernie");
+    	clientInterceptor.setSecurementPasswordType(WSConstants.PW_DIGEST);
         EndpointInterceptor interceptor = prepareInterceptor("UsernameToken", true, true);
         SoapMessage message = loadSoap11Message("usernameTokenDigest-soap.xml");
         MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
+        clientInterceptor.handleRequest(messageContext);
         interceptor.handleRequest(messageContext, null);
         assertValidateUsernameToken(message);
 
