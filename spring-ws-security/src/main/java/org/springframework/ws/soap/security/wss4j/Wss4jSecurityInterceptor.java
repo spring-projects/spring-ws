@@ -36,6 +36,7 @@ import org.apache.ws.security.handler.RequestData;
 import org.apache.ws.security.handler.WSHandlerConstants;
 import org.apache.ws.security.handler.WSHandlerResult;
 import org.apache.ws.security.message.token.Timestamp;
+import org.apache.ws.security.saml.SAMLIssuer;
 import org.apache.ws.security.util.WSSecurityUtil;
 import org.apache.ws.security.validate.Credential;
 import org.apache.ws.security.validate.SignatureTrustValidator;
@@ -88,6 +89,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
     public static final String SECUREMENT_USER_PROPERTY_NAME = "Wss4jSecurityInterceptor.securementUser";
 
+    private static final String SAML_ISSUER_PROPERTY_NAME = "Wss4jSecurityInterceptor.samlIssuer";
+
     private int securementAction;
 
     private String securementActions;
@@ -119,6 +122,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
     private int securementTimeToLive = 300;
 
 	private int futureTimeToLive = 60;
+
+	private SAMLIssuer samlIssuer;
     
     private WSSConfig wssConfig;
 
@@ -489,6 +494,14 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		this.futureTimeToLive = futureTimeToLive;
 	}
 
+	/**
+	 * Sets the SAML issuer.
+	 */
+	public void setSamlIssuer(SAMLIssuer samlIssuer) {
+		handler.setOption(WSHandlerConstants.SAML_PROP_REF_ID, SAML_ISSUER_PROPERTY_NAME);
+		this.samlIssuer = samlIssuer;
+	}
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
         Assert.isTrue(validationActions != null || securementActions != null,
@@ -565,6 +578,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
         requestData.setWssConfig(wssConfig);
 
 	    messageContext.setProperty(WSHandlerConstants.TTL_TIMESTAMP, Integer.toString(securementTimeToLive));
+
+	    messageContext.setProperty(SAML_ISSUER_PROPERTY_NAME, samlIssuer);
 
         return requestData;
     }
