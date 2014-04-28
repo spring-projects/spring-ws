@@ -16,10 +16,14 @@
 
 package org.springframework.ws.transport.xmpp.support;
 
+import java.io.IOException;
+
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -84,13 +88,13 @@ public class XmppConnectionFactoryBean implements FactoryBean<XMPPConnection>, I
     }
 
     @Override
-    public void afterPropertiesSet() throws XMPPException {
+    public void afterPropertiesSet() throws XMPPException, SmackException, IOException {
         ConnectionConfiguration configuration = createConnectionConfiguration(host, port, serviceName);
         Assert.notNull(configuration, "'configuration' must not be null");
         Assert.hasText(username, "'username' must not be empty");
         Assert.hasText(password, "'password' must not be empty");
 
-        connection = new XMPPConnection(configuration);
+        connection = new XMPPTCPConnection(configuration);
         connection.connect();
         if (StringUtils.hasText(resource)) {
             connection.login(username, password, resource);
@@ -102,7 +106,12 @@ public class XmppConnectionFactoryBean implements FactoryBean<XMPPConnection>, I
 
     @Override
     public void destroy() {
-        connection.disconnect();
+        try {
+            connection.disconnect();
+        }
+        catch (NotConnectedException e) {
+            // Ignore
+        }
     }
 
     @Override

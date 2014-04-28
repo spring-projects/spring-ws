@@ -49,6 +49,7 @@ configure(allprojects) {
 
 	repositories {
 		maven { url 'http://repo.spring.io/libs-release' }
+		mavenCentral()
 	}
 
 	dependencies {
@@ -135,6 +136,10 @@ configure(subprojects) { subproject ->
 		archives sourcesJar
 		archives javadocJar
 	}
+
+	ext {
+		smackVersion = '4.0.0'
+	}
 }
 
 project('spring-xml') {
@@ -210,7 +215,9 @@ project('spring-ws-support') {
 		provided("javax.jms:jms-api:1.1-rev-1")
 		provided("javax.mail:javax.mail-api:1.4.7")
 		provided("com.sun.mail:javax.mail:1.4.7")
-		optional("org.igniterealtime.smack:smack:3.2.1")
+		optional("org.igniterealtime.smack:smack-tcp:$smackVersion")
+		optional("org.igniterealtime.smack:smack-resolver-javax:$smackVersion")
+		optional("org.igniterealtime.smack:smack-extensions:$smackVersion")
 		testCompile("commons-httpclient:commons-httpclient:3.1")
 		testRuntime("org.apache.activemq:activemq-core:4.1.2") {
 			exclude group:'org.apache.geronimo.specs', module:'geronimo-jms_1.1_spec'

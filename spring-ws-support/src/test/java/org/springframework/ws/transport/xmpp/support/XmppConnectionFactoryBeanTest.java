@@ -16,6 +16,9 @@
 
 package org.springframework.ws.transport.xmpp.support;
 
+import java.io.IOException;
+
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,12 +33,12 @@ public class XmppConnectionFactoryBeanTest {
         factoryBean = new XmppConnectionFactoryBean();
     }
     @Test(expected = IllegalArgumentException.class)
-    public void noHost() throws XMPPException {
+    public void noHost() throws XMPPException, SmackException, IOException {
         factoryBean.afterPropertiesSet();
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void noUsername() throws XMPPException {
+    public void noUsername() throws XMPPException, SmackException, IOException {
         factoryBean.setHost("jabber.org");
         factoryBean.afterPropertiesSet();
     }
