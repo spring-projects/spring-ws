@@ -8,7 +8,6 @@ Import-Template:
  com.sun.net.httpserver.*;version="0";resolution:=optional,
  com.sun.mail.imap.*;version="[1.4.0, 2.0.0)";resolution:=optional,
  javax.activation.*;version="0",
- javax.ejb.*;version="[2.0.0, 4.0.0)";resolution:=optional,
  javax.jms.*;version="[1.1.0, 2.0.0)",
  javax.mail.*;version="[1.4.0, 2.0.0)",
  javax.naming.*;version="0";resolution:=optional,
