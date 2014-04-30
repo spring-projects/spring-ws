@@ -51,7 +51,7 @@ import org.springframework.context.annotation.Import;
  * 	&#064;Override
  * 	public void addInterceptors(List&lt;EndpointInterceptor&gt; interceptors) {
  * 	    interceptors.add(new MyInterceptor());
- *  }
+ * 	}
  *
  * 	&#064;Override
  * 	public void addArgumentResolvers(List&lt;MethodArgumentResolver&gt; argumentResolvers) {
@@ -77,12 +77,12 @@ import org.springframework.context.annotation.Import;
  * 	    interceptors.add(new MyInterceptor());
  *  }
  *
- *	&#064;Bean
+ * 	&#064;Bean
  * 	&#064;Override
- *  public DefaultMethodEndpointAdapter defaultMethodEndpointAdapter() {
+ * 	public DefaultMethodEndpointAdapter defaultMethodEndpointAdapter() {
  *		// Create or delegate to "super" to create and
  *		// customize properties of DefaultMethodEndpointAdapter
- *	}
+ * 	}
  * }
  * </pre>
  *
