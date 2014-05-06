@@ -194,12 +194,17 @@ project('spring-ws-support') {
 
 		// Transport
 		provided("javax.jms:jms-api:1.1-rev-1")
-		provided("javax.mail:mail:1.4.7")
+		provided("javax.mail:javax.mail-api:1.4.7")
+		provided("com.sun.mail:javax.mail:1.4.7")
 		optional("jivesoftware:smack:3.1.0")
 		testCompile("commons-httpclient:commons-httpclient:3.1")
-		testRuntime("org.apache.activemq:activemq-core:4.1.2")
-		testCompile("org.jvnet.mock-javamail:mock-javamail:1.6")
-  }
+		testRuntime("org.apache.activemq:activemq-core:4.1.2") {
+			exclude group:'org.apache.geronimo.specs', module:'geronimo-jms_1.1_spec'
+		}
+		testCompile("org.jvnet.mock-javamail:mock-javamail:1.6") {
+			exclude group:'javax.mail', module:'mail'
+		}
+	}
 }
 
 project('spring-ws-security') {
