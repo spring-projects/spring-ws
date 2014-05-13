@@ -76,6 +76,7 @@ configure(subprojects) { subproject ->
 
 	apply plugin: "eclipse"
 	apply plugin: "maven"
+	apply from: "${rootProject.projectDir}/publish-maven.gradle"
 
 	jar {
 		manifest.attributes["Created-By"] =
@@ -132,8 +133,8 @@ project('spring-xml') {
 		compile("org.springframework:spring-context:$springVersion")
 
 		//XML
-		optional("org.apache.ws.xmlschema:xmlschema-core:2.1.0")
-		optional("jaxen:jaxen:1.1.4")
+		compile("org.apache.ws.xmlschema:xmlschema-core:2.1.0", optional)
+		compile("jaxen:jaxen:1.1.4", optional)
 	}
 }
 
@@ -151,28 +152,30 @@ project('spring-ws-core') {
 		testCompile("org.springframework:spring-test:$springVersion")
 
 		// XML
-		optional("org.jdom:jdom:2.0.1")
-		optional("dom4j:dom4j:1.6.1")
-		optional("xom:xom:1.2.5") {
+		compile("org.jdom:jdom:2.0.1", optional)
+		compile("dom4j:dom4j:1.6.1", optional)
+		compile("xom:xom:1.2.5") {
+			optional
 			exclude group: 'xml-apis', module: 'xml-apis'
 			exclude group: 'xerces', module: 'xercesImpl'
 			exclude group: 'xalan', module: 'xalan'
 		}
-		optional("org.apache.ws.xmlschema:xmlschema-core:2.1.0")
+		compile("org.apache.ws.xmlschema:xmlschema-core:2.1.0", optional)
 
 		// SOAP
-		optional("org.apache.ws.commons.axiom:axiom-api:$axiomVersion")
-		optional("org.apache.ws.commons.axiom:axiom-impl:$axiomVersion") {
+		compile("org.apache.ws.commons.axiom:axiom-api:$axiomVersion", optional)
+		compile("org.apache.ws.commons.axiom:axiom-impl:$axiomVersion") {
+			optional
 			exclude group: 'org.codehaus.woodstox', module: 'wstx-asl'
 		}
 
 		// WSDL
-		optional("wsdl4j:wsdl4j:1.6.1")
+		compile("wsdl4j:wsdl4j:1.6.1", optional)
 
 		// Transport
-        provided("javax.servlet:javax.servlet-api:3.0.1")
-		optional("org.apache.httpcomponents:httpclient:4.2.5")
-		optional("commons-httpclient:commons-httpclient:3.1")
+		compile("javax.servlet:javax.servlet-api:3.0.1", provided)
+		compile("org.apache.httpcomponents:httpclient:4.2.5", optional)
+		compile("commons-httpclient:commons-httpclient:3.1", optional)
 		testCompile("org.mortbay.jetty:jetty:6.1.26")
 
 		testCompile("log4j:log4j:1.2.16")
@@ -193,10 +196,10 @@ project('spring-ws-support') {
 		testCompile("org.springframework:spring-test:$springVersion")
 
 		// Transport
-		provided("javax.jms:jms-api:1.1-rev-1")
-		provided("javax.mail:javax.mail-api:1.4.7")
-		provided("com.sun.mail:javax.mail:1.4.7")
-		optional("jivesoftware:smack:3.1.0")
+		compile("javax.jms:jms-api:1.1-rev-1", provided)
+		compile("javax.mail:javax.mail-api:1.4.7", provided)
+		compile("com.sun.mail:javax.mail:1.4.7", provided)
+		compile("jivesoftware:smack:3.1.0", optional)
 		testCompile("commons-httpclient:commons-httpclient:3.1")
 		testRuntime("org.apache.activemq:activemq-core:4.1.2") {
 			exclude group:'org.apache.geronimo.specs', module:'geronimo-jms_1.1_spec'
@@ -219,24 +222,27 @@ project('spring-ws-security') {
 
 		// Spring Security
 		compile("org.springframework.security:spring-security-core:3.1.0.RELEASE")
-		optional("net.sf.ehcache:ehcache:2.6.3") {
-		  exclude group: 'net.sf.ehcache', module: 'ehcache-terracotta'
+		compile("net.sf.ehcache:ehcache:2.6.3") {
+			optional
+			exclude group: 'net.sf.ehcache', module: 'ehcache-terracotta'
 		}
 
 		// WS-Security
-		optional("com.sun.xml.wss:xws-security:3.0") {
+		compile("com.sun.xml.wss:xws-security:3.0") {
+			optional
 			exclude group: 'javax.xml.crypto', module: 'xmldsig'
 		}
-		optional("org.apache.ws.security:wss4j:1.6.15")
+		compile("org.apache.ws.security:wss4j:1.6.15", optional)
 
 		// SOAP
-		provided("com.sun.xml.messaging.saaj:saaj-impl:1.3.19") // required for XWSS
-		optional("org.apache.ws.commons.axiom:axiom-api:$axiomVersion")
-		optional("org.apache.ws.commons.axiom:axiom-impl:$axiomVersion") {
+		compile("com.sun.xml.messaging.saaj:saaj-impl:1.3.19", provided) // required for XWSS
+		compile("org.apache.ws.commons.axiom:axiom-api:$axiomVersion", optional)
+		compile("org.apache.ws.commons.axiom:axiom-impl:$axiomVersion") {
+			optional
 			exclude group: 'org.codehaus.woodstox', module: 'wstx-asl'
 		}
 
-  }
+	}
 }
 
 project('spring-ws-test') {
@@ -246,7 +252,7 @@ project('spring-ws-test') {
 		compile project(":spring-xml")
 		compile project(":spring-ws-core")
 
-        // Spring
+		// Spring
 		compile("org.springframework:spring-context:$springVersion")
 
 
@@ -275,20 +281,20 @@ configure(rootProject) {
 		description = 'Generates aggregated Javadoc API documentation.'
 		title = "${rootProject.description} ${version} API"
 
-        dependsOn {
-            subprojects.collect {
-                it.tasks.getByName("jar")
-            }
-        }
+		dependsOn {
+			subprojects.collect {
+				it.tasks.getByName("jar")
+			}
+		}
 
 		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
 		options.author = true
 		options.header = rootProject.description
 		options.overview = 'src/api/overview.html'
-        options.stylesheetFile = file("src/api/stylesheet.css")
+		options.stylesheetFile = file("src/api/stylesheet.css")
 		options.splitIndex = true
-        options.links(project.ext.javadocLinks)
-        options.addStringOption('Xdoclint:none', '-quiet')
+		options.links(project.ext.javadocLinks)
+		options.addStringOption('Xdoclint:none', '-quiet')
 
 		source subprojects.collect { project ->
 			project.sourceSets.main.allJava
