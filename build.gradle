@@ -221,11 +221,8 @@ project('spring-ws-security') {
 		compile("org.springframework:spring-tx:$springVersion")
 
 		// Spring Security
-		compile("org.springframework.security:spring-security-core:3.1.0.RELEASE")
-		compile("net.sf.ehcache:ehcache:2.6.3") {
-			optional
-			exclude group: 'net.sf.ehcache', module: 'ehcache-terracotta'
-		}
+		compile("org.springframework.security:spring-security-core:3.2.3.RELEASE")
+		compile("net.sf.ehcache:ehcache-core:2.6.9", optional)
 
 		// WS-Security
 		compile("com.sun.xml.wss:xws-security:3.0") {
