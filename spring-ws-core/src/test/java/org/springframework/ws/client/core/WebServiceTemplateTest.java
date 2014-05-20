@@ -18,6 +18,7 @@ package org.springframework.ws.client.core;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
@@ -377,7 +378,8 @@ public class WebServiceTemplateTest {
     public void testInterceptors() throws Exception {
         ClientInterceptor interceptorMock1 = createStrictMock("interceptor1", ClientInterceptor.class);
         ClientInterceptor interceptorMock2 = createStrictMock("interceptor2", ClientInterceptor.class);
-        template.setInterceptors(new ClientInterceptor[]{interceptorMock1, interceptorMock2});
+        template.getInterceptors().add(interceptorMock1);
+        template.getInterceptors().add(interceptorMock2);
         expect(interceptorMock1.handleRequest(isA(MessageContext.class))).andReturn(true);
         expect(interceptorMock2.handleRequest(isA(MessageContext.class))).andReturn(true);
         expect(interceptorMock2.handleResponse(isA(MessageContext.class))).andReturn(true);
@@ -412,7 +414,8 @@ public class WebServiceTemplateTest {
 
         ClientInterceptor interceptorMock1 = createStrictMock("interceptor1", ClientInterceptor.class);
         ClientInterceptor interceptorMock2 = createStrictMock("interceptor2", ClientInterceptor.class);
-        template.setInterceptors(new ClientInterceptor[]{interceptorMock1, interceptorMock2});
+        template.getInterceptors().add(interceptorMock1);
+        template.getInterceptors().add(interceptorMock2);
         expect(interceptorMock1.handleRequest(isA(MessageContext.class))).andReturn(false);
         expect(interceptorMock1.handleResponse(isA(MessageContext.class))).andReturn(true);
         interceptorMock1.afterCompletion(isA(MessageContext.class), (Exception)isNull());
@@ -445,7 +448,8 @@ public class WebServiceTemplateTest {
 
         ClientInterceptor interceptorMock1 = createStrictMock("interceptor1", ClientInterceptor.class);
         ClientInterceptor interceptorMock2 = createStrictMock("interceptor2", ClientInterceptor.class);
-        template.setInterceptors(new ClientInterceptor[]{interceptorMock1, interceptorMock2});
+        template.getInterceptors().add(interceptorMock1);
+        template.getInterceptors().add(interceptorMock2);
         expect(interceptorMock1.handleRequest(isA(MessageContext.class))).andReturn(false);
         expect(interceptorMock1.handleResponse(isA(MessageContext.class))).andReturn(true);
         interceptorMock1.afterCompletion(isA(MessageContext.class), (Exception)isNull());

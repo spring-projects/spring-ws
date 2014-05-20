@@ -29,6 +29,8 @@ import org.springframework.ws.client.support.destination.DestinationProvider;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.transport.WebServiceMessageSender;
 
+import java.util.List;
+
 /**
  * Convenient super class for application classes that need Web service access.
  *
@@ -168,12 +170,12 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
     }
 
     /** Returns the {@code ClientInterceptors} used by the template. */
-    public final ClientInterceptor[] getInterceptors() {
+    public final List<ClientInterceptor> getInterceptors() {
         return webServiceTemplate.getInterceptors();
     }
 
     /** Sets the {@code ClientInterceptors} used by the gateway. */
-    public final void setInterceptors(ClientInterceptor[] interceptors) {
+    public final void setInterceptors(List<ClientInterceptor> interceptors) {
         webServiceTemplate.setInterceptors(interceptors);
     }
 

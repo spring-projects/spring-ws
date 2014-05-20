@@ -19,7 +19,7 @@ package org.springframework.ws.client.core;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.util.List;
+import java.util.*;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -78,7 +78,7 @@ import org.springframework.ws.transport.support.TransportUtils;
  * WebServiceMessageCallback#doWithMessage(WebServiceMessage) doWithMessage()} on the request callback, if any. This
  * step stores content in the request message, based on {@code Source}, marshalling, etc.</li> <li>Invoke {@link
  * ClientInterceptor#handleRequest(MessageContext) handleRequest()} on the registered {@link
- * #setInterceptors(ClientInterceptor[]) interceptors}. Interceptors are executed in order. If any of the interceptors
+ * #setInterceptors(java.util.List) interceptors}. Interceptors are executed in order. If any of the interceptors
  * creates a response message in the message context, skip to step 7.</li> <li>Call {@link
  * WebServiceConnection#send(WebServiceMessage) send()} on the connection.</li> <li>Call {@link
  * #hasError(WebServiceConnection,WebServiceMessage) hasError()} to check if the connection has an error. For an HTTP
@@ -121,7 +121,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
     private boolean checkConnectionForFault = true;
 
-    private ClientInterceptor[] interceptors;
+    private List<ClientInterceptor> interceptors = new ArrayList<ClientInterceptor>(0);
 
     private DestinationProvider destinationProvider;
 
@@ -314,7 +314,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      *
      * @return array of endpoint interceptors, or {@code null} if none
      */
-    public ClientInterceptor[] getInterceptors() {
+    public List<ClientInterceptor> getInterceptors() {
         return interceptors;
     }
 
@@ -323,7 +323,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
      *
      * @param interceptors array of endpoint interceptors, or {@code null} if none
      */
-    public final void setInterceptors(ClientInterceptor[] interceptors) {
+    public final void setInterceptors(List<ClientInterceptor> interceptors) {
         this.interceptors = interceptors;
     }
 
@@ -569,7 +569,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     /**
      * Sends and receives a {@link MessageContext}. Sends the {@link MessageContext#getRequest() request message}, and
      * received to the {@link MessageContext#getResponse() repsonse message}. Invocates the defined {@link
-     * #setInterceptors(ClientInterceptor[]) interceptors} as part of the process.
+     * #setInterceptors(java.util.List) interceptors} as part of the process.
      *
      * @param messageContext    the message context
      * @param connection        the connection to use
@@ -590,12 +590,10 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                 requestCallback.doWithMessage(messageContext.getRequest());
             }
             // Apply handleRequest of registered interceptors
-            if (interceptors != null) {
-                for (int i = 0; i < interceptors.length; i++) {
-                    interceptorIndex = i;
-                    if (!interceptors[i].handleRequest(messageContext)) {
-                        break;
-                    }
+            for (int i = 0; i < interceptors.size(); i++) {
+                interceptorIndex = i;
+                if (!interceptors.get(i).handleRequest(messageContext)) {
+                    break;
                 }
             }
             // if an interceptor has set a response, we don't send/receive
@@ -761,7 +759,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     private void triggerHandleResponse(int interceptorIndex, MessageContext messageContext) {
         if (messageContext.hasResponse() && interceptors != null) {
             for (int i = interceptorIndex; i >= 0; i--) {
-                if (!interceptors[i].handleResponse(messageContext)) {
+                if (!interceptors.get(i).handleResponse(messageContext)) {
                     break;
                 }
             }
@@ -781,7 +779,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
     private void triggerHandleFault(int interceptorIndex, MessageContext messageContext) {
         if (messageContext.hasResponse() && interceptors != null) {
             for (int i = interceptorIndex; i >= 0; i--) {
-                if (!interceptors[i].handleFault(messageContext)) {
+                if (!interceptors.get(i).handleFault(messageContext)) {
                     break;
                 }
             }
@@ -803,7 +801,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 			throws WebServiceClientException {
 		if (interceptors != null) {
 			for (int i = interceptorIndex; i >= 0; i--) {
-				interceptors[i].afterCompletion(messageContext, ex);
+				interceptors.get(i).afterCompletion(messageContext, ex);
 			}
 		}
 	}
