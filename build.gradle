@@ -16,7 +16,6 @@ configure(allprojects) {
 	ext.axiomVersion = "1.2.14"
 
 	apply plugin: "java"
-	apply plugin: "maven"
 	apply plugin: "propdeps-idea"
 	apply plugin: "propdeps"
 	apply plugin: "propdeps-maven"
