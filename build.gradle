@@ -233,7 +233,7 @@ project('spring-ws-security') {
 		compile("org.springframework:spring-tx:$springVersion")
 
 		// Spring Security
-		compile("org.springframework.security:spring-security-core:3.2.3.RELEASE")
+		compile("org.springframework.security:spring-security-core:3.2.4.RELEASE")
 		optional("net.sf.ehcache:ehcache-core:2.6.9")
 
 		// WS-Security
