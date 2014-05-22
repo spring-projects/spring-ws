@@ -16,9 +16,6 @@ configure(allprojects) {
 	ext.axiomVersion = "1.2.14"
 
 	apply plugin: "java"
-	apply plugin: "propdeps-idea"
-	apply plugin: "propdeps"
-	apply plugin: "propdeps-maven"
 
 	compileJava.options*.compilerArgs = [
 		"-Xlint:serial", "-Xlint:varargs", "-Xlint:cast", "-Xlint:classfile",
@@ -77,6 +74,9 @@ configure(subprojects) { subproject ->
 
 	apply plugin: "eclipse"
 	apply plugin: "maven"
+	apply plugin: "propdeps"
+	apply plugin: "propdeps-idea"
+	apply plugin: "propdeps-maven"
 	apply from: "${rootProject.projectDir}/publish-maven.gradle"
 
 	 if (project.hasProperty('platformVersion')) {
