@@ -165,7 +165,7 @@ project('spring-ws-core') {
 		testCompile("org.springframework:spring-test:$springVersion")
 
 		// XML
-		optional("org.jdom:jdom:2.0.1")
+		optional("org.jdom:jdom2:2.0.5")
 		optional("dom4j:dom4j:1.6.1")
 		optional("xom:xom:1.2.5") {
 			exclude group: 'xml-apis', module: 'xml-apis'
