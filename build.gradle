@@ -185,7 +185,7 @@ project('spring-ws-core') {
 
 		// Transport
 		provided("javax.servlet:javax.servlet-api:3.0.1")
-		optional("org.apache.httpcomponents:httpclient:4.2.5")
+		optional("org.apache.httpcomponents:httpclient:4.3.4")
 		optional("commons-httpclient:commons-httpclient:3.1")
 		testCompile("org.mortbay.jetty:jetty:6.1.26")
 

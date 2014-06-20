@@ -31,11 +31,7 @@ import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.routing.HttpRoute;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.PoolingClientConnectionManager;
-import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 
@@ -58,6 +54,7 @@ import org.springframework.ws.transport.WebServiceConnection;
  * @see HttpClient
  * @since 2.1.0
  */
+@SuppressWarnings("deprecation")
 public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSender
         implements InitializingBean, DisposableBean {
 
@@ -73,10 +70,11 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 
     /**
      * Create a new instance of the {@code HttpClientMessageSender} with a default {@link HttpClient} that uses a
-     * default {@link PoolingClientConnectionManager}.
+     * default {@link org.apache.http.impl.conn.PoolingClientConnectionManager}.
      */
     public HttpComponentsMessageSender() {
-        DefaultHttpClient defaultClient = new DefaultHttpClient(new PoolingClientConnectionManager());
+	    org.apache.http.impl.client.DefaultHttpClient defaultClient =
+			    new org.apache.http.impl.client.DefaultHttpClient(new org.apache.http.impl.conn.PoolingClientConnectionManager());
         defaultClient.addRequestInterceptor(new RemoveSoapHeadersInterceptor(), 0);
 
         this.httpClient = defaultClient;
@@ -90,7 +88,7 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
      * <p>
      * This constructor does not change the given {@code HttpClient} in any way. As such,
      * it does not set timeouts, nor does it
-     * {@linkplain DefaultHttpClient#addRequestInterceptor(org.apache.http.HttpRequestInterceptor) add}
+     * {@linkplain org.apache.http.impl.client.DefaultHttpClient#addRequestInterceptor(org.apache.http.HttpRequestInterceptor) add}
      * the {@link RemoveSoapHeadersInterceptor}.
      *
      * @param httpClient the HttpClient instance to use for this sender
@@ -134,7 +132,7 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
         if (timeout < 0) {
             throw new IllegalArgumentException("timeout must be a non-negative value");
         }
-        HttpConnectionParams.setConnectionTimeout(getHttpClient().getParams(), timeout);
+	    org.apache.http.params.HttpConnectionParams.setConnectionTimeout(getHttpClient().getParams(), timeout);
     }
 
     /**
@@ -147,26 +145,26 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
         if (timeout < 0) {
             throw new IllegalArgumentException("timeout must be a non-negative value");
         }
-        HttpConnectionParams.setSoTimeout(getHttpClient().getParams(), timeout);
+	    org.apache.http.params.HttpConnectionParams.setSoTimeout(getHttpClient().getParams(), timeout);
     }
 
     /**
      * Sets the maximum number of connections allowed for the underlying HttpClient.
      *
      * @param maxTotalConnections the maximum number of connections allowed
-     * @see PoolingClientConnectionManager#setMaxTotal(int)
+     * @see org.apache.http.impl.conn.PoolingClientConnectionManager#setMaxTotal(int)
      */
     public void setMaxTotalConnections(int maxTotalConnections) {
         if (maxTotalConnections <= 0) {
             throw new IllegalArgumentException("maxTotalConnections must be a positive value");
         }
-        ClientConnectionManager connectionManager = getHttpClient().getConnectionManager();
-        if (!(connectionManager instanceof PoolingClientConnectionManager)) {
+	    org.apache.http.conn.ClientConnectionManager connectionManager = getHttpClient().getConnectionManager();
+        if (!(connectionManager instanceof org.apache.http.impl.conn.PoolingClientConnectionManager)) {
             throw new IllegalArgumentException("maxTotalConnections is not supported on " +
-                    connectionManager.getClass().getName() + ". Use " + PoolingClientConnectionManager.class.getName() +
+                    connectionManager.getClass().getName() + ". Use " + org.apache.http.impl.conn.PoolingClientConnectionManager.class.getName() +
                     " instead");
         }
-        ((PoolingClientConnectionManager) connectionManager).setMaxTotal(maxTotalConnections);
+        ((org.apache.http.impl.conn.PoolingClientConnectionManager) connectionManager).setMaxTotal(maxTotalConnections);
     }
 
     /**
@@ -182,17 +180,17 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
      * <p>The host can be specified as a URI (with scheme and port).
      *
      * @param maxConnectionsPerHost a properties object specifying the maximum number of connection
-     * @see PoolingClientConnectionManager#setMaxPerRoute(HttpRoute, int)
+     * @see org.apache.http.impl.conn.PoolingClientConnectionManager#setMaxPerRoute(HttpRoute, int)
      */
     public void setMaxConnectionsPerHost(Map<String, String> maxConnectionsPerHost) throws URISyntaxException {
-        ClientConnectionManager connectionManager = getHttpClient().getConnectionManager();
-        if (!(connectionManager instanceof PoolingClientConnectionManager)) {
+	    org.apache.http.conn.ClientConnectionManager connectionManager = getHttpClient().getConnectionManager();
+        if (!(connectionManager instanceof org.apache.http.impl.conn.PoolingClientConnectionManager)) {
             throw new IllegalArgumentException("maxConnectionsPerHost is not supported on " +
-                    connectionManager.getClass().getName() + ". Use " + PoolingClientConnectionManager.class.getName() +
+                    connectionManager.getClass().getName() + ". Use " + org.apache.http.impl.conn.PoolingClientConnectionManager.class.getName() +
                     " instead");
         }
-	    PoolingClientConnectionManager poolingConnectionManager =
-			    (PoolingClientConnectionManager) connectionManager;
+	    org.apache.http.impl.conn.PoolingClientConnectionManager poolingConnectionManager =
+			    (org.apache.http.impl.conn.PoolingClientConnectionManager) connectionManager;
 
 	    for (Map.Entry<String, String> entry : maxConnectionsPerHost.entrySet()) {
             URI uri = new URI(entry.getKey());
@@ -218,9 +216,11 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        if (credentials != null && getHttpClient() instanceof DefaultHttpClient) {
-            ((DefaultHttpClient) getHttpClient()).getCredentialsProvider().setCredentials(authScope, credentials);
-        }
+	    if (credentials != null &&
+			    getHttpClient() instanceof org.apache.http.impl.client.DefaultHttpClient) {
+		    ((org.apache.http.impl.client.DefaultHttpClient) getHttpClient())
+				    .getCredentialsProvider().setCredentials(authScope, credentials);
+	    }
     }
 
     @Override
