@@ -30,6 +30,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.JAXBIntrospector;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.UnmarshallerHandler;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
@@ -249,8 +250,25 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
         }
 
         @Override
-        public void saxSource(XMLReader reader, InputSource inputSource) throws JAXBException {
-            result = unmarshaller.unmarshal(inputSource);
+        public void saxSource(XMLReader reader, InputSource inputSource) throws Exception {
+            if (inputSource.getByteStream() == null && inputSource.getCharacterStream() == null
+                    && inputSource.getSystemId() == null) {
+                // The InputSource neither has a stream nor a system ID set; this means that
+                // we are dealing with a custom SAXSource that is not backed by a SAX parser
+                // but that generates a sequence of SAX events in some other way.
+                // In this case, we need to use a ContentHandler to feed the SAX events into
+                // the unmarshaller.
+                UnmarshallerHandler handler = unmarshaller.getUnmarshallerHandler();
+                reader.setContentHandler(handler);
+                reader.parse(inputSource);
+                result = handler.getResult();
+            } else {
+                // If a stream or system ID is set, we assume that the SAXSource is backed
+                // by a SAX parser and we only pass the InputSource to the unmarshaller.
+                // This effectively ignores the SAX parser and lets the unmarshaller take
+                // care of the parsing (in a potentially more efficient way).
+                result = unmarshaller.unmarshal(inputSource);
+            }
         }
 
         @Override

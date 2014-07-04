@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,27 @@
 package org.springframework.ws.server.endpoint.adapter.method.jaxb;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.sax.SAXSource;
 
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.AttributesImpl;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.MockWebServiceMessage;
@@ -39,6 +49,7 @@ import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
+import org.springframework.xml.sax.AbstractXmlReader;
 import org.springframework.xml.transform.StringResult;
 
 public class XmlRootElementPayloadMethodProcessorTest {
@@ -93,6 +104,63 @@ public class XmlRootElementPayloadMethodProcessorTest {
         assertTrue("result not a MyType", result instanceof MyType);
         MyType type = (MyType) result;
         assertEquals("invalid result", "Foo", type.getString());
+    }
+
+    @Test
+    public void resolveArgumentFromCustomSAXSource() throws JAXBException {
+        // Create a custom SAXSource that generates an appropriate sequence of events.
+        XMLReader xmlReader = new AbstractXmlReader() {
+            @Override
+            public void parse(String systemId) throws IOException, SAXException {
+                parse();
+            }
+            
+            @Override
+            public void parse(InputSource input) throws IOException, SAXException {
+                parse();
+            }
+            
+            private void parse() throws SAXException {
+                ContentHandler handler = getContentHandler();
+                // <root xmlns='http://springframework.org'><string>Foo</string></root>
+                handler.startDocument();
+                handler.startPrefixMapping("", "http://springframework.org");
+                handler.startElement("http://springframework.org", "root", "root", new AttributesImpl());
+                handler.startElement("http://springframework.org", "string", "string", new AttributesImpl());
+                handler.characters("Foo".toCharArray(), 0, 3);
+                handler.endElement("http://springframework.org", "string", "string");
+                handler.endElement("http://springframework.org", "root", "root");
+                handler.endPrefixMapping("");
+                handler.endDocument();
+            }
+        };
+        final SAXSource source = new SAXSource(xmlReader, new InputSource());
+        
+        // Create a mock WebServiceMessage that returns the SAXSource as payload source.
+        WebServiceMessage request = new WebServiceMessage() {
+            @Override
+            public void writeTo(OutputStream outputStream) throws IOException {
+                throw new UnsupportedOperationException();
+            }
+            
+            @Override
+            public Source getPayloadSource() {
+                return source;
+            }
+            
+            @Override
+            public Result getPayloadResult() {
+                throw new UnsupportedOperationException();
+            }
+        };
+        // Create a message context with that request. Note that the message factory doesn't matter here:
+        // it is required but not used.
+        MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
+        
+        Object result = processor.resolveArgument(messageContext, rootElementParameter);
+        assertTrue("result not a MyRootElement", result instanceof MyRootElement);
+        MyRootElement rootElement = (MyRootElement) result;
+        assertEquals("invalid result", "Foo", rootElement.getString());
     }
 
     @Test
