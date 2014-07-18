@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2002-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,6 +22,11 @@ import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
+
+import org.apache.commons.logging.LogFactory;
+import static org.junit.Assert.*;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -41,12 +46,6 @@ import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.server.SoapMessageDispatcher;
-
-import org.apache.commons.logging.LogFactory;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("payloadRootAnnotationMethodEndpointMapping.xml")
@@ -69,7 +68,7 @@ public class PayloadRootAnnotationMethodEndpointMappingTest  {
 
     @Test
     public void registrationMultiple() throws NoSuchMethodException {
-	    Method doItMultiple = MyEndpoint.class.getMethod("doItMultiple", Source.class);
+	    Method doItMultiple = MyEndpoint.class.getMethod("doItMultiple");
 	    MethodEndpoint expected = new MethodEndpoint("endpoint", applicationContext, doItMultiple);
 
         MethodEndpoint endpoint = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request1"));
@@ -77,6 +76,20 @@ public class PayloadRootAnnotationMethodEndpointMappingTest  {
         assertEquals("Invalid endpoint registered", expected, endpoint);
 
 	    endpoint = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request2"));
+        assertNotNull("MethodEndpoint not registered", endpoint);
+        assertEquals("Invalid endpoint registered", expected, endpoint);
+    }
+
+    @Test
+    public void registrationRepeatable() throws NoSuchMethodException {
+	    Method doItMultiple = MyEndpoint.class.getMethod("doItRepeatable");
+	    MethodEndpoint expected = new MethodEndpoint("endpoint", applicationContext, doItMultiple);
+
+        MethodEndpoint endpoint = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request3"));
+        assertNotNull("MethodEndpoint not registered", endpoint);
+        assertEquals("Invalid endpoint registered", expected, endpoint);
+
+	    endpoint = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request4"));
         assertNotNull("MethodEndpoint not registered", endpoint);
         assertEquals("Invalid endpoint registered", expected, endpoint);
     }
@@ -130,14 +143,20 @@ public class PayloadRootAnnotationMethodEndpointMappingTest  {
             logger.info("In doIt()");
         }
 
-	    @PayloadRoots({
-			    @PayloadRoot(localPart = "Request1", namespace = "http://springframework.org/spring-ws"),
-			    @PayloadRoot(localPart = "Request2", namespace = "http://springframework.org/spring-ws")
-	    })
-	     public void doItMultiple(@RequestPayload Source payload) {
-	         doItInvoked = true;
-	         logger.info("In doIt()");
-	     }
+	    @PayloadRoots({@PayloadRoot(localPart = "Request1",
+			    namespace = "http://springframework.org/spring-ws"),
+			    @PayloadRoot(localPart = "Request2",
+					    namespace = "http://springframework.org/spring-ws")})
+	    public void doItMultiple() {
+	    }
+
+	    @PayloadRoot(localPart = "Request3",
+			    namespace = "http://springframework.org/spring-ws")
+	    @PayloadRoot(localPart = "Request4",
+			    namespace = "http://springframework.org/spring-ws")
+	    public void doItRepeatable() {
+
+	    }
 
     }
 

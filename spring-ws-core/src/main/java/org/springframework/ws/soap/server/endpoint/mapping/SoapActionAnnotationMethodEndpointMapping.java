@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2002-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
 package org.springframework.ws.soap.server.endpoint.mapping;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.Assert;
@@ -29,6 +31,7 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.server.SoapEndpointInvocationChain;
 import org.springframework.ws.soap.server.SoapEndpointMapping;
 import org.springframework.ws.soap.server.endpoint.annotation.SoapAction;
+import org.springframework.ws.soap.server.endpoint.annotation.SoapActions;
 
 /**
  * Implementation of the {@link org.springframework.ws.server.EndpointMapping} interface that uses the {@link
@@ -112,4 +115,24 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
         SoapAction soapAction = AnnotationUtils.findAnnotation(method, SoapAction.class);
         return soapAction != null ? soapAction.value() : null;
     }
+
+	@Override
+	protected List<String> getLookupKeysForMethod(Method method) {
+		List<String> result = new ArrayList<String>();
+
+		SoapActions soapActions = AnnotationUtils.findAnnotation(method,
+				SoapActions.class);
+		if (soapActions != null) {
+			for (SoapAction soapAction : soapActions.value()) {
+				result.add(soapAction.value());
+			}
+		}
+		else {
+			SoapAction soapAction = AnnotationUtils.findAnnotation(method, SoapAction.class);
+			if (soapAction != null) {
+				result.add(soapAction.value());
+			}
+		}
+		return result;
+	}
 }

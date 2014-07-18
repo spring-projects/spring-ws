@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2002-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,11 @@ package org.springframework.ws.soap.server.endpoint.mapping;
 
 import java.lang.reflect.Method;
 
+import static org.easymock.EasyMock.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
@@ -27,12 +32,7 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.server.endpoint.annotation.SoapAction;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
+import org.springframework.ws.soap.server.endpoint.annotation.SoapActions;
 
 public class SoapActionAnnotationMethodEndpointMappingTest {
 
@@ -50,7 +50,7 @@ public class SoapActionAnnotationMethodEndpointMappingTest {
     }
 
     @Test
-    public void testRegistration() throws Exception {
+    public void registrationSingle() throws Exception {
         SoapMessage requestMock = createMock(SoapMessage.class);
         expect(requestMock.getSoapAction()).andReturn("http://springframework.org/spring-ws/SoapAction");
         WebServiceMessageFactory factoryMock = createMock(WebServiceMessageFactory.class);
@@ -66,6 +66,52 @@ public class SoapActionAnnotationMethodEndpointMappingTest {
         verify(requestMock, factoryMock);
     }
 
+    @Test
+    public void registrationMultiple() throws Exception {
+        SoapMessage requestMock = createMock(SoapMessage.class);
+        expect(requestMock.getSoapAction()).andReturn("http://springframework.org/spring-ws/SoapAction1");
+        expect(requestMock.getSoapAction()).andReturn("http://springframework.org/spring-ws/SoapAction2");
+        WebServiceMessageFactory factoryMock = createMock(WebServiceMessageFactory.class);
+        replay(requestMock, factoryMock);
+
+	    Method doItMultiple = MyEndpoint.class.getMethod("doItMultiple");
+	    MethodEndpoint expected = new MethodEndpoint("endpoint", applicationContext, doItMultiple);
+
+        MessageContext context = new DefaultMessageContext(requestMock, factoryMock);
+        EndpointInvocationChain chain = mapping.getEndpoint(context);
+        Assert.assertNotNull("MethodEndpoint not registered", chain);
+        Assert.assertEquals("Invalid endpoint registered", expected, chain.getEndpoint());
+
+	    chain = mapping.getEndpoint(context);
+        Assert.assertNotNull("MethodEndpoint not registered", chain);
+        Assert.assertEquals("Invalid endpoint registered", expected, chain.getEndpoint());
+
+        verify(requestMock, factoryMock);
+    }
+
+    @Test
+    public void registrationRepeatable() throws Exception {
+        SoapMessage requestMock = createMock(SoapMessage.class);
+        expect(requestMock.getSoapAction()).andReturn("http://springframework.org/spring-ws/SoapAction3");
+        expect(requestMock.getSoapAction()).andReturn("http://springframework.org/spring-ws/SoapAction4");
+        WebServiceMessageFactory factoryMock = createMock(WebServiceMessageFactory.class);
+        replay(requestMock, factoryMock);
+
+	    Method doItRepeatable = MyEndpoint.class.getMethod("doItRepeatable");
+	    MethodEndpoint expected = new MethodEndpoint("endpoint", applicationContext, doItRepeatable);
+
+        MessageContext context = new DefaultMessageContext(requestMock, factoryMock);
+        EndpointInvocationChain chain = mapping.getEndpoint(context);
+        Assert.assertNotNull("MethodEndpoint not registered", chain);
+        Assert.assertEquals("Invalid endpoint registered", expected, chain.getEndpoint());
+
+	    chain = mapping.getEndpoint(context);
+        Assert.assertNotNull("MethodEndpoint not registered", chain);
+        Assert.assertEquals("Invalid endpoint registered", expected, chain.getEndpoint());
+
+        verify(requestMock, factoryMock);
+    }
+
     @Endpoint
     private static class MyEndpoint {
 
@@ -73,6 +119,18 @@ public class SoapActionAnnotationMethodEndpointMappingTest {
         public void doIt() {
 
         }
+
+	    @SoapActions({@SoapAction("http://springframework.org/spring-ws/SoapAction1"),
+			    @SoapAction("http://springframework.org/spring-ws/SoapAction2")})
+	    public void doItMultiple() {
+	    }
+
+		@SoapAction("http://springframework.org/spring-ws/SoapAction3")
+		@SoapAction("http://springframework.org/spring-ws/SoapAction4")
+		public void doItRepeatable() {
+
+	    }
+
 
     }
 }

@@ -14,41 +14,26 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.server.endpoint.annotation;
+package org.springframework.ws.soap.server.endpoint.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
-import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks an endpoint method as the handler for an incoming request. The annotation values signify the the request
- * payload root element that is handled by the method.
+ * Marks an endpoint method as containing multiple {@link SoapAction SoapActions}.
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping
- * @since 1.0.0
+ * @see org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping
+ * @since 2.2.1
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Repeatable(PayloadRoots.class)
-public @interface PayloadRoot {
+public @interface SoapActions {
 
-    /**
-     * Signifies the local part of the payload root element handled by the annotated method.
-     *
-     * @see #namespace()
-     */
-    String localPart();
-
-    /**
-     * Signifies the namespace of the payload root element handled by the annotated method.
-     *
-     * @see #localPart()
-     */
-    String namespace() default "";
+	SoapAction[] value();
 
 }
