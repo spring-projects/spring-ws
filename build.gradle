@@ -233,7 +233,7 @@ project('spring-ws-security') {
 
 		// Spring Security
 		compile("org.springframework.security:spring-security-core:3.2.4.RELEASE")
-		optional("net.sf.ehcache:ehcache-core:2.6.9")
+		optional("net.sf.ehcache:ehcache:2.8.4")
 
 		// WS-Security
 		optional("com.sun.xml.wss:xws-security:3.0") {
