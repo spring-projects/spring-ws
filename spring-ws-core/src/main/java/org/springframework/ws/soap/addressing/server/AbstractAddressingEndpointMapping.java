@@ -16,14 +16,6 @@
 
 package org.springframework.ws.soap.addressing.server;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import javax.xml.transform.TransformerException;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -49,6 +41,10 @@ import org.springframework.ws.soap.server.SoapEndpointInvocationChain;
 import org.springframework.ws.soap.server.SoapEndpointMapping;
 import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.xml.transform.TransformerObjectSupport;
+
+import javax.xml.transform.TransformerException;
+import java.net.URI;
+import java.util.*;
 
 /**
  * Abstract base class for {@link EndpointMapping} implementations that handle WS-Addressing. Besides the normal {@link
@@ -266,7 +262,7 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
                 if (endpoint == null) {
                     return null;
                 }
-                return getEndpointInvocationChain(endpoint, version, requestMap);
+                return getEndpointInvocationChain(endpoint, version, requestMap, messageContext);
             }
         }
         return null;
@@ -278,21 +274,29 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
      */
     private EndpointInvocationChain getEndpointInvocationChain(Object endpoint,
                                                                AddressingVersion version,
-                                                               MessageAddressingProperties requestMap) {
+                                                               MessageAddressingProperties requestMap,
+                                                               MessageContext messageContext) {
         URI responseAction = getResponseAction(endpoint, requestMap);
         URI faultAction = getFaultAction(endpoint, requestMap);
 
-	    WebServiceMessageSender[] messageSenders = getMessageSenders(endpoint);
-	    MessageIdStrategy messageIdStrategy = getMessageIdStrategy(endpoint);
+        WebServiceMessageSender[] messageSenders = getMessageSenders(endpoint);
+        MessageIdStrategy messageIdStrategy = getMessageIdStrategy(endpoint);
 
-	    List<EndpointInterceptor> interceptors = new ArrayList<EndpointInterceptor>(preInterceptors.length + postInterceptors.length + smartInterceptors.length + 1);
-	    AddressingEndpointInterceptor addressingInterceptor = new AddressingEndpointInterceptor(version, messageIdStrategy,
-             messageSenders, responseAction, faultAction);
+        List<EndpointInterceptor> interceptors = new ArrayList<EndpointInterceptor>();
+        interceptors.addAll(Arrays.asList(preInterceptors));
 
-	    interceptors.addAll(Arrays.asList(preInterceptors));
-	    interceptors.add(addressingInterceptor);
-	    interceptors.addAll(Arrays.asList(postInterceptors));
-	    interceptors.addAll(Arrays.asList(smartInterceptors));
+        AddressingEndpointInterceptor addressingInterceptor = new AddressingEndpointInterceptor(version, messageIdStrategy,
+	             messageSenders, responseAction, faultAction);
+        interceptors.add(addressingInterceptor);
+        interceptors.addAll(Arrays.asList(postInterceptors));
+
+        if (this.smartInterceptors != null) {
+            for (SmartEndpointInterceptor smartInterceptor : smartInterceptors) {
+                if (smartInterceptor.shouldIntercept(messageContext, endpoint)) {
+                    interceptors.add(smartInterceptor);
+                }
+            }
+        }
 
 	    return new SoapEndpointInvocationChain(endpoint,
 			    interceptors.toArray(new EndpointInterceptor[interceptors.size()]), actorsOrRoles, isUltimateReceiver);

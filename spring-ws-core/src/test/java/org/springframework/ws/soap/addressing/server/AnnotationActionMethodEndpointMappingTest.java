@@ -16,18 +16,9 @@
 
 package org.springframework.ws.soap.addressing.server;
 
-import java.io.IOException;
-import java.io.InputStream;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPConstants;
-import javax.xml.soap.SOAPException;
-
 import org.custommonkey.xmlunit.XMLUnit;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
@@ -40,6 +31,15 @@ import org.springframework.ws.soap.addressing.server.annotation.Action;
 import org.springframework.ws.soap.addressing.server.annotation.Address;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
+
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.MimeHeaders;
+import javax.xml.soap.SOAPConstants;
+import javax.xml.soap.SOAPException;
+import java.io.IOException;
+import java.io.InputStream;
+
+import static org.junit.Assert.*;
 
 public class AnnotationActionMethodEndpointMappingTest {
 
@@ -55,9 +55,10 @@ public class AnnotationActionMethodEndpointMappingTest {
         XMLUnit.setIgnoreWhitespace(true);
         applicationContext = new StaticApplicationContext();
         applicationContext.registerSingleton("mapping", AnnotationActionEndpointMapping.class);
-	    applicationContext.registerSingleton("interceptor", MyInterceptor.class);
-	    applicationContext.registerSingleton("endpoint", MyEndpoint.class);
-	    applicationContext.refresh();
+        applicationContext.registerSingleton("interceptor", MyInterceptor.class);
+        applicationContext.registerSingleton("smartIntercepter", MySmartInterceptor.class);
+        applicationContext.registerSingleton("endpoint", MyEndpoint.class);
+        applicationContext.refresh();
         mapping = (AnnotationActionEndpointMapping) applicationContext.getBean("mapping");
     }
 
@@ -104,4 +105,15 @@ public class AnnotationActionMethodEndpointMappingTest {
 			super(new PayloadLoggingInterceptor());
 		}
 	}
+
+    private static class MySmartInterceptor extends DelegatingSmartEndpointInterceptor {
+
+        public MySmartInterceptor() {
+            super(new PayloadLoggingInterceptor());
+        }
+
+        public boolean shouldIntercept(MessageContext messageContext, Object endpoint) {
+            return false;
+        }
+    }
 }
