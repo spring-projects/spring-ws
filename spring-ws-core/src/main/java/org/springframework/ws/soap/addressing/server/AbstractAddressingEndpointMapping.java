@@ -266,7 +266,7 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
                 if (endpoint == null) {
                     return null;
                 }
-                return getEndpointInvocationChain(endpoint, version, requestMap);
+                return getEndpointInvocationChain(endpoint, version, requestMap, messageContext);
             }
         }
         return null;
@@ -278,22 +278,30 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
      */
     private EndpointInvocationChain getEndpointInvocationChain(Object endpoint,
                                                                AddressingVersion version,
-                                                               MessageAddressingProperties requestMap) {
+                                                               MessageAddressingProperties requestMap,
+                                                               MessageContext messageContext) {
         URI responseAction = getResponseAction(endpoint, requestMap);
         URI faultAction = getFaultAction(endpoint, requestMap);
 
 	    WebServiceMessageSender[] messageSenders = getMessageSenders(endpoint);
 	    MessageIdStrategy messageIdStrategy = getMessageIdStrategy(endpoint);
 
-	    List<EndpointInterceptor> interceptors = new ArrayList<EndpointInterceptor>(preInterceptors.length + postInterceptors.length + smartInterceptors.length + 1);
-	    AddressingEndpointInterceptor addressingInterceptor = new AddressingEndpointInterceptor(version, messageIdStrategy,
-             messageSenders, responseAction, faultAction);
+        List<EndpointInterceptor> interceptors = new ArrayList<EndpointInterceptor>();
+        interceptors.addAll(Arrays.asList(preInterceptors));
 
-	    interceptors.addAll(Arrays.asList(preInterceptors));
-	    interceptors.add(addressingInterceptor);
-	    interceptors.addAll(Arrays.asList(postInterceptors));
-	    interceptors.addAll(Arrays.asList(smartInterceptors));
-
+        AddressingEndpointInterceptor addressingInterceptor = new AddressingEndpointInterceptor(version, messageIdStrategy,
+	             messageSenders, responseAction, faultAction);
+        interceptors.add(addressingInterceptor);
+        interceptors.addAll(Arrays.asList(postInterceptors));
+        
+        if (this.smartInterceptors != null) {
+            for (SmartEndpointInterceptor smartInterceptor : smartInterceptors) {
+                if (smartInterceptor.shouldIntercept(messageContext, endpoint)) {
+                    interceptors.add(smartInterceptor);
+                }
+            }
+        }
+	    
 	    return new SoapEndpointInvocationChain(endpoint,
 			    interceptors.toArray(new EndpointInterceptor[interceptors.size()]), actorsOrRoles, isUltimateReceiver);
     }

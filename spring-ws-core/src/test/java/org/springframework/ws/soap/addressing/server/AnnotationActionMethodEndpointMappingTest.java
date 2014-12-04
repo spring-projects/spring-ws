@@ -56,6 +56,7 @@ public class AnnotationActionMethodEndpointMappingTest {
         applicationContext = new StaticApplicationContext();
         applicationContext.registerSingleton("mapping", AnnotationActionEndpointMapping.class);
 	    applicationContext.registerSingleton("interceptor", MyInterceptor.class);
+        applicationContext.registerSingleton("smartIntercepter", MySmartInterceptor.class);
 	    applicationContext.registerSingleton("endpoint", MyEndpoint.class);
 	    applicationContext.refresh();
         mapping = (AnnotationActionEndpointMapping) applicationContext.getBean("mapping");
@@ -104,4 +105,15 @@ public class AnnotationActionMethodEndpointMappingTest {
 			super(new PayloadLoggingInterceptor());
 		}
 	}
+    
+    private static class MySmartInterceptor extends DelegatingSmartEndpointInterceptor {
+        
+		public MySmartInterceptor() {
+			super(new PayloadLoggingInterceptor());
+		}
+        
+        public boolean shouldIntercept(MessageContext messageContext, Object endpoint) {
+            return false;
+        }
+    }
 }
