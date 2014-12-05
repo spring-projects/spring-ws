@@ -65,6 +65,7 @@ import java.util.*;
  * WS-Addressing interceptor, respectively.
  *
  * @author Arjen Poutsma
+ * @author Nate Stoddard
  * @since 1.5.0
  */
 public abstract class AbstractAddressingEndpointMapping extends TransformerObjectSupport

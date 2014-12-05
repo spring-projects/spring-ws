@@ -41,6 +41,10 @@ import java.io.InputStream;
 
 import static org.junit.Assert.*;
 
+/**
+ * @author Arjen Poutsma
+ * @author Nate Stoddard
+ */
 public class AnnotationActionMethodEndpointMappingTest {
 
     private StaticApplicationContext applicationContext;
