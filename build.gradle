@@ -12,7 +12,8 @@ buildscript {
 configure(allprojects) {
 	group = "org.springframework.ws"
 
-	ext.springVersion = "4.0.5.RELEASE"
+	ext.springVersion = "4.0.8.RELEASE"
+	ext.springSecurityVersion = "3.2.5.RELEASE"
 	ext.axiomVersion = "1.2.14"
 
 	apply plugin: "java"
@@ -232,7 +233,7 @@ project('spring-ws-security') {
 		compile("org.springframework:spring-tx:$springVersion")
 
 		// Spring Security
-		compile("org.springframework.security:spring-security-core:3.2.4.RELEASE")
+		compile("org.springframework.security:spring-security-core:$springSecurityVersion")
 		optional("net.sf.ehcache:ehcache:2.8.4")
 
 		// WS-Security
