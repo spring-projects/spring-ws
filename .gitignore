@@ -6,3 +6,7 @@ _site
 *.sw[op]
 .project
 sample-pages
+spring-ws-*
+spring-xml
+.gradle
+build
