@@ -82,6 +82,7 @@ import org.springframework.ws.soap.security.wss4j.callback.UsernameTokenPrincipa
  *
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @see <a href="http://ws.apache.org/wss4j/">Apache WSS4J</a>
  * @since 1.5.0
  */
@@ -136,6 +137,9 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
     private boolean bspCompliant;
 
     private boolean securementUseDerivedKey;
+
+    // To maintain same behavior as default, this flag is set to true
+    private boolean removeSecurityHeader = true;
 
     public void setSecurementActions(String securementActions) {
         this.securementActions = securementActions;
@@ -502,7 +506,15 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		this.samlIssuer = samlIssuer;
 	}
 
-	@Override
+    public boolean getRemoveSecurityHeader() {
+        return removeSecurityHeader;
+    }
+
+    public void setRemoveSecurityHeader(boolean removeSecurityHeader) {
+        this.removeSecurityHeader = removeSecurityHeader;
+    }
+
+    @Override
 	public void afterPropertiesSet() throws Exception {
         Assert.isTrue(validationActions != null || securementActions != null,
                 "validationActions or securementActions are required");
@@ -628,7 +640,9 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
         soapMessage.setDocument(envelopeAsDocument);
 
-        soapMessage.getEnvelope().getHeader().removeHeaderElement(WS_SECURITY_NAME);
+        if (this.getRemoveSecurityHeader()) {
+            soapMessage.getEnvelope().getHeader().removeHeaderElement(WS_SECURITY_NAME);
+        }
     }
 
     /**
