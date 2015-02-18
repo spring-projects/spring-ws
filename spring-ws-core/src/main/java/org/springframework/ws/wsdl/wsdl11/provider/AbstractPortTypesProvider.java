@@ -16,7 +16,6 @@
 
 package org.springframework.ws.wsdl.wsdl11.provider;
 
-import java.util.Iterator;
 import java.util.List;
 import javax.wsdl.Definition;
 import javax.wsdl.Fault;
@@ -33,9 +32,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.springframework.util.Assert;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 
 /**
  * Abstract base class for {@link PortTypesProvider} implementations.
@@ -94,14 +91,9 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
     }
 
     private void createOperations(Definition definition, PortType portType) throws WSDLException {
-        MultiValueMap<String, Message> operations = new LinkedMultiValueMap<String, Message>();
-        for (Iterator<?> iterator = definition.getMessages().values().iterator(); iterator.hasNext();) {
-            Message message = (Message) iterator.next();
-            String operationName = getOperationName(message);
-            if (StringUtils.hasText(operationName)) {
-                operations.add(operationName,message);
-            }
-        }
+
+        MultiValueMap<String, Message> operations = groupByOperations(definition, portType);
+
         if (operations.isEmpty() && logger.isWarnEnabled()) {
             logger.warn("No operations were created, make sure the WSDL contains messages");
         }
@@ -140,13 +132,16 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
     }
 
     /**
-     * Template method that returns the name of the operation coupled to the given {@link Message}. Subclasses can
-     * return {@code null} to indicate that a message should not be coupled to an operation.
+     * Template method that groups messages contained in specified WSDL definition into operations.
      *
-     * @param message the WSDL4J {@code Message}
-     * @return the operation name; or {@code null}
+     * <p>It's possible to share messages between operations (e.g. share common FaultMessage)</p>
+     *
+     * @param definition the WSDL4J {@code Definition}
+     * @param portType the WSDL4J {@code PortType}
+     * @return MultiValueMap where key is operation name and value is a list of messages.
      */
-    protected abstract String getOperationName(Message message);
+    protected abstract MultiValueMap<String, Message> groupByOperations(Definition definition, PortType portType);
+
 
     /**
      * Indicates whether the given name name should be included as {@link Input} message in the definition.
