@@ -16,9 +16,16 @@
 
 package org.springframework.ws.wsdl.wsdl11.provider;
 
+import java.util.Iterator;
+
+import javax.wsdl.Definition;
 import javax.wsdl.Message;
+import javax.wsdl.PortType;
 
 import org.springframework.util.Assert;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 
 /**
  * Implementation of the {@link  PortTypesProvider} interface that is based on suffixes.
@@ -101,6 +108,26 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
     }
 
     @Override
+    protected MultiValueMap<String, Message> groupByOperations(Definition definition, PortType portType) {
+        MultiValueMap<String, Message> operations = new LinkedMultiValueMap<String, Message>();
+
+        for (Iterator<?> iterator = definition.getMessages().values().iterator(); iterator.hasNext();) {
+            Message message = (Message) iterator.next();
+            String operationName = getOperationName(message);
+            if (StringUtils.hasText(operationName)) {
+                operations.add(operationName,message);
+            }
+        }
+        return operations;
+    }
+
+    /**
+     * Template method that returns the name of the operation coupled to the given {@link Message}. Subclasses can
+     * return {@code null} to indicate that a message should not be coupled to an operation.
+     *
+     * @param message the WSDL4J {@code Message}
+     * @return the operation name; or {@code null}
+     */
     protected String getOperationName(Message message) {
         String messageName = getMessageName(message);
         if (messageName != null) {
