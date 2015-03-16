@@ -590,16 +590,19 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                 requestCallback.doWithMessage(messageContext.getRequest());
             }
             // Apply handleRequest of registered interceptors
+	        boolean intercepted = false;
             if (interceptors != null) {
                 for (int i = 0; i < interceptors.length; i++) {
                     interceptorIndex = i;
                     if (!interceptors[i].handleRequest(messageContext)) {
+	                    intercepted = true;
                         break;
                     }
                 }
             }
-            // if an interceptor has set a response, we don't send/receive
-            if (!messageContext.hasResponse()) {
+            // no send/receive if an interceptor has set a response or if the chain
+            // has been interrupted
+            if (!messageContext.hasResponse() && !intercepted) {
                 sendRequest(connection, messageContext.getRequest());
                 if (hasError(connection, messageContext.getRequest())) {
                     triggerAfterCompletion(interceptorIndex, messageContext, null);
@@ -622,6 +625,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
                 }
             }
             else {
+	            triggerAfterCompletion(interceptorIndex, messageContext, null);
                 return null;
             }
         }
@@ -793,8 +797,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 * invoke afterCompletion for all interceptors whose handleRequest invocation has
 	 * successfully completed and returned true, in addition to the last interceptor who
 	 * returned {@code false}.
-	 * @param mappedEndpoint the mapped EndpointInvocationChain
 	 * @param interceptorIndex index of last interceptor that successfully completed
+	 * @param messageContext the message context
 	 * @param ex Exception thrown on handler execution, or {@code null} if none
 	 * @see ClientInterceptor#afterCompletion
 	 */

@@ -407,32 +407,24 @@ public class WebServiceTemplateTest {
     }
 
     @Test
-    public void testInterceptorsIntercepted() throws Exception {
+    public void testInterceptorsInterceptedNoResponse() throws Exception {
         MessageContext messageContext = new DefaultMessageContext(messageFactory);
 
         ClientInterceptor interceptorMock1 = createStrictMock("interceptor1", ClientInterceptor.class);
         ClientInterceptor interceptorMock2 = createStrictMock("interceptor2", ClientInterceptor.class);
         template.setInterceptors(new ClientInterceptor[]{interceptorMock1, interceptorMock2});
         expect(interceptorMock1.handleRequest(isA(MessageContext.class))).andReturn(false);
-        expect(interceptorMock1.handleResponse(isA(MessageContext.class))).andReturn(true);
         interceptorMock1.afterCompletion(isA(MessageContext.class), (Exception)isNull());
 
         WebServiceMessageCallback requestCallback = createMock(WebServiceMessageCallback.class);
         requestCallback.doWithMessage(messageContext.getRequest());
 
         WebServiceMessageExtractor extractorMock = createMock(WebServiceMessageExtractor.class);
-        Object extracted = new Object();
-        expect(extractorMock.extractData(isA(WebServiceMessage.class))).andReturn(extracted);
-
-        connectionMock.send(isA(WebServiceMessage.class));
-        expect(connectionMock.hasError()).andReturn(false);
-        expect(connectionMock.receive(messageFactory)).andReturn(new MockWebServiceMessage("<response/>"));
-        expect(connectionMock.hasFault()).andReturn(false);
 
         replay(connectionMock, interceptorMock1, interceptorMock2, requestCallback, extractorMock);
 
         Object result = template.doSendAndReceive(messageContext, connectionMock, requestCallback, extractorMock);
-        assertEquals("Invalid response", extracted, result);
+	    assertNull(result);
 
         verify(connectionMock, interceptorMock1, interceptorMock2, requestCallback, extractorMock);
     }
