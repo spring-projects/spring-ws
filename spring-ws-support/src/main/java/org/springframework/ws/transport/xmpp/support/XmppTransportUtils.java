@@ -23,8 +23,8 @@ import java.util.Iterator;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.transport.xmpp.XmppTransportConstants;
-
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smackx.jiveproperties.JivePropertiesManager;
 
 /**
  * Collection of utility methods to work with Mail transports.
@@ -62,17 +62,17 @@ public abstract class XmppTransportUtils {
     }
 
     public static void addHeader(Message message, String name, String value) {
-        message.setProperty(name, value);        
+        JivePropertiesManager.addProperty(message, name, value);
     }
 
     public static Iterator<String> getHeaderNames(Message message) {
         Assert.notNull(message, "'message' must not be null");
-        return message.getPropertyNames().iterator();
+        return JivePropertiesManager.getPropertiesNames(message).iterator();
     }
 
     public static Iterator<String> getHeaders(Message message, String name) {
         Assert.notNull(message, "'message' must not be null");
-        String value = message.getProperty(name).toString();
+        String value = JivePropertiesManager.getProperty(message, name).toString();
         if (value != null) {
             return Collections.singletonList(value).iterator();
         }

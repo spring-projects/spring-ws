@@ -24,6 +24,7 @@ import java.net.URISyntaxException;
 import java.util.Iterator;
 
 import org.jivesoftware.smack.PacketCollector;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.filter.AndFilter;
 import org.jivesoftware.smack.filter.PacketFilter;
@@ -31,7 +32,6 @@ import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.filter.ThreadFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
-
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractSenderConnection;
@@ -128,7 +128,12 @@ public class XmppSenderConnection extends AbstractSenderConnection {
     @Override
     protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
         requestMessage.setFrom(connection.getUser());
-        connection.sendPacket(requestMessage);
+        try {
+            connection.sendPacket(requestMessage);
+        }
+        catch (NotConnectedException e) {
+            throw new IOException(e);
+        }
     }
 
     /*

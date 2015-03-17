@@ -16,14 +16,17 @@
 
 package org.springframework.ws.transport.xmpp;
 
+import java.io.IOException;
+
 import org.jivesoftware.smack.PacketListener;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
-
 import org.springframework.ws.transport.support.AbstractStandaloneMessageReceiver;
 
 /**
@@ -57,7 +60,7 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
     }
 
     @Override
-    protected void onActivate() throws XMPPException {
+    protected void onActivate() throws XMPPException, SmackException, IOException {
         if (!connection.isConnected()) {
             connection.connect();
         }
@@ -88,7 +91,12 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
             logger.info("Shutting down XMPP receiver [" + connection.getUser() + "]");
         }
         if (connection.isConnected()) {
-            connection.disconnect();
+            try {
+                connection.disconnect();
+            }
+            catch (NotConnectedException e) {
+                // Ignore
+            }
         }
     }
 
